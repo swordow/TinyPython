@@ -112,9 +112,9 @@ PyAPI_FUNC(PyThreadState *) _PyThreadState_Prealloc(PyInterpreterState *);
 PyAPI_FUNC(void) _PyThreadState_Init(PyThreadState *);
 PyAPI_FUNC(void) PyThreadState_Clear(PyThreadState *);
 PyAPI_FUNC(void) PyThreadState_Delete(PyThreadState *);
-#ifdef WITH_THREAD
-PyAPI_FUNC(void) PyThreadState_DeleteCurrent(void);
-#endif
+//#ifdef WITH_THREAD
+//PyAPI_FUNC(void) PyThreadState_DeleteCurrent(void);
+//#endif
 
 PyAPI_FUNC(PyThreadState *) PyThreadState_Get(void);
 PyAPI_FUNC(PyThreadState *) PyThreadState_Swap(PyThreadState *);

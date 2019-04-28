@@ -221,10 +221,10 @@ typedef struct {
        isn't ready for writing. */
     Py_off_t write_end;
 
-#ifdef WITH_THREAD
-    PyThread_type_lock lock;
-    volatile long owner;
-#endif
+//#ifdef WITH_THREAD
+//    PyThread_type_lock lock;
+//    volatile long owner;
+//#endif
 
     Py_ssize_t buffer_size;
     Py_ssize_t buffer_mask;
@@ -258,42 +258,42 @@ typedef struct {
 
 /* These macros protect the buffered object against concurrent operations. */
 
-#ifdef WITH_THREAD
-
-static int
-_enter_buffered_busy(buffered *self)
-{
-    if (self->owner == PyThread_get_thread_ident()) {
-        PyObject *r = PyObject_Repr((PyObject *) self);
-        if (r != NULL) {
-            PyErr_Format(PyExc_RuntimeError,
-                         "reentrant call inside %s",
-                         PyString_AS_STRING(r));
-            Py_DECREF(r);
-        }
-        return 0;
-    }
-    Py_BEGIN_ALLOW_THREADS
-    PyThread_acquire_lock(self->lock, 1);
-    Py_END_ALLOW_THREADS
-    return 1;
-}
-
-#define ENTER_BUFFERED(self) \
-    ( (PyThread_acquire_lock(self->lock, 0) ? \
-       1 : _enter_buffered_busy(self)) \
-     && (self->owner = PyThread_get_thread_ident(), 1) )
-
-#define LEAVE_BUFFERED(self) \
-    do { \
-        self->owner = 0; \
-        PyThread_release_lock(self->lock); \
-    } while(0);
-
-#else
+//#ifdef WITH_THREAD
+//
+//static int
+//_enter_buffered_busy(buffered *self)
+//{
+//    if (self->owner == PyThread_get_thread_ident()) {
+//        PyObject *r = PyObject_Repr((PyObject *) self);
+//        if (r != NULL) {
+//            PyErr_Format(PyExc_RuntimeError,
+//                         "reentrant call inside %s",
+//                         PyString_AS_STRING(r));
+//            Py_DECREF(r);
+//        }
+//        return 0;
+//    }
+//    Py_BEGIN_ALLOW_THREADS
+//    PyThread_acquire_lock(self->lock, 1);
+//    Py_END_ALLOW_THREADS
+//    return 1;
+//}
+//
+//#define ENTER_BUFFERED(self) \
+//    ( (PyThread_acquire_lock(self->lock, 0) ? \
+//       1 : _enter_buffered_busy(self)) \
+//     && (self->owner = PyThread_get_thread_ident(), 1) )
+//
+//#define LEAVE_BUFFERED(self) \
+//    do { \
+//        self->owner = 0; \
+//        PyThread_release_lock(self->lock); \
+//    } while(0);
+//
+//#else
 #define ENTER_BUFFERED(self) 1
 #define LEAVE_BUFFERED(self)
-#endif
+//#endif
 
 #define CHECK_INITIALIZED(self) \
     if (self->ok <= 0) { \
@@ -375,12 +375,12 @@ buffered_dealloc(buffered *self)
         PyMem_Free(self->buffer);
         self->buffer = NULL;
     }
-#ifdef WITH_THREAD
-    if (self->lock) {
-        PyThread_free_lock(self->lock);
-        self->lock = NULL;
-    }
-#endif
+//#ifdef WITH_THREAD
+//    if (self->lock) {
+//        PyThread_free_lock(self->lock);
+//        self->lock = NULL;
+//    }
+//#endif
     Py_CLEAR(self->dict);
     Py_TYPE(self)->tp_free((PyObject *)self);
 }
@@ -687,16 +687,16 @@ _buffered_init(buffered *self)
         PyErr_NoMemory();
         return -1;
     }
-#ifdef WITH_THREAD
-    if (self->lock)
-        PyThread_free_lock(self->lock);
-    self->lock = PyThread_allocate_lock();
-    if (self->lock == NULL) {
-        PyErr_SetString(PyExc_RuntimeError, "can't allocate read lock");
-        return -1;
-    }
-    self->owner = 0;
-#endif
+//#ifdef WITH_THREAD
+//    if (self->lock)
+//        PyThread_free_lock(self->lock);
+//    self->lock = PyThread_allocate_lock();
+//    if (self->lock == NULL) {
+//        PyErr_SetString(PyExc_RuntimeError, "can't allocate read lock");
+//        return -1;
+//    }
+//    self->owner = 0;
+//#endif
     /* Find out whether buffer_size is a power of 2 */
     /* XXX is this optimization useful? */
     for (n = self->buffer_size - 1; n & 1; n >>= 1)
@@ -875,7 +875,7 @@ buffered_read1(buffered *self, PyObject *args)
     /* Return up to n bytes.  If at least one byte is buffered, we
        only return buffered bytes.  Otherwise, we do one raw read. */
 
-    /* XXX: this mimicks the io.py implementation but is probably wrong.
+    /* XXX: this mimicks the io.tpy implementation but is probably wrong.
        If we need to read from the raw stream, then we could actually read
        all `n` bytes asked by the caller (and possibly more, so as to fill
        our buffer for the next reads). */

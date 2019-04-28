@@ -6,17 +6,17 @@
 #include "Python.h"
 
 extern void initarray(void);
-#ifndef MS_WINI64
-extern void initaudioop(void);
-#endif
+//#ifndef MS_WINI64
+//extern void initaudioop(void);
+//#endif
 extern void initbinascii(void);
 extern void initcmath(void);
 extern void initerrno(void);
 extern void initfuture_builtins(void);
 extern void initgc(void);
-#ifndef MS_WINI64
-extern void initimageop(void);
-#endif
+//#ifndef MS_WINI64
+//extern void initimageop(void);
+//#endif
 extern void initmath(void);
 extern void init_md5(void);
 extern void initnt(void);
@@ -27,7 +27,7 @@ extern void init_sha256(void);
 extern void init_sha512(void);
 extern void initstrop(void);
 extern void inittime(void);
-extern void initthread(void);
+//extern void initthread(void);
 extern void initcStringIO(void);
 extern void initcPickle(void);
 #ifdef WIN32
@@ -38,7 +38,7 @@ extern void init_codecs(void);
 extern void init_weakref(void);
 extern void init_hotshot(void);
 extern void initxxsubtype(void);
-extern void initzipimport(void);
+//extern void initzipimport(void);
 extern void init_random(void);
 extern void inititertools(void);
 extern void init_collections(void);
@@ -69,7 +69,7 @@ extern void init_ast(void);
 extern void init_io(void);
 extern void _PyWarnings_Init(void);
 
-/* tools/freeze/makeconfig.py marker for additional "extern" */
+/* tools/freeze/makeconfig.tpy marker for additional "extern" */
 /* -- ADDMODULE MARKER 1 -- */
 
 extern void PyMarshal_Init(void);
@@ -79,19 +79,11 @@ struct _inittab _PyImport_Inittab[] = {
 
     {"array", initarray},
     {"_ast", init_ast},
-#ifdef MS_WINDOWS
-#ifndef MS_WINI64
-    {"audioop", initaudioop},
-#endif
-#endif
     {"binascii", initbinascii},
     {"cmath", initcmath},
     {"errno", initerrno},
     {"future_builtins", initfuture_builtins},
     {"gc", initgc},
-#ifndef MS_WINI64
-    {"imageop", initimageop},
-#endif
     {"math", initmath},
     {"_md5", init_md5},
     {"nt", initnt}, /* Use the NT os functions, not posix */
@@ -102,18 +94,12 @@ struct _inittab _PyImport_Inittab[] = {
     {"_sha512", init_sha512},
     {"strop", initstrop},
     {"time", inittime},
-#ifdef WITH_THREAD
-    {"thread", initthread},
-#endif
     {"cStringIO", initcStringIO},
     {"cPickle", initcPickle},
 #ifdef WIN32
     {"msvcrt", initmsvcrt},
     {"_locale", init_locale},
 #endif
-    /* XXX Should _subprocess go in a WIN32 block?  not WIN64? */
-    {"_subprocess", init_subprocess},
-
     {"_codecs", init_codecs},
     {"_weakref", init_weakref},
     {"_hotshot", init_hotshot},
@@ -124,19 +110,14 @@ struct _inittab _PyImport_Inittab[] = {
     {"itertools", inititertools},
     {"_collections", init_collections},
     {"_symtable", init_symtable},
-    {"mmap", initmmap},
-    {"_csv", init_csv},
     {"_sre", init_sre},
     {"parser", initparser},
-    {"_winreg", init_winreg},
     {"_struct", init_struct},
     {"datetime", initdatetime},
     {"_functools", init_functools},
     {"_json", init_json},
 
     {"xxsubtype", initxxsubtype},
-    {"zipimport", initzipimport},
-    {"zlib", initzlib},
 
     /* CJK codecs */
     {"_multibytecodec", init_multibytecodec},
@@ -147,7 +128,7 @@ struct _inittab _PyImport_Inittab[] = {
     {"_codecs_kr", init_codecs_kr},
     {"_codecs_tw", init_codecs_tw},
 
-/* tools/freeze/makeconfig.py marker for additional "_inittab" entries */
+/* tools/freeze/makeconfig.tpy marker for additional "_inittab" entries */
 /* -- ADDMODULE MARKER 2 -- */
 
     /* This module "lives in" with marshal.c */

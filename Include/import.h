@@ -27,13 +27,13 @@ PyAPI_FUNC(PyObject *) PyImport_ReloadModule(PyObject *m);
 PyAPI_FUNC(void) PyImport_Cleanup(void);
 PyAPI_FUNC(int) PyImport_ImportFrozenModule(char *);
 
-#ifdef WITH_THREAD
-PyAPI_FUNC(void) _PyImport_AcquireLock(void);
-PyAPI_FUNC(int) _PyImport_ReleaseLock(void);
-#else
+//#ifdef WITH_THREAD
+//PyAPI_FUNC(void) _PyImport_AcquireLock(void);
+//PyAPI_FUNC(int) _PyImport_ReleaseLock(void);
+//#else
 #define _PyImport_AcquireLock()
 #define _PyImport_ReleaseLock() 1
-#endif
+//#endif
 
 PyAPI_FUNC(struct filedescr *) _PyImport_FindModule(
 	const char *, PyObject *, char *, size_t, FILE **, PyObject **);

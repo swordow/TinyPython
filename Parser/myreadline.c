@@ -22,10 +22,10 @@ extern char* vms__StdioReadline(FILE *sys_stdin, FILE *sys_stdout, char *prompt)
 
 PyThreadState* _PyOS_ReadlineTState;
 
-#ifdef WITH_THREAD
-#include "pythread.h"
-static PyThread_type_lock _PyOS_ReadlineLock = NULL;
-#endif
+//#ifdef WITH_THREAD
+//#include "pythread.h"
+//static PyThread_type_lock _PyOS_ReadlineLock = NULL;
+//#endif
 
 int (*PyOS_InputHook)(void) = NULL;
 
@@ -80,13 +80,13 @@ my_fgets(char *buf, int len, FILE *fp)
 #ifdef EINTR
         if (errno == EINTR) {
             int s;
-#ifdef WITH_THREAD
-            PyEval_RestoreThread(_PyOS_ReadlineTState);
-#endif
+//#ifdef WITH_THREAD
+//            PyEval_RestoreThread(_PyOS_ReadlineTState);
+//#endif
             s = PyErr_CheckSignals();
-#ifdef WITH_THREAD
-            PyEval_SaveThread();
-#endif
+//#ifdef WITH_THREAD
+//            PyEval_SaveThread();
+//#endif
             if (s < 0)
                     return 1;
 	    /* try again */
@@ -184,22 +184,22 @@ PyOS_Readline(FILE *sys_stdin, FILE *sys_stdout, char *prompt)
 #endif
     }
 
-#ifdef WITH_THREAD
-    if (_PyOS_ReadlineLock == NULL) {
-        _PyOS_ReadlineLock = PyThread_allocate_lock();
-    }
-#endif
+//#ifdef WITH_THREAD
+//    if (_PyOS_ReadlineLock == NULL) {
+//        _PyOS_ReadlineLock = PyThread_allocate_lock();
+//    }
+//#endif
 
     _PyOS_ReadlineTState = PyThreadState_GET();
     Py_BEGIN_ALLOW_THREADS
-#ifdef WITH_THREAD
-    PyThread_acquire_lock(_PyOS_ReadlineLock, 1);
-#endif
+//#ifdef WITH_THREAD
+//    PyThread_acquire_lock(_PyOS_ReadlineLock, 1);
+//#endif
 
     /* This is needed to handle the unlikely case that the
      * interpreter is in interactive mode *and* stdin/out are not
      * a tty.  This can happen, for example if python is run like
-     * this: python -i < test1.py
+     * this: python -i < test1.tpy
      */
     if (!isatty (fileno (sys_stdin)) || !isatty (fileno (sys_stdout)))
         rv = PyOS_StdioReadline (sys_stdin, sys_stdout, prompt);
@@ -208,9 +208,9 @@ PyOS_Readline(FILE *sys_stdin, FILE *sys_stdout, char *prompt)
                                              prompt);
     Py_END_ALLOW_THREADS
 
-#ifdef WITH_THREAD
-    PyThread_release_lock(_PyOS_ReadlineLock);
-#endif
+//#ifdef WITH_THREAD
+//    PyThread_release_lock(_PyOS_ReadlineLock);
+//#endif
 
     _PyOS_ReadlineTState = NULL;
 

@@ -329,9 +329,9 @@ Py_NO_ENABLE_SHARED to find out.  Also support MS_NO_COREDLL for b/w compat */
 			their Makefile (other compilers are generally
 			taken care of by distutils.) */
 #			ifdef _DEBUG
-#				pragma comment(lib,"python27_d.lib")
+#				pragma comment(lib,"tpycore.lib")
 #			else
-#				pragma comment(lib,"python27.lib")
+#				pragma comment(lib,"tpycore.lib")
 #			endif /* _DEBUG */
 #		endif /* _MSC_VER */
 #	endif /* Py_BUILD_CORE */
@@ -577,7 +577,7 @@ Py_NO_ENABLE_SHARED to find out.  Also support MS_NO_COREDLL for b/w compat */
 /* #define HAVE_CLOCK */
 
 /* Define when any dynamic module loading is enabled */
-#define HAVE_DYNAMIC_LOADING
+//#define HAVE_DYNAMIC_LOADING
 
 /* Define if you have ftime.  */
 #ifndef MS_WINCE

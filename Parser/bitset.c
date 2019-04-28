@@ -1,7 +1,7 @@
 
 /* Bitset primitives used by the parser generator */
 
-#include "pgenheaders.h"
+#include "Python.h"
 #include "bitset.h"
 
 bitset

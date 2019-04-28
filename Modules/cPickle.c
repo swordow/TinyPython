@@ -26,8 +26,8 @@ PyDoc_STRVAR(cPickle_module_documentation,
 #endif
 
 /*
- * Pickle opcodes.  These must be kept in synch with pickle.py.  Extensive
- * docs are in pickletools.py.
+ * Pickle opcodes.  These must be kept in synch with pickle.tpy.  Extensive
+ * docs are in pickletools.tpy.
  */
 #define MARK        '('
 #define STOP        '.'
@@ -97,7 +97,7 @@ PyDoc_STRVAR(cPickle_module_documentation,
 
 /* Keep in synch with pickle.Pickler._BATCHSIZE.  This is how many elements
  * batch_list/dict() pumps out before doing APPENDS/SETITEMS.  Nothing will
- * break if this gets out of synch with pickle.py, but it's unclear that
+ * break if this gets out of synch with pickle.tpy, but it's unclear that
  * would help anything either.
  */
 #define BATCHSIZE 1000
@@ -827,7 +827,7 @@ put2(Picklerobject *self, PyObject *ob)
     /* Make sure memo keys are positive! */
     /* XXX Why?
      * XXX And does "positive" really mean non-negative?
-     * XXX pickle.py starts with PUT index 0, not 1.  This makes for
+     * XXX pickle.tpy starts with PUT index 0, not 1.  This makes for
      * XXX gratuitous differences between the pickling modules.
      */
     p++;
@@ -937,7 +937,7 @@ whichmodule(PyObject *global, PyObject *global_name)
         break;
     }
 
-    /* The following implements the rule in pickle.py added in 1.5
+    /* The following implements the rule in pickle.tpy added in 1.5
        that used __main__ if no module is found.  I don't actually
        like this rule. jlf
     */
@@ -3165,7 +3165,7 @@ get_Pickler(PyObject *self, PyObject *args, PyObject *kwds)
     /* XXX
      * The documented signature is Pickler(file, protocol=0), but this
      * accepts Pickler() and Pickler(integer) too.  The meaning then
-     * is clear as mud, undocumented, and not supported by pickle.py.
+     * is clear as mud, undocumented, and not supported by pickle.tpy.
      * I'm told Zope uses this, but I haven't traced into this code
      * far enough to figure out what it means.
      */
@@ -4139,7 +4139,7 @@ load_pop(Unpicklerobject *self)
 {
     Py_ssize_t len = self->stack->length;
 
-    /* Note that we split the (pickle.py) stack into two stacks,
+    /* Note that we split the (pickle.tpy) stack into two stacks,
        an object stack and a mark stack. We have to be clever and
        pop the right one. We do this by looking at the top of the
        mark stack first, and only signalling a stack underflow if
@@ -4649,7 +4649,7 @@ load_mark(Unpicklerobject *self)
 {
     Py_ssize_t s;
 
-    /* Note that we split the (pickle.py) stack into two stacks, an
+    /* Note that we split the (pickle.tpy) stack into two stacks, an
        object stack and a mark stack. Here we push a mark onto the
        mark stack.
     */

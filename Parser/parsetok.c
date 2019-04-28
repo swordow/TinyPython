@@ -1,7 +1,8 @@
 
 /* Parser-tokenizer link implementation */
 
-#include "pgenheaders.h"
+//#include "pgenheaders.h"
+#include "Python.h"
 #include "tokenizer.h"
 #include "node.h"
 #include "grammar.h"
@@ -166,16 +167,23 @@ parsetok(struct tok_state *tok, grammar *g, int start, perrdetail *err_ret,
             started = 0;
             /* Add the right number of dedent tokens,
                except if a certain flag is given --
-               codeop.py uses this. */
-            if (tok->indent &&
+               codeop.tpy uses this. */
+          /*  if (tok->indent &&
                 !(*flags & PyPARSE_DONT_IMPLY_DEDENT))
             {
                 tok->pendin = -tok->indent;
                 tok->indent = 0;
-            }
+            }*/
         }
         else
             started = 1;
+		
+#ifndef PGEN	// PGEN needs NEWLINE in MetaGrammar...
+		if (type == NEWLINE)
+		{
+			continue;
+		}
+#endif
         len = (a != NULL && b != NULL) ? b - a : 0;
         str = (char *) PyObject_MALLOC(len + 1);
         if (str == NULL) {

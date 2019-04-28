@@ -110,7 +110,7 @@ static char copyright[] =
 /* -------------------------------------------------------------------- */
 /* search engine state */
 
-/* default character predicates (run sre_chars.py to regenerate tables) */
+/* default character predicates (run sre_chars.tpy to regenerate tables) */
 
 #define SRE_DIGIT_MASK 1
 #define SRE_SPACE_MASK 2
@@ -2826,7 +2826,7 @@ _compile(PyObject* self_, PyObject* args)
 /* Code validation */
 
 /* To learn more about this code, have a look at the _compile() function in
-   Lib/sre_compile.py.  The validation functions below checks the code array
+   Lib/sre_compile.tpy.  The validation functions below checks the code array
    for conformance with the code patterns generated there.
 
    The nice thing about the generated code is that it is position-independent:

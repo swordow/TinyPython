@@ -1,4 +1,4 @@
-/* Bisection algorithms. Drop in replacement for bisect.py
+/* Bisection algorithms. Drop in replacement for bisect.tpy
 
 Converted to C by Dmitry Vasiliev (dima at hlabs.spb.ru).
 */

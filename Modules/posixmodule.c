@@ -336,13 +336,13 @@ extern int lstat(const char *, struct stat *);
 
 /* Don't use the "_r" form if we don't need it (also, won't have a
    prototype for it, at least on Solaris -- maybe others as well?). */
-#if defined(HAVE_CTERMID_R) && defined(WITH_THREAD)
-#define USE_CTERMID_R
-#endif
+//#if defined(HAVE_CTERMID_R) && defined(WITH_THREAD)
+//#define USE_CTERMID_R
+//#endif
 
-#if defined(HAVE_TMPNAM_R) && defined(WITH_THREAD)
-#define USE_TMPNAM_R
-#endif
+//#if defined(HAVE_TMPNAM_R) && defined(WITH_THREAD)
+//#define USE_TMPNAM_R
+//#endif
 
 #if defined(MAJOR_IN_MKDEV)
 #include <sys/mkdev.h>
@@ -563,7 +563,8 @@ typedef struct {
     char osfile;
 } my_ioinfo;
 
-extern __declspec(dllimport) char * __pioinfo[];
+// https://groups.google.com/forum/#!topic/mingwpy/xUyIRLqcrOs
+// extern __declspec(dllimport) char * __pioinfo[];
 #define IOINFO_L2E 5
 #define IOINFO_ARRAY_ELTS   (1 << IOINFO_L2E)
 #define IOINFO_ARRAYS 64
@@ -575,38 +576,39 @@ extern __declspec(dllimport) char * __pioinfo[];
 int
 _PyVerify_fd(int fd)
 {
-    const int i1 = fd >> IOINFO_L2E;
-    const int i2 = fd & ((1 << IOINFO_L2E) - 1);
+  //  const int i1 = fd >> IOINFO_L2E;
+  //  const int i2 = fd & ((1 << IOINFO_L2E) - 1);
 
-    static int sizeof_ioinfo = 0;
+  //  static int sizeof_ioinfo = 0;
 
-    /* Determine the actual size of the ioinfo structure,
-     * as used by the CRT loaded in memory
-     */
-    if (sizeof_ioinfo == 0 && __pioinfo[0] != NULL) {
-        sizeof_ioinfo = _msize(__pioinfo[0]) / IOINFO_ARRAY_ELTS;
-    }
-    if (sizeof_ioinfo == 0) {
-        /* This should not happen... */
-        goto fail;
-    }
+  //  /* Determine the actual size of the ioinfo structure,
+  //   * as used by the CRT loaded in memory
+  //   */
+  //  if (sizeof_ioinfo == 0 && __pioinfo[0] != NULL) {
+  //      sizeof_ioinfo = _msize(__pioinfo[0]) / IOINFO_ARRAY_ELTS;
+  //  }
+  //  if (sizeof_ioinfo == 0) {
+  //      /* This should not happen... */
+  //      goto fail;
+  //  }
 
-    /* See that it isn't a special CLEAR fileno */
-    if (fd != _NO_CONSOLE_FILENO) {
-        /* Microsoft CRT would check that 0<=fd<_nhandle but we can't do that.  Instead
-         * we check pointer validity and other info
-         */
-        if (0 <= i1 && i1 < IOINFO_ARRAYS && __pioinfo[i1] != NULL) {
-            /* finally, check that the file is open */
-            my_ioinfo* info = (my_ioinfo*)(__pioinfo[i1] + i2 * sizeof_ioinfo);
-            if (info->osfile & FOPEN) {
-                return 1;
-            }
-        }
-    }
-  fail:
-    errno = EBADF;
-    return 0;
+  //  /* See that it isn't a special CLEAR fileno */
+  //  if (fd != _NO_CONSOLE_FILENO) {
+  //      /* Microsoft CRT would check that 0<=fd<_nhandle but we can't do that.  Instead
+  //       * we check pointer validity and other info
+  //       */
+  //      if (0 <= i1 && i1 < IOINFO_ARRAYS && __pioinfo[i1] != NULL) {
+  //          /* finally, check that the file is open */
+  //          my_ioinfo* info = (my_ioinfo*)(__pioinfo[i1] + i2 * sizeof_ioinfo);
+  //          if (info->osfile & FOPEN) {
+  //              return 1;
+  //          }
+  //      }
+  //  }
+  //fail:
+  //  errno = EBADF;
+  //  return 0;
+	return 1;
 }
 
 /* the special case of checking dup2.  The target fd must be in a sensible range */
@@ -5867,17 +5869,17 @@ static int _PyPclose(FILE *file)
     HANDLE hProcess;
     PyObject *procObj, *hProcessObj, *intObj, *fileObj;
     long file_count;
-#ifdef WITH_THREAD
-    PyGILState_STATE state;
-#endif
+//#ifdef WITH_THREAD
+//    PyGILState_STATE state;
+//#endif
 
     /* Close the file handle first, to ensure it can't block the
      * child from exiting if it's the last handle.
      */
     result = fclose(file);
-#ifdef WITH_THREAD
-    state = PyGILState_Ensure();
-#endif
+//#ifdef WITH_THREAD
+//    state = PyGILState_Ensure();
+//#endif
     if (_PyPopenProcs) {
         if ((fileObj = PyLong_FromVoidPtr(file)) != NULL &&
             (procObj = PyDict_GetItem(_PyPopenProcs,
@@ -5935,9 +5937,9 @@ static int _PyPclose(FILE *file)
         Py_XDECREF(fileObj);
     } /* if _PyPopenProcs */
 
-#ifdef WITH_THREAD
-    PyGILState_Release(state);
-#endif
+//#ifdef WITH_THREAD
+//    PyGILState_Release(state);
+//#endif
     return result;
 }
 

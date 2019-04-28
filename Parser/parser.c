@@ -6,7 +6,7 @@
 /* XXX To do: error recovery */
 
 #include "Python.h"
-#include "pgenheaders.h"
+//#include "pgenheaders.h"
 #include "token.h"
 #include "grammar.h"
 #include "node.h"
@@ -16,7 +16,7 @@
 
 #ifdef Py_DEBUG
 extern int Py_DebugFlag;
-#define D(x) if (!Py_DebugFlag); else x
+#define D(x) x
 #else
 #define D(x)
 #endif

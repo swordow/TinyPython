@@ -3,6 +3,7 @@
 
 #ifndef Py_TOKEN_H
 #define Py_TOKEN_H
+#include "Python.h"
 #ifdef __cplusplus
 extern "C" {
 #endif

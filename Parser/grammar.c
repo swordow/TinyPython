@@ -2,7 +2,7 @@
 /* Grammar implementation */
 
 #include "Python.h"
-#include "pgenheaders.h"
+//#include "pgenheaders.h"
 
 #include <ctype.h>
 

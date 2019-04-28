@@ -2,7 +2,7 @@
 /* Tokenizer implementation */
 
 #include "Python.h"
-#include "pgenheaders.h"
+//#include "pgenheaders.h"
 
 #include <ctype.h>
 #include <assert.h>
@@ -106,10 +106,10 @@ tok_new(void)
     tok->fp = NULL;
     tok->input = NULL;
     tok->tabsize = TABSIZE;
-    tok->indent = 0;
-    tok->indstack[0] = 0;
+  /*  tok->indent = 0;
+    tok->indstack[0] = 0;*/
     tok->atbol = 1;
-    tok->pendin = 0;
+   // tok->pendin = 0;
     tok->prompt = tok->nextprompt = NULL;
     tok->lineno = 0;
     tok->level = 0;
@@ -1257,52 +1257,52 @@ tok_get(register struct tok_state *tok, char **p_start, char **p_end)
                may need to skip to the end of a comment */
         }
         if (!blankline && tok->level == 0) {
-            if (col == tok->indstack[tok->indent]) {
-                /* No change */
-                if (altcol != tok->altindstack[tok->indent]) {
-                    if (indenterror(tok))
-                        return ERRORTOKEN;
-                }
-            }
-            else if (col > tok->indstack[tok->indent]) {
-                /* Indent -- always one */
-                if (tok->indent+1 >= MAXINDENT) {
-                    tok->done = E_TOODEEP;
-                    tok->cur = tok->inp;
-                    return ERRORTOKEN;
-                }
-                if (altcol <= tok->altindstack[tok->indent]) {
-                    if (indenterror(tok))
-                        return ERRORTOKEN;
-                }
-                tok->pendin++;
-                tok->indstack[++tok->indent] = col;
-                tok->altindstack[tok->indent] = altcol;
-            }
-            else /* col < tok->indstack[tok->indent] */ {
-                /* Dedent -- any number, must be consistent */
-                while (tok->indent > 0 &&
-                    col < tok->indstack[tok->indent]) {
-                    tok->pendin--;
-                    tok->indent--;
-                }
-                if (col != tok->indstack[tok->indent]) {
-                    tok->done = E_DEDENT;
-                    tok->cur = tok->inp;
-                    return ERRORTOKEN;
-                }
-                if (altcol != tok->altindstack[tok->indent]) {
-                    if (indenterror(tok))
-                        return ERRORTOKEN;
-                }
-            }
+            //if (col == tok->indstack[tok->indent]) {
+            //    /* No change */
+            //    if (altcol != tok->altindstack[tok->indent]) {
+            //        if (indenterror(tok))
+            //            return ERRORTOKEN;
+            //    }
+            //}
+            //else if (col > tok->indstack[tok->indent]) {
+            //    /* Indent -- always one */
+            //    if (tok->indent+1 >= MAXINDENT) {
+            //        tok->done = E_TOODEEP;
+            //        tok->cur = tok->inp;
+            //        return ERRORTOKEN;
+            //    }
+            //    if (altcol <= tok->altindstack[tok->indent]) {
+            //        if (indenterror(tok))
+            //            return ERRORTOKEN;
+            //    }
+            //    tok->pendin++;
+            //    tok->indstack[++tok->indent] = col;
+            //    tok->altindstack[tok->indent] = altcol;
+            //}
+            //else /* col < tok->indstack[tok->indent] */ {
+            //    /* Dedent -- any number, must be consistent */
+            //    while (tok->indent > 0 &&
+            //        col < tok->indstack[tok->indent]) {
+            //        tok->pendin--;
+            //        tok->indent--;
+            //    }
+            //    if (col != tok->indstack[tok->indent]) {
+            //        tok->done = E_DEDENT;
+            //        tok->cur = tok->inp;
+            //        return ERRORTOKEN;
+            //    }
+            //    if (altcol != tok->altindstack[tok->indent]) {
+            //        if (indenterror(tok))
+            //            return ERRORTOKEN;
+            //    }
+            //}
         }
     }
 
     tok->start = tok->cur;
 
     /* Return pending indents/dedents */
-    if (tok->pendin != 0) {
+   /* if (tok->pendin != 0) {
         if (tok->pendin < 0) {
             tok->pendin++;
             return DEDENT;
@@ -1311,7 +1311,7 @@ tok_get(register struct tok_state *tok, char **p_start, char **p_end)
             tok->pendin--;
             return INDENT;
         }
-    }
+    }*/
 
  again:
     tok->start = NULL;

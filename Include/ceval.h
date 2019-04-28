@@ -117,32 +117,32 @@ PyAPI_DATA(int) _Py_CheckInterval;
 PyAPI_FUNC(PyThreadState *) PyEval_SaveThread(void);
 PyAPI_FUNC(void) PyEval_RestoreThread(PyThreadState *);
 
-#ifdef WITH_THREAD
-
-PyAPI_FUNC(int)  PyEval_ThreadsInitialized(void);
-PyAPI_FUNC(void) PyEval_InitThreads(void);
-PyAPI_FUNC(void) PyEval_AcquireLock(void);
-PyAPI_FUNC(void) PyEval_ReleaseLock(void);
-PyAPI_FUNC(void) PyEval_AcquireThread(PyThreadState *tstate);
-PyAPI_FUNC(void) PyEval_ReleaseThread(PyThreadState *tstate);
-PyAPI_FUNC(void) PyEval_ReInitThreads(void);
-
-#define Py_BEGIN_ALLOW_THREADS { \
-                        PyThreadState *_save; \
-                        _save = PyEval_SaveThread();
-#define Py_BLOCK_THREADS        PyEval_RestoreThread(_save);
-#define Py_UNBLOCK_THREADS      _save = PyEval_SaveThread();
-#define Py_END_ALLOW_THREADS    PyEval_RestoreThread(_save); \
-                 }
-
-#else /* !WITH_THREAD */
+//#ifdef WITH_THREAD
+//
+//PyAPI_FUNC(int)  PyEval_ThreadsInitialized(void);
+//PyAPI_FUNC(void) PyEval_InitThreads(void);
+//PyAPI_FUNC(void) PyEval_AcquireLock(void);
+//PyAPI_FUNC(void) PyEval_ReleaseLock(void);
+//PyAPI_FUNC(void) PyEval_AcquireThread(PyThreadState *tstate);
+//PyAPI_FUNC(void) PyEval_ReleaseThread(PyThreadState *tstate);
+//PyAPI_FUNC(void) PyEval_ReInitThreads(void);
+//
+//#define Py_BEGIN_ALLOW_THREADS { \
+//                        PyThreadState *_save; \
+//                        _save = PyEval_SaveThread();
+//#define Py_BLOCK_THREADS        PyEval_RestoreThread(_save);
+//#define Py_UNBLOCK_THREADS      _save = PyEval_SaveThread();
+//#define Py_END_ALLOW_THREADS    PyEval_RestoreThread(_save); \
+//                 }
+//
+//#else /* !WITH_THREAD */
 
 #define Py_BEGIN_ALLOW_THREADS {
 #define Py_BLOCK_THREADS
 #define Py_UNBLOCK_THREADS
 #define Py_END_ALLOW_THREADS }
 
-#endif /* !WITH_THREAD */
+//#endif /* !WITH_THREAD */
 
 PyAPI_FUNC(int) _PyEval_SliceIndex(PyObject *, Py_ssize_t *);
 PyAPI_FUNC(int) _PyEval_SliceIndexNotNone(PyObject *, Py_ssize_t *);

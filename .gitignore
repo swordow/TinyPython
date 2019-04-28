@@ -1,0 +1,6 @@
+.vscode/*
+*.pyc
+PCbuild/.vs/*
+PCbuild/obj/*
+**.vs
+*.exp

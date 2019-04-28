@@ -1,7 +1,7 @@
 
 /* Computation of FIRST stets */
 
-#include "pgenheaders.h"
+#include "Python.h"
 #include "grammar.h"
 #include "token.h"
 

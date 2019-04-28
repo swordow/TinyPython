@@ -11,7 +11,7 @@ forgotten) from the programmer.
 #include "Python.h"
 #include "windows.h"
 
-#ifdef Py_ENABLE_SHARED
+
 char dllVersionBuffer[16] = ""; // a private buffer
 
 // Python Globals
@@ -19,7 +19,7 @@ HMODULE PyWin_DLLhModule = NULL;
 const char *PyWin_DLLVersionString = dllVersionBuffer;
 
 // Windows "Activation Context" work:
-// Our .pyd extension modules are generally built without a manifest (ie,
+// Our .tpyd extension modules are generally built without a manifest (ie,
 // those included with Python and those built with a default distutils.
 // This requires we perform some "activation context" magic when loading our
 // extensions.  In summary:
@@ -75,7 +75,7 @@ void _Py_DeactivateActCtx(ULONG_PTR cookie)
         if (!(*pfnDeactivateActCtx)(0, cookie))
             OutputDebugString("Python failed to de-activate the activation context\n");
 }
-
+#ifdef Py_ENABLE_SHARED
 BOOL    WINAPI  DllMain (HANDLE hInst,
                                                 ULONG ul_reason_for_call,
                                                 LPVOID lpReserved)

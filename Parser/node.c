@@ -56,7 +56,7 @@ fancy_roundup(int n)
  * most nodes with more than one child have <= 4 kids.
  *
  * Else we call fancy_roundup() to grow proportionately to n.  We've got an
- * extreme case then (like test_longexp.py), and on many platforms doing
+ * extreme case then (like test_longexp.tpy), and on many platforms doing
  * anything less than proportional growth leads to exorbitant runtime
  * (e.g., MacPython), or extreme fragmentation of user address space (e.g.,
  * Win98).

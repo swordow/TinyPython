@@ -15,14 +15,14 @@
 #       file_input is a module or sequence of commands read from an input file;
 #       eval_input is the input for the eval() and input() functions.
 # NB: compound_stmt in single_input is followed by extra NEWLINE!
-single_input: NEWLINE | simple_stmt | compound_stmt NEWLINE
-file_input: (NEWLINE | stmt)* ENDMARKER
-eval_input: testlist NEWLINE* ENDMARKER
+single_input: simple_stmt ';'| compound_stmt ';' 
+file_input: (stmt)* ENDMARKER
+eval_input: testlist ENDMARKER
 
-decorator: '@' dotted_name [ '(' [arglist] ')' ] NEWLINE
+decorator: '@' dotted_name [ '(' [arglist] ')' ] ';'
 decorators: decorator+
 decorated: decorators (classdef | funcdef)
-funcdef: 'def' NAME parameters ':' suite
+funcdef: 'def' NAME parameters   '{' suite '}'
 parameters: '(' [varargslist] ')'
 varargslist: ((fpdef ['=' test] ',')*
               ('*' NAME [',' '**' NAME] | '**' NAME) |
@@ -31,7 +31,7 @@ fpdef: NAME | '(' fplist ')'
 fplist: fpdef (',' fpdef)* [',']
 
 stmt: simple_stmt | compound_stmt
-simple_stmt: small_stmt (';' small_stmt)* [';'] NEWLINE
+simple_stmt: (small_stmt ';')+
 small_stmt: (expr_stmt | print_stmt  | del_stmt | pass_stmt | flow_stmt |
              import_stmt | global_stmt | exec_stmt | assert_stmt)
 expr_stmt: testlist (augassign (yield_expr|testlist) |
@@ -63,19 +63,19 @@ exec_stmt: 'exec' expr ['in' test [',' test]]
 assert_stmt: 'assert' test [',' test]
 
 compound_stmt: if_stmt | while_stmt | for_stmt | try_stmt | with_stmt | funcdef | classdef | decorated
-if_stmt: 'if' test ':' suite ('elif' test ':' suite)* ['else' ':' suite]
-while_stmt: 'while' test ':' suite ['else' ':' suite]
-for_stmt: 'for' exprlist 'in' testlist ':' suite ['else' ':' suite]
-try_stmt: ('try' ':' suite
-           ((except_clause ':' suite)+
-            ['else' ':' suite]
-            ['finally' ':' suite] |
-           'finally' ':' suite))
-with_stmt: 'with' with_item (',' with_item)*  ':' suite
+if_stmt: 'if' test   '{' suite '}' ('elif' test   '{' suite '}')* ['else'   '{' suite '}']
+while_stmt: 'while' test  '{' suite '}' ['else'   '{' suite '}']
+for_stmt: 'for' exprlist 'in' testlist   '{' suite '}' ['else'   '{' suite '}']
+try_stmt: ('try'   '{' suite '}'
+           ((except_clause    '{' suite '}')+
+            ['else'    '{' suite '}']
+            ['finally'    '{' suite '}'] |
+           'finally'    '{' suite '}'))
+with_stmt: 'with' with_item (',' with_item)*    '{' suite '}'
 with_item: test ['as' expr]
 # NB compile.c makes sure that the default except clause is last
-except_clause: 'except' [test [('as' | ',') test]]
-suite: simple_stmt | NEWLINE INDENT stmt+ DEDENT
+except_clause: 'except' test [('as' | ',') test]
+suite:  stmt+  
 
 # Backward compatibility cruft to support:
 # [ x for x in lambda: True, lambda: False if x() ]
@@ -84,7 +84,7 @@ suite: simple_stmt | NEWLINE INDENT stmt+ DEDENT
 # (But not a mix of the two)
 testlist_safe: old_test [(',' old_test)+ [',']]
 old_test: or_test | old_lambdef
-old_lambdef: 'lambda' [varargslist] ':' old_test
+old_lambdef: 'lambda' [varargslist] '{' old_test '}'
 
 test: or_test ['if' or_test 'else' test] | lambdef
 or_test: and_test ('or' and_test)*
@@ -107,7 +107,7 @@ atom: ('(' [yield_expr|testlist_comp] ')' |
        NAME | NUMBER | STRING+)
 listmaker: test ( list_for | (',' test)* [','] )
 testlist_comp: test ( comp_for | (',' test)* [','] )
-lambdef: 'lambda' [varargslist] ':' test
+lambdef: 'lambda' [varargslist]   '{' test   '}'
 trailer: '(' [arglist] ')' | '[' subscriptlist ']' | '.' NAME
 subscriptlist: subscript (',' subscript)* [',']
 subscript: '.' '.' '.' | test | [test] ':' [test] [sliceop]
@@ -117,7 +117,7 @@ testlist: test (',' test)* [',']
 dictorsetmaker: ( (test ':' test (comp_for | (',' test ':' test)* [','])) |
                   (test (comp_for | (',' test)* [','])) )
 
-classdef: 'class' NAME ['(' [testlist] ')'] ':' suite
+classdef: 'class' NAME ['(' [testlist] ')']   '{' suite '}'
 
 arglist: (argument ',')* (argument [',']
                          |'*' test (',' argument)* [',' '**' test] 

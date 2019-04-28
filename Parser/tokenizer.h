@@ -25,10 +25,10 @@ struct tok_state {
     /* NB If done != E_OK, cur must be == inp!!! */
     FILE *fp;           /* Rest of input; NULL if tokenizing a string */
     int tabsize;        /* Tab spacing */
-    int indent;         /* Current indentation index */
-    int indstack[MAXINDENT];            /* Stack of indents */
+   // int indent;         /* Current indentation index */
+   // int indstack[MAXINDENT];            /* Stack of indents */
     int atbol;          /* Nonzero if at begin of new line */
-    int pendin;         /* Pending indents (if > 0) or dedents (if < 0) */
+   // int pendin;         /* Pending indents (if > 0) or dedents (if < 0) */
     char *prompt, *nextprompt;          /* For interactive prompting */
     int lineno;         /* Current line number */
     int level;          /* () [] {} Parentheses nesting level */

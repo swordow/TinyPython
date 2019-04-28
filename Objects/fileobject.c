@@ -348,7 +348,7 @@ open_the_file(PyFileObject *f, char *name, char *mode)
         goto cleanup;
     }
 
-    /* rexec.py can't stop a user from getting the file() constructor --
+    /* rexec.tpy can't stop a user from getting the file() constructor --
        all they have to do is get *any* file object f, and then do
        type(f).  Here we prevent them from doing damage with it. */
     if (PyEval_GetRestricted()) {
@@ -1230,7 +1230,7 @@ writes something into the buffer, can it write into any position beyond the
 required trailing null byte?  MSVC 6 fgets does not, and no platform is (yet)
 known on which it does; and it would be a strange way to code fgets. Still,
 getline_via_fgets may not work correctly if it does.  The std test
-test_bufio.py should fail if platform fgets() routinely writes beyond the
+test_bufio.tpy should fail if platform fgets() routinely writes beyond the
 trailing null byte.  #define DONT_USE_FGETS_IN_GETLINE to disable this code.
 **************************************************************************/
 

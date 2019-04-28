@@ -74,12 +74,12 @@
    thread is not the main_thread, send the signal to the main_thread.
 */
 
-#ifdef WITH_THREAD
-#include <sys/types.h> /* For pid_t */
-#include "pythread.h"
-static long main_thread;
-static pid_t main_pid;
-#endif
+//#ifdef WITH_THREAD
+//#include <sys/types.h> /* For pid_t */
+//#include "pythread.h"
+//static long main_thread;
+//static pid_t main_pid;
+//#endif
 
 static struct {
     int tripped;
@@ -189,10 +189,10 @@ signal_handler(int sig_num)
     else
 #endif
     {
-#ifdef WITH_THREAD
-    /* See NOTES section above */
-    if (getpid() == main_pid)
-#endif
+//#ifdef WITH_THREAD
+//    /* See NOTES section above */
+//    if (getpid() == main_pid)
+//#endif
     {
         trip_signal(sig_num);
     }
@@ -287,13 +287,13 @@ signal_signal(PyObject *self, PyObject *args)
             return NULL;
     }
 #endif
-#ifdef WITH_THREAD
-    if (PyThread_get_thread_ident() != main_thread) {
-        PyErr_SetString(PyExc_ValueError,
-                        "signal only works in main thread");
-        return NULL;
-    }
-#endif
+//#ifdef WITH_THREAD
+//    if (PyThread_get_thread_ident() != main_thread) {
+//        PyErr_SetString(PyExc_ValueError,
+//                        "signal only works in main thread");
+//        return NULL;
+//    }
+//#endif
     if (sig_num < 1 || sig_num >= NSIG) {
         PyErr_SetString(PyExc_ValueError,
                         "signal number out of range");
@@ -408,13 +408,13 @@ signal_set_wakeup_fd(PyObject *self, PyObject *args)
     int fd, old_fd;
     if (!PyArg_ParseTuple(args, "i:set_wakeup_fd", &fd))
         return NULL;
-#ifdef WITH_THREAD
-    if (PyThread_get_thread_ident() != main_thread) {
-        PyErr_SetString(PyExc_ValueError,
-                        "set_wakeup_fd only works in main thread");
-        return NULL;
-    }
-#endif
+//#ifdef WITH_THREAD
+//    if (PyThread_get_thread_ident() != main_thread) {
+//        PyErr_SetString(PyExc_ValueError,
+//                        "set_wakeup_fd only works in main thread");
+//        return NULL;
+//    }
+//#endif
     if (fd != -1 && (!_PyVerify_fd(fd) || fstat(fd, &buf) != 0)) {
         PyErr_SetString(PyExc_ValueError, "invalid fd");
         return NULL;
@@ -574,10 +574,10 @@ initsignal(void)
     PyObject *m, *d, *x;
     int i;
 
-#ifdef WITH_THREAD
-    main_thread = PyThread_get_thread_ident();
-    main_pid = getpid();
-#endif
+//#ifdef WITH_THREAD
+//    main_thread = PyThread_get_thread_ident();
+//    main_pid = getpid();
+//#endif
 
     /* Create the module and add the functions */
     m = Py_InitModule3("signal", signal_methods, module_doc);
@@ -894,10 +894,10 @@ PyErr_CheckSignals(void)
     if (!is_tripped)
         return 0;
 
-#ifdef WITH_THREAD
-    if (PyThread_get_thread_ident() != main_thread)
-        return 0;
-#endif
+//#ifdef WITH_THREAD
+//    if (PyThread_get_thread_ident() != main_thread)
+//        return 0;
+//#endif
 
     /*
      * The is_tripped variable is meant to speed up the calls to
@@ -966,10 +966,10 @@ int
 PyOS_InterruptOccurred(void)
 {
     if (Handlers[SIGINT].tripped) {
-#ifdef WITH_THREAD
-        if (PyThread_get_thread_ident() != main_thread)
-            return 0;
-#endif
+//#ifdef WITH_THREAD
+//        if (PyThread_get_thread_ident() != main_thread)
+//            return 0;
+//#endif
         Handlers[SIGINT].tripped = 0;
         return 1;
     }
@@ -995,13 +995,13 @@ PyOS_AfterFork(void)
      * in both processes if they came in just before the fork() but before
      * the interpreter had an opportunity to call the handlers.  issue9535. */
     _clear_pending_signals();
-#ifdef WITH_THREAD
-    /* PyThread_ReInitTLS() must be called early, to make sure that the TLS API
-     * can be called safely. */
-    PyThread_ReInitTLS();
-    PyEval_ReInitThreads();
-    main_thread = PyThread_get_thread_ident();
-    main_pid = getpid();
-    _PyImport_ReInitLock();
-#endif
+//#ifdef WITH_THREAD
+//    /* PyThread_ReInitTLS() must be called early, to make sure that the TLS API
+//     * can be called safely. */
+//    PyThread_ReInitTLS();
+//    PyEval_ReInitThreads();
+//    main_thread = PyThread_get_thread_ident();
+//    main_pid = getpid();
+//    _PyImport_ReInitLock();
+//#endif
 }

@@ -1184,7 +1184,7 @@ strop_replace(PyObject *self, PyObject *args)
         return NULL;
     }
     /* CAUTION:  strop treats a replace count of 0 as infinity, unlke
-     * current (2.1) string.py and string methods.  Preserve this for
+     * current (2.1) string.tpy and string methods.  Preserve this for
      * ... well, hard to say for what <wink>.
      */
     if (count == 0)

@@ -670,7 +670,7 @@ init_io(void)
     ADD_TYPE(&_PyExc_BlockingIOError, "BlockingIOError");
 
     /* Concrete base types of the IO ABCs.
-       (the ABCs themselves are declared through inheritance in io.py)
+       (the ABCs themselves are declared through inheritance in io.tpy)
     */
     ADD_TYPE(&PyIOBase_Type, "_IOBase");
     ADD_TYPE(&PyRawIOBase_Type, "_RawIOBase");

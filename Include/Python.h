@@ -26,9 +26,9 @@
 #error "Python's source code assumes C's unsigned char is an 8-bit type."
 #endif
 
-#if defined(__sgi) && defined(WITH_THREAD) && !defined(_SGI_MP_SOURCE)
-#define _SGI_MP_SOURCE
-#endif
+//#if defined(__sgi) && defined(WITH_THREAD) && !defined(_SGI_MP_SOURCE)
+//#define _SGI_MP_SOURCE
+//#endif
 
 #include <stdio.h>
 #ifndef NULL
@@ -156,7 +156,12 @@ PyAPI_FUNC(PyObject*) _Py_Mangle(PyObject *p, PyObject *name);
 /* Argument must be a char or an int in [-128, 127] or [0, 255]. */
 #define Py_CHARMASK(c)		((unsigned char)((c) & 0xff))
 
+#ifdef WANT_SIGFPE_HANDLER
 #include "pyfpe.h"
+#else
+#define PyFPE_START_PROTECT(err_string, leave_stmt)
+#define PyFPE_END_PROTECT(v)
+#endif
 
 /* These definitions must match corresponding definitions in graminit.h.
    There's code in compile.c that checks that they are the same. */

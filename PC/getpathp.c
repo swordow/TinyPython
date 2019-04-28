@@ -23,7 +23,7 @@
 
    * We attempt to locate the "Python Home" - if the PYTHONHOME env var
      is set, we believe it.  Otherwise, we use the path of our host .EXE's
-     to try and locate our "landmark" (lib\\os.py) and deduce our home.
+     to try and locate our "landmark" (lib\\os.tpy) and deduce our home.
      - If we DO have a Python Home: The relevant sub-directories (Lib,
        plat-win, lib-tk, etc) are based on the Python Home
      - If we DO NOT have a Python Home, the core Python Path is
@@ -82,7 +82,7 @@
  */
 
 #ifndef LANDMARK
-#define LANDMARK "lib\\os.py"
+#define LANDMARK "lib\\os.tpy"
 #endif
 
 static char prefix[MAXPATHLEN+1];
@@ -125,7 +125,7 @@ exists(char *filename)
    may extend 'filename' by one character.
 */
 static int
-ismodule(char *filename)        /* Is module -- check for .pyc/.pyo too */
+ismodule(char *filename)        /* Is module -- check for .tpyc/.tpyo too */
 {
     if (exists(filename))
         return 1;

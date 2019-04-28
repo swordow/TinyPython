@@ -1,8 +1,8 @@
 
-#include "pgenheaders.h"
+#include "Python.h"
 #include "metagrammar.h"
 #include "grammar.h"
-#include "pgen.h"
+//#include "pgen.h"
 static arc arcs_0_0[3] = {
     {2, 0},
     {3, 0},
