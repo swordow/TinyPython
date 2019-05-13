@@ -101,7 +101,7 @@
 #endif
 
 #ifndef LANDMARK
-#define LANDMARK "os.py"
+#define LANDMARK "os.tpy"
 #endif
 
 static char prefix[MAXPATHLEN+1];

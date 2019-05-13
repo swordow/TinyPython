@@ -4,3 +4,4 @@ PCbuild/.vs/*
 PCbuild/obj/*
 **.vs
 *.exp
+*.tpyc

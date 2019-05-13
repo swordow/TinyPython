@@ -45,7 +45,7 @@ extern BOOL PyWin_IsWin32s(void);
  */
 
 #ifndef LANDMARK
-#define LANDMARK "lib\\os.py"
+#define LANDMARK "lib\\os.tpy"
 #endif
 
 static char prefix[MAXPATHLEN+1];

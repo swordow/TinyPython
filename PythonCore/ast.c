@@ -3016,11 +3016,11 @@ ast_for_for_stmt(struct compiling *c, const node *n)
 static excepthandler_ty
 ast_for_except_clause(struct compiling *c, const node *exc, node *body)
 {
-    /* except_clause: 'except' [test [(',' | 'as') test]] */
+    /* except_clause: 'except' test [(',' | 'as') test] */
     REQ(exc, except_clause);
     REQ(body, suite);
-
-    if (NCH(exc) == 1) {
+    assert(NCH(exc) >= 2);
+    /*if (NCH(exc) == 2) {
         asdl_seq *suite_seq = ast_for_suite(c, body);
         if (!suite_seq)
             return NULL;
@@ -3028,7 +3028,7 @@ ast_for_except_clause(struct compiling *c, const node *exc, node *body)
         return ExceptHandler(NULL, NULL, suite_seq, LINENO(exc),
                              exc->n_col_offset, c->c_arena);
     }
-    else if (NCH(exc) == 2) {
+    else*/ if (NCH(exc) == 2) {
         expr_ty expression;
         asdl_seq *suite_seq;
 
@@ -3078,7 +3078,7 @@ static stmt_ty
 ast_for_try_stmt(struct compiling *c, const node *n)
 {
     const int nch = NCH(n);
-    int n_except = (nch - 4)/3;
+    int n_except = (nch - 4)/4;
 	//int finally_pos = nch - 4;
 	//int else_pos = nch - 8;
     asdl_seq *body, *orelse = NULL, *finally = NULL;

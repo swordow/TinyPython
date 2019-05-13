@@ -73,9 +73,9 @@
 
 #ifndef LANDMARK
 #if defined(PYCC_GCC)
-#define LANDMARK "lib/os.py"
+#define LANDMARK "lib/os.tpy"
 #else
-#define LANDMARK "lib\\os.py"
+#define LANDMARK "lib\\os.tpy"
 #endif
 #endif
 
