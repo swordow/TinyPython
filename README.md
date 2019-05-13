@@ -22,12 +22,15 @@ Python:
       
 Tiny Python:
 
-    try {
+    try 
+    {
       if True
       {
         print "If True";
       }
-    } except Exception {
+    } 
+    except Exception 
+    {
       print "except must have one expression...";
     }
     
