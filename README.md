@@ -7,20 +7,32 @@ In fact, some cases, indent makes a mass..,
 so modify the grammar a little.
 
 # Difference
-Code Block lies between '{' '}' as well as c/c++ language.
+
+* Using '{' and '}', Code Block lies between '{' '}' as well as c/c++ language.
+* Statement must ends with ';'
+* In 'try except' statement, except must be followed with a expression
 
 Python:
   
-    if True:
-      print "If True"
+    try:
+      if True:
+        print "If True"
+    except:
+      print "except could with none parameter"
       
 Tiny Python:
 
-    if True
-    {
-      print "If True";
+    try {
+      if True
+      {
+        print "If True";
+      }
+    } except Exception {
+      print "except must have one expression...";
     }
     
+
+
 # Build & Install
 Build is based on python-cmake-buildsystem, after checking out the repo, update the python-cmake-buildsystem submodule, and switch to **ForTPY** Branch.
 
