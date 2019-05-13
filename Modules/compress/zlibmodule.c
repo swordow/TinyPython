@@ -8,40 +8,40 @@
 #include "Python.h"
 #include "zlib.h"
 
-#ifdef WITH_THREAD
-#include "pythread.h"
-
-/* #defs ripped off from _tkinter.c, even though the situation here is much
-   simpler, because we don't have to worry about waiting for Tcl
-   events!  And, since zlib itself is threadsafe, we don't need to worry
-   about re-entering zlib functions.
-
-   N.B.
-
-   Since ENTER_ZLIB and LEAVE_ZLIB only need to be called on functions
-   that modify the components of preexisting de/compress objects, it
-   could prove to be a performance gain on multiprocessor machines if
-   there was an de/compress object-specific lock.  However, for the
-   moment the ENTER_ZLIB and LEAVE_ZLIB calls are global for ALL
-   de/compress objects.
- */
-
-static PyThread_type_lock zlib_lock = NULL; /* initialized on module load */
-
-#define ENTER_ZLIB \
-        Py_BEGIN_ALLOW_THREADS \
-        PyThread_acquire_lock(zlib_lock, 1); \
-        Py_END_ALLOW_THREADS
-
-#define LEAVE_ZLIB \
-        PyThread_release_lock(zlib_lock);
-
-#else
+//#ifdef WITH_THREAD
+//#include "pythread.h"
+//
+///* #defs ripped off from _tkinter.c, even though the situation here is much
+//   simpler, because we don't have to worry about waiting for Tcl
+//   events!  And, since zlib itself is threadsafe, we don't need to worry
+//   about re-entering zlib functions.
+//
+//   N.B.
+//
+//   Since ENTER_ZLIB and LEAVE_ZLIB only need to be called on functions
+//   that modify the components of preexisting de/compress objects, it
+//   could prove to be a performance gain on multiprocessor machines if
+//   there was an de/compress object-specific lock.  However, for the
+//   moment the ENTER_ZLIB and LEAVE_ZLIB calls are global for ALL
+//   de/compress objects.
+// */
+//
+//static PyThread_type_lock zlib_lock = NULL; /* initialized on module load */
+//
+//#define ENTER_ZLIB \
+//        Py_BEGIN_ALLOW_THREADS \
+//        PyThread_acquire_lock(zlib_lock, 1); \
+//        Py_END_ALLOW_THREADS
+//
+//#define LEAVE_ZLIB \
+//        PyThread_release_lock(zlib_lock);
+//
+//#else
 
 #define ENTER_ZLIB
 #define LEAVE_ZLIB
 
-#endif
+//#endif
 
 /* The following parameters are copied from zutil.h, version 0.95 */
 #define DEFLATED   8
@@ -1157,7 +1157,7 @@ PyInit_zlib(void)
 
     PyModule_AddStringConstant(m, "__version__", "1.0");
 
-#ifdef WITH_THREAD
-    zlib_lock = PyThread_allocate_lock();
-#endif /* WITH_THREAD */
+//#ifdef WITH_THREAD
+//    zlib_lock = PyThread_allocate_lock();
+//#endif /* WITH_THREAD */
 }
