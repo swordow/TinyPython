@@ -55,8 +55,8 @@ def main(){
 
     args = sys.argv[1:];
     iptfile = args and args[0] or "Python/graminit.c";
-    if len(args) > 1{ optfile = args[1];
-    else{ optfile = "Lib/keyword.py";
+    if len(args) > 1{ optfile = args[1];}
+    else{ optfile = "Lib/keyword.py";}
 
     # scan the source file for keywords
     fp = open(iptfile);

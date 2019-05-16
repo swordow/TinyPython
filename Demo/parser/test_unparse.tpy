@@ -10,7 +10,7 @@ import unparse;
 def read_pyfile(filename){
     """Read and return the contents of a Python source file (as a
     string), taking into account the file encoding.""";
-    with open(filename, "r") as pyfile:
+    with open(filename, "r") as pyfile{
         source = pyfile.read();
     } return source;
 

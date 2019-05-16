@@ -224,7 +224,7 @@ def _complain_ifclosed(closed){
         There is no return value.
         """;
         _complain_ifclosed(self.closed);
-        if not s{ return;
+        if not s{ return;}
         # Force s to be a string or unicode
         if not isinstance(s, basestring){
             s = str(s);

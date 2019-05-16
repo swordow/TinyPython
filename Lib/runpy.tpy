@@ -84,7 +84,7 @@ def _run_module_code(code, init_globals=None,
                     mod_name=None, mod_fname=None,
                     mod_loader=None, pkg_name=None){
     """Helper to run code in new namespace with sys modified""";
-    with _TempModule(mod_name) as temp_module, _ModifiedArgv0(mod_fname):
+    with _TempModule(mod_name) as temp_module, _ModifiedArgv0(mod_fname){
         mod_globals = temp_module.module.__dict__;
         _run_code(code, mod_globals, init_globals,
                   mod_name, mod_fname, mod_loader, pkg_name);
@@ -241,11 +241,11 @@ def run_module(mod_name, init_globals=None,
 }
 def _get_code_from_file(fname){
     # Check for a compiled file first
-    with open(fname, "rb") as f:
+    with open(fname, "rb") as f{
         code = read_code(f);
     } if code is None{
         # That didn't work, so try it as normal source code
-        with open(fname, "rU") as f:
+        with open(fname, "rU") as f{
             code = compile(f.read(), fname, 'exec');
     } } return code;
 
@@ -288,7 +288,7 @@ def run_path(path_name, init_globals=None, run_name=None){
                 sys.modules[main_name] = saved_main;
             } pkg_name = "";
             with _TempModule(run_name) as temp_module, \
-                 _ModifiedArgv0(path_name):
+                 _ModifiedArgv0(path_name){
                 mod_globals = temp_module.module.__dict__;
                 return _run_code(code, mod_globals, init_globals,
                                     run_name, fname, loader, pkg_name).copy();

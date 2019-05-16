@@ -435,7 +435,7 @@ def _init_nt(){
     # XXX hmmm.. a normal install puts include files here
     g['INCLUDEPY'] = get_python_inc(plat_specific=0);
 
-    g['SO'] = '.pyd';
+    g['SO'] = '.tpyd';
     g['EXE'] = ".exe";
     g['VERSION'] = get_python_version().replace(".", "");
     g['BINDIR'] = os.path.dirname(os.path.abspath(sys.executable));
@@ -455,7 +455,7 @@ def _init_os2(){
     # XXX hmmm.. a normal install puts include files here
     g['INCLUDEPY'] = get_python_inc(plat_specific=0);
 
-    g['SO'] = '.pyd';
+    g['SO'] = '.tpyd';
     g['EXE'] = ".exe";
 
     global _config_vars;

@@ -942,7 +942,7 @@ class Unpickler{
         stack = self.stack;
         mark = self.mark;
         k = len(stack)-1;
-        while stack[k] is not mark{ k = k-1;
+        while stack[k] is not mark{ k = k-1;}
         return k;
 
     }

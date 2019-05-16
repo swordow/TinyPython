@@ -1098,31 +1098,34 @@ validate_repeating_list(node *tree, int ntype, int (*vfunc)(node *),
  *
  *  classdef:
  *      'class' NAME ['(' testlist ')'] ':' suite
+ *  classdef:
+ *      'class' NAME ['(' testlist ')'] '{' suite '}'
  */
 static int
 validate_class(node *tree)
 {
     int nch = NCH(tree);
     int res = (validate_ntype(tree, classdef) &&
-                ((nch == 4) || (nch == 6) || (nch == 7)));
+                ((nch == 5) || (nch == 7) || (nch == 8)));
 
     if (res) {
         res = (validate_name(CHILD(tree, 0), "class")
                && validate_ntype(CHILD(tree, 1), NAME)
-               && validate_colon(CHILD(tree, nch - 2))
-               && validate_suite(CHILD(tree, nch - 1)));
+               && validate_lbrace(CHILD(tree, nch - 3))
+               && validate_suite(CHILD(tree, nch - 2))
+			   && validate_rbrace(CHILD(tree, nch - 1)));
     }
     else {
-        (void) validate_numnodes(tree, 4, "class");
+        (void) validate_numnodes(tree, 5, "class");
     }
 
     if (res) {
-        if (nch == 7) {
+        if (nch == 8) {
                 res = ((validate_lparen(CHILD(tree, 2)) &&
                         validate_testlist(CHILD(tree, 3)) &&
                         validate_rparen(CHILD(tree, 4))));
         }
-        else if (nch == 6) {
+        else if (nch == 7) {
                 res = (validate_lparen(CHILD(tree,2)) &&
                         validate_rparen(CHILD(tree,3)));
         }
@@ -1204,31 +1207,36 @@ validate_parameters(node *tree)
  *  suite:
  *      simple_stmt
  *    | NEWLINE INDENT stmt+ DEDENT
+ *  suite:
+		stmt+
  */
 static int
 validate_suite(node *tree)
 {
     int nch = NCH(tree);
-    int res = (validate_ntype(tree, suite) && ((nch == 1) || (nch >= 4)));
+    //int res = (validate_ntype(tree, suite) && ((nch == 1) || (nch >= 4)));
+	int res = (validate_ntype(tree, suite) && ((nch >= 1)));
+	int i = 0;
+	for (; res && (i < nch); ++i)
+		res = validate_stmt(CHILD(tree, i));
+    //if (res && (nch == 1))
+    //    res = validate_simple_stmt(CHILD(tree, 0));
+    //else if (res) {
+    //    /*  NEWLINE INDENT stmt+ DEDENT  */
+    //    res = (validate_newline(CHILD(tree, 0))
+    //           && validate_indent(CHILD(tree, 1))
+    //           && validate_stmt(CHILD(tree, 2))
+    //           && validate_dedent(CHILD(tree, nch - 1)));
 
-    if (res && (nch == 1))
-        res = validate_simple_stmt(CHILD(tree, 0));
-    else if (res) {
-        /*  NEWLINE INDENT stmt+ DEDENT  */
-        res = (validate_newline(CHILD(tree, 0))
-               && validate_indent(CHILD(tree, 1))
-               && validate_stmt(CHILD(tree, 2))
-               && validate_dedent(CHILD(tree, nch - 1)));
-
-        if (res && (nch > 4)) {
-            int i = 3;
-            --nch;                      /* forget the DEDENT     */
-            for ( ; res && (i < nch); ++i)
-                res = validate_stmt(CHILD(tree, i));
-        }
-        else if (nch < 4)
-            res = validate_numnodes(tree, 4, "suite");
-    }
+    //    if (res && (nch > 4)) {
+    //        int i = 3;
+    //        --nch;                      /* forget the DEDENT     */
+    //        for ( ; res && (i < nch); ++i)
+    //            res = validate_stmt(CHILD(tree, i));
+    //    }
+    //    else if (nch < 4)
+    //        res = validate_numnodes(tree, 4, "suite");
+    //}
     return (res);
 }
 
@@ -1574,7 +1582,7 @@ validate_stmt(node *tree)
 
 
 /*  small_stmt (';' small_stmt)* [';'] NEWLINE
- *
+ * -> (small_stmt ';')+
  */
 static int
 validate_simple_stmt(node *tree)
@@ -1583,19 +1591,20 @@ validate_simple_stmt(node *tree)
     int res = (validate_ntype(tree, simple_stmt)
                && (nch >= 2)
                && validate_small_stmt(CHILD(tree, 0))
-               && validate_newline(CHILD(tree, nch - 1)));
+               && validate_semi(CHILD(tree, nch - 1)));
 
-    if (nch < 2)
-        res = validate_numnodes(tree, 2, "simple_stmt");
-    --nch;                              /* forget the NEWLINE    */
-    if (res && is_even(nch))
-        res = validate_semi(CHILD(tree, --nch));
+    //if (nch < 2)
+    //    res = validate_numnodes(tree, 1, "simple_stmt");
+    //--nch;                              /* forget the NEWLINE    */
+    //if (res && is_even(nch))
+    //    res = validate_semi(CHILD(tree, --nch));
+
     if (res && (nch > 2)) {
         int i;
 
-        for (i = 1; res && (i < nch); i += 2)
-            res = (validate_semi(CHILD(tree, i))
-                   && validate_small_stmt(CHILD(tree, i + 1)));
+        for (i = 0; res && (i < nch); i += 2)
+            res = (validate_semi(CHILD(tree, i+1))
+                   && validate_small_stmt(CHILD(tree, i)));
     }
     return (res);
 }
@@ -2096,16 +2105,18 @@ validate_while(node *tree)
 {
     int nch = NCH(tree);
     int res = (validate_ntype(tree, while_stmt)
-               && ((nch == 4) || (nch == 7))
+               && ((nch == 5) || (nch == 9))
                && validate_name(CHILD(tree, 0), "while")
                && validate_test(CHILD(tree, 1))
-               && validate_colon(CHILD(tree, 2))
-               && validate_suite(CHILD(tree, 3)));
+               && validate_lbrace(CHILD(tree, 2))
+               && validate_suite(CHILD(tree, 3))
+			   && validate_rbrace(CHILD(tree, 4)));
 
-    if (res && (nch == 7))
-        res = (validate_name(CHILD(tree, 4), "else")
-               && validate_colon(CHILD(tree, 5))
-               && validate_suite(CHILD(tree, 6)));
+    if (res && (nch == 9))
+        res = (validate_name(CHILD(tree, 5), "else")
+               && validate_lbrace(CHILD(tree, 6))
+               && validate_suite(CHILD(tree, 7))
+			   && validate_rbrace(CHILD(tree, 8)));
 
     return (res);
 }
@@ -2123,13 +2134,13 @@ validate_for(node *tree)
                && validate_testlist(CHILD(tree, 3))
                && validate_lbrace(CHILD(tree, 4))
                && validate_suite(CHILD(tree, 5))
-			   && validate_lbrace(CHILD(tree, 6)));
+			   && validate_rbrace(CHILD(tree, 6)));
 
     if (res && (nch == 11))
         res = (validate_name(CHILD(tree, 7), "else")
                && validate_lbrace(CHILD(tree, 8))
                && validate_suite(CHILD(tree, 9))
-			   && validate_suite(CHILD(tree, 10)));
+			   && validate_rbrace(CHILD(tree, 10)));
 
     return (res);
 }
@@ -2733,11 +2744,12 @@ validate_with_stmt(node *tree)
     int i;
     int nch = NCH(tree);
     int ok = (validate_ntype(tree, with_stmt)
-        && (nch % 2 == 0)
+        && (nch % 2 == 1 && nch >=5)
         && validate_name(CHILD(tree, 0), "with")
-        && validate_colon(RCHILD(tree, -2))
-        && validate_suite(RCHILD(tree, -1)));
-    for (i = 1; ok && i < nch - 2; i += 2)
+        && validate_lbrace(RCHILD(tree, -3))
+        && validate_suite(RCHILD(tree, -2))
+		&& validate_rbrace(RCHILD(tree, -1)));
+    for (i = 1; ok && i < nch - 3; i += 2)
         ok = validate_with_item(CHILD(tree, i));
     return ok;
 }
@@ -2746,18 +2758,21 @@ validate_with_stmt(node *tree)
  *
  *     -5   -4         -3  -2    -1
  *  'def' NAME parameters ':' suite
+ *     -6   -5         -4  -3    -2  -1
+ *  'def' NAME parameters '{' suite '}'
  */
 static int
 validate_funcdef(node *tree)
 {
     int nch = NCH(tree);
     int ok = (validate_ntype(tree, funcdef)
-               && (nch == 5)
-               && validate_name(RCHILD(tree, -5), "def")
-               && validate_ntype(RCHILD(tree, -4), NAME)
-               && validate_colon(RCHILD(tree, -2))
-               && validate_parameters(RCHILD(tree, -3))
-               && validate_suite(RCHILD(tree, -1)));
+               && (nch == 6)
+               && validate_name(RCHILD(tree, -6), "def")
+               && validate_ntype(RCHILD(tree, -5), NAME)
+			   && validate_parameters(RCHILD(tree, -4))
+               && validate_lbrace(RCHILD(tree, -3))
+               && validate_suite(RCHILD(tree, -2))
+			   && validate_rbrace(RCHILD(tree, -1)));
     return ok;
 }
 
@@ -2784,15 +2799,16 @@ validate_lambdef(node *tree)
 {
     int nch = NCH(tree);
     int res = (validate_ntype(tree, lambdef)
-               && ((nch == 3) || (nch == 4))
+               && ((nch == 4) || (nch == 5))
                && validate_name(CHILD(tree, 0), "lambda")
-               && validate_colon(CHILD(tree, nch - 2))
-               && validate_test(CHILD(tree, nch - 1)));
+               && validate_lbrace(CHILD(tree, nch - 3))
+               && validate_test(CHILD(tree, nch - 2))
+			   && validate_rbrace(CHILD(tree, nch - 1)));
 
     if (res && (nch == 4))
         res = validate_varargslist(CHILD(tree, 1));
     else if (!res && !PyErr_Occurred())
-        (void) validate_numnodes(tree, 3, "lambdef");
+        (void) validate_numnodes(tree, 4, "lambdef");
 
     return (res);
 }
@@ -2803,15 +2819,16 @@ validate_old_lambdef(node *tree)
 {
     int nch = NCH(tree);
     int res = (validate_ntype(tree, old_lambdef)
-               && ((nch == 3) || (nch == 4))
+               && ((nch == 4) || (nch == 5))
                && validate_name(CHILD(tree, 0), "lambda")
-               && validate_colon(CHILD(tree, nch - 2))
-               && validate_test(CHILD(tree, nch - 1)));
+               && validate_lbrace(CHILD(tree, nch - 3))
+               && validate_test(CHILD(tree, nch - 2))
+		       && validate_rbrace(CHILD(tree, nch - 1)));
 
-    if (res && (nch == 4))
+    if (res && (nch == 5))
         res = validate_varargslist(CHILD(tree, 1));
     else if (!res && !PyErr_Occurred())
-        (void) validate_numnodes(tree, 3, "old_lambdef");
+        (void) validate_numnodes(tree, 4, "old_lambdef");
 
     return (res);
 }
@@ -3374,10 +3391,10 @@ validate_file_input(node *tree)
                && validate_ntype(CHILD(tree, nch), ENDMARKER));
 
     for (j = 0; res && (j < nch); ++j) {
-        if (TYPE(CHILD(tree, j)) == stmt)
+        /*if (TYPE(CHILD(tree, j)) == stmt)*/
             res = validate_stmt(CHILD(tree, j));
-        else
-            res = validate_newline(CHILD(tree, j));
+      /*  else
+            res = validate_newline(CHILD(tree, j));*/
     }
     /*  This stays in to prevent any internal failures from getting to the
      *  user.  Hopefully, this won't be needed.  If a user reports getting
