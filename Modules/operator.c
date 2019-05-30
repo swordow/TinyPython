@@ -27,15 +27,15 @@ used for special methods; variants without leading and trailing\n\
   PyObject *a1, *a2; \
   if(! PyArg_UnpackTuple(a,#OP,2,2,&a1,&a2)) return NULL; \
   if(-1 == AOP(a1,a2)) return NULL; \
-  Py_INCREF(Py_None); \
-  return Py_None; }
+  Py_INCREF(Py_Nil); \
+  return Py_Nil; }
 
 #define spam3n(OP,AOP) static PyObject *OP(PyObject *s, PyObject *a) { \
   PyObject *a1, *a2, *a3; \
   if(! PyArg_UnpackTuple(a,#OP,3,3,&a1,&a2,&a3)) return NULL; \
   if(-1 == AOP(a1,a2,a3)) return NULL; \
-  Py_INCREF(Py_None); \
-  return Py_None; }
+  Py_INCREF(Py_Nil); \
+  return Py_Nil; }
 
 #define spami(OP,AOP) static PyObject *OP(PyObject *s, PyObject *a1) { \
   long r; \
@@ -142,7 +142,7 @@ op_pow(PyObject *s, PyObject *a)
 {
     PyObject *a1, *a2;
     if (PyArg_UnpackTuple(a,"pow", 2, 2, &a1, &a2))
-        return PyNumber_Power(a1, a2, Py_None);
+        return PyNumber_Power(a1, a2, Py_Nil);
     return NULL;
 }
 
@@ -151,7 +151,7 @@ op_ipow(PyObject *s, PyObject *a)
 {
     PyObject *a1, *a2;
     if (PyArg_UnpackTuple(a,"ipow", 2, 2, &a1, &a2))
-        return PyNumber_InPlacePower(a1, a2, Py_None);
+        return PyNumber_InPlacePower(a1, a2, Py_Nil);
     return NULL;
 }
 
@@ -206,7 +206,7 @@ op_setslice(PyObject *s, PyObject *a)
     if (-1 == PySequence_SetSlice(a1, a2, a3, a4))
         return NULL;
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject*
@@ -221,7 +221,7 @@ op_delslice(PyObject *s, PyObject *a)
     if (-1 == PySequence_DelSlice(a1, a2, a3))
         return NULL;
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 #undef spam1

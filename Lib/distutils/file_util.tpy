@@ -10,12 +10,12 @@ from distutils.errors import DistutilsFileError;
 from distutils import log;
 
 # for generating verbose output in 'copy_file()'
-_copy_action = {None: 'copying',
+_copy_action = {nil: 'copying',
                 'hard': 'hard linking',
                 'sym': 'symbolically linking'};
 
 
-def _copy_file_contents(src, dst, buffer_size=16*1024){
+function _copy_file_contents(src, dst, buffer_size=16*1024){
     """Copy the file 'src' to 'dst'.
 
     Both must be filenames. Any error opening either file, reading from
@@ -25,8 +25,8 @@ def _copy_file_contents(src, dst, buffer_size=16*1024){
     """;
     # Stolen from shutil module in the standard library, but with
     # custom error-handling added.
-    fsrc = None;
-    fdst = None;
+    fsrc = nil;
+    fdst = nil;
     try{
         try{
             fsrc = open(src, 'rb');
@@ -75,8 +75,8 @@ def _copy_file_contents(src, dst, buffer_size=16*1024){
             fsrc.close();
 
 }
-} } def copy_file(src, dst, preserve_mode=1, preserve_times=1, update=0,
-              link=None, verbose=1, dry_run=0){
+} } function copy_file(src, dst, preserve_mode=1, preserve_times=1, update=0,
+              link=nil, verbose=1, dry_run=0){
     """Copy a file 'src' to 'dst'.
 
     If 'dst' is a directory, then 'src' is copied there with the same name;
@@ -183,7 +183,7 @@ def _copy_file_contents(src, dst, buffer_size=16*1024){
 
 # XXX I suspect this is Unix-specific -- need porting help!
 }
-def move_file (src, dst, verbose=1, dry_run=0){
+function move_file (src, dst, verbose=1, dry_run=0){
     """Move a file 'src' to 'dst'.
 
     If 'dst' is a directory, the file will be moved into it with the same
@@ -250,7 +250,7 @@ def move_file (src, dst, verbose=1, dry_run=0){
 
 
 }
-def write_file (filename, contents){
+function write_file (filename, contents){
     """Create a file with the specified name and write 'contents' (a
     sequence of strings without line terminators) to it.
     """;

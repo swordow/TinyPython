@@ -258,8 +258,8 @@ static PyObject *Qdoffs_UnlockPixels(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &pm))
         return NULL;
     UnlockPixels(pm);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -327,8 +327,8 @@ static PyObject *Qdoffs_SetGWorld(PyObject *_self, PyObject *_args)
         return NULL;
     SetGWorld(port,
               gdh);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -343,8 +343,8 @@ static PyObject *Qdoffs_CTabChanged(PyObject *_self, PyObject *_args)
                           OptResObj_Convert, &ctab))
         return NULL;
     CTabChanged(ctab);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -359,8 +359,8 @@ static PyObject *Qdoffs_PixPatChanged(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &ppat))
         return NULL;
     PixPatChanged(ppat);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -375,8 +375,8 @@ static PyObject *Qdoffs_PortChanged(PyObject *_self, PyObject *_args)
                           GrafObj_Convert, &port))
         return NULL;
     PortChanged(port);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -391,8 +391,8 @@ static PyObject *Qdoffs_GDeviceChanged(PyObject *_self, PyObject *_args)
                           OptResObj_Convert, &gdh))
         return NULL;
     GDeviceChanged(gdh);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -407,8 +407,8 @@ static PyObject *Qdoffs_AllowPurgePixels(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &pm))
         return NULL;
     AllowPurgePixels(pm);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -423,8 +423,8 @@ static PyObject *Qdoffs_NoPurgePixels(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &pm))
         return NULL;
     NoPurgePixels(pm);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -459,8 +459,8 @@ static PyObject *Qdoffs_SetPixelsState(PyObject *_self, PyObject *_args)
         return NULL;
     SetPixelsState(pm,
                    state);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -518,8 +518,8 @@ static PyObject *Qdoffs_DisposeScreenBuffer(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &offscreenPixMap))
         return NULL;
     DisposeScreenBuffer(offscreenPixMap);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -626,8 +626,8 @@ static PyObject *Qdoffs_PutPixMapBytes(PyObject *_self, PyObject *_args)
         return NULL;
     cp = GetPixBaseAddr(pm)+from;
     memcpy(cp, icp, length);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 
 }

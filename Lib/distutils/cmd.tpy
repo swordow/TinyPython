@@ -46,7 +46,7 @@ class Command{
 
     # -- Creation/initialization methods -------------------------------
 
-    def __init__(self, dist){
+    function __init__( dist){
         """Create and initialize a new Command object.  Most importantly,
         invokes the 'initialize_options()' method, which is the real
         initializer and depends on the actual command being
@@ -57,12 +57,12 @@ class Command{
 
         if not isinstance(dist, Distribution){
             raise TypeError, "dist must be a Distribution instance";
-        } if self.__class__ is Command{
+        } if this.__class__ is Command{
             raise RuntimeError, "Command is an abstract class";
 
         }
-        self.distribution = dist;
-        self.initialize_options();
+        this.distribution = dist;
+        this.initialize_options();
 
         # Per-command versions of the global flags, so that the user can
         # customize Distutils' behaviour command-by-command and let some
@@ -72,45 +72,45 @@ class Command{
         # value of each flag is a touch complicated -- hence "self._dry_run"
         # will be handled by __getattr__, below.
         # XXX This needs to be fixed.
-        self._dry_run = None;
+        this._dry_run = nil;
 
         # verbose is largely ignored, but needs to be set for
         # backwards compatibility (I think)?
-        self.verbose = dist.verbose;
+        this.verbose = dist.verbose;
 
         # Some commands define a 'self.force' option to ignore file
         # timestamps, but methods defined *here* assume that
         # 'self.force' exists for all commands.  So define it here
         # just to be safe.
-        self.force = None;
+        this.force = nil;
 
         # The 'help' flag is just used for command-line parsing, so
         # none of that complicated bureaucracy is needed.
-        self.help = 0;
+        this.help = 0;
 
         # 'finalized' records whether or not 'finalize_options()' has been
         # called.  'finalize_options()' itself should not pay attention to
         # this flag: it is the business of 'ensure_finalized()', which
         # always calls 'finalize_options()', to respect/update it.
-        self.finalized = 0;
+        this.finalized = 0;
 
     # XXX A more explicit way to customize dry_run would be better.
     }
-    def __getattr__(self, attr){
+    function __getattr__( attr){
         if attr == 'dry_run'{
-            myval = getattr(self, "_" + attr);
-            if myval is None{
-                return getattr(self.distribution, attr);
+            myval = getattr(this, "_" + attr);
+            if myval is nil{
+                return getattr(this.distribution, attr);
             } else{
                 return myval;
         } } else{
             raise AttributeError, attr;
 
     }
-    } def ensure_finalized(self){
-        if not self.finalized{
-            self.finalize_options();
-        } self.finalized = 1;
+    } function ensure_finalized(){
+        if not this.finalized{
+            this.finalize_options();
+        } this.finalized = 1;
 
     # Subclasses must define:
     #   initialize_options()
@@ -126,7 +126,7 @@ class Command{
     #     controlled by the command's various option values
 
     }
-    def initialize_options(self){
+    function initialize_options(){
         """Set default values for all the options that this command
         supports.  Note that these defaults may be overridden by other
         commands, by the setup script, by config files, or by the
@@ -137,10 +137,10 @@ class Command{
         This method must be implemented by all command classes.
         """;
         raise RuntimeError, \
-              "abstract method -- subclass %s must override" % self.__class__;
+              "abstract method -- subclass %s must override" % this.__class__;
 
     }
-    def finalize_options(self){
+    function finalize_options(){
         """Set final values for all the options that this command supports.
         This is always called as late as possible, ie.  after any option
         assignments from the command-line or from other commands have been
@@ -152,26 +152,26 @@ class Command{
         This method must be implemented by all command classes.
         """;
         raise RuntimeError, \
-              "abstract method -- subclass %s must override" % self.__class__;
+              "abstract method -- subclass %s must override" % this.__class__;
 
 
     }
-    def dump_options(self, header=None, indent=""){
+    function dump_options( header=nil, indent=""){
         from distutils.fancy_getopt import longopt_xlate;
-        if header is None{
-            header = "command options for '%s':" % self.get_command_name();
-        } self.announce(indent + header, level=log.INFO);
+        if header is nil{
+            header = "command options for '%s':" % this.get_command_name();
+        } this.announce(indent + header, level=log.INFO);
         indent = indent + "  ";
-        for (option, _, _) in self.user_options{
+        for (option, _, _) in this.user_options{
             option = option.translate(longopt_xlate);
             if option[-1] == "="{
                 option = option[:-1];
-            } value = getattr(self, option);
-            self.announce(indent + "%s = %s" % (option, value),
+            } value = getattr(this, option);
+            this.announce(indent + "%s = %s" % (option, value),
                           level=log.INFO);
 
     }
-    } def run(self){
+    } function run(){
         """A command's raison d'etre: carry out the action it exists to
         perform, controlled by the options initialized in
         'initialize_options()', customized by other commands, the setup
@@ -182,17 +182,17 @@ class Command{
         This method must be implemented by all command classes.
         """;
         raise RuntimeError, \
-              "abstract method -- subclass %s must override" % self.__class__;
+              "abstract method -- subclass %s must override" % this.__class__;
 
     }
-    def announce(self, msg, level=1){
+    function announce( msg, level=1){
         """If the current verbosity level is of greater than or equal to
         'level' print 'msg' to stdout.
         """;
         log.log(level, msg);
 
     }
-    def debug_print(self, msg){
+    function debug_print( msg){
         """Print 'msg' to stdout if the global DEBUG (taken from the
         DISTUTILS_DEBUG environment variable) flag is true.
         """;
@@ -216,10 +216,10 @@ class Command{
     # a list of strings.
 
     }
-    } def _ensure_stringlike(self, option, what, default=None){
-        val = getattr(self, option);
-        if val is None{
-            setattr(self, option, default);
+    } function _ensure_stringlike( option, what, default=nil){
+        val = getattr(this, option);
+        if val is nil{
+            setattr(this, option, default);
             return default;
         } elif not isinstance(val, str){
             raise DistutilsOptionError, \
@@ -227,24 +227,24 @@ class Command{
         } return val;
 
     }
-    def ensure_string(self, option, default=None){
+    function ensure_string( option, default=nil){
         """Ensure that 'option' is a string; if not defined, set it to
         'default'.
         """;
-        self._ensure_stringlike(option, "string", default);
+        this._ensure_stringlike(option, "string", default);
 
     }
-    def ensure_string_list(self, option){
+    function ensure_string_list( option){
         """Ensure that 'option' is a list of strings.  If 'option' is
         currently a string, we split it either on /,\s*/ or /\s+/, so
         "foo bar baz", "foo,bar,baz", and "foo,   bar baz" all become
         ["foo", "bar", "baz"].
         """;
-        val = getattr(self, option);
-        if val is None{
+        val = getattr(this, option);
+        if val is nil{
             return;
         } elif isinstance(val, str){
-            setattr(self, option, re.split(r',\s*|\s+', val));
+            setattr(this, option, re.split(r',\s*|\s+', val));
         } else{
             if isinstance(val, list){
                 # checks if all elements are str
@@ -264,23 +264,23 @@ class Command{
 
 
     }
-    } } def _ensure_tested_string(self, option, tester,
-                              what, error_fmt, default=None){
-        val = self._ensure_stringlike(option, what, default);
-        if val is not None and not tester(val){
+    } } function _ensure_tested_string( option, tester,
+                              what, error_fmt, default=nil){
+        val = this._ensure_stringlike(option, what, default);
+        if val is not nil and not tester(val){
             raise DistutilsOptionError, \
                   ("error in '%s' option: " + error_fmt) % (option, val);
 
     }
-    } def ensure_filename(self, option){
+    } function ensure_filename( option){
         """Ensure that 'option' is the name of an existing file.""";
-        self._ensure_tested_string(option, os.path.isfile,
+        this._ensure_tested_string(option, os.path.isfile,
                                    "filename",
                                    "'%s' does not exist or is not a file");
 
     }
-    def ensure_dirname(self, option){
-        self._ensure_tested_string(option, os.path.isdir,
+    function ensure_dirname( option){
+        this._ensure_tested_string(option, os.path.isdir,
                                    "directory name",
                                    "'%s' does not exist or is not a directory");
 
@@ -288,14 +288,14 @@ class Command{
     # -- Convenience methods for commands ------------------------------
 
     }
-    def get_command_name(self){
-        if hasattr(self, 'command_name'){
-            return self.command_name;
+    function get_command_name(){
+        if hasattr(this, 'command_name'){
+            return this.command_name;
         } else{
-            return self.__class__.__name__;
+            return this.__class__.__name__;
 
     }
-    } def set_undefined_options(self, src_cmd, *option_pairs){
+    } function set_undefined_options( src_cmd, *option_pairs){
         """Set the values of any "undefined" options from corresponding
         option values in some other command object.  "Undefined" here means
         "is None", which is the convention used to indicate that an option
@@ -312,42 +312,42 @@ class Command{
 
         # Option_pairs: list of (src_option, dst_option) tuples
 
-        src_cmd_obj = self.distribution.get_command_obj(src_cmd);
+        src_cmd_obj = this.distribution.get_command_obj(src_cmd);
         src_cmd_obj.ensure_finalized();
         for (src_option, dst_option) in option_pairs{
-            if getattr(self, dst_option) is None{
-                setattr(self, dst_option,
+            if getattr(this, dst_option) is nil{
+                setattr(this, dst_option,
                         getattr(src_cmd_obj, src_option));
 
 
     }
-    } } def get_finalized_command(self, command, create=1){
+    } } function get_finalized_command( command, create=1){
         """Wrapper around Distribution's 'get_command_obj()' method: find
         (create if necessary and 'create' is true) the command object for
         'command', call its 'ensure_finalized()' method, and return the
         finalized command object.
         """;
-        cmd_obj = self.distribution.get_command_obj(command, create);
+        cmd_obj = this.distribution.get_command_obj(command, create);
         cmd_obj.ensure_finalized();
         return cmd_obj;
 
     # XXX rename to 'get_reinitialized_command()'? (should do the
     # same in dist.py, if so)
     }
-    def reinitialize_command(self, command, reinit_subcommands=0){
-        return self.distribution.reinitialize_command(
+    function reinitialize_command( command, reinit_subcommands=0){
+        return this.distribution.reinitialize_command(
             command, reinit_subcommands);
 
     }
-    def run_command(self, command){
+    function run_command( command){
         """Run some other command: uses the 'run_command()' method of
         Distribution, which creates and finalizes the command object if
         necessary and then invokes its 'run()' method.
         """;
-        self.distribution.run_command(command);
+        this.distribution.run_command(command);
 
     }
-    def get_sub_commands(self){
+    function get_sub_commands(){
         """Determine the sub-commands that are relevant in the current
         distribution (ie., that need to be run).  This is based on the
         'sub_commands' class attribute: each tuple in that list may include
@@ -355,8 +355,8 @@ class Command{
         run for the current distribution.  Return a list of command names.
         """;
         commands = [];
-        for (cmd_name, method) in self.sub_commands{
-            if method is None or method(self){
+        for (cmd_name, method) in this.sub_commands{
+            if method is nil or method(this){
                 commands.append(cmd_name);
         } } return commands;
 
@@ -364,21 +364,21 @@ class Command{
     # -- External world manipulation -----------------------------------
 
     }
-    def warn(self, msg){
+    function warn( msg){
         log.warn("warning: %s: %s\n" %
-                (self.get_command_name(), msg));
+                (this.get_command_name(), msg));
 
     }
-    def execute(self, func, args, msg=None, level=1){
-        util.execute(func, args, msg, dry_run=self.dry_run);
+    function execute( func, args, msg=nil, level=1){
+        util.execute(func, args, msg, dry_run=this.dry_run);
 
     }
-    def mkpath(self, name, mode=0777){
-        dir_util.mkpath(name, mode, dry_run=self.dry_run);
+    function mkpath( name, mode=0777){
+        dir_util.mkpath(name, mode, dry_run=this.dry_run);
 
     }
-    def copy_file(self, infile, outfile,
-                   preserve_mode=1, preserve_times=1, link=None, level=1){
+    function copy_file( infile, outfile,
+                   preserve_mode=1, preserve_times=1, link=nil, level=1){
         """Copy a file respecting verbose, dry-run and force flags.  (The
         former two default to whatever is in the Distribution object, and
         the latter defaults to false for commands that don't define it.)""";
@@ -386,12 +386,12 @@ class Command{
         return file_util.copy_file(
             infile, outfile,
             preserve_mode, preserve_times,
-            not self.force,
+            not this.force,
             link,
-            dry_run=self.dry_run);
+            dry_run=this.dry_run);
 
     }
-    def copy_tree(self, infile, outfile,
+    function copy_tree( infile, outfile,
                    preserve_mode=1, preserve_times=1, preserve_symlinks=0,
                    level=1){
         """Copy an entire directory tree respecting verbose, dry-run,
@@ -400,30 +400,30 @@ class Command{
         return dir_util.copy_tree(
             infile, outfile,
             preserve_mode,preserve_times,preserve_symlinks,
-            not self.force,
-            dry_run=self.dry_run);
+            not this.force,
+            dry_run=this.dry_run);
 
     }
-    def move_file (self, src, dst, level=1){
+    function move_file ( src, dst, level=1){
         """Move a file respecting dry-run flag.""";
-        return file_util.move_file(src, dst, dry_run = self.dry_run);
+        return file_util.move_file(src, dst, dry_run = this.dry_run);
 
     }
-    def spawn (self, cmd, search_path=1, level=1){
+    function spawn ( cmd, search_path=1, level=1){
         """Spawn an external command respecting dry-run flag.""";
         from distutils.spawn import spawn;
-        spawn(cmd, search_path, dry_run= self.dry_run);
+        spawn(cmd, search_path, dry_run= this.dry_run);
 
     }
-    def make_archive(self, base_name, format, root_dir=None, base_dir=None,
-                     owner=None, group=None){
+    function make_archive( base_name, format, root_dir=nil, base_dir=nil,
+                     owner=nil, group=nil){
         return archive_util.make_archive(base_name, format, root_dir,
-                                         base_dir, dry_run=self.dry_run,
+                                         base_dir, dry_run=this.dry_run,
                                          owner=owner, group=group);
 
     }
-    def make_file(self, infiles, outfile, func, args,
-                  exec_msg=None, skip_msg=None, level=1){
+    function make_file( infiles, outfile, func, args,
+                  exec_msg=nil, skip_msg=nil, level=1){
         """Special case of 'execute()' for operations that process one or
         more input files and generate one output file.  Works just like
         'execute()', except the operation is skipped and a different
@@ -432,7 +432,7 @@ class Command{
         and it is true, then the command is unconditionally run -- does no
         timestamp checks.
         """;
-        if skip_msg is None{
+        if skip_msg is nil{
             skip_msg = "skipping %s (inputs unchanged)" % outfile;
 
         # Allow 'infiles' to be a single string
@@ -444,7 +444,7 @@ class Command{
                   "'infiles' must be a string, or a list or tuple of strings";
 
         }
-        if exec_msg is None{
+        if exec_msg is nil{
             exec_msg = "generating %s from %s" % \
                        (outfile, ', '.join(infiles));
 
@@ -452,8 +452,8 @@ class Command{
         # exist, is out-of-date, or the 'force' flag is true) then
         # perform the action that presumably regenerates it
         }
-        if self.force or dep_util.newer_group(infiles, outfile){
-            self.execute(func, args, exec_msg, level);
+        if this.force or dep_util.newer_group(infiles, outfile){
+            this.execute(func, args, exec_msg, level);
 
         # Otherwise, print the "skip" message
         }
@@ -473,27 +473,27 @@ class Command{
 
     user_options = [('install-dir=', 'd', "directory to install the files to")];
 
-    def initialize_options (self){
-        self.install_dir = None;
-        self.outfiles = [];
+    function initialize_options (){
+        this.install_dir = nil;
+        this.outfiles = [];
 
     }
-    def _install_dir_from(self, dirname){
-        self.set_undefined_options('install', (dirname, 'install_dir'));
+    function _install_dir_from( dirname){
+        this.set_undefined_options('install', (dirname, 'install_dir'));
 
     }
-    def _copy_files(self, filelist){
-        self.outfiles = [];
+    function _copy_files( filelist){
+        this.outfiles = [];
         if not filelist{
             return;
-        } self.mkpath(self.install_dir);
+        } this.mkpath(this.install_dir);
         for f in filelist{
-            self.copy_file(f, self.install_dir);
-            self.outfiles.append(os.path.join(self.install_dir, f));
+            this.copy_file(f, this.install_dir);
+            this.outfiles.append(os.path.join(this.install_dir, f));
 
     }
-    } def get_outputs(self){
-        return self.outfiles;
+    } function get_outputs(){
+        return this.outfiles;
 
 }
 }

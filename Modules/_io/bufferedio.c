@@ -465,7 +465,7 @@ buffered_close(buffered *self, PyObject *args)
     if (r < 0)
         goto end;
     if (r > 0) {
-        res = Py_None;
+        res = Py_Nil;
         Py_INCREF(res);
         goto end;
     }
@@ -766,7 +766,7 @@ buffered_flush_and_rewind_unlocked(buffered *self)
         if (n == -1)
             return NULL;
     }
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject *
@@ -838,7 +838,7 @@ buffered_read(buffered *self, PyObject *args)
     }
     else {
         res = _bufferedreader_read_fast(self, n);
-        if (res != Py_None)
+        if (res != Py_Nil)
             return res;
         Py_DECREF(res);
         if (!ENTER_BUFFERED(self))
@@ -1139,7 +1139,7 @@ end:
 static PyObject *
 buffered_truncate(buffered *self, PyObject *args)
 {
-    PyObject *pos = Py_None;
+    PyObject *pos = Py_Nil;
     PyObject *res = NULL;
 
     CHECK_INITIALIZED(self)
@@ -1302,7 +1302,7 @@ _bufferedreader_raw_read(buffered *self, char *start, Py_ssize_t len)
     Py_DECREF(memobj);
     if (res == NULL)
         return -1;
-    if (res == Py_None) {
+    if (res == Py_Nil) {
         /* Non-blocking stream would have blocked. Special return code! */
         Py_DECREF(res);
         return -2;
@@ -1384,13 +1384,13 @@ _bufferedreader_read_all(buffered *self)
             Py_DECREF(chunks);
             return NULL;
         }
-        if (data != Py_None && !PyBytes_Check(data)) {
+        if (data != Py_Nil && !PyBytes_Check(data)) {
             Py_DECREF(data);
             Py_DECREF(chunks);
             PyErr_SetString(PyExc_TypeError, "read() should return bytes");
             return NULL;
         }
-        if (data == Py_None || PyBytes_GET_SIZE(data) == 0) {
+        if (data == Py_Nil || PyBytes_GET_SIZE(data) == 0) {
             if (current_size == 0) {
                 Py_DECREF(chunks);
                 return data;
@@ -1423,7 +1423,7 @@ _bufferedreader_read_fast(buffered *self, Py_ssize_t n)
             self->pos += n;
         return res;
     }
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 /* Generic read function: read from the stream until enough bytes are read,
@@ -1477,8 +1477,8 @@ _bufferedreader_read_generic(buffered *self, Py_ssize_t n)
                 return res;
             }
             Py_DECREF(res);
-            Py_INCREF(Py_None);
-            return Py_None;
+            Py_INCREF(Py_Nil);
+            return Py_Nil;
         }
         remaining -= r;
         written += r;
@@ -1502,8 +1502,8 @@ _bufferedreader_read_generic(buffered *self, Py_ssize_t n)
                 return res;
             }
             Py_DECREF(res);
-            Py_INCREF(Py_None);
-            return Py_None;
+            Py_INCREF(Py_Nil);
+            return Py_Nil;
         }
         if (remaining > r) {
             memcpy(out + written, self->buffer + self->pos, r);
@@ -1728,7 +1728,7 @@ _bufferedwriter_raw_write(buffered *self, char *start, Py_ssize_t len)
     Py_DECREF(memobj);
     if (res == NULL)
         return -1;
-    if (res == Py_None) {
+    if (res == Py_Nil) {
         /* Non-blocking stream would have blocked. Special return code!
            Being paranoid we reset errno in case it is changed by code
            triggered by a decref.  errno is used by _set_BlockingIOError(). */
@@ -1794,7 +1794,7 @@ _bufferedwriter_flush_unlocked(buffered *self)
     _bufferedwriter_reset_buf(self);
 
 end:
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 
 error:
     return NULL;

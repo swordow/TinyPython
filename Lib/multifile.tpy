@@ -41,55 +41,55 @@ class MultiFile{
 
     seekable = 0;
 
-    def __init__(self, fp, seekable=1){
-        self.fp = fp;
-        self.stack = [];
-        self.level = 0;
-        self.last = 0;
+    function __init__( fp, seekable=1){
+        this.fp = fp;
+        this.stack = [];
+        this.level = 0;
+        this.last = 0;
         if seekable{
-            self.seekable = 1;
-            self.start = self.fp.tell();
-            self.posstack = [];
+            this.seekable = 1;
+            this.start = this.fp.tell();
+            this.posstack = [];
 
     }
-    } def tell(self){
-        if self.level > 0{
-            return self.lastpos;
-        } return self.fp.tell() - self.start;
+    } function tell(){
+        if this.level > 0{
+            return this.lastpos;
+        } return this.fp.tell() - this.start;
 
     }
-    def seek(self, pos, whence=0){
-        here = self.tell();
+    function seek( pos, whence=0){
+        here = this.tell();
         if whence{
             if whence == 1{
                 pos = pos + here;
             } elif whence == 2{
-                if self.level > 0{
-                    pos = pos + self.lastpos;
+                if this.level > 0{
+                    pos = pos + this.lastpos;
                 } else{
                     raise Error, "can't use whence=2 yet";
         } } } if not 0 <= pos <= here or \
-                        self.level > 0 and pos > self.lastpos{
+                        this.level > 0 and pos > this.lastpos{
             raise Error, 'bad MultiFile.seek() call';
-        } self.fp.seek(pos + self.start);
-        self.level = 0;
-        self.last = 0;
+        } this.fp.seek(pos + this.start);
+        this.level = 0;
+        this.last = 0;
 
     }
-    def readline(self){
-        if self.level > 0{
+    function readline(){
+        if this.level > 0{
             return '';
-        } line = self.fp.readline();
+        } line = this.fp.readline();
         # Real EOF?
         if not line{
-            self.level = len(self.stack);
-            self.last = (self.level > 0);
-            if self.last{
+            this.level = len(this.stack);
+            this.last = (this.level > 0);
+            if this.last{
                 raise Error, 'sudden EOF in MultiFile.readline()';
             } return '';
-        } assert self.level == 0;
+        } assert this.level == 0;
         # Fast check to see if this is just data
-        if self.is_data(line){
+        if this.is_data(line){
             return line;
         } else{
             # Ignore trailing whitespace on marker lines
@@ -97,82 +97,82 @@ class MultiFile{
         # No?  OK, try to match a boundary.
         # Return the line (unstripped) if we don't.
         }
-        for i, sep in enumerate(reversed(self.stack)){
-            if marker == self.section_divider(sep){
-                self.last = 0;
+        for i, sep in enumerate(reversed(this.stack)){
+            if marker == this.section_divider(sep){
+                this.last = 0;
                 break;
-            } elif marker == self.end_marker(sep){
-                self.last = 1;
+            } elif marker == this.end_marker(sep){
+                this.last = 1;
                 break;
         } } else{
             return line;
         # We only get here if we see a section divider or EOM line
         }
-        if self.seekable{
-            self.lastpos = self.tell() - len(line);
-        } self.level = i+1;
-        if self.level > 1{
+        if this.seekable{
+            this.lastpos = this.tell() - len(line);
+        } this.level = i+1;
+        if this.level > 1{
             raise Error,'Missing endmarker in MultiFile.readline()';
         } return '';
 
     }
-    def readlines(self){
+    function readlines(){
         list = [];
         while 1{
-            line = self.readline();
-            if not line{ break;
+            line = this.readline();
+            if not line{ break;}
             list.append(line);
         } return list;
 
     }
-    def read(self){ # Note: no size argument -- read until EOF only!
-        return ''.join(self.readlines());
+    function read(){ # Note: no size argument -- read until EOF only!
+        return ''.join(this.readlines());
 
     }
-    def next(self){
-        while self.readline(){ pass;
-        if self.level > 1 or self.last{
+    function next(){
+        while this.readline(){ pass;}
+        if this.level > 1 or this.last{
             return 0;
-        } self.level = 0;
-        self.last = 0;
-        if self.seekable{
-            self.start = self.fp.tell();
+        } this.level = 0;
+        this.last = 0;
+        if this.seekable{
+            this.start = this.fp.tell();
         } return 1;
 
     }
-    def push(self, sep){
-        if self.level > 0{
+    function push( sep){
+        if this.level > 0{
             raise Error, 'bad MultiFile.push() call';
-        } self.stack.append(sep);
-        if self.seekable{
-            self.posstack.append(self.start);
-            self.start = self.fp.tell();
+        } this.stack.append(sep);
+        if this.seekable{
+            this.posstack.append(this.start);
+            this.start = this.fp.tell();
 
     }
-    } def pop(self){
-        if self.stack == []{
+    } function pop(){
+        if this.stack == []{
             raise Error, 'bad MultiFile.pop() call';
-        } if self.level <= 1{
-            self.last = 0;
+        } if this.level <= 1{
+            this.last = 0;
         } else{
-            abslastpos = self.lastpos + self.start;
-        } self.level = max(0, self.level - 1);
-        self.stack.pop();
-        if self.seekable{
-            self.start = self.posstack.pop();
-            if self.level > 0{
-                self.lastpos = abslastpos - self.start;
+            abslastpos = this.lastpos + this.start;
+        } this.level = max(0, this.level - 1);
+        this.stack.pop();
+        if this.seekable{
+            this.start = this.posstack.pop();
+            if this.level > 0{
+                this.lastpos = abslastpos - this.start;
 
     }
-    } } def is_data(self, line){
+    } } function is_data( line){
         return line[:2] != '--';
 
     }
-    def section_divider(self, str){
+    function section_divider( str){
         return "--" + str;
 
     }
-    def end_marker(self, str){
+    function end_marker( str){
         return "--" + str + "--";
 
 }

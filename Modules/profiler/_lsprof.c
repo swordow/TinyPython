@@ -584,8 +584,8 @@ static int statsForEntry(rotating_node_t *node, void *arg)
         }
     }
     else {
-        Py_INCREF(Py_None);
-        collect->sublist = Py_None;
+        Py_INCREF(Py_Nil);
+        collect->sublist = Py_Nil;
     }
 
     info = PyObject_CallFunction((PyObject*) &StatsEntryType,
@@ -701,8 +701,8 @@ profiler_enable(ProfilerObject *self, PyObject *args, PyObject *kwds)
         return NULL;
     PyEval_SetProfile(profiler_callback, (PyObject*)self);
     self->flags |= POF_ENABLED;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static void
@@ -735,8 +735,8 @@ profiler_disable(ProfilerObject *self, PyObject* noarg)
     flush_unmatched(self);
     if (pending_exception(self))
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(clear_doc, "\
@@ -749,8 +749,8 @@ static PyObject*
 profiler_clear(ProfilerObject *pObj, PyObject* noarg)
 {
     clearEntries(pObj);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static void

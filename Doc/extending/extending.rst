@@ -292,13 +292,13 @@ on the heap in Python!)
 
 If you have a C function that returns no useful argument (a function returning
 :c:type:`void`), the corresponding Python function must return ``None``.   You
-need this idiom to do so (which is implemented by the :c:macro:`Py_RETURN_NONE`
+need this idiom to do so (which is implemented by the :c:macro:`Py_RETURN_NIL`
 macro)::
 
-   Py_INCREF(Py_None);
-   return Py_None;
+   Py_INCREF(Py_Nil);
+   return Py_Nil;
 
-:c:data:`Py_None` is the C name for the special Python object ``None``.  It is a
+:c:data:`Py_Nil` is the C name for the special Python object ``None``.  It is a
 genuine Python object rather than a *NULL* pointer, which means "error" in most
 contexts, as we have seen.
 
@@ -476,8 +476,8 @@ be part of a module definition::
            Py_XDECREF(my_callback);  /* Dispose of previous callback */
            my_callback = temp;       /* Remember new callback */
            /* Boilerplate to return "None" */
-           Py_INCREF(Py_None);
-           result = Py_None;
+           Py_INCREF(Py_Nil);
+           result = Py_Nil;
        }
        return result;
    }
@@ -715,9 +715,9 @@ Philbrick (philbrick@hks.com)::
               action, voltage);
        printf("-- Lovely plumage, the %s -- It's %s!\n", type, state);
 
-       Py_INCREF(Py_None);
+       Py_INCREF(Py_Nil);
 
-       return Py_None;
+       return Py_Nil;
    }
 
    static PyMethodDef keywdarg_methods[] = {

@@ -22,37 +22,37 @@ class Message(rfc822.Message){
     """A derived class of rfc822.Message that knows about MIME headers and
     contains some hooks for decoding encoded and multipart messages.""";
 
-    def __init__(self, fp, seekable = 1){
-        rfc822.Message.__init__(self, fp, seekable);
-        self.encodingheader = \
-                self.getheader('content-transfer-encoding');
-        self.typeheader = \
-                self.getheader('content-type');
-        self.parsetype();
-        self.parseplist();
+    function __init__( fp, seekable = 1){
+        rfc822.Message.__init__(this, fp, seekable);
+        this.encodingheader = \
+                this.getheader('content-transfer-encoding');
+        this.typeheader = \
+                this.getheader('content-type');
+        this.parsetype();
+        this.parseplist();
 
     }
-    def parsetype(self){
-        str = self.typeheader;
-        if str is None{
+    function parsetype(){
+        str = this.typeheader;
+        if str is nil{
             str = 'text/plain';
         } if ';' in str{
             i = str.index(';');
-            self.plisttext = str[i:];
+            this.plisttext = str[i:];
             str = str[:i];
         } else{
-            self.plisttext = '';
+            this.plisttext = '';
         } fields = str.split('/');
         for i in range(len(fields)){
             fields[i] = fields[i].strip().lower();
-        } self.type = '/'.join(fields);
-        self.maintype = fields[0];
-        self.subtype = '/'.join(fields[1:]);
+        } this.type = '/'.join(fields);
+        this.maintype = fields[0];
+        this.subtype = '/'.join(fields[1:]);
 
     }
-    def parseplist(self){
-        str = self.plisttext;
-        self.plist = [];
+    function parseplist(){
+        str = this.plisttext;
+        this.plist = [];
         while str[:1] == ';'{
             str = str[1:];
             if ';' in str{
@@ -65,48 +65,48 @@ class Message(rfc822.Message){
                 i = f.index('=');
                 f = f[:i].strip().lower() + \
                         '=' + f[i+1:].strip();
-            } self.plist.append(f.strip());
+            } this.plist.append(f.strip());
             str = str[end:];
 
     }
-    } def getplist(self){
-        return self.plist;
+    } function getplist(){
+        return this.plist;
 
     }
-    def getparam(self, name){
+    function getparam( name){
         name = name.lower() + '=';
         n = len(name);
-        for p in self.plist{
+        for p in this.plist{
             if p[:n] == name{
                 return rfc822.unquote(p[n:]);
-        } } return None;
+        } } return nil;
 
     }
-    def getparamnames(self){
+    function getparamnames(){
         result = [];
-        for p in self.plist{
+        for p in this.plist{
             i = p.find('=');
             if i >= 0{
                 result.append(p[:i].lower());
         } } return result;
 
     }
-    def getencoding(self){
-        if self.encodingheader is None{
+    function getencoding(){
+        if this.encodingheader is nil{
             return '7bit';
-        } return self.encodingheader.lower();
+        } return this.encodingheader.lower();
 
     }
-    def gettype(self){
-        return self.type;
+    function gettype(){
+        return this.type;
 
     }
-    def getmaintype(self){
-        return self.maintype;
+    function getmaintype(){
+        return this.maintype;
 
     }
-    def getsubtype(self){
-        return self.subtype;
+    function getsubtype(){
+        return this.subtype;
 
 
 
@@ -123,7 +123,7 @@ class Message(rfc822.Message){
 del thread;
 
 _counter = 0;
-def _get_next_counter(){
+function _get_next_counter(){
     global _counter;
     _counter_lock.acquire();
     _counter += 1;
@@ -132,9 +132,9 @@ def _get_next_counter(){
     return result;
 
 }
-_prefix = None;
+_prefix = nil;
 
-def choose_boundary(){
+function choose_boundary(){
     """Return a string usable as a multipart boundary.
 
     The string chosen is unique within a single program run, and
@@ -146,7 +146,7 @@ def choose_boundary(){
 
     global _prefix;
     import time;
-    if _prefix is None{
+    if _prefix is nil{
         import socket;
         try{
             hostid = socket.gethostbyname(socket.gethostname());
@@ -167,7 +167,7 @@ def choose_boundary(){
 # Subroutines for decoding some common content-transfer-types
 
 }
-def decode(input, output, encoding){
+function decode(input, output, encoding){
     """Decode common content-transfer-encodings (base64, quopri, uuencode).""";
     if encoding == 'base64'{
         import base64;
@@ -187,7 +187,7 @@ def decode(input, output, encoding){
               'unknown Content-Transfer-Encoding: %s' % encoding;
 
 }
-} def encode(input, output, encoding){
+} function encode(input, output, encoding){
     """Encode common content-transfer-encodings (base64, quopri, uuencode).""";
     if encoding == 'base64'{
         import base64;
@@ -236,13 +236,13 @@ encodetab = {
         'base64':               'mmencode -b',
 };
 
-def pipeto(input, command){
+function pipeto(input, command){
     pipe = os.popen(command, 'w');
     copyliteral(input, pipe);
     pipe.close();
 
 }
-def pipethrough(input, command, output){
+function pipethrough(input, command, output){
     (fd, tempname) = tempfile.mkstemp();
     temp = os.fdopen(fd, 'w');
     copyliteral(input, temp);
@@ -253,18 +253,18 @@ def pipethrough(input, command, output){
     os.unlink(tempname);
 
 }
-def copyliteral(input, output){
+function copyliteral(input, output){
     while 1{
         line = input.readline();
-        if not line{ break;
+        if not line{ break;}
         output.write(line);
 
 }
-} def copybinary(input, output){
+} function copybinary(input, output){
     BUFSIZE = 8192;
     while 1{
         line = input.read(BUFSIZE);
-        if not line{ break;
+        if not line{ break;}
         output.write(line);
 
 }

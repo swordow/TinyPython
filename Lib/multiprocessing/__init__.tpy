@@ -91,7 +91,7 @@ import _multiprocessing;
 # Definitions not depending on native semaphores
 #
 
-def Manager(){
+function Manager(){
     '''
     Returns a manager associated with a running server process
 
@@ -104,7 +104,7 @@ def Manager(){
     return m;
 
 }
-def Pipe(duplex=True){
+function Pipe(duplex=true){
     '''
     Returns two connection object connected by a pipe
     ''';
@@ -112,7 +112,7 @@ def Pipe(duplex=True){
     return Pipe(duplex);
 
 }
-def cpu_count(){
+function cpu_count(){
     '''
     Returns the number of CPUs in the system
     ''';
@@ -126,7 +126,7 @@ def cpu_count(){
         if sys.platform == 'darwin'{
             comm = '/usr' + comm;
         } try{
-            with os.popen(comm) as p:
+            with os.popen(comm) as p{
                 num = int(p.read());
         } } except ValueError{
             num = 0;
@@ -143,17 +143,17 @@ def cpu_count(){
         raise NotImplementedError('cannot determine number of cpus');
 
 }
-} def freeze_support(){
+} function freeze_support(){
     '''
     Check whether this is a fake forked process in a frozen executable.
     If so then run code specified by commandline and exit.
     ''';
-    if sys.platform == 'win32' and getattr(sys, 'frozen', False){
+    if sys.platform == 'win32' and getattr(sys, 'frozen', false){
         from multiprocessing.forking import freeze_support;
         freeze_support();
 
 }
-} def get_logger(){
+} function get_logger(){
     '''
     Return package logger -- if it does not already exist then it is created
     ''';
@@ -161,7 +161,7 @@ def cpu_count(){
     return get_logger();
 
 }
-def log_to_stderr(level=None){
+function log_to_stderr(level=nil){
     '''
     Turn on logging and add a handler which prints to stderr
     ''';
@@ -169,7 +169,7 @@ def log_to_stderr(level=None){
     return log_to_stderr(level);
 
 }
-def allow_connection_pickling(){
+function allow_connection_pickling(){
     '''
     Install support for sending connections and sockets between processes
     ''';
@@ -180,7 +180,7 @@ def allow_connection_pickling(){
 #
 
 }
-def Lock(){
+function Lock(){
     '''
     Returns a non-recursive lock object
     ''';
@@ -188,7 +188,7 @@ def Lock(){
     return Lock();
 
 }
-def RLock(){
+function RLock(){
     '''
     Returns a recursive lock object
     ''';
@@ -196,7 +196,7 @@ def RLock(){
     return RLock();
 
 }
-def Condition(lock=None){
+function Condition(lock=nil){
     '''
     Returns a condition object
     ''';
@@ -204,7 +204,7 @@ def Condition(lock=None){
     return Condition(lock);
 
 }
-def Semaphore(value=1){
+function Semaphore(value=1){
     '''
     Returns a semaphore object
     ''';
@@ -212,7 +212,7 @@ def Semaphore(value=1){
     return Semaphore(value);
 
 }
-def BoundedSemaphore(value=1){
+function BoundedSemaphore(value=1){
     '''
     Returns a bounded semaphore object
     ''';
@@ -220,7 +220,7 @@ def BoundedSemaphore(value=1){
     return BoundedSemaphore(value);
 
 }
-def Event(){
+function Event(){
     '''
     Returns an event object
     ''';
@@ -228,7 +228,7 @@ def Event(){
     return Event();
 
 }
-def Queue(maxsize=0){
+function Queue(maxsize=0){
     '''
     Returns a queue object
     ''';
@@ -236,7 +236,7 @@ def Queue(maxsize=0){
     return Queue(maxsize);
 
 }
-def JoinableQueue(maxsize=0){
+function JoinableQueue(maxsize=0){
     '''
     Returns a queue object
     ''';
@@ -244,7 +244,7 @@ def JoinableQueue(maxsize=0){
     return JoinableQueue(maxsize);
 
 }
-def Pool(processes=None, initializer=None, initargs=(), maxtasksperchild=None){
+function Pool(processes=nil, initializer=nil, initargs=(), maxtasksperchild=nil){
     '''
     Returns a process pool object
     ''';
@@ -252,7 +252,7 @@ def Pool(processes=None, initializer=None, initargs=(), maxtasksperchild=None){
     return Pool(processes, initializer, initargs, maxtasksperchild);
 
 }
-def RawValue(typecode_or_type, *args){
+function RawValue(typecode_or_type, *args){
     '''
     Returns a shared object
     ''';
@@ -260,7 +260,7 @@ def RawValue(typecode_or_type, *args){
     return RawValue(typecode_or_type, *args);
 
 }
-def RawArray(typecode_or_type, size_or_initializer){
+function RawArray(typecode_or_type, size_or_initializer){
     '''
     Returns a shared array
     ''';
@@ -268,7 +268,7 @@ def RawArray(typecode_or_type, size_or_initializer){
     return RawArray(typecode_or_type, size_or_initializer);
 
 }
-def Value(typecode_or_type, *args, **kwds){
+function Value(typecode_or_type, *args, **kwds){
     '''
     Returns a synchronized shared object
     ''';
@@ -276,7 +276,7 @@ def Value(typecode_or_type, *args, **kwds){
     return Value(typecode_or_type, *args, **kwds);
 
 }
-def Array(typecode_or_type, size_or_initializer, **kwds){
+function Array(typecode_or_type, size_or_initializer, **kwds){
     '''
     Returns a synchronized shared array
     ''';
@@ -290,7 +290,7 @@ def Array(typecode_or_type, size_or_initializer, **kwds){
 }
 if sys.platform == 'win32'{
 
-    def set_executable(executable){
+    function set_executable(executable){
         '''
         Sets the path to a python.exe or pythonw.exe binary used to run
         child processes on Windows instead of sys.executable.

@@ -25,25 +25,25 @@ tspecials = re.compile(r'[ \(\)<>@,;:\\"/\[\]\?=]');
 
 
 # Helper functions
-def _splitparam(param){
+function _splitparam(param){
     # Split header parameters.  BAW: this may be too simple.  It isn't
     # strictly RFC 2045 (section 5.1) compliant, but it catches most headers
     # found in the wild.  We may eventually need a full fledged parser
     # eventually.
     a, sep, b = param.partition(';');
     if not sep{
-        return a.strip(), None;
+        return a.strip(), nil;
     } return a.strip(), b.strip();
 
 }
-def _formatparam(param, value=None, quote=True){
+function _formatparam(param, value=nil, quote=true){
     """Convenience function to format and return a key=value pair.
 
     This will quote the value if needed or if quote is true.  If value is a
     three tuple (charset, language, value), it will be encoded according
     to RFC2231 rules.
     """;
-    if value is not None and len(value) > 0{
+    if value is not nil and len(value) > 0{
         # A tuple is used for RFC 2231 encoded parameter values where items
         # are (charset, language, value).  charset is a string, not a Charset
         # instance.
@@ -62,7 +62,7 @@ def _formatparam(param, value=None, quote=True){
         return param;
 
 }
-} def _parseparam(s){
+} function _parseparam(s){
     plist = [];
     while s[:1] == ';'{
         s = s[1:];
@@ -81,7 +81,7 @@ def _formatparam(param, value=None, quote=True){
 
 
 }
-def _unquotevalue(value){
+function _unquotevalue(value){
     # This is different than utils.collapse_rfc2231_value() because it doesn't
     # try to convert the value to a unicode.  Message.get_param() and
     # Message.get_params() are both currently defined to return the tuple in
@@ -109,26 +109,26 @@ def _unquotevalue(value){
     you must use the explicit API to set or get all the headers.  Not all of
     the mapping methods are implemented.
     """;
-    def __init__(self){
-        self._headers = [];
-        self._unixfrom = None;
-        self._payload = None;
-        self._charset = None;
+    function __init__(){
+        this._headers = [];
+        this._unixfrom = nil;
+        this._payload = nil;
+        this._charset = nil;
         # Defaults for multipart messages
-        self.preamble = self.epilogue = None;
-        self.defects = [];
+        this.preamble = this.epilogue = nil;
+        this.defects = [];
         # Default content type
-        self._default_type = 'text/plain';
+        this._default_type = 'text/plain';
 
     }
-    def __str__(self){
+    function __str__(){
         """Return the entire formatted message as a string.
         This includes the headers, body, and envelope header.
         """;
-        return self.as_string(unixfrom=True);
+        return this.as_string(unixfrom=true);
 
     }
-    def as_string(self, unixfrom=False){
+    function as_string( unixfrom=false){
         """Return the entire formatted message as a string.
         Optional `unixfrom' when True, means include the Unix From_ envelope
         header.
@@ -141,43 +141,43 @@ def _unquotevalue(value){
         from email.generator import Generator;
         fp = StringIO();
         g = Generator(fp);
-        g.flatten(self, unixfrom=unixfrom);
+        g.flatten(this, unixfrom=unixfrom);
         return fp.getvalue();
 
     }
-    def is_multipart(self){
+    function is_multipart(){
         """Return True if the message consists of multiple parts.""";
-        return isinstance(self._payload, list);
+        return isinstance(this._payload, list);
 
     #
     # Unix From_ line
     #
     }
-    def set_unixfrom(self, unixfrom){
-        self._unixfrom = unixfrom;
+    function set_unixfrom( unixfrom){
+        this._unixfrom = unixfrom;
 
     }
-    def get_unixfrom(self){
-        return self._unixfrom;
+    function get_unixfrom(){
+        return this._unixfrom;
 
     #
     # Payload manipulation.
     #
     }
-    def attach(self, payload){
+    function attach( payload){
         """Add the given payload to the current payload.
 
         The current payload will always be a list of objects after this method
         is called.  If you want to set the payload to a scalar object, use
         set_payload() instead.
         """;
-        if self._payload is None{
-            self._payload = [payload];
+        if this._payload is nil{
+            this._payload = [payload];
         } else{
-            self._payload.append(payload);
+            this._payload.append(payload);
 
     }
-    } def get_payload(self, i=None, decode=False){
+    } function get_payload( i=nil, decode=false){
         """Return a reference to the payload.
 
         The payload will either be a list object or a string.  If you mutate
@@ -197,16 +197,16 @@ def _unquotevalue(value){
         If the message is a multipart and the decode flag is True, then None
         is returned.
         """;
-        if i is None{
-            payload = self._payload;
-        } elif not isinstance(self._payload, list){
-            raise TypeError('Expected list, got %s' % type(self._payload));
+        if i is nil{
+            payload = this._payload;
+        } elif not isinstance(this._payload, list){
+            raise TypeError('Expected list, got %s' % type(this._payload));
         } else{
-            payload = self._payload[i];
+            payload = this._payload[i];
         } if decode{
-            if self.is_multipart(){
-                return None;
-            } cte = self.get('content-transfer-encoding', '').lower();
+            if this.is_multipart(){
+                return nil;
+            } cte = this.get('content-transfer-encoding', '').lower();
             if cte == 'quoted-printable'{
                 return utils._qdecode(payload);
             } elif cte == 'base64'{
@@ -218,7 +218,7 @@ def _unquotevalue(value){
             } } elif cte in ('x-uuencode', 'uuencode', 'uue', 'x-uue'){
                 sfp = StringIO();
                 try{
-                    uu.decode(StringIO(payload+'\n'), sfp, quiet=True);
+                    uu.decode(StringIO(payload+'\n'), sfp, quiet=true);
                     payload = sfp.getvalue();
                 } except uu.Error{
                     # Some decoding problem
@@ -229,18 +229,18 @@ def _unquotevalue(value){
         } } return payload;
 
     }
-    def set_payload(self, payload, charset=None){
+    function set_payload( payload, charset=nil){
         """Set the payload to the given value.
 
         Optional charset sets the message's default character set.  See
         set_charset() for details.
         """;
-        self._payload = payload;
-        if charset is not None{
-            self.set_charset(charset);
+        this._payload = payload;
+        if charset is not nil{
+            this.set_charset(charset);
 
     }
-    } def set_charset(self, charset){
+    } function set_charset( charset){
         """Set the charset of the payload to a given character set.
 
         charset can be a Charset instance, a string naming a character set, or
@@ -255,9 +255,9 @@ def _unquotevalue(value){
         Content-Type, Content-Transfer-Encoding) will be added as needed.
 
         """;
-        if charset is None{
-            self.del_param('charset');
-            self._charset = None;
+        if charset is nil{
+            this.del_param('charset');
+            this._charset = nil;
             return;
         } if isinstance(charset, basestring){
             charset = email.charset.Charset(charset);
@@ -266,42 +266,42 @@ def _unquotevalue(value){
         # BAW: should we accept strings that can serve as arguments to the
         # Charset constructor?
         }
-        self._charset = charset;
-        if 'MIME-Version' not in self{
-            self.add_header('MIME-Version', '1.0');
-        } if 'Content-Type' not in self{
-            self.add_header('Content-Type', 'text/plain',
+        this._charset = charset;
+        if 'MIME-Version' not in this{
+            this.add_header('MIME-Version', '1.0');
+        } if 'Content-Type' not in this{
+            this.add_header('Content-Type', 'text/plain',
                             charset=charset.get_output_charset());
         } else{
-            self.set_param('charset', charset.get_output_charset());
-        } if isinstance(self._payload, unicode){
-            self._payload = self._payload.encode(charset.output_charset);
+            this.set_param('charset', charset.get_output_charset());
+        } if isinstance(this._payload, unicode){
+            this._payload = this._payload.encode(charset.output_charset);
         } if str(charset) != charset.get_output_charset(){
-            self._payload = charset.body_encode(self._payload);
-        } if 'Content-Transfer-Encoding' not in self{
+            this._payload = charset.body_encode(this._payload);
+        } if 'Content-Transfer-Encoding' not in this{
             cte = charset.get_body_encoding();
             try{
-                cte(self);
+                cte(this);
             } except TypeError{
-                self._payload = charset.body_encode(self._payload);
-                self.add_header('Content-Transfer-Encoding', cte);
+                this._payload = charset.body_encode(this._payload);
+                this.add_header('Content-Transfer-Encoding', cte);
 
     }
-    } } def get_charset(self){
+    } } function get_charset(){
         """Return the Charset instance associated with the message's payload.
         """;
-        return self._charset;
+        return this._charset;
 
     #
     # MAPPING INTERFACE (partial)
     #
     }
-    def __len__(self){
+    function __len__(){
         """Return the total number of headers, including duplicates.""";
-        return len(self._headers);
+        return len(this._headers);
 
     }
-    def __getitem__(self, name){
+    function __getitem__( name){
         """Get a header value.
 
         Return None if the header is missing instead of raising an exception.
@@ -310,42 +310,42 @@ def _unquotevalue(value){
         occurrence gets returned is undefined.  Use get_all() to get all
         the values matching a header field name.
         """;
-        return self.get(name);
+        return this.get(name);
 
     }
-    def __setitem__(self, name, val){
+    function __setitem__( name, val){
         """Set the value of a header.
 
         Note: this does not overwrite an existing header with the same field
         name.  Use __delitem__() first to delete any existing headers.
         """;
-        self._headers.append((name, val));
+        this._headers.append((name, val));
 
     }
-    def __delitem__(self, name){
+    function __delitem__( name){
         """Delete all occurrences of a header, if present.
 
         Does not raise an exception if the header is missing.
         """;
         name = name.lower();
         newheaders = [];
-        for k, v in self._headers{
+        for k, v in this._headers{
             if k.lower() != name{
                 newheaders.append((k, v));
-        } } self._headers = newheaders;
+        } } this._headers = newheaders;
 
     }
-    def __contains__(self, name){
-        return name.lower() in [k.lower() for k, v in self._headers];
+    function __contains__( name){
+        return name.lower() in [k.lower() for k, v in this._headers];
 
     }
-    def has_key(self, name){
+    function has_key( name){
         """Return true if the message contains the header.""";
         missing = object();
-        return self.get(name, missing) is not missing;
+        return this.get(name, missing) is not missing;
 
     }
-    def keys(self){
+    function keys(){
         """Return a list of all the message's header field names.
 
         These will be sorted in the order they appeared in the original
@@ -353,10 +353,10 @@ def _unquotevalue(value){
         Any fields deleted and re-inserted are always appended to the header
         list.
         """;
-        return [k for k, v in self._headers];
+        return [k for k, v in this._headers];
 
     }
-    def values(self){
+    function values(){
         """Return a list of all the message's header values.
 
         These will be sorted in the order they appeared in the original
@@ -364,10 +364,10 @@ def _unquotevalue(value){
         Any fields deleted and re-inserted are always appended to the header
         list.
         """;
-        return [v for k, v in self._headers];
+        return [v for k, v in this._headers];
 
     }
-    def items(self){
+    function items(){
         """Get all the message's header fields and values.
 
         These will be sorted in the order they appeared in the original
@@ -375,17 +375,17 @@ def _unquotevalue(value){
         Any fields deleted and re-inserted are always appended to the header
         list.
         """;
-        return self._headers[:];
+        return this._headers[:];
 
     }
-    def get(self, name, failobj=None){
+    function get( name, failobj=nil){
         """Get a header value.
 
         Like __getitem__() but return failobj instead of None when the field
         is missing.
         """;
         name = name.lower();
-        for k, v in self._headers{
+        for k, v in this._headers{
             if k.lower() == name{
                 return v;
         } } return failobj;
@@ -395,7 +395,7 @@ def _unquotevalue(value){
     #
 
     }
-    def get_all(self, name, failobj=None){
+    function get_all( name, failobj=nil){
         """Return a list of all the values for the named field.
 
         These will be sorted in the order they appeared in the original
@@ -406,7 +406,7 @@ def _unquotevalue(value){
         """;
         values = [];
         name = name.lower();
-        for k, v in self._headers{
+        for k, v in this._headers{
             if k.lower() == name{
                 values.append(v);
         } } if not values{
@@ -414,7 +414,7 @@ def _unquotevalue(value){
         } return values;
 
     }
-    def add_header(self, _name, _value, **_params){
+    function add_header( _name, _value, **_params){
         """Extended header setting.
 
         name is the header field to add.  keyword arguments can be used to set
@@ -431,16 +431,16 @@ def _unquotevalue(value){
         """;
         parts = [];
         for k, v in _params.items(){
-            if v is None{
+            if v is nil{
                 parts.append(k.replace('_', '-'));
             } else{
                 parts.append(_formatparam(k.replace('_', '-'), v));
-        } } if _value is not None{
+        } } if _value is not nil{
             parts.insert(0, _value);
-        } self._headers.append((_name, SEMISPACE.join(parts)));
+        } this._headers.append((_name, SEMISPACE.join(parts)));
 
     }
-    def replace_header(self, _name, _value){
+    function replace_header( _name, _value){
         """Replace a header.
 
         Replace the first matching header found in the message, retaining
@@ -448,9 +448,9 @@ def _unquotevalue(value){
         raised.
         """;
         _name = _name.lower();
-        for i, (k, v) in zip(range(len(self._headers)), self._headers){
+        for i, (k, v) in zip(range(len(this._headers)), this._headers){
             if k.lower() == _name{
-                self._headers[i] = (k, _value);
+                this._headers[i] = (k, _value);
                 break;
         } } else{
             raise KeyError(_name);
@@ -460,7 +460,7 @@ def _unquotevalue(value){
     #
 
     }
-    } def get_content_type(self){
+    } function get_content_type(){
         """Return the message's content type.
 
         The returned string is coerced to lower case of the form
@@ -474,10 +474,10 @@ def _unquotevalue(value){
         message/rfc822.
         """;
         missing = object();
-        value = self.get('content-type', missing);
+        value = this.get('content-type', missing);
         if value is missing{
             # This should have no parameters
-            return self.get_default_type();
+            return this.get_default_type();
         } ctype = _splitparam(value)[0].lower();
         # RFC 2045, section 5.2 says if its invalid, use text/plain
         if ctype.count('/') != 1{
@@ -485,51 +485,51 @@ def _unquotevalue(value){
         } return ctype;
 
     }
-    def get_content_maintype(self){
+    function get_content_maintype(){
         """Return the message's main content type.
 
         This is the `maintype' part of the string returned by
         get_content_type().
         """;
-        ctype = self.get_content_type();
+        ctype = this.get_content_type();
         return ctype.split('/')[0];
 
     }
-    def get_content_subtype(self){
+    function get_content_subtype(){
         """Returns the message's sub-content type.
 
         This is the `subtype' part of the string returned by
         get_content_type().
         """;
-        ctype = self.get_content_type();
+        ctype = this.get_content_type();
         return ctype.split('/')[1];
 
     }
-    def get_default_type(self){
+    function get_default_type(){
         """Return the `default' content type.
 
         Most messages have a default content type of text/plain, except for
         messages that are subparts of multipart/digest containers.  Such
         subparts have a default content type of message/rfc822.
         """;
-        return self._default_type;
+        return this._default_type;
 
     }
-    def set_default_type(self, ctype){
+    function set_default_type( ctype){
         """Set the `default' content type.
 
         ctype should be either "text/plain" or "message/rfc822", although this
         is not enforced.  The default content type is not stored in the
         Content-Type header.
         """;
-        self._default_type = ctype;
+        this._default_type = ctype;
 
     }
-    def _get_params_preserve(self, failobj, header){
+    function _get_params_preserve( failobj, header){
         # Like get_params() but preserves the quoting of values.  BAW:
         # should this be part of the public interface?
         missing = object();
-        value = self.get(header, missing);
+        value = this.get(header, missing);
         if value is missing{
             return failobj;
         } params = [];
@@ -547,7 +547,7 @@ def _unquotevalue(value){
         return params;
 
     }
-    def get_params(self, failobj=None, header='content-type', unquote=True){
+    function get_params( failobj=nil, header='content-type', unquote=true){
         """Return the message's Content-Type parameters, as a list.
 
         The elements of the returned list are 2-tuples of key/value pairs, as
@@ -561,7 +561,7 @@ def _unquotevalue(value){
         Content-Type.  If unquote is True, the value is unquoted.
         """;
         missing = object();
-        params = self._get_params_preserve(missing, header);
+        params = this._get_params_preserve(missing, header);
         if params is missing{
             return failobj;
         } if unquote{
@@ -570,8 +570,8 @@ def _unquotevalue(value){
             return params;
 
     }
-    } def get_param(self, param, failobj=None, header='content-type',
-                  unquote=True){
+    } function get_param( param, failobj=nil, header='content-type',
+                  unquote=true){
         """Return the parameter value if found in the Content-Type header.
 
         Optional failobj is the object to return if there is no Content-Type
@@ -596,9 +596,9 @@ def _unquotevalue(value){
         VALUE item in the 3-tuple) is always unquoted, unless unquote is set
         to False.
         """;
-        if header not in self{
+        if header not in this{
             return failobj;
-        } for k, v in self._get_params_preserve(failobj, header){
+        } for k, v in this._get_params_preserve(failobj, header){
             if k.lower() == param.lower(){
                 if unquote{
                     return _unquotevalue(v);
@@ -607,8 +607,8 @@ def _unquotevalue(value){
         } } } return failobj;
 
     }
-    def set_param(self, param, value, header='Content-Type', requote=True,
-                  charset=None, language=''){
+    function set_param( param, value, header='Content-Type', requote=true,
+                  charset=nil, language=''){
         """Set a parameter in the Content-Type header.
 
         If the parameter already exists in the header, its value will be
@@ -629,11 +629,11 @@ def _unquotevalue(value){
             value = (charset, language, value);
 
         }
-        if header not in self and header.lower() == 'content-type'{
+        if header not in this and header.lower() == 'content-type'{
             ctype = 'text/plain';
         } else{
-            ctype = self.get(header);
-        } if not self.get_param(param, header=header){
+            ctype = this.get(header);
+        } if not this.get_param(param, header=header){
             if not ctype{
                 ctype = _formatparam(param, value, requote);
             } else{
@@ -641,7 +641,7 @@ def _unquotevalue(value){
                     [ctype, _formatparam(param, value, requote)]);
         } } else{
             ctype = '';
-            for old_param, old_value in self.get_params(header=header,
+            for old_param, old_value in this.get_params(header=header,
                                                         unquote=requote){
                 append_param = '';
                 if old_param.lower() == param.lower(){
@@ -652,12 +652,12 @@ def _unquotevalue(value){
                     ctype = append_param;
                 } else{
                     ctype = SEMISPACE.join([ctype, append_param]);
-        } } } if ctype != self.get(header){
-            del self[header];
-            self[header] = ctype;
+        } } } if ctype != this.get(header){
+            del this[header];
+            this[header] = ctype;
 
     }
-    } def del_param(self, param, header='content-type', requote=True){
+    } function del_param( param, header='content-type', requote=true){
         """Remove the given parameter completely from the Content-Type header.
 
         The header will be re-written in place without the parameter or its
@@ -665,22 +665,22 @@ def _unquotevalue(value){
         False.  Optional header specifies an alternative to the Content-Type
         header.
         """;
-        if header not in self{
+        if header not in this{
             return;
         } new_ctype = '';
-        for p, v in self.get_params(header=header, unquote=requote){
+        for p, v in this.get_params(header=header, unquote=requote){
             if p.lower() != param.lower(){
                 if not new_ctype{
                     new_ctype = _formatparam(p, v, requote);
                 } else{
                     new_ctype = SEMISPACE.join([new_ctype,
                                                 _formatparam(p, v, requote)]);
-        } } } if new_ctype != self.get(header){
-            del self[header];
-            self[header] = new_ctype;
+        } } } if new_ctype != this.get(header){
+            del this[header];
+            this[header] = new_ctype;
 
     }
-    } def set_type(self, type, header='Content-Type', requote=True){
+    } function set_type( type, header='Content-Type', requote=true){
         """Set the main type and subtype for the Content-Type header.
 
         type must be a string in the form "maintype/subtype", otherwise a
@@ -701,20 +701,20 @@ def _unquotevalue(value){
         # Set the Content-Type, you get a MIME-Version
         }
         if header.lower() == 'content-type'{
-            del self['mime-version'];
-            self['MIME-Version'] = '1.0';
-        } if header not in self{
-            self[header] = type;
+            del this['mime-version'];
+            this['MIME-Version'] = '1.0';
+        } if header not in this{
+            this[header] = type;
             return;
-        } params = self.get_params(header=header, unquote=requote);
-        del self[header];
-        self[header] = type;
+        } params = this.get_params(header=header, unquote=requote);
+        del this[header];
+        this[header] = type;
         # Skip the first param; it's the old type.
         for p, v in params[1:]{
-            self.set_param(p, v, header, requote);
+            this.set_param(p, v, header, requote);
 
     }
-    } def get_filename(self, failobj=None){
+    } function get_filename( failobj=nil){
         """Return the filename associated with the payload if present.
 
         The filename is extracted from the Content-Disposition header's
@@ -723,22 +723,22 @@ def _unquotevalue(value){
         `name' parameter.
         """;
         missing = object();
-        filename = self.get_param('filename', missing, 'content-disposition');
+        filename = this.get_param('filename', missing, 'content-disposition');
         if filename is missing{
-            filename = self.get_param('name', missing, 'content-type');
+            filename = this.get_param('name', missing, 'content-type');
         } if filename is missing{
             return failobj;
         } return utils.collapse_rfc2231_value(filename).strip();
 
     }
-    def get_boundary(self, failobj=None){
+    function get_boundary( failobj=nil){
         """Return the boundary associated with the payload if present.
 
         The boundary is extracted from the Content-Type header's `boundary'
         parameter, and it is unquoted.
         """;
         missing = object();
-        boundary = self.get_param('boundary', missing);
+        boundary = this.get_param('boundary', missing);
         if boundary is missing{
             return failobj;
         # RFC 2046 says that boundaries may begin but not end in w/s
@@ -746,7 +746,7 @@ def _unquotevalue(value){
         return utils.collapse_rfc2231_value(boundary).rstrip();
 
     }
-    def set_boundary(self, boundary){
+    function set_boundary( boundary){
         """Set the boundary parameter in Content-Type to 'boundary'.
 
         This is subtly different than deleting the Content-Type header and
@@ -757,17 +757,17 @@ def _unquotevalue(value){
         HeaderParseError is raised if the message has no Content-Type header.
         """;
         missing = object();
-        params = self._get_params_preserve(missing, 'content-type');
+        params = this._get_params_preserve(missing, 'content-type');
         if params is missing{
             # There was no Content-Type header, and we don't know what type
             # to set it to, so raise an exception.
             raise errors.HeaderParseError('No Content-Type header found');
         } newparams = [];
-        foundp = False;
+        foundp = false;
         for pk, pv in params{
             if pk.lower() == 'boundary'{
                 newparams.append(('boundary', '"%s"' % boundary));
-                foundp = True;
+                foundp = true;
             } else{
                 newparams.append((pk, pv));
         } } if not foundp{
@@ -778,7 +778,7 @@ def _unquotevalue(value){
         # Replace the existing Content-Type header with the new value
         }
         newheaders = [];
-        for h, v in self._headers{
+        for h, v in this._headers{
             if h.lower() == 'content-type'{
                 parts = [];
                 for k, v in newparams{
@@ -791,10 +791,10 @@ def _unquotevalue(value){
             }
             else{
                 newheaders.append((h, v));
-        } } self._headers = newheaders;
+        } } this._headers = newheaders;
 
     }
-    def get_content_charset(self, failobj=None){
+    function get_content_charset( failobj=nil){
         """Return the charset parameter of the Content-Type header.
 
         The returned string is always coerced to lower case.  If there is no
@@ -802,7 +802,7 @@ def _unquotevalue(value){
         failobj is returned.
         """;
         missing = object();
-        charset = self.get_param('charset', missing);
+        charset = this.get_param('charset', missing);
         if charset is missing{
             return failobj;
         } if isinstance(charset, tuple){
@@ -828,7 +828,7 @@ def _unquotevalue(value){
         return charset.lower();
 
     }
-    def get_charsets(self, failobj=None){
+    function get_charsets( failobj=nil){
         """Return a list containing the charset(s) used in this message.
 
         The returned list of items describes the Content-Type headers'
@@ -844,7 +844,7 @@ def _unquotevalue(value){
         one for the container message (i.e. self), so that a non-multipart
         message will still return a list of length 1.
         """;
-        return [part.get_content_charset(failobj) for part in self.walk()];
+        return [part.get_content_charset(failobj) for part in this.walk()];
 
     # I.e. def walk(self): ...
     }

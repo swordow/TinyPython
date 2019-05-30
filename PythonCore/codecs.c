@@ -147,7 +147,7 @@ PyObject *_PyCodec_Lookup(const char *encoding)
         result = PyEval_CallObject(func, args);
         if (result == NULL)
             goto onError;
-        if (result == Py_None) {
+        if (result == Py_Nil) {
             Py_DECREF(result);
             continue;
         }

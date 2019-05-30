@@ -48,12 +48,12 @@ class CalledProcessError(Exception){
     Attributes:
       cmd, returncode, output
     """;
-    def __init__(self, returncode, cmd, output=None){
-        self.returncode = returncode;
-        self.cmd = cmd;
-        self.output = output;
-    } def __str__(self){
-        return "Command '%s' returned non-zero exit status %d" % (self.cmd, self.returncode);
+    function __init__( returncode, cmd, output=nil){
+        this.returncode = returncode;
+        this.cmd = cmd;
+        this.output = output;
+    } function __str__(){
+        return "Command '%s' returned non-zero exit status %d" % (this.cmd, this.returncode);
 
 
 }
@@ -63,9 +63,9 @@ class CalledProcessError(Exception){
     import _subprocess;
     class STARTUPINFO{
         dwFlags = 0;
-        hStdInput = None;
-        hStdOutput = None;
-        hStdError = None;
+        hStdInput = nil;
+        hStdOutput = nil;
+        hStdError = nil;
         wShowWindow = 0;
     } class pywintypes{
         error = IOError;
@@ -75,7 +75,7 @@ class CalledProcessError(Exception){
     try{
         import threading;
     } except ImportError{
-        threading = None;
+        threading = nil;
     } import fcntl;
     import pickle;
 
@@ -107,10 +107,10 @@ if mswindows{
 }
 _active = [];
 
-def _cleanup(){
+function _cleanup(){
     for inst in _active[:]{
         res = inst._internal_poll(_deadstate=sys.maxint);
-        if res is not None{
+        if res is not nil{
             try{
                 _active.remove(inst);
             } except ValueError{
@@ -123,8 +123,8 @@ def _cleanup(){
 STDOUT = -2;
 
 
-def _eintr_retry_call(func, *args){
-    while True{
+function _eintr_retry_call(func, *args){
+    while true{
         try{
             return func(*args);
         } except (OSError, IOError) as e{
@@ -138,7 +138,7 @@ def _eintr_retry_call(func, *args){
 # threads.
 
 }
-} } def _args_from_interpreter_flags(){
+} } function _args_from_interpreter_flags(){
     """Return a list of command-line arguments reproducing the current
     settings in sys.flags and sys.warnoptions.""";
     flag_opt_map = {
@@ -167,7 +167,7 @@ def _eintr_retry_call(func, *args){
 
 
 }
-def call(*popenargs, **kwargs){
+function call(*popenargs, **kwargs){
     """Run command with arguments.  Wait for command to complete, then
     return the returncode attribute.
 
@@ -179,7 +179,7 @@ def call(*popenargs, **kwargs){
 
 
 }
-def check_call(*popenargs, **kwargs){
+function check_call(*popenargs, **kwargs){
     """Run command with arguments.  Wait for command to complete.  If
     the exit code was zero then return, otherwise raise
     CalledProcessError.  The CalledProcessError object will have the
@@ -192,14 +192,14 @@ def check_call(*popenargs, **kwargs){
     retcode = call(*popenargs, **kwargs);
     if retcode{
         cmd = kwargs.get("args");
-        if cmd is None{
+        if cmd is nil{
             cmd = popenargs[0];
         } raise CalledProcessError(retcode, cmd);
     } return 0;
 
 
 }
-def check_output(*popenargs, **kwargs){
+function check_output(*popenargs, **kwargs){
     r"""Run command with arguments and return its output as a byte string.
 
     If the exit code was non-zero it raises a CalledProcessError.  The
@@ -226,14 +226,14 @@ def check_output(*popenargs, **kwargs){
     retcode = process.poll();
     if retcode{
         cmd = kwargs.get("args");
-        if cmd is None{
+        if cmd is nil{
             cmd = popenargs[0];
         } raise CalledProcessError(retcode, cmd, output=output);
     } return output;
 
 
 }
-def list2cmdline(seq){
+function list2cmdline(seq){
     """
     Translate a sequence of arguments into a command line
     string, using the same rules as the MS C runtime:
@@ -264,7 +264,7 @@ def list2cmdline(seq){
     # or search http://msdn.microsoft.com for
     # "Parsing C++ Command-Line Arguments"
     result = [];
-    needquote = False;
+    needquote = false;
     for arg in seq{
         bs_buf = [];
 
@@ -344,13 +344,13 @@ class Popen(object){
     Attributes:
         stdin, stdout, stderr, pid, returncode
     """;
-    _child_created = False;  # Set here since __del__ checks it
+    _child_created = false;  # Set here since __del__ checks it
 
-    def __init__(self, args, bufsize=0, executable=None,
-                 stdin=None, stdout=None, stderr=None,
-                 preexec_fn=None, close_fds=False, shell=False,
-                 cwd=None, env=None, universal_newlines=False,
-                 startupinfo=None, creationflags=0){
+    function __init__( args, bufsize=0, executable=nil,
+                 stdin=nil, stdout=nil, stderr=nil,
+                 preexec_fn=nil, close_fds=false, shell=false,
+                 cwd=nil, env=nil, universal_newlines=false,
+                 startupinfo=nil, creationflags=0){
         """Create new Popen instance.""";
         _cleanup();
 
@@ -359,16 +359,16 @@ class Popen(object){
 
         }
         if mswindows{
-            if preexec_fn is not None{
+            if preexec_fn is not nil{
                 raise ValueError("preexec_fn is not supported on Windows "
                                  "platforms");
-            } if close_fds and (stdin is not None or stdout is not None or
-                              stderr is not None){
+            } if close_fds and (stdin is not nil or stdout is not nil or
+                              stderr is not nil){
                 raise ValueError("close_fds is not supported on Windows "
                                  "platforms if you redirect stdin/stdout/stderr");
         } } else{
             # POSIX
-            if startupinfo is not None{
+            if startupinfo is not nil{
                 raise ValueError("startupinfo is only supported on Windows "
                                  "platforms");
             } if creationflags != 0{
@@ -376,12 +376,12 @@ class Popen(object){
                                  "platforms");
 
         }
-        } self.stdin = None;
-        self.stdout = None;
-        self.stderr = None;
-        self.pid = None;
-        self.returncode = None;
-        self.universal_newlines = universal_newlines;
+        } this.stdin = nil;
+        this.stdout = nil;
+        this.stderr = nil;
+        this.pid = nil;
+        this.returncode = nil;
+        this.universal_newlines = universal_newlines;
 
         # Input and output objects. The general principle is like
         # this:
@@ -400,10 +400,10 @@ class Popen(object){
 
         (p2cread, p2cwrite,
          c2pread, c2pwrite,
-         errread, errwrite), to_close = self._get_handles(stdin, stdout, stderr);
+         errread, errwrite), to_close = this._get_handles(stdin, stdout, stderr);
 
         try{
-            self._execute_child(args, executable, preexec_fn, close_fds,
+            this._execute_child(args, executable, preexec_fn, close_fds,
                                 cwd, env, universal_newlines,
                                 startupinfo, creationflags, shell, to_close,
                                 p2cread, p2cwrite,
@@ -427,53 +427,53 @@ class Popen(object){
 
         }
         if mswindows{
-            if p2cwrite is not None{
+            if p2cwrite is not nil{
                 p2cwrite = msvcrt.open_osfhandle(p2cwrite.Detach(), 0);
-            } if c2pread is not None{
+            } if c2pread is not nil{
                 c2pread = msvcrt.open_osfhandle(c2pread.Detach(), 0);
-            } if errread is not None{
+            } if errread is not nil{
                 errread = msvcrt.open_osfhandle(errread.Detach(), 0);
 
         }
-        } if p2cwrite is not None{
-            self.stdin = os.fdopen(p2cwrite, 'wb', bufsize);
-        } if c2pread is not None{
+        } if p2cwrite is not nil{
+            this.stdin = os.fdopen(p2cwrite, 'wb', bufsize);
+        } if c2pread is not nil{
             if universal_newlines{
-                self.stdout = os.fdopen(c2pread, 'rU', bufsize);
+                this.stdout = os.fdopen(c2pread, 'rU', bufsize);
             } else{
-                self.stdout = os.fdopen(c2pread, 'rb', bufsize);
-        } } if errread is not None{
+                this.stdout = os.fdopen(c2pread, 'rb', bufsize);
+        } } if errread is not nil{
             if universal_newlines{
-                self.stderr = os.fdopen(errread, 'rU', bufsize);
+                this.stderr = os.fdopen(errread, 'rU', bufsize);
             } else{
-                self.stderr = os.fdopen(errread, 'rb', bufsize);
+                this.stderr = os.fdopen(errread, 'rb', bufsize);
 
 
     }
-    } } def _translate_newlines(self, data){
+    } } function _translate_newlines( data){
         data = data.replace("\r\n", "\n");
         data = data.replace("\r", "\n");
         return data;
 
 
     }
-    def __del__(self, _maxint=sys.maxint){
+    function __del__( _maxint=sys.maxint){
         # If __init__ hasn't had a chance to execute (e.g. if it
         # was passed an undeclared keyword argument), we don't
         # have a _child_created attribute at all.
-        if not self._child_created{
+        if not this._child_created{
             # We didn't get to successfully create a child process.
             return;
         # In case the child hasn't been waited on, check if it's done.
         }
-        self._internal_poll(_deadstate=_maxint);
-        if self.returncode is None and _active is not None{
+        this._internal_poll(_deadstate=_maxint);
+        if this.returncode is nil and _active is not nil{
             # Child is still running, keep us alive until we can wait on it.
-            _active.append(self);
+            _active.append(this);
 
 
     }
-    } def communicate(self, input=None){
+    } function communicate( input=nil){
         """Interact with process: Send data to stdin.  Read data from
         stdout and stderr, until end-of-file is reached.  Wait for
         process to terminate.  The optional input argument should be a
@@ -484,35 +484,35 @@ class Popen(object){
 
         # Optimization: If we are only using one pipe, or no pipe at
         # all, using select() or threads is unnecessary.
-        if [self.stdin, self.stdout, self.stderr].count(None) >= 2{
-            stdout = None;
-            stderr = None;
-            if self.stdin{
+        if [this.stdin, this.stdout, this.stderr].count(nil) >= 2{
+            stdout = nil;
+            stderr = nil;
+            if this.stdin{
                 if input{
                     try{
-                        self.stdin.write(input);
+                        this.stdin.write(input);
                     } except IOError as e{
                         if e.errno != errno.EPIPE and e.errno != errno.EINVAL{
                             raise;
-                } } } self.stdin.close();
-            } elif self.stdout{
-                stdout = _eintr_retry_call(self.stdout.read);
-                self.stdout.close();
-            } elif self.stderr{
-                stderr = _eintr_retry_call(self.stderr.read);
-                self.stderr.close();
-            } self.wait();
+                } } } this.stdin.close();
+            } elif this.stdout{
+                stdout = _eintr_retry_call(this.stdout.read);
+                this.stdout.close();
+            } elif this.stderr{
+                stderr = _eintr_retry_call(this.stderr.read);
+                this.stderr.close();
+            } this.wait();
             return (stdout, stderr);
 
         }
-        return self._communicate(input);
+        return this._communicate(input);
 
 
     }
-    def poll(self){
+    function poll(){
         """Check if child process has terminated. Set and return returncode
         attribute.""";
-        return self._internal_poll();
+        return this._internal_poll();
 
 
     }
@@ -520,61 +520,61 @@ class Popen(object){
         #
         # Windows methods
         #
-        def _get_handles(self, stdin, stdout, stderr){
+        function _get_handles( stdin, stdout, stderr){
             """Construct and return tuple with IO objects:
             p2cread, p2cwrite, c2pread, c2pwrite, errread, errwrite
             """;
             to_close = set();
-            if stdin is None and stdout is None and stderr is None{
-                return (None, None, None, None, None, None), to_close;
+            if stdin is nil and stdout is nil and stderr is nil{
+                return (nil, nil, nil, nil, nil, nil), to_close;
 
             }
-            p2cread, p2cwrite = None, None;
-            c2pread, c2pwrite = None, None;
-            errread, errwrite = None, None;
+            p2cread, p2cwrite = nil, nil;
+            c2pread, c2pwrite = nil, nil;
+            errread, errwrite = nil, nil;
 
-            if stdin is None{
+            if stdin is nil{
                 p2cread = _subprocess.GetStdHandle(_subprocess.STD_INPUT_HANDLE);
-                if p2cread is None{
-                    p2cread, _ = _subprocess.CreatePipe(None, 0);
+                if p2cread is nil{
+                    p2cread, _ = _subprocess.CreatePipe(nil, 0);
             } } elif stdin == PIPE{
-                p2cread, p2cwrite = _subprocess.CreatePipe(None, 0);
+                p2cread, p2cwrite = _subprocess.CreatePipe(nil, 0);
             } elif isinstance(stdin, (int, long)){
                 p2cread = msvcrt.get_osfhandle(stdin);
             } else{
                 # Assuming file-like object
                 p2cread = msvcrt.get_osfhandle(stdin.fileno());
-            } p2cread = self._make_inheritable(p2cread);
+            } p2cread = this._make_inheritable(p2cread);
             # We just duplicated the handle, it has to be closed at the end
             to_close.add(p2cread);
             if stdin == PIPE{
                 to_close.add(p2cwrite);
 
             }
-            if stdout is None{
+            if stdout is nil{
                 c2pwrite = _subprocess.GetStdHandle(_subprocess.STD_OUTPUT_HANDLE);
-                if c2pwrite is None{
-                    _, c2pwrite = _subprocess.CreatePipe(None, 0);
+                if c2pwrite is nil{
+                    _, c2pwrite = _subprocess.CreatePipe(nil, 0);
             } } elif stdout == PIPE{
-                c2pread, c2pwrite = _subprocess.CreatePipe(None, 0);
+                c2pread, c2pwrite = _subprocess.CreatePipe(nil, 0);
             } elif isinstance(stdout, (int, long)){
                 c2pwrite = msvcrt.get_osfhandle(stdout);
             } else{
                 # Assuming file-like object
                 c2pwrite = msvcrt.get_osfhandle(stdout.fileno());
-            } c2pwrite = self._make_inheritable(c2pwrite);
+            } c2pwrite = this._make_inheritable(c2pwrite);
             # We just duplicated the handle, it has to be closed at the end
             to_close.add(c2pwrite);
             if stdout == PIPE{
                 to_close.add(c2pread);
 
             }
-            if stderr is None{
+            if stderr is nil{
                 errwrite = _subprocess.GetStdHandle(_subprocess.STD_ERROR_HANDLE);
-                if errwrite is None{
-                    _, errwrite = _subprocess.CreatePipe(None, 0);
+                if errwrite is nil{
+                    _, errwrite = _subprocess.CreatePipe(nil, 0);
             } } elif stderr == PIPE{
-                errread, errwrite = _subprocess.CreatePipe(None, 0);
+                errread, errwrite = _subprocess.CreatePipe(nil, 0);
             } elif stderr == STDOUT{
                 errwrite = c2pwrite;
             } elif isinstance(stderr, (int, long)){
@@ -582,7 +582,7 @@ class Popen(object){
             } else{
                 # Assuming file-like object
                 errwrite = msvcrt.get_osfhandle(stderr.fileno());
-            } errwrite = self._make_inheritable(errwrite);
+            } errwrite = this._make_inheritable(errwrite);
             # We just duplicated the handle, it has to be closed at the end
             to_close.add(errwrite);
             if stderr == PIPE{
@@ -595,7 +595,7 @@ class Popen(object){
 
 
         }
-        def _make_inheritable(self, handle){
+        function _make_inheritable( handle){
             """Return a duplicate of handle, which is inheritable""";
             return _subprocess.DuplicateHandle(_subprocess.GetCurrentProcess(),
                                 handle, _subprocess.GetCurrentProcess(), 0, 1,
@@ -603,7 +603,7 @@ class Popen(object){
 
 
         }
-        def _find_w9xpopen(self){
+        function _find_w9xpopen(){
             """Find and return absolut path to w9xpopen.exe""";
             w9xpopen = os.path.join(
                             os.path.dirname(_subprocess.GetModuleFileName(0)),
@@ -621,7 +621,7 @@ class Popen(object){
 
 
         }
-        def _execute_child(self, args, executable, preexec_fn, close_fds,
+        function _execute_child( args, executable, preexec_fn, close_fds,
                            cwd, env, universal_newlines,
                            startupinfo, creationflags, shell, to_close,
                            p2cread, p2cwrite,
@@ -634,9 +634,9 @@ class Popen(object){
 
             # Process startup details
             }
-            if startupinfo is None{
+            if startupinfo is nil{
                 startupinfo = STARTUPINFO();
-            } if None not in (p2cread, c2pwrite, errwrite){
+            } if nil not in (p2cread, c2pwrite, errwrite){
                 startupinfo.dwFlags |= _subprocess.STARTF_USESTDHANDLES;
                 startupinfo.hStdInput = p2cread;
                 startupinfo.hStdOutput = c2pwrite;
@@ -654,7 +654,7 @@ class Popen(object){
                     # use the w9xpopen intermediate program. For more
                     # information, see KB Q150956
                     # (http://web.archive.org/web/20011105084002/http://support.microsoft.com/support/kb/articles/Q150/9/56.asp)
-                    w9xpopen = self._find_w9xpopen();
+                    w9xpopen = this._find_w9xpopen();
                     args = '"%s" %s' % (w9xpopen, args);
                     # Not passing CREATE_NEW_CONSOLE has been known to
                     # cause random failures on win9x.  Specifically a
@@ -665,7 +665,7 @@ class Popen(object){
                     creationflags |= _subprocess.CREATE_NEW_CONSOLE;
 
             }
-            } def _close_in_parent(fd){
+            } function _close_in_parent(fd){
                 fd.Close();
                 to_close.remove(fd);
 
@@ -674,7 +674,7 @@ class Popen(object){
             try{
                 hp, ht, pid, tid = _subprocess.CreateProcess(executable, args,
                                          # no special security
-                                         None, None,
+                                         nil, nil,
                                          int(not close_fds),
                                          creationflags,
                                          env,
@@ -693,22 +693,22 @@ class Popen(object){
                 # output pipe are maintained in this process or else the
                 # pipe will not close when the child process exits and the
                 # ReadFile will hang.
-                if p2cread is not None{
+                if p2cread is not nil{
                     _close_in_parent(p2cread);
-                } if c2pwrite is not None{
+                } if c2pwrite is not nil{
                     _close_in_parent(c2pwrite);
-                } if errwrite is not None{
+                } if errwrite is not nil{
                     _close_in_parent(errwrite);
 
             # Retain the process handle, but close the thread handle
             }
-            } self._child_created = True;
-            self._handle = hp;
-            self.pid = pid;
+            } this._child_created = true;
+            this._handle = hp;
+            this.pid = pid;
             ht.Close();
 
         }
-        def _internal_poll(self, _deadstate=None,
+        function _internal_poll( _deadstate=nil,
                 _WaitForSingleObject=_subprocess.WaitForSingleObject,
                 _WAIT_OBJECT_0=_subprocess.WAIT_OBJECT_0,
                 _GetExitCodeProcess=_subprocess.GetExitCodeProcess){
@@ -719,51 +719,51 @@ class Popen(object){
             in its local scope.
 
             """;
-            if self.returncode is None{
-                if _WaitForSingleObject(self._handle, 0) == _WAIT_OBJECT_0{
-                    self.returncode = _GetExitCodeProcess(self._handle);
-            } } return self.returncode;
+            if this.returncode is nil{
+                if _WaitForSingleObject(this._handle, 0) == _WAIT_OBJECT_0{
+                    this.returncode = _GetExitCodeProcess(this._handle);
+            } } return this.returncode;
 
 
         }
-        def wait(self){
+        function wait(){
             """Wait for child process to terminate.  Returns returncode
             attribute.""";
-            if self.returncode is None{
-                _subprocess.WaitForSingleObject(self._handle,
+            if this.returncode is nil{
+                _subprocess.WaitForSingleObject(this._handle,
                                                 _subprocess.INFINITE);
-                self.returncode = _subprocess.GetExitCodeProcess(self._handle);
-            } return self.returncode;
+                this.returncode = _subprocess.GetExitCodeProcess(this._handle);
+            } return this.returncode;
 
 
         }
-        def _readerthread(self, fh, buffer){
+        function _readerthread( fh, buffer){
             buffer.append(fh.read());
 
 
         }
-        def _communicate(self, input){
-            stdout = None; # Return
-            stderr = None; # Return
+        function _communicate( input){
+            stdout = nil; # Return
+            stderr = nil; # Return
 
-            if self.stdout{
+            if this.stdout{
                 stdout = [];
-                stdout_thread = threading.Thread(target=self._readerthread,
-                                                 args=(self.stdout, stdout));
-                stdout_thread.setDaemon(True);
+                stdout_thread = threading.Thread(target=this._readerthread,
+                                                 args=(this.stdout, stdout));
+                stdout_thread.setDaemon(true);
                 stdout_thread.start();
-            } if self.stderr{
+            } if this.stderr{
                 stderr = [];
-                stderr_thread = threading.Thread(target=self._readerthread,
-                                                 args=(self.stderr, stderr));
-                stderr_thread.setDaemon(True);
+                stderr_thread = threading.Thread(target=this._readerthread,
+                                                 args=(this.stderr, stderr));
+                stderr_thread.setDaemon(true);
                 stderr_thread.start();
 
             }
-            if self.stdin{
-                if input is not None{
+            if this.stdin{
+                if input is not nil{
                     try{
-                        self.stdin.write(input);
+                        this.stdin.write(input);
                     } except IOError as e{
                         if e.errno == errno.EPIPE{
                             # communicate() should ignore broken pipe error
@@ -776,19 +776,19 @@ class Popen(object){
                             pass;
                         } else{
                             raise;
-                } } } self.stdin.close();
+                } } } this.stdin.close();
 
             }
-            if self.stdout{
+            if this.stdout{
                 stdout_thread.join();
-            } if self.stderr{
+            } if this.stderr{
                 stderr_thread.join();
 
             # All data exchanged.  Translate lists into strings.
             }
-            if stdout is not None{
+            if stdout is not nil{
                 stdout = stdout[0];
-            } if stderr is not None{
+            } if stderr is not nil{
                 stderr = stderr[0];
 
             # Translate newlines, if requested.  We cannot let the file
@@ -796,44 +796,44 @@ class Popen(object){
             # impossible to combine with select (unless forcing no
             # buffering).
             }
-            if self.universal_newlines and hasattr(file, 'newlines'){
+            if this.universal_newlines and hasattr(file, 'newlines'){
                 if stdout{
-                    stdout = self._translate_newlines(stdout);
+                    stdout = this._translate_newlines(stdout);
                 } if stderr{
-                    stderr = self._translate_newlines(stderr);
+                    stderr = this._translate_newlines(stderr);
 
             }
-            } self.wait();
+            } this.wait();
             return (stdout, stderr);
 
         }
-        def send_signal(self, sig){
+        function send_signal( sig){
             """Send a signal to the process
             """;
             if sig == signal.SIGTERM{
-                self.terminate();
+                this.terminate();
             } elif sig == signal.CTRL_C_EVENT{
-                os.kill(self.pid, signal.CTRL_C_EVENT);
+                os.kill(this.pid, signal.CTRL_C_EVENT);
             } elif sig == signal.CTRL_BREAK_EVENT{
-                os.kill(self.pid, signal.CTRL_BREAK_EVENT);
+                os.kill(this.pid, signal.CTRL_BREAK_EVENT);
             } else{
                 raise ValueError("Unsupported signal: {}".format(sig));
 
         }
-        } def terminate(self){
+        } function terminate(){
             """Terminates the process
             """;
             try{
-                _subprocess.TerminateProcess(self._handle, 1);
+                _subprocess.TerminateProcess(this._handle, 1);
             } except OSError as e{
                 # ERROR_ACCESS_DENIED (winerror 5) is received when the
                 # process already died.
                 if e.winerror != 5{
                     raise;
-                } rc = _subprocess.GetExitCodeProcess(self._handle);
+                } rc = _subprocess.GetExitCodeProcess(this._handle);
                 if rc == _subprocess.STILL_ACTIVE{
                     raise;
-                } self.returncode = rc;
+                } this.returncode = rc;
 
         }
         } kill = terminate;
@@ -843,19 +843,19 @@ class Popen(object){
         #
         # POSIX methods
         #
-        def _get_handles(self, stdin, stdout, stderr){
+        function _get_handles( stdin, stdout, stderr){
             """Construct and return tuple with IO objects:
             p2cread, p2cwrite, c2pread, c2pwrite, errread, errwrite
             """;
             to_close = set();
-            p2cread, p2cwrite = None, None;
-            c2pread, c2pwrite = None, None;
-            errread, errwrite = None, None;
+            p2cread, p2cwrite = nil, nil;
+            c2pread, c2pwrite = nil, nil;
+            errread, errwrite = nil, nil;
 
-            if stdin is None{
+            if stdin is nil{
                 pass;
             } elif stdin == PIPE{
-                p2cread, p2cwrite = self.pipe_cloexec();
+                p2cread, p2cwrite = this.pipe_cloexec();
                 to_close.update((p2cread, p2cwrite));
             } elif isinstance(stdin, (int, long)){
                 p2cread = stdin;
@@ -864,10 +864,10 @@ class Popen(object){
                 p2cread = stdin.fileno();
 
             }
-            if stdout is None{
+            if stdout is nil{
                 pass;
             } elif stdout == PIPE{
-                c2pread, c2pwrite = self.pipe_cloexec();
+                c2pread, c2pwrite = this.pipe_cloexec();
                 to_close.update((c2pread, c2pwrite));
             } elif isinstance(stdout, (int, long)){
                 c2pwrite = stdout;
@@ -876,13 +876,13 @@ class Popen(object){
                 c2pwrite = stdout.fileno();
 
             }
-            if stderr is None{
+            if stderr is nil{
                 pass;
             } elif stderr == PIPE{
-                errread, errwrite = self.pipe_cloexec();
+                errread, errwrite = this.pipe_cloexec();
                 to_close.update((errread, errwrite));
             } elif stderr == STDOUT{
-                if c2pwrite is not None{
+                if c2pwrite is not nil{
                     errwrite = c2pwrite;
                 } else{ # child's stdout is not set, use parent's stdout
                     errwrite = sys.__stdout__.fileno();
@@ -899,7 +899,7 @@ class Popen(object){
 
 
         }
-        def _set_cloexec_flag(self, fd, cloexec=True){
+        function _set_cloexec_flag( fd, cloexec=true){
             try{
                 cloexec_flag = fcntl.FD_CLOEXEC;
             } except AttributeError{
@@ -914,20 +914,20 @@ class Popen(object){
 
 
         }
-        } def pipe_cloexec(self){
+        } function pipe_cloexec(){
             """Create a pipe with FDs set CLOEXEC.""";
             # Pipes' FDs are set CLOEXEC by default because we don't want them
             # to be inherited by other subprocesses: the CLOEXEC flag is removed
             # from the child's FDs by _dup2(), between fork() and exec().
             # This is not atomic: we would need the pipe2() syscall for that.
             r, w = os.pipe();
-            self._set_cloexec_flag(r);
-            self._set_cloexec_flag(w);
+            this._set_cloexec_flag(r);
+            this._set_cloexec_flag(w);
             return r, w;
 
 
         }
-        def _close_fds(self, but){
+        function _close_fds( but){
             if hasattr(os, 'closerange'){
                 os.closerange(3, but);
                 os.closerange(but + 1, MAXFD);
@@ -951,15 +951,15 @@ class Popen(object){
             class _noop_context_manager(object){
                 # A dummy context manager that does nothing for the rare
                 # user of a --without-threads build.
-                def __enter__(self){ pass;
-                def __exit__(self, *args){ pass;
+                function __enter__(){ pass;}
+                function __exit__( *args){ pass;}
 
             }
             _disabling_gc_lock = _noop_context_manager();
 
 
         }
-        def _execute_child(self, args, executable, preexec_fn, close_fds,
+        function _execute_child( args, executable, preexec_fn, close_fds,
                            cwd, env, universal_newlines,
                            startupinfo, creationflags, shell, to_close,
                            p2cread, p2cwrite,
@@ -979,11 +979,11 @@ class Popen(object){
                     args[0] = executable;
 
             }
-            } if executable is None{
+            } if executable is nil{
                 executable = args[0];
 
             }
-            def _close_in_parent(fd){
+            function _close_in_parent(fd){
                 os.close(fd);
                 to_close.remove(fd);
 
@@ -991,31 +991,31 @@ class Popen(object){
             # The first char specifies the exception type: 0 means
             # OSError, 1 means some other error.
             }
-            errpipe_read, errpipe_write = self.pipe_cloexec();
+            errpipe_read, errpipe_write = this.pipe_cloexec();
             try{
                 try{
-                    with self._disabling_gc_lock{
+                    with this._disabling_gc_lock{
                         gc_was_enabled = gc.isenabled();
                         # Disable gc to avoid bug where gc -> file_dealloc ->
                         # write to stderr -> hang.
                         # https://bugs.python.org/issue1336
                         gc.disable();
                     } try{
-                        self.pid = os.fork();
+                        this.pid = os.fork();
                     } except Exception{
                         if gc_was_enabled{
                             gc.enable();
                         } raise;
-                    } self._child_created = True;
-                    if self.pid == 0{
+                    } this._child_created = true;
+                    if this.pid == 0{
                         # Child
                         try{
                             # Close parent's pipe ends
-                            if p2cwrite is not None{
+                            if p2cwrite is not nil{
                                 os.close(p2cwrite);
-                            } if c2pread is not None{
+                            } if c2pread is not nil{
                                 os.close(c2pread);
-                            } if errread is not None{
+                            } if errread is not nil{
                                 os.close(errread);
                             } os.close(errpipe_read);
 
@@ -1029,13 +1029,13 @@ class Popen(object){
 
                             # Dup fds for child
                             }
-                            def _dup2(a, b){
+                            function _dup2(a, b){
                                 # dup2() removes the CLOEXEC flag but
                                 # we must do it ourselves if dup2()
                                 # would be a no-op (issue #10806).
                                 if a == b{
-                                    self._set_cloexec_flag(a, False);
-                                } elif a is not None{
+                                    this._set_cloexec_flag(a, false);
+                                } elif a is not nil{
                                     os.dup2(a, b);
                             } } _dup2(p2cread, 0);
                             _dup2(c2pwrite, 1);
@@ -1043,14 +1043,14 @@ class Popen(object){
 
                             # Close pipe fds.  Make sure we don't close the
                             # same fd more than once, or standard fds.
-                            closed = { None };
+                            closed = { nil };
                             for fd in [p2cread, c2pwrite, errwrite]{
                                 if fd not in closed and fd > 2{
                                     os.close(fd);
                                     closed.add(fd);
 
                             }
-                            } if cwd is not None{
+                            } if cwd is not nil{
                                 os.chdir(cwd);
 
                             }
@@ -1061,10 +1061,10 @@ class Popen(object){
                             # preexec_fn(), which may open FDs.
                             }
                             if close_fds{
-                                self._close_fds(but=errpipe_write);
+                                this._close_fds(but=errpipe_write);
 
                             }
-                            if env is None{
+                            if env is nil{
                                 os.execvp(executable, args);
                             } else{
                                 os.execvpe(executable, args, env);
@@ -1102,11 +1102,11 @@ class Popen(object){
                     data = _eintr_retry_call(os.read, errpipe_read, 1048576);
                 } data = "".join(pickle_bits);
             } finally{
-                if p2cread is not None and p2cwrite is not None{
+                if p2cread is not nil and p2cwrite is not nil{
                     _close_in_parent(p2cread);
-                } if c2pwrite is not None and c2pread is not None{
+                } if c2pwrite is not nil and c2pread is not nil{
                     _close_in_parent(c2pwrite);
-                } if errwrite is not None and errread is not None{
+                } if errwrite is not nil and errread is not nil{
                     _close_in_parent(errwrite);
 
                 # be sure the FD is closed no matter what
@@ -1116,7 +1116,7 @@ class Popen(object){
             }
             if data != ""{
                 try{
-                    _eintr_retry_call(os.waitpid, self.pid, 0);
+                    _eintr_retry_call(os.waitpid, this.pid, 0);
                 } except OSError as e{
                     if e.errno != errno.ECHILD{
                         raise;
@@ -1125,25 +1125,25 @@ class Popen(object){
 
 
         }
-        } def _handle_exitstatus(self, sts, _WIFSIGNALED=os.WIFSIGNALED,
+        } function _handle_exitstatus( sts, _WIFSIGNALED=os.WIFSIGNALED,
                 _WTERMSIG=os.WTERMSIG, _WIFEXITED=os.WIFEXITED,
                 _WEXITSTATUS=os.WEXITSTATUS, _WIFSTOPPED=os.WIFSTOPPED,
                 _WSTOPSIG=os.WSTOPSIG){
             # This method is called (indirectly) by __del__, so it cannot
             # refer to anything outside of its local scope.
             if _WIFSIGNALED(sts){
-                self.returncode = -_WTERMSIG(sts);
+                this.returncode = -_WTERMSIG(sts);
             } elif _WIFEXITED(sts){
-                self.returncode = _WEXITSTATUS(sts);
+                this.returncode = _WEXITSTATUS(sts);
             } elif _WIFSTOPPED(sts){
-                self.returncode = -_WSTOPSIG(sts);
+                this.returncode = -_WSTOPSIG(sts);
             } else{
                 # Should never happen
                 raise RuntimeError("Unknown child exit status!");
 
 
         }
-        } def _internal_poll(self, _deadstate=None, _waitpid=os.waitpid,
+        } function _internal_poll( _deadstate=nil, _waitpid=os.waitpid,
                 _WNOHANG=os.WNOHANG, _os_error=os.error, _ECHILD=errno.ECHILD){
             """Check if child process has terminated.  Returns returncode
             attribute.
@@ -1152,31 +1152,31 @@ class Popen(object){
             outside of the local scope (nor can any methods it calls).
 
             """;
-            if self.returncode is None{
+            if this.returncode is nil{
                 try{
-                    pid, sts = _waitpid(self.pid, _WNOHANG);
-                    if pid == self.pid{
-                        self._handle_exitstatus(sts);
+                    pid, sts = _waitpid(this.pid, _WNOHANG);
+                    if pid == this.pid{
+                        this._handle_exitstatus(sts);
                 } } except _os_error as e{
-                    if _deadstate is not None{
-                        self.returncode = _deadstate;
+                    if _deadstate is not nil{
+                        this.returncode = _deadstate;
                     } if e.errno == _ECHILD{
                         # This happens if SIGCLD is set to be ignored or
                         # waiting for child processes has otherwise been
                         # disabled for our process.  This child is dead, we
                         # can't get the status.
                         # http://bugs.python.org/issue15756
-                        self.returncode = 0;
-            } } } return self.returncode;
+                        this.returncode = 0;
+            } } } return this.returncode;
 
 
         }
-        def wait(self){
+        function wait(){
             """Wait for child process to terminate.  Returns returncode
             attribute.""";
-            while self.returncode is None{
+            while this.returncode is nil{
                 try{
-                    pid, sts = _eintr_retry_call(os.waitpid, self.pid, 0);
+                    pid, sts = _eintr_retry_call(os.waitpid, this.pid, 0);
                 } except OSError as e{
                     if e.errno != errno.ECHILD{
                         raise;
@@ -1184,36 +1184,36 @@ class Popen(object){
                     # for child processes has otherwise been disabled for our
                     # process.  This child is dead, we can't get the status.
                     }
-                    pid = self.pid;
+                    pid = this.pid;
                     sts = 0;
                 # Check the pid and loop as waitpid has been known to return
                 # 0 even without WNOHANG in odd situations.  issue14396.
                 }
-                if pid == self.pid{
-                    self._handle_exitstatus(sts);
-            } } return self.returncode;
+                if pid == this.pid{
+                    this._handle_exitstatus(sts);
+            } } return this.returncode;
 
 
         }
-        def _communicate(self, input){
-            if self.stdin{
+        function _communicate( input){
+            if this.stdin{
                 # Flush stdio buffer.  This might block, if the user has
                 # been writing to .stdin in an uncontrolled fashion.
-                self.stdin.flush();
+                this.stdin.flush();
                 if not input{
-                    self.stdin.close();
+                    this.stdin.close();
 
             }
             } if _has_poll{
-                stdout, stderr = self._communicate_with_poll(input);
+                stdout, stderr = this._communicate_with_poll(input);
             } else{
-                stdout, stderr = self._communicate_with_select(input);
+                stdout, stderr = this._communicate_with_select(input);
 
             # All data exchanged.  Translate lists into strings.
             }
-            if stdout is not None{
+            if stdout is not nil{
                 stdout = ''.join(stdout);
-            } if stderr is not None{
+            } if stderr is not nil{
                 stderr = ''.join(stderr);
 
             # Translate newlines, if requested.  We cannot let the file
@@ -1221,47 +1221,47 @@ class Popen(object){
             # impossible to combine with select (unless forcing no
             # buffering).
             }
-            if self.universal_newlines and hasattr(file, 'newlines'){
+            if this.universal_newlines and hasattr(file, 'newlines'){
                 if stdout{
-                    stdout = self._translate_newlines(stdout);
+                    stdout = this._translate_newlines(stdout);
                 } if stderr{
-                    stderr = self._translate_newlines(stderr);
+                    stderr = this._translate_newlines(stderr);
 
             }
-            } self.wait();
+            } this.wait();
             return (stdout, stderr);
 
 
         }
-        def _communicate_with_poll(self, input){
-            stdout = None; # Return
-            stderr = None; # Return
+        function _communicate_with_poll( input){
+            stdout = nil; # Return
+            stderr = nil; # Return
             fd2file = {};
             fd2output = {};
 
             poller = select.poll();
-            def register_and_append(file_obj, eventmask){
+            function register_and_append(file_obj, eventmask){
                 poller.register(file_obj.fileno(), eventmask);
                 fd2file[file_obj.fileno()] = file_obj;
 
             }
-            def close_unregister_and_remove(fd){
+            function close_unregister_and_remove(fd){
                 poller.unregister(fd);
                 fd2file[fd].close();
                 fd2file.pop(fd);
 
             }
-            if self.stdin and input{
-                register_and_append(self.stdin, select.POLLOUT);
+            if this.stdin and input{
+                register_and_append(this.stdin, select.POLLOUT);
 
             }
             select_POLLIN_POLLPRI = select.POLLIN | select.POLLPRI;
-            if self.stdout{
-                register_and_append(self.stdout, select_POLLIN_POLLPRI);
-                fd2output[self.stdout.fileno()] = stdout = [];
-            } if self.stderr{
-                register_and_append(self.stderr, select_POLLIN_POLLPRI);
-                fd2output[self.stderr.fileno()] = stderr = [];
+            if this.stdout{
+                register_and_append(this.stdout, select_POLLIN_POLLPRI);
+                fd2output[this.stdout.fileno()] = stdout = [];
+            } if this.stderr{
+                register_and_append(this.stderr, select_POLLIN_POLLPRI);
+                fd2output[this.stderr.fileno()] = stderr = [];
 
             }
             input_offset = 0;
@@ -1301,19 +1301,19 @@ class Popen(object){
 
 
         }
-        def _communicate_with_select(self, input){
+        function _communicate_with_select( input){
             read_set = [];
             write_set = [];
-            stdout = None; # Return
-            stderr = None; # Return
+            stdout = nil; # Return
+            stderr = nil; # Return
 
-            if self.stdin and input{
-                write_set.append(self.stdin);
-            } if self.stdout{
-                read_set.append(self.stdout);
+            if this.stdin and input{
+                write_set.append(this.stdin);
+            } if this.stdout{
+                read_set.append(this.stdout);
                 stdout = [];
-            } if self.stderr{
-                read_set.append(self.stderr);
+            } if this.stderr{
+                read_set.append(this.stderr);
                 stderr = [];
 
             }
@@ -1327,36 +1327,36 @@ class Popen(object){
                     } raise;
 
                 }
-                if self.stdin in wlist{
+                if this.stdin in wlist{
                     chunk = input[input_offset : input_offset + _PIPE_BUF];
                     try{
-                        bytes_written = os.write(self.stdin.fileno(), chunk);
+                        bytes_written = os.write(this.stdin.fileno(), chunk);
                     } except OSError as e{
                         if e.errno == errno.EPIPE{
-                            self.stdin.close();
-                            write_set.remove(self.stdin);
+                            this.stdin.close();
+                            write_set.remove(this.stdin);
                         } else{
                             raise;
                     } } else{
                         input_offset += bytes_written;
                         if input_offset >= len(input){
-                            self.stdin.close();
-                            write_set.remove(self.stdin);
+                            this.stdin.close();
+                            write_set.remove(this.stdin);
 
                 }
-                } } if self.stdout in rlist{
-                    data = os.read(self.stdout.fileno(), 1024);
+                } } if this.stdout in rlist{
+                    data = os.read(this.stdout.fileno(), 1024);
                     if data == ""{
-                        self.stdout.close();
-                        read_set.remove(self.stdout);
+                        this.stdout.close();
+                        read_set.remove(this.stdout);
                     } stdout.append(data);
 
                 }
-                if self.stderr in rlist{
-                    data = os.read(self.stderr.fileno(), 1024);
+                if this.stderr in rlist{
+                    data = os.read(this.stderr.fileno(), 1024);
                     if data == ""{
-                        self.stderr.close();
-                        read_set.remove(self.stderr);
+                        this.stderr.close();
+                        read_set.remove(this.stderr);
                     } stderr.append(data);
 
             }
@@ -1364,26 +1364,26 @@ class Popen(object){
 
 
         }
-        def send_signal(self, sig){
+        function send_signal( sig){
             """Send a signal to the process
             """;
-            os.kill(self.pid, sig);
+            os.kill(this.pid, sig);
 
         }
-        def terminate(self){
+        function terminate(){
             """Terminate the process with SIGTERM
             """;
-            self.send_signal(signal.SIGTERM);
+            this.send_signal(signal.SIGTERM);
 
         }
-        def kill(self){
+        function kill(){
             """Kill the process with SIGKILL
             """;
-            self.send_signal(signal.SIGKILL);
+            this.send_signal(signal.SIGKILL);
 
 
 }
-} } def _demo_posix(){
+} } function _demo_posix(){
     #
     # Example 1: Simple redirection: Get process list
     #
@@ -1426,12 +1426,12 @@ class Popen(object){
 
 
 }
-} def _demo_windows(){
+} function _demo_windows(){
     #
     # Example 1: Connecting several subprocesses
     #
     print "Looking for 'PROMPT' in set output...";
-    p1 = Popen("set", stdout=PIPE, shell=True);
+    p1 = Popen("set", stdout=PIPE, shell=true);
     p2 = Popen('find "PROMPT"', stdin=p1.stdout, stdout=PIPE);
     print repr(p2.communicate()[0]);
 

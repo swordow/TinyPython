@@ -86,8 +86,8 @@ node2tuple(node *n,                     /* node to convert               */
            int col_offset)              /* include column offsets?       */
 {
     if (n == NULL) {
-        Py_INCREF(Py_None);
-        return (Py_None);
+        Py_INCREF(Py_Nil);
+        return (Py_Nil);
     }
     if (ISNONTERMINAL(TYPE(n))) {
         int i;
@@ -1100,32 +1100,32 @@ validate_repeating_list(node *tree, int ntype, int (*vfunc)(node *),
  *      'class' NAME ['(' testlist ')'] ':' suite
  *  classdef:
  *      'class' NAME ['(' testlist ')'] '{' suite '}'
+ *  classdef:
+ *      'class' NAME ['(' testlist ')'] suite
  */
 static int
 validate_class(node *tree)
 {
     int nch = NCH(tree);
     int res = (validate_ntype(tree, classdef) &&
-                ((nch == 5) || (nch == 7) || (nch == 8)));
+                ((nch == 3) || (nch == 5) || (nch == 6)));
 
     if (res) {
         res = (validate_name(CHILD(tree, 0), "class")
                && validate_ntype(CHILD(tree, 1), NAME)
-               && validate_lbrace(CHILD(tree, nch - 3))
-               && validate_suite(CHILD(tree, nch - 2))
-			   && validate_rbrace(CHILD(tree, nch - 1)));
+               && validate_suite(CHILD(tree, nch - 1)));
     }
     else {
-        (void) validate_numnodes(tree, 5, "class");
+        (void) validate_numnodes(tree, 3, "class");
     }
 
     if (res) {
-        if (nch == 8) {
+        if (nch == 6) {
                 res = ((validate_lparen(CHILD(tree, 2)) &&
                         validate_testlist(CHILD(tree, 3)) &&
                         validate_rparen(CHILD(tree, 4))));
         }
-        else if (nch == 7) {
+        else if (nch == 5) {
                 res = (validate_lparen(CHILD(tree,2)) &&
                         validate_rparen(CHILD(tree,3)));
         }
@@ -1136,43 +1136,41 @@ validate_class(node *tree)
 
 /*  if_stmt:
  *      'if' test ':' suite ('elif' test ':' suite)* ['else' ':' suite]
+*	if_stmt:
+ *      'if' test '{' suite '}' ('elif' test '{' suite '}')* ['else' '{' suite '}']
+*	if_stmt:
+ *      'if' test  suite ('elif' test  suite)* ['else' suite]
  */
 static int
 validate_if(node *tree)
 {
     int nch = NCH(tree);
     int res = (validate_ntype(tree, if_stmt)
-               && (nch >= 5)
+               && (nch >= 3)
                && validate_name(CHILD(tree, 0), "if")
                && validate_test(CHILD(tree, 1))
-               && validate_lbrace(CHILD(tree, 2))
-               && validate_suite(CHILD(tree, 3))
-			   && validate_rbrace(CHILD(tree, 4)));
+               && validate_suite(CHILD(tree, 2)));
 
-    if (res && ((nch % 5) == 4)) {
+    if (res && ((nch % 3) == 2)) {
         /*  ... 'else' ':' suite  */
-        res = (validate_name(CHILD(tree, nch - 4), "else")
-			   && validate_lbrace(CHILD(tree, nch - 3))
-               && validate_suite(CHILD(tree, nch - 2))
-			   && validate_rbrace(CHILD(tree, nch - 1)));
-        nch -= 4;
+        res = (validate_name(CHILD(tree, nch - 2), "else")
+               && validate_suite(CHILD(tree, nch - 1)));
+        nch -= 2;
     }
     else if (!res && !PyErr_Occurred())
-        (void) validate_numnodes(tree, 5, "if");
+        (void) validate_numnodes(tree, 3, "if");
     if ((nch % 5) != 0)
         /* Will catch the case for nch < 4 */
         res = validate_numnodes(tree, 0, "if");
-    else if (res && (nch > 5)) {
+    else if (res && (nch > 3)) {
         /*  ... ('elif' test ':' suite)+ ...  */
-        int j = 5;
+        int j = 3;
         while ((j < nch) && res) {
             res = (validate_name(CHILD(tree, j), "elif")
                    && validate_test(CHILD(tree, j + 1))
-				   && validate_lbrace(CHILD(tree, j + 2))
-                   && validate_suite(CHILD(tree, j + 3))
-				   && validate_rbrace(CHILD(tree, j + 4))
+                   && validate_suite(CHILD(tree, j + 2))
 				);
-            j += 5;
+            j += 3;
         }
     }
     return (res);
@@ -1208,16 +1206,18 @@ validate_parameters(node *tree)
  *      simple_stmt
  *    | NEWLINE INDENT stmt+ DEDENT
  *  suite:
-		stmt+
+ *		stmt+
+ *  suite:
+ *		'{' stmt* '}
  */
 static int
 validate_suite(node *tree)
 {
     int nch = NCH(tree);
     //int res = (validate_ntype(tree, suite) && ((nch == 1) || (nch >= 4)));
-	int res = (validate_ntype(tree, suite) && ((nch >= 1)));
+	int res = (validate_ntype(tree, suite) && ((nch >= 2)));
 	int i = 0;
-	for (; res && (i < nch); ++i)
+	for (i=1; res && (i < nch-1); ++i)
 		res = validate_stmt(CHILD(tree, i));
     //if (res && (nch == 1))
     //    res = validate_simple_stmt(CHILD(tree, 0));
@@ -2105,18 +2105,14 @@ validate_while(node *tree)
 {
     int nch = NCH(tree);
     int res = (validate_ntype(tree, while_stmt)
-               && ((nch == 5) || (nch == 9))
+               && ((nch == 3) || (nch == 5))
                && validate_name(CHILD(tree, 0), "while")
                && validate_test(CHILD(tree, 1))
-               && validate_lbrace(CHILD(tree, 2))
-               && validate_suite(CHILD(tree, 3))
-			   && validate_rbrace(CHILD(tree, 4)));
+               && validate_suite(CHILD(tree, 2)));
 
-    if (res && (nch == 9))
-        res = (validate_name(CHILD(tree, 5), "else")
-               && validate_lbrace(CHILD(tree, 6))
-               && validate_suite(CHILD(tree, 7))
-			   && validate_rbrace(CHILD(tree, 8)));
+    if (res && (nch == 5))
+        res = (validate_name(CHILD(tree, 3), "else")
+               && validate_suite(CHILD(tree, 4)));
 
     return (res);
 }
@@ -2127,20 +2123,16 @@ validate_for(node *tree)
 {
     int nch = NCH(tree);
     int res = (validate_ntype(tree, for_stmt)
-               && ((nch == 7) || (nch == 11))
+               && ((nch == 5) || (nch == 7))
                && validate_name(CHILD(tree, 0), "for")
                && validate_exprlist(CHILD(tree, 1))
                && validate_name(CHILD(tree, 2), "in")
                && validate_testlist(CHILD(tree, 3))
-               && validate_lbrace(CHILD(tree, 4))
-               && validate_suite(CHILD(tree, 5))
-			   && validate_rbrace(CHILD(tree, 6)));
+               && validate_suite(CHILD(tree, 4)));
 
-    if (res && (nch == 11))
-        res = (validate_name(CHILD(tree, 7), "else")
-               && validate_lbrace(CHILD(tree, 8))
-               && validate_suite(CHILD(tree, 9))
-			   && validate_rbrace(CHILD(tree, 10)));
+    if (res && (nch == 7))
+        res = (validate_name(CHILD(tree, 5), "else")
+               && validate_suite(CHILD(tree, 6)));
 
     return (res);
 }
@@ -2151,27 +2143,28 @@ validate_for(node *tree)
                                                    ['finally' '{' suite '}']
  *    | 'try' '{' suite '}' 'finally' '{' suite '}'
  *
+	 try_stmt:
+	 *      'try'  suite  (except_clause suite )+ ['else'  suite ]
+	 ['finally' '{' suite '}']
+	 *    | 'try' suite  'finally' suite 
  */
 static int
 validate_try(node *tree)
 {
     int nch = NCH(tree);
-    int pos = 4;
+    int pos = 2;
     int res = (validate_ntype(tree, try_stmt)
-               && (nch >= 8) && ((nch % 4) == 0));
+               && (nch >= 4) && ((nch % 2) == 0));
 
     if (res)
         res = (validate_name(CHILD(tree, 0), "try")
-               && validate_lbrace(CHILD(tree, 1))
-               && validate_suite(CHILD(tree, 2))
-			   && validate_rbrace(CHILD(tree, 3))
-               && validate_lbrace(CHILD(tree, nch - 3))
-               && validate_suite(CHILD(tree, nch - 2))
-			   && validate_rbrace(CHILD(tree, nch - 1)));
+               && validate_suite(CHILD(tree, 1))
+               && validate_suite(CHILD(tree, nch - 1)));
+
     else if (!PyErr_Occurred()) {
         const char* name = "except";
-        if (TYPE(CHILD(tree, nch - 4)) != except_clause)
-            name = STR(CHILD(tree, nch - 4));
+        if (TYPE(CHILD(tree, nch - 2)) != except_clause)
+            name = STR(CHILD(tree, nch - 2));
 
         PyErr_Format(parser_error,
                      "Illegal number of children for try/%s node.", name);
@@ -2179,35 +2172,27 @@ validate_try(node *tree)
     /* Handle try/finally statement */
     if (res && (TYPE(CHILD(tree, pos)) == NAME) &&
         (strcmp(STR(CHILD(tree, pos)), "finally") == 0)) {
-        res = (validate_numnodes(tree, 8, "try/finally")
-               && validate_lbrace(CHILD(tree, 5))
-               && validate_suite(CHILD(tree, 6))
-			   && validate_rbrace(CHILD(tree, 7)));
+        res = (validate_numnodes(tree, 4, "try/finally")
+               && validate_suite(CHILD(tree, 3)));
         return (res);
     }
     /* try/except statement: skip past except_clause sections */
     while (res && pos < nch && (TYPE(CHILD(tree, pos)) == except_clause)) {
         res = (validate_except_clause(CHILD(tree, pos))
-               && validate_lbrace(CHILD(tree, pos + 1))
-               && validate_suite(CHILD(tree, pos + 2))
-			   && validate_rbrace(CHILD(tree, pos + 3)));
-        pos += 4;
+               && validate_suite(CHILD(tree, pos + 1)));
+        pos += 2;
     }
     /* skip else clause */
     if (res && pos < nch && (TYPE(CHILD(tree, pos)) == NAME) &&
         (strcmp(STR(CHILD(tree, pos)), "else") == 0)) {
-        res = (validate_lbrace(CHILD(tree, pos + 1))
-               && validate_suite(CHILD(tree, pos + 2))
-			   && validate_rbrace(CHILD(tree, pos + 3)));
-        pos += 4;
+        res = (validate_suite(CHILD(tree, pos + 1)));
+        pos += 2;
     }
     if (res && pos < nch) {
         /* last clause must be a finally */
         res = (validate_name(CHILD(tree, pos), "finally")
-               && validate_numnodes(tree, pos + 4, "try/except/finally")
-               && validate_lbrace(CHILD(tree, pos + 1))
-               && validate_suite(CHILD(tree, pos + 2))
-			   && validate_rbrace(CHILD(tree, pos + 3)));
+               && validate_numnodes(tree, pos + 2, "try/except/finally")
+               && validate_suite(CHILD(tree, pos + 1)));
     }
     return (res);
 }
@@ -2737,6 +2722,12 @@ validate_with_item(node *tree)
 /*  with_stmt:
  *    0      1          ...             -2   -1
  *   'with' with_item (',' with_item)* ':' suite
+*  with_stmt:
+ *    0      1          ...             -3   -2   -1
+ *   'with' with_item (',' with_item)* '{' suite  '}'
+ /*  with_stmt:
+ *    0      1          ...              -1
+ *   'with' with_item (',' with_item)* suite
  */
 static int
 validate_with_stmt(node *tree)
@@ -2744,12 +2735,10 @@ validate_with_stmt(node *tree)
     int i;
     int nch = NCH(tree);
     int ok = (validate_ntype(tree, with_stmt)
-        && (nch % 2 == 1 && nch >=5)
+        && (nch % 2 == 1 && nch >=3)
         && validate_name(CHILD(tree, 0), "with")
-        && validate_lbrace(RCHILD(tree, -3))
-        && validate_suite(RCHILD(tree, -2))
-		&& validate_rbrace(RCHILD(tree, -1)));
-    for (i = 1; ok && i < nch - 3; i += 2)
+        && validate_suite(RCHILD(tree, -1)));
+    for (i = 1; ok && i < nch - 1; i += 2)
         ok = validate_with_item(CHILD(tree, i));
     return ok;
 }
@@ -2760,19 +2749,19 @@ validate_with_stmt(node *tree)
  *  'def' NAME parameters ':' suite
  *     -6   -5         -4  -3    -2  -1
  *  'def' NAME parameters '{' suite '}'
+ *    -4  -3    -2         -1
+ *  'def' NAME parameters suite
  */
 static int
 validate_funcdef(node *tree)
 {
     int nch = NCH(tree);
     int ok = (validate_ntype(tree, funcdef)
-               && (nch == 6)
-               && validate_name(RCHILD(tree, -6), "def")
-               && validate_ntype(RCHILD(tree, -5), NAME)
-			   && validate_parameters(RCHILD(tree, -4))
-               && validate_lbrace(RCHILD(tree, -3))
-               && validate_suite(RCHILD(tree, -2))
-			   && validate_rbrace(RCHILD(tree, -1)));
+               && (nch == 4)
+               && validate_name(RCHILD(tree, -4), "def")
+               && validate_ntype(RCHILD(tree, -3), NAME)
+			   && validate_parameters(RCHILD(tree, -2))
+               && validate_suite(RCHILD(tree, -1)));
     return ok;
 }
 

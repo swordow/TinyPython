@@ -414,7 +414,7 @@ cPickle_ErrFormat(PyObject *ErrType, char *stringformat, char *format, ...)
     else
         if (args) retval=args;
         else {
-            PyErr_SetObject(ErrType,Py_None);
+            PyErr_SetObject(ErrType,Py_Nil);
             return NULL;
         }
     PyErr_SetObject(ErrType,retval);
@@ -975,7 +975,7 @@ fast_save_enter(Picklerobject *self, PyObject *obj)
             self->fast_container = -1;
             return 0;
         }
-        if (PyDict_SetItem(self->fast_memo, key, Py_None) < 0) {
+        if (PyDict_SetItem(self->fast_memo, key, Py_Nil) < 0) {
             Py_DECREF(key);
             self->fast_container = -1;
             return 0;
@@ -2347,7 +2347,7 @@ save_pers(Picklerobject *self, PyObject *args, PyObject *f)
     }
     if (! pid) return -1;
 
-    if (pid != Py_None) {
+    if (pid != Py_Nil) {
         if (!self->bin) {
             if (!PyString_Check(pid)) {
                 PyErr_SetString(PicklingError,
@@ -2400,8 +2400,8 @@ save_reduce(Picklerobject *self, PyObject *args, PyObject *fn, PyObject *ob)
     PyObject *callable;
     PyObject *argtup;
     PyObject *state = NULL;
-    PyObject *listitems = Py_None;
-    PyObject *dictitems = Py_None;
+    PyObject *listitems = Py_Nil;
+    PyObject *dictitems = Py_Nil;
     Py_ssize_t size;
 
     int use_newobj = self->proto >= 2;
@@ -2433,10 +2433,10 @@ save_reduce(Picklerobject *self, PyObject *args, PyObject *fn, PyObject *ob)
         return -1;
     }
 
-    if (state == Py_None)
+    if (state == Py_Nil)
         state = NULL;
 
-    if (listitems == Py_None)
+    if (listitems == Py_Nil)
         listitems = NULL;
     else if (!PyIter_Check(listitems)) {
         cPickle_ErrFormat(PicklingError, "Fourth element of "
@@ -2445,7 +2445,7 @@ save_reduce(Picklerobject *self, PyObject *args, PyObject *fn, PyObject *ob)
         return -1;
     }
 
-    if (dictitems == Py_None)
+    if (dictitems == Py_Nil)
         dictitems = NULL;
     else if (!PyIter_Check(dictitems)) {
         cPickle_ErrFormat(PicklingError, "Fifth element of "
@@ -2610,7 +2610,7 @@ save(Picklerobject *self, PyObject *args, int pers_save)
         }
     }
 
-    if (args == Py_None) {
+    if (args == Py_Nil) {
         res = save_none(self, args);
         goto finally;
     }
@@ -2875,8 +2875,8 @@ Pickle_clear_memo(Picklerobject *self, PyObject *args)
 {
     if (self->memo)
         PyDict_Clear(self->memo);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -3106,7 +3106,7 @@ newPicklerobject(PyObject *file, int proto)
     else if (PycStringIO_OutputCheck(file)) {
         self->write_func = write_cStringIO;
     }
-    else if (file == Py_None) {
+    else if (file == Py_Nil) {
         self->write_func = write_none;
     }
     else {
@@ -3352,7 +3352,7 @@ find_class(PyObject *py_module_name, PyObject *py_global_name, PyObject *fc)
     PyObject *global = 0, *module;
 
     if (fc) {
-        if (fc==Py_None) {
+        if (fc==Py_Nil) {
             PyErr_SetString(UnpicklingError, "Global and instance "
                             "pickles are not supported.");
             return NULL;
@@ -3393,7 +3393,7 @@ marker(Unpicklerobject *self)
 static int
 load_none(Unpicklerobject *self)
 {
-    PDATA_APPEND(self->stack, Py_None, -1);
+    PDATA_APPEND(self->stack, Py_Nil, -1);
     return 0;
 }
 
@@ -4595,7 +4595,7 @@ load_build(Unpicklerobject *self)
         slotstate = NULL;
 
     /* Set inst.__dict__ from the state dict (if any). */
-    if (state != Py_None) {
+    if (state != Py_Nil) {
         PyObject *dict;
         if (! PyDict_Check(state)) {
             PyErr_SetString(UnpicklingError, "state is not a "
@@ -5049,7 +5049,7 @@ noload_inst(Unpicklerobject *self)
     Pdata_clear(self->stack, i);
     if (self->readline_func(self, &s) < 0) return -1;
     if (self->readline_func(self, &s) < 0) return -1;
-    PDATA_APPEND(self->stack, Py_None, -1);
+    PDATA_APPEND(self->stack, Py_Nil, -1);
     return 0;
 }
 
@@ -5066,7 +5066,7 @@ noload_newobj(Unpicklerobject *self)
     if (obj == NULL) return -1;
     Py_DECREF(obj);
 
-    PDATA_APPEND(self->stack, Py_None, -1);
+    PDATA_APPEND(self->stack, Py_Nil, -1);
     return 0;
 }
 
@@ -5077,7 +5077,7 @@ noload_global(Unpicklerobject *self)
 
     if (self->readline_func(self, &s) < 0) return -1;
     if (self->readline_func(self, &s) < 0) return -1;
-    PDATA_APPEND(self->stack, Py_None,-1);
+    PDATA_APPEND(self->stack, Py_Nil,-1);
     return 0;
 }
 
@@ -5087,7 +5087,7 @@ noload_reduce(Unpicklerobject *self)
 
     if (self->stack->length < 2) return stackUnderflow();
     Pdata_clear(self->stack, self->stack->length-2);
-    PDATA_APPEND(self->stack, Py_None,-1);
+    PDATA_APPEND(self->stack, Py_Nil,-1);
     return 0;
 }
 
@@ -5106,7 +5106,7 @@ noload_extension(Unpicklerobject *self, int nbytes)
 
     assert(nbytes == 1 || nbytes == 2 || nbytes == 4);
     if (self->read_func(self, &codebytes, nbytes) < 0) return -1;
-    PDATA_APPEND(self->stack, Py_None, -1);
+    PDATA_APPEND(self->stack, Py_Nil, -1);
     return 0;
 }
 
@@ -5703,8 +5703,8 @@ cpm_dump(PyObject *self, PyObject *args, PyObject *kwds)
     if (dump(pickler, ob) < 0)
         goto finally;
 
-    Py_INCREF(Py_None);
-    res = Py_None;
+    Py_INCREF(Py_Nil);
+    res = Py_Nil;
 
   finally:
     Py_XDECREF(pickler);

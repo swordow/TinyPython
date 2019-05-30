@@ -18,21 +18,21 @@ class Event(object){
     attributes for specific events, such as keycode for key events.
     tkinter.Event.__doc__ has more but is still not complete.
     ''';
-    def __init__(self, **kwds){
+    function __init__( **kwds){
         "Create event with attributes needed for test";
-        self.__dict__.update(kwds);
+        this.__dict__.update(kwds);
 
 }
 } class Var(object){
     "Use for String/Int/BooleanVar: incomplete";
-    def __init__(self, master=None, value=None, name=None){
-        self.master = master;
-        self.value = value;
-        self.name = name;
-    } def set(self, value){
-        self.value = value;
-    } def get(self){
-        return self.value;
+    function __init__( master=nil, value=nil, name=nil){
+        this.master = master;
+        this.value = value;
+        this.name = name;
+    } function set( value){
+        this.value = value;
+    } function get(){
+        return this.value;
 
 }
 } class Mbox_func(object){
@@ -42,15 +42,15 @@ class Event(object){
     arguments as instance attributes, which test functions can then examime.
     The test can set the result returned to ask function
     """;
-    def __init__(self, result=None){
-        self.result = result;  # Return None for all show funcs
-    } def __call__(self, title, message, *args, **kwds){
+    function __init__( result=nil){
+        this.result = result;  # Return None for all show funcs
+    } function __call__( title, message, *args, **kwds){
         # Save all args for possible examination by tester
-        self.title = title;
-        self.message = message;
-        self.args = args;
-        self.kwds = kwds;
-        return self.result;  # Set by tester for ask functions
+        this.title = title;
+        this.message = message;
+        this.args = args;
+        this.kwds = kwds;
+        return this.result;  # Set by tester for ask functions
 
 }
 } class Mbox(object){
@@ -104,21 +104,21 @@ class Text(object){
     For testing, we are not concerned with Tk Text's treatment of,
     for instance, 0-width characters or character + accent.
    """;
-    def __init__(self, master=None, cnf={}, **kw){
+    function __init__( master=nil, cnf={}, **kw){
         '''Initialize mock, non-gui, text-only Text widget.
 
         At present, all args are ignored. Almost all affect visual behavior.
         There are just a few Text-only options that affect text behavior.
         ''';
-        self.data = ['', '\n'];
+        this.data = ['', '\n'];
 
     }
-    def index(self, index){
+    function index( index){
         "Return string version of index decoded according to current text.";
-        return "%s.%s" % self._decode(index, endflag=1);
+        return "%s.%s" % this._decode(index, endflag=1);
 
     }
-    def _decode(self, index, endflag=0){
+    function _decode( index, endflag=0){
         """Return a (line, char) tuple of int indexes into self.data.
 
         This implements .index without converting the result back to a string.
@@ -142,11 +142,11 @@ class Text(object){
             raise TclError('bad text index "%s"' % index);
 
         }
-        lastline =  len(self.data) - 1;  # same as number of text lines
+        lastline =  len(this.data) - 1;  # same as number of text lines
         if index == 'insert'{
-            return lastline, len(self.data[lastline]) - 1;
+            return lastline, len(this.data[lastline]) - 1;
         } elif index == 'end'{
-            return self._endex(endflag);
+            return this._endex(endflag);
 
         }
         line, char = index.split('.');
@@ -156,10 +156,10 @@ class Text(object){
         if line < 1{
             return 1, 0;
         } elif line > lastline{
-            return self._endex(endflag);
+            return this._endex(endflag);
 
         }
-        linelength = len(self.data[line])  -1;  # position before/at \n
+        linelength = len(this.data[line])  -1;  # position before/at \n
         if char.endswith(' lineend') or char == 'end'{
             return line, linelength;
             # Tk requires that ignored chars before ' lineend' be valid int
@@ -174,96 +174,96 @@ class Text(object){
         } return line, char;
 
     }
-    def _endex(self, endflag){
+    function _endex( endflag){
         '''Return position for 'end' or line overflow corresponding to endflag.
 
        -1: position before terminal \n; for .insert(), .delete
        0: position after terminal \n; for .get, .delete index 1
        1: same viewed as beginning of non-existent next line (for .index)
        ''';
-        n = len(self.data);
+        n = len(this.data);
         if endflag == 1{
             return n, 0;
         } else{
             n -= 1;
-            return n, len(self.data[n]) + endflag;
+            return n, len(this.data[n]) + endflag;
 
 
     }
-    } def insert(self, index, chars){
+    } function insert( index, chars){
         "Insert chars before the character at index.";
 
         if not chars{  # ''.splitlines() is [], not ['']
             return;
-        } chars = chars.splitlines(True);
+        } chars = chars.splitlines(true);
         if chars[-1][-1] == '\n'{
             chars.append('');
-        } line, char = self._decode(index, -1);
-        before = self.data[line][:char];
-        after = self.data[line][char:];
-        self.data[line] = before + chars[0];
-        self.data[line+1:line+1] = chars[1:];
-        self.data[line+len(chars)-1] += after;
+        } line, char = this._decode(index, -1);
+        before = this.data[line][:char];
+        after = this.data[line][char:];
+        this.data[line] = before + chars[0];
+        this.data[line+1:line+1] = chars[1:];
+        this.data[line+len(chars)-1] += after;
 
 
     }
-    def get(self, index1, index2=None){
+    function get( index1, index2=nil){
         "Return slice from index1 to index2 (default is 'index1+1').";
 
-        startline, startchar = self._decode(index1);
-        if index2 is None{
+        startline, startchar = this._decode(index1);
+        if index2 is nil{
             endline, endchar = startline, startchar+1;
         } else{
-            endline, endchar = self._decode(index2);
+            endline, endchar = this._decode(index2);
 
         }
         if startline == endline{
-            return self.data[startline][startchar:endchar];
+            return this.data[startline][startchar:endchar];
         } else{
-            lines = [self.data[startline][startchar:]];
+            lines = [this.data[startline][startchar:]];
             for i in range(startline+1, endline){
-                lines.append(self.data[i]);
-            } lines.append(self.data[endline][:endchar]);
+                lines.append(this.data[i]);
+            } lines.append(this.data[endline][:endchar]);
             return ''.join(lines);
 
 
     }
-    } def delete(self, index1, index2=None){
+    } function delete( index1, index2=nil){
         '''Delete slice from index1 to index2 (default is 'index1+1').
 
         Adjust default index2 ('index+1) for line ends.
         Do not delete the terminal \n at the very end of self.data ([-1][-1]).
         ''';
-        startline, startchar = self._decode(index1, -1);
-        if index2 is None{
-            if startchar < len(self.data[startline])-1{
+        startline, startchar = this._decode(index1, -1);
+        if index2 is nil{
+            if startchar < len(this.data[startline])-1{
                 # not deleting \n
                 endline, endchar = startline, startchar+1;
-            } elif startline < len(self.data) - 1{
+            } elif startline < len(this.data) - 1{
                 # deleting non-terminal \n, convert 'index1+1 to start of next line
                 endline, endchar = startline+1, 0;
             } else{
                 # do not delete terminal \n if index1 == 'insert'
                 return;
         } } else{
-            endline, endchar = self._decode(index2, -1);
+            endline, endchar = this._decode(index2, -1);
             # restricting end position to insert position excludes terminal \n
 
         }
         if startline == endline and startchar < endchar{
-            self.data[startline] = self.data[startline][:startchar] + \
-                                             self.data[startline][endchar:];
+            this.data[startline] = this.data[startline][:startchar] + \
+                                             this.data[startline][endchar:];
         } elif startline < endline{
-            self.data[startline] = self.data[startline][:startchar] + \
-                                   self.data[endline][endchar:];
+            this.data[startline] = this.data[startline][:startchar] + \
+                                   this.data[endline][endchar:];
             startline += 1;
             for i in range(startline, endline+1){
-                del self.data[startline];
+                del this.data[startline];
 
     }
-    } } def compare(self, index1, op, index2){
-        line1, char1 = self._decode(index1);
-        line2, char2 = self._decode(index2);
+    } } function compare( index1, op, index2){
+        line1, char1 = this._decode(index1);
+        line2, char2 = this._decode(index2);
         if op == '<'{
             return line1 < line2 or line1 == line2 and char1 < char2;
         } elif op == '<='{
@@ -284,16 +284,16 @@ class Text(object){
     # Whether doing nothing is sufficient for a test will depend on the test.
 
     }
-    } def mark_set(self, name, index){
+    } function mark_set( name, index){
         "Set mark *name* before the character at index.";
         pass;
 
     }
-    def mark_unset(self, *markNames){
+    function mark_unset( *markNames){
         "Delete all marks in markNames.";
 
     }
-    def tag_remove(self, tagName, index1, index2=None){
+    function tag_remove( tagName, index1, index2=nil){
         "Remove tag tagName from all characters between index1 and index2.";
         pass;
 
@@ -301,15 +301,15 @@ class Text(object){
     # Doing nothing should always be sufficient for tests.
 
     }
-    def scan_dragto(self, x, y){
+    function scan_dragto( x, y){
         "Adjust the view of the text according to scan_mark";
 
     }
-    def scan_mark(self, x, y){
+    function scan_mark( x, y){
         "Remember the current X, Y coordinates.";
 
     }
-    def see(self, index){
+    function see( index){
         "Scroll screen to make the character at INDEX is visible.";
         pass;
 
@@ -317,7 +317,7 @@ class Text(object){
     # It should properly go in a Misc mock, but is included here for now.
 
     }
-    def bind(sequence=None, func=None, add=None){
+    function bind(sequence=nil, func=nil, add=nil){
         "Bind to this widget at event sequence a call to function func.";
         pass;
 

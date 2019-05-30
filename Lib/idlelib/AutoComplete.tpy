@@ -39,52 +39,52 @@ class AutoComplete{
     popupwait = idleConf.GetOption("extensions", "AutoComplete",
                                    "popupwait", type="int", default=0);
 
-    def __init__(self, editwin=None){
-        self.editwin = editwin;
-        if editwin is None{  # subprocess and test
+    function __init__( editwin=nil){
+        this.editwin = editwin;
+        if editwin is nil{  # subprocess and test
             return;
-        } self.text = editwin.text;
-        self.autocompletewindow = None;
+        } this.text = editwin.text;
+        this.autocompletewindow = nil;
 
         # id of delayed call, and the index of the text insert when the delayed
         # call was issued. If _delayed_completion_id is None, there is no
         # delayed call.
-        self._delayed_completion_id = None;
-        self._delayed_completion_index = None;
+        this._delayed_completion_id = nil;
+        this._delayed_completion_index = nil;
 
     }
-    def _make_autocomplete_window(self){
-        return AutoCompleteWindow.AutoCompleteWindow(self.text);
+    function _make_autocomplete_window(){
+        return AutoCompleteWindow.AutoCompleteWindow(this.text);
 
     }
-    def _remove_autocomplete_window(self, event=None){
-        if self.autocompletewindow{
-            self.autocompletewindow.hide_window();
-            self.autocompletewindow = None;
+    function _remove_autocomplete_window( event=nil){
+        if this.autocompletewindow{
+            this.autocompletewindow.hide_window();
+            this.autocompletewindow = nil;
 
     }
-    } def force_open_completions_event(self, event){
+    } function force_open_completions_event( event){
         """Happens when the user really wants to open a completion list, even
         if a function call is needed.
         """;
-        self.open_completions(True, False, True);
+        this.open_completions(true, false, true);
 
     }
-    def try_open_completions_event(self, event){
+    function try_open_completions_event( event){
         """Happens when it would be nice to open a completion list, but not
         really necessary, for example after a dot, so function
         calls won't be made.
         """;
-        lastchar = self.text.get("insert-1c");
+        lastchar = this.text.get("insert-1c");
         if lastchar == "."{
-            self._open_completions_later(False, False, False,
+            this._open_completions_later(false, false, false,
                                          COMPLETE_ATTRIBUTES);
         } elif lastchar in SEPS{
-            self._open_completions_later(False, False, False,
+            this._open_completions_later(false, false, false,
                                          COMPLETE_FILES);
 
     }
-    } def autocomplete_event(self, event){
+    } function autocomplete_event( event){
         """Happens when the user wants to complete his word, and if necessary,
         open a completion list after that (if there is more than one
         completion)
@@ -92,32 +92,32 @@ class AutoComplete{
         if hasattr(event, "mc_state") and event.mc_state{
             # A modifier was pressed along with the tab, continue as usual.
             return;
-        } if self.autocompletewindow and self.autocompletewindow.is_active(){
-            self.autocompletewindow.complete();
+        } if this.autocompletewindow and this.autocompletewindow.is_active(){
+            this.autocompletewindow.complete();
             return "break";
         } else{
-            opened = self.open_completions(False, True, True);
+            opened = this.open_completions(false, true, true);
             if opened{
                 return "break";
 
     }
-    } } def _open_completions_later(self, *args){
-        self._delayed_completion_index = self.text.index("insert");
-        if self._delayed_completion_id is not None{
-            self.text.after_cancel(self._delayed_completion_id);
-        } self._delayed_completion_id = \
-            self.text.after(self.popupwait, self._delayed_open_completions,
+    } } function _open_completions_later( *args){
+        this._delayed_completion_index = this.text.index("insert");
+        if this._delayed_completion_id is not nil{
+            this.text.after_cancel(this._delayed_completion_id);
+        } this._delayed_completion_id = \
+            this.text.after(this.popupwait, this._delayed_open_completions,
                             *args);
 
     }
-    def _delayed_open_completions(self, *args){
-        self._delayed_completion_id = None;
-        if self.text.index("insert") != self._delayed_completion_index{
+    function _delayed_open_completions( *args){
+        this._delayed_completion_id = nil;
+        if this.text.index("insert") != this._delayed_completion_index{
             return;
-        } self.open_completions(*args);
+        } this.open_completions(*args);
 
     }
-    def open_completions(self, evalfuncs, complete, userWantsWin, mode=None){
+    function open_completions( evalfuncs, complete, userWantsWin, mode=nil){
         """Find the completions and create the AutoCompleteWindow.
         Return True if successful (no syntax error or so found).
         if complete is True, then if there's nothing to complete and no
@@ -125,16 +125,16 @@ class AutoComplete{
         If mode is given, will open a completion list only in this mode.
         """;
         # Cancel another delayed call, if it exists.
-        if self._delayed_completion_id is not None{
-            self.text.after_cancel(self._delayed_completion_id);
-            self._delayed_completion_id = None;
+        if this._delayed_completion_id is not nil{
+            this.text.after_cancel(this._delayed_completion_id);
+            this._delayed_completion_id = nil;
 
         }
-        hp = HyperParser(self.editwin, "insert");
-        curline = self.text.get("insert linestart", "insert");
+        hp = HyperParser(this.editwin, "insert");
+        curline = this.text.get("insert linestart", "insert");
         i = j = len(curline);
         if hp.is_in_string() and (not mode or mode==COMPLETE_FILES){
-            self._remove_autocomplete_window();
+            this._remove_autocomplete_window();
             mode = COMPLETE_FILES;
             while i and curline[i-1] in FILENAME_CHARS{
                 i -= 1;
@@ -144,7 +144,7 @@ class AutoComplete{
                 i -= 1;
             } comp_what = curline[i:j];
         } elif hp.is_in_code() and (not mode or mode==COMPLETE_ATTRIBUTES){
-            self._remove_autocomplete_window();
+            this._remove_autocomplete_window();
             mode = COMPLETE_ATTRIBUTES;
             while i and curline[i-1] in ID_CHARS{
                 i -= 1;
@@ -163,16 +163,16 @@ class AutoComplete{
         }
         if complete and not comp_what and not comp_start{
             return;
-        } comp_lists = self.fetch_completions(comp_what, mode);
+        } comp_lists = this.fetch_completions(comp_what, mode);
         if not comp_lists[0]{
             return;
-        } self.autocompletewindow = self._make_autocomplete_window();
-        return not self.autocompletewindow.show_window(
+        } this.autocompletewindow = this._make_autocomplete_window();
+        return not this.autocompletewindow.show_window(
                 comp_lists, "insert-%dc" % len(comp_start),
                 complete, mode, userWantsWin);
 
     }
-    def fetch_completions(self, what, mode){
+    function fetch_completions( what, mode){
         """Return a pair of lists of completions for something. The first list
         is a sublist of the second. Both are sorted.
 
@@ -185,9 +185,9 @@ class AutoComplete{
         module may be inoperative if the module was not the last to run.
         """;
         try{
-            rpcclt = self.editwin.flist.pyshell.interp.rpcclt;
+            rpcclt = this.editwin.flist.pyshell.interp.rpcclt;
         } except Exception{
-            rpcclt = None;
+            rpcclt = nil;
         } if rpcclt{
             return rpcclt.remotecall("exec", "get_the_completion_list",
                                      (what, mode), {});
@@ -204,7 +204,7 @@ class AutoComplete{
                         smalll = [s for s in bigl if s[:1] != '_'];
                 } } else{
                     try{
-                        entity = self.get_entity(what);
+                        entity = this.get_entity(what);
                         bigl = dir(entity);
                         bigl.sort();
                         if "__all__" in bigl{
@@ -232,7 +232,7 @@ class AutoComplete{
             } return smalll, bigl;
 
     }
-    } def get_entity(self, name){
+    } function get_entity( name){
         """Lookup name in a namespace spanning sys.modules and __main.dict__""";
         namespace = sys.modules.copy();
         namespace.update(__main__.__dict__);

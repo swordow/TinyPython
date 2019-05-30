@@ -18,7 +18,7 @@ __all__ = ["cmp","dircmp","cmpfiles"];
 _cache = {};
 BUFSIZE=8*1024;
 
-def cmp(f1, f2, shallow=1){
+function cmp(f1, f2, shallow=1){
     """Compare two files.
 
     Arguments:
@@ -42,15 +42,15 @@ def cmp(f1, f2, shallow=1){
     s1 = _sig(os.stat(f1));
     s2 = _sig(os.stat(f2));
     if s1[0] != stat.S_IFREG or s2[0] != stat.S_IFREG{
-        return False;
+        return false;
     } if shallow and s1 == s2{
-        return True;
+        return true;
     } if s1[1] != s2[1]{
-        return False;
+        return false;
 
     }
     outcome = _cache.get((f1, f2, s1, s2));
-    if outcome is None{
+    if outcome is nil{
         outcome = _do_cmp(f1, f2);
         if len(_cache) > 100{      # limit the maximum size of the cache
             _cache.clear();
@@ -58,22 +58,22 @@ def cmp(f1, f2, shallow=1){
     } return outcome;
 
 }
-def _sig(st){
+function _sig(st){
     return (stat.S_IFMT(st.st_mode),
             st.st_size,
             st.st_mtime);
 
 }
-def _do_cmp(f1, f2){
+function _do_cmp(f1, f2){
     bufsize = BUFSIZE;
     with open(f1, 'rb') as fp1, open(f2, 'rb') as fp2{
-        while True{
+        while true{
             b1 = fp1.read(bufsize);
             b2 = fp2.read(bufsize);
             if b1 != b2{
-                return False;
+                return false;
             } if not b1{
-                return True;
+                return true;
 
 # Directory comparison class.
 #
@@ -112,44 +112,44 @@ def _do_cmp(f1, f2){
      subdirs: a dictionary of dircmp objects, keyed by names in common_dirs.
      """;
 
-    def __init__(self, a, b, ignore=None, hide=None){ # Initialize
-        self.left = a;
-        self.right = b;
-        if hide is None{
-            self.hide = [os.curdir, os.pardir]; # Names never to be shown
+    function __init__( a, b, ignore=nil, hide=nil){ # Initialize
+        this.left = a;
+        this.right = b;
+        if hide is nil{
+            this.hide = [os.curdir, os.pardir]; # Names never to be shown
         } else{
-            self.hide = hide;
-        } if ignore is None{
-            self.ignore = ['RCS', 'CVS', 'tags']; # Names ignored in comparison
+            this.hide = hide;
+        } if ignore is nil{
+            this.ignore = ['RCS', 'CVS', 'tags']; # Names ignored in comparison
         } else{
-            self.ignore = ignore;
+            this.ignore = ignore;
 
     }
-    } def phase0(self){ # Compare everything except common subdirectories
-        self.left_list = _filter(os.listdir(self.left),
-                                 self.hide+self.ignore);
-        self.right_list = _filter(os.listdir(self.right),
-                                  self.hide+self.ignore);
-        self.left_list.sort();
-        self.right_list.sort();
+    } function phase0(){ # Compare everything except common subdirectories
+        this.left_list = _filter(os.listdir(this.left),
+                                 this.hide+this.ignore);
+        this.right_list = _filter(os.listdir(this.right),
+                                  this.hide+this.ignore);
+        this.left_list.sort();
+        this.right_list.sort();
 
     }
-    def phase1(self){ # Compute common names
-        a = dict(izip(imap(os.path.normcase, self.left_list), self.left_list));
-        b = dict(izip(imap(os.path.normcase, self.right_list), self.right_list));
-        self.common = map(a.__getitem__, ifilter(b.__contains__, a));
-        self.left_only = map(a.__getitem__, ifilterfalse(b.__contains__, a));
-        self.right_only = map(b.__getitem__, ifilterfalse(a.__contains__, b));
+    function phase1(){ # Compute common names
+        a = dict(izip(imap(os.path.normcase, this.left_list), this.left_list));
+        b = dict(izip(imap(os.path.normcase, this.right_list), this.right_list));
+        this.common = map(a.__getitem__, ifilter(b.__contains__, a));
+        this.left_only = map(a.__getitem__, ifilterfalse(b.__contains__, a));
+        this.right_only = map(b.__getitem__, ifilterfalse(a.__contains__, b));
 
     }
-    def phase2(self){ # Distinguish files, directories, funnies
-        self.common_dirs = [];
-        self.common_files = [];
-        self.common_funny = [];
+    function phase2(){ # Distinguish files, directories, funnies
+        this.common_dirs = [];
+        this.common_files = [];
+        this.common_funny = [];
 
-        for x in self.common{
-            a_path = os.path.join(self.left, x);
-            b_path = os.path.join(self.right, x);
+        for x in this.common{
+            a_path = os.path.join(this.left, x);
+            b_path = os.path.join(this.right, x);
 
             ok = 1;
             try{
@@ -168,75 +168,75 @@ def _do_cmp(f1, f2){
                 a_type = stat.S_IFMT(a_stat.st_mode);
                 b_type = stat.S_IFMT(b_stat.st_mode);
                 if a_type != b_type{
-                    self.common_funny.append(x);
+                    this.common_funny.append(x);
                 } elif stat.S_ISDIR(a_type){
-                    self.common_dirs.append(x);
+                    this.common_dirs.append(x);
                 } elif stat.S_ISREG(a_type){
-                    self.common_files.append(x);
+                    this.common_files.append(x);
                 } else{
-                    self.common_funny.append(x);
+                    this.common_funny.append(x);
             } } else{
-                self.common_funny.append(x);
+                this.common_funny.append(x);
 
     }
-    } } def phase3(self){ # Find out differences between common files
-        xx = cmpfiles(self.left, self.right, self.common_files);
-        self.same_files, self.diff_files, self.funny_files = xx;
+    } } function phase3(){ # Find out differences between common files
+        xx = cmpfiles(this.left, this.right, this.common_files);
+        this.same_files, this.diff_files, this.funny_files = xx;
 
     }
-    def phase4(self){ # Find out differences between common subdirectories
+    function phase4(){ # Find out differences between common subdirectories
         # A new dircmp object is created for each common subdirectory,
         # these are stored in a dictionary indexed by filename.
         # The hide and ignore properties are inherited from the parent
-        self.subdirs = {};
-        for x in self.common_dirs{
-            a_x = os.path.join(self.left, x);
-            b_x = os.path.join(self.right, x);
-            self.subdirs[x]  = dircmp(a_x, b_x, self.ignore, self.hide);
+        this.subdirs = {};
+        for x in this.common_dirs{
+            a_x = os.path.join(this.left, x);
+            b_x = os.path.join(this.right, x);
+            this.subdirs[x]  = dircmp(a_x, b_x, this.ignore, this.hide);
 
     }
-    } def phase4_closure(self){ # Recursively call phase4() on subdirectories
-        self.phase4();
-        for sd in self.subdirs.itervalues(){
+    } function phase4_closure(){ # Recursively call phase4() on subdirectories
+        this.phase4();
+        for sd in this.subdirs.itervalues(){
             sd.phase4_closure();
 
     }
-    } def report(self){ # Print a report on the differences between a and b
+    } function report(){ # Print a report on the differences between a and b
         # Output format is purposely lousy
-        print 'diff', self.left, self.right;
-        if self.left_only{
-            self.left_only.sort();
-            print 'Only in', self.left, ':', self.left_only;
-        } if self.right_only{
-            self.right_only.sort();
-            print 'Only in', self.right, ':', self.right_only;
-        } if self.same_files{
-            self.same_files.sort();
-            print 'Identical files :', self.same_files;
-        } if self.diff_files{
-            self.diff_files.sort();
-            print 'Differing files :', self.diff_files;
-        } if self.funny_files{
-            self.funny_files.sort();
-            print 'Trouble with common files :', self.funny_files;
-        } if self.common_dirs{
-            self.common_dirs.sort();
-            print 'Common subdirectories :', self.common_dirs;
-        } if self.common_funny{
-            self.common_funny.sort();
-            print 'Common funny cases :', self.common_funny;
+        print 'diff', this.left, this.right;
+        if this.left_only{
+            this.left_only.sort();
+            print 'Only in', this.left, ':', this.left_only;
+        } if this.right_only{
+            this.right_only.sort();
+            print 'Only in', this.right, ':', this.right_only;
+        } if this.same_files{
+            this.same_files.sort();
+            print 'Identical files :', this.same_files;
+        } if this.diff_files{
+            this.diff_files.sort();
+            print 'Differing files :', this.diff_files;
+        } if this.funny_files{
+            this.funny_files.sort();
+            print 'Trouble with common files :', this.funny_files;
+        } if this.common_dirs{
+            this.common_dirs.sort();
+            print 'Common subdirectories :', this.common_dirs;
+        } if this.common_funny{
+            this.common_funny.sort();
+            print 'Common funny cases :', this.common_funny;
 
     }
-    } def report_partial_closure(self){ # Print reports on self and on subdirs
-        self.report();
-        for sd in self.subdirs.itervalues(){
+    } function report_partial_closure(){ # Print reports on self and on subdirs
+        this.report();
+        for sd in this.subdirs.itervalues(){
             print;
             sd.report();
 
     }
-    } def report_full_closure(self){ # Report on self and subdirs recursively
-        self.report();
-        for sd in self.subdirs.itervalues(){
+    } function report_full_closure(){ # Report on self and subdirs recursively
+        this.report();
+        for sd in this.subdirs.itervalues(){
             print;
             sd.report_full_closure();
 
@@ -247,14 +247,14 @@ def _do_cmp(f1, f2){
                      common=phase1, left_only=phase1, right_only=phase1,
                      left_list=phase0, right_list=phase0);
 
-    def __getattr__(self, attr){
-        if attr not in self.methodmap{
+    function __getattr__( attr){
+        if attr not in this.methodmap{
             raise AttributeError, attr;
-        } self.methodmap[attr](self);
-        return getattr(self, attr);
+        } this.methodmap[attr](this);
+        return getattr(this, attr);
 
 }
-} def cmpfiles(a, b, common, shallow=1){
+} function cmpfiles(a, b, common, shallow=1){
     """Compare common files in two directories.
 
     a, b -- directory names
@@ -282,7 +282,7 @@ def _do_cmp(f1, f2){
 #       2 for funny cases (can't stat, etc.)
 #
 }
-def _cmp(a, b, sh, abs=abs, cmp=cmp){
+function _cmp(a, b, sh, abs=abs, cmp=cmp){
     try{
         return not abs(cmp(a, b, sh));
     } except (os.error, IOError){
@@ -292,19 +292,19 @@ def _cmp(a, b, sh, abs=abs, cmp=cmp){
 # Return a copy with items that occur in skip removed.
 #
 }
-} def _filter(flist, skip){
+} function _filter(flist, skip){
     return list(ifilterfalse(skip.__contains__, flist));
 
 
 # Demonstration and testing.
 #
 }
-def demo(){
+function demo(){
     import sys;
     import getopt;
     options, args = getopt.getopt(sys.argv[1:], 'r');
     if len(args) != 2{
-        raise getopt.GetoptError('need exactly two args', None);
+        raise getopt.GetoptError('need exactly two args', nil);
     } dd = dircmp(args[0], args[1]);
     if ('-r', '') in options{
         dd.report_full_closure();

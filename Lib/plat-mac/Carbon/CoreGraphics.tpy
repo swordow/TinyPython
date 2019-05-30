@@ -1,6 +1,6 @@
 # Generated from 'CGContext.h'
 
-def FOUR_CHAR_CODE(x){ return x;
+function FOUR_CHAR_CODE(x){ return x;}
 kCGLineJoinMiter = 0;
 kCGLineJoinRound = 1;
 kCGLineJoinBevel = 2;

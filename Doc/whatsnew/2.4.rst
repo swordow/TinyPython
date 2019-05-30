@@ -1450,7 +1450,7 @@ Build and C API Changes
 Some of the changes to Python's build process and to the C API are:
 
 * Three new convenience macros were added for common return values from
-  extension functions: :c:macro:`Py_RETURN_NONE`, :c:macro:`Py_RETURN_TRUE`, and
+  extension functions: :c:macro:`Py_RETURN_NIL`, :c:macro:`Py_RETURN_TRUE`, and
   :c:macro:`Py_RETURN_FALSE`. (Contributed by Brett Cannon.)
 
 * Another new macro, :c:macro:`Py_CLEAR(obj)`,  decreases the reference count of

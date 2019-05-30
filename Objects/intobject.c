@@ -729,7 +729,7 @@ int_pow(PyIntObject *v, PyIntObject *w, PyIntObject *z)
     CONVERT_TO_LONG(v, iv);
     CONVERT_TO_LONG(w, iw);
     if (iw < 0) {
-        if ((PyObject *)z != Py_None) {
+        if ((PyObject *)z != Py_Nil) {
             PyErr_SetString(PyExc_TypeError, "pow() 2nd argument "
                  "cannot be negative when 3rd argument specified");
             return NULL;
@@ -740,7 +740,7 @@ int_pow(PyIntObject *v, PyIntObject *w, PyIntObject *z)
         return PyFloat_Type.tp_as_number->nb_power(
             (PyObject *)v, (PyObject *)w, (PyObject *)z);
     }
-    if ((PyObject *)z != Py_None) {
+    if ((PyObject *)z != Py_Nil) {
         CONVERT_TO_LONG(z, iz);
         if (iz == 0) {
             PyErr_SetString(PyExc_ValueError,

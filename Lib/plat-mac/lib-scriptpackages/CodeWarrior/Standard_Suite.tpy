@@ -18,7 +18,7 @@ class Standard_Suite_Events(Standard_Suite_Events){
         'saving_in' : 'kfil',
     };
 
-    def close(self, _object, _attributes={}, **_arguments){
+    function close( _object, _attributes={}, **_arguments){
         """close: close an object
         Required argument: the object to close
         Keyword argument saving: specifies whether or not changes should be saved before closing
@@ -28,12 +28,12 @@ class Standard_Suite_Events(Standard_Suite_Events){
         _code = 'core';
         _subcode = 'clos';
 
-        aetools.keysubst(_arguments, self._argmap_close);
+        aetools.keysubst(_arguments, this._argmap_close);
         _arguments['----'] = _object;
 
         aetools.enumsubst(_arguments, 'savo', _Enum_savo);
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -47,7 +47,7 @@ class Standard_Suite_Events(Standard_Suite_Events){
         'each' : 'kocl',
     };
 
-    def count(self, _object, _attributes={}, **_arguments){
+    function count( _object, _attributes={}, **_arguments){
         """count: return the number of elements of a particular class within an object
         Required argument: the object whose elements are to be counted
         Keyword argument each: the class of the elements to be counted. Keyword 'each' is optional in AppleScript
@@ -57,11 +57,11 @@ class Standard_Suite_Events(Standard_Suite_Events){
         _code = 'core';
         _subcode = 'cnte';
 
-        aetools.keysubst(_arguments, self._argmap_count);
+        aetools.keysubst(_arguments, this._argmap_count);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -75,7 +75,7 @@ class Standard_Suite_Events(Standard_Suite_Events){
         'as' : 'rtyp',
     };
 
-    def get(self, _object, _attributes={}, **_arguments){
+    function get( _object, _attributes={}, **_arguments){
         """get: get the data for an object
         Required argument: the object whose data is to be returned
         Keyword argument as: the desired types for the data, in order of preference
@@ -85,11 +85,11 @@ class Standard_Suite_Events(Standard_Suite_Events){
         _code = 'core';
         _subcode = 'getd';
 
-        aetools.keysubst(_arguments, self._argmap_get);
+        aetools.keysubst(_arguments, this._argmap_get);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -107,7 +107,7 @@ class Standard_Suite_Events(Standard_Suite_Events){
         'with_properties' : 'prdt',
     };
 
-    def make(self, _no_object=None, _attributes={}, **_arguments){
+    function make( _no_object=nil, _attributes={}, **_arguments){
         """make: make a new element
         Keyword argument new: the class of the new element\xd1keyword 'new' is optional in AppleScript
         Keyword argument as: the desired types for the data, in order of preference
@@ -120,11 +120,11 @@ class Standard_Suite_Events(Standard_Suite_Events){
         _code = 'core';
         _subcode = 'crel';
 
-        aetools.keysubst(_arguments, self._argmap_make);
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        aetools.keysubst(_arguments, this._argmap_make);
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -134,7 +134,7 @@ class Standard_Suite_Events(Standard_Suite_Events){
             return _arguments['----'];
 
     }
-    } def select(self, _object=None, _attributes={}, **_arguments){
+    } function select( _object=nil, _attributes={}, **_arguments){
         """select: select the specified object
         Required argument: the object to select
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -142,11 +142,11 @@ class Standard_Suite_Events(Standard_Suite_Events){
         _code = 'misc';
         _subcode = 'slct';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -160,7 +160,7 @@ class Standard_Suite_Events(Standard_Suite_Events){
         'to' : 'data',
     };
 
-    def set(self, _object, _attributes={}, **_arguments){
+    function set( _object, _attributes={}, **_arguments){
         """set: set an object's data
         Required argument: the object to change
         Keyword argument to: the new value
@@ -169,11 +169,11 @@ class Standard_Suite_Events(Standard_Suite_Events){
         _code = 'core';
         _subcode = 'setd';
 
-        aetools.keysubst(_arguments, self._argmap_set);
+        aetools.keysubst(_arguments, this._argmap_set);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);

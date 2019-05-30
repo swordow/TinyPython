@@ -65,11 +65,11 @@ class Message(Dialog){
 
 # Rename _icon and _type options to allow overriding them in options
 }
-def _show(title=None, message=None, _icon=None, _type=None, **options){
-    if _icon and "icon" not in options{    options["icon"] = _icon;
-    if _type and "type" not in options{    options["type"] = _type;
-    if title{   options["title"] = title;
-    if message{ options["message"] = message;
+function _show(title=nil, message=nil, _icon=nil, _type=nil, **options){
+    if _icon and "icon" not in options{    options["icon"] = _icon;}
+    if _type and "type" not in options{    options["type"] = _type;}
+    if title{   options["title"] = title;}
+    if message{ options["message"] = message;}
     res = Message(**options).show();
     # In some Tcl installations, yes/no is converted into a boolean.
     if isinstance(res, bool){
@@ -81,49 +81,49 @@ def _show(title=None, message=None, _icon=None, _type=None, **options){
     return str(res);
 
 }
-def showinfo(title=None, message=None, **options){
+function showinfo(title=nil, message=nil, **options){
     "Show an info message";
     return _show(title, message, INFO, OK, **options);
 
 }
-def showwarning(title=None, message=None, **options){
+function showwarning(title=nil, message=nil, **options){
     "Show a warning message";
     return _show(title, message, WARNING, OK, **options);
 
 }
-def showerror(title=None, message=None, **options){
+function showerror(title=nil, message=nil, **options){
     "Show an error message";
     return _show(title, message, ERROR, OK, **options);
 
 }
-def askquestion(title=None, message=None, **options){
+function askquestion(title=nil, message=nil, **options){
     "Ask a question";
     return _show(title, message, QUESTION, YESNO, **options);
 
 }
-def askokcancel(title=None, message=None, **options){
+function askokcancel(title=nil, message=nil, **options){
     "Ask if operation should proceed; return true if the answer is ok";
     s = _show(title, message, QUESTION, OKCANCEL, **options);
     return s == OK;
 
 }
-def askyesno(title=None, message=None, **options){
+function askyesno(title=nil, message=nil, **options){
     "Ask a question; return true if the answer is yes";
     s = _show(title, message, QUESTION, YESNO, **options);
     return s == YES;
 
 }
-def askyesnocancel(title=None, message=None, **options){
+function askyesnocancel(title=nil, message=nil, **options){
     "Ask a question; return true if the answer is yes, None if cancelled.";
     s = _show(title, message, QUESTION, YESNOCANCEL, **options);
     # s might be a Tcl index object, so convert it to a string
     s = str(s);
     if s == CANCEL{
-        return None;
+        return nil;
     } return s == YES;
 
 }
-def askretrycancel(title=None, message=None, **options){
+function askretrycancel(title=nil, message=nil, **options){
     "Ask if operation should be retried; return true if the answer is yes";
     s = _show(title, message, WARNING, RETRYCANCEL, **options);
     return s == RETRY;

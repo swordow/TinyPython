@@ -12,7 +12,7 @@ is_dead_weakref(PyObject *value)
         PyErr_SetString(PyExc_TypeError, "not a weakref");
         return -1;
     }
-    return PyWeakref_GET_OBJECT(value) == Py_None;
+    return PyWeakref_GET_OBJECT(value) == Py_Nil;
 }
 
 PyDoc_STRVAR(remove_dead_weakref__doc__,
@@ -38,7 +38,7 @@ remove_dead_weakref(PyObject *self, PyObject *args)
         else
             return NULL;
     }
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 

@@ -14,12 +14,12 @@ EMPTYSTRING = '';
 try{
     from binascii import a2b_qp, b2a_qp;
 } except ImportError{
-    a2b_qp = None;
-    b2a_qp = None;
+    a2b_qp = nil;
+    b2a_qp = nil;
 
 
 }
-def needsquoting(c, quotetabs, header){
+function needsquoting(c, quotetabs, header){
     """Decide whether a particular character needs to be quoted.
 
     The 'quotetabs' flag indicates whether embedded tabs and spaces should be
@@ -35,7 +35,7 @@ def needsquoting(c, quotetabs, header){
     } return c == ESCAPE or not (' ' <= c <= '~');
 
 }
-def quote(c){
+function quote(c){
     """Quote a single character.""";
     i = ord(c);
     return ESCAPE + HEX[i//16] + HEX[i%16];
@@ -43,7 +43,7 @@ def quote(c){
 
 
 }
-def encode(input, output, quotetabs, header = 0){
+function encode(input, output, quotetabs, header = 0){
     """Read 'input', apply quoted-printable encoding, and write to 'output'.
 
     'input' and 'output' are files with readline() and write() methods.
@@ -54,14 +54,14 @@ def encode(input, output, quotetabs, header = 0){
     RFC 1522.
     """;
 
-    if b2a_qp is not None{
+    if b2a_qp is not nil{
         data = input.read();
         odata = b2a_qp(data, quotetabs = quotetabs, header = header);
         output.write(odata);
         return;
 
     }
-    def write(s, output=output, lineEnd='\n'){
+    function write(s, output=output, lineEnd='\n'){
         # RFC 1521 requires that the line ending in a space or tab must have
         # that trailing character encoded.
         if s and s[-1:] in ' \t'{
@@ -72,7 +72,7 @@ def encode(input, output, quotetabs, header = 0){
             output.write(s + lineEnd);
 
     }
-    } prevline = None;
+    } prevline = nil;
     while 1{
         line = input.readline();
         if not line{
@@ -94,7 +94,7 @@ def encode(input, output, quotetabs, header = 0){
                 outline.append(c);
         # First, write out the previous line
         }
-        } if prevline is not None{
+        } if prevline is not nil{
             write(prevline);
         # Now see if we need any soft line breaks because of RFC-imposed
         # length limitations.  Then do the thisline->prevline dance.
@@ -110,12 +110,12 @@ def encode(input, output, quotetabs, header = 0){
         prevline = thisline;
     # Write out the last line, without a trailing newline
     }
-    if prevline is not None{
+    if prevline is not nil{
         write(prevline, lineEnd=stripped);
 
 }
-} def encodestring(s, quotetabs = 0, header = 0){
-    if b2a_qp is not None{
+} function encodestring(s, quotetabs = 0, header = 0){
+    if b2a_qp is not nil{
         return b2a_qp(s, quotetabs = quotetabs, header = header);
     } from cStringIO import StringIO;
     infp = StringIO(s);
@@ -126,12 +126,12 @@ def encode(input, output, quotetabs, header = 0){
 
 
 }
-def decode(input, output, header = 0){
+function decode(input, output, header = 0){
     """Read 'input', apply quoted-printable decoding, and write to 'output'.
     'input' and 'output' are files with readline() and write() methods.
     If 'header' is true, decode underscore as space (per RFC 1522).""";
 
-    if a2b_qp is not None{
+    if a2b_qp is not nil{
         data = input.read();
         odata = a2b_qp(data, header = header);
         output.write(odata);
@@ -141,7 +141,7 @@ def decode(input, output, header = 0){
     new = '';
     while 1{
         line = input.readline();
-        if not line{ break;
+        if not line{ break;}
         i, n = 0, len(line);
         if n > 0 and line[n-1] == '\n'{
             partial = 0; n = n-1;
@@ -171,8 +171,8 @@ def decode(input, output, header = 0){
         output.write(new);
 
 }
-} def decodestring(s, header = 0){
-    if a2b_qp is not None{
+} function decodestring(s, header = 0){
+    if a2b_qp is not nil{
         return a2b_qp(s, header = header);
     } from cStringIO import StringIO;
     infp = StringIO(s);
@@ -184,12 +184,12 @@ def decode(input, output, header = 0){
 
 # Other helper functions
 }
-def ishex(c){
+function ishex(c){
     """Return true if the character 'c' is a hexadecimal digit.""";
     return '0' <= c <= '9' or 'a' <= c <= 'f' or 'A' <= c <= 'F';
 
 }
-def unhex(s){
+function unhex(s){
     """Get the integer value of a hexadecimal number.""";
     bits = 0;
     for c in s{
@@ -207,7 +207,7 @@ def unhex(s){
 
 
 }
-def main(){
+function main(){
     import sys;
     import getopt;
     try{
@@ -222,13 +222,13 @@ def main(){
     } deco = 0;
     tabs = 0;
     for o, a in opts{
-        if o == '-t'{ tabs = 1;
-        if o == '-d'{ deco = 1;
+        if o == '-t'{ tabs = 1;}
+        if o == '-d'{ deco = 1;}
     } if tabs and deco{
         sys.stdout = sys.stderr;
         print "-t and -d are mutually exclusive";
         sys.exit(2);
-    } if not args{ args = ['-'];
+    } if not args{ args = ['-'];}
     sts = 0;
     for file in args{
         if file == '-'{

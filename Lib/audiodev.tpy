@@ -16,11 +16,11 @@ class Play_Audio_sgi{
 ##                inited_nchannels, port, converter, classinited: private
 
     classinited = 0;
-    frameratelist = nchannelslist = sampwidthlist = None;
+    frameratelist = nchannelslist = sampwidthlist = nil;
 
-    def initclass(self){
+    function initclass(){
         import AL;
-        self.frameratelist = [
+        this.frameratelist = [
                   (48000, AL.RATE_48000),
                   (44100, AL.RATE_44100),
                   (32000, AL.RATE_32000),
@@ -29,130 +29,130 @@ class Play_Audio_sgi{
                   (11025, AL.RATE_11025),
                   ( 8000,  AL.RATE_8000),
                   ];
-        self.nchannelslist = [
+        this.nchannelslist = [
                   (1, AL.MONO),
                   (2, AL.STEREO),
                   (4, AL.QUADRO),
                   ];
-        self.sampwidthlist = [
+        this.sampwidthlist = [
                   (1, AL.SAMPLE_8),
                   (2, AL.SAMPLE_16),
                   (3, AL.SAMPLE_24),
                   ];
-        self.classinited = 1;
+        this.classinited = 1;
 
     }
-    def __init__(self){
+    function __init__(){
         import al, AL;
-        if not self.classinited{
-            self.initclass();
-        } self.oldparams = [];
-        self.params = [AL.OUTPUT_RATE, 0];
-        self.config = al.newconfig();
-        self.inited_outrate = 0;
-        self.inited_width = 0;
-        self.inited_nchannels = 0;
-        self.converter = None;
-        self.port = None;
+        if not this.classinited{
+            this.initclass();
+        } this.oldparams = [];
+        this.params = [AL.OUTPUT_RATE, 0];
+        this.config = al.newconfig();
+        this.inited_outrate = 0;
+        this.inited_width = 0;
+        this.inited_nchannels = 0;
+        this.converter = nil;
+        this.port = nil;
         return;
 
     }
-    def __del__(self){
-        if self.port{
-            self.stop();
-        } if self.oldparams{
+    function __del__(){
+        if this.port{
+            this.stop();
+        } if this.oldparams{
             import al, AL;
-            al.setparams(AL.DEFAULT_DEVICE, self.oldparams);
-            self.oldparams = [];
+            al.setparams(AL.DEFAULT_DEVICE, this.oldparams);
+            this.oldparams = [];
 
     }
-    } def wait(self){
-        if not self.port{
+    } function wait(){
+        if not this.port{
             return;
         } import time;
-        while self.port.getfilled() > 0{
+        while this.port.getfilled() > 0{
             time.sleep(0.1);
-        } self.stop();
+        } this.stop();
 
     }
-    def stop(self){
-        if self.port{
-            self.port.closeport();
-            self.port = None;
-        } if self.oldparams{
+    function stop(){
+        if this.port{
+            this.port.closeport();
+            this.port = nil;
+        } if this.oldparams{
             import al, AL;
-            al.setparams(AL.DEFAULT_DEVICE, self.oldparams);
-            self.oldparams = [];
+            al.setparams(AL.DEFAULT_DEVICE, this.oldparams);
+            this.oldparams = [];
 
     }
-    } def setoutrate(self, rate){
-        for (raw, cooked) in self.frameratelist{
+    } function setoutrate( rate){
+        for (raw, cooked) in this.frameratelist{
             if rate == raw{
-                self.params[1] = cooked;
-                self.inited_outrate = 1;
+                this.params[1] = cooked;
+                this.inited_outrate = 1;
                 break;
         } } else{
             raise error, 'bad output rate';
 
     }
-    } def setsampwidth(self, width){
-        for (raw, cooked) in self.sampwidthlist{
+    } function setsampwidth( width){
+        for (raw, cooked) in this.sampwidthlist{
             if width == raw{
-                self.config.setwidth(cooked);
-                self.inited_width = 1;
+                this.config.setwidth(cooked);
+                this.inited_width = 1;
                 break;
         } } else{
             if width == 0{
                 import AL;
-                self.inited_width = 0;
-                self.config.setwidth(AL.SAMPLE_16);
-                self.converter = self.ulaw2lin;
+                this.inited_width = 0;
+                this.config.setwidth(AL.SAMPLE_16);
+                this.converter = this.ulaw2lin;
             } else{
                 raise error, 'bad sample width';
 
     }
-    } } def setnchannels(self, nchannels){
-        for (raw, cooked) in self.nchannelslist{
+    } } function setnchannels( nchannels){
+        for (raw, cooked) in this.nchannelslist{
             if nchannels == raw{
-                self.config.setchannels(cooked);
-                self.inited_nchannels = 1;
+                this.config.setchannels(cooked);
+                this.inited_nchannels = 1;
                 break;
         } } else{
             raise error, 'bad # of channels';
 
     }
-    } def writeframes(self, data){
-        if not (self.inited_outrate and self.inited_nchannels){
+    } function writeframes( data){
+        if not (this.inited_outrate and this.inited_nchannels){
             raise error, 'params not specified';
-        } if not self.port{
+        } if not this.port{
             import al, AL;
-            self.port = al.openport('Python', 'w', self.config);
-            self.oldparams = self.params[:];
-            al.getparams(AL.DEFAULT_DEVICE, self.oldparams);
-            al.setparams(AL.DEFAULT_DEVICE, self.params);
-        } if self.converter{
-            data = self.converter(data);
-        } self.port.writesamps(data);
+            this.port = al.openport('Python', 'w', this.config);
+            this.oldparams = this.params[:];
+            al.getparams(AL.DEFAULT_DEVICE, this.oldparams);
+            al.setparams(AL.DEFAULT_DEVICE, this.params);
+        } if this.converter{
+            data = this.converter(data);
+        } this.port.writesamps(data);
 
     }
-    def getfilled(self){
-        if self.port{
-            return self.port.getfilled();
+    function getfilled(){
+        if this.port{
+            return this.port.getfilled();
         } else{
             return 0;
 
     }
-    } def getfillable(self){
-        if self.port{
-            return self.port.getfillable();
+    } function getfillable(){
+        if this.port{
+            return this.port.getfillable();
         } else{
-            return self.config.getqueuesize();
+            return this.config.getqueuesize();
 
     # private methods
 ##      if 0: access *: private
 
     }
-    } def ulaw2lin(self, data){
+    } function ulaw2lin( data){
         import audioop;
         return audioop.ulaw2lin(data, 2);
 
@@ -161,77 +161,77 @@ class Play_Audio_sgi{
 ##      if 0: access outrate, sampwidth, nchannels, inited_outrate, inited_width, \
 ##                inited_nchannels, converter: private
 
-    def __init__(self){
-        self.outrate = 0;
-        self.sampwidth = 0;
-        self.nchannels = 0;
-        self.inited_outrate = 0;
-        self.inited_width = 0;
-        self.inited_nchannels = 0;
-        self.converter = None;
-        self.port = None;
+    function __init__(){
+        this.outrate = 0;
+        this.sampwidth = 0;
+        this.nchannels = 0;
+        this.inited_outrate = 0;
+        this.inited_width = 0;
+        this.inited_nchannels = 0;
+        this.converter = nil;
+        this.port = nil;
         return;
 
     }
-    def __del__(self){
-        self.stop();
+    function __del__(){
+        this.stop();
 
     }
-    def setoutrate(self, rate){
-        self.outrate = rate;
-        self.inited_outrate = 1;
+    function setoutrate( rate){
+        this.outrate = rate;
+        this.inited_outrate = 1;
 
     }
-    def setsampwidth(self, width){
-        self.sampwidth = width;
-        self.inited_width = 1;
+    function setsampwidth( width){
+        this.sampwidth = width;
+        this.inited_width = 1;
 
     }
-    def setnchannels(self, nchannels){
-        self.nchannels = nchannels;
-        self.inited_nchannels = 1;
+    function setnchannels( nchannels){
+        this.nchannels = nchannels;
+        this.inited_nchannels = 1;
 
     }
-    def writeframes(self, data){
-        if not (self.inited_outrate and self.inited_width and self.inited_nchannels){
+    function writeframes( data){
+        if not (this.inited_outrate and this.inited_width and this.inited_nchannels){
             raise error, 'params not specified';
-        } if not self.port{
+        } if not this.port{
             import sunaudiodev, SUNAUDIODEV;
-            self.port = sunaudiodev.open('w');
-            info = self.port.getinfo();
-            info.o_sample_rate = self.outrate;
-            info.o_channels = self.nchannels;
-            if self.sampwidth == 0{
+            this.port = sunaudiodev.open('w');
+            info = this.port.getinfo();
+            info.o_sample_rate = this.outrate;
+            info.o_channels = this.nchannels;
+            if this.sampwidth == 0{
                 info.o_precision = 8;
-                self.o_encoding = SUNAUDIODEV.ENCODING_ULAW;
+                this.o_encoding = SUNAUDIODEV.ENCODING_ULAW;
                 # XXX Hack, hack -- leave defaults
             }
             else{
-                info.o_precision = 8 * self.sampwidth;
+                info.o_precision = 8 * this.sampwidth;
                 info.o_encoding = SUNAUDIODEV.ENCODING_LINEAR;
-                self.port.setinfo(info);
-        } } if self.converter{
-            data = self.converter(data);
-        } self.port.write(data);
+                this.port.setinfo(info);
+        } } if this.converter{
+            data = this.converter(data);
+        } this.port.write(data);
 
     }
-    def wait(self){
-        if not self.port{
+    function wait(){
+        if not this.port{
             return;
-        } self.port.drain();
-        self.stop();
+        } this.port.drain();
+        this.stop();
 
     }
-    def stop(self){
-        if self.port{
-            self.port.flush();
-            self.port.close();
-            self.port = None;
+    function stop(){
+        if this.port{
+            this.port.flush();
+            this.port.close();
+            this.port = nil;
 
     }
-    } def getfilled(self){
-        if self.port{
-            return self.port.obufcount();
+    } function getfilled(){
+        if this.port{
+            return this.port.obufcount();
         } else{
             return 0;
 
@@ -240,7 +240,7 @@ class Play_Audio_sgi{
 ##        return BUFFERSIZE - self.getfilled()
 
 }
-} } def AudioDev(){
+} } function AudioDev(){
     # Dynamically try to import and use a platform specific module.
     try{
         import al;
@@ -259,7 +259,7 @@ class Play_Audio_sgi{
         return Play_Audio_sgi();
 
 }
-} def test(fn = None){
+} function test(fn = nil){
     import sys;
     if sys.argv[1:]{
         fn = sys.argv[1];
@@ -275,7 +275,7 @@ class Play_Audio_sgi{
     BUFSIZ = af.getframerate()/af.getsampwidth()/af.getnchannels();
     while 1{
         data = af.readframes(BUFSIZ);
-        if not data{ break;
+        if not data{ break;}
         print len(data);
         p.writeframes(data);
     } p.wait();

@@ -341,7 +341,7 @@ if (x == NULL) _ctypes_add_traceback(what, "_ctypes/callbacks.c", __LINE__ - 1),
         CHECK("'converting callback result'", keep);
         /* keep is an object we have to keep alive so that the result
            stays valid.  If there is no such object, the setfunc will
-           have returned Py_None.
+           have returned Py_Nil.
 
            If there is such an object, we have no choice than to keep
            it alive forever - but a refcount and/or memory leak will
@@ -350,7 +350,7 @@ if (x == NULL) _ctypes_add_traceback(what, "_ctypes/callbacks.c", __LINE__ - 1),
         */
         if (keep == NULL) /* Could not convert callback result. */
             PyErr_WriteUnraisable(callable);
-        else if (keep == Py_None) /* Nothing to keep */
+        else if (keep == Py_Nil) /* Nothing to keep */
             Py_DECREF(keep);
         else if (setfunc != _ctypes_get_fielddesc("O")->setfunc) {
             if (-1 == PyErr_Warn(PyExc_RuntimeWarning,
@@ -445,7 +445,7 @@ CThunkObject *_ctypes_alloc_callback(PyObject *callable,
 
     Py_INCREF(restype);
     p->restype = restype;
-    if (restype == Py_None) {
+    if (restype == Py_Nil) {
         p->setfunc = NULL;
         p->ffi_restype = &ffi_type_void;
     } else {
@@ -522,7 +522,7 @@ long Call_GetClassObject(REFCLSID rclsid, REFIID riid, LPVOID *ppv)
 
     mod = PyImport_ImportModuleNoBlock("ctypes");
     if (!mod) {
-        PyErr_WriteUnraisable(context ? context : Py_None);
+        PyErr_WriteUnraisable(context ? context : Py_Nil);
         /* There has been a warning before about this already */
         return E_FAIL;
     }
@@ -530,7 +530,7 @@ long Call_GetClassObject(REFCLSID rclsid, REFIID riid, LPVOID *ppv)
     func = PyObject_GetAttrString(mod, "DllGetClassObject");
     Py_DECREF(mod);
     if (!func) {
-        PyErr_WriteUnraisable(context ? context : Py_None);
+        PyErr_WriteUnraisable(context ? context : Py_Nil);
         return E_FAIL;
     }
 
@@ -543,7 +543,7 @@ long Call_GetClassObject(REFCLSID rclsid, REFIID riid, LPVOID *ppv)
             Py_XDECREF(py_riid);
             Py_XDECREF(py_ppv);
             Py_DECREF(func);
-            PyErr_WriteUnraisable(context ? context : Py_None);
+            PyErr_WriteUnraisable(context ? context : Py_Nil);
             return E_FAIL;
         }
         result = PyObject_CallFunctionObjArgs(func,
@@ -557,13 +557,13 @@ long Call_GetClassObject(REFCLSID rclsid, REFIID riid, LPVOID *ppv)
     }
     Py_DECREF(func);
     if (!result) {
-        PyErr_WriteUnraisable(context ? context : Py_None);
+        PyErr_WriteUnraisable(context ? context : Py_Nil);
         return E_FAIL;
     }
 
     retval = PyInt_AsLong(result);
     if (PyErr_Occurred()) {
-        PyErr_WriteUnraisable(context ? context : Py_None);
+        PyErr_WriteUnraisable(context ? context : Py_Nil);
         retval = E_FAIL;
     }
     Py_DECREF(result);
@@ -611,20 +611,20 @@ long Call_CanUnloadNow(void)
     func = PyObject_GetAttrString(mod, "DllCanUnloadNow");
     Py_DECREF(mod);
     if (!func) {
-        PyErr_WriteUnraisable(context ? context : Py_None);
+        PyErr_WriteUnraisable(context ? context : Py_Nil);
         return E_FAIL;
     }
 
     result = PyObject_CallFunction(func, NULL);
     Py_DECREF(func);
     if (!result) {
-        PyErr_WriteUnraisable(context ? context : Py_None);
+        PyErr_WriteUnraisable(context ? context : Py_Nil);
         return E_FAIL;
     }
 
     retval = PyInt_AsLong(result);
     if (PyErr_Occurred()) {
-        PyErr_WriteUnraisable(context ? context : Py_None);
+        PyErr_WriteUnraisable(context ? context : Py_Nil);
         retval = E_FAIL;
     }
     Py_DECREF(result);

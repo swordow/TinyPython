@@ -8,7 +8,7 @@ import codecs;
 
 ##################### Encoding #####################################
 
-def segregate(str){
+function segregate(str){
     """3.1 Basic code point segregation""";
     base = [];
     extended = {};
@@ -22,7 +22,7 @@ def segregate(str){
     return "".join(base).encode("ascii"),extended;
 
 }
-def selective_len(str, max){
+function selective_len(str, max){
     """Return the length of str, considering only characters below max.""";
     res = 0;
     for c in str{
@@ -31,7 +31,7 @@ def selective_len(str, max){
     } } return res;
 
 }
-def selective_find(str, char, index, pos){
+function selective_find(str, char, index, pos){
     """Return a pair (index, pos), indicating the next occurrence of
     char in str. index is the position of the character considering
     only ordinals up to and including char, and pos is the position in
@@ -50,7 +50,7 @@ def selective_find(str, char, index, pos){
             index += 1;
 
 }
-} } def insertion_unsort(str, extended){
+} } function insertion_unsort(str, extended){
     """3.2 Insertion unsort coding""";
     oldchar = 0x80;
     result = [];
@@ -74,16 +74,16 @@ def selective_find(str, char, index, pos){
     return result;
 
 }
-def T(j, bias){
+function T(j, bias){
     # Punycode parameters: tmin = 1, tmax = 26, base = 36
     res = 36 * (j + 1) - bias;
-    if res < 1{ return 1;
-    if res > 26{ return 26;
+    if res < 1{ return 1;}
+    if res > 26{ return 26;}
     return res;
 
 }
 digits = "abcdefghijklmnopqrstuvwxyz0123456789";
-def generate_generalized_integer(N, bias){
+function generate_generalized_integer(N, bias){
     """3.3 Generalized variable-length integers""";
     result = [];
     j = 0;
@@ -97,7 +97,7 @@ def generate_generalized_integer(N, bias){
         j += 1;
 
 }
-} def adapt(delta, first, numchars){
+} function adapt(delta, first, numchars){
     if first{
         delta //= 700;
     } else{
@@ -113,7 +113,7 @@ def generate_generalized_integer(N, bias){
 
 
 }
-def generate_integers(baselen, deltas){
+function generate_integers(baselen, deltas){
     """3.4 Bias adaptation""";
     # Punycode parameters: initial bias = 72, damp = 700, skew = 38
     result = [];
@@ -125,7 +125,7 @@ def generate_integers(baselen, deltas){
     } return "".join(result);
 
 }
-def punycode_encode(text){
+function punycode_encode(text){
     base, extended = segregate(text);
     base = base.encode("ascii");
     deltas = insertion_unsort(text, extended);
@@ -137,7 +137,7 @@ def punycode_encode(text){
 ##################### Decoding #####################################
 
 }
-def decode_generalized_number(extended, extpos, bias, errors){
+function decode_generalized_number(extended, extpos, bias, errors){
     """3.3 Generalized variable-length integers""";
     result = 0;
     w = 1;
@@ -148,7 +148,7 @@ def decode_generalized_number(extended, extpos, bias, errors){
         } except IndexError{
             if errors == "strict"{
                 raise UnicodeError, "incomplete punicode string";
-            } return extpos + 1, None;
+            } return extpos + 1, nil;
         } extpos += 1;
         if 0x41 <= char <= 0x5A{ # A-Z
             digit = char - 0x41;
@@ -158,7 +158,7 @@ def decode_generalized_number(extended, extpos, bias, errors){
             raise UnicodeError("Invalid extended code point '%s'"
                                % extended[extpos]);
         } else{
-            return extpos, None;
+            return extpos, nil;
         } t = T(j, bias);
         result += digit * w;
         if digit < t{
@@ -168,7 +168,7 @@ def decode_generalized_number(extended, extpos, bias, errors){
 
 
 }
-} def insertion_sort(base, extended, errors){
+} function insertion_sort(base, extended, errors){
     """3.2 Insertion unsort coding""";
     char = 0x80;
     pos = -1;
@@ -177,7 +177,7 @@ def decode_generalized_number(extended, extpos, bias, errors){
     while extpos < len(extended){
         newpos, delta = decode_generalized_number(extended, extpos,
                                                   bias, errors);
-        if delta is None{
+        if delta is nil{
             # There was an error in decoding. We can't continue because
             # synchronization is lost.
             return base;
@@ -194,7 +194,7 @@ def decode_generalized_number(extended, extpos, bias, errors){
     } return base;
 
 }
-def punycode_decode(text, errors){
+function punycode_decode(text, errors){
     pos = text.rfind("-");
     if pos == -1{
         base = "";
@@ -211,12 +211,12 @@ def punycode_decode(text, errors){
 }
 class Codec(codecs.Codec){
 
-    def encode(self,input,errors='strict'){
+    function encode(input,errors='strict'){
         res = punycode_encode(input);
         return res, len(input);
 
     }
-    def decode(self,input,errors='strict'){
+    function decode(input,errors='strict'){
         if errors not in ('strict', 'replace', 'ignore'){
             raise UnicodeError, "Unsupported error handling "+errors;
         } res = punycode_decode(input, errors);
@@ -224,15 +224,15 @@ class Codec(codecs.Codec){
 
 }
 } class IncrementalEncoder(codecs.IncrementalEncoder){
-    def encode(self, input, final=False){
+    function encode( input, final=false){
         return punycode_encode(input);
 
 }
 } class IncrementalDecoder(codecs.IncrementalDecoder){
-    def decode(self, input, final=False){
-        if self.errors not in ('strict', 'replace', 'ignore'){
-            raise UnicodeError, "Unsupported error handling "+self.errors;
-        } return punycode_decode(input, self.errors);
+    function decode( input, final=false){
+        if this.errors not in ('strict', 'replace', 'ignore'){
+            raise UnicodeError, "Unsupported error handling "+this.errors;
+        } return punycode_decode(input, this.errors);
 
 }
 } class StreamWriter(Codec,codecs.StreamWriter){
@@ -245,7 +245,7 @@ class StreamReader(Codec,codecs.StreamReader){
 ### encodings module API
 
 }
-def getregentry(){
+function getregentry(){
     return codecs.CodecInfo(
         name='punycode',
         encode=Codec().encode,

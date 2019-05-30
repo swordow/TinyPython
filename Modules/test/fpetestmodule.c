@@ -94,8 +94,8 @@ static PyObject *test(PyObject *self,PyObject *args)
     r = nest2(2, 2.0);
     printerr(r);
 
-    Py_INCREF (Py_None);
-    return Py_None;
+    Py_INCREF (Py_Nil);
+    return Py_Nil;
 }
 
 static void printerr(double r)

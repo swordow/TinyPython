@@ -1,8 +1,8 @@
 # Generated from 'Aliases.h'
 
-def FOUR_CHAR_CODE(x){ return x;
-true = True;
-false = False;
+function FOUR_CHAR_CODE(x){ return x;}
+true = true;
+false = false;
 rAliasType = FOUR_CHAR_CODE('alis');
 kARMMountVol = 0x00000001;
 kARMNoUI = 0x00000002;

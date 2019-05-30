@@ -28,9 +28,9 @@ PyModule_New(const char *name)
         goto fail;
     if (PyDict_SetItemString(m->md_dict, "__name__", nameobj) != 0)
         goto fail;
-    if (PyDict_SetItemString(m->md_dict, "__doc__", Py_None) != 0)
+    if (PyDict_SetItemString(m->md_dict, "__doc__", Py_Nil) != 0)
         goto fail;
-    if (PyDict_SetItemString(m->md_dict, "__package__", Py_None) != 0)
+    if (PyDict_SetItemString(m->md_dict, "__package__", Py_Nil) != 0)
         goto fail;
     Py_DECREF(nameobj);
     PyObject_GC_Track(m);
@@ -117,12 +117,12 @@ _PyModule_Clear(PyObject *m)
     /* First, clear only names starting with a single underscore */
     pos = 0;
     while (PyDict_Next(d, &pos, &key, &value)) {
-        if (value != Py_None && PyString_Check(key)) {
+        if (value != Py_Nil && PyString_Check(key)) {
             char *s = PyString_AsString(key);
             if (s[0] == '_' && s[1] != '_') {
                 if (Py_VerboseFlag > 1)
                     PySys_WriteStderr("#   clear[1] %s\n", s);
-                if (PyDict_SetItem(d, key, Py_None) != 0)
+                if (PyDict_SetItem(d, key, Py_Nil) != 0)
                     PyErr_Clear();
             }
         }
@@ -131,12 +131,12 @@ _PyModule_Clear(PyObject *m)
     /* Next, clear all names except for __builtins__ */
     pos = 0;
     while (PyDict_Next(d, &pos, &key, &value)) {
-        if (value != Py_None && PyString_Check(key)) {
+        if (value != Py_Nil && PyString_Check(key)) {
             char *s = PyString_AsString(key);
             if (s[0] != '_' || strcmp(s, "__builtins__") != 0) {
                 if (Py_VerboseFlag > 1)
                     PySys_WriteStderr("#   clear[2] %s\n", s);
-                if (PyDict_SetItem(d, key, Py_None) != 0)
+                if (PyDict_SetItem(d, key, Py_Nil) != 0)
                     PyErr_Clear();
             }
         }
@@ -154,7 +154,7 @@ static int
 module_init(PyModuleObject *m, PyObject *args, PyObject *kwds)
 {
     static char *kwlist[] = {"name", "doc", NULL};
-    PyObject *dict, *name = Py_None, *doc = Py_None;
+    PyObject *dict, *name = Py_Nil, *doc = Py_Nil;
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "S|O:module.__init__",
                                      kwlist, &name, &doc))
         return -1;

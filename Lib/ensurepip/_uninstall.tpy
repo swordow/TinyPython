@@ -5,7 +5,7 @@ import ensurepip;
 import sys;
 
 
-def _main(argv=None){
+function _main(argv=nil){
     parser = argparse.ArgumentParser(prog="python -m ensurepip._uninstall");
     parser.add_argument(
         "--version",

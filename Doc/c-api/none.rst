@@ -13,16 +13,16 @@ Python/C API.  Since ``None`` is a singleton, testing for object identity (using
 same reason.
 
 
-.. c:var:: PyObject* Py_None
+.. c:var:: PyObject* Py_Nil
 
    The Python ``None`` object, denoting lack of value.  This object has no methods.
    It needs to be treated just like any other object with respect to reference
    counts.
 
 
-.. c:macro:: Py_RETURN_NONE
+.. c:macro:: Py_RETURN_NIL
 
-   Properly handle returning :c:data:`Py_None` from within a C function.
+   Properly handle returning :c:data:`Py_Nil` from within a C function.
 
    .. versionadded:: 2.4
 

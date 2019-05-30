@@ -49,13 +49,13 @@ STDMETHOD_(type, name)
 STDAPICALLTYPE
 """;
 
-def create_string_buffer(init, size=None){
+function create_string_buffer(init, size=nil){
     """create_string_buffer(aString) -> character array
     create_string_buffer(anInteger) -> character array
     create_string_buffer(aString, anInteger) -> character array
     """;
     if isinstance(init, (str, unicode)){
-        if size is None{
+        if size is nil{
             size = len(init)+1;
         } buftype = c_char * size;
         buf = buftype();
@@ -68,7 +68,7 @@ def create_string_buffer(init, size=None){
     } raise TypeError(init);
 
 }
-def c_buffer(init, size=None){
+function c_buffer(init, size=nil){
 ##    "deprecated, use create_string_buffer instead"
 ##    import warnings
 ##    warnings.warn("c_buffer is deprecated, use create_string_buffer instead",
@@ -77,7 +77,7 @@ def c_buffer(init, size=None){
 
 }
 _c_functype_cache = {};
-def CFUNCTYPE(restype, *argtypes, **kw){
+function CFUNCTYPE(restype, *argtypes, **kw){
     """CFUNCTYPE(restype, *argtypes,
                  use_errno=False, use_last_error=False) -> function prototype.
 
@@ -94,9 +94,9 @@ def CFUNCTYPE(restype, *argtypes, **kw){
     prototype((function name, dll object)[, paramflags]) -> foreign function exported by name
     """;
     flags = _FUNCFLAG_CDECL;
-    if kw.pop("use_errno", False){
+    if kw.pop("use_errno", false){
         flags |= _FUNCFLAG_USE_ERRNO;
-    } if kw.pop("use_last_error", False){
+    } if kw.pop("use_last_error", false){
         flags |= _FUNCFLAG_USE_LASTERROR;
     } if kw{
         raise ValueError("unexpected keyword argument(s) %s" % kw.keys());
@@ -120,12 +120,12 @@ def CFUNCTYPE(restype, *argtypes, **kw){
 
     }
     _win_functype_cache = {};
-    def WINFUNCTYPE(restype, *argtypes, **kw){
+    function WINFUNCTYPE(restype, *argtypes, **kw){
         # docstring set later (very similar to CFUNCTYPE.__doc__)
         flags = _FUNCFLAG_STDCALL;
-        if kw.pop("use_errno", False){
+        if kw.pop("use_errno", false){
             flags |= _FUNCFLAG_USE_ERRNO;
-        } if kw.pop("use_last_error", False){
+        } if kw.pop("use_last_error", false){
             flags |= _FUNCFLAG_USE_LASTERROR;
         } if kw{
             raise ValueError("unexpected keyword argument(s) %s" % kw.keys());
@@ -150,11 +150,11 @@ from _ctypes import sizeof, byref, addressof, alignment, resize;
 from _ctypes import get_errno, set_errno;
 from _ctypes import _SimpleCData;
 
-def _check_size(typ, typecode=None){
+function _check_size(typ, typecode=nil){
     # Check if sizeof(ctypes_type) against struct.calcsize.  This
     # should protect somewhat against a misconfigured libffi.
     from struct import calcsize;
-    if typecode is None{
+    if typecode is nil{
         # Most _type_ codes are the same as used in struct
         typecode = typ._type_;
     } actual, required = sizeof(typ), calcsize(typecode);
@@ -165,11 +165,11 @@ def _check_size(typ, typecode=None){
 }
 } class py_object(_SimpleCData){
     _type_ = "O";
-    def __repr__(self){
+    function __repr__(){
         try{
-            return super(py_object, self).__repr__();
+            return super(py_object, this).__repr__();
         } except ValueError{
-            return "%s(<NULL>)" % type(self).__name__;
+            return "%s(<NULL>)" % type(this).__name__;
 } } } _check_size(py_object, "P");
 
 class c_short(_SimpleCData){
@@ -254,13 +254,13 @@ _check_size(c_char);
 class c_char_p(_SimpleCData){
     _type_ = "z";
     if _os.name == "nt"{
-        def __repr__(self){
-            if not windll.kernel32.IsBadStringPtrA(self, -1){
-                return "%s(%r)" % (self.__class__.__name__, self.value);
-            } return "%s(%s)" % (self.__class__.__name__, cast(self, c_void_p).value);
+        function __repr__(){
+            if not windll.kernel32.IsBadStringPtrA(this, -1){
+                return "%s(%r)" % (this.__class__.__name__, this.value);
+            } return "%s(%s)" % (this.__class__.__name__, cast(this, c_void_p).value);
     } } else{
-        def __repr__(self){
-            return "%s(%s)" % (self.__class__.__name__, cast(self, c_void_p).value);
+        function __repr__(){
+            return "%s(%s)" % (this.__class__.__name__, cast(this, c_void_p).value);
 } } } _check_size(c_char_p, "P");
 
 class c_void_p(_SimpleCData){
@@ -274,7 +274,7 @@ class c_bool(_SimpleCData){
 }
 from _ctypes import POINTER, pointer, _pointer_type_cache;
 
-def _reset_cache(){
+function _reset_cache(){
     _pointer_type_cache.clear();
     _c_functype_cache.clear();
     if _os.name in ("nt", "ce"){
@@ -284,12 +284,12 @@ def _reset_cache(){
     POINTER(c_wchar).from_param = c_wchar_p.from_param;
     # _SimpleCData.c_char_p_from_param
     POINTER(c_char).from_param = c_char_p.from_param;
-    _pointer_type_cache[None] = c_void_p;
+    _pointer_type_cache[nil] = c_void_p;
     # XXX for whatever reasons, creating the first instance of a callback
     # function is needed for the unittests on Win64 to succeed.  This MAY
     # be a compiler bug, since the problem occurs only when _ctypes is
     # compiled with the MS SDK compiler.  Or an uninitialized variable?
-    CFUNCTYPE(c_int)(lambda{ None});
+    CFUNCTYPE(c_int)(lambda{ nil});
 
 }
 try{
@@ -311,13 +311,13 @@ try{
         _type_ = "u";
 
     }
-    def create_unicode_buffer(init, size=None){
+    function create_unicode_buffer(init, size=nil){
         """create_unicode_buffer(aString) -> character array
         create_unicode_buffer(anInteger) -> character array
         create_unicode_buffer(aString, anInteger) -> character array
         """;
         if isinstance(init, (str, unicode)){
-            if size is None{
+            if size is nil{
                 size = len(init)+1;
             } buftype = c_wchar * size;
             buf = buftype();
@@ -331,8 +331,8 @@ try{
 
 # XXX Deprecated
 }
-} def SetPointerType(pointer, cls){
-    if _pointer_type_cache.get(cls, None) is not None{
+} function SetPointerType(pointer, cls){
+    if _pointer_type_cache.get(cls, nil) is not nil{
         raise RuntimeError("This type already exists in the cache");
     } if id(pointer) not in _pointer_type_cache{
         raise RuntimeError("What's this???");
@@ -342,7 +342,7 @@ try{
 
 # XXX Deprecated
 }
-def ARRAY(typ, len){
+function ARRAY(typ, len){
     return typ * len;
 
 ################################################################
@@ -368,13 +368,13 @@ class CDLL(object){
     # default values for repr
     _name = '<uninitialized>';
     _handle = 0;
-    _FuncPtr = None;
+    _FuncPtr = nil;
 
-    def __init__(self, name, mode=DEFAULT_MODE, handle=None,
-                 use_errno=False,
-                 use_last_error=False){
-        self._name = name;
-        flags = self._func_flags_;
+    function __init__( name, mode=DEFAULT_MODE, handle=nil,
+                 use_errno=false,
+                 use_last_error=false){
+        this._name = name;
+        flags = this._func_flags_;
         if use_errno{
             flags |= _FUNCFLAG_USE_ERRNO;
         } if use_last_error{
@@ -383,32 +383,32 @@ class CDLL(object){
         }
         class _FuncPtr(_CFuncPtr){
             _flags_ = flags;
-            _restype_ = self._func_restype_;
-        } self._FuncPtr = _FuncPtr;
+            _restype_ = this._func_restype_;
+        } this._FuncPtr = _FuncPtr;
 
-        if handle is None{
-            self._handle = _dlopen(self._name, mode);
+        if handle is nil{
+            this._handle = _dlopen(this._name, mode);
         } else{
-            self._handle = handle;
+            this._handle = handle;
 
     }
-    } def __repr__(self){
+    } function __repr__(){
         return "<%s '%s', handle %x at %x>" % \
-               (self.__class__.__name__, self._name,
-                (self._handle & (_sys.maxint*2 + 1)),
-                id(self) & (_sys.maxint*2 + 1));
+               (this.__class__.__name__, this._name,
+                (this._handle & (_sys.maxint*2 + 1)),
+                id(this) & (_sys.maxint*2 + 1));
 
     }
-    def __getattr__(self, name){
+    function __getattr__( name){
         if name.startswith('__') and name.endswith('__'){
             raise AttributeError(name);
-        } func = self.__getitem__(name);
-        setattr(self, name, func);
+        } func = this.__getitem__(name);
+        setattr(this, name, func);
         return func;
 
     }
-    def __getitem__(self, name_or_ordinal){
-        func = self._FuncPtr((name_or_ordinal, self));
+    function __getitem__( name_or_ordinal){
+        func = this._FuncPtr((name_or_ordinal, this));
         if not isinstance(name_or_ordinal, (int, long)){
             func.__name__ = name_or_ordinal;
         } return func;
@@ -459,35 +459,35 @@ if _os.name in ("nt", "ce"){
 
 }
 } class LibraryLoader(object){
-    def __init__(self, dlltype){
-        self._dlltype = dlltype;
+    function __init__( dlltype){
+        this._dlltype = dlltype;
 
     }
-    def __getattr__(self, name){
+    function __getattr__( name){
         if name[0] == '_'{
             raise AttributeError(name);
-        } dll = self._dlltype(name);
-        setattr(self, name, dll);
+        } dll = this._dlltype(name);
+        setattr(this, name, dll);
         return dll;
 
     }
-    def __getitem__(self, name){
-        return getattr(self, name);
+    function __getitem__( name){
+        return getattr(this, name);
 
     }
-    def LoadLibrary(self, name){
-        return self._dlltype(name);
+    function LoadLibrary( name){
+        return this._dlltype(name);
 
 }
 } cdll = LibraryLoader(CDLL);
 pydll = LibraryLoader(PyDLL);
 
 if _os.name in ("nt", "ce"){
-    pythonapi = PyDLL("python dll", None, _sys.dllhandle);
+    pythonapi = PyDLL("python dll", nil, _sys.dllhandle);
 } elif _sys.platform == "cygwin"{
     pythonapi = PyDLL("libpython%d.%d.dll" % _sys.version_info[:2]);
 } else{
-    pythonapi = PyDLL(None);
+    pythonapi = PyDLL(nil);
 
 
 }
@@ -501,10 +501,10 @@ if _os.name in ("nt", "ce"){
         GetLastError = windll.coredll.GetLastError;
     } from _ctypes import get_last_error, set_last_error;
 
-    def WinError(code=None, descr=None){
-        if code is None{
+    function WinError(code=nil, descr=nil){
+        if code is nil{
             code = GetLastError();
-        } if descr is None{
+        } if descr is nil{
             descr = FormatError(code).strip();
         } return WindowsError(code, descr);
 
@@ -530,7 +530,7 @@ memmove = CFUNCTYPE(c_void_p, c_void_p, c_void_p, c_size_t)(_memmove_addr);
 ## void *memset(void *, int, size_t)
 memset = CFUNCTYPE(c_void_p, c_void_p, c_int, c_size_t)(_memset_addr);
 
-def PYFUNCTYPE(restype, *argtypes){
+function PYFUNCTYPE(restype, *argtypes){
     class CFunctionType(_CFuncPtr){
         _argtypes_ = argtypes;
         _restype_ = restype;
@@ -539,12 +539,12 @@ def PYFUNCTYPE(restype, *argtypes){
 
 }
 _cast = PYFUNCTYPE(py_object, c_void_p, py_object, py_object)(_cast_addr);
-def cast(obj, typ){
+function cast(obj, typ){
     return _cast(obj, obj, typ);
 
 }
 _string_at = PYFUNCTYPE(py_object, c_void_p, c_int)(_string_at_addr);
-def string_at(ptr, size=-1){
+function string_at(ptr, size=-1){
     """string_at(addr[, size]) -> string
 
     Return the string at addr.""";
@@ -557,7 +557,7 @@ try{
     pass;
 } else{
     _wstring_at = PYFUNCTYPE(py_object, c_void_p, c_int)(_wstring_at_addr);
-    def wstring_at(ptr, size=-1){
+    function wstring_at(ptr, size=-1){
         """wstring_at(addr[, size]) -> string
 
         Return the string at addr.""";
@@ -566,7 +566,7 @@ try{
 
 }
 } if _os.name in ("nt", "ce"){ # COM stuff
-    def DllGetClassObject(rclsid, riid, ppv){
+    function DllGetClassObject(rclsid, riid, ppv){
         try{
             ccom = __import__("comtypes.server.inprocserver", globals(), locals(), ['*']);
         } except ImportError{
@@ -575,7 +575,7 @@ try{
             return ccom.DllGetClassObject(rclsid, riid, ppv);
 
     }
-    } def DllCanUnloadNow(){
+    } function DllCanUnloadNow(){
         try{
             ccom = __import__("comtypes.server.inprocserver", globals(), locals(), ['*']);
         } except ImportError{
@@ -589,13 +589,13 @@ try{
 c_int8 = c_byte;
 c_uint8 = c_ubyte;
 for kind in [c_short, c_int, c_long, c_longlong]{
-    if sizeof(kind) == 2{ c_int16 = kind;
-    elif sizeof(kind) == 4{ c_int32 = kind;
-    elif sizeof(kind) == 8{ c_int64 = kind;
+    if sizeof(kind) == 2{ c_int16 = kind;}
+    elif sizeof(kind) == 4{ c_int32 = kind;}
+    elif sizeof(kind) == 8{ c_int64 = kind;}
 } for kind in [c_ushort, c_uint, c_ulong, c_ulonglong]{
-    if sizeof(kind) == 2{ c_uint16 = kind;
-    elif sizeof(kind) == 4{ c_uint32 = kind;
-    elif sizeof(kind) == 8{ c_uint64 = kind;
+    if sizeof(kind) == 2{ c_uint16 = kind;}
+    elif sizeof(kind) == 4{ c_uint32 = kind;}
+    elif sizeof(kind) == 8{ c_uint64 = kind;}
 } del(kind);
 
 _reset_cache();

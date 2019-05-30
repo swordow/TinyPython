@@ -64,7 +64,7 @@ There are a few functions specific to Python functions.
 .. c:function:: int PyFunction_SetDefaults(PyObject *op, PyObject *defaults)
 
    Set the argument default values for the function object *op*. *defaults* must be
-   *Py_None* or a tuple.
+   *Py_Nil* or a tuple.
 
    Raises :exc:`SystemError` and returns ``-1`` on failure.
 
@@ -78,6 +78,6 @@ There are a few functions specific to Python functions.
 .. c:function:: int PyFunction_SetClosure(PyObject *op, PyObject *closure)
 
    Set the closure associated with the function object *op*. *closure* must be
-   *Py_None* or a tuple of cell objects.
+   *Py_Nil* or a tuple of cell objects.
 
    Raises :exc:`SystemError` and returns ``-1`` on failure.

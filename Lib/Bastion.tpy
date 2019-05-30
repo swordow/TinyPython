@@ -44,7 +44,7 @@ class BastionClass{
 
     """;
 
-    def __init__(self, get, name){
+    function __init__( get, name){
         """Constructor.
 
         Arguments:
@@ -54,11 +54,11 @@ class BastionClass{
                (suggestion: use repr(object))
 
         """;
-        self._get_ = get;
-        self._name_ = name;
+        this._get_ = get;
+        this._name_ = name;
 
     }
-    def __repr__(self){
+    function __repr__(){
         """Return a representation string.
 
         This includes the name passed in to the constructor, so that
@@ -66,10 +66,10 @@ class BastionClass{
         some idea of what it is.
 
         """;
-        return "<Bastion for %s>" % self._name_;
+        return "<Bastion for %s>" % this._name_;
 
     }
-    def __getattr__(self, name){
+    function __getattr__( name){
         """Get an as-yet undefined attribute value.
 
         This calls the get() function that was passed to the
@@ -81,14 +81,14 @@ class BastionClass{
         passed on -- exceptions are not cached.
 
         """;
-        attribute = self._get_(name);
-        self.__dict__[name] = attribute;
+        attribute = this._get_(name);
+        this.__dict__[name] = attribute;
         return attribute;
 
 
 }
-} def Bastion(object, filter = lambda name{ name[:1] != '_'},
-            name=None, bastionclass=BastionClass){
+} function Bastion(object, filter = lambda name{ name[:1] != '_'},
+            name=nil, bastionclass=BastionClass){
     """Create a bastion for an object, using an optional filter.
 
     See the Bastion module's documentation for background.
@@ -117,7 +117,7 @@ class BastionClass{
     # instance variables on the bastion object itself, since
     # the user has full access to all instance variables!
 
-    def get1(name, object=object, filter=filter){
+    function get1(name, object=object, filter=filter){
         """Internal function for Bastion().  See source comments.""";
         if filter(name){
             attribute = getattr(object, name);
@@ -126,28 +126,28 @@ class BastionClass{
         } } raise AttributeError, name;
 
     }
-    def get2(name, get1=get1){
+    function get2(name, get1=get1){
         """Internal function for Bastion().  See source comments.""";
         return get1(name);
 
     }
-    if name is None{
+    if name is nil{
         name = repr(object);
     } return bastionclass(get2, name);
 
 
 }
-def _test(){
+function _test(){
     """Test the Bastion() function.""";
     class Original{
-        def __init__(self){
-            self.sum = 0;
-        } def add(self, n){
-            self._add(n);
-        } def _add(self, n){
-            self.sum = self.sum + n;
-        } def total(self){
-            return self.sum;
+        function __init__(){
+            this.sum = 0;
+        } function add( n){
+            this._add(n);
+        } function _add( n){
+            this.sum = this.sum + n;
+        } function total(){
+            return this.sum;
     } } o = Original();
     b = Bastion(o);
     testcode = """if 1:

@@ -108,8 +108,8 @@ static PyObject *CmpInstObj_CloseComponent(ComponentInstanceObject *_self, PyObj
         return NULL;
     _err = CloseComponent(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -124,8 +124,8 @@ static PyObject *CmpInstObj_GetComponentInstanceError(ComponentInstanceObject *_
         return NULL;
     _err = GetComponentInstanceError(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -141,8 +141,8 @@ static PyObject *CmpInstObj_SetComponentInstanceError(ComponentInstanceObject *_
         return NULL;
     SetComponentInstanceError(_self->ob_itself,
                               theError);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -173,8 +173,8 @@ static PyObject *CmpInstObj_SetComponentInstanceStorage(ComponentInstanceObject 
         return NULL;
     SetComponentInstanceStorage(_self->ob_itself,
                                 theStorage);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -354,7 +354,7 @@ PyObject *CmpObj_New(Component itself)
 
 int CmpObj_Convert(PyObject *v, Component *p_itself)
 {
-    if ( v == Py_None ) {
+    if ( v == Py_Nil ) {
                                     *p_itself = 0;
                                     return 1;
         }
@@ -384,8 +384,8 @@ static PyObject *CmpObj_UnregisterComponent(ComponentObject *_self, PyObject *_a
         return NULL;
     _err = UnregisterComponent(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -466,8 +466,8 @@ static PyObject *CmpObj_GetComponentPublicIndString(ComponentObject *_self, PyOb
                                        strListID,
                                        index);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -498,8 +498,8 @@ static PyObject *CmpObj_SetComponentRefcon(ComponentObject *_self, PyObject *_ar
         return NULL;
     SetComponentRefcon(_self->ob_itself,
                        theRefcon);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -562,8 +562,8 @@ static PyObject *CmpObj_GetComponentIndString(ComponentObject *_self, PyObject *
                                  strListID,
                                  index);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -596,8 +596,8 @@ static PyObject *CmpObj_SetDefaultComponent(ComponentObject *_self, PyObject *_a
     _err = SetDefaultComponent(_self->ob_itself,
                                flags);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -630,8 +630,8 @@ static PyObject *CmpObj_UncaptureComponent(ComponentObject *_self, PyObject *_ar
         return NULL;
     _err = UncaptureComponent(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -850,8 +850,8 @@ static PyObject *Cm_CloseComponentResFile(PyObject *_self, PyObject *_args)
         return NULL;
     _err = CloseComponentResFile(refnum);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 

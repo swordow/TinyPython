@@ -137,8 +137,8 @@ static PyObject *Evt_SetEventMask(PyObject *_self, PyObject *_args)
                           &value))
         return NULL;
     SetEventMask(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -198,8 +198,8 @@ static PyObject *Evt_PostEvent(PyObject *_self, PyObject *_args)
     _err = PostEvent(eventNum,
                      eventMsg);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -217,8 +217,8 @@ static PyObject *Evt_FlushEvents(PyObject *_self, PyObject *_args)
         return NULL;
     FlushEvents(whichMask,
                 stopMask);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -278,8 +278,8 @@ static PyObject *Evt_KeyScript(PyObject *_self, PyObject *_args)
                           &code))
         return NULL;
     KeyScript(code);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -329,8 +329,8 @@ static PyObject *Evt_LMSetKeyThresh(PyObject *_self, PyObject *_args)
                           &value))
         return NULL;
     LMSetKeyThresh(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -360,8 +360,8 @@ static PyObject *Evt_LMSetKeyRepThresh(PyObject *_self, PyObject *_args)
                           &value))
         return NULL;
     LMSetKeyRepThresh(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -391,8 +391,8 @@ static PyObject *Evt_LMSetKbdLast(PyObject *_self, PyObject *_args)
                           &value))
         return NULL;
     LMSetKbdLast(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -422,8 +422,8 @@ static PyObject *Evt_LMSetKbdType(PyObject *_self, PyObject *_args)
                           &value))
         return NULL;
     LMSetKbdType(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 

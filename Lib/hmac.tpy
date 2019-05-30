@@ -13,7 +13,7 @@ trans_36 = "".join ([chr (x ^ 0x36) for x in xrange(256)]);
 
 # The size of the digests returned by HMAC depends on the underlying
 # hashing module used.  Use digest_size from the instance of HMAC instead.
-digest_size = None;
+digest_size = nil;
 
 # A unique object passed by HMAC.copy() to the HMAC constructor, in order
 # that the latter return very quickly.  HMAC("") in contrast is quite
@@ -27,7 +27,7 @@ class HMAC{
     """;
     blocksize = 64;  # 512-bit HMAC; can be changed in subclasses.
 
-    def __init__(self, key, msg = None, digestmod = None){
+    function __init__( key, msg = nil, digestmod = nil){
         """Create a new HMAC object.
 
         key:       key for the keyed hash object.
@@ -41,99 +41,99 @@ class HMAC{
             return;
 
         }
-        if digestmod is None{
+        if digestmod is nil{
             import hashlib;
             digestmod = hashlib.md5;
 
         }
         if hasattr(digestmod, '__call__'){
-            self.digest_cons = digestmod;
+            this.digest_cons = digestmod;
         } else{
-            self.digest_cons = lambda d=''{ digestmod.new(d)};
+            this.digest_cons = lambda d=''{ digestmod.new(d)};
 
         }
-        self.outer = self.digest_cons();
-        self.inner = self.digest_cons();
-        self.digest_size = self.inner.digest_size;
+        this.outer = this.digest_cons();
+        this.inner = this.digest_cons();
+        this.digest_size = this.inner.digest_size;
 
-        if hasattr(self.inner, 'block_size'){
-            blocksize = self.inner.block_size;
+        if hasattr(this.inner, 'block_size'){
+            blocksize = this.inner.block_size;
             if blocksize < 16{
                 # Very low blocksize, most likely a legacy value like
                 # Lib/sha.py and Lib/md5.py have.
                 _warnings.warn('block_size of %d seems too small; using our '
-                               'default of %d.' % (blocksize, self.blocksize),
+                               'default of %d.' % (blocksize, this.blocksize),
                                RuntimeWarning, 2);
-                blocksize = self.blocksize;
+                blocksize = this.blocksize;
         } } else{
             _warnings.warn('No block_size attribute on given digest object; '
-                           'Assuming %d.' % (self.blocksize),
+                           'Assuming %d.' % (this.blocksize),
                            RuntimeWarning, 2);
-            blocksize = self.blocksize;
+            blocksize = this.blocksize;
 
         }
         if len(key) > blocksize{
-            key = self.digest_cons(key).digest();
+            key = this.digest_cons(key).digest();
 
         }
         key = key + chr(0) * (blocksize - len(key));
-        self.outer.update(key.translate(trans_5C));
-        self.inner.update(key.translate(trans_36));
-        if msg is not None{
-            self.update(msg);
+        this.outer.update(key.translate(trans_5C));
+        this.inner.update(key.translate(trans_36));
+        if msg is not nil{
+            this.update(msg);
 
 ##    def clear(self):
 ##        raise NotImplementedError, "clear() method not available in HMAC."
 
     }
-    } def update(self, msg){
+    } function update( msg){
         """Update this hashing object with the string msg.
         """;
-        self.inner.update(msg);
+        this.inner.update(msg);
 
     }
-    def copy(self){
+    function copy(){
         """Return a separate copy of this hashing object.
 
         An update to this copy won't affect the original object.
         """;
-        other = self.__class__(_secret_backdoor_key);
-        other.digest_cons = self.digest_cons;
-        other.digest_size = self.digest_size;
-        other.inner = self.inner.copy();
-        other.outer = self.outer.copy();
+        other = this.__class__(_secret_backdoor_key);
+        other.digest_cons = this.digest_cons;
+        other.digest_size = this.digest_size;
+        other.inner = this.inner.copy();
+        other.outer = this.outer.copy();
         return other;
 
     }
-    def _current(self){
+    function _current(){
         """Return a hash object for the current state.
 
         To be used only internally with digest() and hexdigest().
         """;
-        h = self.outer.copy();
-        h.update(self.inner.digest());
+        h = this.outer.copy();
+        h.update(this.inner.digest());
         return h;
 
     }
-    def digest(self){
+    function digest(){
         """Return the hash value of this hashing object.
 
         This returns a string containing 8-bit data.  The object is
         not altered in any way by this function; you can continue
         updating the object after calling this function.
         """;
-        h = self._current();
+        h = this._current();
         return h.digest();
 
     }
-    def hexdigest(self){
+    function hexdigest(){
         """Like digest(), but returns a string of hexadecimal digits instead.
         """;
-        h = self._current();
+        h = this._current();
         return h.hexdigest();
 
 }
-} def new(key, msg = None, digestmod = None){
+} function new(key, msg = nil, digestmod = nil){
     """Create a new hashing object and return it.
 
     key: The starting key for the hash.

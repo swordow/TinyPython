@@ -27,49 +27,49 @@ class build_scripts (Command){
     boolean_options = ['force'];
 
 
-    def initialize_options (self){
-        self.build_dir = None;
-        self.scripts = None;
-        self.force = None;
-        self.executable = None;
-        self.outfiles = None;
+    function initialize_options (){
+        this.build_dir = nil;
+        this.scripts = nil;
+        this.force = nil;
+        this.executable = nil;
+        this.outfiles = nil;
 
     }
-    def finalize_options (self){
-        self.set_undefined_options('build',
+    function finalize_options (){
+        this.set_undefined_options('build',
                                    ('build_scripts', 'build_dir'),
                                    ('force', 'force'),
                                    ('executable', 'executable'));
-        self.scripts = self.distribution.scripts;
+        this.scripts = this.distribution.scripts;
 
     }
-    def get_source_files(self){
-        return self.scripts;
+    function get_source_files(){
+        return this.scripts;
 
     }
-    def run (self){
-        if not self.scripts{
+    function run (){
+        if not this.scripts{
             return;
-        } self.copy_scripts();
+        } this.copy_scripts();
 
 
     }
-    def copy_scripts (self){
+    function copy_scripts (){
         """Copy each script listed in 'self.scripts'; if it's marked as a
         Python script in the Unix way (first line matches 'first_line_re',
         ie. starts with "\#!" and contains "python"), then adjust the first
         line to refer to the current Python interpreter as we copy.
         """;
         _sysconfig = __import__('sysconfig');
-        self.mkpath(self.build_dir);
+        this.mkpath(this.build_dir);
         outfiles = [];
-        for script in self.scripts{
+        for script in this.scripts{
             adjust = 0;
             script = convert_path(script);
-            outfile = os.path.join(self.build_dir, os.path.basename(script));
+            outfile = os.path.join(this.build_dir, os.path.basename(script));
             outfiles.append(outfile);
 
-            if not self.force and not newer(script, outfile){
+            if not this.force and not newer(script, outfile){
                 log.debug("not copying %s (up-to-date)", script);
                 continue;
 
@@ -80,13 +80,13 @@ class build_scripts (Command){
             try{
                 f = open(script, "r");
             } except IOError{
-                if not self.dry_run{
+                if not this.dry_run{
                     raise;
-                } f = None;
+                } f = nil;
             } else{
                 first_line = f.readline();
                 if not first_line{
-                    self.warn("%s is an empty file (skipping)" % script);
+                    this.warn("%s is an empty file (skipping)" % script);
                     continue;
 
                 }
@@ -98,12 +98,12 @@ class build_scripts (Command){
             }
             } if adjust{
                 log.info("copying and adjusting %s -> %s", script,
-                         self.build_dir);
-                if not self.dry_run{
+                         this.build_dir);
+                if not this.dry_run{
                     outf = open(outfile, "w");
                     if not _sysconfig.is_python_build(){
                         outf.write("#!%s%s\n" %
-                                   (self.executable,
+                                   (this.executable,
                                     post_interp));
                     } else{
                         outf.write("#!%s%s\n" %
@@ -119,12 +119,12 @@ class build_scripts (Command){
             } } else{
                 if f{
                     f.close();
-                } self.copy_file(script, outfile);
+                } this.copy_file(script, outfile);
 
         }
         } if os.name == 'posix'{
             for file in outfiles{
-                if self.dry_run{
+                if this.dry_run{
                     log.info("changing mode of %s", file);
                 } else{
                     oldmode = os.stat(file)[ST_MODE] & 07777;

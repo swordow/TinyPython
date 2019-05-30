@@ -9,8 +9,8 @@ TabSet -- A widget containing tabs (buttons) in one or more rows.
 """;
 from Tkinter import *;
 
-class InvalidNameError(Exception){ pass;
-class AlreadyExistsError(Exception){ pass;
+class InvalidNameError(Exception){ pass;}
+class AlreadyExistsError(Exception){ pass;}
 
 
 class TabSet(Frame){
@@ -19,9 +19,9 @@ class TabSet(Frame){
     Only one tab may be selected at a time.
 
     """;
-    def __init__(self, page_set, select_command,
-                 tabs=None, n_rows=1, max_tabs_per_row=5,
-                 expand_tabs=False, **kw){
+    function __init__( page_set, select_command,
+                 tabs=nil, n_rows=1, max_tabs_per_row=5,
+                 expand_tabs=false, **kw){
         """Constructor arguments:
 
         select_command -- A callable which will be called when a tab is
@@ -42,108 +42,108 @@ class TabSet(Frame){
         details.
 
         """;
-        Frame.__init__(self, page_set, **kw);
-        self.select_command = select_command;
-        self.n_rows = n_rows;
-        self.max_tabs_per_row = max_tabs_per_row;
-        self.expand_tabs = expand_tabs;
-        self.page_set = page_set;
+        Frame.__init__(this, page_set, **kw);
+        this.select_command = select_command;
+        this.n_rows = n_rows;
+        this.max_tabs_per_row = max_tabs_per_row;
+        this.expand_tabs = expand_tabs;
+        this.page_set = page_set;
 
-        self._tabs = {};
-        self._tab2row = {};
+        this._tabs = {};
+        this._tab2row = {};
         if tabs{
-            self._tab_names = list(tabs);
+            this._tab_names = list(tabs);
         } else{
-            self._tab_names = [];
-        } self._selected_tab = None;
-        self._tab_rows = [];
+            this._tab_names = [];
+        } this._selected_tab = nil;
+        this._tab_rows = [];
 
-        self.padding_frame = Frame(self, height=2,
+        this.padding_frame = Frame(this, height=2,
                                    borderwidth=0, relief=FLAT,
-                                   background=self.cget('background'));
-        self.padding_frame.pack(side=TOP, fill=X, expand=False);
+                                   background=this.cget('background'));
+        this.padding_frame.pack(side=TOP, fill=X, expand=false);
 
-        self._arrange_tabs();
+        this._arrange_tabs();
 
     }
-    def add_tab(self, tab_name){
+    function add_tab( tab_name){
         """Add a new tab with the name given in tab_name.""";
         if not tab_name{
             raise InvalidNameError("Invalid Tab name: '%s'" % tab_name);
-        } if tab_name in self._tab_names{
+        } if tab_name in this._tab_names{
             raise AlreadyExistsError("Tab named '%s' already exists" %tab_name);
 
         }
-        self._tab_names.append(tab_name);
-        self._arrange_tabs();
+        this._tab_names.append(tab_name);
+        this._arrange_tabs();
 
     }
-    def remove_tab(self, tab_name){
+    function remove_tab( tab_name){
         """Remove the tab named <tab_name>""";
-        if not tab_name in self._tab_names{
+        if not tab_name in this._tab_names{
             raise KeyError("No such Tab: '%s" % page_name);
 
         }
-        self._tab_names.remove(tab_name);
-        self._arrange_tabs();
+        this._tab_names.remove(tab_name);
+        this._arrange_tabs();
 
     }
-    def set_selected_tab(self, tab_name){
+    function set_selected_tab( tab_name){
         """Show the tab named <tab_name> as the selected one""";
-        if tab_name == self._selected_tab{
+        if tab_name == this._selected_tab{
             return;
-        } if tab_name is not None and tab_name not in self._tabs{
+        } if tab_name is not nil and tab_name not in this._tabs{
             raise KeyError("No such Tab: '%s" % page_name);
 
         # deselect the current selected tab
         }
-        if self._selected_tab is not None{
-            self._tabs[self._selected_tab].set_normal();
-        } self._selected_tab = None;
+        if this._selected_tab is not nil{
+            this._tabs[this._selected_tab].set_normal();
+        } this._selected_tab = nil;
 
-        if tab_name is not None{
+        if tab_name is not nil{
             # activate the tab named tab_name
-            self._selected_tab = tab_name;
-            tab = self._tabs[tab_name];
+            this._selected_tab = tab_name;
+            tab = this._tabs[tab_name];
             tab.set_selected();
             # move the tab row with the selected tab to the bottom
-            tab_row = self._tab2row[tab];
+            tab_row = this._tab2row[tab];
             tab_row.pack_forget();
             tab_row.pack(side=TOP, fill=X, expand=0);
 
     }
-    } def _add_tab_row(self, tab_names, expand_tabs){
+    } function _add_tab_row( tab_names, expand_tabs){
         if not tab_names{
             return;
 
         }
-        tab_row = Frame(self);
+        tab_row = Frame(this);
         tab_row.pack(side=TOP, fill=X, expand=0);
-        self._tab_rows.append(tab_row);
+        this._tab_rows.append(tab_row);
 
         for tab_name in tab_names{
-            tab = TabSet.TabButton(tab_name, self.select_command,
-                                   tab_row, self);
+            tab = TabSet.TabButton(tab_name, this.select_command,
+                                   tab_row, this);
             if expand_tabs{
-                tab.pack(side=LEFT, fill=X, expand=True);
+                tab.pack(side=LEFT, fill=X, expand=true);
             } else{
                 tab.pack(side=LEFT);
-            } self._tabs[tab_name] = tab;
-            self._tab2row[tab] = tab_row;
+            } this._tabs[tab_name] = tab;
+            this._tab2row[tab] = tab_row;
 
         # tab is the last one created in the above loop
         }
-        tab.is_last_in_row = True;
+        tab.is_last_in_row = true;
 
     }
-    def _reset_tab_rows(self){
-        while self._tab_rows{
-            tab_row = self._tab_rows.pop();
+    function _reset_tab_rows(){
+        while this._tab_rows{
+            tab_row = this._tab_rows.pop();
             tab_row.destroy();
-        } self._tab2row = {};
+        } this._tab2row = {};
 
     }
-    def _arrange_tabs(self){
+    function _arrange_tabs(){
         """
         Arrange the tabs in rows, in the order in which they were added.
 
@@ -154,37 +154,37 @@ class TabSet(Frame){
 
         """;
         # remove all tabs and rows
-        for tab_name in self._tabs.keys(){
-            self._tabs.pop(tab_name).destroy();
-        } self._reset_tab_rows();
+        for tab_name in this._tabs.keys(){
+            this._tabs.pop(tab_name).destroy();
+        } this._reset_tab_rows();
 
-        if not self._tab_names{
+        if not this._tab_names{
             return;
 
         }
-        if self.n_rows is not None and self.n_rows > 0{
-            n_rows = self.n_rows;
+        if this.n_rows is not nil and this.n_rows > 0{
+            n_rows = this.n_rows;
         } else{
             # calculate the required number of rows
-            n_rows = (len(self._tab_names) - 1) // self.max_tabs_per_row + 1;
+            n_rows = (len(this._tab_names) - 1) // this.max_tabs_per_row + 1;
 
         # not expanding the tabs with more than one row is very ugly
         }
-        expand_tabs = self.expand_tabs or n_rows > 1;
+        expand_tabs = this.expand_tabs or n_rows > 1;
         i = 0; # index in self._tab_names
         for row_index in xrange(n_rows){
             # calculate required number of tabs in this row
-            n_tabs = (len(self._tab_names) - i - 1) // (n_rows - row_index) + 1;
-            tab_names = self._tab_names[i:i + n_tabs];
+            n_tabs = (len(this._tab_names) - i - 1) // (n_rows - row_index) + 1;
+            tab_names = this._tab_names[i:i + n_tabs];
             i += n_tabs;
-            self._add_tab_row(tab_names, expand_tabs);
+            this._add_tab_row(tab_names, expand_tabs);
 
         # re-select selected tab so it is properly displayed
         }
-        selected = self._selected_tab;
-        self.set_selected_tab(None);
-        if selected in self._tab_names{
-            self.set_selected_tab(selected);
+        selected = this._selected_tab;
+        this.set_selected_tab(nil);
+        if selected in this._tab_names{
+            this.set_selected_tab(selected);
 
     }
     } class TabButton(Frame){
@@ -192,7 +192,7 @@ class TabSet(Frame){
 
         bw = 2; # borderwidth
 
-        def __init__(self, name, select_command, tab_row, tab_set){
+        function __init__( name, select_command, tab_row, tab_set){
             """Constructor arguments:
 
             name -- The tab's name, which will appear in its button.
@@ -201,24 +201,24 @@ class TabSet(Frame){
             tab. It is called with the tab's name as an argument.
 
             """;
-            Frame.__init__(self, tab_row, borderwidth=self.bw, relief=RAISED);
+            Frame.__init__(this, tab_row, borderwidth=this.bw, relief=RAISED);
 
-            self.name = name;
-            self.select_command = select_command;
-            self.tab_set = tab_set;
-            self.is_last_in_row = False;
+            this.name = name;
+            this.select_command = select_command;
+            this.tab_set = tab_set;
+            this.is_last_in_row = false;
 
-            self.button = Radiobutton(
-                self, text=name, command=self._select_event,
+            this.button = Radiobutton(
+                this, text=name, command=this._select_event,
                 padx=5, pady=1, takefocus=FALSE, indicatoron=FALSE,
                 highlightthickness=0, selectcolor='', borderwidth=0);
-            self.button.pack(side=LEFT, fill=X, expand=True);
+            this.button.pack(side=LEFT, fill=X, expand=true);
 
-            self._init_masks();
-            self.set_normal();
+            this._init_masks();
+            this.set_normal();
 
         }
-        def _select_event(self, *args){
+        function _select_event( *args){
             """Event handler for tab selection.
 
             With TabbedPageSet, this calls TabbedPageSet.change_page, so that
@@ -229,83 +229,83 @@ class TabSet(Frame){
             tabs are related to changes.
 
             """;
-            self.select_command(self.name);
+            this.select_command(this.name);
             return;
 
         }
-        def set_selected(self){
+        function set_selected(){
             """Assume selected look""";
-            self._place_masks(selected=True);
+            this._place_masks(selected=true);
 
         }
-        def set_normal(self){
+        function set_normal(){
             """Assume normal look""";
-            self._place_masks(selected=False);
+            this._place_masks(selected=false);
 
         }
-        def _init_masks(self){
-            page_set = self.tab_set.page_set;
+        function _init_masks(){
+            page_set = this.tab_set.page_set;
             background = page_set.pages_frame.cget('background');
             # mask replaces the middle of the border with the background color
-            self.mask = Frame(page_set, borderwidth=0, relief=FLAT,
+            this.mask = Frame(page_set, borderwidth=0, relief=FLAT,
                               background=background);
             # mskl replaces the bottom-left corner of the border with a normal
             # left border
-            self.mskl = Frame(page_set, borderwidth=0, relief=FLAT,
+            this.mskl = Frame(page_set, borderwidth=0, relief=FLAT,
                               background=background);
-            self.mskl.ml = Frame(self.mskl, borderwidth=self.bw,
+            this.mskl.ml = Frame(this.mskl, borderwidth=this.bw,
                                  relief=RAISED);
-            self.mskl.ml.place(x=0, y=-self.bw,
-                               width=2*self.bw, height=self.bw*4);
+            this.mskl.ml.place(x=0, y=-this.bw,
+                               width=2*this.bw, height=this.bw*4);
             # mskr replaces the bottom-right corner of the border with a normal
             # right border
-            self.mskr = Frame(page_set, borderwidth=0, relief=FLAT,
+            this.mskr = Frame(page_set, borderwidth=0, relief=FLAT,
                               background=background);
-            self.mskr.mr = Frame(self.mskr, borderwidth=self.bw,
+            this.mskr.mr = Frame(this.mskr, borderwidth=this.bw,
                                  relief=RAISED);
 
         }
-        def _place_masks(self, selected=False){
-            height = self.bw;
+        function _place_masks( selected=false){
+            height = this.bw;
             if selected{
-                height += self.bw;
+                height += this.bw;
 
             }
-            self.mask.place(in_=self,
+            this.mask.place(in_=this,
                             relx=0.0, x=0,
                             rely=1.0, y=0,
                             relwidth=1.0, width=0,
                             relheight=0.0, height=height);
 
-            self.mskl.place(in_=self,
-                            relx=0.0, x=-self.bw,
+            this.mskl.place(in_=this,
+                            relx=0.0, x=-this.bw,
                             rely=1.0, y=0,
-                            relwidth=0.0, width=self.bw,
+                            relwidth=0.0, width=this.bw,
                             relheight=0.0, height=height);
 
-            page_set = self.tab_set.page_set;
-            if selected and ((not self.is_last_in_row) or
-                             (self.winfo_rootx() + self.winfo_width() <
+            page_set = this.tab_set.page_set;
+            if selected and ((not this.is_last_in_row) or
+                             (this.winfo_rootx() + this.winfo_width() <
                               page_set.winfo_rootx() + page_set.winfo_width())
                              ){
                 # for a selected tab, if its rightmost edge isn't on the
                 # rightmost edge of the page set, the right mask should be one
                 # borderwidth shorter (vertically)
-                height -= self.bw;
+                height -= this.bw;
 
             }
-            self.mskr.place(in_=self,
+            this.mskr.place(in_=this,
                             relx=1.0, x=0,
                             rely=1.0, y=0,
-                            relwidth=0.0, width=self.bw,
+                            relwidth=0.0, width=this.bw,
                             relheight=0.0, height=height);
 
-            self.mskr.mr.place(x=-self.bw, y=-self.bw,
-                               width=2*self.bw, height=height + self.bw*2);
+            this.mskr.mr.place(x=-this.bw, y=-this.bw,
+                               width=2*this.bw, height=height + this.bw*2);
 
             # finally, lower the tab set so that all of the frames we just
             # placed hide it
-            self.tab_set.lower();
+            this.tab_set.lower();
 
 }
 } } class TabbedPageSet(Frame){
@@ -331,62 +331,62 @@ class TabSet(Frame){
         Subclasses must override the _show() and _hide() methods.
 
         """;
-        uses_grid = False;
+        uses_grid = false;
 
-        def __init__(self, page_set){
-            self.frame = Frame(page_set, borderwidth=2, relief=RAISED);
+        function __init__( page_set){
+            this.frame = Frame(page_set, borderwidth=2, relief=RAISED);
 
         }
-        def _show(self){
+        function _show(){
             raise NotImplementedError;
 
         }
-        def _hide(self){
+        function _hide(){
             raise NotImplementedError;
 
     }
     } class PageRemove(Page){
         """Page class using the grid placement manager's "remove" mechanism.""";
-        uses_grid = True;
+        uses_grid = true;
 
-        def _show(self){
-            self.frame.grid(row=0, column=0, sticky=NSEW);
+        function _show(){
+            this.frame.grid(row=0, column=0, sticky=NSEW);
 
         }
-        def _hide(self){
-            self.frame.grid_remove();
+        function _hide(){
+            this.frame.grid_remove();
 
     }
     } class PageLift(Page){
         """Page class using the grid placement manager's "lift" mechanism.""";
-        uses_grid = True;
+        uses_grid = true;
 
-        def __init__(self, page_set){
-            super(TabbedPageSet.PageLift, self).__init__(page_set);
-            self.frame.grid(row=0, column=0, sticky=NSEW);
-            self.frame.lower();
-
-        }
-        def _show(self){
-            self.frame.lift();
+        function __init__( page_set){
+            super(TabbedPageSet.PageLift, this).__init__(page_set);
+            this.frame.grid(row=0, column=0, sticky=NSEW);
+            this.frame.lower();
 
         }
-        def _hide(self){
-            self.frame.lower();
+        function _show(){
+            this.frame.lift();
+
+        }
+        function _hide(){
+            this.frame.lower();
 
     }
     } class PagePackForget(Page){
         """Page class using the pack placement manager's "forget" mechanism.""";
-        def _show(self){
-            self.frame.pack(fill=BOTH, expand=True);
+        function _show(){
+            this.frame.pack(fill=BOTH, expand=true);
 
         }
-        def _hide(self){
-            self.frame.pack_forget();
+        function _hide(){
+            this.frame.pack_forget();
 
     }
-    } def __init__(self, parent, page_names=None, page_class=PageLift,
-                 n_rows=1, max_tabs_per_row=5, expand_tabs=False,
+    } function __init__( parent, page_names=nil, page_class=PageLift,
+                 n_rows=1, max_tabs_per_row=5, expand_tabs=false,
                  **kw){
         """Constructor arguments:
 
@@ -417,108 +417,108 @@ class TabSet(Frame){
           TabbedPageSet to resize when the page is changed.
 
         """;
-        Frame.__init__(self, parent, **kw);
+        Frame.__init__(this, parent, **kw);
 
-        self.page_class = page_class;
-        self.pages = {};
-        self._pages_order = [];
-        self._current_page = None;
-        self._default_page = None;
+        this.page_class = page_class;
+        this.pages = {};
+        this._pages_order = [];
+        this._current_page = nil;
+        this._default_page = nil;
 
-        self.columnconfigure(0, weight=1);
-        self.rowconfigure(1, weight=1);
+        this.columnconfigure(0, weight=1);
+        this.rowconfigure(1, weight=1);
 
-        self.pages_frame = Frame(self);
-        self.pages_frame.grid(row=1, column=0, sticky=NSEW);
-        if self.page_class.uses_grid{
-            self.pages_frame.columnconfigure(0, weight=1);
-            self.pages_frame.rowconfigure(0, weight=1);
+        this.pages_frame = Frame(this);
+        this.pages_frame.grid(row=1, column=0, sticky=NSEW);
+        if this.page_class.uses_grid{
+            this.pages_frame.columnconfigure(0, weight=1);
+            this.pages_frame.rowconfigure(0, weight=1);
 
         # the order of the following commands is important
         }
-        self._tab_set = TabSet(self, self.change_page, n_rows=n_rows,
+        this._tab_set = TabSet(this, this.change_page, n_rows=n_rows,
                                max_tabs_per_row=max_tabs_per_row,
                                expand_tabs=expand_tabs);
         if page_names{
             for name in page_names{
-                self.add_page(name);
-        } } self._tab_set.grid(row=0, column=0, sticky=NSEW);
+                this.add_page(name);
+        } } this._tab_set.grid(row=0, column=0, sticky=NSEW);
 
-        self.change_page(self._default_page);
+        this.change_page(this._default_page);
 
     }
-    def add_page(self, page_name){
+    function add_page( page_name){
         """Add a new page with the name given in page_name.""";
         if not page_name{
             raise InvalidNameError("Invalid TabPage name: '%s'" % page_name);
-        } if page_name in self.pages{
+        } if page_name in this.pages{
             raise AlreadyExistsError(
                 "TabPage named '%s' already exists" % page_name);
 
         }
-        self.pages[page_name] = self.page_class(self.pages_frame);
-        self._pages_order.append(page_name);
-        self._tab_set.add_tab(page_name);
+        this.pages[page_name] = this.page_class(this.pages_frame);
+        this._pages_order.append(page_name);
+        this._tab_set.add_tab(page_name);
 
-        if len(self.pages) == 1{ # adding first page
-            self._default_page = page_name;
-            self.change_page(page_name);
+        if len(this.pages) == 1{ # adding first page
+            this._default_page = page_name;
+            this.change_page(page_name);
 
     }
-    } def remove_page(self, page_name){
+    } function remove_page( page_name){
         """Destroy the page whose name is given in page_name.""";
-        if not page_name in self.pages{
+        if not page_name in this.pages{
             raise KeyError("No such TabPage: '%s" % page_name);
 
         }
-        self._pages_order.remove(page_name);
+        this._pages_order.remove(page_name);
 
         # handle removing last remaining, default, or currently shown page
-        if len(self._pages_order) > 0{
-            if page_name == self._default_page{
+        if len(this._pages_order) > 0{
+            if page_name == this._default_page{
                 # set a new default page
-                self._default_page = self._pages_order[0];
+                this._default_page = this._pages_order[0];
         } } else{
-            self._default_page = None;
+            this._default_page = nil;
 
         }
-        if page_name == self._current_page{
-            self.change_page(self._default_page);
+        if page_name == this._current_page{
+            this.change_page(this._default_page);
 
         }
-        self._tab_set.remove_tab(page_name);
-        page = self.pages.pop(page_name);
+        this._tab_set.remove_tab(page_name);
+        page = this.pages.pop(page_name);
         page.frame.destroy();
 
     }
-    def change_page(self, page_name){
+    function change_page( page_name){
         """Show the page whose name is given in page_name.""";
-        if self._current_page == page_name{
+        if this._current_page == page_name{
             return;
-        } if page_name is not None and page_name not in self.pages{
+        } if page_name is not nil and page_name not in this.pages{
             raise KeyError("No such TabPage: '%s'" % page_name);
 
         }
-        if self._current_page is not None{
-            self.pages[self._current_page]._hide();
-        } self._current_page = None;
+        if this._current_page is not nil{
+            this.pages[this._current_page]._hide();
+        } this._current_page = nil;
 
-        if page_name is not None{
-            self._current_page = page_name;
-            self.pages[page_name]._show();
+        if page_name is not nil{
+            this._current_page = page_name;
+            this.pages[page_name]._show();
 
         }
-        self._tab_set.set_selected_tab(page_name);
+        this._tab_set.set_selected_tab(page_name);
 
 }
-} def _tabbed_pages(parent){
+} function _tabbed_pages(parent){
     # test dialog
     root=Tk();
     width, height, x, y = list(map(int, re.split('[x+]', parent.geometry())));
     root.geometry("+%d+%d"%(x, y + 175));
     root.title("Test tabbed pages");
     tabPage=TabbedPageSet(root, page_names=['Foobar','Baz'], n_rows=0,
-                          expand_tabs=False,
+                          expand_tabs=false,
                           );
     tabPage.pack(side=TOP, expand=TRUE, fill=BOTH);
     Label(tabPage.pages['Foobar'].frame, text='Foo', pady=20).pack();

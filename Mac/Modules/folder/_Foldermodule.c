@@ -59,8 +59,8 @@ static PyObject *Folder_ReleaseFolder(PyObject *_self, PyObject *_args)
     _err = ReleaseFolder(vRefNum,
                          folderType);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -118,8 +118,8 @@ static PyObject *Folder_AddFolderDescriptor(PyObject *_self, PyObject *_args)
                                name,
                                replaceFlag);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -153,8 +153,8 @@ static PyObject *Folder_RemoveFolderDescriptor(PyObject *_self, PyObject *_args)
         return NULL;
     _err = RemoveFolderDescriptor(foldType);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -204,8 +204,8 @@ static PyObject *Folder_AddFolderRouting(PyObject *_self, PyObject *_args)
                             flags,
                             replaceFlag);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -222,8 +222,8 @@ static PyObject *Folder_RemoveFolderRouting(PyObject *_self, PyObject *_args)
     _err = RemoveFolderRouting(fileType,
                                routeFromFolder);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -264,8 +264,8 @@ static PyObject *Folder_InvalidateFolderDescriptorCache(PyObject *_self, PyObjec
     _err = InvalidateFolderDescriptorCache(vRefNum,
                                            dirID);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 

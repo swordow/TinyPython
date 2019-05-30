@@ -92,7 +92,7 @@ import textwrap as _textwrap;
 from gettext import gettext as _;
 
 
-def _callable(obj){
+function _callable(obj){
     return hasattr(obj, '__call__') or hasattr(obj, '__bases__');
 
 
@@ -119,27 +119,27 @@ class _AttributeHolder(object){
     '_kwarg_names', or by inspecting the instance __dict__.
     """;
 
-    def __repr__(self){
-        type_name = type(self).__name__;
+    function __repr__(){
+        type_name = type(this).__name__;
         arg_strings = [];
-        for arg in self._get_args(){
+        for arg in this._get_args(){
             arg_strings.append(repr(arg));
-        } for name, value in self._get_kwargs(){
+        } for name, value in this._get_kwargs(){
             arg_strings.append('%s=%r' % (name, value));
         } return '%s(%s)' % (type_name, ', '.join(arg_strings));
 
     }
-    def _get_kwargs(self){
-        return sorted(self.__dict__.items());
+    function _get_kwargs(){
+        return sorted(this.__dict__.items());
 
     }
-    def _get_args(self){
+    function _get_args(){
         return [];
 
 
 }
-} def _ensure_value(namespace, name, value){
-    if getattr(namespace, name, None) is None{
+} function _ensure_value(namespace, name, value){
+    if getattr(namespace, name, nil) is nil{
         setattr(namespace, name, value);
     } return getattr(namespace, name);
 
@@ -156,14 +156,14 @@ class HelpFormatter(object){
     provided by the class are considered an implementation detail.
     """;
 
-    def __init__(self,
+    function __init__(
                  prog,
                  indent_increment=2,
                  max_help_position=24,
-                 width=None){
+                 width=nil){
 
         # default setting for width
-        if width is None{
+        if width is nil{
             try{
                 width = int(_os.environ['COLUMNS']);
             } except (KeyError, ValueError){
@@ -171,57 +171,57 @@ class HelpFormatter(object){
             } width -= 2;
 
         }
-        self._prog = prog;
-        self._indent_increment = indent_increment;
-        self._max_help_position = max_help_position;
-        self._max_help_position = min(max_help_position,
+        this._prog = prog;
+        this._indent_increment = indent_increment;
+        this._max_help_position = max_help_position;
+        this._max_help_position = min(max_help_position,
                                       max(width - 20, indent_increment * 2));
-        self._width = width;
+        this._width = width;
 
-        self._current_indent = 0;
-        self._level = 0;
-        self._action_max_length = 0;
+        this._current_indent = 0;
+        this._level = 0;
+        this._action_max_length = 0;
 
-        self._root_section = self._Section(self, None);
-        self._current_section = self._root_section;
+        this._root_section = this._Section(this, nil);
+        this._current_section = this._root_section;
 
-        self._whitespace_matcher = _re.compile(r'\s+');
-        self._long_break_matcher = _re.compile(r'\n\n\n+');
+        this._whitespace_matcher = _re.compile(r'\s+');
+        this._long_break_matcher = _re.compile(r'\n\n\n+');
 
     # ===============================
     # Section and indentation methods
     # ===============================
     }
-    def _indent(self){
-        self._current_indent += self._indent_increment;
-        self._level += 1;
+    function _indent(){
+        this._current_indent += this._indent_increment;
+        this._level += 1;
 
     }
-    def _dedent(self){
-        self._current_indent -= self._indent_increment;
-        assert self._current_indent >= 0, 'Indent decreased below 0.';
-        self._level -= 1;
+    function _dedent(){
+        this._current_indent -= this._indent_increment;
+        assert this._current_indent >= 0, 'Indent decreased below 0.';
+        this._level -= 1;
 
     }
     class _Section(object){
 
-        def __init__(self, formatter, parent, heading=None){
-            self.formatter = formatter;
-            self.parent = parent;
-            self.heading = heading;
-            self.items = [];
+        function __init__( formatter, parent, heading=nil){
+            this.formatter = formatter;
+            this.parent = parent;
+            this.heading = heading;
+            this.items = [];
 
         }
-        def format_help(self){
+        function format_help(){
             # format the indented section
-            if self.parent is not None{
-                self.formatter._indent();
-            } join = self.formatter._join_parts;
-            for func, args in self.items{
+            if this.parent is not nil{
+                this.formatter._indent();
+            } join = this.formatter._join_parts;
+            for func, args in this.items{
                 func(*args);
-            } item_help = join([func(*args) for func, args in self.items]);
-            if self.parent is not None{
-                self.formatter._dedent();
+            } item_help = join([func(*args) for func, args in this.items]);
+            if this.parent is not nil{
+                this.formatter._dedent();
 
             # return nothing if the section was empty
             }
@@ -230,9 +230,9 @@ class HelpFormatter(object){
 
             # add the heading if the section was non-empty
             }
-            if self.heading is not SUPPRESS and self.heading is not None{
-                current_indent = self.formatter._current_indent;
-                heading = '%*s%s:\n' % (current_indent, '', self.heading);
+            if this.heading is not SUPPRESS and this.heading is not nil{
+                current_indent = this.formatter._current_indent;
+                heading = '%*s%s:\n' % (current_indent, '', this.heading);
             } else{
                 heading = '';
 
@@ -241,96 +241,96 @@ class HelpFormatter(object){
             return join(['\n', heading, item_help, '\n']);
 
     }
-    } def _add_item(self, func, args){
-        self._current_section.items.append((func, args));
+    } function _add_item( func, args){
+        this._current_section.items.append((func, args));
 
     # ========================
     # Message building methods
     # ========================
     }
-    def start_section(self, heading){
-        self._indent();
-        section = self._Section(self, self._current_section, heading);
-        self._add_item(section.format_help, []);
-        self._current_section = section;
+    function start_section( heading){
+        this._indent();
+        section = this._Section(this, this._current_section, heading);
+        this._add_item(section.format_help, []);
+        this._current_section = section;
 
     }
-    def end_section(self){
-        self._current_section = self._current_section.parent;
-        self._dedent();
+    function end_section(){
+        this._current_section = this._current_section.parent;
+        this._dedent();
 
     }
-    def add_text(self, text){
-        if text is not SUPPRESS and text is not None{
-            self._add_item(self._format_text, [text]);
+    function add_text( text){
+        if text is not SUPPRESS and text is not nil{
+            this._add_item(this._format_text, [text]);
 
     }
-    } def add_usage(self, usage, actions, groups, prefix=None){
+    } function add_usage( usage, actions, groups, prefix=nil){
         if usage is not SUPPRESS{
             args = usage, actions, groups, prefix;
-            self._add_item(self._format_usage, args);
+            this._add_item(this._format_usage, args);
 
     }
-    } def add_argument(self, action){
+    } function add_argument( action){
         if action.help is not SUPPRESS{
 
             # find all invocations
-            get_invocation = self._format_action_invocation;
+            get_invocation = this._format_action_invocation;
             invocations = [get_invocation(action)];
-            for subaction in self._iter_indented_subactions(action){
+            for subaction in this._iter_indented_subactions(action){
                 invocations.append(get_invocation(subaction));
 
             # update the maximum item length
             }
             invocation_length = max([len(s) for s in invocations]);
-            action_length = invocation_length + self._current_indent;
-            self._action_max_length = max(self._action_max_length,
+            action_length = invocation_length + this._current_indent;
+            this._action_max_length = max(this._action_max_length,
                                           action_length);
 
             # add the item to the list
-            self._add_item(self._format_action, [action]);
+            this._add_item(this._format_action, [action]);
 
     }
-    } def add_arguments(self, actions){
+    } function add_arguments( actions){
         for action in actions{
-            self.add_argument(action);
+            this.add_argument(action);
 
     # =======================
     # Help-formatting methods
     # =======================
     }
-    } def format_help(self){
-        help = self._root_section.format_help();
+    } function format_help(){
+        help = this._root_section.format_help();
         if help{
-            help = self._long_break_matcher.sub('\n\n', help);
+            help = this._long_break_matcher.sub('\n\n', help);
             help = help.strip('\n') + '\n';
         } return help;
 
     }
-    def _join_parts(self, part_strings){
+    function _join_parts( part_strings){
         return ''.join([part
                         for part in part_strings
                         if part and part is not SUPPRESS]);
 
     }
-    def _format_usage(self, usage, actions, groups, prefix){
-        if prefix is None{
+    function _format_usage( usage, actions, groups, prefix){
+        if prefix is nil{
             prefix = _('usage: ');
 
         # if usage is specified, use that
         }
-        if usage is not None{
-            usage = usage % dict(prog=self._prog);
+        if usage is not nil{
+            usage = usage % dict(prog=this._prog);
 
         # if no optionals or positionals are available, usage is just prog
         }
-        elif usage is None and not actions{
-            usage = '%(prog)s' % dict(prog=self._prog);
+        elif usage is nil and not actions{
+            usage = '%(prog)s' % dict(prog=this._prog);
 
         # if optionals and positionals are available, calculate usage
         }
-        elif usage is None{
-            prog = '%(prog)s' % dict(prog=self._prog);
+        elif usage is nil{
+            prog = '%(prog)s' % dict(prog=this._prog);
 
             # split optionals from positionals
             optionals = [];
@@ -343,12 +343,12 @@ class HelpFormatter(object){
 
             # build full usage string
             }
-            } format = self._format_actions_usage;
+            } format = this._format_actions_usage;
             action_usage = format(optionals + positionals, groups);
             usage = ' '.join([s for s in [prog, action_usage] if s]);
 
             # wrap the usage parts if it's too long
-            text_width = self._width - self._current_indent;
+            text_width = this._width - this._current_indent;
             if len(prefix) + len(usage) > text_width{
 
                 # break usage into wrappable parts
@@ -365,10 +365,10 @@ class HelpFormatter(object){
                 assert ' '.join(pos_parts) == pos_usage;
 
                 # helper for wrapping lines
-                def get_lines(parts, indent, prefix=None){
+                function get_lines(parts, indent, prefix=nil){
                     lines = [];
                     line = [];
-                    if prefix is not None{
+                    if prefix is not nil{
                         line_len = len(prefix) - 1;
                     } else{
                         line_len = len(indent) - 1;
@@ -381,7 +381,7 @@ class HelpFormatter(object){
                         line_len += len(part) + 1;
                     } if line{
                         lines.append(indent + ' '.join(line));
-                    } if prefix is not None{
+                    } if prefix is not nil{
                         lines[0] = lines[0][len(indent):];
                     } return lines;
 
@@ -418,7 +418,7 @@ class HelpFormatter(object){
         } return '%s%s\n\n' % (prefix, usage);
 
     }
-    def _format_actions_usage(self, actions, groups){
+    function _format_actions_usage( actions, groups){
         # find group indices and identify actions in groups
         group_actions = set();
         inserts = {};
@@ -455,7 +455,7 @@ class HelpFormatter(object){
             # suppressed arguments are marked with None
             # remove | separators for suppressed arguments
             if action.help is SUPPRESS{
-                parts.append(None);
+                parts.append(nil);
                 if inserts.get(i) == '|'{
                     inserts.pop(i);
                 } elif inserts.get(i + 1) == '|'{
@@ -464,7 +464,7 @@ class HelpFormatter(object){
             # produce all arg strings
             }
             } elif not action.option_strings{
-                part = self._format_args(action, action.dest);
+                part = this._format_args(action, action.dest);
 
                 # if it's in a group, strip the outer []
                 if action in group_actions{
@@ -490,7 +490,7 @@ class HelpFormatter(object){
                 }
                 else{
                     default = action.dest.upper();
-                    args_string = self._format_args(action, default);
+                    args_string = this._format_args(action, default);
                     part = '%s %s' % (option_string, args_string);
 
                 # make it look optional if it's not required or in a group
@@ -504,12 +504,12 @@ class HelpFormatter(object){
 
         # insert things at the necessary indices
         }
-        } for i in sorted(inserts, reverse=True){
+        } for i in sorted(inserts, reverse=true){
             parts[i:i] = [inserts[i]];
 
         # join all the action items with spaces
         }
-        text = ' '.join([item for item in parts if item is not None]);
+        text = ' '.join([item for item in parts if item is not nil]);
 
         # clean up separators for mutually exclusive groups
         open = r'[\[(]';
@@ -524,38 +524,38 @@ class HelpFormatter(object){
         return text;
 
     }
-    def _format_text(self, text){
+    function _format_text( text){
         if '%(prog)' in text{
-            text = text % dict(prog=self._prog);
-        } text_width = max(self._width - self._current_indent, 11);
-        indent = ' ' * self._current_indent;
-        return self._fill_text(text, text_width, indent) + '\n\n';
+            text = text % dict(prog=this._prog);
+        } text_width = max(this._width - this._current_indent, 11);
+        indent = ' ' * this._current_indent;
+        return this._fill_text(text, text_width, indent) + '\n\n';
 
     }
-    def _format_action(self, action){
+    function _format_action( action){
         # determine the required width and the entry label
-        help_position = min(self._action_max_length + 2,
-                            self._max_help_position);
-        help_width = max(self._width - help_position, 11);
-        action_width = help_position - self._current_indent - 2;
-        action_header = self._format_action_invocation(action);
+        help_position = min(this._action_max_length + 2,
+                            this._max_help_position);
+        help_width = max(this._width - help_position, 11);
+        action_width = help_position - this._current_indent - 2;
+        action_header = this._format_action_invocation(action);
 
         # ho nelp; start on same line and add a final newline
         if not action.help{
-            tup = self._current_indent, '', action_header;
+            tup = this._current_indent, '', action_header;
             action_header = '%*s%s\n' % tup;
 
         # short action name; start on the same line and pad two spaces
         }
         elif len(action_header) <= action_width{
-            tup = self._current_indent, '', action_width, action_header;
+            tup = this._current_indent, '', action_width, action_header;
             action_header = '%*s%-*s  ' % tup;
             indent_first = 0;
 
         # long action name; start on the next line
         }
         else{
-            tup = self._current_indent, '', action_header;
+            tup = this._current_indent, '', action_header;
             action_header = '%*s%s\n' % tup;
             indent_first = help_position;
 
@@ -565,8 +565,8 @@ class HelpFormatter(object){
 
         # if there was help for the action, add lines of help text
         if action.help{
-            help_text = self._expand_help(action);
-            help_lines = self._split_lines(help_text, help_width);
+            help_text = this._expand_help(action);
+            help_lines = this._split_lines(help_text, help_width);
             parts.append('%*s%s\n' % (indent_first, '', help_lines[0]));
             for line in help_lines[1:]{
                 parts.append('%*s%s\n' % (help_position, '', line));
@@ -578,17 +578,17 @@ class HelpFormatter(object){
 
         # if there are any sub-actions, add their help as well
         }
-        for subaction in self._iter_indented_subactions(action){
-            parts.append(self._format_action(subaction));
+        for subaction in this._iter_indented_subactions(action){
+            parts.append(this._format_action(subaction));
 
         # return a single string
         }
-        return self._join_parts(parts);
+        return this._join_parts(parts);
 
     }
-    def _format_action_invocation(self, action){
+    function _format_action_invocation( action){
         if not action.option_strings{
-            metavar, = self._metavar_formatter(action, action.dest)(1);
+            metavar, = this._metavar_formatter(action, action.dest)(1);
             return metavar;
 
         }
@@ -605,7 +605,7 @@ class HelpFormatter(object){
             }
             else{
                 default = action.dest.upper();
-                args_string = self._format_args(action, default);
+                args_string = this._format_args(action, default);
                 for option_string in action.option_strings{
                     parts.append('%s %s' % (option_string, args_string));
 
@@ -613,17 +613,17 @@ class HelpFormatter(object){
             } return ', '.join(parts);
 
     }
-    } def _metavar_formatter(self, action, default_metavar){
-        if action.metavar is not None{
+    } function _metavar_formatter( action, default_metavar){
+        if action.metavar is not nil{
             result = action.metavar;
-        } elif action.choices is not None{
+        } elif action.choices is not nil{
             choice_strs = [str(choice) for choice in action.choices];
             result = '{%s}' % ','.join(choice_strs);
         } else{
             result = default_metavar;
 
         }
-        def format(tuple_size){
+        function format(tuple_size){
             if isinstance(result, tuple){
                 return result;
             } else{
@@ -631,9 +631,9 @@ class HelpFormatter(object){
         } } return format;
 
     }
-    def _format_args(self, action, default_metavar){
-        get_metavar = self._metavar_formatter(action, default_metavar);
-        if action.nargs is None{
+    function _format_args( action, default_metavar){
+        get_metavar = this._metavar_formatter(action, default_metavar);
+        if action.nargs is nil{
             result = '%s' % get_metavar(1);
         } elif action.nargs == OPTIONAL{
             result = '[%s]' % get_metavar(1);
@@ -651,44 +651,44 @@ class HelpFormatter(object){
         } return result;
 
     }
-    def _expand_help(self, action){
-        params = dict(vars(action), prog=self._prog);
+    function _expand_help( action){
+        params = dict(vars(action), prog=this._prog);
         for name in list(params){
             if params[name] is SUPPRESS{
                 del params[name];
         } } for name in list(params){
             if hasattr(params[name], '__name__'){
                 params[name] = params[name].__name__;
-        } } if params.get('choices') is not None{
+        } } if params.get('choices') is not nil{
             choices_str = ', '.join([str(c) for c in params['choices']]);
             params['choices'] = choices_str;
-        } return self._get_help_string(action) % params;
+        } return this._get_help_string(action) % params;
 
     }
-    def _iter_indented_subactions(self, action){
+    function _iter_indented_subactions( action){
         try{
             get_subactions = action._get_subactions;
         } except AttributeError{
             pass;
         } else{
-            self._indent();
+            this._indent();
             for subaction in get_subactions(){
                 yield subaction;
-            } self._dedent();
+            } this._dedent();
 
     }
-    } def _split_lines(self, text, width){
-        text = self._whitespace_matcher.sub(' ', text).strip();
+    } function _split_lines( text, width){
+        text = this._whitespace_matcher.sub(' ', text).strip();
         return _textwrap.wrap(text, width);
 
     }
-    def _fill_text(self, text, width, indent){
-        text = self._whitespace_matcher.sub(' ', text).strip();
+    function _fill_text( text, width, indent){
+        text = this._whitespace_matcher.sub(' ', text).strip();
         return _textwrap.fill(text, width, initial_indent=indent,
                                            subsequent_indent=indent);
 
     }
-    def _get_help_string(self, action){
+    function _get_help_string( action){
         return action.help;
 
 
@@ -700,8 +700,8 @@ class HelpFormatter(object){
     provided by the class are considered an implementation detail.
     """;
 
-    def _fill_text(self, text, width, indent){
-        return ''.join([indent + line for line in text.splitlines(True)]);
+    function _fill_text( text, width, indent){
+        return ''.join([indent + line for line in text.splitlines(true)]);
 
 
 }
@@ -712,7 +712,7 @@ class HelpFormatter(object){
     provided by the class are considered an implementation detail.
     """;
 
-    def _split_lines(self, text, width){
+    function _split_lines( text, width){
         return text.splitlines();
 
 
@@ -724,7 +724,7 @@ class HelpFormatter(object){
     provided by the class are considered an implementation detail.
     """;
 
-    def _get_help_string(self, action){
+    function _get_help_string( action){
         help = action.help;
         if '%(default)' not in action.help{
             if action.default is not SUPPRESS{
@@ -739,17 +739,17 @@ class HelpFormatter(object){
 # =====================
 
 }
-} def _get_action_name(argument){
-    if argument is None{
-        return None;
+} function _get_action_name(argument){
+    if argument is nil{
+        return nil;
     } elif argument.option_strings{
         return  '/'.join(argument.option_strings);
-    } elif argument.metavar not in (None, SUPPRESS){
+    } elif argument.metavar not in (nil, SUPPRESS){
         return argument.metavar;
-    } elif argument.dest not in (None, SUPPRESS){
+    } elif argument.dest not in (nil, SUPPRESS){
         return argument.dest;
     } else{
-        return None;
+        return nil;
 
 
 }
@@ -760,18 +760,18 @@ class HelpFormatter(object){
     information about the argument that caused it.
     """;
 
-    def __init__(self, argument, message){
-        self.argument_name = _get_action_name(argument);
-        self.message = message;
+    function __init__( argument, message){
+        this.argument_name = _get_action_name(argument);
+        this.message = message;
 
     }
-    def __str__(self){
-        if self.argument_name is None{
+    function __str__(){
+        if this.argument_name is nil{
             format = '%(message)s';
         } else{
             format = 'argument %(argument_name)s: %(message)s';
-        } return format % dict(message=self.message,
-                             argument_name=self.argument_name);
+        } return format % dict(message=this.message,
+                             argument_name=this.argument_name);
 
 
 }
@@ -836,30 +836,30 @@ class Action(_AttributeHolder){
             help string. If None, the 'dest' value will be used as the name.
     """;
 
-    def __init__(self,
+    function __init__(
                  option_strings,
                  dest,
-                 nargs=None,
-                 const=None,
-                 default=None,
-                 type=None,
-                 choices=None,
-                 required=False,
-                 help=None,
-                 metavar=None){
-        self.option_strings = option_strings;
-        self.dest = dest;
-        self.nargs = nargs;
-        self.const = const;
-        self.default = default;
-        self.type = type;
-        self.choices = choices;
-        self.required = required;
-        self.help = help;
-        self.metavar = metavar;
+                 nargs=nil,
+                 const=nil,
+                 default=nil,
+                 type=nil,
+                 choices=nil,
+                 required=false,
+                 help=nil,
+                 metavar=nil){
+        this.option_strings = option_strings;
+        this.dest = dest;
+        this.nargs = nargs;
+        this.const = const;
+        this.default = default;
+        this.type = type;
+        this.choices = choices;
+        this.required = required;
+        this.help = help;
+        this.metavar = metavar;
 
     }
-    def _get_kwargs(self){
+    function _get_kwargs(){
         names = [
             'option_strings',
             'dest',
@@ -871,34 +871,34 @@ class Action(_AttributeHolder){
             'help',
             'metavar',
         ];
-        return [(name, getattr(self, name)) for name in names];
+        return [(name, getattr(this, name)) for name in names];
 
     }
-    def __call__(self, parser, namespace, values, option_string=None){
+    function __call__( parser, namespace, values, option_string=nil){
         raise NotImplementedError(_('.__call__() not defined'));
 
 
 }
 } class _StoreAction(Action){
 
-    def __init__(self,
+    function __init__(
                  option_strings,
                  dest,
-                 nargs=None,
-                 const=None,
-                 default=None,
-                 type=None,
-                 choices=None,
-                 required=False,
-                 help=None,
-                 metavar=None){
+                 nargs=nil,
+                 const=nil,
+                 default=nil,
+                 type=nil,
+                 choices=nil,
+                 required=false,
+                 help=nil,
+                 metavar=nil){
         if nargs == 0{
             raise ValueError('nargs for store actions must be > 0; if you '
                              'have nothing to store, actions such as store '
                              'true or store const may be more appropriate');
-        } if const is not None and nargs != OPTIONAL{
+        } if const is not nil and nargs != OPTIONAL{
             raise ValueError('nargs must be %r to supply const' % OPTIONAL);
-        } super(_StoreAction, self).__init__(
+        } super(_StoreAction, this).__init__(
             option_strings=option_strings,
             dest=dest,
             nargs=nargs,
@@ -911,22 +911,22 @@ class Action(_AttributeHolder){
             metavar=metavar);
 
     }
-    def __call__(self, parser, namespace, values, option_string=None){
-        setattr(namespace, self.dest, values);
+    function __call__( parser, namespace, values, option_string=nil){
+        setattr(namespace, this.dest, values);
 
 
 }
 } class _StoreConstAction(Action){
 
-    def __init__(self,
+    function __init__(
                  option_strings,
                  dest,
                  const,
-                 default=None,
-                 required=False,
-                 help=None,
-                 metavar=None){
-        super(_StoreConstAction, self).__init__(
+                 default=nil,
+                 required=false,
+                 help=nil,
+                 metavar=nil){
+        super(_StoreConstAction, this).__init__(
             option_strings=option_strings,
             dest=dest,
             nargs=0,
@@ -936,23 +936,23 @@ class Action(_AttributeHolder){
             help=help);
 
     }
-    def __call__(self, parser, namespace, values, option_string=None){
-        setattr(namespace, self.dest, self.const);
+    function __call__( parser, namespace, values, option_string=nil){
+        setattr(namespace, this.dest, this.const);
 
 
 }
 } class _StoreTrueAction(_StoreConstAction){
 
-    def __init__(self,
+    function __init__(
                  option_strings,
                  dest,
-                 default=False,
-                 required=False,
-                 help=None){
-        super(_StoreTrueAction, self).__init__(
+                 default=false,
+                 required=false,
+                 help=nil){
+        super(_StoreTrueAction, this).__init__(
             option_strings=option_strings,
             dest=dest,
-            const=True,
+            const=true,
             default=default,
             required=required,
             help=help);
@@ -961,16 +961,16 @@ class Action(_AttributeHolder){
 }
 } class _StoreFalseAction(_StoreConstAction){
 
-    def __init__(self,
+    function __init__(
                  option_strings,
                  dest,
-                 default=True,
-                 required=False,
-                 help=None){
-        super(_StoreFalseAction, self).__init__(
+                 default=true,
+                 required=false,
+                 help=nil){
+        super(_StoreFalseAction, this).__init__(
             option_strings=option_strings,
             dest=dest,
-            const=False,
+            const=false,
             default=default,
             required=required,
             help=help);
@@ -979,24 +979,24 @@ class Action(_AttributeHolder){
 }
 } class _AppendAction(Action){
 
-    def __init__(self,
+    function __init__(
                  option_strings,
                  dest,
-                 nargs=None,
-                 const=None,
-                 default=None,
-                 type=None,
-                 choices=None,
-                 required=False,
-                 help=None,
-                 metavar=None){
+                 nargs=nil,
+                 const=nil,
+                 default=nil,
+                 type=nil,
+                 choices=nil,
+                 required=false,
+                 help=nil,
+                 metavar=nil){
         if nargs == 0{
             raise ValueError('nargs for append actions must be > 0; if arg '
                              'strings are not supplying the value to append, '
                              'the append const action may be more appropriate');
-        } if const is not None and nargs != OPTIONAL{
+        } if const is not nil and nargs != OPTIONAL{
             raise ValueError('nargs must be %r to supply const' % OPTIONAL);
-        } super(_AppendAction, self).__init__(
+        } super(_AppendAction, this).__init__(
             option_strings=option_strings,
             dest=dest,
             nargs=nargs,
@@ -1009,24 +1009,24 @@ class Action(_AttributeHolder){
             metavar=metavar);
 
     }
-    def __call__(self, parser, namespace, values, option_string=None){
-        items = _copy.copy(_ensure_value(namespace, self.dest, []));
+    function __call__( parser, namespace, values, option_string=nil){
+        items = _copy.copy(_ensure_value(namespace, this.dest, []));
         items.append(values);
-        setattr(namespace, self.dest, items);
+        setattr(namespace, this.dest, items);
 
 
 }
 } class _AppendConstAction(Action){
 
-    def __init__(self,
+    function __init__(
                  option_strings,
                  dest,
                  const,
-                 default=None,
-                 required=False,
-                 help=None,
-                 metavar=None){
-        super(_AppendConstAction, self).__init__(
+                 default=nil,
+                 required=false,
+                 help=nil,
+                 metavar=nil){
+        super(_AppendConstAction, this).__init__(
             option_strings=option_strings,
             dest=dest,
             nargs=0,
@@ -1037,22 +1037,22 @@ class Action(_AttributeHolder){
             metavar=metavar);
 
     }
-    def __call__(self, parser, namespace, values, option_string=None){
-        items = _copy.copy(_ensure_value(namespace, self.dest, []));
-        items.append(self.const);
-        setattr(namespace, self.dest, items);
+    function __call__( parser, namespace, values, option_string=nil){
+        items = _copy.copy(_ensure_value(namespace, this.dest, []));
+        items.append(this.const);
+        setattr(namespace, this.dest, items);
 
 
 }
 } class _CountAction(Action){
 
-    def __init__(self,
+    function __init__(
                  option_strings,
                  dest,
-                 default=None,
-                 required=False,
-                 help=None){
-        super(_CountAction, self).__init__(
+                 default=nil,
+                 required=false,
+                 help=nil){
+        super(_CountAction, this).__init__(
             option_strings=option_strings,
             dest=dest,
             nargs=0,
@@ -1061,20 +1061,20 @@ class Action(_AttributeHolder){
             help=help);
 
     }
-    def __call__(self, parser, namespace, values, option_string=None){
-        new_count = _ensure_value(namespace, self.dest, 0) + 1;
-        setattr(namespace, self.dest, new_count);
+    function __call__( parser, namespace, values, option_string=nil){
+        new_count = _ensure_value(namespace, this.dest, 0) + 1;
+        setattr(namespace, this.dest, new_count);
 
 
 }
 } class _HelpAction(Action){
 
-    def __init__(self,
+    function __init__(
                  option_strings,
                  dest=SUPPRESS,
                  default=SUPPRESS,
-                 help=None){
-        super(_HelpAction, self).__init__(
+                 help=nil){
+        super(_HelpAction, this).__init__(
             option_strings=option_strings,
             dest=dest,
             default=default,
@@ -1082,7 +1082,7 @@ class Action(_AttributeHolder){
             help=help);
 
     }
-    def __call__(self, parser, namespace, values, option_string=None){
+    function __call__( parser, namespace, values, option_string=nil){
         parser.print_help();
         parser.exit();
 
@@ -1090,24 +1090,24 @@ class Action(_AttributeHolder){
 }
 } class _VersionAction(Action){
 
-    def __init__(self,
+    function __init__(
                  option_strings,
-                 version=None,
+                 version=nil,
                  dest=SUPPRESS,
                  default=SUPPRESS,
                  help="show program's version number and exit"){
-        super(_VersionAction, self).__init__(
+        super(_VersionAction, this).__init__(
             option_strings=option_strings,
             dest=dest,
             default=default,
             nargs=0,
             help=help);
-        self.version = version;
+        this.version = version;
 
     }
-    def __call__(self, parser, namespace, values, option_string=None){
-        version = self.version;
-        if version is None{
+    function __call__( parser, namespace, values, option_string=nil){
+        version = this.version;
+        if version is nil{
             version = parser.version;
         } formatter = parser._get_formatter();
         formatter.add_text(version);
@@ -1119,72 +1119,72 @@ class Action(_AttributeHolder){
 
     class _ChoicesPseudoAction(Action){
 
-        def __init__(self, name, help){
-            sup = super(_SubParsersAction._ChoicesPseudoAction, self);
+        function __init__( name, help){
+            sup = super(_SubParsersAction._ChoicesPseudoAction, this);
             sup.__init__(option_strings=[], dest=name, help=help);
 
     }
-    } def __init__(self,
+    } function __init__(
                  option_strings,
                  prog,
                  parser_class,
                  dest=SUPPRESS,
-                 help=None,
-                 metavar=None){
+                 help=nil,
+                 metavar=nil){
 
-        self._prog_prefix = prog;
-        self._parser_class = parser_class;
-        self._name_parser_map = _collections.OrderedDict();
-        self._choices_actions = [];
+        this._prog_prefix = prog;
+        this._parser_class = parser_class;
+        this._name_parser_map = _collections.OrderedDict();
+        this._choices_actions = [];
 
-        super(_SubParsersAction, self).__init__(
+        super(_SubParsersAction, this).__init__(
             option_strings=option_strings,
             dest=dest,
             nargs=PARSER,
-            choices=self._name_parser_map,
+            choices=this._name_parser_map,
             help=help,
             metavar=metavar);
 
     }
-    def add_parser(self, name, **kwargs){
+    function add_parser( name, **kwargs){
         # set prog from the existing prefix
-        if kwargs.get('prog') is None{
-            kwargs['prog'] = '%s %s' % (self._prog_prefix, name);
+        if kwargs.get('prog') is nil{
+            kwargs['prog'] = '%s %s' % (this._prog_prefix, name);
 
         # create a pseudo-action to hold the choice help
         }
         if 'help' in kwargs{
             help = kwargs.pop('help');
-            choice_action = self._ChoicesPseudoAction(name, help);
-            self._choices_actions.append(choice_action);
+            choice_action = this._ChoicesPseudoAction(name, help);
+            this._choices_actions.append(choice_action);
 
         # create the parser and add it to the map
         }
-        parser = self._parser_class(**kwargs);
-        self._name_parser_map[name] = parser;
+        parser = this._parser_class(**kwargs);
+        this._name_parser_map[name] = parser;
         return parser;
 
     }
-    def _get_subactions(self){
-        return self._choices_actions;
+    function _get_subactions(){
+        return this._choices_actions;
 
     }
-    def __call__(self, parser, namespace, values, option_string=None){
+    function __call__( parser, namespace, values, option_string=nil){
         parser_name = values[0];
         arg_strings = values[1:];
 
         # set the parser name if requested
-        if self.dest is not SUPPRESS{
-            setattr(namespace, self.dest, parser_name);
+        if this.dest is not SUPPRESS{
+            setattr(namespace, this.dest, parser_name);
 
         # select the parser
         }
         try{
-            parser = self._name_parser_map[parser_name];
+            parser = this._name_parser_map[parser_name];
         } except KeyError{
-            tup = parser_name, ', '.join(self._name_parser_map);
+            tup = parser_name, ', '.join(this._name_parser_map);
             msg = _('unknown parser %r (choices: %s)') % tup;
-            raise ArgumentError(self, msg);
+            raise ArgumentError(this, msg);
 
         # parse all the remaining options into the namespace
         # store any unrecognized options on the object, so that the top
@@ -1194,7 +1194,7 @@ class Action(_AttributeHolder){
         # in a new namespace object and then update the original
         # namespace for the relevant parts.
         }
-        subnamespace, arg_strings = parser.parse_known_args(arg_strings, None);
+        subnamespace, arg_strings = parser.parse_known_args(arg_strings, nil);
         for key, value in vars(subnamespace).items(){
             setattr(namespace, key, value);
 
@@ -1222,35 +1222,35 @@ class Action(_AttributeHolder){
             the builtin open() function.
     """;
 
-    def __init__(self, mode='r', bufsize=-1){
-        self._mode = mode;
-        self._bufsize = bufsize;
+    function __init__( mode='r', bufsize=-1){
+        this._mode = mode;
+        this._bufsize = bufsize;
 
     }
-    def __call__(self, string){
+    function __call__( string){
         # the special argument "-" means sys.std{in,out}
         if string == '-'{
-            if 'r' in self._mode{
+            if 'r' in this._mode{
                 return _sys.stdin;
-            } elif 'w' in self._mode{
+            } elif 'w' in this._mode{
                 return _sys.stdout;
             } else{
-                msg = _('argument "-" with mode %r') % self._mode;
+                msg = _('argument "-" with mode %r') % this._mode;
                 raise ValueError(msg);
 
         # all other arguments are used as file names
         }
         } try{
-            return open(string, self._mode, self._bufsize);
+            return open(string, this._mode, this._bufsize);
         } except IOError as e{
             message = _("can't open '%s': %s");
             raise ArgumentTypeError(message % (string, e));
 
     }
-    } def __repr__(self){
-        args = self._mode, self._bufsize;
+    } function __repr__(){
+        args = this._mode, this._bufsize;
         args_str = ', '.join(repr(arg) for arg in args if arg != -1);
-        return '%s(%s)' % (type(self).__name__, args_str);
+        return '%s(%s)' % (type(this).__name__, args_str);
 
 # ===========================
 # Optional and Positional Parsing
@@ -1264,119 +1264,119 @@ class Action(_AttributeHolder){
     string representation.
     """;
 
-    def __init__(self, **kwargs){
+    function __init__( **kwargs){
         for name in kwargs{
-            setattr(self, name, kwargs[name]);
+            setattr(this, name, kwargs[name]);
 
     }
-    } __hash__ = None;
+    } __hash__ = nil;
 
-    def __eq__(self, other){
+    function __eq__( other){
         if not isinstance(other, Namespace){
             return NotImplemented;
-        } return vars(self) == vars(other);
+        } return vars(this) == vars(other);
 
     }
-    def __ne__(self, other){
+    function __ne__( other){
         if not isinstance(other, Namespace){
             return NotImplemented;
-        } return not (self == other);
+        } return not (this == other);
 
     }
-    def __contains__(self, key){
-        return key in self.__dict__;
+    function __contains__( key){
+        return key in this.__dict__;
 
 
 }
 } class _ActionsContainer(object){
 
-    def __init__(self,
+    function __init__(
                  description,
                  prefix_chars,
                  argument_default,
                  conflict_handler){
-        super(_ActionsContainer, self).__init__();
+        super(_ActionsContainer, this).__init__();
 
-        self.description = description;
-        self.argument_default = argument_default;
-        self.prefix_chars = prefix_chars;
-        self.conflict_handler = conflict_handler;
+        this.description = description;
+        this.argument_default = argument_default;
+        this.prefix_chars = prefix_chars;
+        this.conflict_handler = conflict_handler;
 
         # set up registries
-        self._registries = {};
+        this._registries = {};
 
         # register actions
-        self.register('action', None, _StoreAction);
-        self.register('action', 'store', _StoreAction);
-        self.register('action', 'store_const', _StoreConstAction);
-        self.register('action', 'store_true', _StoreTrueAction);
-        self.register('action', 'store_false', _StoreFalseAction);
-        self.register('action', 'append', _AppendAction);
-        self.register('action', 'append_const', _AppendConstAction);
-        self.register('action', 'count', _CountAction);
-        self.register('action', 'help', _HelpAction);
-        self.register('action', 'version', _VersionAction);
-        self.register('action', 'parsers', _SubParsersAction);
+        this.register('action', nil, _StoreAction);
+        this.register('action', 'store', _StoreAction);
+        this.register('action', 'store_const', _StoreConstAction);
+        this.register('action', 'store_true', _StoreTrueAction);
+        this.register('action', 'store_false', _StoreFalseAction);
+        this.register('action', 'append', _AppendAction);
+        this.register('action', 'append_const', _AppendConstAction);
+        this.register('action', 'count', _CountAction);
+        this.register('action', 'help', _HelpAction);
+        this.register('action', 'version', _VersionAction);
+        this.register('action', 'parsers', _SubParsersAction);
 
         # raise an exception if the conflict handler is invalid
-        self._get_handler();
+        this._get_handler();
 
         # action storage
-        self._actions = [];
-        self._option_string_actions = {};
+        this._actions = [];
+        this._option_string_actions = {};
 
         # groups
-        self._action_groups = [];
-        self._mutually_exclusive_groups = [];
+        this._action_groups = [];
+        this._mutually_exclusive_groups = [];
 
         # defaults storage
-        self._defaults = {};
+        this._defaults = {};
 
         # determines whether an "option" looks like a negative number
-        self._negative_number_matcher = _re.compile(r'^-\d+$|^-\d*\.\d+$');
+        this._negative_number_matcher = _re.compile(r'^-\d+$|^-\d*\.\d+$');
 
         # whether or not there are any optionals that look like negative
         # numbers -- uses a list so it can be shared and edited
-        self._has_negative_number_optionals = [];
+        this._has_negative_number_optionals = [];
 
     # ====================
     # Registration methods
     # ====================
     }
-    def register(self, registry_name, value, object){
-        registry = self._registries.setdefault(registry_name, {});
+    function register( registry_name, value, object){
+        registry = this._registries.setdefault(registry_name, {});
         registry[value] = object;
 
     }
-    def _registry_get(self, registry_name, value, default=None){
-        return self._registries[registry_name].get(value, default);
+    function _registry_get( registry_name, value, default=nil){
+        return this._registries[registry_name].get(value, default);
 
     # ==================================
     # Namespace default accessor methods
     # ==================================
     }
-    def set_defaults(self, **kwargs){
-        self._defaults.update(kwargs);
+    function set_defaults( **kwargs){
+        this._defaults.update(kwargs);
 
         # if these defaults match any existing arguments, replace
         # the previous default on the object with the new one
-        for action in self._actions{
+        for action in this._actions{
             if action.dest in kwargs{
                 action.default = kwargs[action.dest];
 
     }
-    } } def get_default(self, dest){
-        for action in self._actions{
-            if action.dest == dest and action.default is not None{
+    } } function get_default( dest){
+        for action in this._actions{
+            if action.dest == dest and action.default is not nil{
                 return action.default;
-        } } return self._defaults.get(dest, None);
+        } } return this._defaults.get(dest, nil);
 
 
     # =======================
     # Adding argument actions
     # =======================
     }
-    def add_argument(self, *args, **kwargs){
+    function add_argument( *args, **kwargs){
         """
         add_argument(dest, ..., name=value, ...)
         add_argument(option_string, option_string, ..., name=value, ...)
@@ -1385,94 +1385,94 @@ class Action(_AttributeHolder){
         # if no positional args are supplied or only one is supplied and
         # it doesn't look like an option string, parse a positional
         # argument
-        chars = self.prefix_chars;
+        chars = this.prefix_chars;
         if not args or len(args) == 1 and args[0][0] not in chars{
             if args and 'dest' in kwargs{
                 raise ValueError('dest supplied twice for positional argument');
-            } kwargs = self._get_positional_kwargs(*args, **kwargs);
+            } kwargs = this._get_positional_kwargs(*args, **kwargs);
 
         # otherwise, we're adding an optional argument
         }
         else{
-            kwargs = self._get_optional_kwargs(*args, **kwargs);
+            kwargs = this._get_optional_kwargs(*args, **kwargs);
 
         # if no default was supplied, use the parser-level default
         }
         if 'default' not in kwargs{
             dest = kwargs['dest'];
-            if dest in self._defaults{
-                kwargs['default'] = self._defaults[dest];
-            } elif self.argument_default is not None{
-                kwargs['default'] = self.argument_default;
+            if dest in this._defaults{
+                kwargs['default'] = this._defaults[dest];
+            } elif this.argument_default is not nil{
+                kwargs['default'] = this.argument_default;
 
         # create the action object, and add it to the parser
         }
-        } action_class = self._pop_action_class(kwargs);
+        } action_class = this._pop_action_class(kwargs);
         if not _callable(action_class){
             raise ValueError('unknown action "%s"' % (action_class,));
         } action = action_class(**kwargs);
 
         # raise an error if the action type is not callable
-        type_func = self._registry_get('type', action.type, action.type);
+        type_func = this._registry_get('type', action.type, action.type);
         if not _callable(type_func){
             raise ValueError('%r is not callable' % (type_func,));
 
         # raise an error if the metavar does not match the type
         }
-        if hasattr(self, "_get_formatter"){
+        if hasattr(this, "_get_formatter"){
             try{
-                self._get_formatter()._format_args(action, None);
+                this._get_formatter()._format_args(action, nil);
             } except TypeError{
                 raise ValueError("length of metavar tuple does not match nargs");
 
         }
-        } return self._add_action(action);
+        } return this._add_action(action);
 
     }
-    def add_argument_group(self, *args, **kwargs){
-        group = _ArgumentGroup(self, *args, **kwargs);
-        self._action_groups.append(group);
+    function add_argument_group( *args, **kwargs){
+        group = _ArgumentGroup(this, *args, **kwargs);
+        this._action_groups.append(group);
         return group;
 
     }
-    def add_mutually_exclusive_group(self, **kwargs){
-        group = _MutuallyExclusiveGroup(self, **kwargs);
-        self._mutually_exclusive_groups.append(group);
+    function add_mutually_exclusive_group( **kwargs){
+        group = _MutuallyExclusiveGroup(this, **kwargs);
+        this._mutually_exclusive_groups.append(group);
         return group;
 
     }
-    def _add_action(self, action){
+    function _add_action( action){
         # resolve any conflicts
-        self._check_conflict(action);
+        this._check_conflict(action);
 
         # add to actions list
-        self._actions.append(action);
-        action.container = self;
+        this._actions.append(action);
+        action.container = this;
 
         # index the action by any option strings it has
         for option_string in action.option_strings{
-            self._option_string_actions[option_string] = action;
+            this._option_string_actions[option_string] = action;
 
         # set the flag if any option strings look like negative numbers
         }
         for option_string in action.option_strings{
-            if self._negative_number_matcher.match(option_string){
-                if not self._has_negative_number_optionals{
-                    self._has_negative_number_optionals.append(True);
+            if this._negative_number_matcher.match(option_string){
+                if not this._has_negative_number_optionals{
+                    this._has_negative_number_optionals.append(true);
 
         # return the created action
         }
         } } return action;
 
     }
-    def _remove_action(self, action){
-        self._actions.remove(action);
+    function _remove_action( action){
+        this._actions.remove(action);
 
     }
-    def _add_container_actions(self, container){
+    function _add_container_actions( container){
         # collect groups by titles
         title_group_map = {};
-        for group in self._action_groups{
+        for group in this._action_groups{
             if group.title in title_group_map{
                 msg = _('cannot merge actions - two groups are named %r');
                 raise ValueError(msg % (group.title));
@@ -1486,7 +1486,7 @@ class Action(_AttributeHolder){
             # if a group with the title exists, use that, otherwise
             # create a new group matching the container's group
             if group.title not in title_group_map{
-                title_group_map[group.title] = self.add_argument_group(
+                title_group_map[group.title] = this.add_argument_group(
                     title=group.title,
                     description=group.description,
                     conflict_handler=group.conflict_handler);
@@ -1501,7 +1501,7 @@ class Action(_AttributeHolder){
         # description= then this code will need to be expanded as above
         }
         } for group in container._mutually_exclusive_groups{
-            mutex_group = self.add_mutually_exclusive_group(
+            mutex_group = this.add_mutually_exclusive_group(
                 required=group.required);
 
             # map the actions to their new mutex group
@@ -1511,10 +1511,10 @@ class Action(_AttributeHolder){
         # add all actions to this container or their group
         }
         } for action in container._actions{
-            group_map.get(action, self)._add_action(action);
+            group_map.get(action, this)._add_action(action);
 
     }
-    } def _get_positional_kwargs(self, dest, **kwargs){
+    } function _get_positional_kwargs( dest, **kwargs){
         # make sure required is not specified
         if 'required' in kwargs{
             msg = _("'required' is an invalid argument for positionals");
@@ -1524,44 +1524,44 @@ class Action(_AttributeHolder){
         # always required
         }
         if kwargs.get('nargs') not in [OPTIONAL, ZERO_OR_MORE]{
-            kwargs['required'] = True;
+            kwargs['required'] = true;
         } if kwargs.get('nargs') == ZERO_OR_MORE and 'default' not in kwargs{
-            kwargs['required'] = True;
+            kwargs['required'] = true;
 
         # return the keyword arguments with no option strings
         }
         return dict(kwargs, dest=dest, option_strings=[]);
 
     }
-    def _get_optional_kwargs(self, *args, **kwargs){
+    function _get_optional_kwargs( *args, **kwargs){
         # determine short and long option strings
         option_strings = [];
         long_option_strings = [];
         for option_string in args{
             # error on strings that don't start with an appropriate prefix
-            if not option_string[0] in self.prefix_chars{
+            if not option_string[0] in this.prefix_chars{
                 msg = _('invalid option string %r: '
                         'must start with a character %r');
-                tup = option_string, self.prefix_chars;
+                tup = option_string, this.prefix_chars;
                 raise ValueError(msg % tup);
 
             # strings starting with two prefix characters are long options
             }
             option_strings.append(option_string);
-            if option_string[0] in self.prefix_chars{
+            if option_string[0] in this.prefix_chars{
                 if len(option_string) > 1{
-                    if option_string[1] in self.prefix_chars{
+                    if option_string[1] in this.prefix_chars{
                         long_option_strings.append(option_string);
 
         # infer destination, '--foo-bar' -> 'foo_bar' and '-x' -> 'x'
         }
-        } } } dest = kwargs.pop('dest', None);
-        if dest is None{
+        } } } dest = kwargs.pop('dest', nil);
+        if dest is nil{
             if long_option_strings{
                 dest_option_string = long_option_strings[0];
             } else{
                 dest_option_string = option_strings[0];
-            } dest = dest_option_string.lstrip(self.prefix_chars);
+            } dest = dest_option_string.lstrip(this.prefix_chars);
             if not dest{
                 msg = _('dest= is required for options like %r');
                 raise ValueError(msg % option_string);
@@ -1572,38 +1572,38 @@ class Action(_AttributeHolder){
         return dict(kwargs, dest=dest, option_strings=option_strings);
 
     }
-    def _pop_action_class(self, kwargs, default=None){
+    function _pop_action_class( kwargs, default=nil){
         action = kwargs.pop('action', default);
-        return self._registry_get('action', action, action);
+        return this._registry_get('action', action, action);
 
     }
-    def _get_handler(self){
+    function _get_handler(){
         # determine function from conflict handler string
-        handler_func_name = '_handle_conflict_%s' % self.conflict_handler;
+        handler_func_name = '_handle_conflict_%s' % this.conflict_handler;
         try{
-            return getattr(self, handler_func_name);
+            return getattr(this, handler_func_name);
         } except AttributeError{
             msg = _('invalid conflict_resolution value: %r');
-            raise ValueError(msg % self.conflict_handler);
+            raise ValueError(msg % this.conflict_handler);
 
     }
-    } def _check_conflict(self, action){
+    } function _check_conflict( action){
 
         # find all options that conflict with this option
         confl_optionals = [];
         for option_string in action.option_strings{
-            if option_string in self._option_string_actions{
-                confl_optional = self._option_string_actions[option_string];
+            if option_string in this._option_string_actions{
+                confl_optional = this._option_string_actions[option_string];
                 confl_optionals.append((option_string, confl_optional));
 
         # resolve any conflicts
         }
         } if confl_optionals{
-            conflict_handler = self._get_handler();
+            conflict_handler = this._get_handler();
             conflict_handler(action, confl_optionals);
 
     }
-    } def _handle_conflict_error(self, action, conflicting_actions){
+    } function _handle_conflict_error( action, conflicting_actions){
         message = _('conflicting option string(s): %s');
         conflict_string = ', '.join([option_string
                                      for option_string, action
@@ -1611,14 +1611,14 @@ class Action(_AttributeHolder){
         raise ArgumentError(action, message % conflict_string);
 
     }
-    def _handle_conflict_resolve(self, action, conflicting_actions){
+    function _handle_conflict_resolve( action, conflicting_actions){
 
         # remove all conflicting options
         for option_string, action in conflicting_actions{
 
             # remove the conflicting option
             action.option_strings.remove(option_string);
-            self._option_string_actions.pop(option_string, None);
+            this._option_string_actions.pop(option_string, nil);
 
             # if the option now has no option string, remove it from the
             # container holding it
@@ -1629,61 +1629,61 @@ class Action(_AttributeHolder){
 }
 } } } class _ArgumentGroup(_ActionsContainer){
 
-    def __init__(self, container, title=None, description=None, **kwargs){
+    function __init__( container, title=nil, description=nil, **kwargs){
         # add any missing keyword arguments by checking the container
         update = kwargs.setdefault;
         update('conflict_handler', container.conflict_handler);
         update('prefix_chars', container.prefix_chars);
         update('argument_default', container.argument_default);
-        super_init = super(_ArgumentGroup, self).__init__;
+        super_init = super(_ArgumentGroup, this).__init__;
         super_init(description=description, **kwargs);
 
         # group attributes
-        self.title = title;
-        self._group_actions = [];
+        this.title = title;
+        this._group_actions = [];
 
         # share most attributes with the container
-        self._registries = container._registries;
-        self._actions = container._actions;
-        self._option_string_actions = container._option_string_actions;
-        self._defaults = container._defaults;
-        self._has_negative_number_optionals = \
+        this._registries = container._registries;
+        this._actions = container._actions;
+        this._option_string_actions = container._option_string_actions;
+        this._defaults = container._defaults;
+        this._has_negative_number_optionals = \
             container._has_negative_number_optionals;
-        self._mutually_exclusive_groups = container._mutually_exclusive_groups;
+        this._mutually_exclusive_groups = container._mutually_exclusive_groups;
 
     }
-    def _add_action(self, action){
-        action = super(_ArgumentGroup, self)._add_action(action);
-        self._group_actions.append(action);
+    function _add_action( action){
+        action = super(_ArgumentGroup, this)._add_action(action);
+        this._group_actions.append(action);
         return action;
 
     }
-    def _remove_action(self, action){
-        super(_ArgumentGroup, self)._remove_action(action);
-        self._group_actions.remove(action);
+    function _remove_action( action){
+        super(_ArgumentGroup, this)._remove_action(action);
+        this._group_actions.remove(action);
 
 
 }
 } class _MutuallyExclusiveGroup(_ArgumentGroup){
 
-    def __init__(self, container, required=False){
-        super(_MutuallyExclusiveGroup, self).__init__(container);
-        self.required = required;
-        self._container = container;
+    function __init__( container, required=false){
+        super(_MutuallyExclusiveGroup, this).__init__(container);
+        this.required = required;
+        this._container = container;
 
     }
-    def _add_action(self, action){
+    function _add_action( action){
         if action.required{
             msg = _('mutually exclusive arguments must be optional');
             raise ValueError(msg);
-        } action = self._container._add_action(action);
-        self._group_actions.append(action);
+        } action = this._container._add_action(action);
+        this._group_actions.append(action);
         return action;
 
     }
-    def _remove_action(self, action){
-        self._container._remove_action(action);
-        self._group_actions.remove(action);
+    function _remove_action( action){
+        this._container._remove_action(action);
+        this._group_actions.remove(action);
 
 
 }
@@ -1705,21 +1705,21 @@ class Action(_AttributeHolder){
         - add_help -- Add a -h/-help option
     """;
 
-    def __init__(self,
-                 prog=None,
-                 usage=None,
-                 description=None,
-                 epilog=None,
-                 version=None,
+    function __init__(
+                 prog=nil,
+                 usage=nil,
+                 description=nil,
+                 epilog=nil,
+                 version=nil,
                  parents=[],
                  formatter_class=HelpFormatter,
                  prefix_chars='-',
-                 fromfile_prefix_chars=None,
-                 argument_default=None,
+                 fromfile_prefix_chars=nil,
+                 argument_default=nil,
                  conflict_handler='error',
-                 add_help=True){
+                 add_help=true){
 
-        if version is not None{
+        if version is not nil{
             import warnings;
             warnings.warn(
                 """The "version" argument to ArgumentParser is deprecated. """
@@ -1728,66 +1728,66 @@ class Action(_AttributeHolder){
                 """instead""", DeprecationWarning);
 
         }
-        superinit = super(ArgumentParser, self).__init__;
+        superinit = super(ArgumentParser, this).__init__;
         superinit(description=description,
                   prefix_chars=prefix_chars,
                   argument_default=argument_default,
                   conflict_handler=conflict_handler);
 
         # default setting for prog
-        if prog is None{
+        if prog is nil{
             prog = _os.path.basename(_sys.argv[0]);
 
         }
-        self.prog = prog;
-        self.usage = usage;
-        self.epilog = epilog;
-        self.version = version;
-        self.formatter_class = formatter_class;
-        self.fromfile_prefix_chars = fromfile_prefix_chars;
-        self.add_help = add_help;
+        this.prog = prog;
+        this.usage = usage;
+        this.epilog = epilog;
+        this.version = version;
+        this.formatter_class = formatter_class;
+        this.fromfile_prefix_chars = fromfile_prefix_chars;
+        this.add_help = add_help;
 
-        add_group = self.add_argument_group;
-        self._positionals = add_group(_('positional arguments'));
-        self._optionals = add_group(_('optional arguments'));
-        self._subparsers = None;
+        add_group = this.add_argument_group;
+        this._positionals = add_group(_('positional arguments'));
+        this._optionals = add_group(_('optional arguments'));
+        this._subparsers = nil;
 
         # register types
-        def identity(string){
+        function identity(string){
             return string;
-        } self.register('type', None, identity);
+        } this.register('type', nil, identity);
 
         # add help and version arguments if necessary
         # (using explicit default to override global argument_default)
         default_prefix = '-' if '-' in prefix_chars else prefix_chars[0];
-        if self.add_help{
-            self.add_argument(
+        if this.add_help{
+            this.add_argument(
                 default_prefix+'h', default_prefix*2+'help',
                 action='help', default=SUPPRESS,
                 help=_('show this help message and exit'));
-        } if self.version{
-            self.add_argument(
+        } if this.version{
+            this.add_argument(
                 default_prefix+'v', default_prefix*2+'version',
                 action='version', default=SUPPRESS,
-                version=self.version,
+                version=this.version,
                 help=_("show program's version number and exit"));
 
         # add parent arguments and defaults
         }
         for parent in parents{
-            self._add_container_actions(parent);
+            this._add_container_actions(parent);
             try{
                 defaults = parent._defaults;
             } except AttributeError{
                 pass;
             } else{
-                self._defaults.update(defaults);
+                this._defaults.update(defaults);
 
     # =======================
     # Pretty __repr__ methods
     # =======================
     }
-    } } def _get_kwargs(self){
+    } } function _get_kwargs(){
         names = [
             'prog',
             'usage',
@@ -1797,80 +1797,80 @@ class Action(_AttributeHolder){
             'conflict_handler',
             'add_help',
         ];
-        return [(name, getattr(self, name)) for name in names];
+        return [(name, getattr(this, name)) for name in names];
 
     # ==================================
     # Optional/Positional adding methods
     # ==================================
     }
-    def add_subparsers(self, **kwargs){
-        if self._subparsers is not None{
-            self.error(_('cannot have multiple subparser arguments'));
+    function add_subparsers( **kwargs){
+        if this._subparsers is not nil{
+            this.error(_('cannot have multiple subparser arguments'));
 
         # add the parser class to the arguments if it's not present
         }
-        kwargs.setdefault('parser_class', type(self));
+        kwargs.setdefault('parser_class', type(this));
 
         if 'title' in kwargs or 'description' in kwargs{
             title = _(kwargs.pop('title', 'subcommands'));
-            description = _(kwargs.pop('description', None));
-            self._subparsers = self.add_argument_group(title, description);
+            description = _(kwargs.pop('description', nil));
+            this._subparsers = this.add_argument_group(title, description);
         } else{
-            self._subparsers = self._positionals;
+            this._subparsers = this._positionals;
 
         # prog defaults to the usage message of this parser, skipping
         # optional arguments and with no "usage:" prefix
         }
-        if kwargs.get('prog') is None{
-            formatter = self._get_formatter();
-            positionals = self._get_positional_actions();
-            groups = self._mutually_exclusive_groups;
-            formatter.add_usage(self.usage, positionals, groups, '');
+        if kwargs.get('prog') is nil{
+            formatter = this._get_formatter();
+            positionals = this._get_positional_actions();
+            groups = this._mutually_exclusive_groups;
+            formatter.add_usage(this.usage, positionals, groups, '');
             kwargs['prog'] = formatter.format_help().strip();
 
         # create the parsers action and add it to the positionals list
         }
-        parsers_class = self._pop_action_class(kwargs, 'parsers');
+        parsers_class = this._pop_action_class(kwargs, 'parsers');
         action = parsers_class(option_strings=[], **kwargs);
-        self._subparsers._add_action(action);
+        this._subparsers._add_action(action);
 
         # return the created parsers action
         return action;
 
     }
-    def _add_action(self, action){
+    function _add_action( action){
         if action.option_strings{
-            self._optionals._add_action(action);
+            this._optionals._add_action(action);
         } else{
-            self._positionals._add_action(action);
+            this._positionals._add_action(action);
         } return action;
 
     }
-    def _get_optional_actions(self){
+    function _get_optional_actions(){
         return [action
-                for action in self._actions
+                for action in this._actions
                 if action.option_strings];
 
     }
-    def _get_positional_actions(self){
+    function _get_positional_actions(){
         return [action
-                for action in self._actions
+                for action in this._actions
                 if not action.option_strings];
 
     # =====================================
     # Command line argument parsing methods
     # =====================================
     }
-    def parse_args(self, args=None, namespace=None){
-        args, argv = self.parse_known_args(args, namespace);
+    function parse_args( args=nil, namespace=nil){
+        args, argv = this.parse_known_args(args, namespace);
         if argv{
             msg = _('unrecognized arguments: %s');
-            self.error(msg % ' '.join(argv));
+            this.error(msg % ' '.join(argv));
         } return args;
 
     }
-    def parse_known_args(self, args=None, namespace=None){
-        if args is None{
+    function parse_known_args( args=nil, namespace=nil){
+        if args is nil{
             # args default to the system args
             args = _sys.argv[1:];
         } else{
@@ -1879,12 +1879,12 @@ class Action(_AttributeHolder){
 
         # default Namespace built from parser defaults
         }
-        if namespace is None{
+        if namespace is nil{
             namespace = Namespace();
 
         # add any action defaults that aren't present
         }
-        for action in self._actions{
+        for action in this._actions{
             if action.dest is not SUPPRESS{
                 if not hasattr(namespace, action.dest){
                     if action.default is not SUPPRESS{
@@ -1892,33 +1892,33 @@ class Action(_AttributeHolder){
 
         # add any parser defaults that aren't present
         }
-        } } } for dest in self._defaults{
+        } } } for dest in this._defaults{
             if not hasattr(namespace, dest){
-                setattr(namespace, dest, self._defaults[dest]);
+                setattr(namespace, dest, this._defaults[dest]);
 
         # parse the arguments and exit if there are any errors
         }
         } try{
-            namespace, args = self._parse_known_args(args, namespace);
+            namespace, args = this._parse_known_args(args, namespace);
             if hasattr(namespace, _UNRECOGNIZED_ARGS_ATTR){
                 args.extend(getattr(namespace, _UNRECOGNIZED_ARGS_ATTR));
                 delattr(namespace, _UNRECOGNIZED_ARGS_ATTR);
             } return namespace, args;
         } except ArgumentError{
             err = _sys.exc_info()[1];
-            self.error(str(err));
+            this.error(str(err));
 
     }
-    } def _parse_known_args(self, arg_strings, namespace){
+    } function _parse_known_args( arg_strings, namespace){
         # replace arg strings that are file references
-        if self.fromfile_prefix_chars is not None{
-            arg_strings = self._read_args_from_files(arg_strings);
+        if this.fromfile_prefix_chars is not nil{
+            arg_strings = this._read_args_from_files(arg_strings);
 
         # map all mutually exclusive arguments to the other arguments
         # they can't occur with
         }
         action_conflicts = {};
-        for mutex_group in self._mutually_exclusive_groups{
+        for mutex_group in this._mutually_exclusive_groups{
             group_actions = mutex_group._group_actions;
             for i, mutex_action in enumerate(mutex_group._group_actions){
                 conflicts = action_conflicts.setdefault(mutex_action, []);
@@ -1944,8 +1944,8 @@ class Action(_AttributeHolder){
             # and note the index if it was an option
             }
             } else{
-                option_tuple = self._parse_optional(arg_string);
-                if option_tuple is None{
+                option_tuple = this._parse_optional(arg_string);
+                if option_tuple is nil{
                     pattern = 'A';
                 } else{
                     option_string_indices[i] = option_tuple;
@@ -1960,9 +1960,9 @@ class Action(_AttributeHolder){
         seen_actions = set();
         seen_non_default_actions = set();
 
-        def take_action(action, argument_strings, option_string=None){
+        function take_action(action, argument_strings, option_string=nil){
             seen_actions.add(action);
-            argument_values = self._get_values(action, argument_strings);
+            argument_values = this._get_values(action, argument_strings);
 
             # error if this argument is not allowed with other previously
             # seen arguments, assuming that actions that use the default
@@ -1979,11 +1979,11 @@ class Action(_AttributeHolder){
             # (e.g. from a default)
             }
             } } if argument_values is not SUPPRESS{
-                action(self, namespace, argument_values, option_string);
+                action(this, namespace, argument_values, option_string);
 
         # function to convert arg_strings into an optional action
         }
-        } def consume_optional(start_index){
+        } function consume_optional(start_index){
 
             # get the optional identified at this index
             option_tuple = option_string_indices[start_index];
@@ -1991,31 +1991,31 @@ class Action(_AttributeHolder){
 
             # identify additional optionals in the same arg string
             # (e.g. -xyz is the same as -x -y -z if no args are required)
-            match_argument = self._match_argument;
+            match_argument = this._match_argument;
             action_tuples = [];
-            while True{
+            while true{
 
                 # if we found no optional action, skip it
-                if action is None{
+                if action is nil{
                     extras.append(arg_strings[start_index]);
                     return start_index + 1;
 
                 # if there is an explicit argument, try to match the
                 # optional's string arguments to only this
                 }
-                if explicit_arg is not None{
+                if explicit_arg is not nil{
                     arg_count = match_argument(action, 'A');
 
                     # if the action is a single-dash option and takes no
                     # arguments, try to parse more single-dash options out
                     # of the tail of the option string
-                    chars = self.prefix_chars;
+                    chars = this.prefix_chars;
                     if arg_count == 0 and option_string[1] not in chars{
                         action_tuples.append((action, [], option_string));
                         char = option_string[0];
                         option_string = char + explicit_arg[0];
-                        new_explicit_arg = explicit_arg[1:] or None;
-                        optionals_map = self._option_string_actions;
+                        new_explicit_arg = explicit_arg[1:] or nil;
+                        optionals_map = this._option_string_actions;
                         if option_string in optionals_map{
                             action = optionals_map[option_string];
                             explicit_arg = new_explicit_arg;
@@ -2063,12 +2063,12 @@ class Action(_AttributeHolder){
         # the list of Positionals left to be parsed; this is modified
         # by consume_positionals()
         }
-        positionals = self._get_positional_actions();
+        positionals = this._get_positional_actions();
 
         # function to convert arg_strings into positional actions
-        def consume_positionals(start_index){
+        function consume_positionals(start_index){
             # match as many Positionals as possible
-            match_partial = self._match_arguments_partial;
+            match_partial = this._match_arguments_partial;
             selected_pattern = arg_strings_pattern[start_index:];
             arg_counts = match_partial(positionals, selected_pattern);
 
@@ -2134,30 +2134,30 @@ class Action(_AttributeHolder){
         # if we didn't use all the Positional objects, there were too few
         # arg strings supplied.
         if positionals{
-            self.error(_('too few arguments'));
+            this.error(_('too few arguments'));
 
         # make sure all required actions were present, and convert defaults.
         }
-        for action in self._actions{
+        for action in this._actions{
             if action not in seen_actions{
                 if action.required{
                     name = _get_action_name(action);
-                    self.error(_('argument %s is required') % name);
+                    this.error(_('argument %s is required') % name);
                 } else{
                     # Convert action default now instead of doing it before
                     # parsing arguments to avoid calling convert functions
                     # twice (which may fail) if the argument was given, but
                     # only if it was defined already in the namespace
-                    if (action.default is not None and
+                    if (action.default is not nil and
                             isinstance(action.default, basestring) and
                             hasattr(namespace, action.dest) and
                             action.default is getattr(namespace, action.dest)){
                         setattr(namespace, action.dest,
-                                self._get_value(action, action.default));
+                                this._get_value(action, action.default));
 
         # make sure all required groups had one option present
         }
-        } } } for group in self._mutually_exclusive_groups{
+        } } } for group in this._mutually_exclusive_groups{
             if group.required{
                 for action in group._group_actions{
                     if action in seen_non_default_actions{
@@ -2170,20 +2170,20 @@ class Action(_AttributeHolder){
                              for action in group._group_actions
                              if action.help is not SUPPRESS];
                     msg = _('one of the arguments %s is required');
-                    self.error(msg % ' '.join(names));
+                    this.error(msg % ' '.join(names));
 
         # return the updated namespace and the extra arguments
         }
         } } return namespace, extras;
 
     }
-    def _read_args_from_files(self, arg_strings){
+    function _read_args_from_files( arg_strings){
         # expand arguments referencing files
         new_arg_strings = [];
         for arg_string in arg_strings{
 
             # for regular arguments, just add them back into the list
-            if not arg_string or arg_string[0] not in self.fromfile_prefix_chars{
+            if not arg_string or arg_string[0] not in this.fromfile_prefix_chars{
                 new_arg_strings.append(arg_string);
 
             # replace arguments referencing files with the file content
@@ -2194,34 +2194,34 @@ class Action(_AttributeHolder){
                     try{
                         arg_strings = [];
                         for arg_line in args_file.read().splitlines(){
-                            for arg in self.convert_arg_line_to_args(arg_line){
+                            for arg in this.convert_arg_line_to_args(arg_line){
                                 arg_strings.append(arg);
-                        } } arg_strings = self._read_args_from_files(arg_strings);
+                        } } arg_strings = this._read_args_from_files(arg_strings);
                         new_arg_strings.extend(arg_strings);
                     } finally{
                         args_file.close();
                 } } except IOError{
                     err = _sys.exc_info()[1];
-                    self.error(str(err));
+                    this.error(str(err));
 
         # return the modified argument list
         }
         } } return new_arg_strings;
 
     }
-    def convert_arg_line_to_args(self, arg_line){
+    function convert_arg_line_to_args( arg_line){
         return [arg_line];
 
     }
-    def _match_argument(self, action, arg_strings_pattern){
+    function _match_argument( action, arg_strings_pattern){
         # match the pattern for this action to the arg strings
-        nargs_pattern = self._get_nargs_pattern(action);
+        nargs_pattern = this._get_nargs_pattern(action);
         match = _re.match(nargs_pattern, arg_strings_pattern);
 
         # raise an exception if we weren't able to find a match
-        if match is None{
+        if match is nil{
             nargs_errors = {
-                None: _('expected one argument'),
+                nil: _('expected one argument'),
                 OPTIONAL: _('expected at most one argument'),
                 ONE_OR_MORE: _('expected at least one argument'),
             };
@@ -2234,16 +2234,16 @@ class Action(_AttributeHolder){
         return len(match.group(1));
 
     }
-    def _match_arguments_partial(self, actions, arg_strings_pattern){
+    function _match_arguments_partial( actions, arg_strings_pattern){
         # progressively shorten the actions list by slicing off the
         # final actions until we find a match
         result = [];
         for i in range(len(actions), 0, -1){
             actions_slice = actions[:i];
-            pattern = ''.join([self._get_nargs_pattern(action)
+            pattern = ''.join([this._get_nargs_pattern(action)
                                for action in actions_slice]);
             match = _re.match(pattern, arg_strings_pattern);
-            if match is not None{
+            if match is not nil{
                 result.extend([len(string) for string in match.groups()]);
                 break;
 
@@ -2252,46 +2252,46 @@ class Action(_AttributeHolder){
         } return result;
 
     }
-    def _parse_optional(self, arg_string){
+    function _parse_optional( arg_string){
         # if it's an empty string, it was meant to be a positional
         if not arg_string{
-            return None;
+            return nil;
 
         # if it doesn't start with a prefix, it was meant to be positional
         }
-        if not arg_string[0] in self.prefix_chars{
-            return None;
+        if not arg_string[0] in this.prefix_chars{
+            return nil;
 
         # if the option string is present in the parser, return the action
         }
-        if arg_string in self._option_string_actions{
-            action = self._option_string_actions[arg_string];
-            return action, arg_string, None;
+        if arg_string in this._option_string_actions{
+            action = this._option_string_actions[arg_string];
+            return action, arg_string, nil;
 
         # if it's just a single character, it was meant to be positional
         }
         if len(arg_string) == 1{
-            return None;
+            return nil;
 
         # if the option string before the "=" is present, return the action
         }
         if '=' in arg_string{
             option_string, explicit_arg = arg_string.split('=', 1);
-            if option_string in self._option_string_actions{
-                action = self._option_string_actions[option_string];
+            if option_string in this._option_string_actions{
+                action = this._option_string_actions[option_string];
                 return action, option_string, explicit_arg;
 
         # search through all possible prefixes of the option string
         # and all actions in the parser for possible interpretations
         }
-        } option_tuples = self._get_option_tuples(arg_string);
+        } option_tuples = this._get_option_tuples(arg_string);
 
         # if multiple actions match, the option string was ambiguous
         if len(option_tuples) > 1{
             options = ', '.join([option_string
                 for action, option_string, explicit_arg in option_tuples]);
             tup = arg_string, options;
-            self.error(_('ambiguous option: %s could match %s') % tup);
+            this.error(_('ambiguous option: %s could match %s') % tup);
 
         # if exactly one action matched, this segmentation is good,
         # so return the parsed action
@@ -2304,36 +2304,36 @@ class Action(_AttributeHolder){
         # number, it was meant to be positional
         # unless there are negative-number-like options
         }
-        if self._negative_number_matcher.match(arg_string){
-            if not self._has_negative_number_optionals{
-                return None;
+        if this._negative_number_matcher.match(arg_string){
+            if not this._has_negative_number_optionals{
+                return nil;
 
         # if it contains a space, it was meant to be a positional
         }
         } if ' ' in arg_string{
-            return None;
+            return nil;
 
         # it was meant to be an optional but there is no such option
         # in this parser (though it might be a valid option in a subparser)
         }
-        return None, arg_string, None;
+        return nil, arg_string, nil;
 
     }
-    def _get_option_tuples(self, option_string){
+    function _get_option_tuples( option_string){
         result = [];
 
         # option strings starting with two prefix characters are only
         # split at the '='
-        chars = self.prefix_chars;
+        chars = this.prefix_chars;
         if option_string[0] in chars and option_string[1] in chars{
             if '=' in option_string{
                 option_prefix, explicit_arg = option_string.split('=', 1);
             } else{
                 option_prefix = option_string;
-                explicit_arg = None;
-            } for option_string in self._option_string_actions{
+                explicit_arg = nil;
+            } for option_string in this._option_string_actions{
                 if option_string.startswith(option_prefix){
-                    action = self._option_string_actions[option_string];
+                    action = this._option_string_actions[option_string];
                     tup = action, option_string, explicit_arg;
                     result.append(tup);
 
@@ -2343,37 +2343,37 @@ class Action(_AttributeHolder){
         }
         } } elif option_string[0] in chars and option_string[1] not in chars{
             option_prefix = option_string;
-            explicit_arg = None;
+            explicit_arg = nil;
             short_option_prefix = option_string[:2];
             short_explicit_arg = option_string[2:];
 
-            for option_string in self._option_string_actions{
+            for option_string in this._option_string_actions{
                 if option_string == short_option_prefix{
-                    action = self._option_string_actions[option_string];
+                    action = this._option_string_actions[option_string];
                     tup = action, option_string, short_explicit_arg;
                     result.append(tup);
                 } elif option_string.startswith(option_prefix){
-                    action = self._option_string_actions[option_string];
+                    action = this._option_string_actions[option_string];
                     tup = action, option_string, explicit_arg;
                     result.append(tup);
 
         # shouldn't ever get here
         }
         } } else{
-            self.error(_('unexpected option string: %s') % option_string);
+            this.error(_('unexpected option string: %s') % option_string);
 
         # return the collected option tuples
         }
         return result;
 
     }
-    def _get_nargs_pattern(self, action){
+    function _get_nargs_pattern( action){
         # in all examples below, we have to allow for '--' args
         # which are represented as '-' in the pattern
         nargs = action.nargs;
 
         # the default (None) is assumed to be a single argument
-        if nargs is None{
+        if nargs is nil{
             nargs_pattern = '(-*A-*)';
 
         # allow zero or one arguments
@@ -2420,7 +2420,7 @@ class Action(_AttributeHolder){
     # Value conversion methods
     # ========================
     }
-    def _get_values(self, action, arg_strings){
+    function _get_values( action, arg_strings){
         # for everything but PARSER, REMAINDER args, strip out first '--'
         if action.nargs not in [PARSER, REMAINDER]{
             try{
@@ -2436,52 +2436,52 @@ class Action(_AttributeHolder){
             } else{
                 value = action.default;
             } if isinstance(value, basestring){
-                value = self._get_value(action, value);
-                self._check_value(action, value);
+                value = this._get_value(action, value);
+                this._check_value(action, value);
 
         # when nargs='*' on a positional, if there were no command-line
         # args, use the default if it is anything other than None
         }
         } elif (not arg_strings and action.nargs == ZERO_OR_MORE and
               not action.option_strings){
-            if action.default is not None{
+            if action.default is not nil{
                 value = action.default;
             } else{
                 value = arg_strings;
-            } self._check_value(action, value);
+            } this._check_value(action, value);
 
         # single argument or optional argument produces a single value
         }
-        elif len(arg_strings) == 1 and action.nargs in [None, OPTIONAL]{
+        elif len(arg_strings) == 1 and action.nargs in [nil, OPTIONAL]{
             arg_string, = arg_strings;
-            value = self._get_value(action, arg_string);
-            self._check_value(action, value);
+            value = this._get_value(action, arg_string);
+            this._check_value(action, value);
 
         # REMAINDER arguments convert all values, checking none
         }
         elif action.nargs == REMAINDER{
-            value = [self._get_value(action, v) for v in arg_strings];
+            value = [this._get_value(action, v) for v in arg_strings];
 
         # PARSER arguments convert all values, but check only the first
         }
         elif action.nargs == PARSER{
-            value = [self._get_value(action, v) for v in arg_strings];
-            self._check_value(action, value[0]);
+            value = [this._get_value(action, v) for v in arg_strings];
+            this._check_value(action, value[0]);
 
         # all other types of nargs produce a list
         }
         else{
-            value = [self._get_value(action, v) for v in arg_strings];
+            value = [this._get_value(action, v) for v in arg_strings];
             for v in value{
-                self._check_value(action, v);
+                this._check_value(action, v);
 
         # return the converted value
         }
         } return value;
 
     }
-    def _get_value(self, action, arg_string){
-        type_func = self._registry_get('type', action.type, action.type);
+    function _get_value( action, arg_string){
+        type_func = this._registry_get('type', action.type, action.type);
         if not _callable(type_func){
             msg = _('%r is not callable');
             raise ArgumentError(action, msg % type_func);
@@ -2510,9 +2510,9 @@ class Action(_AttributeHolder){
         return result;
 
     }
-    def _check_value(self, action, value){
+    function _check_value( action, value){
         # converted value must be one of the choices (if specified)
-        if action.choices is not None and value not in action.choices{
+        if action.choices is not nil and value not in action.choices{
             tup = value, ', '.join(map(repr, action.choices));
             msg = _('invalid choice: %r (choose from %s)') % tup;
             raise ArgumentError(action, msg);
@@ -2521,25 +2521,25 @@ class Action(_AttributeHolder){
     # Help-formatting methods
     # =======================
     }
-    } def format_usage(self){
-        formatter = self._get_formatter();
-        formatter.add_usage(self.usage, self._actions,
-                            self._mutually_exclusive_groups);
+    } function format_usage(){
+        formatter = this._get_formatter();
+        formatter.add_usage(this.usage, this._actions,
+                            this._mutually_exclusive_groups);
         return formatter.format_help();
 
     }
-    def format_help(self){
-        formatter = self._get_formatter();
+    function format_help(){
+        formatter = this._get_formatter();
 
         # usage
-        formatter.add_usage(self.usage, self._actions,
-                            self._mutually_exclusive_groups);
+        formatter.add_usage(this.usage, this._actions,
+                            this._mutually_exclusive_groups);
 
         # description
-        formatter.add_text(self.description);
+        formatter.add_text(this.description);
 
         # positionals, optionals and user-defined groups
-        for action_group in self._action_groups{
+        for action_group in this._action_groups{
             formatter.start_section(action_group.title);
             formatter.add_text(action_group.description);
             formatter.add_arguments(action_group._group_actions);
@@ -2547,54 +2547,54 @@ class Action(_AttributeHolder){
 
         # epilog
         }
-        formatter.add_text(self.epilog);
+        formatter.add_text(this.epilog);
 
         # determine help from format above
         return formatter.format_help();
 
     }
-    def format_version(self){
+    function format_version(){
         import warnings;
         warnings.warn(
             'The format_version method is deprecated -- the "version" '
             'argument to ArgumentParser is no longer supported.',
             DeprecationWarning);
-        formatter = self._get_formatter();
-        formatter.add_text(self.version);
+        formatter = this._get_formatter();
+        formatter.add_text(this.version);
         return formatter.format_help();
 
     }
-    def _get_formatter(self){
-        return self.formatter_class(prog=self.prog);
+    function _get_formatter(){
+        return this.formatter_class(prog=this.prog);
 
     # =====================
     # Help-printing methods
     # =====================
     }
-    def print_usage(self, file=None){
-        if file is None{
+    function print_usage( file=nil){
+        if file is nil{
             file = _sys.stdout;
-        } self._print_message(self.format_usage(), file);
+        } this._print_message(this.format_usage(), file);
 
     }
-    def print_help(self, file=None){
-        if file is None{
+    function print_help( file=nil){
+        if file is nil{
             file = _sys.stdout;
-        } self._print_message(self.format_help(), file);
+        } this._print_message(this.format_help(), file);
 
     }
-    def print_version(self, file=None){
+    function print_version( file=nil){
         import warnings;
         warnings.warn(
             'The print_version method is deprecated -- the "version" '
             'argument to ArgumentParser is no longer supported.',
             DeprecationWarning);
-        self._print_message(self.format_version(), file);
+        this._print_message(this.format_version(), file);
 
     }
-    def _print_message(self, message, file=None){
+    function _print_message( message, file=nil){
         if message{
-            if file is None{
+            if file is nil{
                 file = _sys.stderr;
             } file.write(message);
 
@@ -2602,13 +2602,13 @@ class Action(_AttributeHolder){
     # Exiting methods
     # ===============
     }
-    } def exit(self, status=0, message=None){
+    } function exit( status=0, message=nil){
         if message{
-            self._print_message(message, _sys.stderr);
+            this._print_message(message, _sys.stderr);
         } _sys.exit(status);
 
     }
-    def error(self, message){
+    function error( message){
         """error(message: string)
 
         Prints a usage message incorporating the message to stderr and
@@ -2617,8 +2617,8 @@ class Action(_AttributeHolder){
         If you override this in a subclass, it should not return -- it
         should either exit or raise an exception.
         """;
-        self.print_usage(_sys.stderr);
-        self.exit(2, _('%s: error: %s\n') % (self.prog, message));
+        this.print_usage(_sys.stderr);
+        this.exit(2, _('%s: error: %s\n') % (this.prog, message));
 
 }
 }

@@ -31,24 +31,24 @@ class ASTVisitor{
 
     VERBOSE = 0;
 
-    def __init__(self){
-        self.node = None;
-        self._cache = {};
+    function __init__(){
+        this.node = nil;
+        this._cache = {};
 
     }
-    def default(self, node, *args){
+    function default( node, *args){
         for child in node.getChildNodes(){
-            self.dispatch(child, *args);
+            this.dispatch(child, *args);
 
     }
-    } def dispatch(self, node, *args){
-        self.node = node;
+    } function dispatch( node, *args){
+        this.node = node;
         klass = node.__class__;
-        meth = self._cache.get(klass, None);
-        if meth is None{
+        meth = this._cache.get(klass, nil);
+        if meth is nil{
             className = klass.__name__;
-            meth = getattr(self.visitor, 'visit' + className, self.default);
-            self._cache[klass] = meth;
+            meth = getattr(this.visitor, 'visit' + className, this.default);
+            this._cache[klass] = meth;
 ##        if self.VERBOSE > 0:
 ##            className = klass.__name__
 ##            if self.VERBOSE == 1:
@@ -60,11 +60,11 @@ class ASTVisitor{
         return meth(node, *args);
 
     }
-    def preorder(self, tree, visitor, *args){
+    function preorder( tree, visitor, *args){
         """Do preorder walk of tree using visitor""";
-        self.visitor = visitor;
-        visitor.visit = self.dispatch;
-        self.dispatch(tree, *args); # XXX *args make sense?
+        this.visitor = visitor;
+        visitor.visit = this.dispatch;
+        this.dispatch(tree, *args); # XXX *args make sense?
 
 }
 } class ExampleASTVisitor(ASTVisitor){
@@ -76,44 +76,44 @@ class ASTVisitor{
     """;
     examples = {};
 
-    def dispatch(self, node, *args){
-        self.node = node;
-        meth = self._cache.get(node.__class__, None);
+    function dispatch( node, *args){
+        this.node = node;
+        meth = this._cache.get(node.__class__, nil);
         className = node.__class__.__name__;
-        if meth is None{
-            meth = getattr(self.visitor, 'visit' + className, 0);
-            self._cache[node.__class__] = meth;
-        } if self.VERBOSE > 1{
+        if meth is nil{
+            meth = getattr(this.visitor, 'visit' + className, 0);
+            this._cache[node.__class__] = meth;
+        } if this.VERBOSE > 1{
             print "dispatch", className, (meth and meth.__name__ or '');
         } if meth{
             meth(node, *args);
-        } elif self.VERBOSE > 0{
+        } elif this.VERBOSE > 0{
             klass = node.__class__;
-            if klass not in self.examples{
-                self.examples[klass] = klass;
+            if klass not in this.examples{
+                this.examples[klass] = klass;
                 print;
-                print self.visitor;
+                print this.visitor;
                 print klass;
                 for attr in dir(node){
                     if attr[0] != '_'{
                         print "\t", "%-12.12s" % attr, getattr(node, attr);
                 } } print;
-            } return self.default(node, *args);
+            } return this.default(node, *args);
 
 # XXX this is an API change
 
 }
 } } _walker = ASTVisitor;
-def walk(tree, visitor, walker=None, verbose=None){
-    if walker is None{
+function walk(tree, visitor, walker=nil, verbose=nil){
+    if walker is nil{
         walker = _walker();
-    } if verbose is not None{
+    } if verbose is not nil{
         walker.VERBOSE = verbose;
     } walker.preorder(tree, visitor);
     return walker.visitor;
 
 }
-def dumpNode(node){
+function dumpNode(node){
     print node.__class__;
     for attr in dir(node){
         if attr[0] != '_'{

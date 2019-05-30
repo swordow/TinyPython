@@ -57,7 +57,7 @@ PyClass_New(PyObject *bases, PyObject *dict, PyObject *name)
         return NULL;
     }
     if (PyDict_GetItem(dict, docstr) == NULL) {
-        if (PyDict_SetItem(dict, docstr, Py_None) < 0)
+        if (PyDict_SetItem(dict, docstr, Py_Nil) < 0)
             return NULL;
     }
     if (PyDict_GetItem(dict, modstr) == NULL) {
@@ -251,7 +251,7 @@ class_getattr(register PyClassObject *op, PyObject *name)
         }
         if (strcmp(sname, "__name__") == 0) {
             if (op->cl_name == NULL)
-                v = Py_None;
+                v = Py_Nil;
             else
                 v = op->cl_name;
             Py_INCREF(v);
@@ -584,7 +584,7 @@ PyInstance_New(PyObject *klass, PyObject *arg, PyObject *kw)
             inst = NULL;
         }
         else {
-            if (res != Py_None) {
+            if (res != Py_Nil) {
                 PyErr_SetString(PyExc_TypeError,
                            "__init__() should return None");
                 Py_DECREF(inst);
@@ -609,13 +609,13 @@ static PyObject *
 instance_new(PyTypeObject* type, PyObject* args, PyObject *kw)
 {
     PyObject *klass;
-    PyObject *dict = Py_None;
+    PyObject *dict = Py_Nil;
 
     if (!PyArg_ParseTuple(args, "O!|O:instance",
                           &PyClass_Type, &klass, &dict))
         return NULL;
 
-    if (dict == Py_None)
+    if (dict == Py_Nil)
         dict = NULL;
     else if (!PyDict_Check(dict)) {
         PyErr_SetString(PyExc_TypeError,
@@ -1487,7 +1487,7 @@ half_binop(PyObject *v, PyObject *w, char *opname, binaryfunc thisfunc,
     if (coerced == NULL) {
         return NULL;
     }
-    if (coerced == Py_None || coerced == Py_NotImplemented) {
+    if (coerced == Py_Nil || coerced == Py_NotImplemented) {
         Py_DECREF(coerced);
         return generic_binary_op(v, w, opname);
     }
@@ -1575,7 +1575,7 @@ instance_coerce(PyObject **pv, PyObject **pw)
         /* __coerce__ call raised an exception */
         return -1;
     }
-    if (coerced == Py_None || coerced == Py_NotImplemented) {
+    if (coerced == Py_Nil || coerced == Py_NotImplemented) {
         /* __coerce__ says "I can't do it" */
         Py_DECREF(coerced);
         return 1;
@@ -1884,14 +1884,14 @@ UNARY(instance_hex, "__hex__")
 static PyObject *
 bin_power(PyObject *v, PyObject *w)
 {
-    return PyNumber_Power(v, w, Py_None);
+    return PyNumber_Power(v, w, Py_Nil);
 }
 
 /* This version is for ternary calls only (z != None) */
 static PyObject *
 instance_pow(PyObject *v, PyObject *w, PyObject *z)
 {
-    if (z == Py_None) {
+    if (z == Py_Nil) {
         return do_binop(v, w, "__pow__", "__rpow__", bin_power);
     }
     else {
@@ -1918,14 +1918,14 @@ instance_pow(PyObject *v, PyObject *w, PyObject *z)
 static PyObject *
 bin_inplace_power(PyObject *v, PyObject *w)
 {
-    return PyNumber_InPlacePower(v, w, Py_None);
+    return PyNumber_InPlacePower(v, w, Py_Nil);
 }
 
 
 static PyObject *
 instance_ipow(PyObject *v, PyObject *w, PyObject *z)
 {
-    if (z == Py_None) {
+    if (z == Py_Nil) {
         return do_binop_inplace(v, w, "__ipow__", "__pow__",
             "__rpow__", bin_inplace_power);
     }
@@ -2365,7 +2365,7 @@ instancemethod_new(PyTypeObject* type, PyObject* args, PyObject *kw)
                         "first argument must be callable");
         return NULL;
     }
-    if (self == Py_None)
+    if (self == Py_Nil)
         self = NULL;
     if (self == NULL && classObj == NULL) {
         PyErr_SetString(PyExc_TypeError,
@@ -2476,7 +2476,7 @@ instancemethod_hash(PyMethodObject *a)
 {
     long x, y;
     if (a->im_self == NULL)
-        x = PyObject_Hash(Py_None);
+        x = PyObject_Hash(Py_Nil);
     else
         x = PyObject_Hash(a->im_self);
     if (x == -1)

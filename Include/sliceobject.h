@@ -16,7 +16,7 @@ PyAPI_DATA(PyObject) _Py_EllipsisObject; /* Don't use this directly */
 
 A slice object containing start, stop, and step data members (the
 names are from range).  After much talk with Guido, it was decided to
-let these be any arbitrary python type.  Py_None stands for omitted values.
+let these be any arbitrary python type.  Py_Nil stands for omitted values.
 */
 
 typedef struct {

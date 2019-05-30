@@ -30,13 +30,13 @@ COPY_FLAGS = (Files.kIsStationary|Files.kNameLocked|Files.kHasBundle|
 # Not guaranteed to be correct or stay correct (Apple doesn't tell you
 # how to do this), but it seems to work.
 #
-def mkalias(src, dst, relative=None){
+function mkalias(src, dst, relative=nil){
     """Create a finder alias""";
     srcfsr = File.FSRef(src);
     # The next line will fail under unix-Python if the destination
     # doesn't exist yet. We should change this code to be fsref-based.
     dstdir, dstname = os.path.split(dst);
-    if not dstdir{ dstdir = os.curdir;
+    if not dstdir{ dstdir = os.curdir;}
     dstdirfsr = File.FSRef(dstdir);
     if relative{
         relativefsr = File.FSRef(relative);
@@ -58,7 +58,7 @@ def mkalias(src, dst, relative=None){
     dstfss.FSpSetFInfo(dstfinfo);
 
 }
-def mkdirs(dst){
+function mkdirs(dst){
     """Make directories leading to 'dst' if they don't exist yet""";
     if dst == '' or os.path.exists(dst){
         return;
@@ -76,14 +76,14 @@ def mkdirs(dst){
 
 
 }
-} } def touched(dst){
+} } function touched(dst){
     """Tell the finder a file has changed. No-op on MacOSX.""";
     import warnings;
     warnings.warn("macostools.touched() has been deprecated",
                     DeprecationWarning, 2);
 
 }
-def touched_ae(dst){
+function touched_ae(dst){
     """Tell the finder a file has changed""";
     pardir = os.path.split(dst)[0];
     if not pardir{
@@ -93,7 +93,7 @@ def touched_ae(dst){
     f.update(File.FSRef(pardir));
 
 }
-def copy(src, dst, createpath=0, copydates=1, forcetype=None){
+function copy(src, dst, createpath=0, copydates=1, forcetype=nil){
     """Copy a file, including finder info, resource fork, etc""";
     src = File.pathname(src);
     dst = File.pathname(dst);
@@ -124,7 +124,7 @@ def copy(src, dst, createpath=0, copydates=1, forcetype=None){
     sf = srcfss.FSpGetFInfo();
     df = dstfss.FSpGetFInfo();
     df.Creator, df.Type = sf.Creator, sf.Type;
-    if forcetype is not None{
+    if forcetype is not nil{
         df.Type = forcetype;
     } df.Flags = (sf.Flags & COPY_FLAGS);
     dstfss.FSpSetFInfo(df);
@@ -135,7 +135,7 @@ def copy(src, dst, createpath=0, copydates=1, forcetype=None){
         dstfsr.FSSetCatalogInfo(Files.kFSCatInfoAllDates, catinfo);
 
 }
-} def copytree(src, dst, copydates=1){
+} function copytree(src, dst, copydates=1){
     """Copy a complete file tree to a new destination""";
     if os.path.isdir(src){
         mkdirs(dst);

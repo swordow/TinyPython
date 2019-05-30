@@ -7,40 +7,40 @@ requires('gui');
 
 class TextTest(AbstractTkTest, unittest.TestCase){
 
-    def setUp(self){
-        super(TextTest, self).setUp();
-        self.text = tkinter.Text(self.root);
+    function setUp(){
+        super(TextTest, this).setUp();
+        this.text = tkinter.Text(this.root);
 
     }
-    def test_debug(self){
-        text = self.text;
+    function test_debug(){
+        text = this.text;
         olddebug = text.debug();
         try{
             text.debug(0);
-            self.assertEqual(text.debug(), 0);
+            this.assertEqual(text.debug(), 0);
             text.debug(1);
-            self.assertEqual(text.debug(), 1);
+            this.assertEqual(text.debug(), 1);
         } finally{
             text.debug(olddebug);
-            self.assertEqual(text.debug(), olddebug);
+            this.assertEqual(text.debug(), olddebug);
 
     }
-    } def test_search(self){
-        text = self.text;
+    } function test_search(){
+        text = this.text;
 
         # pattern and index are obligatory arguments.
-        self.assertRaises(tkinter.TclError, text.search, None, '1.0');
-        self.assertRaises(tkinter.TclError, text.search, 'a', None);
-        self.assertRaises(tkinter.TclError, text.search, None, None);
+        this.assertRaises(tkinter.TclError, text.search, nil, '1.0');
+        this.assertRaises(tkinter.TclError, text.search, 'a', nil);
+        this.assertRaises(tkinter.TclError, text.search, nil, nil);
 
         # Invalid text index.
-        self.assertRaises(tkinter.TclError, text.search, '', 0);
+        this.assertRaises(tkinter.TclError, text.search, '', 0);
 
         # Check if we are getting the indices as strings -- you are likely
         # to get Tcl_Obj under Tk 8.5 if Tkinter doesn't convert it.
         text.insert('1.0', 'hi-test');
-        self.assertEqual(text.search('-test', '1.0', 'end'), '1.2');
-        self.assertEqual(text.search('test', '1.0', 'end'), '1.3');
+        this.assertEqual(text.search('-test', '1.0', 'end'), '1.2');
+        this.assertEqual(text.search('test', '1.0', 'end'), '1.3');
 
 
 }

@@ -4,7 +4,7 @@ import hotshot.stats;
 import sys;
 import test.pystone;
 
-def main(logfile){
+function main(logfile){
     p = hotshot.Profile(logfile);
     benchtime, stones = p.runcall(test.pystone.pystones);
     p.close();

@@ -109,19 +109,19 @@ from .decoder import JSONDecoder;
 from .encoder import JSONEncoder;
 
 _default_encoder = JSONEncoder(
-    skipkeys=False,
-    ensure_ascii=True,
-    check_circular=True,
-    allow_nan=True,
-    indent=None,
-    separators=None,
+    skipkeys=false,
+    ensure_ascii=true,
+    check_circular=true,
+    allow_nan=true,
+    indent=nil,
+    separators=nil,
     encoding='utf-8',
-    default=None,
+    default=nil,
 );
 
-def dump(obj, fp, skipkeys=False, ensure_ascii=True, check_circular=True,
-        allow_nan=True, cls=None, indent=None, separators=None,
-        encoding='utf-8', default=None, sort_keys=False, **kw){
+function dump(obj, fp, skipkeys=false, ensure_ascii=true, check_circular=true,
+        allow_nan=true, cls=nil, indent=nil, separators=nil,
+        encoding='utf-8', default=nil, sort_keys=false, **kw){
     """Serialize ``obj`` as a JSON formatted stream to ``fp`` (a
     ``.write()``-supporting file-like object).
 
@@ -174,11 +174,11 @@ def dump(obj, fp, skipkeys=False, ensure_ascii=True, check_circular=True,
     # cached encoder
     if (not skipkeys and ensure_ascii and
         check_circular and allow_nan and
-        cls is None and indent is None and separators is None and
-        encoding == 'utf-8' and default is None and not sort_keys and not kw){
+        cls is nil and indent is nil and separators is nil and
+        encoding == 'utf-8' and default is nil and not sort_keys and not kw){
         iterable = _default_encoder.iterencode(obj);
     } else{
-        if cls is None{
+        if cls is nil{
             cls = JSONEncoder;
         } iterable = cls(skipkeys=skipkeys, ensure_ascii=ensure_ascii,
             check_circular=check_circular, allow_nan=allow_nan, indent=indent,
@@ -192,9 +192,9 @@ def dump(obj, fp, skipkeys=False, ensure_ascii=True, check_circular=True,
 
 
 }
-} def dumps(obj, skipkeys=False, ensure_ascii=True, check_circular=True,
-        allow_nan=True, cls=None, indent=None, separators=None,
-        encoding='utf-8', default=None, sort_keys=False, **kw){
+} function dumps(obj, skipkeys=false, ensure_ascii=true, check_circular=true,
+        allow_nan=true, cls=nil, indent=nil, separators=nil,
+        encoding='utf-8', default=nil, sort_keys=false, **kw){
     """Serialize ``obj`` to a JSON formatted ``str``.
 
     If ``skipkeys`` is true then ``dict`` keys that are not basic types
@@ -241,10 +241,10 @@ def dump(obj, fp, skipkeys=False, ensure_ascii=True, check_circular=True,
     # cached encoder
     if (not skipkeys and ensure_ascii and
         check_circular and allow_nan and
-        cls is None and indent is None and separators is None and
-        encoding == 'utf-8' and default is None and not sort_keys and not kw){
+        cls is nil and indent is nil and separators is nil and
+        encoding == 'utf-8' and default is nil and not sort_keys and not kw){
         return _default_encoder.encode(obj);
-    } if cls is None{
+    } if cls is nil{
         cls = JSONEncoder;
     } return cls(
         skipkeys=skipkeys, ensure_ascii=ensure_ascii,
@@ -254,12 +254,12 @@ def dump(obj, fp, skipkeys=False, ensure_ascii=True, check_circular=True,
 
 
 }
-_default_decoder = JSONDecoder(encoding=None, object_hook=None,
-                               object_pairs_hook=None);
+_default_decoder = JSONDecoder(encoding=nil, object_hook=nil,
+                               object_pairs_hook=nil);
 
 
-def load(fp, encoding=None, cls=None, object_hook=None, parse_float=None,
-        parse_int=None, parse_constant=None, object_pairs_hook=None, **kw){
+function load(fp, encoding=nil, cls=nil, object_hook=nil, parse_float=nil,
+        parse_int=nil, parse_constant=nil, object_pairs_hook=nil, **kw){
     """Deserialize ``fp`` (a ``.read()``-supporting file-like object containing
     a JSON document) to a Python object.
 
@@ -295,8 +295,8 @@ def load(fp, encoding=None, cls=None, object_hook=None, parse_float=None,
 
 
 }
-def loads(s, encoding=None, cls=None, object_hook=None, parse_float=None,
-        parse_int=None, parse_constant=None, object_pairs_hook=None, **kw){
+function loads(s, encoding=nil, cls=nil, object_hook=nil, parse_float=nil,
+        parse_int=nil, parse_constant=nil, object_pairs_hook=nil, **kw){
     """Deserialize ``s`` (a ``str`` or ``unicode`` instance containing a JSON
     document) to a Python object.
 
@@ -337,21 +337,21 @@ def loads(s, encoding=None, cls=None, object_hook=None, parse_float=None,
     kwarg; otherwise ``JSONDecoder`` is used.
 
     """;
-    if (cls is None and encoding is None and object_hook is None and
-            parse_int is None and parse_float is None and
-            parse_constant is None and object_pairs_hook is None and not kw){
+    if (cls is nil and encoding is nil and object_hook is nil and
+            parse_int is nil and parse_float is nil and
+            parse_constant is nil and object_pairs_hook is nil and not kw){
         return _default_decoder.decode(s);
-    } if cls is None{
+    } if cls is nil{
         cls = JSONDecoder;
-    } if object_hook is not None{
+    } if object_hook is not nil{
         kw['object_hook'] = object_hook;
-    } if object_pairs_hook is not None{
+    } if object_pairs_hook is not nil{
         kw['object_pairs_hook'] = object_pairs_hook;
-    } if parse_float is not None{
+    } if parse_float is not nil{
         kw['parse_float'] = parse_float;
-    } if parse_int is not None{
+    } if parse_int is not nil{
         kw['parse_int'] = parse_int;
-    } if parse_constant is not None{
+    } if parse_constant is not nil{
         kw['parse_constant'] = parse_constant;
     } return cls(encoding=encoding, **kw).decode(s);
 

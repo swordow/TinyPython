@@ -1,7 +1,7 @@
 # Generated from 'MacTextEditor.h'
 
 
-def FOUR_CHAR_CODE(x){ return x;
+function FOUR_CHAR_CODE(x){ return x;}
 false = 0;
 true = 1;
 kTXNClearThisControl = 0xFFFFFFFF;

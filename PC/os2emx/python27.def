@@ -487,7 +487,7 @@ EXPORTS
   "_Py_ReadyTypes"
   "_Py_SwappedOp"
   "_Py_NotImplementedStruct"
-  "_Py_NoneStruct"
+  "_Py_NilStruct"
   "_Py_cobject_hack"
   "_Py_abstract_hack"
   "_PyTrash_delete_nesting"

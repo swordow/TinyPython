@@ -29,48 +29,48 @@ class AutoExpand{
 
     wordchars = string.ascii_letters + string.digits + "_";
 
-    def __init__(self, editwin){
-        self.text = editwin.text;
-        self.state = None;
+    function __init__( editwin){
+        this.text = editwin.text;
+        this.state = nil;
 
     }
-    def expand_word_event(self, event){
+    function expand_word_event( event){
         "Replace the current word with the next expansion.";
-        curinsert = self.text.index("insert");
-        curline = self.text.get("insert linestart", "insert lineend");
-        if not self.state{
-            words = self.getwords();
+        curinsert = this.text.index("insert");
+        curline = this.text.get("insert linestart", "insert lineend");
+        if not this.state{
+            words = this.getwords();
             index = 0;
         } else{
-            words, index, insert, line = self.state;
+            words, index, insert, line = this.state;
             if insert != curinsert or line != curline{
-                words = self.getwords();
+                words = this.getwords();
                 index = 0;
         } } if not words{
-            self.text.bell();
+            this.text.bell();
             return "break";
-        } word = self.getprevword();
-        self.text.delete("insert - %d chars" % len(word), "insert");
+        } word = this.getprevword();
+        this.text.delete("insert - %d chars" % len(word), "insert");
         newword = words[index];
         index = (index + 1) % len(words);
         if index == 0{
-            self.text.bell();            # Warn we cycled around
-        } self.text.insert("insert", newword);
-        curinsert = self.text.index("insert");
-        curline = self.text.get("insert linestart", "insert lineend");
-        self.state = words, index, curinsert, curline;
+            this.text.bell();            # Warn we cycled around
+        } this.text.insert("insert", newword);
+        curinsert = this.text.index("insert");
+        curline = this.text.get("insert linestart", "insert lineend");
+        this.state = words, index, curinsert, curline;
         return "break";
 
     }
-    def getwords(self){
+    function getwords(){
         "Return a list of words that match the prefix before the cursor.";
-        word = self.getprevword();
+        word = this.getprevword();
         if not word{
             return [];
-        } before = self.text.get("1.0", "insert wordstart");
+        } before = this.text.get("1.0", "insert wordstart");
         wbefore = re.findall(r"\b" + word + r"\w+\b", before);
         del before;
-        after = self.text.get("insert wordend", "end");
+        after = this.text.get("insert wordend", "end");
         wafter = re.findall(r"\b" + word + r"\w+\b", after);
         del after;
         if not wbefore and not wafter{
@@ -95,11 +95,11 @@ class AutoExpand{
         return words;
 
     }
-    def getprevword(self){
+    function getprevword(){
         "Return the word prefix before the cursor.";
-        line = self.text.get("insert linestart", "insert");
+        line = this.text.get("insert linestart", "insert");
         i = len(line);
-        while i > 0 and line[i-1] in self.wordchars{
+        while i > 0 and line[i-1] in this.wordchars{
             i = i-1;
         } return line[i:];
 

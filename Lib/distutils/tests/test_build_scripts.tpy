@@ -15,23 +15,23 @@ class BuildScriptsTestCase(support.TempdirManager,
                            support.LoggingSilencer,
                            unittest.TestCase){
 
-    def test_default_settings(self){
-        cmd = self.get_build_scripts_cmd("/foo/bar", []);
-        self.assertFalse(cmd.force);
-        self.assertIsNone(cmd.build_dir);
+    function test_default_settings(){
+        cmd = this.get_build_scripts_cmd("/foo/bar", []);
+        this.assertFalse(cmd.force);
+        this.assertIsNone(cmd.build_dir);
 
         cmd.finalize_options();
 
-        self.assertTrue(cmd.force);
-        self.assertEqual(cmd.build_dir, "/foo/bar");
+        this.assertTrue(cmd.force);
+        this.assertEqual(cmd.build_dir, "/foo/bar");
 
     }
-    def test_build(self){
-        source = self.mkdtemp();
-        target = self.mkdtemp();
-        expected = self.write_sample_scripts(source);
+    function test_build(){
+        source = this.mkdtemp();
+        target = this.mkdtemp();
+        expected = this.write_sample_scripts(source);
 
-        cmd = self.get_build_scripts_cmd(target,
+        cmd = this.get_build_scripts_cmd(target,
                                          [os.path.join(source, fn)
                                           for fn in expected]);
         cmd.finalize_options();
@@ -39,10 +39,10 @@ class BuildScriptsTestCase(support.TempdirManager,
 
         built = os.listdir(target);
         for name in expected{
-            self.assertIn(name, built);
+            this.assertIn(name, built);
 
     }
-    } def get_build_scripts_cmd(self, target, scripts){
+    } function get_build_scripts_cmd( target, scripts){
         import sys;
         dist = Distribution();
         dist.scripts = scripts;
@@ -54,27 +54,27 @@ class BuildScriptsTestCase(support.TempdirManager,
         return build_scripts(dist);
 
     }
-    def write_sample_scripts(self, dir){
+    function write_sample_scripts( dir){
         expected = [];
         expected.append("script1.py");
-        self.write_script(dir, "script1.py",
+        this.write_script(dir, "script1.py",
                           ("#! /usr/bin/env python2.3\n"
                            "# bogus script w/ Python sh-bang\n"
                            "pass\n"));
         expected.append("script2.py");
-        self.write_script(dir, "script2.py",
+        this.write_script(dir, "script2.py",
                           ("#!/usr/bin/python\n"
                            "# bogus script w/ Python sh-bang\n"
                            "pass\n"));
         expected.append("shell.sh");
-        self.write_script(dir, "shell.sh",
+        this.write_script(dir, "shell.sh",
                           ("#!/bin/sh\n"
                            "# bogus shell script w/ sh-bang\n"
                            "exit 0\n"));
         return expected;
 
     }
-    def write_script(self, dir, name, text){
+    function write_script( dir, name, text){
         f = open(os.path.join(dir, name), "w");
         try{
             f.write(text);
@@ -82,13 +82,13 @@ class BuildScriptsTestCase(support.TempdirManager,
             f.close();
 
     }
-    } def test_version_int(self){
-        source = self.mkdtemp();
-        target = self.mkdtemp();
-        expected = self.write_sample_scripts(source);
+    } function test_version_int(){
+        source = this.mkdtemp();
+        target = this.mkdtemp();
+        expected = this.write_sample_scripts(source);
 
 
-        cmd = self.get_build_scripts_cmd(target,
+        cmd = this.get_build_scripts_cmd(target,
                                          [os.path.join(source, fn)
                                           for fn in expected]);
         cmd.finalize_options();
@@ -103,16 +103,16 @@ class BuildScriptsTestCase(support.TempdirManager,
         try{
             cmd.run();
         } finally{
-            if old is not None{
+            if old is not nil{
                 sysconfig._CONFIG_VARS['VERSION'] = old;
 
         }
         } built = os.listdir(target);
         for name in expected{
-            self.assertIn(name, built);
+            this.assertIn(name, built);
 
 }
-} } def test_suite(){
+} } function test_suite(){
     return unittest.makeSuite(BuildScriptsTestCase);
 
 }

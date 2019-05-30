@@ -87,7 +87,7 @@ PyDoc_STRVAR(textiobase_encoding_doc,
 static PyObject *
 textiobase_encoding_get(PyObject *self, void *context)
 {
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(textiobase_newlines_doc,
@@ -101,7 +101,7 @@ PyDoc_STRVAR(textiobase_newlines_doc,
 static PyObject *
 textiobase_newlines_get(PyObject *self, void *context)
 {
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(textiobase_errors_doc,
@@ -113,7 +113,7 @@ PyDoc_STRVAR(textiobase_errors_doc,
 static PyObject *
 textiobase_errors_get(PyObject *self, void *context)
 {
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 
@@ -271,7 +271,7 @@ _PyIncrementalNewlineDecoder_decode(PyObject *_self,
     }
 
     /* decode input (with the eventual \r from a previous pass) */
-    if (self->decoder != Py_None) {
+    if (self->decoder != Py_Nil) {
         output = PyObject_CallMethodObjArgs(self->decoder,
             _PyIO_str_decode, input, final ? Py_True : Py_False, NULL);
     }
@@ -488,7 +488,7 @@ incrementalnewlinedecoder_getstate(nldecoder_object *self, PyObject *args)
     PyObject *buffer;
     unsigned PY_LONG_LONG flag;
 
-    if (self->decoder != Py_None) {
+    if (self->decoder != Py_Nil) {
         PyObject *state = PyObject_CallMethodObjArgs(self->decoder,
            _PyIO_str_getstate, NULL);
         if (state == NULL)
@@ -522,11 +522,11 @@ incrementalnewlinedecoder_setstate(nldecoder_object *self, PyObject *state)
     self->pendingcr = (int) flag & 1;
     flag >>= 1;
 
-    if (self->decoder != Py_None)
+    if (self->decoder != Py_Nil)
         return PyObject_CallMethod(self->decoder,
                                    "setstate", "((OK))", buffer, flag);
     else
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
 }
 
 static PyObject *
@@ -534,10 +534,10 @@ incrementalnewlinedecoder_reset(nldecoder_object *self, PyObject *args)
 {
     self->seennl = 0;
     self->pendingcr = 0;
-    if (self->decoder != Py_None)
+    if (self->decoder != Py_Nil)
         return PyObject_CallMethodObjArgs(self->decoder, _PyIO_str_reset, NULL);
     else
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
 }
 
 static PyObject *
@@ -559,7 +559,7 @@ incrementalnewlinedecoder_newlines_get(nldecoder_object *self, void *context)
     case SEEN_CR | SEEN_LF | SEEN_CRLF:
         return Py_BuildValue("sss", "\r", "\n", "\r\n");
     default:
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
    }
 
 }
@@ -2365,7 +2365,7 @@ textiowrapper_tell(textio *self, PyObject *args)
 static PyObject *
 textiowrapper_truncate(textio *self, PyObject *args)
 {
-    PyObject *pos = Py_None;
+    PyObject *pos = Py_Nil;
     PyObject *res;
 
     CHECK_ATTACHED(self)
@@ -2482,7 +2482,7 @@ textiowrapper_close(textio *self, PyObject *args)
         return NULL;
 
     if (r > 0) {
-        Py_RETURN_NONE; /* stream already closed */
+        Py_RETURN_NIL; /* stream already closed */
     }
     else {
         PyObject *exc = NULL, *val, *tb;
@@ -2559,12 +2559,12 @@ textiowrapper_newlines_get(textio *self, void *context)
     PyObject *res;
     CHECK_ATTACHED(self);
     if (self->decoder == NULL)
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     res = PyObject_GetAttr(self->decoder, _PyIO_str_newlines);
     if (res == NULL) {
         if (PyErr_ExceptionMatches(PyExc_AttributeError)) {
             PyErr_Clear();
-            Py_RETURN_NONE;
+            Py_RETURN_NIL;
         }
         else {
             return NULL;

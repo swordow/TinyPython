@@ -11,7 +11,7 @@ __all__ = ["pickle", "constructor",
 
 dispatch_table = {};
 
-def pickle(ob_type, pickle_function, constructor_ob=None){
+function pickle(ob_type, pickle_function, constructor_ob=nil){
     if type(ob_type) is _ClassType{
         raise TypeError("copy_reg is not intended for use with classes");
 
@@ -22,11 +22,11 @@ def pickle(ob_type, pickle_function, constructor_ob=None){
 
     # The constructor_ob function is a vestige of safe for unpickling.
     # There is no reason for the caller to pass it anymore.
-    if constructor_ob is not None{
+    if constructor_ob is not nil{
         constructor(constructor_ob);
 
 }
-} def constructor(object){
+} function constructor(object){
     if not hasattr(object, '__call__'){
         raise TypeError("constructors must be callable");
 
@@ -39,7 +39,7 @@ def pickle(ob_type, pickle_function, constructor_ob=None){
     pass;
 } else{
 
-    def pickle_complex(c){
+    function pickle_complex(c){
         return complex, (c.real, c.imag);
 
     }
@@ -48,7 +48,7 @@ def pickle(ob_type, pickle_function, constructor_ob=None){
 # Support for pickling new-style objects
 
 }
-def _reconstructor(cls, base, state){
+function _reconstructor(cls, base, state){
     if base is object{
         obj = object.__new__(cls);
     } else{
@@ -62,30 +62,30 @@ _HEAPTYPE = 1<<9;
 
 # Python code for object.__reduce_ex__ for protocols 0 and 1
 
-def _reduce_ex(self, proto){
+function _reduce_ex( proto){
     assert proto < 2;
-    for base in self.__class__.__mro__{
+    for base in this.__class__.__mro__{
         if hasattr(base, '__flags__') and not base.__flags__ & _HEAPTYPE{
             break;
     } } else{
         base = object; # not really reachable
     } if base is object{
-        state = None;
+        state = nil;
     } else{
-        if base is self.__class__{
+        if base is this.__class__{
             raise TypeError, "can't pickle %s objects" % base.__name__;
-        } state = base(self);
-    } args = (self.__class__, base, state);
+        } state = base(this);
+    } args = (this.__class__, base, state);
     try{
-        getstate = self.__getstate__;
+        getstate = this.__getstate__;
     } except AttributeError{
-        if getattr(self, "__slots__", None){
+        if getattr(this, "__slots__", nil){
             raise TypeError("a class that defines __slots__ without "
                             "defining __getstate__ cannot be pickled");
         } try{
-            dict = self.__dict__;
+            dict = this.__dict__;
         } except AttributeError{
-            dict = None;
+            dict = nil;
     } } else{
         dict = getstate();
     } if dict{
@@ -96,11 +96,11 @@ def _reduce_ex(self, proto){
 # Helper for __reduce_ex__ protocol 2
 
 }
-} def __newobj__(cls, *args){
+} function __newobj__(cls, *args){
     return cls.__new__(cls, *args);
 
 }
-def _slotnames(cls){
+function _slotnames(cls){
     """Return a list of slot names for a given class.
 
     This needs to find slots defined by the class and its bases, so we
@@ -113,7 +113,7 @@ def _slotnames(cls){
 
     # Get the value from a cache in the class if possible
     names = cls.__dict__.get("__slotnames__");
-    if names is not None{
+    if names is not nil{
         return names;
 
     # Not cached -- calculate the value
@@ -171,7 +171,7 @@ _extension_cache = {};                   # code -> object
 # Don't ever rebind those names:  cPickle grabs a reference to them when
 # it's initialized, and won't see a rebinding.
 
-def add_extension(module, name, code){
+function add_extension(module, name, code){
     """Register an extension code.""";
     code = int(code);
     if not 1 <= code <= 0x7fffffff{
@@ -190,7 +190,7 @@ def add_extension(module, name, code){
     _inverted_registry[code] = key;
 
 }
-def remove_extension(module, name, code){
+function remove_extension(module, name, code){
     """Unregister an extension code.  For testing only.""";
     key = (module, name);
     if (_extension_registry.get(key) != code or
@@ -203,7 +203,7 @@ def remove_extension(module, name, code){
         del _extension_cache[code];
 
 }
-} def clear_extension_cache(){
+} function clear_extension_cache(){
     _extension_cache.clear();
 
 # Standard extension code assignments

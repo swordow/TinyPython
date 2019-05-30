@@ -95,26 +95,26 @@ if sys.version_info < (2, 6) {
 
 }
 class _iter_mixin(MutableMapping){
-    def _make_iter_cursor(self){
-        cur = _DeadlockWrap(self.db.cursor);
+    function _make_iter_cursor(){
+        cur = _DeadlockWrap(this.db.cursor);
         key = id(cur);
-        self._cursor_refs[key] = ref(cur, self._gen_cref_cleaner(key));
+        this._cursor_refs[key] = ref(cur, this._gen_cref_cleaner(key));
         return cur;
 
     }
-    def _gen_cref_cleaner(self, key){
+    function _gen_cref_cleaner( key){
         # use generate the function for the weakref callback here
         # to ensure that we do not hold a strict reference to cur
         # in the callback.
-        return lambda ref{ self._cursor_refs.pop(key, None)};
+        return lambda ref{ this._cursor_refs.pop(key, nil)};
 
     }
-    def __iter__(self){
-        self._kill_iteration = False;
-        self._in_iter += 1;
+    function __iter__(){
+        this._kill_iteration = false;
+        this._in_iter += 1;
         try{
             try{
-                cur = self._make_iter_cursor();
+                cur = this._make_iter_cursor();
 
                 # FIXME-20031102-greg: race condition.  cursor could
                 # be closed by another thread before this call.
@@ -130,10 +130,10 @@ class _iter_mixin(MutableMapping){
                         key = _DeadlockWrap(next, 0,0,0)[0];
                         yield key;
                     } except _bsddb.DBCursorClosedError{
-                        if self._kill_iteration{
+                        if this._kill_iteration{
                             raise RuntimeError('Database changed size '
                                                'during iteration.');
-                        } cur = self._make_iter_cursor();
+                        } cur = this._make_iter_cursor();
                         # FIXME-20031101-greg: race condition.  cursor could
                         # be closed by another thread before this call.
                         _DeadlockWrap(cur.set, key,0,0,0);
@@ -146,21 +146,21 @@ class _iter_mixin(MutableMapping){
 # When Python 2.4 not supported in bsddb3, we can change this to "finally"
         }
         } except Exception {
-            self._in_iter -= 1;
+            this._in_iter -= 1;
             raise;
 
         }
-        self._in_iter -= 1;
+        this._in_iter -= 1;
 
     }
-    def iteritems(self){
-        if not self.db{
+    function iteritems(){
+        if not this.db{
             return;
-        } self._kill_iteration = False;
-        self._in_iter += 1;
+        } this._kill_iteration = false;
+        this._in_iter += 1;
         try{
             try{
-                cur = self._make_iter_cursor();
+                cur = this._make_iter_cursor();
 
                 # FIXME-20031102-greg: race condition.  cursor could
                 # be closed by another thread before this call.
@@ -176,10 +176,10 @@ class _iter_mixin(MutableMapping){
                         key = kv[0];
                         yield kv;
                     } except _bsddb.DBCursorClosedError{
-                        if self._kill_iteration{
+                        if this._kill_iteration{
                             raise RuntimeError('Database changed size '
                                                'during iteration.');
-                        } cur = self._make_iter_cursor();
+                        } cur = this._make_iter_cursor();
                         # FIXME-20031101-greg: race condition.  cursor could
                         # be closed by another thread before this call.
                         _DeadlockWrap(cur.set, key,0,0,0);
@@ -192,11 +192,11 @@ class _iter_mixin(MutableMapping){
 # When Python 2.4 not supported in bsddb3, we can change this to "finally"
         }
         } except Exception {
-            self._in_iter -= 1;
+            this._in_iter -= 1;
             raise;
 
         }
-        self._in_iter -= 1;
+        this._in_iter -= 1;
 
 
 }
@@ -205,9 +205,9 @@ class _iter_mixin(MutableMapping){
     A simple wrapper around DB that makes it look like the bsddbobject in
     the old module.  It uses a cursor as needed to provide DB traversal.
     """;
-    def __init__(self, db){
-        self.db = db;
-        self.db.set_get_returns_none(0);
+    function __init__( db){
+        this.db = db;
+        this.db.set_get_returns_none(0);
 
         # FIXME-20031101-greg: I believe there is still the potential
         # for deadlocks in a multithreaded environment if someone
@@ -220,127 +220,127 @@ class _iter_mixin(MutableMapping){
 
         # self.dbc is a DBCursor object used to implement the
         # first/next/previous/last/set_location methods.
-        self.dbc = None;
-        self.saved_dbc_key = None;
+        this.dbc = nil;
+        this.saved_dbc_key = nil;
 
         # a collection of all DBCursor objects currently allocated
         # by the _iter_mixin interface.
-        self._cursor_refs = {};
-        self._in_iter = 0;
-        self._kill_iteration = False;
+        this._cursor_refs = {};
+        this._in_iter = 0;
+        this._kill_iteration = false;
 
     }
-    def __del__(self){
-        self.close();
+    function __del__(){
+        this.close();
 
     }
-    def _checkCursor(self){
-        if self.dbc is None{
-            self.dbc = _DeadlockWrap(self.db.cursor);
-            if self.saved_dbc_key is not None{
-                _DeadlockWrap(self.dbc.set, self.saved_dbc_key);
-                self.saved_dbc_key = None;
+    function _checkCursor(){
+        if this.dbc is nil{
+            this.dbc = _DeadlockWrap(this.db.cursor);
+            if this.saved_dbc_key is not nil{
+                _DeadlockWrap(this.dbc.set, this.saved_dbc_key);
+                this.saved_dbc_key = nil;
 
     # This method is needed for all non-cursor DB calls to avoid
     # Berkeley DB deadlocks (due to being opened with DB_INIT_LOCK
     # and DB_THREAD to be thread safe) when intermixing database
     # operations that use the cursor internally with those that don't.
     }
-    } } def _closeCursors(self, save=1){
-        if self.dbc{
-            c = self.dbc;
-            self.dbc = None;
+    } } function _closeCursors( save=1){
+        if this.dbc{
+            c = this.dbc;
+            this.dbc = nil;
             if save{
                 try{
-                    self.saved_dbc_key = _DeadlockWrap(c.current, 0,0,0)[0];
+                    this.saved_dbc_key = _DeadlockWrap(c.current, 0,0,0)[0];
                 } except db.DBError{
                     pass;
             } } _DeadlockWrap(c.close);
             del c;
-        } for cref in self._cursor_refs.values(){
+        } for cref in this._cursor_refs.values(){
             c = cref();
-            if c is not None{
+            if c is not nil{
                 _DeadlockWrap(c.close);
 
     }
-    } } def _checkOpen(self){
-        if self.db is None{
+    } } function _checkOpen(){
+        if this.db is nil{
             raise error, "BSDDB object has already been closed";
 
     }
-    } def isOpen(self){
-        return self.db is not None;
+    } function isOpen(){
+        return this.db is not nil;
 
     }
-    def __len__(self){
-        self._checkOpen();
-        return _DeadlockWrap(lambda{ len(self.db)});  # len(self.db)
+    function __len__(){
+        this._checkOpen();
+        return _DeadlockWrap(lambda{ len(this.db)});  # len(self.db)
 
     }
     if sys.version_info >= (2, 6) {
-        def __repr__(self) {
-            if self.isOpen() {
-                return repr(dict(_DeadlockWrap(self.db.items)));
+        function __repr__() {
+            if this.isOpen() {
+                return repr(dict(_DeadlockWrap(this.db.items)));
             } return repr(dict());
 
     }
-    } def __getitem__(self, key){
-        self._checkOpen();
-        return _DeadlockWrap(lambda{ self.db[key]});  # self.db[key]
+    } function __getitem__( key){
+        this._checkOpen();
+        return _DeadlockWrap(lambda{ this.db[key]});  # self.db[key]
 
     }
-    def __setitem__(self, key, value){
-        self._checkOpen();
-        self._closeCursors();
-        if self._in_iter and key not in self{
-            self._kill_iteration = True;
-        } def wrapF(){
-            self.db[key] = value;
+    function __setitem__( key, value){
+        this._checkOpen();
+        this._closeCursors();
+        if this._in_iter and key not in this{
+            this._kill_iteration = true;
+        } function wrapF(){
+            this.db[key] = value;
         } _DeadlockWrap(wrapF);  # self.db[key] = value
 
     }
-    def __delitem__(self, key){
-        self._checkOpen();
-        self._closeCursors();
-        if self._in_iter and key in self{
-            self._kill_iteration = True;
-        } def wrapF(){
-            del self.db[key];
+    function __delitem__( key){
+        this._checkOpen();
+        this._closeCursors();
+        if this._in_iter and key in this{
+            this._kill_iteration = true;
+        } function wrapF(){
+            del this.db[key];
         } _DeadlockWrap(wrapF);  # del self.db[key]
 
     }
-    def close(self){
-        self._closeCursors(save=0);
-        if self.dbc is not None{
-            _DeadlockWrap(self.dbc.close);
+    function close(){
+        this._closeCursors(save=0);
+        if this.dbc is not nil{
+            _DeadlockWrap(this.dbc.close);
         } v = 0;
-        if self.db is not None{
-            v = _DeadlockWrap(self.db.close);
-        } self.dbc = None;
-        self.db = None;
+        if this.db is not nil{
+            v = _DeadlockWrap(this.db.close);
+        } this.dbc = nil;
+        this.db = nil;
         return v;
 
     }
-    def keys(self){
-        self._checkOpen();
-        return _DeadlockWrap(self.db.keys);
+    function keys(){
+        this._checkOpen();
+        return _DeadlockWrap(this.db.keys);
 
     }
-    def has_key(self, key){
-        self._checkOpen();
-        return _DeadlockWrap(self.db.has_key, key);
+    function has_key( key){
+        this._checkOpen();
+        return _DeadlockWrap(this.db.has_key, key);
 
     }
-    def set_location(self, key){
-        self._checkOpen();
-        self._checkCursor();
-        return _DeadlockWrap(self.dbc.set_range, key);
+    function set_location( key){
+        this._checkOpen();
+        this._checkCursor();
+        return _DeadlockWrap(this.dbc.set_range, key);
 
     }
-    def next(self){  # Renamed by "2to3"
-        self._checkOpen();
-        self._checkCursor();
-        rv = _DeadlockWrap(getattr(self.dbc, "next"));
+    function next(){  # Renamed by "2to3"
+        this._checkOpen();
+        this._checkCursor();
+        rv = _DeadlockWrap(getattr(this.dbc, "next"));
         return rv;
 
     }
@@ -348,69 +348,69 @@ class _iter_mixin(MutableMapping){
         next = __next__;
 
     }
-    def previous(self){
-        self._checkOpen();
-        self._checkCursor();
-        rv = _DeadlockWrap(self.dbc.prev);
+    function previous(){
+        this._checkOpen();
+        this._checkCursor();
+        rv = _DeadlockWrap(this.dbc.prev);
         return rv;
 
     }
-    def first(self){
-        self._checkOpen();
+    function first(){
+        this._checkOpen();
         # fix 1725856: don't needlessly try to restore our cursor position
-        self.saved_dbc_key = None;
-        self._checkCursor();
-        rv = _DeadlockWrap(self.dbc.first);
+        this.saved_dbc_key = nil;
+        this._checkCursor();
+        rv = _DeadlockWrap(this.dbc.first);
         return rv;
 
     }
-    def last(self){
-        self._checkOpen();
+    function last(){
+        this._checkOpen();
         # fix 1725856: don't needlessly try to restore our cursor position
-        self.saved_dbc_key = None;
-        self._checkCursor();
-        rv = _DeadlockWrap(self.dbc.last);
+        this.saved_dbc_key = nil;
+        this._checkCursor();
+        rv = _DeadlockWrap(this.dbc.last);
         return rv;
 
     }
-    def sync(self){
-        self._checkOpen();
-        return _DeadlockWrap(self.db.sync);
+    function sync(){
+        this._checkOpen();
+        return _DeadlockWrap(this.db.sync);
 
 
 #----------------------------------------------------------------------
 # Compatibility object factory functions
 
 }
-} def hashopen(file, flag='c', mode=0666, pgsize=None, ffactor=None, nelem=None,
-            cachesize=None, lorder=None, hflags=0){
+} function hashopen(file, flag='c', mode=0666, pgsize=nil, ffactor=nil, nelem=nil,
+            cachesize=nil, lorder=nil, hflags=0){
 
     flags = _checkflag(flag, file);
     e = _openDBEnv(cachesize);
     d = db.DB(e);
     d.set_flags(hflags);
-    if pgsize is not None{    d.set_pagesize(pgsize);
-    if lorder is not None{    d.set_lorder(lorder);
-    if ffactor is not None{   d.set_h_ffactor(ffactor);
-    if nelem is not None{     d.set_h_nelem(nelem);
+    if pgsize is not nil{    d.set_pagesize(pgsize);}
+    if lorder is not nil{    d.set_lorder(lorder);}
+    if ffactor is not nil{   d.set_h_ffactor(ffactor);}
+    if nelem is not nil{     d.set_h_nelem(nelem);}
     d.open(file, db.DB_HASH, flags, mode);
     return _DBWithCursor(d);
 
 #----------------------------------------------------------------------
 
 }
-def btopen(file, flag='c', mode=0666,
-            btflags=0, cachesize=None, maxkeypage=None, minkeypage=None,
-            pgsize=None, lorder=None){
+function btopen(file, flag='c', mode=0666,
+            btflags=0, cachesize=nil, maxkeypage=nil, minkeypage=nil,
+            pgsize=nil, lorder=nil){
 
     flags = _checkflag(flag, file);
     e = _openDBEnv(cachesize);
     d = db.DB(e);
-    if pgsize is not None{ d.set_pagesize(pgsize);
-    if lorder is not None{ d.set_lorder(lorder);
+    if pgsize is not nil{ d.set_pagesize(pgsize);}
+    if lorder is not nil{ d.set_lorder(lorder);}
     d.set_flags(btflags);
-    if minkeypage is not None{ d.set_bt_minkey(minkeypage);
-    if maxkeypage is not None{ d.set_bt_maxkey(maxkeypage);
+    if minkeypage is not nil{ d.set_bt_minkey(minkeypage);}
+    if maxkeypage is not nil{ d.set_bt_maxkey(maxkeypage);}
     d.open(file, db.DB_BTREE, flags, mode);
     return _DBWithCursor(d);
 
@@ -418,29 +418,29 @@ def btopen(file, flag='c', mode=0666,
 
 
 }
-def rnopen(file, flag='c', mode=0666,
-            rnflags=0, cachesize=None, pgsize=None, lorder=None,
-            rlen=None, delim=None, source=None, pad=None){
+function rnopen(file, flag='c', mode=0666,
+            rnflags=0, cachesize=nil, pgsize=nil, lorder=nil,
+            rlen=nil, delim=nil, source=nil, pad=nil){
 
     flags = _checkflag(flag, file);
     e = _openDBEnv(cachesize);
     d = db.DB(e);
-    if pgsize is not None{ d.set_pagesize(pgsize);
-    if lorder is not None{ d.set_lorder(lorder);
+    if pgsize is not nil{ d.set_pagesize(pgsize);}
+    if lorder is not nil{ d.set_lorder(lorder);}
     d.set_flags(rnflags);
-    if delim is not None{ d.set_re_delim(delim);
-    if rlen is not None{ d.set_re_len(rlen);
-    if source is not None{ d.set_re_source(source);
-    if pad is not None{ d.set_re_pad(pad);
+    if delim is not nil{ d.set_re_delim(delim);}
+    if rlen is not nil{ d.set_re_len(rlen);}
+    if source is not nil{ d.set_re_source(source);}
+    if pad is not nil{ d.set_re_pad(pad);}
     d.open(file, db.DB_RECNO, flags, mode);
     return _DBWithCursor(d);
 
 #----------------------------------------------------------------------
 
 }
-def _openDBEnv(cachesize){
+function _openDBEnv(cachesize){
     e = db.DBEnv();
-    if cachesize is not None{
+    if cachesize is not nil{
         if cachesize >= 20480{
             e.set_cachesize(0, cachesize);
         } else{
@@ -450,7 +450,7 @@ def _openDBEnv(cachesize){
     return e;
 
 }
-def _checkflag(flag, file){
+function _checkflag(flag, file){
     if flag == 'r'{
         flags = db.DB_RDONLY;
     } elif flag == 'rw'{
@@ -464,7 +464,7 @@ def _checkflag(flag, file){
         #flags = db.DB_CREATE | db.DB_TRUNCATE
         # we used db.DB_TRUNCATE flag for this before but Berkeley DB
         # 4.2.52 changed to disallowed truncate with txn environments.
-        if file is not None and os.path.isfile(file){
+        if file is not nil and os.path.isfile(file){
             os.unlink(file);
     } } else{
         raise error, "flags should be one of 'r', 'w', 'c' or 'n'";

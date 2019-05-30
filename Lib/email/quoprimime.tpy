@@ -60,19 +60,19 @@ bqre = re.compile(r'[^ !-<>-~\t]');
 
 
 # Helpers
-def header_quopri_check(c){
+function header_quopri_check(c){
     """Return True if the character should be escaped with header quopri.""";
     return bool(hqre.match(c));
 
 
 }
-def body_quopri_check(c){
+function body_quopri_check(c){
     """Return True if the character should be escaped with body quopri.""";
     return bool(bqre.match(c));
 
 
 }
-def header_quopri_len(s){
+function header_quopri_len(s){
     """Return the length of str when it is encoded with header quopri.""";
     count = 0;
     for c in s{
@@ -84,7 +84,7 @@ def header_quopri_len(s){
 
 
 }
-def body_quopri_len(str){
+function body_quopri_len(str){
     """Return the length of str when it is encoded with body quopri.""";
     count = 0;
     for c in str{
@@ -96,7 +96,7 @@ def body_quopri_len(str){
 
 
 }
-def _max_append(L, s, maxlen, extra=''){
+function _max_append(L, s, maxlen, extra=''){
     if not L{
         L.append(s.lstrip());
     } elif len(L[-1]) + len(s) <= maxlen{
@@ -106,19 +106,19 @@ def _max_append(L, s, maxlen, extra=''){
 
 
 }
-} def unquote(s){
+} function unquote(s){
     """Turn a string in the form =AB to the ASCII character with value 0xab""";
     return chr(int(s[1:3], 16));
 
 
 }
-def quote(c){
+function quote(c){
     return "=%02X" % ord(c);
 
 
 
 }
-def header_encode(header, charset="iso-8859-1", keep_eols=False,
+function header_encode(header, charset="iso-8859-1", keep_eols=false,
                   maxlinelen=76, eol=NL){
     """Encode a single header line with quoted-printable (like) encoding.
 
@@ -159,7 +159,7 @@ def header_encode(header, charset="iso-8859-1", keep_eols=False,
     # length, after the RFC chrome is added in.
     }
     quoted = [];
-    if maxlinelen is None{
+    if maxlinelen is nil{
         # An obnoxiously large number that's good enough
         max_encoded = 100000;
     } else{
@@ -189,7 +189,7 @@ def header_encode(header, charset="iso-8859-1", keep_eols=False,
 
 
 }
-def encode(body, binary=False, maxlinelen=76, eol=NL){
+function encode(body, binary=false, maxlinelen=76, eol=NL){
     """Encode with quoted-printable, wrapping at maxlinelen characters.
 
     If binary is False (the default), end-of-line characters will be converted
@@ -231,7 +231,7 @@ def encode(body, binary=False, maxlinelen=76, eol=NL){
         }
         lineno += 1;
         encoded_line = '';
-        prev = None;
+        prev = nil;
         linelen = len(line);
         # Now we need to examine every character to see if it needs to be
         # quopri encoded.  BAW: again, string concatenation is inefficient.
@@ -287,7 +287,7 @@ encodestring = encode;
 
 # BAW: I'm not sure if the intent was for the signature of this function to be
 # the same as base64MIME.decode() or not...
-def decode(encoded, eol=NL){
+function decode(encoded, eol=NL){
     """Decode a quoted-printable string.
 
     Lines are separated with eol, which defaults to \\n.
@@ -348,7 +348,7 @@ decodestring = decode;
 
 
 
-def _unquote_match(match){
+function _unquote_match(match){
     """Turn a match in the form =AB to the ASCII character with value 0xab""";
     s = match.group(0);
     return unquote(s);
@@ -356,7 +356,7 @@ def _unquote_match(match){
 
 # Header decoding is done a bit differently
 }
-def header_decode(s){
+function header_decode(s){
     """Decode a string encoded with RFC 2045 MIME header `Q' encoding.
 
     This function does not parse a full MIME header value encoded with

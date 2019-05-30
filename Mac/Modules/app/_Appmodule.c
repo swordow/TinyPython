@@ -189,8 +189,8 @@ static PyObject *App_RegisterAppearanceClient(PyObject *_self, PyObject *_args)
         return NULL;
     _err = RegisterAppearanceClient();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -205,8 +205,8 @@ static PyObject *App_UnregisterAppearanceClient(PyObject *_self, PyObject *_args
         return NULL;
     _err = UnregisterAppearanceClient();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -229,8 +229,8 @@ static PyObject *App_SetThemePen(PyObject *_self, PyObject *_args)
                        inDepth,
                        inIsColorDevice);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -253,8 +253,8 @@ static PyObject *App_SetThemeBackground(PyObject *_self, PyObject *_args)
                               inDepth,
                               inIsColorDevice);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -277,8 +277,8 @@ static PyObject *App_SetThemeTextColor(PyObject *_self, PyObject *_args)
                              inDepth,
                              inIsColorDevice);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -301,8 +301,8 @@ static PyObject *App_SetThemeWindowBackground(PyObject *_self, PyObject *_args)
                                     inBrush,
                                     inUpdate);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -322,8 +322,8 @@ static PyObject *App_DrawThemeWindowHeader(PyObject *_self, PyObject *_args)
     _err = DrawThemeWindowHeader(&inRect,
                                  inState);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -343,8 +343,8 @@ static PyObject *App_DrawThemeWindowListViewHeader(PyObject *_self, PyObject *_a
     _err = DrawThemeWindowListViewHeader(&inRect,
                                          inState);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -364,8 +364,8 @@ static PyObject *App_DrawThemePlacard(PyObject *_self, PyObject *_args)
     _err = DrawThemePlacard(&inRect,
                             inState);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -385,8 +385,8 @@ static PyObject *App_DrawThemeEditTextFrame(PyObject *_self, PyObject *_args)
     _err = DrawThemeEditTextFrame(&inRect,
                                   inState);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -406,8 +406,8 @@ static PyObject *App_DrawThemeListBoxFrame(PyObject *_self, PyObject *_args)
     _err = DrawThemeListBoxFrame(&inRect,
                                  inState);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -427,8 +427,8 @@ static PyObject *App_DrawThemeFocusRect(PyObject *_self, PyObject *_args)
     _err = DrawThemeFocusRect(&inRect,
                               inHasFocus);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -448,8 +448,8 @@ static PyObject *App_DrawThemePrimaryGroup(PyObject *_self, PyObject *_args)
     _err = DrawThemePrimaryGroup(&inRect,
                                  inState);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -469,8 +469,8 @@ static PyObject *App_DrawThemeSecondaryGroup(PyObject *_self, PyObject *_args)
     _err = DrawThemeSecondaryGroup(&inRect,
                                    inState);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -490,8 +490,8 @@ static PyObject *App_DrawThemeSeparator(PyObject *_self, PyObject *_args)
     _err = DrawThemeSeparator(&inRect,
                               inState);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -511,8 +511,8 @@ static PyObject *App_DrawThemeModelessDialogFrame(PyObject *_self, PyObject *_ar
     _err = DrawThemeModelessDialogFrame(&inRect,
                                         inState);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -535,8 +535,8 @@ static PyObject *App_DrawThemeGenericWell(PyObject *_self, PyObject *_args)
                                 inState,
                                 inFillCenter);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -554,8 +554,8 @@ static PyObject *App_DrawThemeFocusRegion(PyObject *_self, PyObject *_args)
     _err = DrawThemeFocusRegion((RgnHandle)0,
                                 inHasFocus);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -615,8 +615,8 @@ static PyObject *App_DrawThemeMenuBarBackground(PyObject *_self, PyObject *_args
                                       inState,
                                       inAttributes);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -653,8 +653,8 @@ static PyObject *App_DrawThemeMenuBackground(PyObject *_self, PyObject *_args)
     _err = DrawThemeMenuBackground(&inMenuRect,
                                    inMenuType);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -675,8 +675,8 @@ static PyObject *App_GetThemeMenuBackgroundRegion(PyObject *_self, PyObject *_ar
                                         menuType,
                                         (RgnHandle)0);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -693,8 +693,8 @@ static PyObject *App_DrawThemeMenuSeparator(PyObject *_self, PyObject *_args)
         return NULL;
     _err = DrawThemeMenuSeparator(&inItemRect);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -774,8 +774,8 @@ static PyObject *App_DrawThemeTabPane(PyObject *_self, PyObject *_args)
     _err = DrawThemeTabPane(&inRect,
                             inState);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -799,8 +799,8 @@ static PyObject *App_GetThemeTabRegion(PyObject *_self, PyObject *_args)
                              inDirection,
                              (RgnHandle)0);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -817,8 +817,8 @@ static PyObject *App_SetThemeCursor(PyObject *_self, PyObject *_args)
         return NULL;
     _err = SetThemeCursor(inCursor);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -838,8 +838,8 @@ static PyObject *App_SetAnimatedThemeCursor(PyObject *_self, PyObject *_args)
     _err = SetAnimatedThemeCursor(inCursor,
                                   inAnimationStep);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -910,8 +910,8 @@ static PyObject *App_UseThemeFont(PyObject *_self, PyObject *_args)
     _err = UseThemeFont(inFontID,
                         inScript);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -944,8 +944,8 @@ static PyObject *App_DrawThemeTextBox(PyObject *_self, PyObject *_args)
                             inJust,
                             NULL);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1152,8 +1152,8 @@ static PyObject *App_DrawThemeScrollBarDelimiters(PyObject *_self, PyObject *_ar
                                         state,
                                         attributes);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1184,8 +1184,8 @@ static PyObject *App_DrawThemeButton(PyObject *_self, PyObject *_args)
                            NULL,
                            inUserData);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1209,8 +1209,8 @@ static PyObject *App_GetThemeButtonRegion(PyObject *_self, PyObject *_args)
                                 &inNewInfo,
                                 (RgnHandle)0);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1279,8 +1279,8 @@ static PyObject *App_PlayThemeSound(PyObject *_self, PyObject *_args)
         return NULL;
     _err = PlayThemeSound(kind);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1297,8 +1297,8 @@ static PyObject *App_BeginThemeDragSound(PyObject *_self, PyObject *_args)
         return NULL;
     _err = BeginThemeDragSound(kind);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1313,8 +1313,8 @@ static PyObject *App_EndThemeDragSound(PyObject *_self, PyObject *_args)
         return NULL;
     _err = EndThemeDragSound();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1334,8 +1334,8 @@ static PyObject *App_DrawThemeTickMark(PyObject *_self, PyObject *_args)
     _err = DrawThemeTickMark(&bounds,
                              state);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1362,8 +1362,8 @@ static PyObject *App_DrawThemeChasingArrows(PyObject *_self, PyObject *_args)
                                   NULL,
                                   eraseData);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1393,8 +1393,8 @@ static PyObject *App_DrawThemePopupArrow(PyObject *_self, PyObject *_args)
                                NULL,
                                eraseData);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1420,8 +1420,8 @@ static PyObject *App_DrawThemeStandaloneGrowBox(PyObject *_self, PyObject *_args
                                       isSmall,
                                       state);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1447,8 +1447,8 @@ static PyObject *App_DrawThemeStandaloneNoGrowBox(PyObject *_self, PyObject *_ar
                                         isSmall,
                                         state);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1489,8 +1489,8 @@ static PyObject *App_NormalizeThemeDrawingState(PyObject *_self, PyObject *_args
         return NULL;
     _err = NormalizeThemeDrawingState();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1536,8 +1536,8 @@ static PyObject *App_ApplyThemeBackground(PyObject *_self, PyObject *_args)
                                 inDepth,
                                 inColorDev);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1563,8 +1563,8 @@ static PyObject *App_SetThemeTextColorForWindow(PyObject *_self, PyObject *_args
                                       depth,
                                       isColorDev);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 

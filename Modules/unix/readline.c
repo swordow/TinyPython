@@ -92,7 +92,7 @@ parse_and_bind(PyObject *self, PyObject *args)
     strcpy(copy, s);
     rl_parse_and_bind(copy);
     free(copy); /* Free the copy */
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(doc_parse_and_bind,
@@ -111,7 +111,7 @@ read_init_file(PyObject *self, PyObject *args)
     errno = rl_read_init_file(s);
     if (errno)
         return PyErr_SetFromErrno(PyExc_IOError);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(doc_read_init_file,
@@ -131,7 +131,7 @@ read_history_file(PyObject *self, PyObject *args)
     errno = read_history(s);
     if (errno)
         return PyErr_SetFromErrno(PyExc_IOError);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static int _history_length = -1; /* do not truncate history by default */
@@ -154,7 +154,7 @@ write_history_file(PyObject *self, PyObject *args)
         history_truncate_file(s, _history_length);
     if (errno)
         return PyErr_SetFromErrno(PyExc_IOError);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(doc_write_history_file,
@@ -172,7 +172,7 @@ set_history_length(PyObject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, "i:set_history_length", &length))
         return NULL;
     _history_length = length;
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(set_history_length_doc,
@@ -201,12 +201,12 @@ the history file.");
 static PyObject *
 set_hook(const char *funcname, PyObject **hook_var, PyObject *args)
 {
-    PyObject *function = Py_None;
+    PyObject *function = Py_Nil;
     char buf[80];
     PyOS_snprintf(buf, sizeof(buf), "|O:set_%.50s", funcname);
     if (!PyArg_ParseTuple(args, buf, &function))
         return NULL;
-    if (function == Py_None) {
+    if (function == Py_Nil) {
         Py_CLEAR(*hook_var);
     }
     else if (PyCallable_Check(function)) {
@@ -222,7 +222,7 @@ set_hook(const char *funcname, PyObject **hook_var, PyObject *args)
         PyErr_SetString(PyExc_TypeError, buf);
         return NULL;
     }
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 
@@ -361,7 +361,7 @@ set_completer_delims(PyObject *self, PyObject *args)
         free(completer_word_break_characters);
         completer_word_break_characters = break_chars;
         rl_completer_word_break_characters = break_chars;
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     }
     else
         return PyErr_NoMemory();
@@ -425,7 +425,7 @@ py_remove_history(PyObject *self, PyObject *args)
     }
     /* free memory allocated for the history entry */
     _py_free_history_entry(entry);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(doc_remove_history,
@@ -457,7 +457,7 @@ py_replace_history(PyObject *self, PyObject *args)
     }
     /* free memory allocated for the old history entry */
     _py_free_history_entry(old_entry);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(doc_replace_history,
@@ -475,7 +475,7 @@ py_add_history(PyObject *self, PyObject *args)
         return NULL;
     }
     add_history(line);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(doc_add_history,
@@ -516,7 +516,7 @@ static PyObject *
 get_completer(PyObject *self, PyObject *noargs)
 {
     if (completer == NULL) {
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     }
     Py_INCREF(completer);
     return completer;
@@ -573,14 +573,14 @@ get_history_item(PyObject *self, PyObject *args)
          */
         if (idx < (0 + libedit_history_start)
                 || idx >= (length + libedit_history_start)) {
-            Py_RETURN_NONE;
+            Py_RETURN_NIL;
         }
     }
 #endif /* __APPLE__ */
     if ((hist_ent = history_get(idx)))
         return PyString_FromString(hist_ent->line);
     else {
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     }
 }
 
@@ -623,7 +623,7 @@ static PyObject *
 py_clear_history(PyObject *self, PyObject *noarg)
 {
     clear_history();
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(doc_clear_history,
@@ -641,7 +641,7 @@ insert_text(PyObject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, "s:insert_text", &s))
         return NULL;
     rl_insert_text(s);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(doc_insert_text,
@@ -655,7 +655,7 @@ static PyObject *
 redisplay(PyObject *self, PyObject *noarg)
 {
     rl_redisplay();
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(doc_redisplay,
@@ -729,7 +729,7 @@ on_hook(PyObject *func)
         r = PyObject_CallFunction(func, NULL);
         if (r == NULL)
             goto error;
-        if (r == Py_None)
+        if (r == Py_Nil)
             result = 0;
         else {
             result = PyInt_AsLong(r);
@@ -801,7 +801,7 @@ on_completion_display_matches_hook(char **matches,
     Py_DECREF(m); m=NULL;
 
     if (r == NULL ||
-        (r != Py_None && PyInt_AsLong(r) == -1 && PyErr_Occurred())) {
+        (r != Py_Nil && PyInt_AsLong(r) == -1 && PyErr_Occurred())) {
         goto error;
     }
     Py_XDECREF(r); r=NULL;
@@ -854,7 +854,7 @@ on_completion(const char *text, int state)
         r = PyObject_CallFunction(completer, "si", text, state);
         if (r == NULL)
             goto error;
-        if (r == Py_None) {
+        if (r == Py_Nil) {
             result = NULL;
         }
         else {

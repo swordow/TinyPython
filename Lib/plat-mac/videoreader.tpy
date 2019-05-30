@@ -20,10 +20,10 @@ from Carbon import Res;
 try{
     from Carbon import MediaDescr;
 } except ImportError{
-    def _audiodescr(data){
-        return None;
+    function _audiodescr(data){
+        return nil;
 } } else{
-    def _audiodescr(data){
+    function _audiodescr(data){
         return MediaDescr.SoundDescription.decode(data);
 } } try{
     from imgformat import macrgb;
@@ -33,148 +33,148 @@ try{
 # import audio.format
 
 class VideoFormat{
-    def __init__(self, name, descr, width, height, format){
-        self.__name = name;
-        self.__descr = descr;
-        self.__width = width;
-        self.__height = height;
-        self.__format = format;
+    function __init__( name, descr, width, height, format){
+        this.__name = name;
+        this.__descr = descr;
+        this.__width = width;
+        this.__height = height;
+        this.__format = format;
 
     }
-    def getname(self){
-        return self.__name;
+    function getname(){
+        return this.__name;
 
     }
-    def getdescr(self){
-        return self.__descr;
+    function getdescr(){
+        return this.__descr;
 
     }
-    def getsize(self){
-        return self.__width, self.__height;
+    function getsize(){
+        return this.__width, this.__height;
 
     }
-    def getformat(self){
-        return self.__format;
+    function getformat(){
+        return this.__format;
 
 }
 } class _Reader{
-    def __init__(self, path){
+    function __init__( path){
         fd = Qt.OpenMovieFile(path, 0);
-        self.movie, d1, d2 = Qt.NewMovieFromFile(fd, 0, 0);
-        self.movietimescale = self.movie.GetMovieTimeScale();
+        this.movie, d1, d2 = Qt.NewMovieFromFile(fd, 0, 0);
+        this.movietimescale = this.movie.GetMovieTimeScale();
         try{
-            self.audiotrack = self.movie.GetMovieIndTrackType(1,
+            this.audiotrack = this.movie.GetMovieIndTrackType(1,
                 QuickTime.AudioMediaCharacteristic, QuickTime.movieTrackCharacteristic);
-            self.audiomedia = self.audiotrack.GetTrackMedia();
+            this.audiomedia = this.audiotrack.GetTrackMedia();
         } except Qt.Error{
-            self.audiotrack = self.audiomedia = None;
-            self.audiodescr = {};
+            this.audiotrack = this.audiomedia = nil;
+            this.audiodescr = {};
         } else{
             handle = Res.Handle('');
-            n = self.audiomedia.GetMediaSampleDescriptionCount();
-            self.audiomedia.GetMediaSampleDescription(1, handle);
-            self.audiodescr = _audiodescr(handle.data);
-            self.audiotimescale = self.audiomedia.GetMediaTimeScale();
+            n = this.audiomedia.GetMediaSampleDescriptionCount();
+            this.audiomedia.GetMediaSampleDescription(1, handle);
+            this.audiodescr = _audiodescr(handle.data);
+            this.audiotimescale = this.audiomedia.GetMediaTimeScale();
             del handle;
 
         }
         try{
-            self.videotrack = self.movie.GetMovieIndTrackType(1,
+            this.videotrack = this.movie.GetMovieIndTrackType(1,
                 QuickTime.VisualMediaCharacteristic, QuickTime.movieTrackCharacteristic);
-            self.videomedia = self.videotrack.GetTrackMedia();
+            this.videomedia = this.videotrack.GetTrackMedia();
         } except Qt.Error{
-            self.videotrack = self.videomedia = self.videotimescale = None;
-        } if self.videotrack{
-            self.videotimescale = self.videomedia.GetMediaTimeScale();
-            x0, y0, x1, y1 = self.movie.GetMovieBox();
-            self.videodescr = {'width':(x1-x0), 'height':(y1-y0)};
-            self._initgworld();
-        } self.videocurtime = None;
-        self.audiocurtime = None;
+            this.videotrack = this.videomedia = this.videotimescale = nil;
+        } if this.videotrack{
+            this.videotimescale = this.videomedia.GetMediaTimeScale();
+            x0, y0, x1, y1 = this.movie.GetMovieBox();
+            this.videodescr = {'width':(x1-x0), 'height':(y1-y0)};
+            this._initgworld();
+        } this.videocurtime = nil;
+        this.audiocurtime = nil;
 
 
     }
-    def __del__(self){
-        self.audiomedia = None;
-        self.audiotrack = None;
-        self.videomedia = None;
-        self.videotrack = None;
-        self.movie = None;
+    function __del__(){
+        this.audiomedia = nil;
+        this.audiotrack = nil;
+        this.videomedia = nil;
+        this.videotrack = nil;
+        this.movie = nil;
 
     }
-    def _initgworld(self){
+    function _initgworld(){
         old_port, old_dev = Qdoffs.GetGWorld();
         try{
-            movie_w = self.videodescr['width'];
-            movie_h = self.videodescr['height'];
+            movie_w = this.videodescr['width'];
+            movie_h = this.videodescr['height'];
             movie_rect = (0, 0, movie_w, movie_h);
-            self.gworld = Qdoffs.NewGWorld(32,  movie_rect, None, None, QDOffscreen.keepLocal);
-            self.pixmap = self.gworld.GetGWorldPixMap();
-            Qdoffs.LockPixels(self.pixmap);
-            Qdoffs.SetGWorld(self.gworld.as_GrafPtr(), None);
+            this.gworld = Qdoffs.NewGWorld(32,  movie_rect, nil, nil, QDOffscreen.keepLocal);
+            this.pixmap = this.gworld.GetGWorldPixMap();
+            Qdoffs.LockPixels(this.pixmap);
+            Qdoffs.SetGWorld(this.gworld.as_GrafPtr(), nil);
             Qd.EraseRect(movie_rect);
-            self.movie.SetMovieGWorld(self.gworld.as_GrafPtr(), None);
-            self.movie.SetMovieBox(movie_rect);
-            self.movie.SetMovieActive(1);
-            self.movie.MoviesTask(0);
-            self.movie.SetMoviePlayHints(QuickTime.hintsHighQuality, QuickTime.hintsHighQuality);
+            this.movie.SetMovieGWorld(this.gworld.as_GrafPtr(), nil);
+            this.movie.SetMovieBox(movie_rect);
+            this.movie.SetMovieActive(1);
+            this.movie.MoviesTask(0);
+            this.movie.SetMoviePlayHints(QuickTime.hintsHighQuality, QuickTime.hintsHighQuality);
             # XXXX framerate
         }
         finally{
             Qdoffs.SetGWorld(old_port, old_dev);
 
     }
-    } def _gettrackduration_ms(self, track){
+    } function _gettrackduration_ms( track){
         tracktime = track.GetTrackDuration();
-        return self._movietime_to_ms(tracktime);
+        return this._movietime_to_ms(tracktime);
 
     }
-    def _movietime_to_ms(self, time){
-        value, d1, d2 = Qt.ConvertTimeScale((time, self.movietimescale, None), 1000);
+    function _movietime_to_ms( time){
+        value, d1, d2 = Qt.ConvertTimeScale((time, this.movietimescale, nil), 1000);
         return value;
 
     }
-    def _videotime_to_ms(self, time){
-        value, d1, d2 = Qt.ConvertTimeScale((time, self.videotimescale, None), 1000);
+    function _videotime_to_ms( time){
+        value, d1, d2 = Qt.ConvertTimeScale((time, this.videotimescale, nil), 1000);
         return value;
 
     }
-    def _audiotime_to_ms(self, time){
-        value, d1, d2 = Qt.ConvertTimeScale((time, self.audiotimescale, None), 1000);
+    function _audiotime_to_ms( time){
+        value, d1, d2 = Qt.ConvertTimeScale((time, this.audiotimescale, nil), 1000);
         return value;
 
     }
-    def _videotime_to_movietime(self, time){
-        value, d1, d2 = Qt.ConvertTimeScale((time, self.videotimescale, None),
-                self.movietimescale);
+    function _videotime_to_movietime( time){
+        value, d1, d2 = Qt.ConvertTimeScale((time, this.videotimescale, nil),
+                this.movietimescale);
         return value;
 
     }
-    def HasAudio(self){
-        return not self.audiotrack is None;
+    function HasAudio(){
+        return not this.audiotrack is nil;
 
     }
-    def HasVideo(self){
-        return not self.videotrack is None;
+    function HasVideo(){
+        return not this.videotrack is nil;
 
     }
-    def GetAudioDuration(self){
-        if not self.audiotrack{
+    function GetAudioDuration(){
+        if not this.audiotrack{
             return 0;
-        } return self._gettrackduration_ms(self.audiotrack);
+        } return this._gettrackduration_ms(this.audiotrack);
 
     }
-    def GetVideoDuration(self){
-        if not self.videotrack{
+    function GetVideoDuration(){
+        if not this.videotrack{
             return 0;
-        } return self._gettrackduration_ms(self.videotrack);
+        } return this._gettrackduration_ms(this.videotrack);
 
     }
-    def GetAudioFormat(self){
-        if not self.audiodescr{
-            return None, None, None, None, None;
-        } bps = self.audiodescr['sampleSize'];
-        nch = self.audiodescr['numChannels'];
+    function GetAudioFormat(){
+        if not this.audiodescr{
+            return nil, nil, nil, nil, nil;
+        } bps = this.audiodescr['sampleSize'];
+        nch = this.audiodescr['numChannels'];
         if nch == 1{
             channels = ['mono'];
         } elif nch == 2{
@@ -190,111 +190,111 @@ class VideoFormat{
             # number of bytes, so frames are nchannels*samplesize, and there's one frame per block.
             blocksize = (bps/8)*nch;
             fpb = 1;
-        } if self.audiodescr['dataFormat'] == 'raw '{
+        } if this.audiodescr['dataFormat'] == 'raw '{
             encoding = 'linear-excess';
-        } elif self.audiodescr['dataFormat'] == 'twos'{
+        } elif this.audiodescr['dataFormat'] == 'twos'{
             encoding = 'linear-signed';
         } else{
-            encoding = 'quicktime-coding-%s'%self.audiodescr['dataFormat'];
+            encoding = 'quicktime-coding-%s'%this.audiodescr['dataFormat'];
 ##      return audio.format.AudioFormatLinear('quicktime_audio', 'QuickTime Audio Format',
 ##          channels, encoding, blocksize=blocksize, fpb=fpb, bps=bps)
         }
         return channels, encoding, blocksize, fpb, bps;
 
     }
-    def GetAudioFrameRate(self){
-        if not self.audiodescr{
-            return None;
-        } return int(self.audiodescr['sampleRate']);
+    function GetAudioFrameRate(){
+        if not this.audiodescr{
+            return nil;
+        } return int(this.audiodescr['sampleRate']);
 
     }
-    def GetVideoFormat(self){
-        width = self.videodescr['width'];
-        height = self.videodescr['height'];
+    function GetVideoFormat(){
+        width = this.videodescr['width'];
+        height = this.videodescr['height'];
         return VideoFormat('dummy_format', 'Dummy Video Format', width, height, macrgb);
 
     }
-    def GetVideoFrameRate(self){
-        tv = self.videocurtime;
-        if tv is None{
+    function GetVideoFrameRate(){
+        tv = this.videocurtime;
+        if tv is nil{
             tv = 0;
         } flags = QuickTime.nextTimeStep|QuickTime.nextTimeEdgeOK;
-        tv, dur = self.videomedia.GetMediaNextInterestingTime(flags, tv, 1.0);
-        dur = self._videotime_to_ms(dur);
+        tv, dur = this.videomedia.GetMediaNextInterestingTime(flags, tv, 1.0);
+        dur = this._videotime_to_ms(dur);
         return int((1000.0/dur)+0.5);
 
     }
-    def ReadAudio(self, nframes, time=None){
-        if not time is None{
-            self.audiocurtime = time;
+    function ReadAudio( nframes, time=nil){
+        if not time is nil{
+            this.audiocurtime = time;
         } flags = QuickTime.nextTimeStep|QuickTime.nextTimeEdgeOK;
-        if self.audiocurtime is None{
-            self.audiocurtime = 0;
-        } tv = self.audiomedia.GetMediaNextInterestingTimeOnly(flags, self.audiocurtime, 1.0);
-        if tv < 0 or (self.audiocurtime and tv < self.audiocurtime){
-            return self._audiotime_to_ms(self.audiocurtime), None;
+        if this.audiocurtime is nil{
+            this.audiocurtime = 0;
+        } tv = this.audiomedia.GetMediaNextInterestingTimeOnly(flags, this.audiocurtime, 1.0);
+        if tv < 0 or (this.audiocurtime and tv < this.audiocurtime){
+            return this._audiotime_to_ms(this.audiocurtime), nil;
         } h = Res.Handle('');
         desc_h = Res.Handle('');
         size, actualtime, sampleduration, desc_index, actualcount, flags = \
-            self.audiomedia.GetMediaSample(h, 0, tv, desc_h, nframes);
-        self.audiocurtime = actualtime + actualcount*sampleduration;
-        return self._audiotime_to_ms(actualtime), h.data;
+            this.audiomedia.GetMediaSample(h, 0, tv, desc_h, nframes);
+        this.audiocurtime = actualtime + actualcount*sampleduration;
+        return this._audiotime_to_ms(actualtime), h.data;
 
     }
-    def ReadVideo(self, time=None){
-        if not time is None{
-            self.videocurtime = time;
+    function ReadVideo( time=nil){
+        if not time is nil{
+            this.videocurtime = time;
         } flags = QuickTime.nextTimeStep;
-        if self.videocurtime is None{
+        if this.videocurtime is nil{
             flags = flags | QuickTime.nextTimeEdgeOK;
-            self.videocurtime = 0;
-        } tv = self.videomedia.GetMediaNextInterestingTimeOnly(flags, self.videocurtime, 1.0);
-        if tv < 0 or (self.videocurtime and tv <= self.videocurtime){
-            return self._videotime_to_ms(self.videocurtime), None;
-        } self.videocurtime = tv;
-        moviecurtime = self._videotime_to_movietime(self.videocurtime);
-        self.movie.SetMovieTimeValue(moviecurtime);
-        self.movie.MoviesTask(0);
-        return self._videotime_to_ms(self.videocurtime), self._getpixmapcontent();
+            this.videocurtime = 0;
+        } tv = this.videomedia.GetMediaNextInterestingTimeOnly(flags, this.videocurtime, 1.0);
+        if tv < 0 or (this.videocurtime and tv <= this.videocurtime){
+            return this._videotime_to_ms(this.videocurtime), nil;
+        } this.videocurtime = tv;
+        moviecurtime = this._videotime_to_movietime(this.videocurtime);
+        this.movie.SetMovieTimeValue(moviecurtime);
+        this.movie.MoviesTask(0);
+        return this._videotime_to_ms(this.videocurtime), this._getpixmapcontent();
 
     }
-    def _getpixmapcontent(self){
+    function _getpixmapcontent(){
         """Shuffle the offscreen PixMap data, because it may have funny stride values""";
-        rowbytes = Qdoffs.GetPixRowBytes(self.pixmap);
-        width = self.videodescr['width'];
-        height = self.videodescr['height'];
+        rowbytes = Qdoffs.GetPixRowBytes(this.pixmap);
+        width = this.videodescr['width'];
+        height = this.videodescr['height'];
         start = 0;
         rv = [];
         for i in range(height){
-            nextline = Qdoffs.GetPixMapBytes(self.pixmap, start, width*4);
+            nextline = Qdoffs.GetPixMapBytes(this.pixmap, start, width*4);
             start = start + rowbytes;
             rv.append(nextline);
         } return ''.join(rv);
 
 }
-} def reader(url){
+} function reader(url){
     try{
         rdr = _Reader(url);
     } except IOError{
-        return None;
+        return nil;
     } return rdr;
 
 }
-def _test(){
+function _test(){
     import EasyDialogs;
     try{
         from PIL import Image;
     } except ImportError{
-        Image = None;
+        Image = nil;
     } import MacOS;
     Qt.EnterMovies();
     path = EasyDialogs.AskFileForOpen(message='Video to convert');
-    if not path{ sys.exit(0);
+    if not path{ sys.exit(0);}
     rdr = reader(path);
     if not rdr{
         sys.exit(1);
     } dstdir = EasyDialogs.AskFileForSave(message='Name for output folder');
-    if not dstdir{ sys.exit(0);
+    if not dstdir{ sys.exit(0);}
     num = 0;
     os.mkdir(dstdir);
     videofmt = rdr.GetVideoFormat();
@@ -305,7 +305,7 @@ def _test(){
         fname = 'frame%04.4d.jpg'%num;
         num = num+1;
         pname = os.path.join(dstdir, fname);
-        if not Image{ print 'Not',;
+        if not Image{ print 'Not',;}
         print 'Writing %s, size %dx%d, %d bytes'%(fname, imgw, imgh, len(data));
         if Image{
             img = Image.fromstring("RGBA", (imgw, imgh), data);

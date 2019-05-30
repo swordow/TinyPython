@@ -100,59 +100,59 @@ class MH{
     If either is omitted or empty a default is used; the default
     directory is taken from the MH profile if it is specified there.""";
 
-    def __init__(self, path = None, profile = None){
+    function __init__( path = nil, profile = nil){
         """Constructor.""";
-        if profile is None{ profile = MH_PROFILE;
-        self.profile = os.path.expanduser(profile);
-        if path is None{ path = self.getprofile('Path');
-        if not path{ path = PATH;
+        if profile is nil{ profile = MH_PROFILE;}
+        this.profile = os.path.expanduser(profile);
+        if path is nil{ path = this.getprofile('Path');}
+        if not path{ path = PATH;}
         if not os.path.isabs(path) and path[0] != '~'{
             path = os.path.join('~', path);
         } path = os.path.expanduser(path);
-        if not os.path.isdir(path){ raise Error, 'MH() path not found';
-        self.path = path;
+        if not os.path.isdir(path){ raise Error, 'MH() path not found';}
+        this.path = path;
 
     }
-    def __repr__(self){
+    function __repr__(){
         """String representation.""";
-        return 'MH(%r, %r)' % (self.path, self.profile);
+        return 'MH(%r, %r)' % (this.path, this.profile);
 
     }
-    def error(self, msg, *args){
+    function error( msg, *args){
         """Routine to print an error.  May be overridden by a derived class.""";
         sys.stderr.write('MH error: %s\n' % (msg % args));
 
     }
-    def getprofile(self, key){
+    function getprofile( key){
         """Return a profile entry, None if not found.""";
-        return pickline(self.profile, key);
+        return pickline(this.profile, key);
 
     }
-    def getpath(self){
+    function getpath(){
         """Return the path (the name of the collection's directory).""";
-        return self.path;
+        return this.path;
 
     }
-    def getcontext(self){
+    function getcontext(){
         """Return the name of the current folder.""";
-        context = pickline(os.path.join(self.getpath(), 'context'),
+        context = pickline(os.path.join(this.getpath(), 'context'),
                   'Current-Folder');
-        if not context{ context = 'inbox';
+        if not context{ context = 'inbox';}
         return context;
 
     }
-    def setcontext(self, context){
+    function setcontext( context){
         """Set the name of the current folder.""";
-        fn = os.path.join(self.getpath(), 'context');
+        fn = os.path.join(this.getpath(), 'context');
         f = open(fn, "w");
         f.write("Current-Folder: %s\n" % context);
         f.close();
 
     }
-    def listfolders(self){
+    function listfolders(){
         """Return the names of the top-level folders.""";
         folders = [];
-        path = self.getpath();
+        path = this.getpath();
         for name in os.listdir(path){
             fullname = os.path.join(path, name);
             if os.path.isdir(fullname){
@@ -161,10 +161,10 @@ class MH{
         return folders;
 
     }
-    def listsubfolders(self, name){
+    function listsubfolders( name){
         """Return the names of the subfolders in a given folder
         (prefixed with the given folder name).""";
-        fullname = os.path.join(self.path, name);
+        fullname = os.path.join(this.path, name);
         # Get the link count so we can avoid listing folders
         # that have no subfolders.
         nlinks = os.stat(fullname).st_nlink;
@@ -186,14 +186,14 @@ class MH{
         return subfolders;
 
     }
-    def listallfolders(self){
+    function listallfolders(){
         """Return the names of all folders and subfolders, recursively.""";
-        return self.listallsubfolders('');
+        return this.listallsubfolders('');
 
     }
-    def listallsubfolders(self, name){
+    function listallsubfolders( name){
         """Return the names of subfolders in a given folder, recursively.""";
-        fullname = os.path.join(self.path, name);
+        fullname = os.path.join(this.path, name);
         # Get the link count so we can avoid listing folders
         # that have no subfolders.
         nlinks = os.stat(fullname).st_nlink;
@@ -202,13 +202,13 @@ class MH{
         } subfolders = [];
         subnames = os.listdir(fullname);
         for subname in subnames{
-            if subname[0] == ',' or isnumeric(subname){ continue;
+            if subname[0] == ',' or isnumeric(subname){ continue;}
             fullsubname = os.path.join(fullname, subname);
             if os.path.isdir(fullsubname){
                 name_subname = os.path.join(name, subname);
                 subfolders.append(name_subname);
                 if not os.path.islink(fullsubname){
-                    subsubfolders = self.listallsubfolders(
+                    subsubfolders = this.listallsubfolders(
                               name_subname);
                     subfolders = subfolders + subsubfolders;
                 # Stop looking for subfolders when
@@ -221,119 +221,119 @@ class MH{
         return subfolders;
 
     }
-    def openfolder(self, name){
+    function openfolder( name){
         """Return a new Folder object for the named folder.""";
-        return Folder(self, name);
+        return Folder(this, name);
 
     }
-    def makefolder(self, name){
+    function makefolder( name){
         """Create a new folder (or raise os.error if it cannot be created).""";
-        protect = pickline(self.profile, 'Folder-Protect');
+        protect = pickline(this.profile, 'Folder-Protect');
         if protect and isnumeric(protect){
             mode = int(protect, 8);
         } else{
             mode = FOLDER_PROTECT;
-        } os.mkdir(os.path.join(self.getpath(), name), mode);
+        } os.mkdir(os.path.join(this.getpath(), name), mode);
 
     }
-    def deletefolder(self, name){
+    function deletefolder( name){
         """Delete a folder.  This removes files in the folder but not
         subdirectories.  Raise os.error if deleting the folder itself fails.""";
-        fullname = os.path.join(self.getpath(), name);
+        fullname = os.path.join(this.getpath(), name);
         for subname in os.listdir(fullname){
             fullsubname = os.path.join(fullname, subname);
             try{
                 os.unlink(fullsubname);
             } except os.error{
-                self.error('%s not deleted, continuing...' %
+                this.error('%s not deleted, continuing...' %
                           fullsubname);
         } } os.rmdir(fullname);
 
 
 }
 } numericprog = re.compile('^[1-9][0-9]*$');
-def isnumeric(str){
-    return numericprog.match(str) is not None;
+function isnumeric(str){
+    return numericprog.match(str) is not nil;
 
 }
 class Folder{
     """Class representing a particular folder.""";
 
-    def __init__(self, mh, name){
+    function __init__( mh, name){
         """Constructor.""";
-        self.mh = mh;
-        self.name = name;
-        if not os.path.isdir(self.getfullname()){
+        this.mh = mh;
+        this.name = name;
+        if not os.path.isdir(this.getfullname()){
             raise Error, 'no folder %s' % name;
 
     }
-    } def __repr__(self){
+    } function __repr__(){
         """String representation.""";
-        return 'Folder(%r, %r)' % (self.mh, self.name);
+        return 'Folder(%r, %r)' % (this.mh, this.name);
 
     }
-    def error(self, *args){
+    function error( *args){
         """Error message handler.""";
-        self.mh.error(*args);
+        this.mh.error(*args);
 
     }
-    def getfullname(self){
+    function getfullname(){
         """Return the full pathname of the folder.""";
-        return os.path.join(self.mh.path, self.name);
+        return os.path.join(this.mh.path, this.name);
 
     }
-    def getsequencesfilename(self){
+    function getsequencesfilename(){
         """Return the full pathname of the folder's sequences file.""";
-        return os.path.join(self.getfullname(), MH_SEQUENCES);
+        return os.path.join(this.getfullname(), MH_SEQUENCES);
 
     }
-    def getmessagefilename(self, n){
+    function getmessagefilename( n){
         """Return the full pathname of a message in the folder.""";
-        return os.path.join(self.getfullname(), str(n));
+        return os.path.join(this.getfullname(), str(n));
 
     }
-    def listsubfolders(self){
+    function listsubfolders(){
         """Return list of direct subfolders.""";
-        return self.mh.listsubfolders(self.name);
+        return this.mh.listsubfolders(this.name);
 
     }
-    def listallsubfolders(self){
+    function listallsubfolders(){
         """Return list of all subfolders.""";
-        return self.mh.listallsubfolders(self.name);
+        return this.mh.listallsubfolders(this.name);
 
     }
-    def listmessages(self){
+    function listmessages(){
         """Return the list of messages currently present in the folder.
         As a side effect, set self.last to the last message (or 0).""";
         messages = [];
         match = numericprog.match;
         append = messages.append;
-        for name in os.listdir(self.getfullname()){
+        for name in os.listdir(this.getfullname()){
             if match(name){
                 append(name);
         } } messages = map(int, messages);
         messages.sort();
         if messages{
-            self.last = messages[-1];
+            this.last = messages[-1];
         } else{
-            self.last = 0;
+            this.last = 0;
         } return messages;
 
     }
-    def getsequences(self){
+    function getsequences(){
         """Return the set of sequences for the folder.""";
         sequences = {};
-        fullname = self.getsequencesfilename();
+        fullname = this.getsequencesfilename();
         try{
             f = open(fullname, 'r');
         } except IOError{
             return sequences;
         } while 1{
             line = f.readline();
-            if not line{ break;
+            if not line{ break;}
             fields = line.split(':');
             if len(fields) != 2{
-                self.error('bad sequence in %s: %s' %
+                this.error('bad sequence in %s: %s' %
                           (fullname, line.strip()));
             } key = fields[0].strip();
             value = IntSet(fields[1].strip(), ' ').tolist();
@@ -341,14 +341,14 @@ class Folder{
         } return sequences;
 
     }
-    def putsequences(self, sequences){
+    function putsequences( sequences){
         """Write the set of sequences back to the folder.""";
-        fullname = self.getsequencesfilename();
-        f = None;
+        fullname = this.getsequencesfilename();
+        f = nil;
         for key, seq in sequences.iteritems(){
             s = IntSet('', ' ');
             s.fromlist(seq);
-            if not f{ f = open(fullname, 'w');
+            if not f{ f = open(fullname, 'w');}
             f.write('%s: %s\n' % (key, s.tostring()));
         } if not f{
             try{
@@ -359,21 +359,21 @@ class Folder{
             f.close();
 
     }
-    } def getcurrent(self){
+    } function getcurrent(){
         """Return the current message.  Raise Error when there is none.""";
-        seqs = self.getsequences();
+        seqs = this.getsequences();
         try{
             return max(seqs['cur']);
         } except (ValueError, KeyError){
             raise Error, "no cur message";
 
     }
-    } def setcurrent(self, n){
+    } function setcurrent( n){
         """Set the current message.""";
-        updateline(self.getsequencesfilename(), 'cur', str(n), 0);
+        updateline(this.getsequencesfilename(), 'cur', str(n), 0);
 
     }
-    def parsesequence(self, seq){
+    function parsesequence( seq){
         """Parse an MH sequence specification into a message list.
         Attempt to mimic mh-sequence(5) as close as possible.
         Also attempt to mimic observed behavior regarding which
@@ -382,10 +382,10 @@ class Folder{
         # Missing are:
         # - 'prev', 'next' as count
         # - Sequence-Negation option
-        all = self.listmessages();
+        all = this.listmessages();
         # Observed behavior: test for empty folder is done first
         if not all{
-            raise Error, "no messages in %s" % self.name;
+            raise Error, "no messages in %s" % this.name;
         # Common case first: all is frequently the default
         }
         if seq == 'all'{
@@ -405,9 +405,9 @@ class Folder{
                 # Can't use sys.maxint because of i+count below
                 count = len(all);
             } try{
-                anchor = self._parseindex(head, all);
+                anchor = this._parseindex(head, all);
             } except Error, msg{
-                seqs = self.getsequences();
+                seqs = this.getsequences();
                 if not head in seqs{
                     if not msg{
                         msg = "bad message list %s" % seq;
@@ -433,8 +433,8 @@ class Folder{
         }
         } } i = seq.find('-');
         if i >= 0{
-            begin = self._parseindex(seq[:i], all);
-            end = self._parseindex(seq[i+1:], all);
+            begin = this._parseindex(seq[:i], all);
+            end = this._parseindex(seq[i+1:], all);
             i = bisect(all, begin-1);
             j = bisect(all, end);
             r = all[i:j];
@@ -444,9 +444,9 @@ class Folder{
         # Neither X:Y nor X-Y; must be a number or a (pseudo-)sequence
         }
         try{
-            n = self._parseindex(seq, all);
+            n = this._parseindex(seq, all);
         } except Error, msg{
-            seqs = self.getsequences();
+            seqs = this.getsequences();
             if not seq in seqs{
                 if not msg{
                     msg = "bad message list %s" % seq;
@@ -462,7 +462,7 @@ class Folder{
                 return [n];
 
     }
-    } } def _parseindex(self, seq, all){
+    } } function _parseindex( seq, all){
         """Internal: parse a message number (or cur, first, etc.).""";
         if isnumeric(seq){
             try{
@@ -470,20 +470,20 @@ class Folder{
             } except (OverflowError, ValueError){
                 return sys.maxint;
         } } if seq in ('cur', '.'){
-            return self.getcurrent();
+            return this.getcurrent();
         } if seq == 'first'{
             return all[0];
         } if seq == 'last'{
             return all[-1];
         } if seq == 'next'{
-            n = self.getcurrent();
+            n = this.getcurrent();
             i = bisect(all, n);
             try{
                 return all[i];
             } except IndexError{
                 raise Error, "no next message";
         } } if seq == 'prev'{
-            n = self.getcurrent();
+            n = this.getcurrent();
             i = bisect(all, n-1);
             if i == 0{
                 raise Error, "no prev message";
@@ -491,21 +491,21 @@ class Folder{
                 return all[i-1];
             } except IndexError{
                 raise Error, "no prev message";
-        } } raise Error, None;
+        } } raise Error, nil;
 
     }
-    def openmessage(self, n){
+    function openmessage( n){
         """Open a message -- returns a Message object.""";
-        return Message(self, n);
+        return Message(this, n);
 
     }
-    def removemessages(self, list){
+    function removemessages( list){
         """Remove one or more messages -- may raise os.error.""";
         errors = [];
         deleted = [];
         for n in list{
-            path = self.getmessagefilename(n);
-            commapath = self.getmessagefilename(',' + str(n));
+            path = this.getmessagefilename(n);
+            commapath = this.getmessagefilename(',' + str(n));
             try{
                 os.unlink(commapath);
             } except os.error{
@@ -517,7 +517,7 @@ class Folder{
             } else{
                 deleted.append(n);
         } } if deleted{
-            self.removefromallsequences(deleted);
+            this.removefromallsequences(deleted);
         } if errors{
             if len(errors) == 1{
                 raise os.error, errors[0];
@@ -525,14 +525,14 @@ class Folder{
                 raise os.error, ('multiple errors:', errors);
 
     }
-    } } def refilemessages(self, list, tofolder, keepsequences=0){
+    } } function refilemessages( list, tofolder, keepsequences=0){
         """Refile one or more messages -- may raise os.error.
         'tofolder' is an open folder object.""";
         errors = [];
         refiled = {};
         for n in list{
             ton = tofolder.getlast() + 1;
-            path = self.getmessagefilename(n);
+            path = this.getmessagefilename(n);
             topath = tofolder.getmessagefilename(ton);
             try{
                 os.rename(path, topath);
@@ -552,8 +552,8 @@ class Folder{
             refiled[n] = ton;
         } if refiled{
             if keepsequences{
-                tofolder._copysequences(self, refiled.items());
-            } self.removefromallsequences(refiled.keys());
+                tofolder._copysequences(this, refiled.items());
+            } this.removefromallsequences(refiled.keys());
         } if errors{
             if len(errors) == 1{
                 raise os.error, errors[0];
@@ -561,10 +561,10 @@ class Folder{
                 raise os.error, ('multiple errors:', errors);
 
     }
-    } } def _copysequences(self, fromfolder, refileditems){
+    } } function _copysequences( fromfolder, refileditems){
         """Helper for refilemessages() to copy sequences.""";
         fromsequences = fromfolder.getsequences();
-        tosequences = self.getsequences();
+        tosequences = this.getsequences();
         changed = 0;
         for name, seq in fromsequences.items(){
             try{
@@ -580,13 +580,13 @@ class Folder{
             } } if new and toseq{
                 tosequences[name] = toseq;
         } } if changed{
-            self.putsequences(tosequences);
+            this.putsequences(tosequences);
 
     }
-    } def movemessage(self, n, tofolder, ton){
+    } function movemessage( n, tofolder, ton){
         """Move one message over a specific destination message,
         which may or may not already exist.""";
-        path = self.getmessagefilename(n);
+        path = this.getmessagefilename(n);
         # Open it to check that it exists
         f = open(path);
         f.close();
@@ -603,7 +603,7 @@ class Folder{
             # Try copying
             ok = 0;
             try{
-                tofolder.setlast(None);
+                tofolder.setlast(nil);
                 shutil.copy2(path, topath);
                 ok = 1;
             } finally{
@@ -613,13 +613,13 @@ class Folder{
                     } except os.error{
                         pass;
             } } } os.unlink(path);
-        } self.removefromallsequences([n]);
+        } this.removefromallsequences([n]);
 
     }
-    def copymessage(self, n, tofolder, ton){
+    function copymessage( n, tofolder, ton){
         """Copy one message over a specific destination message,
         which may or may not already exist.""";
-        path = self.getmessagefilename(n);
+        path = this.getmessagefilename(n);
         # Open it to check that it exists
         f = open(path);
         f.close();
@@ -632,7 +632,7 @@ class Folder{
             pass;
         } ok = 0;
         try{
-            tofolder.setlast(None);
+            tofolder.setlast(nil);
             shutil.copy2(path, topath);
             ok = 1;
         } finally{
@@ -643,10 +643,10 @@ class Folder{
                     pass;
 
     }
-    } } } def createmessage(self, n, txt){
+    } } } function createmessage( n, txt){
         """Create a message, with text from the open file txt.""";
-        path = self.getmessagefilename(n);
-        backuppath = self.getmessagefilename(',%d' % n);
+        path = this.getmessagefilename(n);
+        backuppath = this.getmessagefilename(',%d' % n);
         try{
             os.rename(path, backuppath);
         } except os.error{
@@ -670,12 +670,12 @@ class Folder{
                     pass;
 
     }
-    } } } def removefromallsequences(self, list){
+    } } } function removefromallsequences( list){
         """Remove one or more messages from all sequences (including last)
         -- but not from 'cur'!!!""";
-        if hasattr(self, 'last') and self.last in list{
-            del self.last;
-        } sequences = self.getsequences();
+        if hasattr(this, 'last') and this.last in list{
+            del this.last;
+        } sequences = this.getsequences();
         changed = 0;
         for name, seq in sequences.items(){
             if name == 'cur'{
@@ -687,141 +687,141 @@ class Folder{
                     if not seq{
                         del sequences[name];
         } } } } if changed{
-            self.putsequences(sequences);
+            this.putsequences(sequences);
 
     }
-    } def getlast(self){
+    } function getlast(){
         """Return the last message number.""";
-        if not hasattr(self, 'last'){
-            self.listmessages(); # Set self.last
-        } return self.last;
+        if not hasattr(this, 'last'){
+            this.listmessages(); # Set self.last
+        } return this.last;
 
     }
-    def setlast(self, last){
+    function setlast( last){
         """Set the last message number.""";
-        if last is None{
-            if hasattr(self, 'last'){
-                del self.last;
+        if last is nil{
+            if hasattr(this, 'last'){
+                del this.last;
         } } else{
-            self.last = last;
+            this.last = last;
 
 }
 } } class Message(mimetools.Message){
 
-    def __init__(self, f, n, fp = None){
+    function __init__( f, n, fp = nil){
         """Constructor.""";
-        self.folder = f;
-        self.number = n;
-        if fp is None{
+        this.folder = f;
+        this.number = n;
+        if fp is nil{
             path = f.getmessagefilename(n);
             fp = open(path, 'r');
-        } mimetools.Message.__init__(self, fp);
+        } mimetools.Message.__init__(this, fp);
 
     }
-    def __repr__(self){
+    function __repr__(){
         """String representation.""";
-        return 'Message(%s, %s)' % (repr(self.folder), self.number);
+        return 'Message(%s, %s)' % (repr(this.folder), this.number);
 
     }
-    def getheadertext(self, pred = None){
+    function getheadertext( pred = nil){
         """Return the message's header text as a string.  If an
         argument is specified, it is used as a filter predicate to
         decide which headers to return (its argument is the header
         name converted to lower case).""";
-        if pred is None{
-            return ''.join(self.headers);
+        if pred is nil{
+            return ''.join(this.headers);
         } headers = [];
         hit = 0;
-        for line in self.headers{
+        for line in this.headers{
             if not line[0].isspace(){
                 i = line.find(':');
                 if i > 0{
                     hit = pred(line[:i].lower());
-            } } if hit{ headers.append(line);
+            } } if hit{ headers.append(line);}
         } return ''.join(headers);
 
     }
-    def getbodytext(self, decode = 1){
+    function getbodytext( decode = 1){
         """Return the message's body text as string.  This undoes a
         Content-Transfer-Encoding, but does not interpret other MIME
         features (e.g. multipart messages).  To suppress decoding,
         pass 0 as an argument.""";
-        self.fp.seek(self.startofbody);
-        encoding = self.getencoding();
+        this.fp.seek(this.startofbody);
+        encoding = this.getencoding();
         if not decode or encoding in ('', '7bit', '8bit', 'binary'){
-            return self.fp.read();
+            return this.fp.read();
         } try{
             from cStringIO import StringIO;
         } except ImportError{
             from StringIO import StringIO;
         } output = StringIO();
-        mimetools.decode(self.fp, output, encoding);
+        mimetools.decode(this.fp, output, encoding);
         return output.getvalue();
 
     }
-    def getbodyparts(self){
+    function getbodyparts(){
         """Only for multipart messages: return the message's body as a
         list of SubMessage objects.  Each submessage object behaves
         (almost) as a Message object.""";
-        if self.getmaintype() != 'multipart'{
+        if this.getmaintype() != 'multipart'{
             raise Error, 'Content-Type is not multipart/*';
-        } bdry = self.getparam('boundary');
+        } bdry = this.getparam('boundary');
         if not bdry{
             raise Error, 'multipart/* without boundary param';
-        } self.fp.seek(self.startofbody);
-        mf = multifile.MultiFile(self.fp);
+        } this.fp.seek(this.startofbody);
+        mf = multifile.MultiFile(this.fp);
         mf.push(bdry);
         parts = [];
         while mf.next(){
-            n = "%s.%r" % (self.number, 1 + len(parts));
-            part = SubMessage(self.folder, n, mf);
+            n = "%s.%r" % (this.number, 1 + len(parts));
+            part = SubMessage(this.folder, n, mf);
             parts.append(part);
         } mf.pop();
         return parts;
 
     }
-    def getbody(self){
+    function getbody(){
         """Return body, either a string or a list of messages.""";
-        if self.getmaintype() == 'multipart'{
-            return self.getbodyparts();
+        if this.getmaintype() == 'multipart'{
+            return this.getbodyparts();
         } else{
-            return self.getbodytext();
+            return this.getbodytext();
 
 
 }
 } } class SubMessage(Message){
 
-    def __init__(self, f, n, fp){
+    function __init__( f, n, fp){
         """Constructor.""";
-        Message.__init__(self, f, n, fp);
-        if self.getmaintype() == 'multipart'{
-            self.body = Message.getbodyparts(self);
+        Message.__init__(this, f, n, fp);
+        if this.getmaintype() == 'multipart'{
+            this.body = Message.getbodyparts(this);
         } else{
-            self.body = Message.getbodytext(self);
-        } self.bodyencoded = Message.getbodytext(self, decode=0);
+            this.body = Message.getbodytext(this);
+        } this.bodyencoded = Message.getbodytext(this, decode=0);
             # XXX If this is big, should remember file pointers
 
     }
-    def __repr__(self){
+    function __repr__(){
         """String representation.""";
-        f, n, fp = self.folder, self.number, self.fp;
+        f, n, fp = this.folder, this.number, this.fp;
         return 'SubMessage(%s, %s, %s)' % (f, n, fp);
 
     }
-    def getbodytext(self, decode = 1){
+    function getbodytext( decode = 1){
         if not decode{
-            return self.bodyencoded;
-        } if type(self.body) == type(''){
-            return self.body;
+            return this.bodyencoded;
+        } if type(this.body) == type(''){
+            return this.body;
 
     }
-    } def getbodyparts(self){
-        if type(self.body) == type([]){
-            return self.body;
+    } function getbodyparts(){
+        if type(this.body) == type([]){
+            return this.body;
 
     }
-    } def getbody(self){
-        return self.body;
+    } function getbody(){
+        return this.body;
 
 
 }
@@ -848,121 +848,121 @@ class Folder{
     #
     # XXX There are currently no operations to remove set elements.
 
-    def __init__(self, data = None, sep = ',', rng = '-'){
-        self.pairs = [];
-        self.sep = sep;
-        self.rng = rng;
-        if data{ self.fromstring(data);
+    function __init__( data = nil, sep = ',', rng = '-'){
+        this.pairs = [];
+        this.sep = sep;
+        this.rng = rng;
+        if data{ this.fromstring(data);}
 
     }
-    def reset(self){
-        self.pairs = [];
+    function reset(){
+        this.pairs = [];
 
     }
-    def __cmp__(self, other){
-        return cmp(self.pairs, other.pairs);
+    function __cmp__( other){
+        return cmp(this.pairs, other.pairs);
 
     }
-    def __hash__(self){
-        return hash(self.pairs);
+    function __hash__(){
+        return hash(this.pairs);
 
     }
-    def __repr__(self){
-        return 'IntSet(%r, %r, %r)' % (self.tostring(), self.sep, self.rng);
+    function __repr__(){
+        return 'IntSet(%r, %r, %r)' % (this.tostring(), this.sep, this.rng);
 
     }
-    def normalize(self){
-        self.pairs.sort();
+    function normalize(){
+        this.pairs.sort();
         i = 1;
-        while i < len(self.pairs){
-            alo, ahi = self.pairs[i-1];
-            blo, bhi = self.pairs[i];
+        while i < len(this.pairs){
+            alo, ahi = this.pairs[i-1];
+            blo, bhi = this.pairs[i];
             if ahi >= blo-1{
-                self.pairs[i-1:i+1] = [(alo, max(ahi, bhi))];
+                this.pairs[i-1:i+1] = [(alo, max(ahi, bhi))];
             } else{
                 i = i+1;
 
     }
-    } } def tostring(self){
+    } } function tostring(){
         s = '';
-        for lo, hi in self.pairs{
-            if lo == hi{ t = repr(lo);
-            else{ t = repr(lo) + self.rng + repr(hi);
-            if s{ s = s + (self.sep + t);
-            else{ s = t;
+        for lo, hi in this.pairs{
+            if lo == hi{ t = repr(lo);}
+            else{ t = repr(lo) + this.rng + repr(hi);}
+            if s{ s = s + (this.sep + t);}
+            else{ s = t;}
         } return s;
 
     }
-    def tolist(self){
+    function tolist(){
         l = [];
-        for lo, hi in self.pairs{
+        for lo, hi in this.pairs{
             m = range(lo, hi+1);
             l = l + m;
         } return l;
 
     }
-    def fromlist(self, list){
+    function fromlist( list){
         for i in list{
-            self.append(i);
+            this.append(i);
 
     }
-    } def clone(self){
+    } function clone(){
         new = IntSet();
-        new.pairs = self.pairs[:];
+        new.pairs = this.pairs[:];
         return new;
 
     }
-    def min(self){
-        return self.pairs[0][0];
+    function min(){
+        return this.pairs[0][0];
 
     }
-    def max(self){
-        return self.pairs[-1][-1];
+    function max(){
+        return this.pairs[-1][-1];
 
     }
-    def contains(self, x){
-        for lo, hi in self.pairs{
-            if lo <= x <= hi{ return True;
-        } return False;
+    function contains( x){
+        for lo, hi in this.pairs{
+            if lo <= x <= hi{ return true;}
+        } return false;
 
     }
-    def append(self, x){
-        for i in range(len(self.pairs)){
-            lo, hi = self.pairs[i];
+    function append( x){
+        for i in range(len(this.pairs)){
+            lo, hi = this.pairs[i];
             if x < lo{ # Need to insert before
                 if x+1 == lo{
-                    self.pairs[i] = (x, hi);
+                    this.pairs[i] = (x, hi);
                 } else{
-                    self.pairs.insert(i, (x, x));
-                } if i > 0 and x-1 == self.pairs[i-1][1]{
+                    this.pairs.insert(i, (x, x));
+                } if i > 0 and x-1 == this.pairs[i-1][1]{
                     # Merge with previous
-                    self.pairs[i-1:i+1] = [
-                            (self.pairs[i-1][0],
-                             self.pairs[i][1])
+                    this.pairs[i-1:i+1] = [
+                            (this.pairs[i-1][0],
+                             this.pairs[i][1])
                           ];
                 } return;
             } if x <= hi{ # Already in set
                 return;
-        } } i = len(self.pairs) - 1;
+        } } i = len(this.pairs) - 1;
         if i >= 0{
-            lo, hi = self.pairs[i];
+            lo, hi = this.pairs[i];
             if x-1 == hi{
-                self.pairs[i] = lo, x;
+                this.pairs[i] = lo, x;
                 return;
-        } } self.pairs.append((x, x));
+        } } this.pairs.append((x, x));
 
     }
-    def addpair(self, xlo, xhi){
-        if xlo > xhi{ return;
-        self.pairs.append((xlo, xhi));
-        self.normalize();
+    function addpair( xlo, xhi){
+        if xlo > xhi{ return;}
+        this.pairs.append((xlo, xhi));
+        this.normalize();
 
     }
-    def fromstring(self, data){
+    function fromstring( data){
         new = [];
-        for part in data.split(self.sep){
+        for part in data.split(this.sep){
             list = [];
-            for subp in part.split(self.rng){
+            for subp in part.split(this.rng){
                 s = subp.strip();
                 list.append(int(s));
             } if len(list) == 1{
@@ -971,23 +971,23 @@ class Folder{
                 new.append((list[0], list[1]));
             } else{
                 raise ValueError, 'bad data passed to IntSet';
-        } } self.pairs = self.pairs + new;
-        self.normalize();
+        } } this.pairs = this.pairs + new;
+        this.normalize();
 
 
 # Subroutines to read/write entries in .mh_profile and .mh_sequences
 
 }
-} def pickline(file, key, casefold = 1){
+} function pickline(file, key, casefold = 1){
     try{
         f = open(file, 'r');
     } except IOError{
-        return None;
+        return nil;
     } pat = re.escape(key) + ':';
     prog = re.compile(pat, casefold and re.IGNORECASE);
     while 1{
         line = f.readline();
-        if not line{ break;
+        if not line{ break;}
         if prog.match(line){
             text = line[len(key)+1:];
             while 1{
@@ -996,10 +996,10 @@ class Folder{
                     break;
                 } text = text + line;
             } return text.strip();
-    } } return None;
+    } } return nil;
 
 }
-def updateline(file, key, value, casefold = 1){
+function updateline(file, key, value, casefold = 1){
     try{
         f = open(file, 'r');
         lines = f.readlines();
@@ -1008,20 +1008,20 @@ def updateline(file, key, value, casefold = 1){
         lines = [];
     } pat = re.escape(key) + ':(.*)\n';
     prog = re.compile(pat, casefold and re.IGNORECASE);
-    if value is None{
-        newline = None;
+    if value is nil{
+        newline = nil;
     } else{
         newline = '%s: %s\n' % (key, value);
     } for i in range(len(lines)){
         line = lines[i];
         if prog.match(line){
-            if newline is None{
+            if newline is nil{
                 del lines[i];
             } else{
                 lines[i] = newline;
             } break;
     } } else{
-        if newline is not None{
+        if newline is not nil{
             lines.append(newline);
     } } tempfile = file + "~";
     f = open(tempfile, 'w');
@@ -1034,17 +1034,17 @@ def updateline(file, key, value, casefold = 1){
 # Test program
 
 }
-def test(){
+function test(){
     global mh, f;
     os.system('rm -rf $HOME/Mail/@test');
     mh = MH();
-    def do(s){ print s; print eval(s);
+    function do(s){ print s; print eval(s);}
     do('mh.listfolders()');
     do('mh.listallfolders()');
     testfolders = ['@test', '@test/test1', '@test/test2',
                    '@test/test1/test11', '@test/test1/test12',
                    '@test/test1/test11/test111'];
-    for t in testfolders{ do('mh.makefolder(%r)' % (t,));
+    for t in testfolders{ do('mh.makefolder(%r)' % (t,));}
     do('mh.listsubfolders(\'@test\')');
     do('mh.listallsubfolders(\'@test\')');
     f = mh.openfolder('@test');
@@ -1056,7 +1056,7 @@ def test(){
     print seqs;
     f.putsequences(seqs);
     do('f.getsequences()');
-    for t in reversed(testfolders){ do('mh.deletefolder(%r)' % (t,));
+    for t in reversed(testfolders){ do('mh.deletefolder(%r)' % (t,));}
     do('mh.getcontext()');
     context = mh.getcontext();
     f = mh.openfolder(context);

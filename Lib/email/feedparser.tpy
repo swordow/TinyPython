@@ -48,74 +48,74 @@ class BufferedSubFile(object){
     (i.e. empty string) is returned instead.  This lets the parser adhere to a
     simple abstraction -- it parses until EOF closes the current message.
     """;
-    def __init__(self){
+    function __init__(){
         # Chunks of the last partial line pushed into this object.
-        self._partial = [];
+        this._partial = [];
         # The list of full, pushed lines, in reverse order
-        self._lines = [];
+        this._lines = [];
         # The stack of false-EOF checking predicates.
-        self._eofstack = [];
+        this._eofstack = [];
         # A flag indicating whether the file has been closed or not.
-        self._closed = False;
+        this._closed = false;
 
     }
-    def push_eof_matcher(self, pred){
-        self._eofstack.append(pred);
+    function push_eof_matcher( pred){
+        this._eofstack.append(pred);
 
     }
-    def pop_eof_matcher(self){
-        return self._eofstack.pop();
+    function pop_eof_matcher(){
+        return this._eofstack.pop();
 
     }
-    def close(self){
+    function close(){
         # Don't forget any trailing partial line.
-        self.pushlines(''.join(self._partial).splitlines(True));
-        self._partial = [];
-        self._closed = True;
+        this.pushlines(''.join(this._partial).splitlines(true));
+        this._partial = [];
+        this._closed = true;
 
     }
-    def readline(self){
-        if not self._lines{
-            if self._closed{
+    function readline(){
+        if not this._lines{
+            if this._closed{
                 return '';
             } return NeedMoreData;
         # Pop the line off the stack and see if it matches the current
         # false-EOF predicate.
         }
-        line = self._lines.pop();
+        line = this._lines.pop();
         # RFC 2046, section 5.1.2 requires us to recognize outer level
         # boundaries at any level of inner nesting.  Do this, but be sure it's
         # in the order of most to least nested.
-        for ateof in self._eofstack[::-1]{
+        for ateof in this._eofstack[::-1]{
             if ateof(line){
                 # We're at the false EOF.  But push the last line back first.
-                self._lines.append(line);
+                this._lines.append(line);
                 return '';
         } } return line;
 
     }
-    def unreadline(self, line){
+    function unreadline( line){
         # Let the consumer push a line back into the buffer.
         assert line is not NeedMoreData;
-        self._lines.append(line);
+        this._lines.append(line);
 
     }
-    def push(self, data){
+    function push( data){
         """Push some new data into this object.""";
         # Crack into lines, but preserve the linesep characters on the end of each
-        parts = data.splitlines(True);
+        parts = data.splitlines(true);
 
         if not parts or not parts[0].endswith(('\n', '\r')){
             # No new complete lines, so just accumulate partials
-            self._partial += parts;
+            this._partial += parts;
             return;
 
         }
-        if self._partial{
+        if this._partial{
             # If there are previous leftovers, complete them now
-            self._partial.append(parts[0]);
-            parts[0:1] = ''.join(self._partial).splitlines(True);
-            del self._partial[:];
+            this._partial.append(parts[0]);
+            parts[0:1] = ''.join(this._partial).splitlines(true);
+            del this._partial[:];
 
         # If the last element of the list does not end in a newline, then treat
         # it as a partial line.  We only check for '\n' here because a line
@@ -123,22 +123,22 @@ class BufferedSubFile(object){
         # '\r\n' sequence (see bugs 1555570 and 1721862).
         }
         if not parts[-1].endswith('\n'){
-            self._partial = [parts.pop()];
-        } self.pushlines(parts);
+            this._partial = [parts.pop()];
+        } this.pushlines(parts);
 
     }
-    def pushlines(self, lines){
+    function pushlines( lines){
         # Crack into lines, but preserve the newlines on the end of each
         parts = NLCRE_crack.split(data);
         # The *ahem* interesting behaviour of re.split when supplied grouping
         # parentheses is that the last element of the resulting list is the
         # data after the final RE.  In the case of a NL/CR terminated string,
         # this is the empty string.
-        self._partial = parts.pop();
+        this._partial = parts.pop();
         #GAN 29Mar09  bugs 1555570, 1721862  Confusion at 8K boundary ending with \r:
         # is there a \n to follow later?
-        if not self._partial and parts and parts[-1].endswith('\r'){
-            self._partial = parts.pop(-2)+parts.pop();
+        if not this._partial and parts and parts[-1].endswith('\r'){
+            this._partial = parts.pop(-2)+parts.pop();
         # parts is a list of strings, alternating between the line contents
         # and the eol character(s).  Gather up a list of lines after
         # re-attaching the newlines.
@@ -146,24 +146,24 @@ class BufferedSubFile(object){
         lines = [];
         for i in range(len(parts) // 2){
             lines.append(parts[i*2] + parts[i*2+1]);
-        } self.pushlines(lines);
+        } this.pushlines(lines);
 
     }
-    def pushlines(self, lines){
+    function pushlines( lines){
         # Reverse and insert at the front of the lines.
-        self._lines[:0] = lines[::-1];
+        this._lines[:0] = lines[::-1];
 
     }
-    def is_closed(self){
-        return self._closed;
+    function is_closed(){
+        return this._closed;
 
     }
-    def __iter__(self){
-        return self;
+    function __iter__(){
+        return this;
 
     }
-    def next(self){
-        line = self.readline();
+    function next(){
+        line = this.readline();
         if line == ''{
             raise StopIteration;
         } return line;
@@ -174,41 +174,41 @@ class BufferedSubFile(object){
 } class FeedParser{
     """A feed-style parser of email.""";
 
-    def __init__(self, _factory=message.Message){
+    function __init__( _factory=message.Message){
         """_factory is called with no arguments to create a new message obj""";
-        self._factory = _factory;
-        self._input = BufferedSubFile();
-        self._msgstack = [];
-        self._parse = self._parsegen().next;
-        self._cur = None;
-        self._last = None;
-        self._headersonly = False;
+        this._factory = _factory;
+        this._input = BufferedSubFile();
+        this._msgstack = [];
+        this._parse = this._parsegen().next;
+        this._cur = nil;
+        this._last = nil;
+        this._headersonly = false;
 
     # Non-public interface for supporting Parser's headersonly flag
     }
-    def _set_headersonly(self){
-        self._headersonly = True;
+    function _set_headersonly(){
+        this._headersonly = true;
 
     }
-    def feed(self, data){
+    function feed( data){
         """Push more data into the parser.""";
-        self._input.push(data);
-        self._call_parse();
+        this._input.push(data);
+        this._call_parse();
 
     }
-    def _call_parse(self){
+    function _call_parse(){
         try{
-            self._parse();
+            this._parse();
         } except StopIteration{
             pass;
 
     }
-    } def close(self){
+    } function close(){
         """Parse all remaining data and return the root message object.""";
-        self._input.close();
-        self._call_parse();
-        root = self._pop_message();
-        assert not self._msgstack;
+        this._input.close();
+        this._call_parse();
+        root = this._pop_message();
+        assert not this._msgstack;
         # Look for final set of defects
         if root.get_content_maintype() == 'multipart' \
                and not root.is_multipart(){
@@ -216,33 +216,33 @@ class BufferedSubFile(object){
         } return root;
 
     }
-    def _new_message(self){
-        msg = self._factory();
-        if self._cur and self._cur.get_content_type() == 'multipart/digest'{
+    function _new_message(){
+        msg = this._factory();
+        if this._cur and this._cur.get_content_type() == 'multipart/digest'{
             msg.set_default_type('message/rfc822');
-        } if self._msgstack{
-            self._msgstack[-1].attach(msg);
-        } self._msgstack.append(msg);
-        self._cur = msg;
-        self._last = msg;
+        } if this._msgstack{
+            this._msgstack[-1].attach(msg);
+        } this._msgstack.append(msg);
+        this._cur = msg;
+        this._last = msg;
 
     }
-    def _pop_message(self){
-        retval = self._msgstack.pop();
-        if self._msgstack{
-            self._cur = self._msgstack[-1];
+    function _pop_message(){
+        retval = this._msgstack.pop();
+        if this._msgstack{
+            this._cur = this._msgstack[-1];
         } else{
-            self._cur = None;
+            this._cur = nil;
         } return retval;
 
     }
-    def _parsegen(self){
+    function _parsegen(){
         # Create a new message and start by parsing headers.
-        self._new_message();
+        this._new_message();
         headers = [];
         # Collect the headers, searching for a line that doesn't match the RFC
         # 2822 header or continuation pattern (including an empty line).
-        for line in self._input{
+        for line in this._input{
             if line is NeedMoreData{
                 yield NeedMoreData;
                 continue;
@@ -251,58 +251,58 @@ class BufferedSubFile(object){
                 # (i.e. newline), just throw it away. Otherwise the line is
                 # part of the body so push it back.
                 if not NLCRE.match(line){
-                    self._input.unreadline(line);
+                    this._input.unreadline(line);
                 } break;
             } headers.append(line);
         # Done with the headers, so parse them and figure out what we're
         # supposed to see in the body of the message.
         }
-        self._parse_headers(headers);
+        this._parse_headers(headers);
         # Headers-only parsing is a backwards compatibility hack, which was
         # necessary in the older parser, which could raise errors.  All
         # remaining lines in the input are thrown into the message body.
-        if self._headersonly{
+        if this._headersonly{
             lines = [];
-            while True{
-                line = self._input.readline();
+            while true{
+                line = this._input.readline();
                 if line is NeedMoreData{
                     yield NeedMoreData;
                     continue;
                 } if line == ''{
                     break;
                 } lines.append(line);
-            } self._cur.set_payload(EMPTYSTRING.join(lines));
+            } this._cur.set_payload(EMPTYSTRING.join(lines));
             return;
-        } if self._cur.get_content_type() == 'message/delivery-status'{
+        } if this._cur.get_content_type() == 'message/delivery-status'{
             # message/delivery-status contains blocks of headers separated by
             # a blank line.  We'll represent each header block as a separate
             # nested message object, but the processing is a bit different
             # than standard message/* types because there is no body for the
             # nested messages.  A blank line separates the subparts.
-            while True{
-                self._input.push_eof_matcher(NLCRE.match);
-                for retval in self._parsegen(){
+            while true{
+                this._input.push_eof_matcher(NLCRE.match);
+                for retval in this._parsegen(){
                     if retval is NeedMoreData{
                         yield NeedMoreData;
                         continue;
                     } break;
-                } msg = self._pop_message();
+                } msg = this._pop_message();
                 # We need to pop the EOF matcher in order to tell if we're at
                 # the end of the current file, not the end of the last block
                 # of message headers.
-                self._input.pop_eof_matcher();
+                this._input.pop_eof_matcher();
                 # The input stream must be sitting at the newline or at the
                 # EOF.  We want to see if we're at the end of this subpart, so
                 # first consume the blank line, then test the next line to see
                 # if we're at this subpart's EOF.
-                while True{
-                    line = self._input.readline();
+                while true{
+                    line = this._input.readline();
                     if line is NeedMoreData{
                         yield NeedMoreData;
                         continue;
                     } break;
-                } while True{
-                    line = self._input.readline();
+                } while true{
+                    line = this._input.readline();
                     if line is NeedMoreData{
                         yield NeedMoreData;
                         continue;
@@ -311,33 +311,33 @@ class BufferedSubFile(object){
                     break;
                 # Not at EOF so this is a line we're going to need.
                 }
-                self._input.unreadline(line);
+                this._input.unreadline(line);
             } return;
-        } if self._cur.get_content_maintype() == 'message'{
+        } if this._cur.get_content_maintype() == 'message'{
             # The message claims to be a message/* type, then what follows is
             # another RFC 2822 message.
-            for retval in self._parsegen(){
+            for retval in this._parsegen(){
                 if retval is NeedMoreData{
                     yield NeedMoreData;
                     continue;
                 } break;
-            } self._pop_message();
+            } this._pop_message();
             return;
-        } if self._cur.get_content_maintype() == 'multipart'{
-            boundary = self._cur.get_boundary();
-            if boundary is None{
+        } if this._cur.get_content_maintype() == 'multipart'{
+            boundary = this._cur.get_boundary();
+            if boundary is nil{
                 # The message /claims/ to be a multipart but it has not
                 # defined a boundary.  That's a problem which we'll handle by
                 # reading everything until the EOF and marking the message as
                 # defective.
-                self._cur.defects.append(errors.NoBoundaryInMultipartDefect());
+                this._cur.defects.append(errors.NoBoundaryInMultipartDefect());
                 lines = [];
-                for line in self._input{
+                for line in this._input{
                     if line is NeedMoreData{
                         yield NeedMoreData;
                         continue;
                     } lines.append(line);
-                } self._cur.set_payload(EMPTYSTRING.join(lines));
+                } this._cur.set_payload(EMPTYSTRING.join(lines));
                 return;
             # Create a line match predicate which matches the inter-part
             # boundary as well as the end-of-multipart boundary.  Don't push
@@ -348,11 +348,11 @@ class BufferedSubFile(object){
             boundaryre = re.compile(
                 '(?P<sep>' + re.escape(separator) +
                 r')(?P<end>--)?(?P<ws>[ \t]*)(?P<linesep>\r\n|\r|\n)?$');
-            capturing_preamble = True;
+            capturing_preamble = true;
             preamble = [];
-            linesep = False;
-            while True{
-                line = self._input.readline();
+            linesep = false;
+            while true{
+                line = this._input.readline();
                 if line is NeedMoreData{
                     yield NeedMoreData;
                     continue;
@@ -377,29 +377,29 @@ class BufferedSubFile(object){
                             eolmo = NLCRE_eol.search(lastline);
                             if eolmo{
                                 preamble[-1] = lastline[:-len(eolmo.group(0))];
-                            } self._cur.preamble = EMPTYSTRING.join(preamble);
-                        } capturing_preamble = False;
-                        self._input.unreadline(line);
+                            } this._cur.preamble = EMPTYSTRING.join(preamble);
+                        } capturing_preamble = false;
+                        this._input.unreadline(line);
                         continue;
                     # We saw a boundary separating two parts.  Consume any
                     # multiple boundary lines that may be following.  Our
                     # interpretation of RFC 2046 BNF grammar does not produce
                     # body parts within such double boundaries.
                     }
-                    while True{
-                        line = self._input.readline();
+                    while true{
+                        line = this._input.readline();
                         if line is NeedMoreData{
                             yield NeedMoreData;
                             continue;
                         } mo = boundaryre.match(line);
                         if not mo{
-                            self._input.unreadline(line);
+                            this._input.unreadline(line);
                             break;
                     # Recurse to parse this subpart; the input stream points
                     # at the subpart's first line.
                     }
-                    } self._input.push_eof_matcher(boundaryre.match);
-                    for retval in self._parsegen(){
+                    } this._input.push_eof_matcher(boundaryre.match);
+                    for retval in this._parsegen(){
                         if retval is NeedMoreData{
                             yield NeedMoreData;
                             continue;
@@ -409,27 +409,27 @@ class BufferedSubFile(object){
                     # previous subpart's payload (or epilogue if the previous
                     # part is a multipart).
                     }
-                    if self._last.get_content_maintype() == 'multipart'{
-                        epilogue = self._last.epilogue;
+                    if this._last.get_content_maintype() == 'multipart'{
+                        epilogue = this._last.epilogue;
                         if epilogue == ''{
-                            self._last.epilogue = None;
-                        } elif epilogue is not None{
+                            this._last.epilogue = nil;
+                        } elif epilogue is not nil{
                             mo = NLCRE_eol.search(epilogue);
                             if mo{
                                 end = len(mo.group(0));
-                                self._last.epilogue = epilogue[:-end];
+                                this._last.epilogue = epilogue[:-end];
                     } } } else{
-                        payload = self._last.get_payload();
+                        payload = this._last.get_payload();
                         if isinstance(payload, basestring){
                             mo = NLCRE_eol.search(payload);
                             if mo{
                                 payload = payload[:-len(mo.group(0))];
-                                self._last.set_payload(payload);
-                    } } } self._input.pop_eof_matcher();
-                    self._pop_message();
+                                this._last.set_payload(payload);
+                    } } } this._input.pop_eof_matcher();
+                    this._pop_message();
                     # Set the multipart up for newline cleansing, which will
                     # happen if we're in a nested multipart.
-                    self._last = self._cur;
+                    this._last = this._cur;
                 } else{
                     # I think we must be in the preamble
                     assert capturing_preamble;
@@ -440,14 +440,14 @@ class BufferedSubFile(object){
             # Everything from here to the EOF is epilogue.
             }
             } if capturing_preamble{
-                self._cur.defects.append(errors.StartBoundaryNotFoundDefect());
-                self._cur.set_payload(EMPTYSTRING.join(preamble));
+                this._cur.defects.append(errors.StartBoundaryNotFoundDefect());
+                this._cur.set_payload(EMPTYSTRING.join(preamble));
                 epilogue = [];
-                for line in self._input{
+                for line in this._input{
                     if line is NeedMoreData{
                         yield NeedMoreData;
                         continue;
-                } } self._cur.epilogue = EMPTYSTRING.join(epilogue);
+                } } this._cur.epilogue = EMPTYSTRING.join(epilogue);
                 return;
             # If the end boundary ended in a newline, we'll need to make sure
             # the epilogue isn't None
@@ -456,7 +456,7 @@ class BufferedSubFile(object){
                 epilogue = [''];
             } else{
                 epilogue = [];
-            } for line in self._input{
+            } for line in this._input{
                 if line is NeedMoreData{
                     yield NeedMoreData;
                     continue;
@@ -470,21 +470,21 @@ class BufferedSubFile(object){
                 bolmo = NLCRE_bol.match(firstline);
                 if bolmo{
                     epilogue[0] = firstline[len(bolmo.group(0)):];
-            } } self._cur.epilogue = EMPTYSTRING.join(epilogue);
+            } } this._cur.epilogue = EMPTYSTRING.join(epilogue);
             return;
         # Otherwise, it's some non-multipart type, so the entire rest of the
         # file contents becomes the payload.
         }
         lines = [];
-        for line in self._input{
+        for line in this._input{
             if line is NeedMoreData{
                 yield NeedMoreData;
                 continue;
             } lines.append(line);
-        } self._cur.set_payload(EMPTYSTRING.join(lines));
+        } this._cur.set_payload(EMPTYSTRING.join(lines));
 
     }
-    def _parse_headers(self, lines){
+    function _parse_headers( lines){
         # Passed a list of lines that make up the headers for the current msg
         lastheader = '';
         lastvalue = [];
@@ -496,14 +496,14 @@ class BufferedSubFile(object){
                     # is illegal, so let's note the defect, store the illegal
                     # line, and ignore it for purposes of headers.
                     defect = errors.FirstHeaderLineIsContinuationDefect(line);
-                    self._cur.defects.append(defect);
+                    this._cur.defects.append(defect);
                     continue;
                 } lastvalue.append(line);
                 continue;
             } if lastheader{
                 # XXX reconsider the joining of folded lines
                 lhdr = EMPTYSTRING.join(lastvalue)[:-1].rstrip('\r\n');
-                self._cur[lastheader] = lhdr;
+                this._cur[lastheader] = lhdr;
                 lastheader, lastvalue = '', [];
             # Check for envelope header, i.e. unix-from
             }
@@ -513,26 +513,26 @@ class BufferedSubFile(object){
                     mo = NLCRE_eol.search(line);
                     if mo{
                         line = line[:-len(mo.group(0))];
-                    } self._cur.set_unixfrom(line);
+                    } this._cur.set_unixfrom(line);
                     continue;
                 } elif lineno == len(lines) - 1{
                     # Something looking like a unix-from at the end - it's
                     # probably the first line of the body, so push back the
                     # line and stop.
-                    self._input.unreadline(line);
+                    this._input.unreadline(line);
                     return;
                 } else{
                     # Weirdly placed unix-from line.  Note this as a defect
                     # and ignore it.
                     defect = errors.MisplacedEnvelopeHeaderDefect(line);
-                    self._cur.defects.append(defect);
+                    this._cur.defects.append(defect);
                     continue;
             # Split the line on the colon separating field name from value.
             }
             } i = line.find(':');
             if i < 0{
                 defect = errors.MalformedHeaderDefect(line);
-                self._cur.defects.append(defect);
+                this._cur.defects.append(defect);
                 continue;
             } lastheader = line[:i];
             lastvalue = [line[i+1:].lstrip()];
@@ -540,7 +540,7 @@ class BufferedSubFile(object){
         }
         if lastheader{
             # XXX reconsider the joining of folded lines
-            self._cur[lastheader] = EMPTYSTRING.join(lastvalue).rstrip('\r\n');
+            this._cur[lastheader] = EMPTYSTRING.join(lastvalue).rstrip('\r\n');
 
 }
 } }

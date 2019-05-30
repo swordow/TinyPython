@@ -112,7 +112,7 @@ stringlib_parse_args_finds(const char * function_name, PyObject *args,
     PyObject *tmp_subobj;
     Py_ssize_t tmp_start = 0;
     Py_ssize_t tmp_end = PY_SSIZE_T_MAX;
-    PyObject *obj_start=Py_None, *obj_end=Py_None;
+    PyObject *obj_start=Py_Nil, *obj_end=Py_Nil;
     char format[FORMAT_BUFFER_SIZE] = "O|OO:";
     size_t len = strlen(format);
 
@@ -125,10 +125,10 @@ stringlib_parse_args_finds(const char * function_name, PyObject *args,
     /* To support None in "start" and "end" arguments, meaning
        the same as if they were not passed.
     */
-    if (obj_start != Py_None)
+    if (obj_start != Py_Nil)
         if (!_PyEval_SliceIndex(obj_start, &tmp_start))
             return 0;
-    if (obj_end != Py_None)
+    if (obj_end != Py_Nil)
         if (!_PyEval_SliceIndex(obj_end, &tmp_end))
             return 0;
 

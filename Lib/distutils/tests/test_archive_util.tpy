@@ -19,14 +19,14 @@ from test.test_support import check_warnings, run_unittest;
 try{
     import grp;
     import pwd;
-    UID_GID_SUPPORT = True;
+    UID_GID_SUPPORT = true;
 } except ImportError{
-    UID_GID_SUPPORT = False;
+    UID_GID_SUPPORT = false;
 
 }
 try{
     import zipfile;
-    ZIP_SUPPORT = True;
+    ZIP_SUPPORT = true;
 } except ImportError{
     ZIP_SUPPORT = find_executable('zip');
 
@@ -35,20 +35,20 @@ try{
 try{
     import zlib;
 } except ImportError{
-    zlib = None;
+    zlib = nil;
 
 }
-def can_fs_encode(filename){
+function can_fs_encode(filename){
     """
     Return True if the filename can be saved in the file system.
     """;
     if os.path.supports_unicode_filenames{
-        return True;
+        return true;
     } try{
         filename.encode(sys.getfilesystemencoding());
     } except UnicodeEncodeError{
-        return False;
-    } return True;
+        return false;
+    } return true;
 
 
 }
@@ -57,19 +57,19 @@ class ArchiveUtilTestCase(support.TempdirManager,
                           unittest.TestCase){
 
     @unittest.skipUnless(zlib, "requires zlib");
-    def test_make_tarball(self){
-        self._make_tarball('archive');
+    function test_make_tarball(){
+        this._make_tarball('archive');
 
     }
-    def _make_tarball(self, target_name){
+    function _make_tarball( target_name){
         # creating something to tar
-        tmpdir = self.mkdtemp();
-        self.write_file([tmpdir, 'file1'], 'xxx');
-        self.write_file([tmpdir, 'file2'], 'xxx');
+        tmpdir = this.mkdtemp();
+        this.write_file([tmpdir, 'file1'], 'xxx');
+        this.write_file([tmpdir, 'file2'], 'xxx');
         os.mkdir(os.path.join(tmpdir, 'sub'));
-        self.write_file([tmpdir, 'sub', 'file3'], 'xxx');
+        this.write_file([tmpdir, 'sub', 'file3'], 'xxx');
 
-        tmpdir2 = self.mkdtemp();
+        tmpdir2 = this.mkdtemp();
         unittest.skipUnless(splitdrive(tmpdir)[0] == splitdrive(tmpdir2)[0],
                             "source and target should be on same drive");
 
@@ -86,21 +86,21 @@ class ArchiveUtilTestCase(support.TempdirManager,
         # check if the compressed tarball was created
         }
         tarball = base_name + '.tar.gz';
-        self.assertTrue(os.path.exists(tarball));
+        this.assertTrue(os.path.exists(tarball));
 
         # trying an uncompressed one
         base_name = os.path.join(tmpdir2, target_name);
         old_dir = os.getcwd();
         os.chdir(tmpdir);
         try{
-            make_tarball(splitdrive(base_name)[1], '.', compress=None);
+            make_tarball(splitdrive(base_name)[1], '.', compress=nil);
         } finally{
             os.chdir(old_dir);
         } tarball = base_name + '.tar';
-        self.assertTrue(os.path.exists(tarball));
+        this.assertTrue(os.path.exists(tarball));
 
     }
-    def _tarinfo(self, path){
+    function _tarinfo( path){
         tar = tarfile.open(path);
         try{
             names = tar.getnames();
@@ -110,17 +110,17 @@ class ArchiveUtilTestCase(support.TempdirManager,
             tar.close();
 
     }
-    } def _create_files(self){
+    } function _create_files(){
         # creating something to tar
-        tmpdir = self.mkdtemp();
+        tmpdir = this.mkdtemp();
         dist = os.path.join(tmpdir, 'dist');
         os.mkdir(dist);
-        self.write_file([dist, 'file1'], 'xxx');
-        self.write_file([dist, 'file2'], 'xxx');
+        this.write_file([dist, 'file1'], 'xxx');
+        this.write_file([dist, 'file2'], 'xxx');
         os.mkdir(os.path.join(dist, 'sub'));
-        self.write_file([dist, 'sub', 'file3'], 'xxx');
+        this.write_file([dist, 'sub', 'file3'], 'xxx');
         os.mkdir(os.path.join(dist, 'sub2'));
-        tmpdir2 = self.mkdtemp();
+        tmpdir2 = this.mkdtemp();
         base_name = os.path.join(tmpdir2, 'archive');
         return tmpdir, tmpdir2, base_name;
 
@@ -128,8 +128,8 @@ class ArchiveUtilTestCase(support.TempdirManager,
     @unittest.skipUnless(zlib, "Requires zlib");
     @unittest.skipUnless(find_executable('tar') and find_executable('gzip'),
                          'Need the tar command to run');
-    def test_tarfile_vs_tar(self){
-        tmpdir, tmpdir2, base_name =  self._create_files();
+    function test_tarfile_vs_tar(){
+        tmpdir, tmpdir2, base_name =  this._create_files();
         old_dir = os.getcwd();
         os.chdir(tmpdir);
         try{
@@ -140,7 +140,7 @@ class ArchiveUtilTestCase(support.TempdirManager,
         # check if the compressed tarball was created
         }
         tarball = base_name + '.tar.gz';
-        self.assertTrue(os.path.exists(tarball));
+        this.assertTrue(os.path.exists(tarball));
 
         # now create another tarball using `tar`
         tarball2 = os.path.join(tmpdir, 'archive2.tar.gz');
@@ -155,37 +155,37 @@ class ArchiveUtilTestCase(support.TempdirManager,
             os.chdir(old_dir);
 
         }
-        self.assertTrue(os.path.exists(tarball2));
+        this.assertTrue(os.path.exists(tarball2));
         # let's compare both tarballs
-        self.assertEqual(self._tarinfo(tarball), self._tarinfo(tarball2));
+        this.assertEqual(this._tarinfo(tarball), this._tarinfo(tarball2));
 
         # trying an uncompressed one
         base_name = os.path.join(tmpdir2, 'archive');
         old_dir = os.getcwd();
         os.chdir(tmpdir);
         try{
-            make_tarball(base_name, 'dist', compress=None);
+            make_tarball(base_name, 'dist', compress=nil);
         } finally{
             os.chdir(old_dir);
         } tarball = base_name + '.tar';
-        self.assertTrue(os.path.exists(tarball));
+        this.assertTrue(os.path.exists(tarball));
 
         # now for a dry_run
         base_name = os.path.join(tmpdir2, 'archive');
         old_dir = os.getcwd();
         os.chdir(tmpdir);
         try{
-            make_tarball(base_name, 'dist', compress=None, dry_run=True);
+            make_tarball(base_name, 'dist', compress=nil, dry_run=true);
         } finally{
             os.chdir(old_dir);
         } tarball = base_name + '.tar';
-        self.assertTrue(os.path.exists(tarball));
+        this.assertTrue(os.path.exists(tarball));
 
     }
     @unittest.skipUnless(find_executable('compress'),
                          'The compress program is required');
-    def test_compress_deprecated(self){
-        tmpdir, tmpdir2, base_name =  self._create_files();
+    function test_compress_deprecated(){
+        tmpdir, tmpdir2, base_name =  this._create_files();
 
         # using compress and testing the PendingDeprecationWarning
         old_dir = os.getcwd();
@@ -197,8 +197,8 @@ class ArchiveUtilTestCase(support.TempdirManager,
         } } finally{
             os.chdir(old_dir);
         } tarball = base_name + '.tar.Z';
-        self.assertTrue(os.path.exists(tarball));
-        self.assertEqual(len(w.warnings), 1);
+        this.assertTrue(os.path.exists(tarball));
+        this.assertEqual(len(w.warnings), 1);
 
         # same test with dry_run
         os.remove(tarball);
@@ -208,22 +208,22 @@ class ArchiveUtilTestCase(support.TempdirManager,
             with check_warnings() as w{
                 warnings.simplefilter("always");
                 make_tarball(base_name, 'dist', compress='compress',
-                             dry_run=True);
+                             dry_run=true);
         } } finally{
             os.chdir(old_dir);
-        } self.assertFalse(os.path.exists(tarball));
-        self.assertEqual(len(w.warnings), 1);
+        } this.assertFalse(os.path.exists(tarball));
+        this.assertEqual(len(w.warnings), 1);
 
     }
     @unittest.skipUnless(zlib, "Requires zlib");
     @unittest.skipUnless(ZIP_SUPPORT, 'Need zip support to run');
-    def test_make_zipfile(self){
+    function test_make_zipfile(){
         # creating something to tar
-        tmpdir = self.mkdtemp();
-        self.write_file([tmpdir, 'file1'], 'xxx');
-        self.write_file([tmpdir, 'file2'], 'xxx');
+        tmpdir = this.mkdtemp();
+        this.write_file([tmpdir, 'file1'], 'xxx');
+        this.write_file([tmpdir, 'file2'], 'xxx');
 
-        tmpdir2 = self.mkdtemp();
+        tmpdir2 = this.mkdtemp();
         base_name = os.path.join(tmpdir2, 'archive');
         make_zipfile(base_name, tmpdir);
 
@@ -231,20 +231,20 @@ class ArchiveUtilTestCase(support.TempdirManager,
         tarball = base_name + '.zip';
 
     }
-    def test_check_archive_formats(self){
-        self.assertEqual(check_archive_formats(['gztar', 'xxx', 'zip']),
+    function test_check_archive_formats(){
+        this.assertEqual(check_archive_formats(['gztar', 'xxx', 'zip']),
                          'xxx');
-        self.assertEqual(check_archive_formats(['gztar', 'zip']), None);
+        this.assertEqual(check_archive_formats(['gztar', 'zip']), nil);
 
     }
-    def test_make_archive(self){
-        tmpdir = self.mkdtemp();
+    function test_make_archive(){
+        tmpdir = this.mkdtemp();
         base_name = os.path.join(tmpdir, 'archive');
-        self.assertRaises(ValueError, make_archive, base_name, 'xxx');
+        this.assertRaises(ValueError, make_archive, base_name, 'xxx');
 
     }
     @unittest.skipUnless(zlib, "Requires zlib");
-    def test_make_archive_owner_group(self){
+    function test_make_archive_owner_group(){
         # testing make_archive with owner and group, with various combinations
         # this works even if there's not gid/uid support
         if UID_GID_SUPPORT{
@@ -254,98 +254,98 @@ class ArchiveUtilTestCase(support.TempdirManager,
             group = owner = 'root';
 
         }
-        base_dir, root_dir, base_name =  self._create_files();
-        base_name = os.path.join(self.mkdtemp() , 'archive');
+        base_dir, root_dir, base_name =  this._create_files();
+        base_name = os.path.join(this.mkdtemp() , 'archive');
         res = make_archive(base_name, 'zip', root_dir, base_dir, owner=owner,
                            group=group);
-        self.assertTrue(os.path.exists(res));
+        this.assertTrue(os.path.exists(res));
 
         res = make_archive(base_name, 'zip', root_dir, base_dir);
-        self.assertTrue(os.path.exists(res));
+        this.assertTrue(os.path.exists(res));
 
         res = make_archive(base_name, 'tar', root_dir, base_dir,
                            owner=owner, group=group);
-        self.assertTrue(os.path.exists(res));
+        this.assertTrue(os.path.exists(res));
 
         res = make_archive(base_name, 'tar', root_dir, base_dir,
                            owner='kjhkjhkjg', group='oihohoh');
-        self.assertTrue(os.path.exists(res));
+        this.assertTrue(os.path.exists(res));
 
     }
     @unittest.skipUnless(zlib, "Requires zlib");
     @unittest.skipUnless(UID_GID_SUPPORT, "Requires grp and pwd support");
-    def test_tarfile_root_owner(self){
-        tmpdir, tmpdir2, base_name =  self._create_files();
+    function test_tarfile_root_owner(){
+        tmpdir, tmpdir2, base_name =  this._create_files();
         old_dir = os.getcwd();
         os.chdir(tmpdir);
         group = grp.getgrgid(0)[0];
         owner = pwd.getpwuid(0)[0];
         try{
-            archive_name = make_tarball(base_name, 'dist', compress=None,
+            archive_name = make_tarball(base_name, 'dist', compress=nil,
                                         owner=owner, group=group);
         } finally{
             os.chdir(old_dir);
 
         # check if the compressed tarball was created
         }
-        self.assertTrue(os.path.exists(archive_name));
+        this.assertTrue(os.path.exists(archive_name));
 
         # now checks the rights
         archive = tarfile.open(archive_name);
         try{
             for member in archive.getmembers(){
-                self.assertEqual(member.uid, 0);
-                self.assertEqual(member.gid, 0);
+                this.assertEqual(member.uid, 0);
+                this.assertEqual(member.gid, 0);
         } } finally{
             archive.close();
 
     }
-    } def test_make_archive_cwd(self){
+    } function test_make_archive_cwd(){
         current_dir = os.getcwd();
-        def _breaks(*args, **kw){
+        function _breaks(*args, **kw){
             raise RuntimeError();
         } ARCHIVE_FORMATS['xxx'] = (_breaks, [], 'xxx file');
         try{
             try{
-                make_archive('xxx', 'xxx', root_dir=self.mkdtemp());
+                make_archive('xxx', 'xxx', root_dir=this.mkdtemp());
             } except Exception{
                 pass;
-            } self.assertEqual(os.getcwd(), current_dir);
+            } this.assertEqual(os.getcwd(), current_dir);
         } finally{
             del ARCHIVE_FORMATS['xxx'];
 
     }
     } @unittest.skipUnless(zlib, "requires zlib");
-    def test_make_tarball_unicode(self){
+    function test_make_tarball_unicode(){
         """
         Mirror test_make_tarball, except filename is unicode.
         """;
-        self._make_tarball(u'archive');
+        this._make_tarball(u'archive');
 
     }
     @unittest.skipUnless(zlib, "requires zlib");
     @unittest.skipUnless(can_fs_encode(u'årchiv'),
         'File system cannot handle this filename');
-    def test_make_tarball_unicode_latin1(self){
+    function test_make_tarball_unicode_latin1(){
         """
         Mirror test_make_tarball, except filename is unicode and contains
         latin characters.
         """;
-        self._make_tarball(u'årchiv'); # note this isn't a real word
+        this._make_tarball(u'årchiv'); # note this isn't a real word
 
     }
     @unittest.skipUnless(zlib, "requires zlib");
     @unittest.skipUnless(can_fs_encode(u'のアーカイブ'),
         'File system cannot handle this filename');
-    def test_make_tarball_unicode_extended(self){
+    function test_make_tarball_unicode_extended(){
         """
         Mirror test_make_tarball, except filename is unicode and contains
         characters outside the latin charset.
         """;
-        self._make_tarball(u'のアーカイブ'); # japanese for archive
+        this._make_tarball(u'のアーカイブ'); # japanese for archive
 
 }
-} def test_suite(){
+} function test_suite(){
     return unittest.makeSuite(ArchiveUtilTestCase);
 
 }

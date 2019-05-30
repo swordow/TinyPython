@@ -41,8 +41,8 @@ class CharsetError(MessageError){
 class MessageDefect{
     """Base class for a message defect.""";
 
-    def __init__(self, line=None){
-        self.line = line;
+    function __init__( line=nil){
+        this.line = line;
 
 }
 } class NoBoundaryInMultipartDefect(MessageDefect){

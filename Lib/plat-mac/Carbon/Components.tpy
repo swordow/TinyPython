@@ -1,6 +1,6 @@
 # Generated from 'Components.h'
 
-def FOUR_CHAR_CODE(x){ return x;
+function FOUR_CHAR_CODE(x){ return x;}
 kAppleManufacturer = FOUR_CHAR_CODE('appl');
 kComponentResourceType = FOUR_CHAR_CODE('thng');
 kComponentAliasResourceType = FOUR_CHAR_CODE('thga');

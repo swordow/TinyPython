@@ -90,26 +90,26 @@ class CodecInfo(tuple){
     # be defined for Python 3.5
     #
     # See http://bugs.python.org/issue19619
-    _is_text_encoding = True; # Assume codecs are text encodings by default
+    _is_text_encoding = true; # Assume codecs are text encodings by default
 
-    def __new__(cls, encode, decode, streamreader=None, streamwriter=None,
-        incrementalencoder=None, incrementaldecoder=None, name=None,
-        _is_text_encoding=None){
-        self = tuple.__new__(cls, (encode, decode, streamreader, streamwriter));
-        self.name = name;
-        self.encode = encode;
-        self.decode = decode;
-        self.incrementalencoder = incrementalencoder;
-        self.incrementaldecoder = incrementaldecoder;
-        self.streamwriter = streamwriter;
-        self.streamreader = streamreader;
-        if _is_text_encoding is not None{
-            self._is_text_encoding = _is_text_encoding;
-        } return self;
+    function __new__(cls, encode, decode, streamreader=nil, streamwriter=nil,
+        incrementalencoder=nil, incrementaldecoder=nil, name=nil,
+        _is_text_encoding=nil){
+        this = tuple.__new__(cls, (encode, decode, streamreader, streamwriter));
+        this.name = name;
+        this.encode = encode;
+        this.decode = decode;
+        this.incrementalencoder = incrementalencoder;
+        this.incrementaldecoder = incrementaldecoder;
+        this.streamwriter = streamwriter;
+        this.streamreader = streamreader;
+        if _is_text_encoding is not nil{
+            this._is_text_encoding = _is_text_encoding;
+        } return this;
 
     }
-    def __repr__(self){
-        return "<%s.%s object for encoding %s at 0x%x>" % (self.__class__.__module__, self.__class__.__name__, self.name, id(self));
+    function __repr__(){
+        return "<%s.%s object for encoding %s at 0x%x>" % (this.__class__.__module__, this.__class__.__name__, this.name, id(this));
 
 }
 } class Codec{
@@ -134,7 +134,7 @@ class CodecInfo(tuple){
         The set of allowed values can be extended via register_error.
 
     """;
-    def encode(self, input, errors='strict'){
+    function encode( input, errors='strict'){
 
         """ Encodes the object input and returns a tuple (output
             object, length consumed).
@@ -154,7 +154,7 @@ class CodecInfo(tuple){
         raise NotImplementedError;
 
     }
-    def decode(self, input, errors='strict'){
+    function decode( input, errors='strict'){
 
         """ Decodes the object input and returns a tuple (output
             object, length consumed).
@@ -184,7 +184,7 @@ class CodecInfo(tuple){
     passed piece by piece to the encode() method. The IncrementalEncoder remembers
     the state of the Encoding process between calls to encode().
     """;
-    def __init__(self, errors='strict'){
+    function __init__( errors='strict'){
         """
         Creates an IncrementalEncoder instance.
 
@@ -192,31 +192,31 @@ class CodecInfo(tuple){
         providing the errors keyword argument. See the module docstring
         for a list of possible values.
         """;
-        self.errors = errors;
-        self.buffer = "";
+        this.errors = errors;
+        this.buffer = "";
 
     }
-    def encode(self, input, final=False){
+    function encode( input, final=false){
         """
         Encodes input and returns the resulting object.
         """;
         raise NotImplementedError;
 
     }
-    def reset(self){
+    function reset(){
         """
         Resets the encoder to the initial state.
         """;
 
     }
-    def getstate(self){
+    function getstate(){
         """
         Return the current state of the encoder.
         """;
         return 0;
 
     }
-    def setstate(self, state){
+    function setstate( state){
         """
         Set the current state of the encoder. state must have been
         returned by getstate().
@@ -229,37 +229,37 @@ class CodecInfo(tuple){
     incremental encoder if the encoder must keep some of the output in a
     buffer between calls to encode().
     """;
-    def __init__(self, errors='strict'){
-        IncrementalEncoder.__init__(self, errors);
-        self.buffer = ""; # unencoded input that is kept between calls to encode()
+    function __init__( errors='strict'){
+        IncrementalEncoder.__init__(this, errors);
+        this.buffer = ""; # unencoded input that is kept between calls to encode()
 
     }
-    def _buffer_encode(self, input, errors, final){
+    function _buffer_encode( input, errors, final){
         # Overwrite this method in subclasses: It must encode input
         # and return an (output, length consumed) tuple
         raise NotImplementedError;
 
     }
-    def encode(self, input, final=False){
+    function encode( input, final=false){
         # encode input (taking the buffer into account)
-        data = self.buffer + input;
-        (result, consumed) = self._buffer_encode(data, self.errors, final);
+        data = this.buffer + input;
+        (result, consumed) = this._buffer_encode(data, this.errors, final);
         # keep unencoded input until the next call
-        self.buffer = data[consumed:];
+        this.buffer = data[consumed:];
         return result;
 
     }
-    def reset(self){
-        IncrementalEncoder.reset(self);
-        self.buffer = "";
+    function reset(){
+        IncrementalEncoder.reset(this);
+        this.buffer = "";
 
     }
-    def getstate(self){
-        return self.buffer or 0;
+    function getstate(){
+        return this.buffer or 0;
 
     }
-    def setstate(self, state){
-        self.buffer = state or "";
+    function setstate( state){
+        this.buffer = state or "";
 
 }
 } class IncrementalDecoder(object){
@@ -268,7 +268,7 @@ class CodecInfo(tuple){
     passed piece by piece to the decode() method. The IncrementalDecoder
     remembers the state of the decoding process between calls to decode().
     """;
-    def __init__(self, errors='strict'){
+    function __init__( errors='strict'){
         """
         Creates an IncrementalDecoder instance.
 
@@ -276,23 +276,23 @@ class CodecInfo(tuple){
         providing the errors keyword argument. See the module docstring
         for a list of possible values.
         """;
-        self.errors = errors;
+        this.errors = errors;
 
     }
-    def decode(self, input, final=False){
+    function decode( input, final=false){
         """
         Decodes input and returns the resulting object.
         """;
         raise NotImplementedError;
 
     }
-    def reset(self){
+    function reset(){
         """
         Resets the decoder to the initial state.
         """;
 
     }
-    def getstate(self){
+    function getstate(){
         """
         Return the current state of the decoder.
 
@@ -307,7 +307,7 @@ class CodecInfo(tuple){
         return (b"", 0);
 
     }
-    def setstate(self, state){
+    function setstate( state){
         """
         Set the current state of the decoder.
 
@@ -322,39 +322,39 @@ class CodecInfo(tuple){
     incremental decoder if the decoder must be able to handle incomplete byte
     sequences.
     """;
-    def __init__(self, errors='strict'){
-        IncrementalDecoder.__init__(self, errors);
-        self.buffer = ""; # undecoded input that is kept between calls to decode()
+    function __init__( errors='strict'){
+        IncrementalDecoder.__init__(this, errors);
+        this.buffer = ""; # undecoded input that is kept between calls to decode()
 
     }
-    def _buffer_decode(self, input, errors, final){
+    function _buffer_decode( input, errors, final){
         # Overwrite this method in subclasses: It must decode input
         # and return an (output, length consumed) tuple
         raise NotImplementedError;
 
     }
-    def decode(self, input, final=False){
+    function decode( input, final=false){
         # decode input (taking the buffer into account)
-        data = self.buffer + input;
-        (result, consumed) = self._buffer_decode(data, self.errors, final);
+        data = this.buffer + input;
+        (result, consumed) = this._buffer_decode(data, this.errors, final);
         # keep undecoded input until the next call
-        self.buffer = data[consumed:];
+        this.buffer = data[consumed:];
         return result;
 
     }
-    def reset(self){
-        IncrementalDecoder.reset(self);
-        self.buffer = "";
+    function reset(){
+        IncrementalDecoder.reset(this);
+        this.buffer = "";
 
     }
-    def getstate(self){
+    function getstate(){
         # additional state info is always 0
-        return (self.buffer, 0);
+        return (this.buffer, 0);
 
     }
-    def setstate(self, state){
+    function setstate( state){
         # ignore additional state info
-        self.buffer = state[0];
+        this.buffer = state[0];
 
 #
 # The StreamWriter and StreamReader class provide generic working
@@ -366,7 +366,7 @@ class CodecInfo(tuple){
 }
 } class StreamWriter(Codec){
 
-    def __init__(self, stream, errors='strict'){
+    function __init__( stream, errors='strict'){
 
         """ Creates a StreamWriter instance.
 
@@ -388,27 +388,27 @@ class CodecInfo(tuple){
             The set of allowed parameter values can be extended via
             register_error.
         """;
-        self.stream = stream;
-        self.errors = errors;
+        this.stream = stream;
+        this.errors = errors;
 
     }
-    def write(self, object){
+    function write( object){
 
         """ Writes the object's contents encoded to self.stream.
         """;
-        data, consumed = self.encode(object, self.errors);
-        self.stream.write(data);
+        data, consumed = this.encode(object, this.errors);
+        this.stream.write(data);
 
     }
-    def writelines(self, list){
+    function writelines( list){
 
         """ Writes the concatenated list of strings to the stream
             using .write().
         """;
-        self.write(''.join(list));
+        this.write(''.join(list));
 
     }
-    def reset(self){
+    function reset(){
 
         """ Flushes and resets the codec buffers used for keeping state.
 
@@ -421,33 +421,33 @@ class CodecInfo(tuple){
         pass;
 
     }
-    def seek(self, offset, whence=0){
-        self.stream.seek(offset, whence);
+    function seek( offset, whence=0){
+        this.stream.seek(offset, whence);
         if whence == 0 and offset == 0{
-            self.reset();
+            this.reset();
 
     }
-    } def __getattr__(self, name,
+    } function __getattr__( name,
                     getattr=getattr){
 
         """ Inherit all other methods from the underlying stream.
         """;
-        return getattr(self.stream, name);
+        return getattr(this.stream, name);
 
     }
-    def __enter__(self){
-        return self;
+    function __enter__(){
+        return this;
 
     }
-    def __exit__(self, type, value, tb){
-        self.stream.close();
+    function __exit__( type, value, tb){
+        this.stream.close();
 
 ###
 
 }
 } class StreamReader(Codec){
 
-    def __init__(self, stream, errors='strict'){
+    function __init__( stream, errors='strict'){
 
         """ Creates a StreamReader instance.
 
@@ -465,20 +465,20 @@ class CodecInfo(tuple){
             The set of allowed parameter values can be extended via
             register_error.
         """;
-        self.stream = stream;
-        self.errors = errors;
-        self.bytebuffer = "";
+        this.stream = stream;
+        this.errors = errors;
+        this.bytebuffer = "";
         # For str->str decoding this will stay a str
         # For str->unicode decoding the first read will promote it to unicode
-        self.charbuffer = "";
-        self.linebuffer = None;
+        this.charbuffer = "";
+        this.linebuffer = nil;
 
     }
-    def decode(self, input, errors='strict'){
+    function decode( input, errors='strict'){
         raise NotImplementedError;
 
     }
-    def read(self, size=-1, chars=-1, firstline=False){
+    function read( size=-1, chars=-1, firstline=false){
 
         """ Decodes data from the stream self.stream and returns the
             resulting object.
@@ -507,9 +507,9 @@ class CodecInfo(tuple){
             on the stream, these should be read too.
         """;
         # If we have lines cached, first merge them back into characters
-        if self.linebuffer{
-            self.charbuffer = "".join(self.linebuffer);
-            self.linebuffer = None;
+        if this.linebuffer{
+            this.charbuffer = "".join(this.linebuffer);
+            this.linebuffer = nil;
 
         }
         if chars < 0{
@@ -519,50 +519,50 @@ class CodecInfo(tuple){
 
         # read until we get the required number of characters (if available)
         }
-        while True{
+        while true{
             # can the request be satisfied from the character buffer?
             if chars >= 0{
-                if len(self.charbuffer) >= chars{
+                if len(this.charbuffer) >= chars{
                     break;
             # we need more data
             }
             } if size < 0{
-                newdata = self.stream.read();
+                newdata = this.stream.read();
             } else{
-                newdata = self.stream.read(size);
+                newdata = this.stream.read(size);
             # decode bytes (those remaining from the last call included)
             }
-            data = self.bytebuffer + newdata;
+            data = this.bytebuffer + newdata;
             try{
-                newchars, decodedbytes = self.decode(data, self.errors);
+                newchars, decodedbytes = this.decode(data, this.errors);
             } except UnicodeDecodeError, exc{
                 if firstline{
-                    newchars, decodedbytes = self.decode(data[:exc.start], self.errors);
-                    lines = newchars.splitlines(True);
+                    newchars, decodedbytes = this.decode(data[:exc.start], this.errors);
+                    lines = newchars.splitlines(true);
                     if len(lines)<=1{
                         raise;
                 } } else{
                     raise;
             # keep undecoded bytes until the next call
             }
-            } self.bytebuffer = data[decodedbytes:];
+            } this.bytebuffer = data[decodedbytes:];
             # put new characters in the character buffer
-            self.charbuffer += newchars;
+            this.charbuffer += newchars;
             # there was no data available
             if not newdata{
                 break;
         } } if chars < 0{
             # Return everything we've got
-            result = self.charbuffer;
-            self.charbuffer = "";
+            result = this.charbuffer;
+            this.charbuffer = "";
         } else{
             # Return the first chars characters
-            result = self.charbuffer[:chars];
-            self.charbuffer = self.charbuffer[chars:];
+            result = this.charbuffer[:chars];
+            this.charbuffer = this.charbuffer[chars:];
         } return result;
 
     }
-    def readline(self, size=None, keepends=True){
+    function readline( size=nil, keepends=true){
 
         """ Read one line from the input stream and return the
             decoded data.
@@ -573,34 +573,34 @@ class CodecInfo(tuple){
         """;
         # If we have lines cached from an earlier read, return
         # them unconditionally
-        if self.linebuffer{
-            line = self.linebuffer[0];
-            del self.linebuffer[0];
-            if len(self.linebuffer) == 1{
+        if this.linebuffer{
+            line = this.linebuffer[0];
+            del this.linebuffer[0];
+            if len(this.linebuffer) == 1{
                 # revert to charbuffer mode; we might need more data
                 # next time
-                self.charbuffer = self.linebuffer[0];
-                self.linebuffer = None;
+                this.charbuffer = this.linebuffer[0];
+                this.linebuffer = nil;
             } if not keepends{
-                line = line.splitlines(False)[0];
+                line = line.splitlines(false)[0];
             } return line;
 
         }
         readsize = size or 72;
         line = "";
         # If size is given, we call read() only once
-        while True{
-            data = self.read(readsize, firstline=True);
+        while true{
+            data = this.read(readsize, firstline=true);
             if data{
                 # If we're at a "\r" read one extra character (which might
                 # be a "\n") to get a proper line ending. If the stream is
                 # temporarily exhausted we return the wrong line ending.
                 if data.endswith("\r"){
-                    data += self.read(size=1, chars=1);
+                    data += this.read(size=1, chars=1);
 
             }
             } line += data;
-            lines = line.splitlines(True);
+            lines = line.splitlines(true);
             if lines{
                 if len(lines) > 1{
                     # More than one line result; the first line is a full line
@@ -609,20 +609,20 @@ class CodecInfo(tuple){
                     del lines[0];
                     if len(lines) > 1{
                         # cache the remaining lines
-                        lines[-1] += self.charbuffer;
-                        self.linebuffer = lines;
-                        self.charbuffer = None;
+                        lines[-1] += this.charbuffer;
+                        this.linebuffer = lines;
+                        this.charbuffer = nil;
                     } else{
                         # only one remaining line, put it back into charbuffer
-                        self.charbuffer = lines[0] + self.charbuffer;
+                        this.charbuffer = lines[0] + this.charbuffer;
                     } if not keepends{
-                        line = line.splitlines(False)[0];
+                        line = line.splitlines(false)[0];
                     } break;
                 } line0withend = lines[0];
-                line0withoutend = lines[0].splitlines(False)[0];
+                line0withoutend = lines[0].splitlines(false)[0];
                 if line0withend != line0withoutend{ # We really have a line end
                     # Put the rest back together and keep it until the next call
-                    self.charbuffer = "".join(lines[1:]) + self.charbuffer;
+                    this.charbuffer = "".join(lines[1:]) + this.charbuffer;
                     if keepends{
                         line = line0withend;
                     } else{
@@ -630,16 +630,16 @@ class CodecInfo(tuple){
                     } break;
             # we didn't get anything or this was our only try
             }
-            } if not data or size is not None{
+            } if not data or size is not nil{
                 if line and not keepends{
-                    line = line.splitlines(False)[0];
+                    line = line.splitlines(false)[0];
                 } break;
             } if readsize<8000{
                 readsize *= 2;
         } } return line;
 
     }
-    def readlines(self, sizehint=None, keepends=True){
+    function readlines( sizehint=nil, keepends=true){
 
         """ Read all lines available on the input stream
             and return them as list of lines.
@@ -651,11 +651,11 @@ class CodecInfo(tuple){
             way to finding the true end-of-line.
 
         """;
-        data = self.read();
+        data = this.read();
         return data.splitlines(keepends);
 
     }
-    def reset(self){
+    function reset(){
 
         """ Resets the codec buffers used for keeping state.
 
@@ -664,47 +664,47 @@ class CodecInfo(tuple){
             from decoding errors.
 
         """;
-        self.bytebuffer = "";
-        self.charbuffer = u"";
-        self.linebuffer = None;
+        this.bytebuffer = "";
+        this.charbuffer = u"";
+        this.linebuffer = nil;
 
     }
-    def seek(self, offset, whence=0){
+    function seek( offset, whence=0){
         """ Set the input stream's current position.
 
             Resets the codec buffers used for keeping state.
         """;
-        self.stream.seek(offset, whence);
-        self.reset();
+        this.stream.seek(offset, whence);
+        this.reset();
 
     }
-    def next(self){
+    function next(){
 
         """ Return the next decoded line from the input stream.""";
-        line = self.readline();
+        line = this.readline();
         if line{
             return line;
         } raise StopIteration;
 
     }
-    def __iter__(self){
-        return self;
+    function __iter__(){
+        return this;
 
     }
-    def __getattr__(self, name,
+    function __getattr__( name,
                     getattr=getattr){
 
         """ Inherit all other methods from the underlying stream.
         """;
-        return getattr(self.stream, name);
+        return getattr(this.stream, name);
 
     }
-    def __enter__(self){
-        return self;
+    function __enter__(){
+        return this;
 
     }
-    def __exit__(self, type, value, tb){
-        self.stream.close();
+    function __exit__( type, value, tb){
+        this.stream.close();
 
 ###
 
@@ -722,7 +722,7 @@ class CodecInfo(tuple){
     # Optional attributes set by the file wrappers below
     encoding = 'unknown';
 
-    def __init__(self, stream, Reader, Writer, errors='strict'){
+    function __init__( stream, Reader, Writer, errors='strict'){
 
         """ Creates a StreamReaderWriter instance.
 
@@ -735,76 +735,76 @@ class CodecInfo(tuple){
             StreamWriter/Readers.
 
         """;
-        self.stream = stream;
-        self.reader = Reader(stream, errors);
-        self.writer = Writer(stream, errors);
-        self.errors = errors;
+        this.stream = stream;
+        this.reader = Reader(stream, errors);
+        this.writer = Writer(stream, errors);
+        this.errors = errors;
 
     }
-    def read(self, size=-1){
+    function read( size=-1){
 
-        return self.reader.read(size);
-
-    }
-    def readline(self, size=None){
-
-        return self.reader.readline(size);
+        return this.reader.read(size);
 
     }
-    def readlines(self, sizehint=None){
+    function readline( size=nil){
 
-        return self.reader.readlines(sizehint);
+        return this.reader.readline(size);
 
     }
-    def next(self){
+    function readlines( sizehint=nil){
+
+        return this.reader.readlines(sizehint);
+
+    }
+    function next(){
 
         """ Return the next decoded line from the input stream.""";
-        return self.reader.next();
+        return this.reader.next();
 
     }
-    def __iter__(self){
-        return self;
+    function __iter__(){
+        return this;
 
     }
-    def write(self, data){
+    function write( data){
 
-        return self.writer.write(data);
-
-    }
-    def writelines(self, list){
-
-        return self.writer.writelines(list);
+        return this.writer.write(data);
 
     }
-    def reset(self){
+    function writelines( list){
 
-        self.reader.reset();
-        self.writer.reset();
+        return this.writer.writelines(list);
 
     }
-    def seek(self, offset, whence=0){
-        self.stream.seek(offset, whence);
-        self.reader.reset();
+    function reset(){
+
+        this.reader.reset();
+        this.writer.reset();
+
+    }
+    function seek( offset, whence=0){
+        this.stream.seek(offset, whence);
+        this.reader.reset();
         if whence == 0 and offset == 0{
-            self.writer.reset();
+            this.writer.reset();
 
     }
-    } def __getattr__(self, name,
+    } function __getattr__( name,
                     getattr=getattr){
 
         """ Inherit all other methods from the underlying stream.
         """;
-        return getattr(self.stream, name);
+        return getattr(this.stream, name);
 
     # these are needed to make "with codecs.open(...)" work properly
 
     }
-    def __enter__(self){
-        return self;
+    function __enter__(){
+        return this;
 
     }
-    def __exit__(self, type, value, tb){
-        self.stream.close();
+    function __exit__( type, value, tb){
+        this.stream.close();
 
 ###
 
@@ -830,7 +830,7 @@ class CodecInfo(tuple){
     data_encoding = 'unknown';
     file_encoding = 'unknown';
 
-    def __init__(self, stream, encode, decode, Reader, Writer,
+    function __init__( stream, encode, decode, Reader, Writer,
                  errors='strict'){
 
         """ Creates a StreamRecoder instance which implements a two-way
@@ -856,88 +856,88 @@ class CodecInfo(tuple){
             StreamWriter/Readers.
 
         """;
-        self.stream = stream;
-        self.encode = encode;
-        self.decode = decode;
-        self.reader = Reader(stream, errors);
-        self.writer = Writer(stream, errors);
-        self.errors = errors;
+        this.stream = stream;
+        this.encode = encode;
+        this.decode = decode;
+        this.reader = Reader(stream, errors);
+        this.writer = Writer(stream, errors);
+        this.errors = errors;
 
     }
-    def read(self, size=-1){
+    function read( size=-1){
 
-        data = self.reader.read(size);
-        data, bytesencoded = self.encode(data, self.errors);
+        data = this.reader.read(size);
+        data, bytesencoded = this.encode(data, this.errors);
         return data;
 
     }
-    def readline(self, size=None){
+    function readline( size=nil){
 
-        if size is None{
-            data = self.reader.readline();
+        if size is nil{
+            data = this.reader.readline();
         } else{
-            data = self.reader.readline(size);
-        } data, bytesencoded = self.encode(data, self.errors);
+            data = this.reader.readline(size);
+        } data, bytesencoded = this.encode(data, this.errors);
         return data;
 
     }
-    def readlines(self, sizehint=None){
+    function readlines( sizehint=nil){
 
-        data = self.reader.read();
-        data, bytesencoded = self.encode(data, self.errors);
+        data = this.reader.read();
+        data, bytesencoded = this.encode(data, this.errors);
         return data.splitlines(1);
 
     }
-    def next(self){
+    function next(){
 
         """ Return the next decoded line from the input stream.""";
-        data = self.reader.next();
-        data, bytesencoded = self.encode(data, self.errors);
+        data = this.reader.next();
+        data, bytesencoded = this.encode(data, this.errors);
         return data;
 
     }
-    def __iter__(self){
-        return self;
+    function __iter__(){
+        return this;
 
     }
-    def write(self, data){
+    function write( data){
 
-        data, bytesdecoded = self.decode(data, self.errors);
-        return self.writer.write(data);
+        data, bytesdecoded = this.decode(data, this.errors);
+        return this.writer.write(data);
 
     }
-    def writelines(self, list){
+    function writelines( list){
 
         data = ''.join(list);
-        data, bytesdecoded = self.decode(data, self.errors);
-        return self.writer.write(data);
+        data, bytesdecoded = this.decode(data, this.errors);
+        return this.writer.write(data);
 
     }
-    def reset(self){
+    function reset(){
 
-        self.reader.reset();
-        self.writer.reset();
+        this.reader.reset();
+        this.writer.reset();
 
     }
-    def __getattr__(self, name,
+    function __getattr__( name,
                     getattr=getattr){
 
         """ Inherit all other methods from the underlying stream.
         """;
-        return getattr(self.stream, name);
+        return getattr(this.stream, name);
 
     }
-    def __enter__(self){
-        return self;
+    function __enter__(){
+        return this;
 
     }
-    def __exit__(self, type, value, tb){
-        self.stream.close();
+    function __exit__( type, value, tb){
+        this.stream.close();
 
 ### Shortcuts
 
 }
-} def open(filename, mode='rb', encoding=None, errors='strict', buffering=1){
+} function open(filename, mode='rb', encoding=nil, errors='strict', buffering=1){
 
     """ Open an encoded file using the given mode and return
         a wrapped version providing transparent encoding/decoding.
@@ -968,7 +968,7 @@ class CodecInfo(tuple){
         parameter.
 
     """;
-    if encoding is not None{
+    if encoding is not nil{
         if 'U' in mode{
             # No automatic conversion of '\n' is done on reading and writing
             mode = mode.strip().replace('U', '');
@@ -978,7 +978,7 @@ class CodecInfo(tuple){
             # Force opening of the file in binary mode
             mode = mode + 'b';
     } } file = __builtin__.open(filename, mode, buffering);
-    if encoding is None{
+    if encoding is nil{
         return file;
     } info = lookup(encoding);
     srw = StreamReaderWriter(file, info.streamreader, info.streamwriter, errors);
@@ -987,7 +987,7 @@ class CodecInfo(tuple){
     return srw;
 
 }
-def EncodedFile(file, data_encoding, file_encoding=None, errors='strict'){
+function EncodedFile(file, data_encoding, file_encoding=nil, errors='strict'){
 
     """ Return a wrapped version of file which provides transparent
         encoding translation.
@@ -1012,7 +1012,7 @@ def EncodedFile(file, data_encoding, file_encoding=None, errors='strict'){
         introspection by Python programs.
 
     """;
-    if file_encoding is None{
+    if file_encoding is nil{
         file_encoding = data_encoding;
     } data_info = lookup(data_encoding);
     file_info = lookup(file_encoding);
@@ -1026,7 +1026,7 @@ def EncodedFile(file, data_encoding, file_encoding=None, errors='strict'){
 ### Helpers for codec lookup
 
 }
-def getencoder(encoding){
+function getencoder(encoding){
 
     """ Lookup up the codec for the given encoding and return
         its encoder function.
@@ -1037,7 +1037,7 @@ def getencoder(encoding){
     return lookup(encoding).encode;
 
 }
-def getdecoder(encoding){
+function getdecoder(encoding){
 
     """ Lookup up the codec for the given encoding and return
         its decoder function.
@@ -1048,7 +1048,7 @@ def getdecoder(encoding){
     return lookup(encoding).decode;
 
 }
-def getincrementalencoder(encoding){
+function getincrementalencoder(encoding){
 
     """ Lookup up the codec for the given encoding and return
         its IncrementalEncoder class or factory function.
@@ -1058,12 +1058,12 @@ def getincrementalencoder(encoding){
 
     """;
     encoder = lookup(encoding).incrementalencoder;
-    if encoder is None{
+    if encoder is nil{
         raise LookupError(encoding);
     } return encoder;
 
 }
-def getincrementaldecoder(encoding){
+function getincrementaldecoder(encoding){
 
     """ Lookup up the codec for the given encoding and return
         its IncrementalDecoder class or factory function.
@@ -1073,12 +1073,12 @@ def getincrementaldecoder(encoding){
 
     """;
     decoder = lookup(encoding).incrementaldecoder;
-    if decoder is None{
+    if decoder is nil{
         raise LookupError(encoding);
     } return decoder;
 
 }
-def getreader(encoding){
+function getreader(encoding){
 
     """ Lookup up the codec for the given encoding and return
         its StreamReader class or factory function.
@@ -1089,7 +1089,7 @@ def getreader(encoding){
     return lookup(encoding).streamreader;
 
 }
-def getwriter(encoding){
+function getwriter(encoding){
 
     """ Lookup up the codec for the given encoding and return
         its StreamWriter class or factory function.
@@ -1100,7 +1100,7 @@ def getwriter(encoding){
     return lookup(encoding).streamwriter;
 
 }
-def iterencode(iterator, encoding, errors='strict', **kwargs){
+function iterencode(iterator, encoding, errors='strict', **kwargs){
     """
     Encoding iterator.
 
@@ -1114,12 +1114,12 @@ def iterencode(iterator, encoding, errors='strict', **kwargs){
         output = encoder.encode(input);
         if output{
             yield output;
-    } } output = encoder.encode("", True);
+    } } output = encoder.encode("", true);
     if output{
         yield output;
 
 }
-} def iterdecode(iterator, encoding, errors='strict', **kwargs){
+} function iterdecode(iterator, encoding, errors='strict', **kwargs){
     """
     Decoding iterator.
 
@@ -1133,14 +1133,14 @@ def iterencode(iterator, encoding, errors='strict', **kwargs){
         output = decoder.decode(input);
         if output{
             yield output;
-    } } output = decoder.decode("", True);
+    } } output = decoder.decode("", true);
     if output{
         yield output;
 
 ### Helpers for charmap-based codecs
 
 }
-} def make_identity_dict(rng){
+} function make_identity_dict(rng){
 
     """ make_identity_dict(rng) -> dict
 
@@ -1154,7 +1154,7 @@ def iterencode(iterator, encoding, errors='strict', **kwargs){
     } return res;
 
 }
-def make_encoding_map(decoding_map){
+function make_encoding_map(decoding_map){
 
     """ Creates an encoding map from a decoding map.
 
@@ -1172,7 +1172,7 @@ def make_encoding_map(decoding_map){
         if not v in m{
             m[v] = k;
         } else{
-            m[v] = None;
+            m[v] = nil;
     } } return m;
 
 ### error handlers
@@ -1186,11 +1186,11 @@ try{
     backslashreplace_errors = lookup_error("backslashreplace");
 } except LookupError{
     # In --disable-unicode builds, these error handler are missing
-    strict_errors = None;
-    ignore_errors = None;
-    replace_errors = None;
-    xmlcharrefreplace_errors = None;
-    backslashreplace_errors = None;
+    strict_errors = nil;
+    ignore_errors = nil;
+    replace_errors = nil;
+    xmlcharrefreplace_errors = nil;
+    backslashreplace_errors = nil;
 
 # Tell modulefinder that using codecs probably needs the encodings
 # package

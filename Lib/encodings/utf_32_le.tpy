@@ -7,13 +7,13 @@ import codecs;
 
 encode = codecs.utf_32_le_encode;
 
-def decode(input, errors='strict'){
-    return codecs.utf_32_le_decode(input, errors, True);
+function decode(input, errors='strict'){
+    return codecs.utf_32_le_decode(input, errors, true);
 
 }
 class IncrementalEncoder(codecs.IncrementalEncoder){
-    def encode(self, input, final=False){
-        return codecs.utf_32_le_encode(input, self.errors)[0];
+    function encode( input, final=false){
+        return codecs.utf_32_le_encode(input, this.errors)[0];
 
 }
 } class IncrementalDecoder(codecs.BufferedIncrementalDecoder){
@@ -30,7 +30,7 @@ class StreamReader(codecs.StreamReader){
 ### encodings module API
 
 }
-def getregentry(){
+function getregentry(){
     return codecs.CodecInfo(
         name='utf-32-le',
         encode=encode,

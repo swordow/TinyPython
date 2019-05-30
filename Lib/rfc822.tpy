@@ -85,7 +85,7 @@ _blanklines = ('\r\n', '\n');            # Optimization for islast()
 class Message{
     """Represents a single RFC 2822-compliant message.""";
 
-    def __init__(self, fp, seekable = 1){
+    function __init__( fp, seekable = 1){
         """Initialize the class instance and read the headers.""";
         if seekable == 1{
             # Exercise tell() to make sure it works
@@ -94,35 +94,35 @@ class Message{
                 fp.tell();
             } except (AttributeError, IOError){
                 seekable = 0;
-        } } self.fp = fp;
-        self.seekable = seekable;
-        self.startofheaders = None;
-        self.startofbody = None;
+        } } this.fp = fp;
+        this.seekable = seekable;
+        this.startofheaders = nil;
+        this.startofbody = nil;
         #
-        if self.seekable{
+        if this.seekable{
             try{
-                self.startofheaders = self.fp.tell();
+                this.startofheaders = this.fp.tell();
             } except IOError{
-                self.seekable = 0;
+                this.seekable = 0;
         #
         }
-        } self.readheaders();
+        } this.readheaders();
         #
-        if self.seekable{
+        if this.seekable{
             try{
-                self.startofbody = self.fp.tell();
+                this.startofbody = this.fp.tell();
             } except IOError{
-                self.seekable = 0;
+                this.seekable = 0;
 
     }
-    } } def rewindbody(self){
+    } } function rewindbody(){
         """Rewind the file to the start of the body (if seekable).""";
-        if not self.seekable{
+        if not this.seekable{
             raise IOError, "unseekable file";
-        } self.fp.seek(self.startofbody);
+        } this.fp.seek(this.startofbody);
 
     }
-    def readheaders(self){
+    function readheaders(){
         """Read header lines.
 
         Read header lines up to the entirely blank line that terminates them.
@@ -137,75 +137,75 @@ class Message{
         printing them will reproduce the header exactly as it appears in the
         file).
         """;
-        self.dict = {};
-        self.unixfrom = '';
-        self.headers = lst = [];
-        self.status = '';
+        this.dict = {};
+        this.unixfrom = '';
+        this.headers = lst = [];
+        this.status = '';
         headerseen = "";
         firstline = 1;
-        startofline = unread = tell = None;
-        if hasattr(self.fp, 'unread'){
-            unread = self.fp.unread;
-        } elif self.seekable{
-            tell = self.fp.tell;
+        startofline = unread = tell = nil;
+        if hasattr(this.fp, 'unread'){
+            unread = this.fp.unread;
+        } elif this.seekable{
+            tell = this.fp.tell;
         } while 1{
             if tell{
                 try{
                     startofline = tell();
                 } except IOError{
-                    startofline = tell = None;
-                    self.seekable = 0;
-            } } line = self.fp.readline();
+                    startofline = tell = nil;
+                    this.seekable = 0;
+            } } line = this.fp.readline();
             if not line{
-                self.status = 'EOF in headers';
+                this.status = 'EOF in headers';
                 break;
             # Skip unix From name time lines
             }
             if firstline and line.startswith('From '){
-                self.unixfrom = self.unixfrom + line;
+                this.unixfrom = this.unixfrom + line;
                 continue;
             } firstline = 0;
             if headerseen and line[0] in ' \t'{
                 # It's a continuation line.
                 lst.append(line);
-                x = (self.dict[headerseen] + "\n " + line.strip());
-                self.dict[headerseen] = x.strip();
+                x = (this.dict[headerseen] + "\n " + line.strip());
+                this.dict[headerseen] = x.strip();
                 continue;
-            } elif self.iscomment(line){
+            } elif this.iscomment(line){
                 # It's a comment.  Ignore it.
                 continue;
-            } elif self.islast(line){
+            } elif this.islast(line){
                 # Note! No pushback here!  The delimiter line gets eaten.
                 break;
-            } headerseen = self.isheader(line);
+            } headerseen = this.isheader(line);
             if headerseen{
                 # It's a legal header line, save it.
                 lst.append(line);
-                self.dict[headerseen] = line[len(headerseen)+1:].strip();
+                this.dict[headerseen] = line[len(headerseen)+1:].strip();
                 continue;
-            } elif headerseen is not None{
+            } elif headerseen is not nil{
                 # An empty header name. These aren't allowed in HTTP, but it's
                 # probably a benign mistake. Don't add the header, just keep
                 # going.
                 continue;
             } else{
                 # It's not a header line; throw it back and stop here.
-                if not self.dict{
-                    self.status = 'No headers';
+                if not this.dict{
+                    this.status = 'No headers';
                 } else{
-                    self.status = 'Non-header line where header expected';
+                    this.status = 'Non-header line where header expected';
                 # Try to undo the read.
                 }
                 if unread{
                     unread(line);
                 } elif tell{
-                    self.fp.seek(startofline);
+                    this.fp.seek(startofline);
                 } else{
-                    self.status = self.status + '; bad seek';
+                    this.status = this.status + '; bad seek';
                 } break;
 
     }
-    } } def isheader(self, line){
+    } } function isheader( line){
         """Determine whether a given line is a legal header.
 
         This method should return the header name, suitably canonicalized.
@@ -215,10 +215,10 @@ class Message{
         i = line.find(':');
         if i > -1{
             return line[:i].lower();
-        } return None;
+        } return nil;
 
     }
-    def islast(self, line){
+    function islast( line){
         """Determine whether a line is a legal end of RFC 2822 headers.
 
         You may override this method if your application wants to bend the
@@ -229,17 +229,17 @@ class Message{
         return line in _blanklines;
 
     }
-    def iscomment(self, line){
+    function iscomment( line){
         """Determine whether a line should be skipped entirely.
 
         You may override this method in order to use Message parsing on tagged
         data in RFC 2822-like formats that support embedded comments or
         free-text data.
         """;
-        return False;
+        return false;
 
     }
-    def getallmatchingheaders(self, name){
+    function getallmatchingheaders( name){
         """Find all header lines matching a given header name.
 
         Look through the list of headers and find all lines matching a given
@@ -252,7 +252,7 @@ class Message{
         n = len(name);
         lst = [];
         hit = 0;
-        for line in self.headers{
+        for line in this.headers{
             if line[:n].lower() == name{
                 hit = 1;
             } elif not line[:1].isspace(){
@@ -262,7 +262,7 @@ class Message{
         } } return lst;
 
     }
-    def getfirstmatchingheader(self, name){
+    function getfirstmatchingheader( name){
         """Get the first header line matching name.
 
         This is similar to getallmatchingheaders, but it returns only the
@@ -272,7 +272,7 @@ class Message{
         n = len(name);
         lst = [];
         hit = 0;
-        for line in self.headers{
+        for line in this.headers{
             if hit{
                 if not line[:1].isspace(){
                     break;
@@ -283,7 +283,7 @@ class Message{
         } } return lst;
 
     }
-    def getrawheader(self, name){
+    function getrawheader( name){
         """A higher-level interface to getfirstmatchingheader().
 
         Return a string containing the literal text of the header but with the
@@ -292,24 +292,24 @@ class Message{
         occur.
         """;
 
-        lst = self.getfirstmatchingheader(name);
+        lst = this.getfirstmatchingheader(name);
         if not lst{
-            return None;
+            return nil;
         } lst[0] = lst[0][len(name) + 1:];
         return ''.join(lst);
 
     }
-    def getheader(self, name, default=None){
+    function getheader( name, default=nil){
         """Get the header value for a name.
 
         This is the normal interface: it returns a stripped version of the
         header value for a given header name, or None if it doesn't exist.
         This uses the dictionary version which finds the *last* such header.
         """;
-        return self.dict.get(name.lower(), default);
+        return this.dict.get(name.lower(), default);
     } get = getheader;
 
-    def getheaders(self, name){
+    function getheaders( name){
         """Get all values for a header.
 
         This returns a list of values for headers given more than once; each
@@ -319,7 +319,7 @@ class Message{
         result = [];
         current = '';
         have_header = 0;
-        for s in self.getallmatchingheaders(name){
+        for s in this.getallmatchingheaders(name){
             if s[0].isspace(){
                 if current{
                     current = "%s\n %s" % (current, s.strip());
@@ -335,21 +335,21 @@ class Message{
         } return result;
 
     }
-    def getaddr(self, name){
+    function getaddr( name){
         """Get a single address from a header, as a tuple.
 
         An example return value:
         ('Guido van Rossum', 'guido@cwi.nl')
         """;
         # New, by Ben Escoto
-        alist = self.getaddrlist(name);
+        alist = this.getaddrlist(name);
         if alist{
             return alist[0];
         } else{
-            return (None, None);
+            return (nil, nil);
 
     }
-    } def getaddrlist(self, name){
+    } function getaddrlist( name){
         """Get a list of addresses from a header.
 
         Retrieves a list of addresses from a header, where each address is a
@@ -357,7 +357,7 @@ class Message{
         properly with multiple To: or Cc: headers for example.
         """;
         raw = [];
-        for h in self.getallmatchingheaders(name){
+        for h in this.getallmatchingheaders(name){
             if h[0] in ' \t'{
                 raw.append(h);
             } else{
@@ -372,71 +372,71 @@ class Message{
         return a.addresslist;
 
     }
-    def getdate(self, name){
+    function getdate( name){
         """Retrieve a date field from a header.
 
         Retrieves a date field from the named header, returning a tuple
         compatible with time.mktime().
         """;
         try{
-            data = self[name];
+            data = this[name];
         } except KeyError{
-            return None;
+            return nil;
         } return parsedate(data);
 
     }
-    def getdate_tz(self, name){
+    function getdate_tz( name){
         """Retrieve a date field from a header as a 10-tuple.
 
         The first 9 elements make up a tuple compatible with time.mktime(),
         and the 10th is the offset of the poster's time zone from GMT/UTC.
         """;
         try{
-            data = self[name];
+            data = this[name];
         } except KeyError{
-            return None;
+            return nil;
         } return parsedate_tz(data);
 
 
     # Access as a dictionary (only finds *last* header of each type):
 
     }
-    def __len__(self){
+    function __len__(){
         """Get the number of headers in a message.""";
-        return len(self.dict);
+        return len(this.dict);
 
     }
-    def __getitem__(self, name){
+    function __getitem__( name){
         """Get a specific header, as from a dictionary.""";
-        return self.dict[name.lower()];
+        return this.dict[name.lower()];
 
     }
-    def __setitem__(self, name, value){
+    function __setitem__( name, value){
         """Set the value of a header.
 
         Note: This is not a perfect inversion of __getitem__, because any
         changed headers get stuck at the end of the raw-headers list rather
         than where the altered header was.
         """;
-        del self[name]; # Won't fail if it doesn't exist
-        self.dict[name.lower()] = value;
+        del this[name]; # Won't fail if it doesn't exist
+        this.dict[name.lower()] = value;
         text = name + ": " + value;
         for line in text.split("\n"){
-            self.headers.append(line + "\n");
+            this.headers.append(line + "\n");
 
     }
-    } def __delitem__(self, name){
+    } function __delitem__( name){
         """Delete all occurrences of a specific header, if it is present.""";
         name = name.lower();
-        if not name in self.dict{
+        if not name in this.dict{
             return;
-        } del self.dict[name];
+        } del this.dict[name];
         name = name + ':';
         n = len(name);
         lst = [];
         hit = 0;
-        for i in range(len(self.headers)){
-            line = self.headers[i];
+        for i in range(len(this.headers)){
+            line = this.headers[i];
             if line[:n].lower() == name{
                 hit = 1;
             } elif not line[:1].isspace(){
@@ -444,55 +444,55 @@ class Message{
             } if hit{
                 lst.append(i);
         } } for i in reversed(lst){
-            del self.headers[i];
+            del this.headers[i];
 
     }
-    } def setdefault(self, name, default=""){
+    } function setdefault( name, default=""){
         lowername = name.lower();
-        if lowername in self.dict{
-            return self.dict[lowername];
+        if lowername in this.dict{
+            return this.dict[lowername];
         } else{
             text = name + ": " + default;
             for line in text.split("\n"){
-                self.headers.append(line + "\n");
-            } self.dict[lowername] = default;
+                this.headers.append(line + "\n");
+            } this.dict[lowername] = default;
             return default;
 
     }
-    } def has_key(self, name){
+    } function has_key( name){
         """Determine whether a message contains the named header.""";
-        return name.lower() in self.dict;
+        return name.lower() in this.dict;
 
     }
-    def __contains__(self, name){
+    function __contains__( name){
         """Determine whether a message contains the named header.""";
-        return name.lower() in self.dict;
+        return name.lower() in this.dict;
 
     }
-    def __iter__(self){
-        return iter(self.dict);
+    function __iter__(){
+        return iter(this.dict);
 
     }
-    def keys(self){
+    function keys(){
         """Get all of a message's header field names.""";
-        return self.dict.keys();
+        return this.dict.keys();
 
     }
-    def values(self){
+    function values(){
         """Get all of a message's header field values.""";
-        return self.dict.values();
+        return this.dict.values();
 
     }
-    def items(self){
+    function items(){
         """Get all of a message's headers.
 
         Returns a list of name, value tuples.
         """;
-        return self.dict.items();
+        return this.dict.items();
 
     }
-    def __str__(self){
-        return ''.join(self.headers);
+    function __str__(){
+        return ''.join(this.headers);
 
 
 # Utility functions
@@ -503,7 +503,7 @@ class Message{
 
 
 }
-} def unquote(s){
+} function unquote(s){
     """Remove quotes from a string.""";
     if len(s) > 1{
         if s.startswith('"') and s.endswith('"'){
@@ -514,18 +514,18 @@ class Message{
 
 
 }
-def quote(s){
+function quote(s){
     """Add quotes around a string.""";
     return s.replace('\\', '\\\\').replace('"', '\\"');
 
 
 }
-def parseaddr(address){
+function parseaddr(address){
     """Parse an address into a (realname, mailaddr) tuple.""";
     a = AddressList(address);
     lst = a.addresslist;
     if not lst{
-        return (None, None);
+        return (nil, nil);
     } return lst[0];
 
 
@@ -542,194 +542,194 @@ class AddrlistClass{
     Use rfc822.AddressList instead.
     """;
 
-    def __init__(self, field){
+    function __init__( field){
         """Initialize a new instance.
 
         `field' is an unparsed address header field, containing one or more
         addresses.
         """;
-        self.specials = '()<>@,:;.\"[]';
-        self.pos = 0;
-        self.LWS = ' \t';
-        self.CR = '\r\n';
-        self.atomends = self.specials + self.LWS + self.CR;
+        this.specials = '()<>@,:;.\"[]';
+        this.pos = 0;
+        this.LWS = ' \t';
+        this.CR = '\r\n';
+        this.atomends = this.specials + this.LWS + this.CR;
         # Note that RFC 2822 now specifies `.' as obs-phrase, meaning that it
         # is obsolete syntax.  RFC 2822 requires that we recognize obsolete
         # syntax, so allow dots in phrases.
-        self.phraseends = self.atomends.replace('.', '');
-        self.field = field;
-        self.commentlist = [];
+        this.phraseends = this.atomends.replace('.', '');
+        this.field = field;
+        this.commentlist = [];
 
     }
-    def gotonext(self){
+    function gotonext(){
         """Parse up to the start of the next address.""";
-        while self.pos < len(self.field){
-            if self.field[self.pos] in self.LWS + '\n\r'{
-                self.pos = self.pos + 1;
-            } elif self.field[self.pos] == '('{
-                self.commentlist.append(self.getcomment());
-            } else{ break;
+        while this.pos < len(this.field){
+            if this.field[this.pos] in this.LWS + '\n\r'{
+                this.pos = this.pos + 1;
+            } elif this.field[this.pos] == '('{
+                this.commentlist.append(this.getcomment());
+            } else{ break;}
 
     }
-    } def getaddrlist(self){
+    } function getaddrlist(){
         """Parse all addresses.
 
         Returns a list containing all of the addresses.
         """;
         result = [];
-        ad = self.getaddress();
+        ad = this.getaddress();
         while ad{
             result += ad;
-            ad = self.getaddress();
+            ad = this.getaddress();
         } return result;
 
     }
-    def getaddress(self){
+    function getaddress(){
         """Parse the next address.""";
-        self.commentlist = [];
-        self.gotonext();
+        this.commentlist = [];
+        this.gotonext();
 
-        oldpos = self.pos;
-        oldcl = self.commentlist;
-        plist = self.getphraselist();
+        oldpos = this.pos;
+        oldcl = this.commentlist;
+        plist = this.getphraselist();
 
-        self.gotonext();
+        this.gotonext();
         returnlist = [];
 
-        if self.pos >= len(self.field){
+        if this.pos >= len(this.field){
             # Bad email address technically, no domain.
             if plist{
-                returnlist = [(' '.join(self.commentlist), plist[0])];
+                returnlist = [(' '.join(this.commentlist), plist[0])];
 
         }
-        } elif self.field[self.pos] in '.@'{
+        } elif this.field[this.pos] in '.@'{
             # email address is just an addrspec
             # this isn't very efficient since we start over
-            self.pos = oldpos;
-            self.commentlist = oldcl;
-            addrspec = self.getaddrspec();
-            returnlist = [(' '.join(self.commentlist), addrspec)];
+            this.pos = oldpos;
+            this.commentlist = oldcl;
+            addrspec = this.getaddrspec();
+            returnlist = [(' '.join(this.commentlist), addrspec)];
 
         }
-        elif self.field[self.pos] == ':'{
+        elif this.field[this.pos] == ':'{
             # address is a group
             returnlist = [];
 
-            fieldlen = len(self.field);
-            self.pos += 1;
-            while self.pos < len(self.field){
-                self.gotonext();
-                if self.pos < fieldlen and self.field[self.pos] == ';'{
-                    self.pos += 1;
+            fieldlen = len(this.field);
+            this.pos += 1;
+            while this.pos < len(this.field){
+                this.gotonext();
+                if this.pos < fieldlen and this.field[this.pos] == ';'{
+                    this.pos += 1;
                     break;
-                } returnlist = returnlist + self.getaddress();
+                } returnlist = returnlist + this.getaddress();
 
         }
-        } elif self.field[self.pos] == '<'{
+        } elif this.field[this.pos] == '<'{
             # Address is a phrase then a route addr
-            routeaddr = self.getrouteaddr();
+            routeaddr = this.getrouteaddr();
 
-            if self.commentlist{
+            if this.commentlist{
                 returnlist = [(' '.join(plist) + ' (' + \
-                         ' '.join(self.commentlist) + ')', routeaddr)];
-            } else{ returnlist = [(' '.join(plist), routeaddr)];
+                         ' '.join(this.commentlist) + ')', routeaddr)];
+            } else{ returnlist = [(' '.join(plist), routeaddr)];}
 
         }
         else{
             if plist{
-                returnlist = [(' '.join(self.commentlist), plist[0])];
-            } elif self.field[self.pos] in self.specials{
-                self.pos += 1;
+                returnlist = [(' '.join(this.commentlist), plist[0])];
+            } elif this.field[this.pos] in this.specials{
+                this.pos += 1;
 
         }
-        } self.gotonext();
-        if self.pos < len(self.field) and self.field[self.pos] == ','{
-            self.pos += 1;
+        } this.gotonext();
+        if this.pos < len(this.field) and this.field[this.pos] == ','{
+            this.pos += 1;
         } return returnlist;
 
     }
-    def getrouteaddr(self){
+    function getrouteaddr(){
         """Parse a route address (Return-path value).
 
         This method just skips all the route stuff and returns the addrspec.
         """;
-        if self.field[self.pos] != '<'{
+        if this.field[this.pos] != '<'{
             return;
 
         }
         expectroute = 0;
-        self.pos += 1;
-        self.gotonext();
+        this.pos += 1;
+        this.gotonext();
         adlist = "";
-        while self.pos < len(self.field){
+        while this.pos < len(this.field){
             if expectroute{
-                self.getdomain();
+                this.getdomain();
                 expectroute = 0;
-            } elif self.field[self.pos] == '>'{
-                self.pos += 1;
+            } elif this.field[this.pos] == '>'{
+                this.pos += 1;
                 break;
-            } elif self.field[self.pos] == '@'{
-                self.pos += 1;
+            } elif this.field[this.pos] == '@'{
+                this.pos += 1;
                 expectroute = 1;
-            } elif self.field[self.pos] == ':'{
-                self.pos += 1;
+            } elif this.field[this.pos] == ':'{
+                this.pos += 1;
             } else{
-                adlist = self.getaddrspec();
-                self.pos += 1;
+                adlist = this.getaddrspec();
+                this.pos += 1;
                 break;
-            } self.gotonext();
+            } this.gotonext();
 
         }
         return adlist;
 
     }
-    def getaddrspec(self){
+    function getaddrspec(){
         """Parse an RFC 2822 addr-spec.""";
         aslist = [];
 
-        self.gotonext();
-        while self.pos < len(self.field){
-            if self.field[self.pos] == '.'{
+        this.gotonext();
+        while this.pos < len(this.field){
+            if this.field[this.pos] == '.'{
                 aslist.append('.');
-                self.pos += 1;
-            } elif self.field[self.pos] == '"'{
-                aslist.append('"%s"' % self.getquote());
-            } elif self.field[self.pos] in self.atomends{
+                this.pos += 1;
+            } elif this.field[this.pos] == '"'{
+                aslist.append('"%s"' % this.getquote());
+            } elif this.field[this.pos] in this.atomends{
                 break;
-            } else{ aslist.append(self.getatom());
-            self.gotonext();
+            } else{ aslist.append(this.getatom());}
+            this.gotonext();
 
         }
-        if self.pos >= len(self.field) or self.field[self.pos] != '@'{
+        if this.pos >= len(this.field) or this.field[this.pos] != '@'{
             return ''.join(aslist);
 
         }
         aslist.append('@');
-        self.pos += 1;
-        self.gotonext();
-        return ''.join(aslist) + self.getdomain();
+        this.pos += 1;
+        this.gotonext();
+        return ''.join(aslist) + this.getdomain();
 
     }
-    def getdomain(self){
+    function getdomain(){
         """Get the complete domain name from an address.""";
         sdlist = [];
-        while self.pos < len(self.field){
-            if self.field[self.pos] in self.LWS{
-                self.pos += 1;
-            } elif self.field[self.pos] == '('{
-                self.commentlist.append(self.getcomment());
-            } elif self.field[self.pos] == '['{
-                sdlist.append(self.getdomainliteral());
-            } elif self.field[self.pos] == '.'{
-                self.pos += 1;
+        while this.pos < len(this.field){
+            if this.field[this.pos] in this.LWS{
+                this.pos += 1;
+            } elif this.field[this.pos] == '('{
+                this.commentlist.append(this.getcomment());
+            } elif this.field[this.pos] == '['{
+                sdlist.append(this.getdomainliteral());
+            } elif this.field[this.pos] == '.'{
+                this.pos += 1;
                 sdlist.append('.');
-            } elif self.field[self.pos] in self.atomends{
+            } elif this.field[this.pos] in this.atomends{
                 break;
-            } else{ sdlist.append(self.getatom());
+            } else{ sdlist.append(this.getatom());}
         } return ''.join(sdlist);
 
     }
-    def getdelimited(self, beginchar, endchars, allowcomments = 1){
+    function getdelimited( beginchar, endchars, allowcomments = 1){
         """Parse a header fragment delimited by special characters.
 
         `beginchar' is the start character for the fragment.  If self is not
@@ -742,49 +742,49 @@ class AddrlistClass{
         If `allowcomments' is non-zero, embedded RFC 2822 comments are allowed
         within the parsed fragment.
         """;
-        if self.field[self.pos] != beginchar{
+        if this.field[this.pos] != beginchar{
             return '';
 
         }
         slist = [''];
         quote = 0;
-        self.pos += 1;
-        while self.pos < len(self.field){
+        this.pos += 1;
+        while this.pos < len(this.field){
             if quote == 1{
-                slist.append(self.field[self.pos]);
+                slist.append(this.field[this.pos]);
                 quote = 0;
-            } elif self.field[self.pos] in endchars{
-                self.pos += 1;
+            } elif this.field[this.pos] in endchars{
+                this.pos += 1;
                 break;
-            } elif allowcomments and self.field[self.pos] == '('{
-                slist.append(self.getcomment());
+            } elif allowcomments and this.field[this.pos] == '('{
+                slist.append(this.getcomment());
                 continue;        # have already advanced pos from getcomment
-            } elif self.field[self.pos] == '\\'{
+            } elif this.field[this.pos] == '\\'{
                 quote = 1;
             } else{
-                slist.append(self.field[self.pos]);
-            } self.pos += 1;
+                slist.append(this.field[this.pos]);
+            } this.pos += 1;
 
         }
         return ''.join(slist);
 
     }
-    def getquote(self){
+    function getquote(){
         """Get a quote-delimited fragment from self's field.""";
-        return self.getdelimited('"', '"\r', 0);
+        return this.getdelimited('"', '"\r', 0);
 
     }
-    def getcomment(self){
+    function getcomment(){
         """Get a parenthesis-delimited fragment from self's field.""";
-        return self.getdelimited('(', ')\r', 1);
+        return this.getdelimited('(', ')\r', 1);
 
     }
-    def getdomainliteral(self){
+    function getdomainliteral(){
         """Parse an RFC 2822 domain-literal.""";
-        return '[%s]' % self.getdelimited('[', ']\r', 0);
+        return '[%s]' % this.getdelimited('[', ']\r', 0);
 
     }
-    def getatom(self, atomends=None){
+    function getatom( atomends=nil){
         """Parse an RFC 2822 atom.
 
         Optional atomends specifies a different set of end token delimiters
@@ -792,21 +792,21 @@ class AddrlistClass{
         getphraselist() since phrase endings must not include the `.' (which
         is legal in phrases).""";
         atomlist = [''];
-        if atomends is None{
-            atomends = self.atomends;
+        if atomends is nil{
+            atomends = this.atomends;
 
         }
-        while self.pos < len(self.field){
-            if self.field[self.pos] in atomends{
+        while this.pos < len(this.field){
+            if this.field[this.pos] in atomends{
                 break;
-            } else{ atomlist.append(self.field[self.pos]);
-            self.pos += 1;
+            } else{ atomlist.append(this.field[this.pos]);}
+            this.pos += 1;
 
         }
         return ''.join(atomlist);
 
     }
-    def getphraselist(self){
+    function getphraselist(){
         """Parse a sequence of RFC 2822 phrases.
 
         A phrase is a sequence of words, which are in turn either RFC 2822
@@ -815,17 +815,17 @@ class AddrlistClass{
         """;
         plist = [];
 
-        while self.pos < len(self.field){
-            if self.field[self.pos] in self.LWS{
-                self.pos += 1;
-            } elif self.field[self.pos] == '"'{
-                plist.append(self.getquote());
-            } elif self.field[self.pos] == '('{
-                self.commentlist.append(self.getcomment());
-            } elif self.field[self.pos] in self.phraseends{
+        while this.pos < len(this.field){
+            if this.field[this.pos] in this.LWS{
+                this.pos += 1;
+            } elif this.field[this.pos] == '"'{
+                plist.append(this.getquote());
+            } elif this.field[this.pos] == '('{
+                this.commentlist.append(this.getcomment());
+            } elif this.field[this.pos] in this.phraseends{
                 break;
             } else{
-                plist.append(self.getatom(self.phraseends));
+                plist.append(this.getatom(this.phraseends));
 
         }
         } return plist;
@@ -833,63 +833,63 @@ class AddrlistClass{
 }
 } class AddressList(AddrlistClass){
     """An AddressList encapsulates a list of parsed RFC 2822 addresses.""";
-    def __init__(self, field){
-        AddrlistClass.__init__(self, field);
+    function __init__( field){
+        AddrlistClass.__init__(this, field);
         if field{
-            self.addresslist = self.getaddrlist();
+            this.addresslist = this.getaddrlist();
         } else{
-            self.addresslist = [];
+            this.addresslist = [];
 
     }
-    } def __len__(self){
-        return len(self.addresslist);
+    } function __len__(){
+        return len(this.addresslist);
 
     }
-    def __str__(self){
-        return ", ".join(map(dump_address_pair, self.addresslist));
+    function __str__(){
+        return ", ".join(map(dump_address_pair, this.addresslist));
 
     }
-    def __add__(self, other){
+    function __add__( other){
         # Set union
-        newaddr = AddressList(None);
-        newaddr.addresslist = self.addresslist[:];
+        newaddr = AddressList(nil);
+        newaddr.addresslist = this.addresslist[:];
         for x in other.addresslist{
-            if not x in self.addresslist{
+            if not x in this.addresslist{
                 newaddr.addresslist.append(x);
         } } return newaddr;
 
     }
-    def __iadd__(self, other){
+    function __iadd__( other){
         # Set union, in-place
         for x in other.addresslist{
-            if not x in self.addresslist{
-                self.addresslist.append(x);
-        } } return self;
+            if not x in this.addresslist{
+                this.addresslist.append(x);
+        } } return this;
 
     }
-    def __sub__(self, other){
+    function __sub__( other){
         # Set difference
-        newaddr = AddressList(None);
-        for x in self.addresslist{
+        newaddr = AddressList(nil);
+        for x in this.addresslist{
             if not x in other.addresslist{
                 newaddr.addresslist.append(x);
         } } return newaddr;
 
     }
-    def __isub__(self, other){
+    function __isub__( other){
         # Set difference, in-place
         for x in other.addresslist{
-            if x in self.addresslist{
-                self.addresslist.remove(x);
-        } } return self;
+            if x in this.addresslist{
+                this.addresslist.remove(x);
+        } } return this;
 
     }
-    def __getitem__(self, index){
+    function __getitem__( index){
         # Make indexing, slices, and 'in' work
-        return self.addresslist[index];
+        return this.addresslist[index];
 
 }
-} def dump_address_pair(pair){
+} function dump_address_pair(pair){
     """Dump a (name, address) pair in a canonicalized form.""";
     if pair[0]{
         return '"' + pair[0] + '" <' + pair[1] + '>';
@@ -920,13 +920,13 @@ _timezones = {'UT':0, 'UTC':0, 'GMT':0, 'Z':0,
               };
 
 
-def parsedate_tz(data){
+function parsedate_tz(data){
     """Convert a date string to a time tuple.
 
     Accounts for military timezones.
     """;
     if not data{
-        return None;
+        return nil;
     } data = data.split();
     if data[0][-1] in (',', '.') or data[0].lower() in _daynames{
         # There's a dayname here. Skip it
@@ -948,16 +948,16 @@ def parsedate_tz(data){
         } else{
             data.append(''); # Dummy tz
     } } if len(data) < 5{
-        return None;
+        return nil;
     } data = data[:5];
     [dd, mm, yy, tm, tz] = data;
     mm = mm.lower();
     if not mm in _monthnames{
         dd, mm = mm, dd.lower();
         if not mm in _monthnames{
-            return None;
+            return nil;
     } } mm = _monthnames.index(mm)+1;
-    if mm > 12{ mm = mm - 12;
+    if mm > 12{ mm = mm - 12;}
     if dd[-1] == ','{
         dd = dd[:-1];
     } i = yy.find(':');
@@ -976,7 +976,7 @@ def parsedate_tz(data){
     } elif len(tm) == 3{
         [thh, tmm, tss] = tm;
     } else{
-        return None;
+        return nil;
     } try{
         yy = int(yy);
         dd = int(dd);
@@ -984,8 +984,8 @@ def parsedate_tz(data){
         tmm = int(tmm);
         tss = int(tss);
     } except ValueError{
-        return None;
-    } tzoffset = None;
+        return nil;
+    } tzoffset = nil;
     tz = tz.upper();
     if tz in _timezones{
         tzoffset = _timezones[tz];
@@ -1007,18 +1007,18 @@ def parsedate_tz(data){
 
 
 }
-def parsedate(data){
+function parsedate(data){
     """Convert a time string to a time tuple.""";
     t = parsedate_tz(data);
-    if t is None{
+    if t is nil{
         return t;
     } return t[:9];
 
 
 }
-def mktime_tz(data){
+function mktime_tz(data){
     """Turn a 10-tuple as returned by parsedate_tz() into a UTC timestamp.""";
-    if data[9] is None{
+    if data[9] is nil{
         # No zone info, so localtime is better assumption than GMT
         return time.mktime(data[:8] + (-1,));
     } else{
@@ -1026,7 +1026,7 @@ def mktime_tz(data){
         return t - data[9] - time.timezone;
 
 }
-} def formatdate(timeval=None){
+} function formatdate(timeval=nil){
     """Returns time format preferred for Internet standards.
 
     Sun, 06 Nov 1994 08:49:37 GMT  ; RFC 822, updated by RFC 1123
@@ -1036,7 +1036,7 @@ def mktime_tz(data){
     can't because strftime() honors the locale and could generate
     non-English names.
     """;
-    if timeval is None{
+    if timeval is nil{
         timeval = time.time();
     } timeval = time.gmtime(timeval);
     return "%s, %02d %s %04d %02d:%02d:%02d GMT" % (
@@ -1055,7 +1055,7 @@ def mktime_tz(data){
 if __name__ == '__main__'{
     import sys, os;
     file = os.path.join(os.environ['HOME'], 'Mail/inbox/1');
-    if sys.argv[1:]{ file = sys.argv[1];
+    if sys.argv[1:]{ file = sys.argv[1];}
     f = open(file, 'r');
     m = Message(f);
     print 'From:', m.getaddr('from');
@@ -1071,10 +1071,10 @@ if __name__ == '__main__'{
         hhmm, ss = divmod(hhmmss, 60);
         hh, mm = divmod(hhmm, 60);
         print "%+03d%02d" % (hh, mm),;
-        if ss{ print ".%02d" % ss,;
+        if ss{ print ".%02d" % ss,;}
         print;
     } else{
-        print 'ParsedDate:', None;
+        print 'ParsedDate:', nil;
     } m.rewindbody();
     n = 0;
     while f.readline(){
@@ -1082,8 +1082,8 @@ if __name__ == '__main__'{
     } print 'Lines:', n;
     print '-'*70;
     print 'len =', len(m);
-    if 'Date' in m{ print 'Date =', m['Date'];
-    if 'X-Nonsense' in m{ pass;
+    if 'Date' in m{ print 'Date =', m['Date'];}
+    if 'X-Nonsense' in m{ pass;}
     print 'keys =', m.keys();
     print 'values =', m.values();
     print 'items =', m.items();

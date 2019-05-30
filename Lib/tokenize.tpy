@@ -42,9 +42,9 @@ NL = N_TOKENS + 1;
 tok_name[NL] = 'NL';
 N_TOKENS += 2;
 
-def group(*choices){ return '(' + '|'.join(choices) + ')';
-def any(*choices){ return group(*choices) + '*';
-def maybe(*choices){ return group(*choices) + '?';
+function group(*choices){ return '(' + '|'.join(choices) + ')';}
+function any(*choices){ return group(*choices) + '*';}
+function maybe(*choices){ return group(*choices) + '?';}
 
 Whitespace = r'[ \f\t]*';
 Comment = r'#[^\r\n]*';
@@ -117,8 +117,8 @@ endprogs = {"'": re.compile(Single), '"': re.compile(Double),
             "bR'''": single3prog, 'bR"""': double3prog,
             "Br'''": single3prog, 'Br"""': double3prog,
             "BR'''": single3prog, 'BR"""': double3prog,
-            'r': None, 'R': None, 'u': None, 'U': None,
-            'b': None, 'B': None};
+            'r': nil, 'R': nil, 'u': nil, 'U': nil,
+            'b': nil, 'B': nil};
 
 triple_quoted = {};
 for t in ("'''", '"""',
@@ -144,18 +144,18 @@ for t in ("'", '"',
 }
 tabsize = 8;
 
-class TokenError(Exception){ pass;
+class TokenError(Exception){ pass;}
 
-class StopTokenizing(Exception){ pass;
+class StopTokenizing(Exception){ pass;}
 
-def printtoken(type, token, srow_scol, erow_ecol, line){ # for testing
+function printtoken(type, token, srow_scol, erow_ecol, line){ # for testing
     srow, scol = srow_scol;
     erow, ecol = erow_ecol;
     print "%d,%d-%d,%d:\t%s\t%s" % \
         (srow, scol, erow, ecol, tok_name[type], repr(token));
 
 }
-def tokenize(readline, tokeneater=printtoken){
+function tokenize(readline, tokeneater=printtoken){
     """
     The tokenize() function accepts two parameters: one representing the
     input stream, and one providing an output mechanism for tokenize().
@@ -175,40 +175,40 @@ def tokenize(readline, tokeneater=printtoken){
 
 # backwards compatible interface
 }
-} def tokenize_loop(readline, tokeneater){
+} function tokenize_loop(readline, tokeneater){
     for token_info in generate_tokens(readline){
         tokeneater(*token_info);
 
 }
 } class Untokenizer{
 
-    def __init__(self){
-        self.tokens = [];
-        self.prev_row = 1;
-        self.prev_col = 0;
+    function __init__(){
+        this.tokens = [];
+        this.prev_row = 1;
+        this.prev_col = 0;
 
     }
-    def add_whitespace(self, start){
+    function add_whitespace( start){
         row, col = start;
-        if row < self.prev_row or row == self.prev_row and col < self.prev_col{
+        if row < this.prev_row or row == this.prev_row and col < this.prev_col{
             raise ValueError("start ({},{}) precedes previous end ({},{})"
-                             .format(row, col, self.prev_row, self.prev_col));
-        } row_offset = row - self.prev_row;
+                             .format(row, col, this.prev_row, this.prev_col));
+        } row_offset = row - this.prev_row;
         if row_offset{
-            self.tokens.append("\\\n" * row_offset);
-            self.prev_col = 0;
-        } col_offset = col - self.prev_col;
+            this.tokens.append("\\\n" * row_offset);
+            this.prev_col = 0;
+        } col_offset = col - this.prev_col;
         if col_offset{
-            self.tokens.append(" " * col_offset);
+            this.tokens.append(" " * col_offset);
 
     }
-    } def untokenize(self, iterable){
+    } function untokenize( iterable){
         it = iter(iterable);
         indents = [];
-        startline = False;
+        startline = false;
         for t in it{
             if len(t) == 2{
-                self.compat(t, it);
+                this.compat(t, it);
                 break;
             } tok_type, token, start, end, line = t;
             if tok_type == ENDMARKER{
@@ -218,30 +218,30 @@ def tokenize(readline, tokeneater=printtoken){
                 continue;
             } elif tok_type == DEDENT{
                 indents.pop();
-                self.prev_row, self.prev_col = end;
+                this.prev_row, this.prev_col = end;
                 continue;
             } elif tok_type in (NEWLINE, NL){
-                startline = True;
+                startline = true;
             } elif startline and indents{
                 indent = indents[-1];
                 if start[1] >= len(indent){
-                    self.tokens.append(indent);
-                    self.prev_col = len(indent);
-                } startline = False;
-            } self.add_whitespace(start);
-            self.tokens.append(token);
-            self.prev_row, self.prev_col = end;
+                    this.tokens.append(indent);
+                    this.prev_col = len(indent);
+                } startline = false;
+            } this.add_whitespace(start);
+            this.tokens.append(token);
+            this.prev_row, this.prev_col = end;
             if tok_type in (NEWLINE, NL){
-                self.prev_row += 1;
-                self.prev_col = 0;
-        } } return "".join(self.tokens);
+                this.prev_row += 1;
+                this.prev_col = 0;
+        } } return "".join(this.tokens);
 
     }
-    def compat(self, token, iterable){
+    function compat( token, iterable){
         indents = [];
-        toks_append = self.tokens.append;
+        toks_append = this.tokens.append;
         startline = token[0] in (NEWLINE, NL);
-        prevstring = False;
+        prevstring = false;
 
         for tok in chain([token], iterable){
             toknum, tokval = tok[:2];
@@ -254,9 +254,9 @@ def tokenize(readline, tokeneater=printtoken){
             if toknum == STRING{
                 if prevstring{
                     tokval = ' ' + tokval;
-                } prevstring = True;
+                } prevstring = true;
             } else{
-                prevstring = False;
+                prevstring = false;
 
             }
             if toknum == INDENT{
@@ -266,14 +266,14 @@ def tokenize(readline, tokeneater=printtoken){
                 indents.pop();
                 continue;
             } elif toknum in (NEWLINE, NL){
-                startline = True;
+                startline = true;
             } elif startline and indents{
                 toks_append(indents[-1]);
-                startline = False;
+                startline = false;
             } toks_append(tokval);
 
 }
-} } def untokenize(iterable){
+} } function untokenize(iterable){
     """Transform tokens back into Python source code.
 
     Each element returned by the iterable must be a token sequence
@@ -295,7 +295,7 @@ def tokenize(readline, tokeneater=printtoken){
     return ut.untokenize(iterable);
 
 }
-def generate_tokens(readline){
+function generate_tokens(readline){
     """
     The generate_tokens() generator requires one argument, readline, which
     must be a callable object which provides the same interface as the
@@ -314,7 +314,7 @@ def generate_tokens(readline){
     lnum = parenlev = continued = 0;
     namechars, numchars = string.ascii_letters + '_', '0123456789';
     contstr, needcont = '', 0;
-    contline = None;
+    contline = nil;
     indents = [0];
 
     while 1{                                   # loop over lines in stream
@@ -334,12 +334,12 @@ def generate_tokens(readline){
                 yield (STRING, contstr + line[:end],
                        strstart, (lnum, end), contline + line);
                 contstr, needcont = '', 0;
-                contline = None;
+                contline = nil;
             } elif needcont and line[-2:] != '\\\n' and line[-3:] != '\\\r\n'{
                 yield (ERRORTOKEN, contstr + line,
                            strstart, (lnum, len(line)), contline);
                 contstr = '';
-                contline = None;
+                contline = nil;
                 continue;
             } else{
                 contstr = contstr + line;
@@ -348,7 +348,7 @@ def generate_tokens(readline){
 
         }
         } elif parenlev == 0 and not continued{  # new statement
-            if not line{ break;
+            if not line{ break;}
             column = 0;
             while pos < max{                   # measure leading whitespace
                 if line[pos] == ' '{

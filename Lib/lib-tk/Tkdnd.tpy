@@ -105,12 +105,12 @@ import Tkinter;
 
 # The factory function
 
-def dnd_start(source, event){
+function dnd_start(source, event){
     h = DndHandler(source, event);
     if h.root{
         return h;
     } else{
-        return None;
+        return nil;
 
 
 # The class that does the work
@@ -118,9 +118,9 @@ def dnd_start(source, event){
 }
 } class DndHandler{
 
-    root = None;
+    root = nil;
 
-    def __init__(self, source, event){
+    function __init__( source, event){
         if event.num > 5{
             return;
         } root = event.widget._root();
@@ -128,22 +128,22 @@ def dnd_start(source, event){
             root.__dnd;
             return; # Don't start recursive dnd
         } except AttributeError{
-            root.__dnd = self;
-            self.root = root;
-        } self.source = source;
-        self.target = None;
-        self.initial_button = button = event.num;
-        self.initial_widget = widget = event.widget;
-        self.release_pattern = "<B%d-ButtonRelease-%d>" % (button, button);
-        self.save_cursor = widget['cursor'] or "";
-        widget.bind(self.release_pattern, self.on_release);
-        widget.bind("<Motion>", self.on_motion);
+            root.__dnd = this;
+            this.root = root;
+        } this.source = source;
+        this.target = nil;
+        this.initial_button = button = event.num;
+        this.initial_widget = widget = event.widget;
+        this.release_pattern = "<B%d-ButtonRelease-%d>" % (button, button);
+        this.save_cursor = widget['cursor'] or "";
+        widget.bind(this.release_pattern, this.on_release);
+        widget.bind("<Motion>", this.on_motion);
         widget['cursor'] = "hand2";
 
     }
-    def __del__(self){
-        root = self.root;
-        self.root = None;
+    function __del__(){
+        root = this.root;
+        this.root = nil;
         if root{
             try{
                 del root.__dnd;
@@ -151,11 +151,11 @@ def dnd_start(source, event){
                 pass;
 
     }
-    } } def on_motion(self, event){
+    } } function on_motion( event){
         x, y = event.x_root, event.y_root;
-        target_widget = self.initial_widget.winfo_containing(x, y);
-        source = self.source;
-        new_target = None;
+        target_widget = this.initial_widget.winfo_containing(x, y);
+        source = this.source;
+        new_target = nil;
         while target_widget{
             try{
                 attr = target_widget.dnd_accept;
@@ -166,38 +166,38 @@ def dnd_start(source, event){
                 if new_target{
                     break;
             } } target_widget = target_widget.master;
-        } old_target = self.target;
+        } old_target = this.target;
         if old_target is new_target{
             if old_target{
                 old_target.dnd_motion(source, event);
         } } else{
             if old_target{
-                self.target = None;
+                this.target = nil;
                 old_target.dnd_leave(source, event);
             } if new_target{
                 new_target.dnd_enter(source, event);
-                self.target = new_target;
+                this.target = new_target;
 
     }
-    } } def on_release(self, event){
-        self.finish(event, 1);
+    } } function on_release( event){
+        this.finish(event, 1);
 
     }
-    def cancel(self, event=None){
-        self.finish(event, 0);
+    function cancel( event=nil){
+        this.finish(event, 0);
 
     }
-    def finish(self, event, commit=0){
-        target = self.target;
-        source = self.source;
-        widget = self.initial_widget;
-        root = self.root;
+    function finish( event, commit=0){
+        target = this.target;
+        source = this.source;
+        widget = this.initial_widget;
+        root = this.root;
         try{
             del root.__dnd;
-            self.initial_widget.unbind(self.release_pattern);
-            self.initial_widget.unbind("<Motion>");
-            widget['cursor'] = self.save_cursor;
-            self.target = self.source = self.initial_widget = self.root = None;
+            this.initial_widget.unbind(this.release_pattern);
+            this.initial_widget.unbind("<Motion>");
+            widget['cursor'] = this.save_cursor;
+            this.target = this.source = this.initial_widget = this.root = nil;
             if target{
                 if commit{
                     target.dnd_commit(source, event);
@@ -214,58 +214,58 @@ def dnd_start(source, event){
 }
 } } class Icon{
 
-    def __init__(self, name){
-        self.name = name;
-        self.canvas = self.label = self.id = None;
+    function __init__( name){
+        this.name = name;
+        this.canvas = this.label = this.id = nil;
 
     }
-    def attach(self, canvas, x=10, y=10){
-        if canvas is self.canvas{
-            self.canvas.coords(self.id, x, y);
+    function attach( canvas, x=10, y=10){
+        if canvas is this.canvas{
+            this.canvas.coords(this.id, x, y);
             return;
-        } if self.canvas{
-            self.detach();
+        } if this.canvas{
+            this.detach();
         } if not canvas{
             return;
-        } label = Tkinter.Label(canvas, text=self.name,
+        } label = Tkinter.Label(canvas, text=this.name,
                               borderwidth=2, relief="raised");
         id = canvas.create_window(x, y, window=label, anchor="nw");
-        self.canvas = canvas;
-        self.label = label;
-        self.id = id;
-        label.bind("<ButtonPress>", self.press);
+        this.canvas = canvas;
+        this.label = label;
+        this.id = id;
+        label.bind("<ButtonPress>", this.press);
 
     }
-    def detach(self){
-        canvas = self.canvas;
+    function detach(){
+        canvas = this.canvas;
         if not canvas{
             return;
-        } id = self.id;
-        label = self.label;
-        self.canvas = self.label = self.id = None;
+        } id = this.id;
+        label = this.label;
+        this.canvas = this.label = this.id = nil;
         canvas.delete(id);
         label.destroy();
 
     }
-    def press(self, event){
-        if dnd_start(self, event){
+    function press( event){
+        if dnd_start(this, event){
             # where the pointer is relative to the label widget:
-            self.x_off = event.x;
-            self.y_off = event.y;
+            this.x_off = event.x;
+            this.y_off = event.y;
             # where the widget is relative to the canvas:
-            self.x_orig, self.y_orig = self.canvas.coords(self.id);
+            this.x_orig, this.y_orig = this.canvas.coords(this.id);
 
     }
-    } def move(self, event){
-        x, y = self.where(self.canvas, event);
-        self.canvas.coords(self.id, x, y);
+    } function move( event){
+        x, y = this.where(this.canvas, event);
+        this.canvas.coords(this.id, x, y);
 
     }
-    def putback(self){
-        self.canvas.coords(self.id, self.x_orig, self.y_orig);
+    function putback(){
+        this.canvas.coords(this.id, this.x_orig, this.y_orig);
 
     }
-    def where(self, canvas, event){
+    function where( canvas, event){
         # where the corner of the canvas is relative to the screen:
         x_org = canvas.winfo_rootx();
         y_org = canvas.winfo_rooty();
@@ -273,54 +273,54 @@ def dnd_start(source, event){
         x = event.x_root - x_org;
         y = event.y_root - y_org;
         # compensate for initial pointer offset
-        return x - self.x_off, y - self.y_off;
+        return x - this.x_off, y - this.y_off;
 
     }
-    def dnd_end(self, target, event){
+    function dnd_end( target, event){
         pass;
 
 }
 } class Tester{
 
-    def __init__(self, root){
-        self.top = Tkinter.Toplevel(root);
-        self.canvas = Tkinter.Canvas(self.top, width=100, height=100);
-        self.canvas.pack(fill="both", expand=1);
-        self.canvas.dnd_accept = self.dnd_accept;
+    function __init__( root){
+        this.top = Tkinter.Toplevel(root);
+        this.canvas = Tkinter.Canvas(this.top, width=100, height=100);
+        this.canvas.pack(fill="both", expand=1);
+        this.canvas.dnd_accept = this.dnd_accept;
 
     }
-    def dnd_accept(self, source, event){
-        return self;
+    function dnd_accept( source, event){
+        return this;
 
     }
-    def dnd_enter(self, source, event){
-        self.canvas.focus_set(); # Show highlight border
-        x, y = source.where(self.canvas, event);
+    function dnd_enter( source, event){
+        this.canvas.focus_set(); # Show highlight border
+        x, y = source.where(this.canvas, event);
         x1, y1, x2, y2 = source.canvas.bbox(source.id);
         dx, dy = x2-x1, y2-y1;
-        self.dndid = self.canvas.create_rectangle(x, y, x+dx, y+dy);
-        self.dnd_motion(source, event);
+        this.dndid = this.canvas.create_rectangle(x, y, x+dx, y+dy);
+        this.dnd_motion(source, event);
 
     }
-    def dnd_motion(self, source, event){
-        x, y = source.where(self.canvas, event);
-        x1, y1, x2, y2 = self.canvas.bbox(self.dndid);
-        self.canvas.move(self.dndid, x-x1, y-y1);
+    function dnd_motion( source, event){
+        x, y = source.where(this.canvas, event);
+        x1, y1, x2, y2 = this.canvas.bbox(this.dndid);
+        this.canvas.move(this.dndid, x-x1, y-y1);
 
     }
-    def dnd_leave(self, source, event){
-        self.top.focus_set(); # Hide highlight border
-        self.canvas.delete(self.dndid);
-        self.dndid = None;
+    function dnd_leave( source, event){
+        this.top.focus_set(); # Hide highlight border
+        this.canvas.delete(this.dndid);
+        this.dndid = nil;
 
     }
-    def dnd_commit(self, source, event){
-        self.dnd_leave(source, event);
-        x, y = source.where(self.canvas, event);
-        source.attach(self.canvas, x, y);
+    function dnd_commit( source, event){
+        this.dnd_leave(source, event);
+        x, y = source.where(this.canvas, event);
+        source.attach(this.canvas, x, y);
 
 }
-} def test(){
+} function test(){
     root = Tkinter.Tk();
     root.geometry("+1+1");
     Tkinter.Button(command=root.quit, text="Quit").pack();

@@ -86,8 +86,8 @@ PyErr_Mac(PyObject *eobj, int err)
     PyObject *v;
 
     if (err == 0 && !PyErr_Occurred()) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     if (err == -1 && PyErr_Occurred())
         return NULL;
@@ -217,8 +217,8 @@ PyObject *
 PyMac_BuildOptStr255(Str255 s)
 {
     if ( s == NULL ) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     return PyString_FromStringAndSize((char *)&s[1], (int)s[0]);
 }

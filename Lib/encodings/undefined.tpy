@@ -15,21 +15,21 @@ import codecs;
 
 class Codec(codecs.Codec){
 
-    def encode(self,input,errors='strict'){
+    function encode(input,errors='strict'){
         raise UnicodeError("undefined encoding");
 
     }
-    def decode(self,input,errors='strict'){
+    function decode(input,errors='strict'){
         raise UnicodeError("undefined encoding");
 
 }
 } class IncrementalEncoder(codecs.IncrementalEncoder){
-    def encode(self, input, final=False){
+    function encode( input, final=false){
         raise UnicodeError("undefined encoding");
 
 }
 } class IncrementalDecoder(codecs.IncrementalDecoder){
-    def decode(self, input, final=False){
+    function decode( input, final=false){
         raise UnicodeError("undefined encoding");
 
 }
@@ -43,7 +43,7 @@ class StreamReader(Codec,codecs.StreamReader){
 ### encodings module API
 
 }
-def getregentry(){
+function getregentry(){
     return codecs.CodecInfo(
         name='undefined',
         encode=Codec().encode,

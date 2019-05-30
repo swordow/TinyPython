@@ -12,30 +12,30 @@ import _ctypes_test;
 @unittest.skipUnless(sizeof(c_void_p) == sizeof(c_int),
                      "sizeof c_void_p and c_int differ");
 class WindowsTestCase(unittest.TestCase){
-    def test_callconv_1(self){
+    function test_callconv_1(){
         # Testing stdcall function
 
         IsWindow = windll.user32.IsWindow;
         # ValueError: Procedure probably called with not enough arguments
         # (4 bytes missing)
-        self.assertRaises(ValueError, IsWindow);
+        this.assertRaises(ValueError, IsWindow);
 
         # This one should succeed...
-        self.assertEqual(0, IsWindow(0));
+        this.assertEqual(0, IsWindow(0));
 
         # ValueError: Procedure probably called with too many arguments
         # (8 bytes in excess)
-        self.assertRaises(ValueError, IsWindow, 0, 0, 0);
+        this.assertRaises(ValueError, IsWindow, 0, 0, 0);
 
     }
-    def test_callconv_2(self){
+    function test_callconv_2(){
         # Calling stdcall function as cdecl
 
         IsWindow = cdll.user32.IsWindow;
 
         # ValueError: Procedure called with not enough arguments
         # (4 bytes missing) or wrong calling convention
-        self.assertRaises(ValueError, IsWindow, None);
+        this.assertRaises(ValueError, IsWindow, nil);
 
 }
 } @unittest.skipUnless(sys.platform == "win32", 'Windows-specific test');
@@ -43,22 +43,22 @@ class FunctionCallTestCase(unittest.TestCase){
     @unittest.skipUnless('MSC' in sys.version, "SEH only supported by MSC");
     @unittest.skipIf(sys.executable.endswith('_d.exe'),
                      "SEH not enabled in debug builds");
-    def test_SEH(self){
+    function test_SEH(){
         requires("SEH");
         # Call functions with invalid arguments, and make sure
         # that access violations are trapped and raise an
         # exception.
-        self.assertRaises(WindowsError, windll.kernel32.GetModuleHandleA, 32);
+        this.assertRaises(WindowsError, windll.kernel32.GetModuleHandleA, 32);
 
     }
-    def test_noargs(self){
+    function test_noargs(){
         # This is a special case on win32 x64
         windll.user32.GetDesktopWindow();
 
 }
 } @unittest.skipUnless(sys.platform == "win32", 'Windows-specific test');
 class ReturnStructSizesTestCase(unittest.TestCase){
-    def test_sizes(self){
+    function test_sizes(){
         dll = CDLL(_ctypes_test.__file__);
         for i in range(1, 11){
             fields = [ ("f%d" % f, c_char) for f in range(1, i + 1)];
@@ -70,41 +70,41 @@ class ReturnStructSizesTestCase(unittest.TestCase){
             for i, f in enumerate(fields){
                 value = getattr(res, f[0]);
                 expected = chr(ord('a') + i);
-                self.assertEquals(value, expected);
+                this.assertEquals(value, expected);
 
 
 
 }
 } } } @unittest.skipUnless(sys.platform == "win32", 'Windows-specific test');
 class TestWintypes(unittest.TestCase){
-    def test_HWND(self){
+    function test_HWND(){
         from ctypes import wintypes;
-        self.assertEqual(sizeof(wintypes.HWND), sizeof(c_void_p));
+        this.assertEqual(sizeof(wintypes.HWND), sizeof(c_void_p));
 
     }
-    def test_PARAM(self){
+    function test_PARAM(){
         from ctypes import wintypes;
-        self.assertEqual(sizeof(wintypes.WPARAM),
+        this.assertEqual(sizeof(wintypes.WPARAM),
                              sizeof(c_void_p));
-        self.assertEqual(sizeof(wintypes.LPARAM),
+        this.assertEqual(sizeof(wintypes.LPARAM),
                              sizeof(c_void_p));
 
     }
-    def test_COMError(self){
+    function test_COMError(){
         from _ctypes import COMError;
         if support.HAVE_DOCSTRINGS{
-            self.assertEqual(COMError.__doc__,
+            this.assertEqual(COMError.__doc__,
                              "Raised when a COM method call failed.");
 
         }
         ex = COMError(-1, "text", ("details",));
-        self.assertEqual(ex.hresult, -1);
-        self.assertEqual(ex.text, "text");
-        self.assertEqual(ex.details, ("details",));
+        this.assertEqual(ex.hresult, -1);
+        this.assertEqual(ex.text, "text");
+        this.assertEqual(ex.details, ("details",));
 
 }
 } class Structures(unittest.TestCase){
-    def test_struct_by_value(self){
+    function test_struct_by_value(){
         class POINT(Structure){
             _fields_ = [("x", c_long),
                         ("y", c_long)];
@@ -127,7 +127,7 @@ class TestWintypes(unittest.TestCase){
         rect = RECT(left, top, right, bottom);
         PointInRect = dll.PointInRect;
         PointInRect.argtypes = [POINTER(RECT), POINT];
-        self.assertEqual(1, PointInRect(byref(rect), pt));
+        this.assertEqual(1, PointInRect(byref(rect), pt));
 
         ReturnRect = dll.ReturnRect;
         ReturnRect.argtypes = [c_int, RECT, POINTER(RECT), POINT, RECT,
@@ -138,10 +138,10 @@ class TestWintypes(unittest.TestCase){
                          byref(rect), pt, rect);
             # the c function will check and modify ret if something is
             # passed in improperly
-            self.assertEqual(ret.left, left.value);
-            self.assertEqual(ret.right, right.value);
-            self.assertEqual(ret.top, top.value);
-            self.assertEqual(ret.bottom, bottom.value);
+            this.assertEqual(ret.left, left.value);
+            this.assertEqual(ret.right, right.value);
+            this.assertEqual(ret.top, top.value);
+            this.assertEqual(ret.bottom, bottom.value);
 
         # to not leak references, we must clean _pointer_type_cache
         }

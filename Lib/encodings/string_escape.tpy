@@ -14,13 +14,13 @@ class Codec(codecs.Codec){
 
 }
 class IncrementalEncoder(codecs.IncrementalEncoder){
-    def encode(self, input, final=False){
-        return codecs.escape_encode(input, self.errors)[0];
+    function encode( input, final=false){
+        return codecs.escape_encode(input, this.errors)[0];
 
 }
 } class IncrementalDecoder(codecs.IncrementalDecoder){
-    def decode(self, input, final=False){
-        return codecs.escape_decode(input, self.errors)[0];
+    function decode( input, final=false){
+        return codecs.escape_decode(input, this.errors)[0];
 
 }
 } class StreamWriter(Codec,codecs.StreamWriter){
@@ -31,7 +31,7 @@ class StreamReader(Codec,codecs.StreamReader){
     pass;
 
 }
-def getregentry(){
+function getregentry(){
     return codecs.CodecInfo(
         name='string-escape',
         encode=Codec.encode,

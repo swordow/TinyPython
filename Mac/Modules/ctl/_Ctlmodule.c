@@ -186,8 +186,8 @@ static PyObject *CtlObj_HiliteControl(ControlObject *_self, PyObject *_args)
         return NULL;
     HiliteControl(_self->ob_itself,
                   hiliteState);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -200,8 +200,8 @@ static PyObject *CtlObj_ShowControl(ControlObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     ShowControl(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -214,8 +214,8 @@ static PyObject *CtlObj_HideControl(ControlObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     HideControl(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -260,8 +260,8 @@ static PyObject *CtlObj_ActivateControl(ControlObject *_self, PyObject *_args)
         return NULL;
     _err = ActivateControl(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -276,8 +276,8 @@ static PyObject *CtlObj_DeactivateControl(ControlObject *_self, PyObject *_args)
         return NULL;
     _err = DeactivateControl(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -298,8 +298,8 @@ static PyObject *CtlObj_SetControlVisibility(ControlObject *_self, PyObject *_ar
                                 inIsVisible,
                                 inDoDraw);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -329,8 +329,8 @@ static PyObject *CtlObj_EnableControl(ControlObject *_self, PyObject *_args)
         return NULL;
     _err = EnableControl(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -345,8 +345,8 @@ static PyObject *CtlObj_DisableControl(ControlObject *_self, PyObject *_args)
         return NULL;
     _err = DisableControl(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -359,8 +359,8 @@ static PyObject *CtlObj_Draw1Control(ControlObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     Draw1Control(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -399,8 +399,8 @@ static PyObject *CtlObj_SetControlFontStyle(ControlObject *_self, PyObject *_arg
     _err = SetControlFontStyle(_self->ob_itself,
                                &inStyle);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -413,8 +413,8 @@ static PyObject *CtlObj_DrawControlInCurrentPort(ControlObject *_self, PyObject 
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     DrawControlInCurrentPort(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -435,8 +435,8 @@ static PyObject *CtlObj_SetUpControlBackground(ControlObject *_self, PyObject *_
                                   inDepth,
                                   inIsColorDevice);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -457,8 +457,8 @@ static PyObject *CtlObj_SetUpControlTextColor(ControlObject *_self, PyObject *_a
                                  inDepth,
                                  inIsColorDevice);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -483,8 +483,8 @@ static PyObject *CtlObj_DragControl(ControlObject *_self, PyObject *_args)
                 &limitRect,
                 &slopRect,
                 axis);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -614,8 +614,8 @@ static PyObject *CtlObj_MoveControl(ControlObject *_self, PyObject *_args)
     MoveControl(_self->ob_itself,
                 h,
                 v);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -634,8 +634,8 @@ static PyObject *CtlObj_SizeControl(ControlObject *_self, PyObject *_args)
     SizeControl(_self->ob_itself,
                 w,
                 h);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -651,8 +651,8 @@ static PyObject *CtlObj_SetControlTitle(ControlObject *_self, PyObject *_args)
         return NULL;
     SetControlTitle(_self->ob_itself,
                     title);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -686,8 +686,8 @@ static PyObject *CtlObj_SetControlTitleWithCFString(ControlObject *_self, PyObje
     _err = SetControlTitleWithCFString(_self->ob_itself,
                                        inString);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -736,8 +736,8 @@ static PyObject *CtlObj_SetControlValue(ControlObject *_self, PyObject *_args)
         return NULL;
     SetControlValue(_self->ob_itself,
                     newValue);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -768,8 +768,8 @@ static PyObject *CtlObj_SetControlMinimum(ControlObject *_self, PyObject *_args)
         return NULL;
     SetControlMinimum(_self->ob_itself,
                       newMinimum);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -800,8 +800,8 @@ static PyObject *CtlObj_SetControlMaximum(ControlObject *_self, PyObject *_args)
         return NULL;
     SetControlMaximum(_self->ob_itself,
                       newMaximum);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -832,8 +832,8 @@ static PyObject *CtlObj_SetControlViewSize(ControlObject *_self, PyObject *_args
         return NULL;
     SetControlViewSize(_self->ob_itself,
                        newViewSize);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -864,8 +864,8 @@ static PyObject *CtlObj_SetControl32BitValue(ControlObject *_self, PyObject *_ar
         return NULL;
     SetControl32BitValue(_self->ob_itself,
                          newValue);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -896,8 +896,8 @@ static PyObject *CtlObj_SetControl32BitMaximum(ControlObject *_self, PyObject *_
         return NULL;
     SetControl32BitMaximum(_self->ob_itself,
                            newMaximum);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -928,8 +928,8 @@ static PyObject *CtlObj_SetControl32BitMinimum(ControlObject *_self, PyObject *_
         return NULL;
     SetControl32BitMinimum(_self->ob_itself,
                            newMinimum);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -962,8 +962,8 @@ static PyObject *CtlObj_SetControlID(ControlObject *_self, PyObject *_args)
     _err = SetControlID(_self->ob_itself,
                         &inID);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -999,8 +999,8 @@ static PyObject *CtlObj_SetControlCommandID(ControlObject *_self, PyObject *_arg
     _err = SetControlCommandID(_self->ob_itself,
                                inCommandID);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1039,8 +1039,8 @@ static PyObject *CtlObj_RemoveControlProperty(ControlObject *_self, PyObject *_a
                                  propertyCreator,
                                  propertyTag);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1091,8 +1091,8 @@ static PyObject *CtlObj_ChangeControlPropertyAttributes(ControlObject *_self, Py
                                            attributesToSet,
                                            attributesToClear);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1113,8 +1113,8 @@ static PyObject *CtlObj_GetControlRegion(ControlObject *_self, PyObject *_args)
                             inPart,
                             outRegion);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1146,8 +1146,8 @@ static PyObject *CtlObj_SetControlAction(ControlObject *_self, PyObject *_args)
         return NULL;
     SetControlAction(_self->ob_itself,
                      myactionproc_upp);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     setcallback((PyObject*)_self, kMyControlActionProcTag, actionProc, &c_callback);
     return _res;
 }
@@ -1164,8 +1164,8 @@ static PyObject *CtlObj_SetControlReference(ControlObject *_self, PyObject *_arg
         return NULL;
     SetControlReference(_self->ob_itself,
                         data);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1198,8 +1198,8 @@ static PyObject *CtlObj_EmbedControl(ControlObject *_self, PyObject *_args)
     _err = EmbedControl(_self->ob_itself,
                         inContainer);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1217,8 +1217,8 @@ static PyObject *CtlObj_AutoEmbedControl(ControlObject *_self, PyObject *_args)
     _err = AutoEmbedControl(_self->ob_itself,
                             inWindow);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1293,8 +1293,8 @@ static PyObject *CtlObj_SetControlSupervisor(ControlObject *_self, PyObject *_ar
     _err = SetControlSupervisor(_self->ob_itself,
                                 inBoss);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1378,8 +1378,8 @@ static PyObject *CtlObj_HandleControlDragReceive(ControlObject *_self, PyObject 
     _err = HandleControlDragReceive(_self->ob_itself,
                                     inDrag);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1397,8 +1397,8 @@ static PyObject *CtlObj_SetControlDragTrackingEnabled(ControlObject *_self, PyOb
     _err = SetControlDragTrackingEnabled(_self->ob_itself,
                                          inTracks);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1538,8 +1538,8 @@ static PyObject *CtlObj_SetControlDataHandle(ControlObject *_self, PyObject *_ar
         return NULL;
     SetControlDataHandle(_self->ob_itself,
                          dataHandle);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1555,8 +1555,8 @@ static PyObject *CtlObj_SetControlBounds(ControlObject *_self, PyObject *_args)
         return NULL;
     SetControlBounds(_self->ob_itself,
                      &bounds);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1572,8 +1572,8 @@ static PyObject *CtlObj_SetControlPopupMenuHandle(ControlObject *_self, PyObject
         return NULL;
     SetControlPopupMenuHandle(_self->ob_itself,
                               popupMenu);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1589,8 +1589,8 @@ static PyObject *CtlObj_SetControlPopupMenuID(ControlObject *_self, PyObject *_a
         return NULL;
     SetControlPopupMenuID(_self->ob_itself,
                           menuID);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1626,8 +1626,8 @@ static PyObject *CtlObj_SetBevelButtonMenuValue(ControlObject *_self, PyObject *
     _err = SetBevelButtonMenuValue(_self->ob_itself,
                                    inValue);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1663,8 +1663,8 @@ static PyObject *CtlObj_SetBevelButtonContentInfo(ControlObject *_self, PyObject
     _err = SetBevelButtonContentInfo(_self->ob_itself,
                                      &inContent);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1682,8 +1682,8 @@ static PyObject *CtlObj_SetBevelButtonTransform(ControlObject *_self, PyObject *
     _err = SetBevelButtonTransform(_self->ob_itself,
                                    transform);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1701,8 +1701,8 @@ static PyObject *CtlObj_SetDisclosureTriangleLastValue(ControlObject *_self, PyO
     _err = SetDisclosureTriangleLastValue(_self->ob_itself,
                                           inValue);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1741,8 +1741,8 @@ static PyObject *CtlObj_SetTabEnabled(ControlObject *_self, PyObject *_args)
                          inTabToHilite,
                          inEnabled);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1760,8 +1760,8 @@ static PyObject *CtlObj_SetImageWellContentInfo(ControlObject *_self, PyObject *
     _err = SetImageWellContentInfo(_self->ob_itself,
                                    &inContent);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1779,8 +1779,8 @@ static PyObject *CtlObj_SetImageWellTransform(ControlObject *_self, PyObject *_a
     _err = SetImageWellTransform(_self->ob_itself,
                                  inTransform);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1816,8 +1816,8 @@ static PyObject *CtlObj_SetDataBrowserViewStyle(ControlObject *_self, PyObject *
     _err = SetDataBrowserViewStyle(_self->ob_itself,
                                    style);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1853,8 +1853,8 @@ static PyObject *CtlObj_ExecuteDataBrowserEditCommand(ControlObject *_self, PyOb
     _err = ExecuteDataBrowserEditCommand(_self->ob_itself,
                                          command);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1896,8 +1896,8 @@ static PyObject *CtlObj_MoveDataBrowserSelectionAnchor(ControlObject *_self, PyO
                                           direction,
                                           extendSelection);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1915,8 +1915,8 @@ static PyObject *CtlObj_OpenDataBrowserContainer(ControlObject *_self, PyObject 
     _err = OpenDataBrowserContainer(_self->ob_itself,
                                     container);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1934,8 +1934,8 @@ static PyObject *CtlObj_CloseDataBrowserContainer(ControlObject *_self, PyObject
     _err = CloseDataBrowserContainer(_self->ob_itself,
                                      container);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1956,8 +1956,8 @@ static PyObject *CtlObj_SortDataBrowserContainer(ControlObject *_self, PyObject 
                                     container,
                                     sortChildren);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1984,8 +1984,8 @@ static PyObject *CtlObj_GetDataBrowserItems(ControlObject *_self, PyObject *_arg
                                state,
                                items);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2075,8 +2075,8 @@ static PyObject *CtlObj_RevealDataBrowserItem(ControlObject *_self, PyObject *_a
                                  propertyID,
                                  options);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2094,8 +2094,8 @@ static PyObject *CtlObj_SetDataBrowserActiveItems(ControlObject *_self, PyObject
     _err = SetDataBrowserActiveItems(_self->ob_itself,
                                      active);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2167,8 +2167,8 @@ static PyObject *CtlObj_SetDataBrowserTarget(ControlObject *_self, PyObject *_ar
     _err = SetDataBrowserTarget(_self->ob_itself,
                                 target);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2204,8 +2204,8 @@ static PyObject *CtlObj_SetDataBrowserSortOrder(ControlObject *_self, PyObject *
     _err = SetDataBrowserSortOrder(_self->ob_itself,
                                    order);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2244,8 +2244,8 @@ static PyObject *CtlObj_SetDataBrowserScrollPosition(ControlObject *_self, PyObj
                                         top,
                                         left);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2287,8 +2287,8 @@ static PyObject *CtlObj_SetDataBrowserHasScrollBars(ControlObject *_self, PyObje
                                        horiz,
                                        vert);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2327,8 +2327,8 @@ static PyObject *CtlObj_SetDataBrowserSortProperty(ControlObject *_self, PyObjec
     _err = SetDataBrowserSortProperty(_self->ob_itself,
                                       property);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2364,8 +2364,8 @@ static PyObject *CtlObj_SetDataBrowserSelectionFlags(ControlObject *_self, PyObj
     _err = SetDataBrowserSelectionFlags(_self->ob_itself,
                                         selectionFlags);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2404,8 +2404,8 @@ static PyObject *CtlObj_SetDataBrowserPropertyFlags(ControlObject *_self, PyObje
                                        property,
                                        flags);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2444,8 +2444,8 @@ static PyObject *CtlObj_SetDataBrowserEditText(ControlObject *_self, PyObject *_
     _err = SetDataBrowserEditText(_self->ob_itself,
                                   text);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2481,8 +2481,8 @@ static PyObject *CtlObj_GetDataBrowserEditText(ControlObject *_self, PyObject *_
     _err = GetDataBrowserEditText(_self->ob_itself,
                                   text);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2503,8 +2503,8 @@ static PyObject *CtlObj_SetDataBrowserEditItem(ControlObject *_self, PyObject *_
                                   item,
                                   property);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2570,8 +2570,8 @@ static PyObject *CtlObj_RemoveDataBrowserTableViewColumn(ControlObject *_self, P
     _err = RemoveDataBrowserTableViewColumn(_self->ob_itself,
                                             column);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2607,8 +2607,8 @@ static PyObject *CtlObj_SetDataBrowserTableViewHiliteStyle(ControlObject *_self,
     _err = SetDataBrowserTableViewHiliteStyle(_self->ob_itself,
                                               hiliteStyle);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2644,8 +2644,8 @@ static PyObject *CtlObj_SetDataBrowserTableViewRowHeight(ControlObject *_self, P
     _err = SetDataBrowserTableViewRowHeight(_self->ob_itself,
                                             height);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2681,8 +2681,8 @@ static PyObject *CtlObj_SetDataBrowserTableViewColumnWidth(ControlObject *_self,
     _err = SetDataBrowserTableViewColumnWidth(_self->ob_itself,
                                               width);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2721,8 +2721,8 @@ static PyObject *CtlObj_SetDataBrowserTableViewItemRowHeight(ControlObject *_sel
                                                 item,
                                                 height);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2764,8 +2764,8 @@ static PyObject *CtlObj_SetDataBrowserTableViewNamedColumnWidth(ControlObject *_
                                                    column,
                                                    width);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2807,8 +2807,8 @@ static PyObject *CtlObj_SetDataBrowserTableViewGeometry(ControlObject *_self, Py
                                            variableWidthColumns,
                                            variableHeightRows);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2871,8 +2871,8 @@ static PyObject *CtlObj_SetDataBrowserTableViewItemRow(ControlObject *_self, PyO
                                           item,
                                           row);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2914,8 +2914,8 @@ static PyObject *CtlObj_SetDataBrowserTableViewColumnPosition(ControlObject *_se
                                                  column,
                                                  position);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2972,8 +2972,8 @@ static PyObject *CtlObj_AutoSizeDataBrowserListViewColumns(ControlObject *_self,
         return NULL;
     _err = AutoSizeDataBrowserListViewColumns(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2994,8 +2994,8 @@ static PyObject *CtlObj_AddDataBrowserListViewColumn(ControlObject *_self, PyObj
                                         &columnDesc,
                                         position);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3013,8 +3013,8 @@ static PyObject *CtlObj_SetDataBrowserListViewHeaderBtnHeight(ControlObject *_se
     _err = SetDataBrowserListViewHeaderBtnHeight(_self->ob_itself,
                                                  height);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3050,8 +3050,8 @@ static PyObject *CtlObj_SetDataBrowserListViewUsePlainBackground(ControlObject *
     _err = SetDataBrowserListViewUsePlainBackground(_self->ob_itself,
                                                     usePlainBackground);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3090,8 +3090,8 @@ static PyObject *CtlObj_SetDataBrowserListViewDisclosureColumn(ControlObject *_s
                                                   column,
                                                   expandableRows);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3130,8 +3130,8 @@ static PyObject *CtlObj_GetDataBrowserColumnViewPath(ControlObject *_self, PyObj
     _err = GetDataBrowserColumnViewPath(_self->ob_itself,
                                         path);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3167,8 +3167,8 @@ static PyObject *CtlObj_SetDataBrowserColumnViewDisplayType(ControlObject *_self
     _err = SetDataBrowserColumnViewDisplayType(_self->ob_itself,
                                                propertyType);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3232,8 +3232,8 @@ static PyObject *CtlObj_DisposeControl(ControlObject *_self, PyObject *_args)
             DisposeControl(_self->ob_itself);
             _self->ob_itself = NULL;
         }
-        Py_INCREF(Py_None);
-        _res = Py_None;
+        Py_INCREF(Py_Nil);
+        _res = Py_Nil;
         return _res;
 
 }
@@ -3250,7 +3250,7 @@ static PyObject *CtlObj_TrackControl(ControlObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, "O&|O",
                           PyMac_GetPoint, &startPoint, &callback))
         return NULL;
-    if (callback && callback != Py_None) {
+    if (callback && callback != Py_Nil) {
         if (PyInt_Check(callback) && PyInt_AS_LONG(callback) == -1)
             upp = (ControlActionUPP)-1;
         else {
@@ -3283,7 +3283,7 @@ static PyObject *CtlObj_HandleControlClick(ControlObject *_self, PyObject *_args
                           &modifiers,
                           &callback))
         return NULL;
-    if (callback && callback != Py_None) {
+    if (callback && callback != Py_Nil) {
         if (PyInt_Check(callback) && PyInt_AS_LONG(callback) == -1)
             upp = (ControlActionUPP)-1;
         else {
@@ -3326,7 +3326,7 @@ static PyObject *CtlObj_SetControlData(ControlObject *_self, PyObject *_args)
 
     if (_err != noErr)
         return PyMac_Error(_err);
-    _res = Py_None;
+    _res = Py_Nil;
     return _res;
 
 }
@@ -3398,7 +3398,7 @@ static PyObject *CtlObj_SetControlData_Handle(ControlObject *_self, PyObject *_a
 
     if (_err != noErr)
         return PyMac_Error(_err);
-    _res = Py_None;
+    _res = Py_Nil;
     return _res;
 
 }
@@ -3471,7 +3471,7 @@ static PyObject *CtlObj_SetControlData_Callback(ControlObject *_self, PyObject *
 
     if (_err != noErr)
         return PyMac_Error(_err);
-    _res = Py_None;
+    _res = Py_Nil;
     return _res;
 
 }
@@ -3984,8 +3984,8 @@ static PyObject *Ctl_DrawControls(PyObject *_self, PyObject *_args)
                           WinObj_Convert, &theWindow))
         return NULL;
     DrawControls(theWindow);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4003,8 +4003,8 @@ static PyObject *Ctl_UpdateControls(PyObject *_self, PyObject *_args)
         return NULL;
     UpdateControls(inWindow,
                    inUpdateRegion);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4042,8 +4042,8 @@ static PyObject *Ctl_IdleControls(PyObject *_self, PyObject *_args)
                           WinObj_Convert, &inWindow))
         return NULL;
     IdleControls(inWindow);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4086,8 +4086,8 @@ static PyObject *Ctl_DumpControlHierarchy(PyObject *_self, PyObject *_args)
     _err = DumpControlHierarchy(inWindow,
                                 &inDumpFile);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4170,8 +4170,8 @@ static PyObject *Ctl_SetKeyboardFocus(PyObject *_self, PyObject *_args)
                             inControl,
                             inPart);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4188,8 +4188,8 @@ static PyObject *Ctl_AdvanceKeyboardFocus(PyObject *_self, PyObject *_args)
         return NULL;
     _err = AdvanceKeyboardFocus(inWindow);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4206,8 +4206,8 @@ static PyObject *Ctl_ReverseKeyboardFocus(PyObject *_self, PyObject *_args)
         return NULL;
     _err = ReverseKeyboardFocus(inWindow);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4224,8 +4224,8 @@ static PyObject *Ctl_ClearKeyboardFocus(PyObject *_self, PyObject *_args)
         return NULL;
     _err = ClearKeyboardFocus(inWindow);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4245,8 +4245,8 @@ static PyObject *Ctl_SetAutomaticControlDragTrackingEnabledForWindow(PyObject *_
     _err = SetAutomaticControlDragTrackingEnabledForWindow(inWindow,
                                                            inTracks);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5546,7 +5546,7 @@ CtlObj_WhichControl(ControlHandle c)
     PyObject *it;
 
     if (c == NULL)
-        it = Py_None;
+        it = Py_Nil;
     else {
         it = (PyObject *) GetControlReference(c);
         /*
@@ -5620,7 +5620,7 @@ setcallback(PyObject *myself, OSType which, PyObject *callback, UniversalProcPtr
     else
         return -1;
     /* Only now do we test for clearing of the callback: */
-    if ( callback == Py_None )
+    if ( callback == Py_Nil )
         *uppp = NULL;
     /* Create the dict if it doesn't exist yet (so we don't get such a dict for every control) */
     if ( self->ob_callbackdict == NULL )

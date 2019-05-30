@@ -140,8 +140,8 @@ sndih_setNumberChannels(self, args)
 
     if( (err=SPBSetDeviceInfo(inRefNum, siNumberChannels, (Ptr)&nchannel)) != noErr )
         return PyMac_Error(err);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static char sndih_getContinuous__doc__[] =
@@ -183,8 +183,8 @@ sndih_setContinuous(self, args)
 
     if( (err=SPBSetDeviceInfo(inRefNum, siContinuous, (Ptr)&onoff)) != noErr )
         return PyMac_Error(err);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static char sndih_getInputSourceNames__doc__[] =
@@ -247,8 +247,8 @@ sndih_setInputSource(self, args)
 
     if( (err=SPBSetDeviceInfo(inRefNum, siInputSource, (Ptr)&source)) != noErr )
         return PyMac_Error(err);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static char sndih_getPlayThruOnOff__doc__[] =
@@ -290,8 +290,8 @@ sndih_setPlayThruOnOff(self, args)
 
     if( (err=SPBSetDeviceInfo(inRefNum, siPlayThruOnOff, (Ptr)&onoff)) != noErr )
         return PyMac_Error(err);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static char sndih_getSampleRate__doc__[] =
@@ -333,8 +333,8 @@ sndih_setSampleRate(self, args)
 
     if( (err=SPBSetDeviceInfo(inRefNum, siSampleRate, (Ptr)&sample_rate)) != noErr )
         return PyMac_Error(err);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static char sndih_getSampleSize__doc__[] =
@@ -376,8 +376,8 @@ sndih_setSampleSize(self, args)
 
     if( (err=SPBSetDeviceInfo(inRefNum, siSampleSize, (Ptr)&size)) != noErr )
         return PyMac_Error(err);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static char sndih_getSampleSizeAvailable__doc__[] =

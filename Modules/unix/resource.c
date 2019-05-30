@@ -202,8 +202,8 @@ resource_setrlimit(PyObject *self, PyObject *args)
         goto error;
     }
     Py_DECREF(limits);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 
   error:
     Py_DECREF(limits);

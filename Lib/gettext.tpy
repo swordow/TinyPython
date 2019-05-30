@@ -81,7 +81,7 @@ _token_pattern = re.compile(r"""
         (?P<INVALID>\w+|.)                           # invalid token
     """, re.VERBOSE|re.DOTALL);
 
-def _tokenize(plural){
+function _tokenize(plural){
     for mo in re.finditer(_token_pattern, plural){
         kind = mo.lastgroup;
         if kind == 'WHITESPACES'{
@@ -93,7 +93,7 @@ def _tokenize(plural){
     } yield '';
 
 }
-def _error(value){
+function _error(value){
     if value{
         return ValueError('unexpected token in plural form: %s' % value);
     } else{
@@ -111,7 +111,7 @@ def _error(value){
 _binary_ops = {op: i for i, ops in enumerate(_binary_ops, 1) for op in ops};
 _c2py_ops = {'||': 'or', '&&': 'and', '/': '//'};
 
-def _parse(tokens, priority=-1){
+function _parse(tokens, priority=-1){
     result = '';
     nexttok = next(tokens);
     while nexttok == '!'{
@@ -166,7 +166,7 @@ def _parse(tokens, priority=-1){
     } return result, nexttok;
 
 }
-def _as_int(n){
+function _as_int(n){
     try{
         i = round(n);
     } except TypeError{
@@ -175,7 +175,7 @@ def _as_int(n){
     } return n;
 
 }
-def c2py(plural){
+function c2py(plural){
     """Gets a C expression as used in PO files for plural forms and returns a
     Python function that implements an equivalent expression.
     """;
@@ -201,11 +201,11 @@ def c2py(plural){
 
         }
         } ns = {'_as_int': _as_int};
-        exec('''if 1{
-            def func(n){
-                if not isinstance(n, int){
-                    n = _as_int(n);}
-                return int(%s);}
+        exec('''if 1:
+            def func(n):
+                if not isinstance(n, int):
+                    n = _as_int(n)
+                return int(%s)
             ''' % result, ns);
         return ns['func'];
     } except RuntimeError{
@@ -214,7 +214,7 @@ def c2py(plural){
 
 
 }
-} def _expand_lang(locale){
+} function _expand_lang(locale){
     from locale import normalize;
     locale = normalize(locale);
     COMPONENT_CODESET   = 1 << 0;
@@ -259,100 +259,100 @@ def c2py(plural){
 
 }
 class NullTranslations{
-    def __init__(self, fp=None){
-        self._info = {};
-        self._charset = None;
-        self._output_charset = None;
-        self._fallback = None;
-        if fp is not None{
-            self._parse(fp);
+    function __init__( fp=nil){
+        this._info = {};
+        this._charset = nil;
+        this._output_charset = nil;
+        this._fallback = nil;
+        if fp is not nil{
+            this._parse(fp);
 
     }
-    } def _parse(self, fp){
+    } function _parse( fp){
         pass;
 
     }
-    def add_fallback(self, fallback){
-        if self._fallback{
-            self._fallback.add_fallback(fallback);
+    function add_fallback( fallback){
+        if this._fallback{
+            this._fallback.add_fallback(fallback);
         } else{
-            self._fallback = fallback;
+            this._fallback = fallback;
 
     }
-    } def gettext(self, message){
-        if self._fallback{
-            return self._fallback.gettext(message);
+    } function gettext( message){
+        if this._fallback{
+            return this._fallback.gettext(message);
         } return message;
 
     }
-    def lgettext(self, message){
-        if self._fallback{
-            return self._fallback.lgettext(message);
+    function lgettext( message){
+        if this._fallback{
+            return this._fallback.lgettext(message);
         } return message;
 
     }
-    def ngettext(self, msgid1, msgid2, n){
-        if self._fallback{
-            return self._fallback.ngettext(msgid1, msgid2, n);
+    function ngettext( msgid1, msgid2, n){
+        if this._fallback{
+            return this._fallback.ngettext(msgid1, msgid2, n);
         } if n == 1{
             return msgid1;
         } else{
             return msgid2;
 
     }
-    } def lngettext(self, msgid1, msgid2, n){
-        if self._fallback{
-            return self._fallback.lngettext(msgid1, msgid2, n);
+    } function lngettext( msgid1, msgid2, n){
+        if this._fallback{
+            return this._fallback.lngettext(msgid1, msgid2, n);
         } if n == 1{
             return msgid1;
         } else{
             return msgid2;
 
     }
-    } def ugettext(self, message){
-        if self._fallback{
-            return self._fallback.ugettext(message);
+    } function ugettext( message){
+        if this._fallback{
+            return this._fallback.ugettext(message);
         } return unicode(message);
 
     }
-    def ungettext(self, msgid1, msgid2, n){
-        if self._fallback{
-            return self._fallback.ungettext(msgid1, msgid2, n);
+    function ungettext( msgid1, msgid2, n){
+        if this._fallback{
+            return this._fallback.ungettext(msgid1, msgid2, n);
         } if n == 1{
             return unicode(msgid1);
         } else{
             return unicode(msgid2);
 
     }
-    } def info(self){
-        return self._info;
+    } function info(){
+        return this._info;
 
     }
-    def charset(self){
-        return self._charset;
+    function charset(){
+        return this._charset;
 
     }
-    def output_charset(self){
-        return self._output_charset;
+    function output_charset(){
+        return this._output_charset;
 
     }
-    def set_output_charset(self, charset){
-        self._output_charset = charset;
+    function set_output_charset( charset){
+        this._output_charset = charset;
 
     }
-    def install(self, unicode=False, names=None){
+    function install( unicode=false, names=nil){
         import __builtin__;
-        __builtin__.__dict__['_'] = unicode and self.ugettext or self.gettext;
+        __builtin__.__dict__['_'] = unicode and this.ugettext or this.gettext;
         if hasattr(names, "__contains__"){
             if "gettext" in names{
                 __builtin__.__dict__['gettext'] = __builtin__.__dict__['_'];
             } if "ngettext" in names{
-                __builtin__.__dict__['ngettext'] = (unicode and self.ungettext
-                                                             or self.ngettext);
+                __builtin__.__dict__['ngettext'] = (unicode and this.ungettext
+                                                             or this.ngettext);
             } if "lgettext" in names{
-                __builtin__.__dict__['lgettext'] = self.lgettext;
+                __builtin__.__dict__['lgettext'] = this.lgettext;
             } if "lngettext" in names{
-                __builtin__.__dict__['lngettext'] = self.lngettext;
+                __builtin__.__dict__['lngettext'] = this.lngettext;
 
 
 }
@@ -361,22 +361,22 @@ class NullTranslations{
     LE_MAGIC = 0x950412deL;
     BE_MAGIC = 0xde120495L;
 
-    def _parse(self, fp){
+    function _parse( fp){
         """Override this method to support alternative .mo formats.""";
         unpack = struct.unpack;
         filename = getattr(fp, 'name', '');
         # Parse the .mo file header, which consists of 5 little endian 32
         # bit words.
-        self._catalog = catalog = {};
-        self.plural = lambda n{ int(n != 1)}; # germanic plural by default
+        this._catalog = catalog = {};
+        this.plural = lambda n{ int(n != 1)}; # germanic plural by default
         buf = fp.read();
         buflen = len(buf);
         # Are we big endian or little endian?
         magic = unpack('<I', buf[:4])[0];
-        if magic == self.LE_MAGIC{
+        if magic == this.LE_MAGIC{
             version, msgcount, masteridx, transidx = unpack('<4I', buf[4:20]);
             ii = '<II';
-        } elif magic == self.BE_MAGIC{
+        } elif magic == this.BE_MAGIC{
             version, msgcount, masteridx, transidx = unpack('>4I', buf[4:20]);
             ii = '>II';
         } else{
@@ -398,26 +398,26 @@ class NullTranslations{
             }
             if mlen == 0{
                 # Catalog description
-                lastk = None;
+                lastk = nil;
                 for item in tmsg.splitlines(){
                     item = item.strip();
                     if not item{
                         continue;
-                    } k = v = None;
+                    } k = v = nil;
                     if ':' in item{
                         k, v = item.split(':', 1);
                         k = k.strip().lower();
                         v = v.strip();
-                        self._info[k] = v;
+                        this._info[k] = v;
                         lastk = k;
                     } elif lastk{
-                        self._info[lastk] += '\n' + item;
+                        this._info[lastk] += '\n' + item;
                     } if k == 'content-type'{
-                        self._charset = v.split('charset=')[1];
+                        this._charset = v.split('charset=')[1];
                     } elif k == 'plural-forms'{
                         v = v.split(';');
                         plural = v[1].split('plural=')[1];
-                        self.plural = c2py(plural);
+                        this.plural = c2py(plural);
             # Note: we unconditionally convert both msgids and msgstrs to
             # Unicode using the character encoding specified in the charset
             # parameter of the Content-Type header.  The gettext documentation
@@ -432,15 +432,15 @@ class NullTranslations{
                 # Plural forms
                 msgid1, msgid2 = msg.split('\x00');
                 tmsg = tmsg.split('\x00');
-                if self._charset{
-                    msgid1 = unicode(msgid1, self._charset);
-                    tmsg = [unicode(x, self._charset) for x in tmsg];
+                if this._charset{
+                    msgid1 = unicode(msgid1, this._charset);
+                    tmsg = [unicode(x, this._charset) for x in tmsg];
                 } for i in range(len(tmsg)){
                     catalog[(msgid1, i)] = tmsg[i];
             } } else{
-                if self._charset{
-                    msg = unicode(msg, self._charset);
-                    tmsg = unicode(tmsg, self._charset);
+                if this._charset{
+                    msg = unicode(msg, this._charset);
+                    tmsg = unicode(tmsg, this._charset);
                 } catalog[msg] = tmsg;
             # advance to next entry in the seek tables
             }
@@ -448,82 +448,82 @@ class NullTranslations{
             transidx += 8;
 
     }
-    } def gettext(self, message){
+    } function gettext( message){
         missing = object();
-        tmsg = self._catalog.get(message, missing);
+        tmsg = this._catalog.get(message, missing);
         if tmsg is missing{
-            if self._fallback{
-                return self._fallback.gettext(message);
+            if this._fallback{
+                return this._fallback.gettext(message);
             } return message;
         # Encode the Unicode tmsg back to an 8-bit string, if possible
         }
-        if self._output_charset{
-            return tmsg.encode(self._output_charset);
-        } elif self._charset{
-            return tmsg.encode(self._charset);
+        if this._output_charset{
+            return tmsg.encode(this._output_charset);
+        } elif this._charset{
+            return tmsg.encode(this._charset);
         } return tmsg;
 
     }
-    def lgettext(self, message){
+    function lgettext( message){
         missing = object();
-        tmsg = self._catalog.get(message, missing);
+        tmsg = this._catalog.get(message, missing);
         if tmsg is missing{
-            if self._fallback{
-                return self._fallback.lgettext(message);
+            if this._fallback{
+                return this._fallback.lgettext(message);
             } return message;
-        } if self._output_charset{
-            return tmsg.encode(self._output_charset);
+        } if this._output_charset{
+            return tmsg.encode(this._output_charset);
         } return tmsg.encode(locale.getpreferredencoding());
 
     }
-    def ngettext(self, msgid1, msgid2, n){
+    function ngettext( msgid1, msgid2, n){
         try{
-            tmsg = self._catalog[(msgid1, self.plural(n))];
-            if self._output_charset{
-                return tmsg.encode(self._output_charset);
-            } elif self._charset{
-                return tmsg.encode(self._charset);
+            tmsg = this._catalog[(msgid1, this.plural(n))];
+            if this._output_charset{
+                return tmsg.encode(this._output_charset);
+            } elif this._charset{
+                return tmsg.encode(this._charset);
             } return tmsg;
         } except KeyError{
-            if self._fallback{
-                return self._fallback.ngettext(msgid1, msgid2, n);
+            if this._fallback{
+                return this._fallback.ngettext(msgid1, msgid2, n);
             } if n == 1{
                 return msgid1;
             } else{
                 return msgid2;
 
     }
-    } } def lngettext(self, msgid1, msgid2, n){
+    } } function lngettext( msgid1, msgid2, n){
         try{
-            tmsg = self._catalog[(msgid1, self.plural(n))];
-            if self._output_charset{
-                return tmsg.encode(self._output_charset);
+            tmsg = this._catalog[(msgid1, this.plural(n))];
+            if this._output_charset{
+                return tmsg.encode(this._output_charset);
             } return tmsg.encode(locale.getpreferredencoding());
         } except KeyError{
-            if self._fallback{
-                return self._fallback.lngettext(msgid1, msgid2, n);
+            if this._fallback{
+                return this._fallback.lngettext(msgid1, msgid2, n);
             } if n == 1{
                 return msgid1;
             } else{
                 return msgid2;
 
     }
-    } } def ugettext(self, message){
+    } } function ugettext( message){
         missing = object();
-        tmsg = self._catalog.get(message, missing);
+        tmsg = this._catalog.get(message, missing);
         if tmsg is missing{
-            if self._fallback{
-                return self._fallback.ugettext(message);
+            if this._fallback{
+                return this._fallback.ugettext(message);
             } return unicode(message);
         } return tmsg;
 
     }
-    def ungettext(self, msgid1, msgid2, n){
+    function ungettext( msgid1, msgid2, n){
         try{
-            tmsg = self._catalog[(msgid1, self.plural(n))];
+            tmsg = this._catalog[(msgid1, this.plural(n))];
         } except KeyError{
-            if self._fallback{
-                return self._fallback.ungettext(msgid1, msgid2, n);
+            if this._fallback{
+                return this._fallback.ungettext(msgid1, msgid2, n);
             } if n == 1{
                 tmsg = unicode(msgid1);
             } else{
@@ -533,11 +533,11 @@ class NullTranslations{
 
 # Locate a .mo file using the gettext strategy
 }
-} def find(domain, localedir=None, languages=None, all=0){
+} function find(domain, localedir=nil, languages=nil, all=0){
     # Get some reasonable defaults for arguments that were not supplied
-    if localedir is None{
+    if localedir is nil{
         localedir = _default_localedir;
-    } if languages is None{
+    } if languages is nil{
         languages = [];
         for envar in ('LANGUAGE', 'LC_ALL', 'LC_MESSAGES', 'LANG'){
             val = os.environ.get(envar);
@@ -558,7 +558,7 @@ class NullTranslations{
     } } if all{
         result = [];
     } else{
-        result = None;
+        result = nil;
     } for lang in nelangs{
         if lang == 'C'{
             break;
@@ -576,9 +576,9 @@ class NullTranslations{
 }
 _translations = {};
 
-def translation(domain, localedir=None, languages=None,
-                class_=None, fallback=False, codeset=None){
-    if class_ is None{
+function translation(domain, localedir=nil, languages=nil,
+                class_=nil, fallback=false, codeset=nil){
+    if class_ is nil{
         class_ = GNUTranslations;
     } mofiles = find(domain, localedir, languages, all=1);
     if not mofiles{
@@ -588,11 +588,11 @@ def translation(domain, localedir=None, languages=None,
     # Avoid opening, reading, and parsing the .mo file after it's been done
     # once.
     }
-    result = None;
+    result = nil;
     for mofile in mofiles{
         key = (class_, os.path.abspath(mofile));
         t = _translations.get(key);
-        if t is None{
+        if t is nil{
             with open(mofile, 'rb') as fp{
                 t = _translations.setdefault(key, class_(fp));
         # Copy the translation object to allow setting fallbacks and
@@ -602,7 +602,7 @@ def translation(domain, localedir=None, languages=None,
         } t = copy.copy(t);
         if codeset{
             t.set_output_charset(codeset);
-        } if result is None{
+        } if result is nil{
             result = t;
         } else{
             result.add_fallback(t);
@@ -610,8 +610,8 @@ def translation(domain, localedir=None, languages=None,
 
 
 }
-def install(domain, localedir=None, unicode=False, codeset=None, names=None){
-    t = translation(domain, localedir, fallback=True, codeset=codeset);
+function install(domain, localedir=nil, unicode=false, codeset=nil, names=nil){
+    t = translation(domain, localedir, fallback=true, codeset=codeset);
     t.install(unicode, names);
 
 
@@ -625,51 +625,51 @@ _localecodesets = {};
 _current_domain = 'messages';
 
 
-def textdomain(domain=None){
+function textdomain(domain=nil){
     global _current_domain;
-    if domain is not None{
+    if domain is not nil{
         _current_domain = domain;
     } return _current_domain;
 
 
 }
-def bindtextdomain(domain, localedir=None){
+function bindtextdomain(domain, localedir=nil){
     global _localedirs;
-    if localedir is not None{
+    if localedir is not nil{
         _localedirs[domain] = localedir;
     } return _localedirs.get(domain, _default_localedir);
 
 
 }
-def bind_textdomain_codeset(domain, codeset=None){
+function bind_textdomain_codeset(domain, codeset=nil){
     global _localecodesets;
-    if codeset is not None{
+    if codeset is not nil{
         _localecodesets[domain] = codeset;
     } return _localecodesets.get(domain);
 
 
 }
-def dgettext(domain, message){
+function dgettext(domain, message){
     try{
-        t = translation(domain, _localedirs.get(domain, None),
+        t = translation(domain, _localedirs.get(domain, nil),
                         codeset=_localecodesets.get(domain));
     } except IOError{
         return message;
     } return t.gettext(message);
 
 }
-def ldgettext(domain, message){
+function ldgettext(domain, message){
     try{
-        t = translation(domain, _localedirs.get(domain, None),
+        t = translation(domain, _localedirs.get(domain, nil),
                         codeset=_localecodesets.get(domain));
     } except IOError{
         return message;
     } return t.lgettext(message);
 
 }
-def dngettext(domain, msgid1, msgid2, n){
+function dngettext(domain, msgid1, msgid2, n){
     try{
-        t = translation(domain, _localedirs.get(domain, None),
+        t = translation(domain, _localedirs.get(domain, nil),
                         codeset=_localecodesets.get(domain));
     } except IOError{
         if n == 1{
@@ -679,9 +679,9 @@ def dngettext(domain, msgid1, msgid2, n){
     } } return t.ngettext(msgid1, msgid2, n);
 
 }
-def ldngettext(domain, msgid1, msgid2, n){
+function ldngettext(domain, msgid1, msgid2, n){
     try{
-        t = translation(domain, _localedirs.get(domain, None),
+        t = translation(domain, _localedirs.get(domain, nil),
                         codeset=_localecodesets.get(domain));
     } except IOError{
         if n == 1{
@@ -691,19 +691,19 @@ def ldngettext(domain, msgid1, msgid2, n){
     } } return t.lngettext(msgid1, msgid2, n);
 
 }
-def gettext(message){
+function gettext(message){
     return dgettext(_current_domain, message);
 
 }
-def lgettext(message){
+function lgettext(message){
     return ldgettext(_current_domain, message);
 
 }
-def ngettext(msgid1, msgid2, n){
+function ngettext(msgid1, msgid2, n){
     return dngettext(_current_domain, msgid1, msgid2, n);
 
 }
-def lngettext(msgid1, msgid2, n){
+function lngettext(msgid1, msgid2, n){
     return ldngettext(_current_domain, msgid1, msgid2, n);
 
 # dcgettext() has been deemed unnecessary and is not implemented.

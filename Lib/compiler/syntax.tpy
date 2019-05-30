@@ -11,7 +11,7 @@ errors.
 
 from compiler import ast, walk;
 
-def check(tree, multi=None){
+function check(tree, multi=nil){
     v = SyntaxErrorChecker(multi);
     walk(tree, v);
     return v.errors;
@@ -20,26 +20,26 @@ def check(tree, multi=None){
 class SyntaxErrorChecker{
     """A visitor to find syntax errors in the AST.""";
 
-    def __init__(self, multi=None){
+    function __init__( multi=nil){
         """Create new visitor object.
 
         If optional argument multi is not None, then print messages
         for each error rather than raising a SyntaxError for the
         first.
         """;
-        self.multi = multi;
-        self.errors = 0;
+        this.multi = multi;
+        this.errors = 0;
 
     }
-    def error(self, node, msg){
-        self.errors = self.errors + 1;
-        if self.multi is not None{
+    function error( node, msg){
+        this.errors = this.errors + 1;
+        if this.multi is not nil{
             print "%s:%s: %s" % (node.filename, node.lineno, msg);
         } else{
             raise SyntaxError, "%s (%s:%s)" % (msg, node.filename, node.lineno);
 
     }
-    } def visitAssign(self, node){
+    } function visitAssign( node){
         # the transformer module handles many of these
         pass;
 ##        for target in node.nodes:

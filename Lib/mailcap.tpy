@@ -6,7 +6,7 @@ __all__ = ["getcaps","findmatch"];
 
 # Part 1: top-level interface.
 
-def getcaps(){
+function getcaps(){
     """Return a dictionary containing the mailcap database.
 
     The dictionary maps a MIME type (in all lowercase, e.g. 'text/plain')
@@ -32,7 +32,7 @@ def getcaps(){
     } } } return caps;
 
 }
-def listmailcapfiles(){
+function listmailcapfiles(){
     """Return a list of all mailcap files found on the system.""";
     # XXX Actually, this is Unix-specific
     if 'MAILCAPS' in os.environ{
@@ -52,7 +52,7 @@ def listmailcapfiles(){
 # Part 2: the parser.
 
 }
-def readmailcapfile(fp){
+function readmailcapfile(fp){
     """Read a mailcap file and return a dictionary keyed by MIME type.
 
     Each MIME type is mapped to an entry consisting of a list of
@@ -64,7 +64,7 @@ def readmailcapfile(fp){
     caps = {};
     while 1{
         line = fp.readline();
-        if not line{ break;
+        if not line{ break;}
         # Ignore comments and blank lines
         if line[0] == '#' or line.strip() == ''{
             continue;
@@ -72,7 +72,7 @@ def readmailcapfile(fp){
         # Join continuation lines
         while nextline[-2:] == '\\\n'{
             nextline = fp.readline();
-            if not nextline{ nextline = '\n';
+            if not nextline{ nextline = '\n';}
             line = line[:-2] + nextline;
         # Parse the line
         }
@@ -93,7 +93,7 @@ def readmailcapfile(fp){
     } } return caps;
 
 }
-def parseline(line){
+function parseline(line){
     """Parse one entry in a mailcap file and return a dictionary.
 
     The viewing command is stored as the value with the key "view",
@@ -106,7 +106,7 @@ def parseline(line){
         fields.append(field);
         i = i+1; # Skip semicolon
     } if len(fields) < 2{
-        return None, None;
+        return nil, nil;
     } key, view, rest = fields[0], fields[1], fields[2:];
     fields = {'view': view};
     for field in rest{
@@ -125,7 +125,7 @@ def parseline(line){
     } } return key, fields;
 
 }
-def parsefield(line, i, n){
+function parsefield(line, i, n){
     """Separate one key-value pair in a mailcap entry.""";
     start = i;
     while i < n{
@@ -142,7 +142,7 @@ def parsefield(line, i, n){
 # Part 3: using the database.
 
 }
-def findmatch(caps, MIMEtype, key='view', filename="/dev/null", plist=[]){
+function findmatch(caps, MIMEtype, key='view', filename="/dev/null", plist=[]){
     """Find a match for a mailcap entry.
 
     Return a tuple containing the command line, and the mailcap entry
@@ -160,10 +160,10 @@ def findmatch(caps, MIMEtype, key='view', filename="/dev/null", plist=[]){
                 continue;
         } } command = subst(e[key], MIMEtype, filename, plist);
         return command, e;
-    } return None, None;
+    } return nil, nil;
 
 }
-def lookup(caps, MIMEtype, key=None){
+function lookup(caps, MIMEtype, key=nil){
     entries = [];
     if MIMEtype in caps{
         entries = entries + caps[MIMEtype];
@@ -171,12 +171,12 @@ def lookup(caps, MIMEtype, key=None){
     MIMEtype = MIMEtypes[0] + '/*';
     if MIMEtype in caps{
         entries = entries + caps[MIMEtype];
-    } if key is not None{
+    } if key is not nil{
         entries = filter(lambda e, key=key{ key in e}, entries);
     } return entries;
 
 }
-def subst(field, MIMEtype, filename, plist=[]){
+function subst(field, MIMEtype, filename, plist=[]){
     # XXX Actually, this is Unix-specific
     res = '';
     i, n = 0, len(field);
@@ -210,7 +210,7 @@ def subst(field, MIMEtype, filename, plist=[]){
     } } } return res;
 
 }
-def findparam(name, plist){
+function findparam(name, plist){
     name = name.lower() + '=';
     n = len(name);
     for p in plist{
@@ -222,7 +222,7 @@ def findparam(name, plist){
 # Part 4: test program.
 
 }
-def test(){
+function test(){
     import sys;
     caps = getcaps();
     if not sys.argv[1:]{
@@ -245,11 +245,11 @@ def test(){
                 print "Exit status:", sts;
 
 }
-} } } def show(caps){
+} } } function show(caps){
     print "Mailcap files:";
-    for fn in listmailcapfiles(){ print "\t" + fn;
+    for fn in listmailcapfiles(){ print "\t" + fn;}
     print;
-    if not caps{ caps = getcaps();
+    if not caps{ caps = getcaps();}
     print "Mailcap entries:";
     print;
     ckeys = caps.keys();

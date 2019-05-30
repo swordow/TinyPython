@@ -9,12 +9,12 @@ from test_ttk.support import (AbstractTkTest, tcl_version, requires_tcl,
 import test.test_support;
 
 
-noconv = noconv_meth = False;
+noconv = noconv_meth = false;
 if get_tk_patchlevel() < (8, 5, 11){
     noconv = str;
 } noconv_meth = noconv and staticmethod(noconv);
 
-def int_round(x){
+function int_round(x){
     return int(round(x));
 
 }
@@ -30,226 +30,226 @@ _sentinel = object();
 
 class AbstractWidgetTest(AbstractTkTest){
     _conv_pixels = staticmethod(pixels_round);
-    _conv_pad_pixels = None;
-    _stringify = False;
+    _conv_pad_pixels = nil;
+    _stringify = false;
 
     @property;
-    def scaling(self){
+    function scaling(){
         try{
-            return self._scaling;
+            return this._scaling;
         } except AttributeError{
-            self._scaling = float(self.root.call('tk', 'scaling'));
-            return self._scaling;
+            this._scaling = float(this.root.call('tk', 'scaling'));
+            return this._scaling;
 
     }
-    } def _str(self, value){
-        if not self._stringify and self.wantobjects and tcl_version >= (8, 6){
+    } function _str( value){
+        if not this._stringify and this.wantobjects and tcl_version >= (8, 6){
             return value;
         } if isinstance(value, tuple){
-            return ' '.join(map(self._str, value));
+            return ' '.join(map(this._str, value));
         } return str(value);
 
     }
-    def assertEqual2(self, actual, expected, msg=None, eq=object.__eq__){
+    function assertEqual2( actual, expected, msg=nil, eq=object.__eq__){
         if eq(actual, expected){
             return;
-        } self.assertEqual(actual, expected, msg);
+        } this.assertEqual(actual, expected, msg);
 
     }
-    def checkParam(self, widget, name, value, expected=_sentinel,
-                   conv=False, eq=None){
+    function checkParam( widget, name, value, expected=_sentinel,
+                   conv=false, eq=nil){
         widget[name] = value;
         if expected is _sentinel{
             expected = value;
         } if conv{
             expected = conv(expected);
-        } if self._stringify or not self.wantobjects{
+        } if this._stringify or not this.wantobjects{
             if isinstance(expected, tuple){
                 expected = tkinter._join(expected);
             } else{
                 expected = str(expected);
-        } } if eq is None{
+        } } if eq is nil{
             eq = tcl_obj_eq;
-        } self.assertEqual2(widget[name], expected, eq=eq);
-        self.assertEqual2(widget.cget(name), expected, eq=eq);
+        } this.assertEqual2(widget[name], expected, eq=eq);
+        this.assertEqual2(widget.cget(name), expected, eq=eq);
         # XXX
         if not isinstance(widget, Scale){
             t = widget.configure(name);
-            self.assertEqual(len(t), 5);
-            self.assertEqual2(t[4], expected, eq=eq);
+            this.assertEqual(len(t), 5);
+            this.assertEqual2(t[4], expected, eq=eq);
 
     }
-    } def checkInvalidParam(self, widget, name, value, errmsg=None,
-                          keep_orig=True){
+    } function checkInvalidParam( widget, name, value, errmsg=nil,
+                          keep_orig=true){
         orig = widget[name];
-        if errmsg is not None{
+        if errmsg is not nil{
             errmsg = errmsg.format(value);
-        } with self.assertRaises(tkinter.TclError) as cm{
+        } with this.assertRaises(tkinter.TclError) as cm{
             widget[name] = value;
-        } if errmsg is not None{
-            self.assertEqual(str(cm.exception), errmsg);
+        } if errmsg is not nil{
+            this.assertEqual(str(cm.exception), errmsg);
         } if keep_orig{
-            self.assertEqual(widget[name], orig);
+            this.assertEqual(widget[name], orig);
         } else{
             widget[name] = orig;
-        } with self.assertRaises(tkinter.TclError) as cm{
+        } with this.assertRaises(tkinter.TclError) as cm{
             widget.configure({name: value});
-        } if errmsg is not None{
-            self.assertEqual(str(cm.exception), errmsg);
+        } if errmsg is not nil{
+            this.assertEqual(str(cm.exception), errmsg);
         } if keep_orig{
-            self.assertEqual(widget[name], orig);
+            this.assertEqual(widget[name], orig);
         } else{
             widget[name] = orig;
 
     }
-    } def checkParams(self, widget, name, *values, **kwargs){
+    } function checkParams( widget, name, *values, **kwargs){
         for value in values{
-            self.checkParam(widget, name, value, **kwargs);
+            this.checkParam(widget, name, value, **kwargs);
 
     }
-    } def checkIntegerParam(self, widget, name, *values, **kwargs){
-        self.checkParams(widget, name, *values, **kwargs);
-        self.checkInvalidParam(widget, name, '',
+    } function checkIntegerParam( widget, name, *values, **kwargs){
+        this.checkParams(widget, name, *values, **kwargs);
+        this.checkInvalidParam(widget, name, '',
                 errmsg='expected integer but got ""');
-        self.checkInvalidParam(widget, name, '10p',
+        this.checkInvalidParam(widget, name, '10p',
                 errmsg='expected integer but got "10p"');
-        self.checkInvalidParam(widget, name, 3.2,
+        this.checkInvalidParam(widget, name, 3.2,
                 errmsg='expected integer but got "3.2"');
 
     }
-    def checkFloatParam(self, widget, name, *values, **kwargs){
+    function checkFloatParam( widget, name, *values, **kwargs){
         if 'conv' in kwargs{
             conv = kwargs.pop('conv');
         } else{
             conv = float;
         } for value in values{
-            self.checkParam(widget, name, value, conv=conv, **kwargs);
-        } self.checkInvalidParam(widget, name, '',
+            this.checkParam(widget, name, value, conv=conv, **kwargs);
+        } this.checkInvalidParam(widget, name, '',
                 errmsg='expected floating-point number but got ""');
-        self.checkInvalidParam(widget, name, 'spam',
+        this.checkInvalidParam(widget, name, 'spam',
                 errmsg='expected floating-point number but got "spam"');
 
     }
-    def checkBooleanParam(self, widget, name){
-        for value in (False, 0, 'false', 'no', 'off'){
-            self.checkParam(widget, name, value, expected=0);
-        } for value in (True, 1, 'true', 'yes', 'on'){
-            self.checkParam(widget, name, value, expected=1);
-        } self.checkInvalidParam(widget, name, '',
+    function checkBooleanParam( widget, name){
+        for value in (false, 0, 'false', 'no', 'off'){
+            this.checkParam(widget, name, value, expected=0);
+        } for value in (true, 1, 'true', 'yes', 'on'){
+            this.checkParam(widget, name, value, expected=1);
+        } this.checkInvalidParam(widget, name, '',
                 errmsg='expected boolean value but got ""');
-        self.checkInvalidParam(widget, name, 'spam',
+        this.checkInvalidParam(widget, name, 'spam',
                 errmsg='expected boolean value but got "spam"');
 
     }
-    def checkColorParam(self, widget, name, allow_empty=None, **kwargs){
-        self.checkParams(widget, name,
+    function checkColorParam( widget, name, allow_empty=nil, **kwargs){
+        this.checkParams(widget, name,
                          '#ff0000', '#00ff00', '#0000ff', '#123456',
                          'red', 'green', 'blue', 'white', 'black', 'grey',
                          **kwargs);
-        self.checkInvalidParam(widget, name, 'spam',
+        this.checkInvalidParam(widget, name, 'spam',
                 errmsg='unknown color name "spam"');
 
     }
-    def checkCursorParam(self, widget, name, **kwargs){
-        self.checkParams(widget, name, 'arrow', 'watch', 'cross', '',**kwargs);
+    function checkCursorParam( widget, name, **kwargs){
+        this.checkParams(widget, name, 'arrow', 'watch', 'cross', '',**kwargs);
         if tcl_version >= (8, 5){
-            self.checkParam(widget, name, 'none');
-        } self.checkInvalidParam(widget, name, 'spam',
+            this.checkParam(widget, name, 'none');
+        } this.checkInvalidParam(widget, name, 'spam',
                 errmsg='bad cursor spec "spam"');
 
     }
-    def checkCommandParam(self, widget, name){
-        def command(*args){
+    function checkCommandParam( widget, name){
+        function command(*args){
             pass;
         } widget[name] = command;
-        self.assertTrue(widget[name]);
-        self.checkParams(widget, name, '');
+        this.assertTrue(widget[name]);
+        this.checkParams(widget, name, '');
 
     }
-    def checkEnumParam(self, widget, name, *values, **kwargs){
+    function checkEnumParam( widget, name, *values, **kwargs){
         if 'errmsg' in kwargs{
             errmsg = kwargs.pop('errmsg');
         } else{
-            errmsg = None;
-        } self.checkParams(widget, name, *values, **kwargs);
-        if errmsg is None{
+            errmsg = nil;
+        } this.checkParams(widget, name, *values, **kwargs);
+        if errmsg is nil{
             errmsg2 = ' %s "{}": must be %s%s or %s' % (
                     name,
                     ', '.join(values[:-1]),
                     ',' if len(values) > 2 else '',
                     values[-1]);
-            self.checkInvalidParam(widget, name, '',
+            this.checkInvalidParam(widget, name, '',
                                    errmsg='ambiguous' + errmsg2);
             errmsg = 'bad' + errmsg2;
-        } self.checkInvalidParam(widget, name, 'spam', errmsg=errmsg);
+        } this.checkInvalidParam(widget, name, 'spam', errmsg=errmsg);
 
     }
-    def checkPixelsParam(self, widget, name, *values, **kwargs){
+    function checkPixelsParam( widget, name, *values, **kwargs){
         if 'conv' in kwargs{
             conv = kwargs.pop('conv');
         } else{
-            conv = None;
-        } if conv is None{
-            conv = self._conv_pixels;
+            conv = nil;
+        } if conv is nil{
+            conv = this._conv_pixels;
         } if 'keep_orig' in kwargs{
             keep_orig = kwargs.pop('keep_orig');
         } else{
-            keep_orig = True;
+            keep_orig = true;
         } for value in values{
             expected = _sentinel;
             conv1 = conv;
             if isinstance(value, str){
                 if conv1 and conv1 is not str{
-                    expected = pixels_conv(value) * self.scaling;
+                    expected = pixels_conv(value) * this.scaling;
                     conv1 = int_round;
-            } } self.checkParam(widget, name, value, expected=expected,
+            } } this.checkParam(widget, name, value, expected=expected,
                             conv=conv1, **kwargs);
-        } self.checkInvalidParam(widget, name, '6x',
+        } this.checkInvalidParam(widget, name, '6x',
                 errmsg='bad screen distance "6x"', keep_orig=keep_orig);
-        self.checkInvalidParam(widget, name, 'spam',
+        this.checkInvalidParam(widget, name, 'spam',
                 errmsg='bad screen distance "spam"', keep_orig=keep_orig);
 
     }
-    def checkReliefParam(self, widget, name){
-        self.checkParams(widget, name,
+    function checkReliefParam( widget, name){
+        this.checkParams(widget, name,
                          'flat', 'groove', 'raised', 'ridge', 'solid', 'sunken');
         errmsg='bad relief "spam": must be '\
                'flat, groove, raised, ridge, solid, or sunken';
         if tcl_version < (8, 6){
-            errmsg = None;
-        } self.checkInvalidParam(widget, name, 'spam',
+            errmsg = nil;
+        } this.checkInvalidParam(widget, name, 'spam',
                 errmsg=errmsg);
 
     }
-    def checkImageParam(self, widget, name){
-        image = tkinter.PhotoImage(master=self.root, name='image1');
-        self.checkParam(widget, name, image, conv=str);
-        self.checkInvalidParam(widget, name, 'spam',
+    function checkImageParam( widget, name){
+        image = tkinter.PhotoImage(master=this.root, name='image1');
+        this.checkParam(widget, name, image, conv=str);
+        this.checkInvalidParam(widget, name, 'spam',
                 errmsg='image "spam" doesn\'t exist');
         widget[name] = '';
 
     }
-    def checkVariableParam(self, widget, name, var){
-        self.checkParam(widget, name, var, conv=str);
+    function checkVariableParam( widget, name, var){
+        this.checkParam(widget, name, var, conv=str);
 
     }
-    def assertIsBoundingBox(self, bbox){
-        self.assertIsNotNone(bbox);
-        self.assertIsInstance(bbox, tuple);
+    function assertIsBoundingBox( bbox){
+        this.assertIsNotNone(bbox);
+        this.assertIsInstance(bbox, tuple);
         if len(bbox) != 4{
-            self.fail('Invalid bounding box: %r' % (bbox,));
+            this.fail('Invalid bounding box: %r' % (bbox,));
         } for item in bbox{
             if not isinstance(item, int){
-                self.fail('Invalid bounding box: %r' % (bbox,));
+                this.fail('Invalid bounding box: %r' % (bbox,));
                 break;
 
     }
-    } } def test_keys(self){
-        widget = self.create();
+    } } function test_keys(){
+        widget = this.create();
         keys = widget.keys();
         # XXX
         if not isinstance(widget, Scale){
-            self.assertEqual(sorted(keys), sorted(widget.configure()));
+            this.assertEqual(sorted(keys), sorted(widget.configure()));
         } for k in keys{
             widget[k];
         # Test if OPTIONS contains all keys
@@ -263,13 +263,13 @@ class AbstractWidgetTest(AbstractTkTest){
                 'vcmd': 'validatecommand',
             };
             keys = set(keys);
-            expected = set(self.OPTIONS);
+            expected = set(this.OPTIONS);
             for k in sorted(keys - expected){
                 if not (k in aliases and
                         aliases[k] in keys and
                         aliases[k] in expected){
                     print('%s.OPTIONS doesn\'t contain "%s"' %
-                          (self.__class__.__name__, k));
+                          (this.__class__.__name__, k));
 
 
 }
@@ -288,337 +288,337 @@ class AbstractWidgetTest(AbstractTkTest){
         'underline', 'wraplength', 'xscrollcommand', 'yscrollcommand',
     );
 
-    def test_activebackground(self){
-        widget = self.create();
-        self.checkColorParam(widget, 'activebackground');
+    function test_activebackground(){
+        widget = this.create();
+        this.checkColorParam(widget, 'activebackground');
 
     }
-    def test_activeborderwidth(self){
-        widget = self.create();
-        self.checkPixelsParam(widget, 'activeborderwidth',
+    function test_activeborderwidth(){
+        widget = this.create();
+        this.checkPixelsParam(widget, 'activeborderwidth',
                               0, 1.3, 2.9, 6, -2, '10p');
 
     }
-    def test_activeforeground(self){
-        widget = self.create();
-        self.checkColorParam(widget, 'activeforeground');
+    function test_activeforeground(){
+        widget = this.create();
+        this.checkColorParam(widget, 'activeforeground');
 
     }
-    def test_anchor(self){
-        widget = self.create();
-        self.checkEnumParam(widget, 'anchor',
+    function test_anchor(){
+        widget = this.create();
+        this.checkEnumParam(widget, 'anchor',
                 'n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw', 'center');
 
     }
-    def test_background(self){
-        widget = self.create();
-        self.checkColorParam(widget, 'background');
-        if 'bg' in self.OPTIONS{
-            self.checkColorParam(widget, 'bg');
+    function test_background(){
+        widget = this.create();
+        this.checkColorParam(widget, 'background');
+        if 'bg' in this.OPTIONS{
+            this.checkColorParam(widget, 'bg');
 
     }
-    } def test_bitmap(self){
-        widget = self.create();
-        self.checkParam(widget, 'bitmap', 'questhead');
-        self.checkParam(widget, 'bitmap', 'gray50');
+    } function test_bitmap(){
+        widget = this.create();
+        this.checkParam(widget, 'bitmap', 'questhead');
+        this.checkParam(widget, 'bitmap', 'gray50');
         filename = test.test_support.findfile('python.xbm', subdir='imghdrdata');
-        self.checkParam(widget, 'bitmap', '@' + filename);
+        this.checkParam(widget, 'bitmap', '@' + filename);
         # Cocoa Tk widgets don't detect invalid -bitmap values
         # See https://core.tcl.tk/tk/info/31cd33dbf0
-        if not ('aqua' in self.root.tk.call('tk', 'windowingsystem') and
-                'AppKit' in self.root.winfo_server()){
-            self.checkInvalidParam(widget, 'bitmap', 'spam',
+        if not ('aqua' in this.root.tk.call('tk', 'windowingsystem') and
+                'AppKit' in this.root.winfo_server()){
+            this.checkInvalidParam(widget, 'bitmap', 'spam',
                     errmsg='bitmap "spam" not defined');
 
     }
-    } def test_borderwidth(self){
-        widget = self.create();
-        self.checkPixelsParam(widget, 'borderwidth',
+    } function test_borderwidth(){
+        widget = this.create();
+        this.checkPixelsParam(widget, 'borderwidth',
                               0, 1.3, 2.6, 6, -2, '10p');
-        if 'bd' in self.OPTIONS{
-            self.checkPixelsParam(widget, 'bd', 0, 1.3, 2.6, 6, -2, '10p');
+        if 'bd' in this.OPTIONS{
+            this.checkPixelsParam(widget, 'bd', 0, 1.3, 2.6, 6, -2, '10p');
 
     }
-    } def test_compound(self){
-        widget = self.create();
-        self.checkEnumParam(widget, 'compound',
+    } function test_compound(){
+        widget = this.create();
+        this.checkEnumParam(widget, 'compound',
                 'bottom', 'center', 'left', 'none', 'right', 'top');
 
     }
-    def test_cursor(self){
-        widget = self.create();
-        self.checkCursorParam(widget, 'cursor');
+    function test_cursor(){
+        widget = this.create();
+        this.checkCursorParam(widget, 'cursor');
 
     }
-    def test_disabledforeground(self){
-        widget = self.create();
-        self.checkColorParam(widget, 'disabledforeground');
+    function test_disabledforeground(){
+        widget = this.create();
+        this.checkColorParam(widget, 'disabledforeground');
 
     }
-    def test_exportselection(self){
-        widget = self.create();
-        self.checkBooleanParam(widget, 'exportselection');
+    function test_exportselection(){
+        widget = this.create();
+        this.checkBooleanParam(widget, 'exportselection');
 
     }
-    def test_font(self){
-        widget = self.create();
-        self.checkParam(widget, 'font',
+    function test_font(){
+        widget = this.create();
+        this.checkParam(widget, 'font',
                         '-Adobe-Helvetica-Medium-R-Normal--*-120-*-*-*-*-*-*');
-        self.checkInvalidParam(widget, 'font', '',
+        this.checkInvalidParam(widget, 'font', '',
                                errmsg='font "" doesn\'t exist');
 
     }
-    def test_foreground(self){
-        widget = self.create();
-        self.checkColorParam(widget, 'foreground');
-        if 'fg' in self.OPTIONS{
-            self.checkColorParam(widget, 'fg');
+    function test_foreground(){
+        widget = this.create();
+        this.checkColorParam(widget, 'foreground');
+        if 'fg' in this.OPTIONS{
+            this.checkColorParam(widget, 'fg');
 
     }
-    } def test_highlightbackground(self){
-        widget = self.create();
-        self.checkColorParam(widget, 'highlightbackground');
+    } function test_highlightbackground(){
+        widget = this.create();
+        this.checkColorParam(widget, 'highlightbackground');
 
     }
-    def test_highlightcolor(self){
-        widget = self.create();
-        self.checkColorParam(widget, 'highlightcolor');
+    function test_highlightcolor(){
+        widget = this.create();
+        this.checkColorParam(widget, 'highlightcolor');
 
     }
-    def test_highlightthickness(self){
-        widget = self.create();
-        self.checkPixelsParam(widget, 'highlightthickness',
+    function test_highlightthickness(){
+        widget = this.create();
+        this.checkPixelsParam(widget, 'highlightthickness',
                               0, 1.3, 2.6, 6, '10p');
-        self.checkParam(widget, 'highlightthickness', -2, expected=0,
-                        conv=self._conv_pixels);
+        this.checkParam(widget, 'highlightthickness', -2, expected=0,
+                        conv=this._conv_pixels);
 
     }
     @unittest.skipIf(sys.platform == 'darwin',
                      'crashes with Cocoa Tk (issue19733)');
-    def test_image(self){
-        widget = self.create();
-        self.checkImageParam(widget, 'image');
+    function test_image(){
+        widget = this.create();
+        this.checkImageParam(widget, 'image');
 
     }
-    def test_insertbackground(self){
-        widget = self.create();
-        self.checkColorParam(widget, 'insertbackground');
+    function test_insertbackground(){
+        widget = this.create();
+        this.checkColorParam(widget, 'insertbackground');
 
     }
-    def test_insertborderwidth(self){
-        widget = self.create();
-        self.checkPixelsParam(widget, 'insertborderwidth',
+    function test_insertborderwidth(){
+        widget = this.create();
+        this.checkPixelsParam(widget, 'insertborderwidth',
                               0, 1.3, 2.6, 6, -2, '10p');
 
     }
-    def test_insertofftime(self){
-        widget = self.create();
-        self.checkIntegerParam(widget, 'insertofftime', 100);
+    function test_insertofftime(){
+        widget = this.create();
+        this.checkIntegerParam(widget, 'insertofftime', 100);
 
     }
-    def test_insertontime(self){
-        widget = self.create();
-        self.checkIntegerParam(widget, 'insertontime', 100);
+    function test_insertontime(){
+        widget = this.create();
+        this.checkIntegerParam(widget, 'insertontime', 100);
 
     }
-    def test_insertwidth(self){
-        widget = self.create();
-        self.checkPixelsParam(widget, 'insertwidth', 1.3, 2.6, -2, '10p');
+    function test_insertwidth(){
+        widget = this.create();
+        this.checkPixelsParam(widget, 'insertwidth', 1.3, 2.6, -2, '10p');
 
     }
-    def test_jump(self){
-        widget = self.create();
-        self.checkBooleanParam(widget, 'jump');
+    function test_jump(){
+        widget = this.create();
+        this.checkBooleanParam(widget, 'jump');
 
     }
-    def test_justify(self){
-        widget = self.create();
-        self.checkEnumParam(widget, 'justify', 'left', 'right', 'center',
+    function test_justify(){
+        widget = this.create();
+        this.checkEnumParam(widget, 'justify', 'left', 'right', 'center',
                 errmsg='bad justification "{}": must be '
                        'left, right, or center');
-        self.checkInvalidParam(widget, 'justify', '',
+        this.checkInvalidParam(widget, 'justify', '',
                 errmsg='ambiguous justification "": must be '
                        'left, right, or center');
 
     }
-    def test_orient(self){
-        widget = self.create();
-        self.assertEqual(str(widget['orient']), self.default_orient);
-        self.checkEnumParam(widget, 'orient', 'horizontal', 'vertical');
+    function test_orient(){
+        widget = this.create();
+        this.assertEqual(str(widget['orient']), this.default_orient);
+        this.checkEnumParam(widget, 'orient', 'horizontal', 'vertical');
 
     }
-    def test_padx(self){
-        widget = self.create();
-        self.checkPixelsParam(widget, 'padx', 3, 4.4, 5.6, -2, '12m',
-                              conv=self._conv_pad_pixels);
+    function test_padx(){
+        widget = this.create();
+        this.checkPixelsParam(widget, 'padx', 3, 4.4, 5.6, -2, '12m',
+                              conv=this._conv_pad_pixels);
 
     }
-    def test_pady(self){
-        widget = self.create();
-        self.checkPixelsParam(widget, 'pady', 3, 4.4, 5.6, -2, '12m',
-                              conv=self._conv_pad_pixels);
+    function test_pady(){
+        widget = this.create();
+        this.checkPixelsParam(widget, 'pady', 3, 4.4, 5.6, -2, '12m',
+                              conv=this._conv_pad_pixels);
 
     }
-    def test_relief(self){
-        widget = self.create();
-        self.checkReliefParam(widget, 'relief');
+    function test_relief(){
+        widget = this.create();
+        this.checkReliefParam(widget, 'relief');
 
     }
-    def test_repeatdelay(self){
-        widget = self.create();
-        self.checkIntegerParam(widget, 'repeatdelay', -500, 500);
+    function test_repeatdelay(){
+        widget = this.create();
+        this.checkIntegerParam(widget, 'repeatdelay', -500, 500);
 
     }
-    def test_repeatinterval(self){
-        widget = self.create();
-        self.checkIntegerParam(widget, 'repeatinterval', -500, 500);
+    function test_repeatinterval(){
+        widget = this.create();
+        this.checkIntegerParam(widget, 'repeatinterval', -500, 500);
 
     }
-    def test_selectbackground(self){
-        widget = self.create();
-        self.checkColorParam(widget, 'selectbackground');
+    function test_selectbackground(){
+        widget = this.create();
+        this.checkColorParam(widget, 'selectbackground');
 
     }
-    def test_selectborderwidth(self){
-        widget = self.create();
-        self.checkPixelsParam(widget, 'selectborderwidth', 1.3, 2.6, -2, '10p');
+    function test_selectborderwidth(){
+        widget = this.create();
+        this.checkPixelsParam(widget, 'selectborderwidth', 1.3, 2.6, -2, '10p');
 
     }
-    def test_selectforeground(self){
-        widget = self.create();
-        self.checkColorParam(widget, 'selectforeground');
+    function test_selectforeground(){
+        widget = this.create();
+        this.checkColorParam(widget, 'selectforeground');
 
     }
-    def test_setgrid(self){
-        widget = self.create();
-        self.checkBooleanParam(widget, 'setgrid');
+    function test_setgrid(){
+        widget = this.create();
+        this.checkBooleanParam(widget, 'setgrid');
 
     }
-    def test_state(self){
-        widget = self.create();
-        self.checkEnumParam(widget, 'state', 'active', 'disabled', 'normal');
+    function test_state(){
+        widget = this.create();
+        this.checkEnumParam(widget, 'state', 'active', 'disabled', 'normal');
 
     }
-    def test_takefocus(self){
-        widget = self.create();
-        self.checkParams(widget, 'takefocus', '0', '1', '');
+    function test_takefocus(){
+        widget = this.create();
+        this.checkParams(widget, 'takefocus', '0', '1', '');
 
     }
-    def test_text(self){
-        widget = self.create();
-        self.checkParams(widget, 'text', '', 'any string');
+    function test_text(){
+        widget = this.create();
+        this.checkParams(widget, 'text', '', 'any string');
 
     }
-    def test_textvariable(self){
-        widget = self.create();
-        var = tkinter.StringVar(self.root);
-        self.checkVariableParam(widget, 'textvariable', var);
+    function test_textvariable(){
+        widget = this.create();
+        var = tkinter.StringVar(this.root);
+        this.checkVariableParam(widget, 'textvariable', var);
 
     }
-    def test_troughcolor(self){
-        widget = self.create();
-        self.checkColorParam(widget, 'troughcolor');
+    function test_troughcolor(){
+        widget = this.create();
+        this.checkColorParam(widget, 'troughcolor');
 
     }
-    def test_underline(self){
-        widget = self.create();
-        self.checkIntegerParam(widget, 'underline', 0, 1, 10);
+    function test_underline(){
+        widget = this.create();
+        this.checkIntegerParam(widget, 'underline', 0, 1, 10);
 
     }
-    def test_wraplength(self){
-        widget = self.create();
-        self.checkPixelsParam(widget, 'wraplength', 100);
+    function test_wraplength(){
+        widget = this.create();
+        this.checkPixelsParam(widget, 'wraplength', 100);
 
     }
-    def test_xscrollcommand(self){
-        widget = self.create();
-        self.checkCommandParam(widget, 'xscrollcommand');
+    function test_xscrollcommand(){
+        widget = this.create();
+        this.checkCommandParam(widget, 'xscrollcommand');
 
     }
-    def test_yscrollcommand(self){
-        widget = self.create();
-        self.checkCommandParam(widget, 'yscrollcommand');
+    function test_yscrollcommand(){
+        widget = this.create();
+        this.checkCommandParam(widget, 'yscrollcommand');
 
     # non-standard but common options
 
     }
-    def test_command(self){
-        widget = self.create();
-        self.checkCommandParam(widget, 'command');
+    function test_command(){
+        widget = this.create();
+        this.checkCommandParam(widget, 'command');
 
     }
-    def test_indicatoron(self){
-        widget = self.create();
-        self.checkBooleanParam(widget, 'indicatoron');
+    function test_indicatoron(){
+        widget = this.create();
+        this.checkBooleanParam(widget, 'indicatoron');
 
     }
-    def test_offrelief(self){
-        widget = self.create();
-        self.checkReliefParam(widget, 'offrelief');
+    function test_offrelief(){
+        widget = this.create();
+        this.checkReliefParam(widget, 'offrelief');
 
     }
-    def test_overrelief(self){
-        widget = self.create();
-        self.checkReliefParam(widget, 'overrelief');
+    function test_overrelief(){
+        widget = this.create();
+        this.checkReliefParam(widget, 'overrelief');
 
     }
-    def test_selectcolor(self){
-        widget = self.create();
-        self.checkColorParam(widget, 'selectcolor');
+    function test_selectcolor(){
+        widget = this.create();
+        this.checkColorParam(widget, 'selectcolor');
 
     }
-    def test_selectimage(self){
-        widget = self.create();
-        self.checkImageParam(widget, 'selectimage');
-
-    }
-    @requires_tcl(8, 5);
-    def test_tristateimage(self){
-        widget = self.create();
-        self.checkImageParam(widget, 'tristateimage');
+    function test_selectimage(){
+        widget = this.create();
+        this.checkImageParam(widget, 'selectimage');
 
     }
     @requires_tcl(8, 5);
-    def test_tristatevalue(self){
-        widget = self.create();
-        self.checkParam(widget, 'tristatevalue', 'unknowable');
+    function test_tristateimage(){
+        widget = this.create();
+        this.checkImageParam(widget, 'tristateimage');
 
     }
-    def test_variable(self){
-        widget = self.create();
-        var = tkinter.DoubleVar(self.root);
-        self.checkVariableParam(widget, 'variable', var);
+    @requires_tcl(8, 5);
+    function test_tristatevalue(){
+        widget = this.create();
+        this.checkParam(widget, 'tristatevalue', 'unknowable');
+
+    }
+    function test_variable(){
+        widget = this.create();
+        var = tkinter.DoubleVar(this.root);
+        this.checkVariableParam(widget, 'variable', var);
 
 
 }
 } class IntegerSizeTests(object){
-    def test_height(self){
-        widget = self.create();
-        self.checkIntegerParam(widget, 'height', 100, -100, 0);
+    function test_height(){
+        widget = this.create();
+        this.checkIntegerParam(widget, 'height', 100, -100, 0);
 
     }
-    def test_width(self){
-        widget = self.create();
-        self.checkIntegerParam(widget, 'width', 402, -402, 0);
+    function test_width(){
+        widget = this.create();
+        this.checkIntegerParam(widget, 'width', 402, -402, 0);
 
 
 }
 } class PixelSizeTests(object){
-    def test_height(self){
-        widget = self.create();
-        self.checkPixelsParam(widget, 'height', 100, 101.2, 102.6, -100, 0, '3c');
+    function test_height(){
+        widget = this.create();
+        this.checkPixelsParam(widget, 'height', 100, 101.2, 102.6, -100, 0, '3c');
 
     }
-    def test_width(self){
-        widget = self.create();
-        self.checkPixelsParam(widget, 'width', 402, 403.4, 404.6, -402, 0, '5i');
+    function test_width(){
+        widget = this.create();
+        this.checkPixelsParam(widget, 'width', 402, 403.4, 404.6, -402, 0, '5i');
 
 
 }
-} def add_standard_options(*source_classes){
+} function add_standard_options(*source_classes){
     # This decorator adds test_xxx methods from source classes for every xxx
     # option in the OPTIONS class attribute if they are not defined explicitly.
-    def decorator(cls){
+    function decorator(cls){
         for option in cls.OPTIONS{
             methodname = 'test_' + option;
             if not hasattr(cls, methodname){
@@ -628,8 +628,8 @@ class AbstractWidgetTest(AbstractTkTest){
                                 getattr(source_class, methodname).im_func);
                         break;
                 } } else{
-                    def test(self, option=option){
-                        widget = self.create();
+                    function test( option=option){
+                        widget = this.create();
                         widget[option];
                         raise AssertionError('Option "%s" is not tested in %s' %
                                              (option, cls.__name__));
@@ -639,7 +639,7 @@ class AbstractWidgetTest(AbstractTkTest){
     } return decorator;
 
 }
-def setUpModule(){
+function setUpModule(){
     if test.test_support.verbose{
         tcl = tkinter.Tcl();
         print 'patchlevel =', tcl.call('info', 'patchlevel');

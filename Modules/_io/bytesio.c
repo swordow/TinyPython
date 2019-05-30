@@ -180,7 +180,7 @@ static PyObject *
 bytesio_flush(bytesio *self)
 {
     CHECK_CLOSED(self);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(getval_doc,
@@ -229,7 +229,7 @@ bytesio_read(bytesio *self, PyObject *args)
 {
     Py_ssize_t size, n;
     char *output;
-    PyObject *arg = Py_None;
+    PyObject *arg = Py_Nil;
 
     CHECK_CLOSED(self);
 
@@ -241,7 +241,7 @@ bytesio_read(bytesio *self, PyObject *args)
         if (size == -1 && PyErr_Occurred())
             return NULL;
     }
-    else if (arg == Py_None) {
+    else if (arg == Py_Nil) {
         /* Read until EOF is reached, by default. */
         size = -1;
     }
@@ -298,7 +298,7 @@ bytesio_readline(bytesio *self, PyObject *args)
 {
     Py_ssize_t size, n;
     char *output;
-    PyObject *arg = Py_None;
+    PyObject *arg = Py_Nil;
 
     CHECK_CLOSED(self);
 
@@ -310,7 +310,7 @@ bytesio_readline(bytesio *self, PyObject *args)
         if (size == -1 && PyErr_Occurred())
             return NULL;
     }
-    else if (arg == Py_None) {
+    else if (arg == Py_Nil) {
         /* No size limit, by default. */
         size = -1;
     }
@@ -344,7 +344,7 @@ bytesio_readlines(bytesio *self, PyObject *args)
     Py_ssize_t maxsize, size, n;
     PyObject *result, *line;
     char *output;
-    PyObject *arg = Py_None;
+    PyObject *arg = Py_Nil;
 
     CHECK_CLOSED(self);
 
@@ -356,7 +356,7 @@ bytesio_readlines(bytesio *self, PyObject *args)
         if (maxsize == -1 && PyErr_Occurred())
             return NULL;
     }
-    else if (arg == Py_None) {
+    else if (arg == Py_Nil) {
         /* No size limit, by default. */
         maxsize = -1;
     }
@@ -436,7 +436,7 @@ static PyObject *
 bytesio_truncate(bytesio *self, PyObject *args)
 {
     Py_ssize_t size;
-    PyObject *arg = Py_None;
+    PyObject *arg = Py_Nil;
 
     CHECK_CLOSED(self);
 
@@ -448,7 +448,7 @@ bytesio_truncate(bytesio *self, PyObject *args)
         if (size == -1 && PyErr_Occurred())
             return NULL;
     }
-    else if (arg == Py_None) {
+    else if (arg == Py_Nil) {
         /* Truncate to current position if no argument is passed. */
         size = self->pos;
     }
@@ -612,7 +612,7 @@ bytesio_writelines(bytesio *self, PyObject *v)
     if (PyErr_Occurred())
         return NULL;
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(close_doc,
@@ -625,7 +625,7 @@ bytesio_close(bytesio *self)
         PyMem_Free(self->buf);
         self->buf = NULL;
     }
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 /* Pickling support.
@@ -653,8 +653,8 @@ bytesio_getstate(bytesio *self)
     if (initvalue == NULL)
         return NULL;
     if (self->dict == NULL) {
-        Py_INCREF(Py_None);
-        dict = Py_None;
+        Py_INCREF(Py_Nil);
+        dict = Py_Nil;
     }
     else {
         dict = PyDict_Copy(self->dict);
@@ -720,7 +720,7 @@ bytesio_setstate(bytesio *self, PyObject *state)
 
     /* Set the dictionary of the instance variables. */
     dict = PyTuple_GET_ITEM(state, 2);
-    if (dict != Py_None) {
+    if (dict != Py_Nil) {
         if (!PyDict_Check(dict)) {
             PyErr_Format(PyExc_TypeError,
                          "third item of state should be a dict, got a %.200s",
@@ -739,7 +739,7 @@ bytesio_setstate(bytesio *self, PyObject *state)
         }
     }
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static void
@@ -793,7 +793,7 @@ bytesio_init(bytesio *self, PyObject *args, PyObject *kwds)
     self->string_size = 0;
     self->pos = 0;
 
-    if (initvalue && initvalue != Py_None) {
+    if (initvalue && initvalue != Py_Nil) {
         PyObject *res;
         res = bytesio_write(self, initvalue);
         if (res == NULL)

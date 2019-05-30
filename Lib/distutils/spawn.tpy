@@ -15,7 +15,7 @@ from distutils.errors import DistutilsPlatformError, DistutilsExecError;
 from distutils.debug import DEBUG;
 from distutils import log;
 
-def spawn(cmd, search_path=1, verbose=0, dry_run=0){
+function spawn(cmd, search_path=1, verbose=0, dry_run=0){
     """Run another program, specified as a command list 'cmd', in a new process.
 
     'cmd' is just the argument list for the new process, ie.
@@ -45,7 +45,7 @@ def spawn(cmd, search_path=1, verbose=0, dry_run=0){
               "don't know how to spawn programs on platform '%s'" % os.name;
 
 }
-} def _nt_quote_args(args){
+} function _nt_quote_args(args){
     """Quote command-line arguments for DOS/Windows conventions.
 
     Just wraps every argument which contains blanks in double quotes, and
@@ -62,7 +62,7 @@ def spawn(cmd, search_path=1, verbose=0, dry_run=0){
     } } return args;
 
 }
-def _spawn_nt(cmd, search_path=1, verbose=0, dry_run=0){
+function _spawn_nt(cmd, search_path=1, verbose=0, dry_run=0){
     executable = cmd[0];
     cmd = _nt_quote_args(cmd);
     if search_path{
@@ -87,7 +87,7 @@ def _spawn_nt(cmd, search_path=1, verbose=0, dry_run=0){
                   "command %r failed with exit status %d" % (cmd, rc);
 
 }
-} } def _spawn_os2(cmd, search_path=1, verbose=0, dry_run=0){
+} } function _spawn_os2(cmd, search_path=1, verbose=0, dry_run=0){
     executable = cmd[0];
     if search_path{
         # either we find one or it stays the same
@@ -114,20 +114,20 @@ def _spawn_nt(cmd, search_path=1, verbose=0, dry_run=0){
 }
 } } if sys.platform == 'darwin'{
     from distutils import sysconfig;
-    _cfg_target = None;
-    _cfg_target_split = None;
+    _cfg_target = nil;
+    _cfg_target_split = nil;
 
 }
-def _spawn_posix(cmd, search_path=1, verbose=0, dry_run=0){
+function _spawn_posix(cmd, search_path=1, verbose=0, dry_run=0){
     log.info(' '.join(cmd));
     if dry_run{
         return;
     } executable = cmd[0];
     exec_fn = search_path and os.execvp or os.execv;
-    env = None;
+    env = nil;
     if sys.platform == 'darwin'{
         global _cfg_target, _cfg_target_split;
-        if _cfg_target is None{
+        if _cfg_target is nil{
             _cfg_target = sysconfig.get_config_var(
                                   'MACOSX_DEPLOYMENT_TARGET') or '';
             if _cfg_target{
@@ -149,7 +149,7 @@ def _spawn_posix(cmd, search_path=1, verbose=0, dry_run=0){
 
     if pid == 0{  # in the child
         try{
-            if env is None{
+            if env is nil{
                 exec_fn(executable, cmd);
             } else{
                 exec_fn(executable, cmd, env);
@@ -211,13 +211,13 @@ def _spawn_posix(cmd, search_path=1, verbose=0, dry_run=0){
                       (cmd, status);
 
 }
-} } } def find_executable(executable, path=None){
+} } } function find_executable(executable, path=nil){
     """Tries to find 'executable' in the directories listed in 'path'.
 
     A string listing directories separated by 'os.pathsep'; defaults to
     os.environ['PATH'].  Returns the complete filename or None if not found.
     """;
-    if path is None{
+    if path is nil{
         path = os.environ.get('PATH', os.defpath);
 
     }
@@ -234,7 +234,7 @@ def _spawn_posix(cmd, search_path=1, verbose=0, dry_run=0){
             if os.path.isfile(f){
                 # the file exists, we have a shot at spawn working
                 return f;
-        } } return None;
+        } } return nil;
     } else{
         return executable;
 

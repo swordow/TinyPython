@@ -18,8 +18,8 @@ import imp;
 
 __all__ = ["compile_dir","compile_file","compile_path"];
 
-def compile_dir(dir, maxlevels=10, ddir=None,
-                force=0, rx=None, quiet=0){
+function compile_dir(dir, maxlevels=10, ddir=nil,
+                force=0, rx=nil, quiet=0){
     """Byte-compile all modules in the given directory tree.
 
     Arguments (only dir is required):
@@ -42,10 +42,10 @@ def compile_dir(dir, maxlevels=10, ddir=None,
     success = 1;
     for name in names{
         fullname = os.path.join(dir, name);
-        if ddir is not None{
+        if ddir is not nil{
             dfile = os.path.join(ddir, name);
         } else{
-            dfile = None;
+            dfile = nil;
         } if not os.path.isdir(fullname){
             if not compile_file(fullname, ddir, force, rx, quiet){
                 success = 0;
@@ -59,7 +59,7 @@ def compile_dir(dir, maxlevels=10, ddir=None,
     } } } return success;
 
 }
-def compile_file(fullname, ddir=None, force=0, rx=None, quiet=0){
+function compile_file(fullname, ddir=nil, force=0, rx=nil, quiet=0){
     """Byte-compile one file.
 
     Arguments (only fullname is required):
@@ -72,11 +72,11 @@ def compile_file(fullname, ddir=None, force=0, rx=None, quiet=0){
     """;
     success = 1;
     name = os.path.basename(fullname);
-    if ddir is not None{
+    if ddir is not nil{
         dfile = os.path.join(ddir, name);
     } else{
-        dfile = None;
-    } if rx is not None{
+        dfile = nil;
+    } if rx is not nil{
         mo = rx.search(fullname);
         if mo{
             return success;
@@ -97,7 +97,7 @@ def compile_file(fullname, ddir=None, force=0, rx=None, quiet=0){
             } } if not quiet{
                 print 'Compiling', fullname, '...';
             } try{
-                ok = py_compile.compile(fullname, None, dfile, True);
+                ok = py_compile.compile(fullname, nil, dfile, true);
             } except py_compile.PyCompileError,err{
                 if quiet{
                     print 'Compiling', fullname, '...';
@@ -112,7 +112,7 @@ def compile_file(fullname, ddir=None, force=0, rx=None, quiet=0){
     } } } } return success;
 
 }
-def compile_path(skip_curdir=1, maxlevels=0, force=0, quiet=0){
+function compile_path(skip_curdir=1, maxlevels=0, force=0, quiet=0){
     """Byte-compile all module on sys.path.
 
     Arguments (all optional):
@@ -127,12 +127,12 @@ def compile_path(skip_curdir=1, maxlevels=0, force=0, quiet=0){
         if (not dir or dir == os.curdir) and skip_curdir{
             print 'Skipping current directory';
         } else{
-            success = success and compile_dir(dir, maxlevels, None,
+            success = success and compile_dir(dir, maxlevels, nil,
                                               force, quiet=quiet);
     } } return success;
 
 }
-def expand_args(args, flist){
+function expand_args(args, flist){
     """read names in flist and append to args""";
     expanded = args[:];
     if flist{
@@ -152,7 +152,7 @@ def expand_args(args, flist){
     } } return expanded;
 
 }
-def main(){
+function main(){
     """Script main program.""";
     import getopt;
     try{
@@ -184,20 +184,20 @@ def main(){
 
         sys.exit(2);
     } maxlevels = 10;
-    ddir = None;
+    ddir = nil;
     force = 0;
     quiet = 0;
-    rx = None;
-    flist = None;
+    rx = nil;
+    flist = nil;
     for o, a in opts{
-        if o == '-l'{ maxlevels = 0;
-        if o == '-d'{ ddir = a;
-        if o == '-f'{ force = 1;
-        if o == '-q'{ quiet = 1;
+        if o == '-l'{ maxlevels = 0;}
+        if o == '-d'{ ddir = a;}
+        if o == '-f'{ force = 1;}
+        if o == '-q'{ quiet = 1;}
         if o == '-x'{
             import re;
             rx = re.compile(a);
-        } if o == '-i'{ flist = a;
+        } if o == '-i'{ flist = a;}
     } if ddir{
         if len(args) != 1 and not os.path.isdir(args[0]){
             print "-d destdir require exactly one directory argument";

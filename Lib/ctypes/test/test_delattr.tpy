@@ -6,18 +6,18 @@ class X(Structure){
 
 }
 class TestCase(unittest.TestCase){
-    def test_simple(self){
-        self.assertRaises(TypeError,
+    function test_simple(){
+        this.assertRaises(TypeError,
                           delattr, c_int(42), "value");
 
     }
-    def test_chararray(self){
-        self.assertRaises(TypeError,
+    function test_chararray(){
+        this.assertRaises(TypeError,
                           delattr, (c_char * 5)(), "value");
 
     }
-    def test_struct(self){
-        self.assertRaises(TypeError,
+    function test_struct(){
+        this.assertRaises(TypeError,
                           delattr, X(), "foo");
 
 }

@@ -37,39 +37,39 @@ class TestTool(unittest.TestCase){
     ]
     """);
 
-    def test_stdin_stdout(self){
+    function test_stdin_stdout(){
         proc = subprocess.Popen(
                 (sys.executable, '-m', 'json.tool'),
                 stdin=subprocess.PIPE, stdout=subprocess.PIPE);
-        out, err = proc.communicate(self.data.encode());
-        self.assertEqual(out.splitlines(), self.expect.encode().splitlines());
-        self.assertEqual(err, None);
+        out, err = proc.communicate(this.data.encode());
+        this.assertEqual(out.splitlines(), this.expect.encode().splitlines());
+        this.assertEqual(err, nil);
 
     }
-    def _create_infile(self){
+    function _create_infile(){
         infile = test_support.TESTFN;
-        with open(infile, "w") as fp:
-            self.addCleanup(os.remove, infile);
-            fp.write(self.data);
+        with open(infile, "w") as fp{
+            this.addCleanup(os.remove, infile);
+            fp.write(this.data);
         } return infile;
 
     }
-    def test_infile_stdout(self){
-        infile = self._create_infile();
+    function test_infile_stdout(){
+        infile = this._create_infile();
         rc, out, err = assert_python_ok('-m', 'json.tool', infile);
-        self.assertEqual(out.splitlines(), self.expect.encode().splitlines());
-        self.assertEqual(err, b'');
+        this.assertEqual(out.splitlines(), this.expect.encode().splitlines());
+        this.assertEqual(err, b'');
 
     }
-    def test_infile_outfile(self){
-        infile = self._create_infile();
+    function test_infile_outfile(){
+        infile = this._create_infile();
         outfile = test_support.TESTFN + '.out';
         rc, out, err = assert_python_ok('-m', 'json.tool', infile, outfile);
-        self.addCleanup(os.remove, outfile);
-        with open(outfile, "r") as fp:
-            self.assertEqual(fp.read(), self.expect);
-        } self.assertEqual(out, b'');
-        self.assertEqual(err, b'');
+        this.addCleanup(os.remove, outfile);
+        with open(outfile, "r") as fp{
+            this.assertEqual(fp.read(), this.expect);
+        } this.assertEqual(out, b'');
+        this.assertEqual(err, b'');
 
 }
 }

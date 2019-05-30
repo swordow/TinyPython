@@ -57,8 +57,8 @@ static PyObject *Help_HMSetHelpTagsDisplayed(PyObject *_self, PyObject *_args)
         return NULL;
     _err = HMSetHelpTagsDisplayed(inDisplayTags);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -72,8 +72,8 @@ static PyObject *Help_HMSetTagDelay(PyObject *_self, PyObject *_args)
         return NULL;
     _err = HMSetTagDelay(inDelay);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -104,8 +104,8 @@ static PyObject *Help_HMSetMenuHelpFromBalloonRsrc(PyObject *_self, PyObject *_a
     _err = HMSetMenuHelpFromBalloonRsrc(inMenu,
                                         inHmnuRsrcID);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -125,8 +125,8 @@ static PyObject *Help_HMSetDialogHelpFromBalloonRsrc(PyObject *_self, PyObject *
                                           inHdlgRsrcID,
                                           inItemStart);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -138,8 +138,8 @@ static PyObject *Help_HMHideTag(PyObject *_self, PyObject *_args)
         return NULL;
     _err = HMHideTag();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 

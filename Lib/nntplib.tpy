@@ -47,12 +47,12 @@ _MAXLINE = 2048;
 # Exceptions raised when an error or invalid response is received
 class NNTPError(Exception){
     """Base class for all nntplib exceptions""";
-    def __init__(self, *args){
-        Exception.__init__(self, *args);
+    function __init__( *args){
+        Exception.__init__(this, *args);
         try{
-            self.response = args[0];
+            this.response = args[0];
         } except IndexError{
-            self.response = 'No response given';
+            this.response = 'No response given';
 
 }
 } } class NNTPReplyError(NNTPError){
@@ -104,8 +104,8 @@ CRLF = '\r\n';
 
 # The class itself
 class NNTP{
-    def __init__(self, host, port=NNTP_PORT, user=None, password=None,
-                 readermode=None, usenetrc=True){
+    function __init__( host, port=NNTP_PORT, user=nil, password=nil,
+                 readermode=nil, usenetrc=true){
         """Initialize an instance.  Arguments:
         - host: hostname to connect to
         - port: port to connect to (default the standard NNTP port)
@@ -120,12 +120,12 @@ class NNTP{
         unexpected NNTPPermanentErrors, you might need to set
         readermode.
         """;
-        self.host = host;
-        self.port = port;
-        self.sock = socket.create_connection((host, port));
-        self.file = self.sock.makefile('rb');
-        self.debugging = 0;
-        self.welcome = self.getresp();
+        this.host = host;
+        this.port = port;
+        this.sock = socket.create_connection((host, port));
+        this.file = this.sock.makefile('rb');
+        this.debugging = 0;
+        this.welcome = this.getresp();
 
         # 'mode reader' is sometimes necessary to enable 'reader' mode.
         # However, the order in which 'mode reader' and 'authinfo' need to
@@ -135,7 +135,7 @@ class NNTP{
         readermode_afterauth = 0;
         if readermode{
             try{
-                self.welcome = self.shortcmd('mode reader');
+                this.welcome = this.shortcmd('mode reader');
             } except NNTPPermanentError{
                 # error 500, probably 'not implemented'
                 pass;
@@ -161,18 +161,18 @@ class NNTP{
         # Perform NNRP authentication if needed.
         }
         if user{
-            resp = self.shortcmd('authinfo user '+user);
+            resp = this.shortcmd('authinfo user '+user);
             if resp[:3] == '381'{
                 if not password{
                     raise NNTPReplyError(resp);
                 } else{
-                    resp = self.shortcmd(
+                    resp = this.shortcmd(
                             'authinfo pass '+password);
                     if resp[:3] != '281'{
                         raise NNTPPermanentError(resp);
             } } } if readermode_afterauth{
                 try{
-                    self.welcome = self.shortcmd('mode reader');
+                    this.welcome = this.shortcmd('mode reader');
                 } except NNTPPermanentError{
                     # error 500, probably 'not implemented'
                     pass;
@@ -184,57 +184,57 @@ class NNTP{
     # if it 201, posting is not allowed
 
     }
-    } } } def getwelcome(self){
+    } } } function getwelcome(){
         """Get the welcome message from the server
         (this is read and squirreled away by __init__()).
         If the response code is 200, posting is allowed;
         if it 201, posting is not allowed.""";
 
-        if self.debugging{ print '*welcome*', repr(self.welcome);
-        return self.welcome;
+        if this.debugging{ print '*welcome*', repr(this.welcome);}
+        return this.welcome;
 
     }
-    def set_debuglevel(self, level){
+    function set_debuglevel( level){
         """Set the debugging level.  Argument 'level' means:
         0: no debugging output (default)
         1: print commands and responses but not body text etc.
         2: also print raw lines read and sent before stripping CR/LF""";
 
-        self.debugging = level;
+        this.debugging = level;
     } debug = set_debuglevel;
 
-    def putline(self, line){
+    function putline( line){
         """Internal: send one line to the server, appending CRLF.""";
         line = line + CRLF;
-        if self.debugging > 1{ print '*put*', repr(line);
-        self.sock.sendall(line);
+        if this.debugging > 1{ print '*put*', repr(line);}
+        this.sock.sendall(line);
 
     }
-    def putcmd(self, line){
+    function putcmd( line){
         """Internal: send one command to the server (through putline()).""";
-        if self.debugging{ print '*cmd*', repr(line);
-        self.putline(line);
+        if this.debugging{ print '*cmd*', repr(line);}
+        this.putline(line);
 
     }
-    def getline(self){
+    function getline(){
         """Internal: return one line from the server, stripping CRLF.
         Raise EOFError if the connection is closed.""";
-        line = self.file.readline(_MAXLINE + 1);
+        line = this.file.readline(_MAXLINE + 1);
         if len(line) > _MAXLINE{
             raise NNTPDataError('line too long');
-        } if self.debugging > 1{
+        } if this.debugging > 1{
             print '*get*', repr(line);
-        } if not line{ raise EOFError;
-        if line[-2:] == CRLF{ line = line[:-2];
-        elif line[-1:] in CRLF{ line = line[:-1];
+        } if not line{ raise EOFError;}
+        if line[-2:] == CRLF{ line = line[:-2];}
+        elif line[-1:] in CRLF{ line = line[:-1];}
         return line;
 
     }
-    def getresp(self){
+    function getresp(){
         """Internal: get a response from the server.
         Raise various errors if the response indicates an error.""";
-        resp = self.getline();
-        if self.debugging{ print '*resp*', repr(resp);
+        resp = this.getline();
+        if this.debugging{ print '*resp*', repr(resp);}
         c = resp[:1];
         if c == '4'{
             raise NNTPTemporaryError(resp);
@@ -245,23 +245,23 @@ class NNTP{
         } return resp;
 
     }
-    def getlongresp(self, file=None){
+    function getlongresp( file=nil){
         """Internal: get a response plus following text from the server.
         Raise various errors if the response indicates an error.""";
 
-        openedFile = None;
+        openedFile = nil;
         try{
             # If a string was passed then open a file with that name
             if isinstance(file, str){
                 openedFile = file = open(file, "w");
 
             }
-            resp = self.getresp();
+            resp = this.getresp();
             if resp[:3] not in LONGRESP{
                 raise NNTPReplyError(resp);
             } list = [];
             while 1{
-                line = self.getline();
+                line = this.getline();
                 if line == '.'{
                     break;
                 } if line[:2] == '..'{
@@ -279,19 +279,19 @@ class NNTP{
         } return resp, list;
 
     }
-    def shortcmd(self, line){
+    function shortcmd( line){
         """Internal: send a command and get the response.""";
-        self.putcmd(line);
-        return self.getresp();
+        this.putcmd(line);
+        return this.getresp();
 
     }
-    def longcmd(self, line, file=None){
+    function longcmd( line, file=nil){
         """Internal: send a command and get the response plus following text.""";
-        self.putcmd(line);
-        return self.getlongresp(file);
+        this.putcmd(line);
+        return this.getlongresp(file);
 
     }
-    def newgroups(self, date, time, file=None){
+    function newgroups( date, time, file=nil){
         """Process a NEWGROUPS command.  Arguments:
         - date: string 'yymmdd' indicating the date
         - time: string 'hhmmss' indicating the time
@@ -299,10 +299,10 @@ class NNTP{
         - resp: server response if successful
         - list: list of newsgroup names""";
 
-        return self.longcmd('NEWGROUPS ' + date + ' ' + time, file);
+        return this.longcmd('NEWGROUPS ' + date + ' ' + time, file);
 
     }
-    def newnews(self, group, date, time, file=None){
+    function newnews( group, date, time, file=nil){
         """Process a NEWNEWS command.  Arguments:
         - group: group name or '*'
         - date: string 'yymmdd' indicating the date
@@ -312,22 +312,22 @@ class NNTP{
         - list: list of message ids""";
 
         cmd = 'NEWNEWS ' + group + ' ' + date + ' ' + time;
-        return self.longcmd(cmd, file);
+        return this.longcmd(cmd, file);
 
     }
-    def list(self, file=None){
+    function list( file=nil){
         """Process a LIST command.  Return:
         - resp: server response if successful
         - list: list of (group, last, first, flag) (strings)""";
 
-        resp, list = self.longcmd('LIST', file);
+        resp, list = this.longcmd('LIST', file);
         for i in range(len(list)){
             # Parse lines into "group last first flag"
             list[i] = tuple(list[i].split());
         } return resp, list;
 
     }
-    def description(self, group){
+    function description( group){
 
         """Get a description for a single group.  If more than one
         group matches ('group' is a pattern), return the first.  If no
@@ -340,23 +340,23 @@ class NNTP{
         NOTE: This neither checks for a wildcard in 'group' nor does
         it check whether the group actually exists.""";
 
-        resp, lines = self.descriptions(group);
+        resp, lines = this.descriptions(group);
         if len(lines) == 0{
             return "";
         } else{
             return lines[0][1];
 
     }
-    } def descriptions(self, group_pattern){
+    } function descriptions( group_pattern){
         """Get descriptions for a range of groups.""";
         line_pat = re.compile("^(?P<group>[^ \t]+)[ \t]+(.*)$");
         # Try the more std (acc. to RFC2980) LIST NEWSGROUPS first
-        resp, raw_lines = self.longcmd('LIST NEWSGROUPS ' + group_pattern);
+        resp, raw_lines = this.longcmd('LIST NEWSGROUPS ' + group_pattern);
         if resp[:3] != "215"{
             # Now the deprecated XGTITLE.  This either raises an error
             # or succeeds with the same output structure as LIST
             # NEWSGROUPS.
-            resp, raw_lines = self.longcmd('XGTITLE ' + group_pattern);
+            resp, raw_lines = this.longcmd('XGTITLE ' + group_pattern);
         } lines = [];
         for raw_line in raw_lines{
             match = line_pat.search(raw_line.strip());
@@ -365,7 +365,7 @@ class NNTP{
         } } return resp, lines;
 
     }
-    def group(self, name){
+    function group( name){
         """Process a GROUP command.  Argument:
         - group: the group name
         Returns:
@@ -375,7 +375,7 @@ class NNTP{
         - last: last article number (string)
         - name: the group name""";
 
-        resp = self.shortcmd('GROUP ' + name);
+        resp = this.shortcmd('GROUP ' + name);
         if resp[:3] != '211'{
             raise NNTPReplyError(resp);
         } words = resp.split();
@@ -392,15 +392,15 @@ class NNTP{
         } } } } return resp, count, first, last, name;
 
     }
-    def help(self, file=None){
+    function help( file=nil){
         """Process a HELP command.  Returns:
         - resp: server response if successful
         - list: list of strings""";
 
-        return self.longcmd('HELP',file);
+        return this.longcmd('HELP',file);
 
     }
-    def statparse(self, resp){
+    function statparse( resp){
         """Internal: parse the response of a STAT, NEXT or LAST command.""";
         if resp[:2] != '22'{
             raise NNTPReplyError(resp);
@@ -415,13 +415,13 @@ class NNTP{
         } } return resp, nr, id;
 
     }
-    def statcmd(self, line){
+    function statcmd( line){
         """Internal: process a STAT, NEXT or LAST command.""";
-        resp = self.shortcmd(line);
-        return self.statparse(resp);
+        resp = this.shortcmd(line);
+        return this.statparse(resp);
 
     }
-    def stat(self, id){
+    function stat( id){
         """Process a STAT command.  Argument:
         - id: article number or message id
         Returns:
@@ -429,27 +429,27 @@ class NNTP{
         - nr:   the article number
         - id:   the message id""";
 
-        return self.statcmd('STAT ' + id);
+        return this.statcmd('STAT ' + id);
 
     }
-    def next(self){
+    function next(){
         """Process a NEXT command.  No arguments.  Return as for STAT.""";
-        return self.statcmd('NEXT');
+        return this.statcmd('NEXT');
 
     }
-    def last(self){
+    function last(){
         """Process a LAST command.  No arguments.  Return as for STAT.""";
-        return self.statcmd('LAST');
+        return this.statcmd('LAST');
 
     }
-    def artcmd(self, line, file=None){
+    function artcmd( line, file=nil){
         """Internal: process a HEAD, BODY or ARTICLE command.""";
-        resp, list = self.longcmd(line, file);
-        resp, nr, id = self.statparse(resp);
+        resp, list = this.longcmd(line, file);
+        resp, nr, id = this.statparse(resp);
         return resp, nr, id, list;
 
     }
-    def head(self, id){
+    function head( id){
         """Process a HEAD command.  Argument:
         - id: article number or message id
         Returns:
@@ -458,10 +458,10 @@ class NNTP{
         - id: message id
         - list: the lines of the article's header""";
 
-        return self.artcmd('HEAD ' + id);
+        return this.artcmd('HEAD ' + id);
 
     }
-    def body(self, id, file=None){
+    function body( id, file=nil){
         """Process a BODY command.  Argument:
         - id: article number or message id
         - file: Filename string or file object to store the article in
@@ -472,10 +472,10 @@ class NNTP{
         - list: the lines of the article's body or an empty list
                 if file was used""";
 
-        return self.artcmd('BODY ' + id, file);
+        return this.artcmd('BODY ' + id, file);
 
     }
-    def article(self, id){
+    function article( id){
         """Process an ARTICLE command.  Argument:
         - id: article number or message id
         Returns:
@@ -484,17 +484,17 @@ class NNTP{
         - id: message id
         - list: the lines of the article""";
 
-        return self.artcmd('ARTICLE ' + id);
+        return this.artcmd('ARTICLE ' + id);
 
     }
-    def slave(self){
+    function slave(){
         """Process a SLAVE command.  Returns:
         - resp: server response if successful""";
 
-        return self.shortcmd('SLAVE');
+        return this.shortcmd('SLAVE');
 
     }
-    def xhdr(self, hdr, str, file=None){
+    function xhdr( hdr, str, file=nil){
         """Process an XHDR command (optional server extension).  Arguments:
         - hdr: the header type (e.g. 'subject')
         - str: an article nr, a message id, or a range nr1-nr2
@@ -503,7 +503,7 @@ class NNTP{
         - list: list of (nr, value) strings""";
 
         pat = re.compile('^([0-9]+) ?(.*)\n?');
-        resp, lines = self.longcmd('XHDR ' + hdr + ' ' + str, file);
+        resp, lines = this.longcmd('XHDR ' + hdr + ' ' + str, file);
         for i in range(len(lines)){
             line = lines[i];
             m = pat.match(line);
@@ -512,7 +512,7 @@ class NNTP{
         } } return resp, lines;
 
     }
-    def xover(self, start, end, file=None){
+    function xover( start, end, file=nil){
         """Process an XOVER command (optional server extension) Arguments:
         - start: start of range
         - end: end of range
@@ -521,7 +521,7 @@ class NNTP{
         - list: list of (art-nr, subject, poster, date,
                          id, references, size, lines)""";
 
-        resp, lines = self.longcmd('XOVER ' + start + '-' + end, file);
+        resp, lines = this.longcmd('XOVER ' + start + '-' + end, file);
         xover_lines = [];
         for line in lines{
             elem = line.split("\t");
@@ -539,7 +539,7 @@ class NNTP{
         } } return resp,xover_lines;
 
     }
-    def xgtitle(self, group, file=None){
+    function xgtitle( group, file=nil){
         """Process an XGTITLE command (optional server extension) Arguments:
         - group: group name wildcard (i.e. news.*)
         Returns:
@@ -547,7 +547,7 @@ class NNTP{
         - list: list of (name,title) strings""";
 
         line_pat = re.compile("^([^ \t]+)[ \t]+(.*)$");
-        resp, raw_lines = self.longcmd('XGTITLE ' + group, file);
+        resp, raw_lines = this.longcmd('XGTITLE ' + group, file);
         lines = [];
         for raw_line in raw_lines{
             match = line_pat.search(raw_line.strip());
@@ -556,14 +556,14 @@ class NNTP{
         } } return resp, lines;
 
     }
-    def xpath(self,id){
+    function xpath(id){
         """Process an XPATH command (optional server extension) Arguments:
         - id: Message id of article
         Returns:
         resp: server response if successful
         path: directory path to article""";
 
-        resp = self.shortcmd("XPATH " + id);
+        resp = this.shortcmd("XPATH " + id);
         if resp[:3] != '223'{
             raise NNTPReplyError(resp);
         } try{
@@ -574,7 +574,7 @@ class NNTP{
             return resp, path;
 
     }
-    } def date (self){
+    } function date (){
         """Process the DATE command. Arguments:
         None
         Returns:
@@ -582,7 +582,7 @@ class NNTP{
         date: Date suitable for newnews/newgroups commands etc.
         time: Time suitable for newnews/newgroups commands etc.""";
 
-        resp = self.shortcmd("DATE");
+        resp = this.shortcmd("DATE");
         if resp[:3] != '111'{
             raise NNTPReplyError(resp);
         } elem = resp.split();
@@ -596,13 +596,13 @@ class NNTP{
 
 
     }
-    def post(self, f){
+    function post( f){
         """Process a POST command.  Arguments:
         - f: file containing the article
         Returns:
         - resp: server response if successful""";
 
-        resp = self.shortcmd('POST');
+        resp = this.shortcmd('POST');
         # Raises error_??? if posting is not allowed
         if resp[0] != '3'{
             raise NNTPReplyError(resp);
@@ -614,12 +614,12 @@ class NNTP{
                 line = line[:-1];
             } if line[:1] == '.'{
                 line = '.' + line;
-            } self.putline(line);
-        } self.putline('.');
-        return self.getresp();
+            } this.putline(line);
+        } this.putline('.');
+        return this.getresp();
 
     }
-    def ihave(self, id, f){
+    function ihave( id, f){
         """Process an IHAVE command.  Arguments:
         - id: message-id of the article
         - f:  file containing the article
@@ -627,7 +627,7 @@ class NNTP{
         - resp: server response if successful
         Note that if the server refuses the article an exception is raised.""";
 
-        resp = self.shortcmd('IHAVE ' + id);
+        resp = this.shortcmd('IHAVE ' + id);
         # Raises error_??? if the server already has it
         if resp[0] != '3'{
             raise NNTPReplyError(resp);
@@ -639,19 +639,19 @@ class NNTP{
                 line = line[:-1];
             } if line[:1] == '.'{
                 line = '.' + line;
-            } self.putline(line);
-        } self.putline('.');
-        return self.getresp();
+            } this.putline(line);
+        } this.putline('.');
+        return this.getresp();
 
     }
-    def quit(self){
+    function quit(){
         """Process a QUIT command and close the socket.  Returns:
         - resp: server response if successful""";
 
-        resp = self.shortcmd('QUIT');
-        self.file.close();
-        self.sock.close();
-        del self.file, self.sock;
+        resp = this.shortcmd('QUIT');
+        this.file.close();
+        this.sock.close();
+        del this.file, this.sock;
         return resp;
 
 
@@ -667,7 +667,7 @@ class NNTP{
     if newshost.find('.') == -1{
         mode = 'readermode';
     } else{
-        mode = None;
+        mode = nil;
     } s = NNTP(newshost, readermode=mode);
     resp, count, first, last, name = s.group('comp.lang.python');
     print resp;

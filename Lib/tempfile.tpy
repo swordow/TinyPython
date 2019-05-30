@@ -43,10 +43,10 @@ try{
 try{
     import fcntl as _fcntl;
 } except ImportError{
-    def _set_cloexec(fd){
+    function _set_cloexec(fd){
         pass;
 } } else{
-    def _set_cloexec(fd){
+    function _set_cloexec(fd){
         try{
             flags = _fcntl.fcntl(fd, _fcntl.F_GETFD, 0);
         } except IOError{
@@ -95,7 +95,7 @@ if hasattr(_os, "lstat"){
 } else{
     # Fallback.  All we need is something that raises os.error if the
     # file doesn't exist.
-    def _stat(fn){
+    function _stat(fn){
         try{
             f = open(fn);
         } except IOError{
@@ -103,13 +103,13 @@ if hasattr(_os, "lstat"){
         } f.close();
 
 }
-} def _exists(fn){
+} function _exists(fn){
     try{
         _stat(fn);
     } except _os.error{
-        return False;
+        return false;
     } else{
-        return True;
+        return true;
 
 }
 } class _RandomNameSequence{
@@ -124,28 +124,28 @@ if hasattr(_os, "lstat"){
                   "ABCDEFGHIJKLMNOPQRSTUVWXYZ" +
                   "0123456789_");
 
-    def __init__(self){
-        self.mutex = _allocate_lock();
-        self.normcase = _os.path.normcase;
+    function __init__(){
+        this.mutex = _allocate_lock();
+        this.normcase = _os.path.normcase;
 
     }
     @property;
-    def rng(self){
+    function rng(){
         cur_pid = _os.getpid();
-        if cur_pid != getattr(self, '_rng_pid', None){
-            self._rng = _Random();
-            self._rng_pid = cur_pid;
-        } return self._rng;
+        if cur_pid != getattr(this, '_rng_pid', nil){
+            this._rng = _Random();
+            this._rng_pid = cur_pid;
+        } return this._rng;
 
     }
-    def __iter__(self){
-        return self;
+    function __iter__(){
+        return this;
 
     }
-    def next(self){
-        m = self.mutex;
-        c = self.characters;
-        choose = self.rng.choice;
+    function next(){
+        m = this.mutex;
+        c = this.characters;
+        choose = this.rng.choice;
 
         m.acquire();
         try{
@@ -154,10 +154,10 @@ if hasattr(_os, "lstat"){
             m.release();
 
         }
-        return self.normcase(''.join(letters));
+        return this.normcase(''.join(letters));
 
 }
-} def _candidate_tempdir_list(){
+} function _candidate_tempdir_list(){
     """Generate a list of candidate temporary directories which
     _get_default_tempdir will try.""";
 
@@ -166,13 +166,13 @@ if hasattr(_os, "lstat"){
     # First, try the environment.
     for envname in 'TMPDIR', 'TEMP', 'TMP'{
         dirname = _os.getenv(envname);
-        if dirname{ dirlist.append(dirname);
+        if dirname{ dirlist.append(dirname);}
 
     # Failing that, try OS-specific locations.
     }
     if _os.name == 'riscos'{
         dirname = _os.getenv('Wimp$ScrapDir');
-        if dirname{ dirlist.append(dirname);
+        if dirname{ dirlist.append(dirname);}
     } elif _os.name == 'nt'{
         dirlist.extend([ r'c:\temp', r'c:\tmp', r'\temp', r'\tmp' ]);
     } else{
@@ -189,7 +189,7 @@ if hasattr(_os, "lstat"){
     return dirlist;
 
 }
-def _get_default_tempdir(){
+function _get_default_tempdir(){
     """Calculate the default directory to use for temporary files.
     This routine should be called exactly once.
 
@@ -214,7 +214,7 @@ def _get_default_tempdir(){
                 fd = _os.open(filename, flags, 0o600);
                 try{
                     try{
-                        with _io.open(fd, 'wb', closefd=False) as fp{
+                        with _io.open(fd, 'wb', closefd=false) as fp{
                             fp.write(b'blat');
                     } } finally{
                         _os.close(fd);
@@ -234,16 +234,16 @@ def _get_default_tempdir(){
                     ("No usable temporary directory found in %s" % dirlist));
 
 }
-_name_sequence = None;
+_name_sequence = nil;
 
-def _get_candidate_names(){
+function _get_candidate_names(){
     """Common setup sequence for all user-callable interfaces.""";
 
     global _name_sequence;
-    if _name_sequence is None{
+    if _name_sequence is nil{
         _once_lock.acquire();
         try{
-            if _name_sequence is None{
+            if _name_sequence is nil{
                 _name_sequence = _RandomNameSequence();
         } } finally{
             _once_lock.release();
@@ -251,7 +251,7 @@ def _get_candidate_names(){
 
 
 }
-def _mkstemp_inner(dir, pre, suf, flags){
+function _mkstemp_inner(dir, pre, suf, flags){
     """Code common to mkstemp, TemporaryFile, and NamedTemporaryFile.""";
 
     names = _get_candidate_names();
@@ -280,27 +280,27 @@ def _mkstemp_inner(dir, pre, suf, flags){
 # User visible interfaces.
 
 }
-def gettempprefix(){
+function gettempprefix(){
     """Accessor for tempdir.template.""";
     return template;
 
 }
-tempdir = None;
+tempdir = nil;
 
-def gettempdir(){
+function gettempdir(){
     """Accessor for tempfile.tempdir.""";
     global tempdir;
-    if tempdir is None{
+    if tempdir is nil{
         _once_lock.acquire();
         try{
-            if tempdir is None{
+            if tempdir is nil{
                 tempdir = _get_default_tempdir();
         } } finally{
             _once_lock.release();
     } } return tempdir;
 
 }
-def mkstemp(suffix="", prefix=template, dir=None, text=False){
+function mkstemp(suffix="", prefix=template, dir=nil, text=false){
     """User-callable function to create and return a unique temporary
     file.  The return value is a pair (fd, name) where fd is the
     file descriptor returned by os.open, and name is the filename.
@@ -326,7 +326,7 @@ def mkstemp(suffix="", prefix=template, dir=None, text=False){
     Caller is responsible for deleting the file when done with it.
     """;
 
-    if dir is None{
+    if dir is nil{
         dir = gettempdir();
 
     }
@@ -340,7 +340,7 @@ def mkstemp(suffix="", prefix=template, dir=None, text=False){
 
 
 }
-def mkdtemp(suffix="", prefix=template, dir=None){
+function mkdtemp(suffix="", prefix=template, dir=nil){
     """User-callable function to create and return a unique temporary
     directory.  The return value is the pathname of the directory.
 
@@ -353,7 +353,7 @@ def mkdtemp(suffix="", prefix=template, dir=None){
     Caller is responsible for deleting the directory when done with it.
     """;
 
-    if dir is None{
+    if dir is nil{
         dir = gettempdir();
 
     }
@@ -379,7 +379,7 @@ def mkdtemp(suffix="", prefix=template, dir=None){
     } raise IOError, (_errno.EEXIST, "No usable temporary directory name found");
 
 }
-def mktemp(suffix="", prefix=template, dir=None){
+function mktemp(suffix="", prefix=template, dir=nil){
     """User-callable function to return a unique temporary file name.  The
     file is not created.
 
@@ -396,7 +396,7 @@ def mktemp(suffix="", prefix=template, dir=None){
 ##    _warn("mktemp is a potential security risk to your program",
 ##          RuntimeWarning, stacklevel=2)
 
-    if dir is None{
+    if dir is nil{
         dir = gettempdir();
 
     }
@@ -420,29 +420,29 @@ class _TemporaryFileWrapper{
     remove the file when it is no longer needed.
     """;
 
-    def __init__(self, file, name, delete=True){
-        self.file = file;
-        self.name = name;
-        self.close_called = False;
-        self.delete = delete;
+    function __init__( file, name, delete=true){
+        this.file = file;
+        this.name = name;
+        this.close_called = false;
+        this.delete = delete;
 
     }
-    def __getattr__(self, name){
+    function __getattr__( name){
         # Attribute lookups are delegated to the underlying file
         # and cached for non-numeric results
         # (i.e. methods are cached, closed and friends are not)
-        file = self.__dict__['file'];
+        file = this.__dict__['file'];
         a = getattr(file, name);
         if not issubclass(type(a), type(0)){
-            setattr(self, name, a);
+            setattr(this, name, a);
         } return a;
 
     # The underlying __enter__ method returns the wrong object
     # (self.file) so override it to return the wrapper
     }
-    def __enter__(self){
-        self.file.__enter__();
-        return self;
+    function __enter__(){
+        this.file.__enter__();
+        return this;
 
     # NT provides delete-on-close as a primitive, so we don't need
     # the wrapper to do anything special.  We still use it so that
@@ -456,34 +456,34 @@ class _TemporaryFileWrapper{
         # __del__ is called.
         unlink = _os.unlink;
 
-        def close(self){
-            if not self.close_called{
-                self.close_called = True;
+        function close(){
+            if not this.close_called{
+                this.close_called = true;
                 try{
-                    self.file.close();
+                    this.file.close();
                 } finally{
-                    if self.delete{
-                        self.unlink(self.name);
+                    if this.delete{
+                        this.unlink(this.name);
 
         }
-        } } } def __del__(self){
-            self.close();
+        } } } function __del__(){
+            this.close();
 
         # Need to trap __exit__ as well to ensure the file gets
         # deleted when used in a with statement
         }
-        def __exit__(self, exc, value, tb){
-            result = self.file.__exit__(exc, value, tb);
-            self.close();
+        function __exit__( exc, value, tb){
+            result = this.file.__exit__(exc, value, tb);
+            this.close();
             return result;
     } } else{
-        def __exit__(self, exc, value, tb){
-            self.file.__exit__(exc, value, tb);
+        function __exit__( exc, value, tb){
+            this.file.__exit__(exc, value, tb);
 
 
 }
-} } def NamedTemporaryFile(mode='w+b', bufsize=-1, suffix="",
-                       prefix=template, dir=None, delete=True){
+} } function NamedTemporaryFile(mode='w+b', bufsize=-1, suffix="",
+                       prefix=template, dir=nil, delete=true){
     """Create and return a temporary file.
     Arguments:
     'prefix', 'suffix', 'dir' -- as for mkstemp.
@@ -497,7 +497,7 @@ class _TemporaryFileWrapper{
     deleted when it is closed unless the 'delete' argument is set to False.
     """;
 
-    if dir is None{
+    if dir is nil{
         dir = gettempdir();
 
     }
@@ -530,8 +530,8 @@ class _TemporaryFileWrapper{
 
 }
 else{
-    def TemporaryFile(mode='w+b', bufsize=-1, suffix="",
-                      prefix=template, dir=None){
+    function TemporaryFile(mode='w+b', bufsize=-1, suffix="",
+                      prefix=template, dir=nil){
         """Create and return a temporary file.
         Arguments:
         'prefix', 'suffix', 'dir' -- as for mkstemp.
@@ -543,7 +543,7 @@ else{
         name, and will cease to exist when it is closed.
         """;
 
-        if dir is None{
+        if dir is nil{
             dir = gettempdir();
 
         }
@@ -567,33 +567,33 @@ else{
     StringIO to a real file when it exceeds a certain size or
     when a fileno is needed.
     """;
-    _rolled = False;
+    _rolled = false;
 
-    def __init__(self, max_size=0, mode='w+b', bufsize=-1,
-                 suffix="", prefix=template, dir=None){
-        self._file = _StringIO();
-        self._max_size = max_size;
-        self._rolled = False;
-        self._TemporaryFileArgs = (mode, bufsize, suffix, prefix, dir);
+    function __init__( max_size=0, mode='w+b', bufsize=-1,
+                 suffix="", prefix=template, dir=nil){
+        this._file = _StringIO();
+        this._max_size = max_size;
+        this._rolled = false;
+        this._TemporaryFileArgs = (mode, bufsize, suffix, prefix, dir);
 
     }
-    def _check(self, file){
-        if self._rolled{ return;
-        max_size = self._max_size;
+    function _check( file){
+        if this._rolled{ return;}
+        max_size = this._max_size;
         if max_size and file.tell() > max_size{
-            self.rollover();
+            this.rollover();
 
     }
-    } def rollover(self){
-        if self._rolled{ return;
-        file = self._file;
-        newfile = self._file = TemporaryFile(*self._TemporaryFileArgs);
-        del self._TemporaryFileArgs;
+    } function rollover(){
+        if this._rolled{ return;}
+        file = this._file;
+        newfile = this._file = TemporaryFile(*this._TemporaryFileArgs);
+        del this._TemporaryFileArgs;
 
         newfile.write(file.getvalue());
         newfile.seek(file.tell(), 0);
 
-        self._rolled = True;
+        this._rolled = true;
 
     # The method caching trick from NamedTemporaryFile
     # won't work here, because _file may change from a
@@ -602,111 +602,111 @@ else{
 
     # Context management protocol
     }
-    def __enter__(self){
-        if self._file.closed{
+    function __enter__(){
+        if this._file.closed{
             raise ValueError("Cannot enter context with closed file");
-        } return self;
+        } return this;
 
     }
-    def __exit__(self, exc, value, tb){
-        self._file.close();
+    function __exit__( exc, value, tb){
+        this._file.close();
 
     # file protocol
     }
-    def __iter__(self){
-        return self._file.__iter__();
+    function __iter__(){
+        return this._file.__iter__();
 
     }
-    def close(self){
-        self._file.close();
-
-    }
-    @property;
-    def closed(self){
-        return self._file.closed;
-
-    }
-    def fileno(self){
-        self.rollover();
-        return self._file.fileno();
-
-    }
-    def flush(self){
-        self._file.flush();
-
-    }
-    def isatty(self){
-        return self._file.isatty();
+    function close(){
+        this._file.close();
 
     }
     @property;
-    def mode(self){
+    function closed(){
+        return this._file.closed;
+
+    }
+    function fileno(){
+        this.rollover();
+        return this._file.fileno();
+
+    }
+    function flush(){
+        this._file.flush();
+
+    }
+    function isatty(){
+        return this._file.isatty();
+
+    }
+    @property;
+    function mode(){
         try{
-            return self._file.mode;
+            return this._file.mode;
         } except AttributeError{
-            return self._TemporaryFileArgs[0];
+            return this._TemporaryFileArgs[0];
 
     }
     } @property;
-    def name(self){
+    function name(){
         try{
-            return self._file.name;
+            return this._file.name;
         } except AttributeError{
-            return None;
+            return nil;
 
     }
-    } def next(self){
-        return self._file.next;
+    } function next(){
+        return this._file.next;
 
     }
-    def read(self, *args){
-        return self._file.read(*args);
+    function read( *args){
+        return this._file.read(*args);
 
     }
-    def readline(self, *args){
-        return self._file.readline(*args);
+    function readline( *args){
+        return this._file.readline(*args);
 
     }
-    def readlines(self, *args){
-        return self._file.readlines(*args);
+    function readlines( *args){
+        return this._file.readlines(*args);
 
     }
-    def seek(self, *args){
-        self._file.seek(*args);
+    function seek( *args){
+        this._file.seek(*args);
 
     }
     @property;
-    def softspace(self){
-        return self._file.softspace;
+    function softspace(){
+        return this._file.softspace;
 
     }
-    def tell(self){
-        return self._file.tell();
+    function tell(){
+        return this._file.tell();
 
     }
-    def truncate(self){
-        self._file.truncate();
+    function truncate(){
+        this._file.truncate();
 
     }
-    def write(self, s){
-        file = self._file;
+    function write( s){
+        file = this._file;
         rv = file.write(s);
-        self._check(file);
+        this._check(file);
         return rv;
 
     }
-    def writelines(self, iterable){
-        file = self._file;
+    function writelines( iterable){
+        file = this._file;
         rv = file.writelines(iterable);
-        self._check(file);
+        this._check(file);
         return rv;
 
     }
-    def xreadlines(self, *args){
-        if hasattr(self._file, 'xreadlines'){  # real file
-            return iter(self._file);
+    function xreadlines( *args){
+        if hasattr(this._file, 'xreadlines'){  # real file
+            return iter(this._file);
         } else{  # StringIO()
-            return iter(self._file.readlines(*args));
+            return iter(this._file.readlines(*args));
 
 }
 } }

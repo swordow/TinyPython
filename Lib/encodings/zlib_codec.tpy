@@ -11,7 +11,7 @@ import zlib; # this codec needs the optional zlib module !
 
 ### Codec APIs
 
-def zlib_encode(input,errors='strict'){
+function zlib_encode(input,errors='strict'){
 
     """ Encodes the object input and returns a tuple (output
         object, length consumed).
@@ -26,7 +26,7 @@ def zlib_encode(input,errors='strict'){
     return (output, len(input));
 
 }
-def zlib_decode(input,errors='strict'){
+function zlib_decode(input,errors='strict'){
 
     """ Decodes the object input and returns a tuple (output
         object, length consumed).
@@ -47,48 +47,48 @@ def zlib_decode(input,errors='strict'){
 }
 class Codec(codecs.Codec){
 
-    def encode(self, input, errors='strict'){
+    function encode( input, errors='strict'){
         return zlib_encode(input, errors);
-    } def decode(self, input, errors='strict'){
+    } function decode( input, errors='strict'){
         return zlib_decode(input, errors);
 
 }
 } class IncrementalEncoder(codecs.IncrementalEncoder){
-    def __init__(self, errors='strict'){
+    function __init__( errors='strict'){
         assert errors == 'strict';
-        self.errors = errors;
-        self.compressobj = zlib.compressobj();
+        this.errors = errors;
+        this.compressobj = zlib.compressobj();
 
     }
-    def encode(self, input, final=False){
+    function encode( input, final=false){
         if final{
-            c = self.compressobj.compress(input);
-            return c + self.compressobj.flush();
+            c = this.compressobj.compress(input);
+            return c + this.compressobj.flush();
         } else{
-            return self.compressobj.compress(input);
+            return this.compressobj.compress(input);
 
     }
-    } def reset(self){
-        self.compressobj = zlib.compressobj();
+    } function reset(){
+        this.compressobj = zlib.compressobj();
 
 }
 } class IncrementalDecoder(codecs.IncrementalDecoder){
-    def __init__(self, errors='strict'){
+    function __init__( errors='strict'){
         assert errors == 'strict';
-        self.errors = errors;
-        self.decompressobj = zlib.decompressobj();
+        this.errors = errors;
+        this.decompressobj = zlib.decompressobj();
 
     }
-    def decode(self, input, final=False){
+    function decode( input, final=false){
         if final{
-            c = self.decompressobj.decompress(input);
-            return c + self.decompressobj.flush();
+            c = this.decompressobj.decompress(input);
+            return c + this.decompressobj.flush();
         } else{
-            return self.decompressobj.decompress(input);
+            return this.decompressobj.decompress(input);
 
     }
-    } def reset(self){
-        self.decompressobj = zlib.decompressobj();
+    } function reset(){
+        this.decompressobj = zlib.decompressobj();
 
 }
 } class StreamWriter(Codec,codecs.StreamWriter){
@@ -101,7 +101,7 @@ class StreamReader(Codec,codecs.StreamReader){
 ### encodings module API
 
 }
-def getregentry(){
+function getregentry(){
     return codecs.CodecInfo(
         name='zlib',
         encode=zlib_encode,
@@ -110,7 +110,7 @@ def getregentry(){
         incrementaldecoder=IncrementalDecoder,
         streamreader=StreamReader,
         streamwriter=StreamWriter,
-        _is_text_encoding=False,
+        _is_text_encoding=false,
     );
 
 }

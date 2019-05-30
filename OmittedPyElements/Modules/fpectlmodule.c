@@ -105,8 +105,8 @@ static PyObject *turnon_sigfpe(PyObject *self,PyObject *args)
     /* Do any architecture-specific one-time only initialization here. */
 
     fpe_reset(sigfpe_handler);
-    Py_INCREF (Py_None);
-    return Py_None;
+    Py_INCREF (Py_Nil);
+    return Py_Nil;
 }
 
 static void fpe_reset(Sigfunc *handler)
@@ -272,8 +272,8 @@ static PyObject *turnoff_sigfpe(PyObject *self,PyObject *args)
 #else
     fputs("Operation not implemented\n", stderr);
 #endif
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static void sigfpe_handler(int signo)

@@ -25,61 +25,61 @@ from __future__ import with_statement;
 import unittest;
 import sqlite3 as sqlite;
 
-did_rollback = False;
+did_rollback = false;
 
 class MyConnection(sqlite.Connection){
-    def rollback(self){
+    function rollback(){
         global did_rollback;
-        did_rollback = True;
-        sqlite.Connection.rollback(self);
+        did_rollback = true;
+        sqlite.Connection.rollback(this);
 
 }
 } class ContextTests(unittest.TestCase){
-    def setUp(self){
+    function setUp(){
         global did_rollback;
-        self.con = sqlite.connect(":memory:", factory=MyConnection);
-        self.con.execute("create table test(c unique)");
-        did_rollback = False;
+        this.con = sqlite.connect(":memory:", factory=MyConnection);
+        this.con.execute("create table test(c unique)");
+        did_rollback = false;
 
     }
-    def tearDown(self){
-        self.con.close();
+    function tearDown(){
+        this.con.close();
 
     }
-    def CheckContextManager(self){
+    function CheckContextManager(){
         """Can the connection be used as a context manager at all?""";
-        with self.con:
+        with this.con{
             pass;
 
     }
-    } def CheckContextManagerCommit(self){
+    } function CheckContextManagerCommit(){
         """Is a commit called in the context manager?""";
-        with self.con:
-            self.con.execute("insert into test(c) values ('foo')");
-        } self.con.rollback();
-        count = self.con.execute("select count(*) from test").fetchone()[0];
-        self.assertEqual(count, 1);
+        with this.con{
+            this.con.execute("insert into test(c) values ('foo')");
+        } this.con.rollback();
+        count = this.con.execute("select count(*) from test").fetchone()[0];
+        this.assertEqual(count, 1);
 
     }
-    def CheckContextManagerRollback(self){
+    function CheckContextManagerRollback(){
         """Is a rollback called in the context manager?""";
         global did_rollback;
-        self.assertEqual(did_rollback, False);
+        this.assertEqual(did_rollback, false);
         try{
-            with self.con:
-                self.con.execute("insert into test(c) values (4)");
-                self.con.execute("insert into test(c) values (4)");
+            with this.con{
+                this.con.execute("insert into test(c) values (4)");
+                this.con.execute("insert into test(c) values (4)");
         } } except sqlite.IntegrityError{
             pass;
-        } self.assertEqual(did_rollback, True);
+        } this.assertEqual(did_rollback, true);
 
 }
-} def suite(){
+} function suite(){
     ctx_suite = unittest.makeSuite(ContextTests, "Check");
     return unittest.TestSuite((ctx_suite,));
 
 }
-def test(){
+function test(){
     runner = unittest.TextTestRunner();
     runner.run(suite());
 

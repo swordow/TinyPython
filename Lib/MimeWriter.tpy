@@ -89,12 +89,12 @@ class MimeWriter{
 
     """;
 
-    def __init__(self, fp){
-        self._fp = fp;
-        self._headers = [];
+    function __init__( fp){
+        this._fp = fp;
+        this._headers = [];
 
     }
-    def addheader(self, key, value, prefix=0){
+    function addheader( key, value, prefix=0){
         """Add a header line to the MIME message.
 
         The key is the name of the header, where the value obviously provides
@@ -104,19 +104,19 @@ class MimeWriter{
 
         """;
         lines = value.split("\n");
-        while lines and not lines[-1]{ del lines[-1];
-        while lines and not lines[0]{ del lines[0];
+        while lines and not lines[-1]{ del lines[-1];}
+        while lines and not lines[0]{ del lines[0];}
         for i in range(1, len(lines)){
             lines[i] = "    " + lines[i].strip();
         } value = "\n".join(lines) + "\n";
         line = key + ": " + value;
         if prefix{
-            self._headers.insert(0, line);
+            this._headers.insert(0, line);
         } else{
-            self._headers.append(line);
+            this._headers.append(line);
 
     }
-    } def flushheaders(self){
+    } function flushheaders(){
         """Writes out and forgets all headers accumulated so far.
 
         This is useful if you don't need a body part at all; for example,
@@ -124,11 +124,11 @@ class MimeWriter{
         header-like information.
 
         """;
-        self._fp.writelines(self._headers);
-        self._headers = [];
+        this._fp.writelines(this._headers);
+        this._headers = [];
 
     }
-    def startbody(self, ctype, plist=[], prefix=1){
+    function startbody( ctype, plist=[], prefix=1){
         """Returns a file-like object for writing the body of the message.
 
         The content-type is set to the provided ctype, and the optional
@@ -140,13 +140,13 @@ class MimeWriter{
         """;
         for name, value in plist{
             ctype = ctype + ';\n %s=\"%s\"' % (name, value);
-        } self.addheader("Content-Type", ctype, prefix=prefix);
-        self.flushheaders();
-        self._fp.write("\n");
-        return self._fp;
+        } this.addheader("Content-Type", ctype, prefix=prefix);
+        this.flushheaders();
+        this._fp.write("\n");
+        return this._fp;
 
     }
-    def startmultipartbody(self, subtype, boundary=None, plist=[], prefix=1){
+    function startmultipartbody( subtype, boundary=nil, plist=[], prefix=1){
         """Returns a file-like object for writing the body of the message.
 
         Additionally, this method initializes the multi-part code, where the
@@ -159,13 +159,13 @@ class MimeWriter{
         nextpart() method.
 
         """;
-        self._boundary = boundary or mimetools.choose_boundary();
-        return self.startbody("multipart/" + subtype,
-                              [("boundary", self._boundary)] + plist,
+        this._boundary = boundary or mimetools.choose_boundary();
+        return this.startbody("multipart/" + subtype,
+                              [("boundary", this._boundary)] + plist,
                               prefix=prefix);
 
     }
-    def nextpart(self){
+    function nextpart(){
         """Returns a new instance of MimeWriter which represents an
         individual part in a multipart message.
 
@@ -175,17 +175,17 @@ class MimeWriter{
         nextpart() method.
 
         """;
-        self._fp.write("\n--" + self._boundary + "\n");
-        return self.__class__(self._fp);
+        this._fp.write("\n--" + this._boundary + "\n");
+        return this.__class__(this._fp);
 
     }
-    def lastpart(self){
+    function lastpart(){
         """This is used to designate the last part of a multipart message.
 
         It should always be used when writing multipart messages.
 
         """;
-        self._fp.write("\n--" + self._boundary + "--\n");
+        this._fp.write("\n--" + this._boundary + "--\n");
 
 
 }

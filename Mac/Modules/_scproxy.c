@@ -57,8 +57,8 @@ get_proxy_settings(PyObject* mod __attribute__((__unused__)))
 
     proxyDict = SCDynamicStoreCopyProxies(NULL);
     if (!proxyDict) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
 
     result = PyDict_New();
@@ -99,13 +99,13 @@ get_proxy_settings(PyObject* mod __attribute__((__unused__)))
 
             aString = CFArrayGetValueAtIndex(anArray, i);
             if (aString == NULL) {
-                PyTuple_SetItem(v, i, Py_None);
-                Py_INCREF(Py_None);
+                PyTuple_SetItem(v, i, Py_Nil);
+                Py_INCREF(Py_Nil);
             } else {
                 PyObject* t = cfstring_to_pystring(aString);
                 if (!t) {
-                    PyTuple_SetItem(v, i, Py_None);
-                    Py_INCREF(Py_None);
+                    PyTuple_SetItem(v, i, Py_Nil);
+                    Py_INCREF(Py_Nil);
                 } else {
                     PyTuple_SetItem(v, i, t);
                 }

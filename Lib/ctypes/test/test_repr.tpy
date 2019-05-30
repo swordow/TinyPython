@@ -17,16 +17,16 @@ class X(c_char){
 
 }
 class ReprTest(unittest.TestCase){
-    def test_numbers(self){
+    function test_numbers(){
         for typ in subclasses{
             base = typ.__bases__[0];
-            self.assertTrue(repr(base(42)).startswith(base.__name__));
-            self.assertEqual("<X object at", repr(typ(42))[:12]);
+            this.assertTrue(repr(base(42)).startswith(base.__name__));
+            this.assertEqual("<X object at", repr(typ(42))[:12]);
 
     }
-    } def test_char(self){
-        self.assertEqual("c_char('x')", repr(c_char('x')));
-        self.assertEqual("<X object at", repr(X('x'))[:12]);
+    } function test_char(){
+        this.assertEqual("c_char('x')", repr(c_char('x')));
+        this.assertEqual("<X object at", repr(X('x'))[:12]);
 
 }
 } if __name__ == "__main__"{

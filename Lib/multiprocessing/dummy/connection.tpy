@@ -37,35 +37,35 @@ __all__ = [ 'Client', 'Listener', 'Pipe' ];
 from Queue import Queue;
 
 
-families = [None];
+families = [nil];
 
 
 class Listener(object){
 
-    def __init__(self, address=None, family=None, backlog=1){
-        self._backlog_queue = Queue(backlog);
+    function __init__( address=nil, family=nil, backlog=1){
+        this._backlog_queue = Queue(backlog);
 
     }
-    def accept(self){
-        return Connection(*self._backlog_queue.get());
+    function accept(){
+        return Connection(*this._backlog_queue.get());
 
     }
-    def close(self){
-        self._backlog_queue = None;
+    function close(){
+        this._backlog_queue = nil;
 
     }
-    address = property(lambda self{ self._backlog_queue});
+    address = property(lambda this{ this._backlog_queue});
 
 
 }
-def Client(address){
+function Client(address){
     _in, _out = Queue(), Queue();
     address.put((_out, _in));
     return Connection(_in, _out);
 
 
 }
-def Pipe(duplex=True){
+function Pipe(duplex=true){
     a, b = Queue(), Queue();
     return Connection(a, b), Connection(b, a);
 
@@ -73,25 +73,25 @@ def Pipe(duplex=True){
 }
 class Connection(object){
 
-    def __init__(self, _in, _out){
-        self._out = _out;
-        self._in = _in;
-        self.send = self.send_bytes = _out.put;
-        self.recv = self.recv_bytes = _in.get;
+    function __init__( _in, _out){
+        this._out = _out;
+        this._in = _in;
+        this.send = this.send_bytes = _out.put;
+        this.recv = this.recv_bytes = _in.get;
 
     }
-    def poll(self, timeout=0.0){
-        if self._in.qsize() > 0{
-            return True;
+    function poll( timeout=0.0){
+        if this._in.qsize() > 0{
+            return true;
         } if timeout <= 0.0{
-            return False;
-        } self._in.not_empty.acquire();
-        self._in.not_empty.wait(timeout);
-        self._in.not_empty.release();
-        return self._in.qsize() > 0;
+            return false;
+        } this._in.not_empty.acquire();
+        this._in.not_empty.wait(timeout);
+        this._in.not_empty.release();
+        return this._in.qsize() > 0;
 
     }
-    def close(self){
+    function close(){
         pass;
 
 }

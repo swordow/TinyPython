@@ -644,7 +644,7 @@ handle_weakrefs(PyGC_Head *unreachable, PyGC_Head *old)
              */
             assert(wr->wr_object == op);
             _PyWeakref_ClearRef(wr);
-            assert(wr->wr_object == Py_None);
+            assert(wr->wr_object == Py_Nil);
             if (wr->wr_callback == NULL)
                 continue;                       /* no callback */
 
@@ -1060,8 +1060,8 @@ static PyObject *
 gc_enable(PyObject *self, PyObject *noargs)
 {
     enabled = 1;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(gc_disable__doc__,
@@ -1073,8 +1073,8 @@ static PyObject *
 gc_disable(PyObject *self, PyObject *noargs)
 {
     enabled = 0;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(gc_isenabled__doc__,
@@ -1144,8 +1144,8 @@ gc_set_debug(PyObject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, "i:set_debug", &debug))
         return NULL;
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(gc_get_debug__doc__,
@@ -1179,8 +1179,8 @@ gc_set_thresh(PyObject *self, PyObject *args)
         generations[i].threshold = generations[2].threshold;
     }
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(gc_get_thresh__doc__,

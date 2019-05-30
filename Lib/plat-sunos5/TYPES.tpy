@@ -71,37 +71,37 @@ INT_LEAST16_MIN = INT16_MIN;
 INT_LEAST32_MIN = INT32_MIN;
 
 # Included from sys/int_const.h
-def INT8_C(c){ return (c);
+function INT8_C(c){ return (c);}
 
-def INT16_C(c){ return (c);
+function INT16_C(c){ return (c);}
 
-def INT32_C(c){ return (c);
+function INT32_C(c){ return (c);}
 
-def INT64_C(c){ return __CONCAT__(c,l);
+function INT64_C(c){ return __CONCAT__(c,l);}
 
-def INT64_C(c){ return __CONCAT__(c,ll);
+function INT64_C(c){ return __CONCAT__(c,ll);}
 
-def UINT8_C(c){ return __CONCAT__(c,u);
+function UINT8_C(c){ return __CONCAT__(c,u);}
 
-def UINT16_C(c){ return __CONCAT__(c,u);
+function UINT16_C(c){ return __CONCAT__(c,u);}
 
-def UINT32_C(c){ return __CONCAT__(c,u);
+function UINT32_C(c){ return __CONCAT__(c,u);}
 
-def UINT64_C(c){ return __CONCAT__(c,ul);
+function UINT64_C(c){ return __CONCAT__(c,ul);}
 
-def UINT64_C(c){ return __CONCAT__(c,ull);
+function UINT64_C(c){ return __CONCAT__(c,ull);}
 
-def INTMAX_C(c){ return __CONCAT__(c,l);
+function INTMAX_C(c){ return __CONCAT__(c,l);}
 
-def UINTMAX_C(c){ return __CONCAT__(c,ul);
+function UINTMAX_C(c){ return __CONCAT__(c,ul);}
 
-def INTMAX_C(c){ return __CONCAT__(c,ll);
+function INTMAX_C(c){ return __CONCAT__(c,ll);}
 
-def UINTMAX_C(c){ return __CONCAT__(c,ull);
+function UINTMAX_C(c){ return __CONCAT__(c,ull);}
 
-def INTMAX_C(c){ return (c);
+function INTMAX_C(c){ return (c);}
 
-def UINTMAX_C(c){ return (c);
+function UINTMAX_C(c){ return (c);}
 
 
 # Included from sys/int_fmtio.h
@@ -227,7 +227,7 @@ P_MYID = (-1);
 # Included from sys/time.h
 TIME32_MAX = INT32_MAX;
 TIME32_MIN = INT32_MIN;
-def TIMEVAL_OVERFLOW(tv){ return; \
+function TIMEVAL_OVERFLOW(tv){ return;} \
 
 from TYPES import *;
 DST_NONE = 0;
@@ -245,7 +245,7 @@ ITIMER_REAL = 0;
 ITIMER_VIRTUAL = 1;
 ITIMER_PROF = 2;
 ITIMER_REALPROF = 3;
-def ITIMERVAL_OVERFLOW(itv){ return; \
+function ITIMERVAL_OVERFLOW(itv){ return;} \
 
 SEC = 1;
 MILLISEC = 1000;
@@ -253,9 +253,9 @@ MICROSEC = 1000000;
 NANOSEC = 1000000000;
 
 # Included from sys/time_impl.h
-def TIMESPEC_OVERFLOW(ts){ return; \
+function TIMESPEC_OVERFLOW(ts){ return;} \
 
-def ITIMERSPEC_OVERFLOW(it){ return; \
+function ITIMERSPEC_OVERFLOW(it){ return;} \
 
 __CLOCK_REALTIME0 = 0;
 CLOCK_VIRTUAL = 1;
@@ -270,33 +270,33 @@ TIMER_ABSTIME = 0x1;
 
 # Included from sys/mutex.h
 from TYPES import *;
-def MUTEX_HELD(x){ return (mutex_owned(x));
+function MUTEX_HELD(x){ return (mutex_owned(x));}
 
-def TICK_TO_SEC(tick){ return ((tick) / hz);
+function TICK_TO_SEC(tick){ return ((tick) / hz);}
 
-def SEC_TO_TICK(sec){ return ((sec) * hz);
+function SEC_TO_TICK(sec){ return ((sec) * hz);}
 
-def TICK_TO_MSEC(tick){ return; \
+function TICK_TO_MSEC(tick){ return;} \
 
-def MSEC_TO_TICK(msec){ return; \
+function MSEC_TO_TICK(msec){ return;} \
 
-def MSEC_TO_TICK_ROUNDUP(msec){ return; \
+function MSEC_TO_TICK_ROUNDUP(msec){ return;} \
 
-def TICK_TO_USEC(tick){ return ((tick) * usec_per_tick);
+function TICK_TO_USEC(tick){ return ((tick) * usec_per_tick);}
 
-def USEC_TO_TICK(usec){ return ((usec) / usec_per_tick);
+function USEC_TO_TICK(usec){ return ((usec) / usec_per_tick);}
 
-def USEC_TO_TICK_ROUNDUP(usec){ return; \
+function USEC_TO_TICK_ROUNDUP(usec){ return;} \
 
-def TICK_TO_NSEC(tick){ return ((tick) * nsec_per_tick);
+function TICK_TO_NSEC(tick){ return ((tick) * nsec_per_tick);}
 
-def NSEC_TO_TICK(nsec){ return ((nsec) / nsec_per_tick);
+function NSEC_TO_TICK(nsec){ return ((nsec) / nsec_per_tick);}
 
-def NSEC_TO_TICK_ROUNDUP(nsec){ return; \
+function NSEC_TO_TICK_ROUNDUP(nsec){ return;} \
 
-def TIMEVAL_TO_TICK(tvp){ return; \
+function TIMEVAL_TO_TICK(tvp){ return;} \
 
-def TIMESTRUC_TO_TICK(tsp){ return; \
+function TIMESTRUC_TO_TICK(tsp){ return;} \
 
 
 # Included from time.h
@@ -310,4 +310,4 @@ FD_SETSIZE = 65536;
 FD_SETSIZE = 1024;
 _NBBY = 8;
 NBBY = _NBBY;
-def FD_ZERO(p){ return bzero((p), sizeof (*(p)));
+function FD_ZERO(p){ return bzero((p), sizeof (*(p)));}

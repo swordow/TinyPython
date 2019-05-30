@@ -138,8 +138,8 @@ static PyObject *GrafObj_MacSetPort(GrafPortObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     MacSetPort(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -662,8 +662,8 @@ static PyObject *GrafObj_SectRegionWithPortClipRegion(GrafPortObject *_self, PyO
         return NULL;
     SectRegionWithPortClipRegion(_self->ob_itself,
                                  ioRegion);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -679,8 +679,8 @@ static PyObject *GrafObj_SectRegionWithPortVisibleRegion(GrafPortObject *_self, 
         return NULL;
     SectRegionWithPortVisibleRegion(_self->ob_itself,
                                     ioRegion);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -750,8 +750,8 @@ static PyObject *GrafObj_SetPortBounds(GrafPortObject *_self, PyObject *_args)
         return NULL;
     SetPortBounds(_self->ob_itself,
                   &rect);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -767,8 +767,8 @@ static PyObject *GrafObj_SetPortOpColor(GrafPortObject *_self, PyObject *_args)
         return NULL;
     SetPortOpColor(_self->ob_itself,
                    &opColor);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -784,8 +784,8 @@ static PyObject *GrafObj_SetPortTextFont(GrafPortObject *_self, PyObject *_args)
         return NULL;
     SetPortTextFont(_self->ob_itself,
                     txFont);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -801,8 +801,8 @@ static PyObject *GrafObj_SetPortTextSize(GrafPortObject *_self, PyObject *_args)
         return NULL;
     SetPortTextSize(_self->ob_itself,
                     txSize);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -818,8 +818,8 @@ static PyObject *GrafObj_SetPortTextFace(GrafPortObject *_self, PyObject *_args)
         return NULL;
     SetPortTextFace(_self->ob_itself,
                     face);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -835,8 +835,8 @@ static PyObject *GrafObj_SetPortTextMode(GrafPortObject *_self, PyObject *_args)
         return NULL;
     SetPortTextMode(_self->ob_itself,
                     mode);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -852,8 +852,8 @@ static PyObject *GrafObj_SetPortVisibleRegion(GrafPortObject *_self, PyObject *_
         return NULL;
     SetPortVisibleRegion(_self->ob_itself,
                          visRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -869,8 +869,8 @@ static PyObject *GrafObj_SetPortClipRegion(GrafPortObject *_self, PyObject *_arg
         return NULL;
     SetPortClipRegion(_self->ob_itself,
                       clipRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -886,8 +886,8 @@ static PyObject *GrafObj_SetPortPenPixPat(GrafPortObject *_self, PyObject *_args
         return NULL;
     SetPortPenPixPat(_self->ob_itself,
                      penPattern);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -903,8 +903,8 @@ static PyObject *GrafObj_SetPortFillPixPat(GrafPortObject *_self, PyObject *_arg
         return NULL;
     SetPortFillPixPat(_self->ob_itself,
                       penPattern);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -920,8 +920,8 @@ static PyObject *GrafObj_SetPortBackPixPat(GrafPortObject *_self, PyObject *_arg
         return NULL;
     SetPortBackPixPat(_self->ob_itself,
                       backPattern);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -937,8 +937,8 @@ static PyObject *GrafObj_SetPortPenSize(GrafPortObject *_self, PyObject *_args)
         return NULL;
     SetPortPenSize(_self->ob_itself,
                    penSize);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -954,8 +954,8 @@ static PyObject *GrafObj_SetPortPenMode(GrafPortObject *_self, PyObject *_args)
         return NULL;
     SetPortPenMode(_self->ob_itself,
                    penMode);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -971,8 +971,8 @@ static PyObject *GrafObj_SetPortFracHPenLocation(GrafPortObject *_self, PyObject
         return NULL;
     SetPortFracHPenLocation(_self->ob_itself,
                             pnLocHFrac);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -985,8 +985,8 @@ static PyObject *GrafObj_DisposePort(GrafPortObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     DisposePort(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1134,8 +1134,8 @@ static PyObject *GrafObj_QDFlushPortBuffer(GrafPortObject *_self, PyObject *_arg
         return NULL;
     QDFlushPortBuffer(_self->ob_itself,
                       region);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1153,8 +1153,8 @@ static PyObject *GrafObj_QDGetDirtyRegion(GrafPortObject *_self, PyObject *_args
     _err = QDGetDirtyRegion(_self->ob_itself,
                             rgn);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1172,8 +1172,8 @@ static PyObject *GrafObj_QDSetDirtyRegion(GrafPortObject *_self, PyObject *_args
     _err = QDSetDirtyRegion(_self->ob_itself,
                             rgn);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1474,8 +1474,8 @@ static PyObject *BMObj_putdata(BitMapObject *_self, PyObject *_args)
         return NULL;
     cp = _self->ob_itself->baseAddr+from;
     memcpy(cp, icp, length);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 
 }
@@ -1630,8 +1630,8 @@ static PyObject *Qd_GrafDevice(PyObject *_self, PyObject *_args)
                           &device))
         return NULL;
     GrafDevice(device);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1646,8 +1646,8 @@ static PyObject *Qd_SetPortBits(PyObject *_self, PyObject *_args)
                           BMObj_Convert, &bm))
         return NULL;
     SetPortBits(bm);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1665,8 +1665,8 @@ static PyObject *Qd_PortSize(PyObject *_self, PyObject *_args)
         return NULL;
     PortSize(width,
              height);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1684,8 +1684,8 @@ static PyObject *Qd_MovePortTo(PyObject *_self, PyObject *_args)
         return NULL;
     MovePortTo(leftGlobal,
                topGlobal);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1703,8 +1703,8 @@ static PyObject *Qd_SetOrigin(PyObject *_self, PyObject *_args)
         return NULL;
     SetOrigin(h,
               v);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1719,8 +1719,8 @@ static PyObject *Qd_SetClip(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &rgn))
         return NULL;
     SetClip(rgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1735,8 +1735,8 @@ static PyObject *Qd_GetClip(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &rgn))
         return NULL;
     GetClip(rgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1751,8 +1751,8 @@ static PyObject *Qd_ClipRect(PyObject *_self, PyObject *_args)
                           PyMac_GetRect, &r))
         return NULL;
     ClipRect(&r);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1773,8 +1773,8 @@ static PyObject *Qd_BackPat(PyObject *_self, PyObject *_args)
         goto pat__error__;
     }
     BackPat(pat__in__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
  pat__error__: ;
     return _res;
 }
@@ -1788,8 +1788,8 @@ static PyObject *Qd_InitCursor(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     InitCursor();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1810,8 +1810,8 @@ static PyObject *Qd_MacSetCursor(PyObject *_self, PyObject *_args)
         goto crsr__error__;
     }
     MacSetCursor(crsr__in__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
  crsr__error__: ;
     return _res;
 }
@@ -1825,8 +1825,8 @@ static PyObject *Qd_HideCursor(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     HideCursor();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1839,8 +1839,8 @@ static PyObject *Qd_MacShowCursor(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     MacShowCursor();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1853,8 +1853,8 @@ static PyObject *Qd_ObscureCursor(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     ObscureCursor();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1867,8 +1867,8 @@ static PyObject *Qd_HidePen(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     HidePen();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1881,8 +1881,8 @@ static PyObject *Qd_ShowPen(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     ShowPen();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1933,8 +1933,8 @@ static PyObject *Qd_SetPenState(PyObject *_self, PyObject *_args)
         goto pnState__error__;
     }
     SetPenState(pnState__in__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
  pnState__error__: ;
     return _res;
 }
@@ -1953,8 +1953,8 @@ static PyObject *Qd_PenSize(PyObject *_self, PyObject *_args)
         return NULL;
     PenSize(width,
         height);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1969,8 +1969,8 @@ static PyObject *Qd_PenMode(PyObject *_self, PyObject *_args)
                           &mode))
         return NULL;
     PenMode(mode);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1991,8 +1991,8 @@ static PyObject *Qd_PenPat(PyObject *_self, PyObject *_args)
         goto pat__error__;
     }
     PenPat(pat__in__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
  pat__error__: ;
     return _res;
 }
@@ -2006,8 +2006,8 @@ static PyObject *Qd_PenNormal(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     PenNormal();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2025,8 +2025,8 @@ static PyObject *Qd_MoveTo(PyObject *_self, PyObject *_args)
         return NULL;
     MoveTo(h,
            v);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2044,8 +2044,8 @@ static PyObject *Qd_Move(PyObject *_self, PyObject *_args)
         return NULL;
     Move(dh,
          dv);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2063,8 +2063,8 @@ static PyObject *Qd_MacLineTo(PyObject *_self, PyObject *_args)
         return NULL;
     MacLineTo(h,
               v);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2082,8 +2082,8 @@ static PyObject *Qd_Line(PyObject *_self, PyObject *_args)
         return NULL;
     Line(dh,
          dv);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2098,8 +2098,8 @@ static PyObject *Qd_ForeColor(PyObject *_self, PyObject *_args)
                           &color))
         return NULL;
     ForeColor(color);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2114,8 +2114,8 @@ static PyObject *Qd_BackColor(PyObject *_self, PyObject *_args)
                           &color))
         return NULL;
     BackColor(color);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2130,8 +2130,8 @@ static PyObject *Qd_ColorBit(PyObject *_self, PyObject *_args)
                           &whichBit))
         return NULL;
     ColorBit(whichBit);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2298,8 +2298,8 @@ static PyObject *Qd_MacFrameRect(PyObject *_self, PyObject *_args)
                           PyMac_GetRect, &r))
         return NULL;
     MacFrameRect(&r);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2314,8 +2314,8 @@ static PyObject *Qd_PaintRect(PyObject *_self, PyObject *_args)
                           PyMac_GetRect, &r))
         return NULL;
     PaintRect(&r);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2330,8 +2330,8 @@ static PyObject *Qd_EraseRect(PyObject *_self, PyObject *_args)
                           PyMac_GetRect, &r))
         return NULL;
     EraseRect(&r);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2346,8 +2346,8 @@ static PyObject *Qd_MacInvertRect(PyObject *_self, PyObject *_args)
                           PyMac_GetRect, &r))
         return NULL;
     MacInvertRect(&r);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2371,8 +2371,8 @@ static PyObject *Qd_MacFillRect(PyObject *_self, PyObject *_args)
     }
     MacFillRect(&r,
                 pat__in__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
  pat__error__: ;
     return _res;
 }
@@ -2388,8 +2388,8 @@ static PyObject *Qd_FrameOval(PyObject *_self, PyObject *_args)
                           PyMac_GetRect, &r))
         return NULL;
     FrameOval(&r);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2404,8 +2404,8 @@ static PyObject *Qd_PaintOval(PyObject *_self, PyObject *_args)
                           PyMac_GetRect, &r))
         return NULL;
     PaintOval(&r);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2420,8 +2420,8 @@ static PyObject *Qd_EraseOval(PyObject *_self, PyObject *_args)
                           PyMac_GetRect, &r))
         return NULL;
     EraseOval(&r);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2436,8 +2436,8 @@ static PyObject *Qd_InvertOval(PyObject *_self, PyObject *_args)
                           PyMac_GetRect, &r))
         return NULL;
     InvertOval(&r);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2461,8 +2461,8 @@ static PyObject *Qd_FillOval(PyObject *_self, PyObject *_args)
     }
     FillOval(&r,
              pat__in__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
  pat__error__: ;
     return _res;
 }
@@ -2484,8 +2484,8 @@ static PyObject *Qd_FrameRoundRect(PyObject *_self, PyObject *_args)
     FrameRoundRect(&r,
                    ovalWidth,
                    ovalHeight);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2506,8 +2506,8 @@ static PyObject *Qd_PaintRoundRect(PyObject *_self, PyObject *_args)
     PaintRoundRect(&r,
                    ovalWidth,
                    ovalHeight);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2528,8 +2528,8 @@ static PyObject *Qd_EraseRoundRect(PyObject *_self, PyObject *_args)
     EraseRoundRect(&r,
                    ovalWidth,
                    ovalHeight);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2550,8 +2550,8 @@ static PyObject *Qd_InvertRoundRect(PyObject *_self, PyObject *_args)
     InvertRoundRect(&r,
                     ovalWidth,
                     ovalHeight);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2581,8 +2581,8 @@ static PyObject *Qd_FillRoundRect(PyObject *_self, PyObject *_args)
                   ovalWidth,
                   ovalHeight,
                   pat__in__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
  pat__error__: ;
     return _res;
 }
@@ -2604,8 +2604,8 @@ static PyObject *Qd_FrameArc(PyObject *_self, PyObject *_args)
     FrameArc(&r,
              startAngle,
              arcAngle);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2626,8 +2626,8 @@ static PyObject *Qd_PaintArc(PyObject *_self, PyObject *_args)
     PaintArc(&r,
              startAngle,
              arcAngle);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2648,8 +2648,8 @@ static PyObject *Qd_EraseArc(PyObject *_self, PyObject *_args)
     EraseArc(&r,
              startAngle,
              arcAngle);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2670,8 +2670,8 @@ static PyObject *Qd_InvertArc(PyObject *_self, PyObject *_args)
     InvertArc(&r,
               startAngle,
               arcAngle);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2701,8 +2701,8 @@ static PyObject *Qd_FillArc(PyObject *_self, PyObject *_args)
         startAngle,
         arcAngle,
         pat__in__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
  pat__error__: ;
     return _res;
 }
@@ -2731,8 +2731,8 @@ static PyObject *Qd_OpenRgn(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     OpenRgn();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2747,8 +2747,8 @@ static PyObject *Qd_CloseRgn(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &dstRgn))
         return NULL;
     CloseRgn(dstRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2768,8 +2768,8 @@ static PyObject *Qd_BitMapToRegion(PyObject *_self, PyObject *_args)
     _err = BitMapToRegion(region,
                           bMap);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2787,8 +2787,8 @@ static PyObject *Qd_RgnToHandle(PyObject *_self, PyObject *_args)
         return NULL;
     RgnToHandle(region,
                 flattenedRgnDataHdl);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2803,8 +2803,8 @@ static PyObject *Qd_DisposeRgn(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &rgn))
         return NULL;
     DisposeRgn(rgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2822,8 +2822,8 @@ static PyObject *Qd_MacCopyRgn(PyObject *_self, PyObject *_args)
         return NULL;
     MacCopyRgn(srcRgn,
                dstRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2838,8 +2838,8 @@ static PyObject *Qd_SetEmptyRgn(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &rgn))
         return NULL;
     SetEmptyRgn(rgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2866,8 +2866,8 @@ static PyObject *Qd_MacSetRectRgn(PyObject *_self, PyObject *_args)
                   top,
                   right,
                   bottom);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2885,8 +2885,8 @@ static PyObject *Qd_RectRgn(PyObject *_self, PyObject *_args)
         return NULL;
     RectRgn(rgn,
         &r);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2907,8 +2907,8 @@ static PyObject *Qd_MacOffsetRgn(PyObject *_self, PyObject *_args)
     MacOffsetRgn(rgn,
                  dh,
                  dv);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2929,8 +2929,8 @@ static PyObject *Qd_InsetRgn(PyObject *_self, PyObject *_args)
     InsetRgn(rgn,
              dh,
              dv);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2951,8 +2951,8 @@ static PyObject *Qd_SectRgn(PyObject *_self, PyObject *_args)
     SectRgn(srcRgnA,
         srcRgnB,
         dstRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2973,8 +2973,8 @@ static PyObject *Qd_MacUnionRgn(PyObject *_self, PyObject *_args)
     MacUnionRgn(srcRgnA,
                 srcRgnB,
                 dstRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2995,8 +2995,8 @@ static PyObject *Qd_DiffRgn(PyObject *_self, PyObject *_args)
     DiffRgn(srcRgnA,
         srcRgnB,
         dstRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3017,8 +3017,8 @@ static PyObject *Qd_MacXorRgn(PyObject *_self, PyObject *_args)
     MacXorRgn(srcRgnA,
               srcRgnB,
               dstRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3090,8 +3090,8 @@ static PyObject *Qd_MacFrameRgn(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &rgn))
         return NULL;
     MacFrameRgn(rgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3106,8 +3106,8 @@ static PyObject *Qd_MacPaintRgn(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &rgn))
         return NULL;
     MacPaintRgn(rgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3122,8 +3122,8 @@ static PyObject *Qd_EraseRgn(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &rgn))
         return NULL;
     EraseRgn(rgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3138,8 +3138,8 @@ static PyObject *Qd_MacInvertRgn(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &rgn))
         return NULL;
     MacInvertRgn(rgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3163,8 +3163,8 @@ static PyObject *Qd_MacFillRgn(PyObject *_self, PyObject *_args)
     }
     MacFillRgn(rgn,
                pat__in__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
  pat__error__: ;
     return _res;
 }
@@ -3189,8 +3189,8 @@ static PyObject *Qd_ScrollRect(PyObject *_self, PyObject *_args)
                dh,
                dv,
                updateRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3220,8 +3220,8 @@ static PyObject *Qd_CopyBits(PyObject *_self, PyObject *_args)
              &dstRect,
              mode,
              maskRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3251,8 +3251,8 @@ static PyObject *Qd_CopyMask(PyObject *_self, PyObject *_args)
              &srcRect,
              &maskRect,
              &dstRect);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3290,8 +3290,8 @@ static PyObject *Qd_PicComment(PyObject *_self, PyObject *_args)
     PicComment(kind,
                dataSize,
                dataHandle);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3304,8 +3304,8 @@ static PyObject *Qd_ClosePicture(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     ClosePicture();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3323,8 +3323,8 @@ static PyObject *Qd_DrawPicture(PyObject *_self, PyObject *_args)
         return NULL;
     DrawPicture(myPicture,
                 &dstRect);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3339,8 +3339,8 @@ static PyObject *Qd_KillPicture(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &myPicture))
         return NULL;
     KillPicture(myPicture);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3368,8 +3368,8 @@ static PyObject *Qd_ClosePoly(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     ClosePoly();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3384,8 +3384,8 @@ static PyObject *Qd_KillPoly(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &poly))
         return NULL;
     KillPoly(poly);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3406,8 +3406,8 @@ static PyObject *Qd_OffsetPoly(PyObject *_self, PyObject *_args)
     OffsetPoly(poly,
                dh,
                dv);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3422,8 +3422,8 @@ static PyObject *Qd_FramePoly(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &poly))
         return NULL;
     FramePoly(poly);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3438,8 +3438,8 @@ static PyObject *Qd_PaintPoly(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &poly))
         return NULL;
     PaintPoly(poly);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3454,8 +3454,8 @@ static PyObject *Qd_ErasePoly(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &poly))
         return NULL;
     ErasePoly(poly);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3470,8 +3470,8 @@ static PyObject *Qd_InvertPoly(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &poly))
         return NULL;
     InvertPoly(poly);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3495,8 +3495,8 @@ static PyObject *Qd_FillPoly(PyObject *_self, PyObject *_args)
     }
     FillPoly(poly,
              pat__in__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
  pat__error__: ;
     return _res;
 }
@@ -3672,8 +3672,8 @@ static PyObject *Qd_MapRgn(PyObject *_self, PyObject *_args)
     MapRgn(rgn,
            &srcRect,
            &dstRect);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3694,8 +3694,8 @@ static PyObject *Qd_MapPoly(PyObject *_self, PyObject *_args)
     MapPoly(poly,
         &srcRect,
         &dstRect);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3722,8 +3722,8 @@ static PyObject *Qd_StdBits(PyObject *_self, PyObject *_args)
         &dstRect,
         mode,
         maskRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3893,8 +3893,8 @@ static PyObject *Qd_DisposePixMap(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &pm))
         return NULL;
     DisposePixMap(pm);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3912,8 +3912,8 @@ static PyObject *Qd_CopyPixMap(PyObject *_self, PyObject *_args)
         return NULL;
     CopyPixMap(srcPM,
                dstPM);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3943,8 +3943,8 @@ static PyObject *Qd_DisposePixPat(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &pp))
         return NULL;
     DisposePixPat(pp);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3962,8 +3962,8 @@ static PyObject *Qd_CopyPixPat(PyObject *_self, PyObject *_args)
         return NULL;
     CopyPixPat(srcPP,
                dstPP);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3978,8 +3978,8 @@ static PyObject *Qd_PenPixPat(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &pp))
         return NULL;
     PenPixPat(pp);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3994,8 +3994,8 @@ static PyObject *Qd_BackPixPat(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &pp))
         return NULL;
     BackPixPat(pp);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4030,8 +4030,8 @@ static PyObject *Qd_MakeRGBPat(PyObject *_self, PyObject *_args)
         return NULL;
     MakeRGBPat(pp,
                &myColor);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4049,8 +4049,8 @@ static PyObject *Qd_FillCRect(PyObject *_self, PyObject *_args)
         return NULL;
     FillCRect(&r,
               pp);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4068,8 +4068,8 @@ static PyObject *Qd_FillCOval(PyObject *_self, PyObject *_args)
         return NULL;
     FillCOval(&r,
               pp);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4093,8 +4093,8 @@ static PyObject *Qd_FillCRoundRect(PyObject *_self, PyObject *_args)
                    ovalWidth,
                    ovalHeight,
                    pp);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4118,8 +4118,8 @@ static PyObject *Qd_FillCArc(PyObject *_self, PyObject *_args)
              startAngle,
              arcAngle,
              pp);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4137,8 +4137,8 @@ static PyObject *Qd_FillCRgn(PyObject *_self, PyObject *_args)
         return NULL;
     FillCRgn(rgn,
              pp);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4156,8 +4156,8 @@ static PyObject *Qd_FillCPoly(PyObject *_self, PyObject *_args)
         return NULL;
     FillCPoly(poly,
               pp);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4172,8 +4172,8 @@ static PyObject *Qd_RGBForeColor(PyObject *_self, PyObject *_args)
                           QdRGB_Convert, &color))
         return NULL;
     RGBForeColor(&color);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4188,8 +4188,8 @@ static PyObject *Qd_RGBBackColor(PyObject *_self, PyObject *_args)
                           QdRGB_Convert, &color))
         return NULL;
     RGBBackColor(&color);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4210,8 +4210,8 @@ static PyObject *Qd_SetCPixel(PyObject *_self, PyObject *_args)
     SetCPixel(h,
               v,
               &cPix);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4226,8 +4226,8 @@ static PyObject *Qd_SetPortPix(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &pm))
         return NULL;
     SetPortPix(pm);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4293,8 +4293,8 @@ static PyObject *Qd_OpColor(PyObject *_self, PyObject *_args)
                           QdRGB_Convert, &color))
         return NULL;
     OpColor(&color);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4309,8 +4309,8 @@ static PyObject *Qd_HiliteColor(PyObject *_self, PyObject *_args)
                           QdRGB_Convert, &color))
         return NULL;
     HiliteColor(&color);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4325,8 +4325,8 @@ static PyObject *Qd_DisposeCTable(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &cTable))
         return NULL;
     DisposeCTable(cTable);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4375,8 +4375,8 @@ static PyObject *Qd_SetCCursor(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &cCrsr))
         return NULL;
     SetCCursor(cCrsr);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4389,8 +4389,8 @@ static PyObject *Qd_AllocCursor(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     AllocCursor();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4405,8 +4405,8 @@ static PyObject *Qd_DisposeCCursor(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &cCrsr))
         return NULL;
     DisposeCCursor(cCrsr);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4526,8 +4526,8 @@ static PyObject *Qd_SetDeviceAttribute(PyObject *_self, PyObject *_args)
     SetDeviceAttribute(gdh,
                        attribute,
                        value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4548,8 +4548,8 @@ static PyObject *Qd_InitGDevice(PyObject *_self, PyObject *_args)
     InitGDevice(qdRefNum,
                 mode,
                 gdh);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4584,8 +4584,8 @@ static PyObject *Qd_DisposeGDevice(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &gdh))
         return NULL;
     DisposeGDevice(gdh);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4600,8 +4600,8 @@ static PyObject *Qd_SetGDevice(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &gd))
         return NULL;
     SetGDevice(gd);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4704,8 +4704,8 @@ static PyObject *Qd_GetSubTable(PyObject *_self, PyObject *_args)
     GetSubTable(myColors,
                 iTabRes,
                 targetTbl);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4726,8 +4726,8 @@ static PyObject *Qd_MakeITable(PyObject *_self, PyObject *_args)
     MakeITable(cTabH,
                iTabH,
                res);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4742,8 +4742,8 @@ static PyObject *Qd_SetClientID(PyObject *_self, PyObject *_args)
                           &id))
         return NULL;
     SetClientID(id);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4761,8 +4761,8 @@ static PyObject *Qd_ProtectEntry(PyObject *_self, PyObject *_args)
         return NULL;
     ProtectEntry(index,
                  protect);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4780,8 +4780,8 @@ static PyObject *Qd_ReserveEntry(PyObject *_self, PyObject *_args)
         return NULL;
     ReserveEntry(index,
                  reserve);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4832,8 +4832,8 @@ static PyObject *Qd_CopyDeepMask(PyObject *_self, PyObject *_args)
                  &dstRect,
                  mode,
                  maskRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4922,8 +4922,8 @@ static PyObject *Qd_ShieldCursor(PyObject *_self, PyObject *_args)
         return NULL;
     ShieldCursor(&shieldRect,
                  offsetPt);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5181,8 +5181,8 @@ static PyObject *Qd_SetQDGlobalsRandomSeed(PyObject *_self, PyObject *_args)
                           &randomSeed))
         return NULL;
     SetQDGlobalsRandomSeed(randomSeed);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5203,8 +5203,8 @@ static PyObject *Qd_SetQDGlobalsArrow(PyObject *_self, PyObject *_args)
         goto arrow__error__;
     }
     SetQDGlobalsArrow(arrow__in__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
  arrow__error__: ;
     return _res;
 }
@@ -5270,8 +5270,8 @@ static PyObject *Qd_SetQDError(PyObject *_self, PyObject *_args)
                           &err))
         return NULL;
     SetQDError(err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5301,8 +5301,8 @@ static PyObject *Qd_LMSetScrVRes(PyObject *_self, PyObject *_args)
                           &value))
         return NULL;
     LMSetScrVRes(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5332,8 +5332,8 @@ static PyObject *Qd_LMSetScrHRes(PyObject *_self, PyObject *_args)
                           &value))
         return NULL;
     LMSetScrHRes(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5363,8 +5363,8 @@ static PyObject *Qd_LMSetMainDevice(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &value))
         return NULL;
     LMSetMainDevice(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5394,8 +5394,8 @@ static PyObject *Qd_LMSetDeviceList(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &value))
         return NULL;
     LMSetDeviceList(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5425,8 +5425,8 @@ static PyObject *Qd_LMSetQDColors(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &value))
         return NULL;
     LMSetQDColors(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5456,8 +5456,8 @@ static PyObject *Qd_LMSetWidthListHand(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &value))
         return NULL;
     LMSetWidthListHand(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5487,8 +5487,8 @@ static PyObject *Qd_LMSetHiliteMode(PyObject *_self, PyObject *_args)
                           &value))
         return NULL;
     LMSetHiliteMode(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5518,8 +5518,8 @@ static PyObject *Qd_LMSetWidthTabHandle(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &value))
         return NULL;
     LMSetWidthTabHandle(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5549,8 +5549,8 @@ static PyObject *Qd_LMSetLastSPExtra(PyObject *_self, PyObject *_args)
                           &value))
         return NULL;
     LMSetLastSPExtra(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5580,8 +5580,8 @@ static PyObject *Qd_LMSetLastFOND(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &value))
         return NULL;
     LMSetLastFOND(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5611,8 +5611,8 @@ static PyObject *Qd_LMSetFractEnable(PyObject *_self, PyObject *_args)
                           &value))
         return NULL;
     LMSetFractEnable(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5642,8 +5642,8 @@ static PyObject *Qd_LMSetTheGDevice(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &value))
         return NULL;
     LMSetTheGDevice(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5673,8 +5673,8 @@ static PyObject *Qd_LMSetHiliteRGB(PyObject *_self, PyObject *_args)
                           QdRGB_Convert, &hiliteRGBValue))
         return NULL;
     LMSetHiliteRGB(&hiliteRGBValue);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5704,8 +5704,8 @@ static PyObject *Qd_LMSetCursorNew(PyObject *_self, PyObject *_args)
                           &value))
         return NULL;
     LMSetCursorNew(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5720,8 +5720,8 @@ static PyObject *Qd_TextFont(PyObject *_self, PyObject *_args)
                           &font))
         return NULL;
     TextFont(font);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5736,8 +5736,8 @@ static PyObject *Qd_TextFace(PyObject *_self, PyObject *_args)
                           &face))
         return NULL;
     TextFace(face);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5752,8 +5752,8 @@ static PyObject *Qd_TextMode(PyObject *_self, PyObject *_args)
                           &mode))
         return NULL;
     TextMode(mode);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5768,8 +5768,8 @@ static PyObject *Qd_TextSize(PyObject *_self, PyObject *_args)
                           &size))
         return NULL;
     TextSize(size);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5784,8 +5784,8 @@ static PyObject *Qd_SpaceExtra(PyObject *_self, PyObject *_args)
                           PyMac_GetFixed, &extra))
         return NULL;
     SpaceExtra(extra);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5800,8 +5800,8 @@ static PyObject *Qd_DrawChar(PyObject *_self, PyObject *_args)
                           &ch))
         return NULL;
     DrawChar(ch);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5816,8 +5816,8 @@ static PyObject *Qd_DrawString(PyObject *_self, PyObject *_args)
                           PyMac_GetStr255, s))
         return NULL;
     DrawString(s);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5841,8 +5841,8 @@ static PyObject *Qd_MacDrawText(PyObject *_self, PyObject *_args)
     MacDrawText(textBuf__in__,
                 firstByte,
                 byteCount);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5932,8 +5932,8 @@ static PyObject *Qd_CharExtra(PyObject *_self, PyObject *_args)
                           PyMac_GetFixed, &extra))
         return NULL;
     CharExtra(extra);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5971,8 +5971,8 @@ static PyObject *Qd_SetPort(PyObject *_self, PyObject *_args)
                           GrafObj_Convert, &thePort))
         return NULL;
     SetPort(thePort);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6010,8 +6010,8 @@ static PyObject *Qd_SetCursor(PyObject *_self, PyObject *_args)
         goto crsr__error__;
     }
     SetCursor(crsr__in__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
  crsr__error__: ;
     return _res;
 }
@@ -6025,8 +6025,8 @@ static PyObject *Qd_ShowCursor(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     ShowCursor();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6044,8 +6044,8 @@ static PyObject *Qd_LineTo(PyObject *_self, PyObject *_args)
         return NULL;
     LineTo(h,
            v);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6172,8 +6172,8 @@ static PyObject *Qd_FrameRect(PyObject *_self, PyObject *_args)
                           PyMac_GetRect, &r))
         return NULL;
     FrameRect(&r);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6188,8 +6188,8 @@ static PyObject *Qd_InvertRect(PyObject *_self, PyObject *_args)
                           PyMac_GetRect, &r))
         return NULL;
     InvertRect(&r);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6213,8 +6213,8 @@ static PyObject *Qd_FillRect(PyObject *_self, PyObject *_args)
     }
     FillRect(&r,
              pat__in__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
  pat__error__: ;
     return _res;
 }
@@ -6233,8 +6233,8 @@ static PyObject *Qd_CopyRgn(PyObject *_self, PyObject *_args)
         return NULL;
     CopyRgn(srcRgn,
         dstRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6261,8 +6261,8 @@ static PyObject *Qd_SetRectRgn(PyObject *_self, PyObject *_args)
                top,
                right,
                bottom);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6283,8 +6283,8 @@ static PyObject *Qd_OffsetRgn(PyObject *_self, PyObject *_args)
     OffsetRgn(rgn,
               dh,
               dv);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6305,8 +6305,8 @@ static PyObject *Qd_UnionRgn(PyObject *_self, PyObject *_args)
     UnionRgn(srcRgnA,
              srcRgnB,
              dstRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6327,8 +6327,8 @@ static PyObject *Qd_XorRgn(PyObject *_self, PyObject *_args)
     XorRgn(srcRgnA,
            srcRgnB,
            dstRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6363,8 +6363,8 @@ static PyObject *Qd_FrameRgn(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &rgn))
         return NULL;
     FrameRgn(rgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6379,8 +6379,8 @@ static PyObject *Qd_PaintRgn(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &rgn))
         return NULL;
     PaintRgn(rgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6395,8 +6395,8 @@ static PyObject *Qd_InvertRgn(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &rgn))
         return NULL;
     InvertRgn(rgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6420,8 +6420,8 @@ static PyObject *Qd_FillRgn(PyObject *_self, PyObject *_args)
     }
     FillRgn(rgn,
         pat__in__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
  pat__error__: ;
     return _res;
 }
@@ -6486,8 +6486,8 @@ static PyObject *Qd_DrawText(PyObject *_self, PyObject *_args)
     DrawText(textBuf__in__,
              firstByte,
              byteCount);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 

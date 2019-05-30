@@ -50,7 +50,7 @@ kwlist = [
 
 iskeyword = frozenset(kwlist).__contains__;
 
-def main(){
+function main(){
     import sys, re;
 
     args = sys.argv[1:];

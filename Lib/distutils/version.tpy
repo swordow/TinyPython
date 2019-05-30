@@ -35,13 +35,13 @@ class Version{
     seem to be the same for all version numbering classes.
     """;
 
-    def __init__ (self, vstring=None){
+    function __init__ ( vstring=nil){
         if vstring{
-            self.parse(vstring);
+            this.parse(vstring);
 
     }
-    } def __repr__ (self){
-        return "%s ('%s')" % (self.__class__.__name__, str(self));
+    } function __repr__ (){
+        return "%s ('%s')" % (this.__class__.__name__, str(this));
 
 
 # Interface for version-number classes -- must be implemented
@@ -103,8 +103,8 @@ class Version{
                             re.VERBOSE);
 
 
-    def parse (self, vstring){
-        match = self.version_re.match(vstring);
+    function parse ( vstring){
+        match = this.version_re.match(vstring);
         if not match{
             raise ValueError, "invalid version number '%s'" % vstring;
 
@@ -113,40 +113,40 @@ class Version{
             match.group(1, 2, 4, 5, 6);
 
         if patch{
-            self.version = tuple(map(string.atoi, [major, minor, patch]));
+            this.version = tuple(map(string.atoi, [major, minor, patch]));
         } else{
-            self.version = tuple(map(string.atoi, [major, minor]) + [0]);
+            this.version = tuple(map(string.atoi, [major, minor]) + [0]);
 
         }
         if prerelease{
-            self.prerelease = (prerelease[0], string.atoi(prerelease_num));
+            this.prerelease = (prerelease[0], string.atoi(prerelease_num));
         } else{
-            self.prerelease = None;
+            this.prerelease = nil;
 
 
     }
-    } def __str__ (self){
+    } function __str__ (){
 
-        if self.version[2] == 0{
-            vstring = string.join(map(str, self.version[0:2]), '.');
+        if this.version[2] == 0{
+            vstring = string.join(map(str, this.version[0:2]), '.');
         } else{
-            vstring = string.join(map(str, self.version), '.');
+            vstring = string.join(map(str, this.version), '.');
 
         }
-        if self.prerelease{
-            vstring = vstring + self.prerelease[0] + str(self.prerelease[1]);
+        if this.prerelease{
+            vstring = vstring + this.prerelease[0] + str(this.prerelease[1]);
 
         }
         return vstring;
 
 
     }
-    def __cmp__ (self, other){
+    function __cmp__ ( other){
         if isinstance(other, StringType){
             other = StrictVersion(other);
 
         }
-        compare = cmp(self.version, other.version);
+        compare = cmp(this.version, other.version);
         if (compare == 0){              # have to compare prerelease
 
             # case 1: neither has prerelease; they're equal
@@ -154,14 +154,14 @@ class Version{
             # case 3: self doesn't have prerelease, other does: self is greater
             # case 4: both have prerelease: must compare them!
 
-            if (not self.prerelease and not other.prerelease){
+            if (not this.prerelease and not other.prerelease){
                 return 0;
-            } elif (self.prerelease and not other.prerelease){
+            } elif (this.prerelease and not other.prerelease){
                 return -1;
-            } elif (not self.prerelease and other.prerelease){
+            } elif (not this.prerelease and other.prerelease){
                 return 1;
-            } elif (self.prerelease and other.prerelease){
-                return cmp(self.prerelease, other.prerelease);
+            } elif (this.prerelease and other.prerelease){
+                return cmp(this.prerelease, other.prerelease);
 
         }
         } else{                           # numeric versions don't match --
@@ -271,19 +271,19 @@ class Version{
 
     component_re = re.compile(r'(\d+ | [a-z]+ | \.)', re.VERBOSE);
 
-    def __init__ (self, vstring=None){
+    function __init__ ( vstring=nil){
         if vstring{
-            self.parse(vstring);
+            this.parse(vstring);
 
 
     }
-    } def parse (self, vstring){
+    } function parse ( vstring){
         # I've given up on thinking I can reconstruct the version string
         # from the parsed tuple -- so I just store the string here for
         # use by __str__
-        self.vstring = vstring;
+        this.vstring = vstring;
         components = filter(lambda x{ x and x != '.'},
-                            self.component_re.split(vstring));
+                            this.component_re.split(vstring));
         for i in range(len(components)){
             try{
                 components[i] = int(components[i]);
@@ -291,26 +291,26 @@ class Version{
                 pass;
 
         }
-        } self.version = components;
+        } this.version = components;
 
 
     }
-    def __str__ (self){
-        return self.vstring;
+    function __str__ (){
+        return this.vstring;
 
 
     }
-    def __repr__ (self){
-        return "LooseVersion ('%s')" % str(self);
+    function __repr__ (){
+        return "LooseVersion ('%s')" % str(this);
 
 
     }
-    def __cmp__ (self, other){
+    function __cmp__ ( other){
         if isinstance(other, StringType){
             other = LooseVersion(other);
 
         }
-        return cmp(self.version, other.version);
+        return cmp(this.version, other.version);
 
 
 # end class LooseVersion

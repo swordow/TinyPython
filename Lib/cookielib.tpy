@@ -37,10 +37,10 @@ try{
 } import httplib;  # only for the default HTTP port
 from calendar import timegm;
 
-debug = False;   # set to True to enable debugging via the logging module
-logger = None;
+debug = false;   # set to True to enable debugging via the logging module
+logger = nil;
 
-def _debug(*args){
+function _debug(*args){
     if not debug{
         return;
     } global logger;
@@ -55,13 +55,13 @@ DEFAULT_HTTP_PORT = str(httplib.HTTP_PORT);
 MISSING_FILENAME_TEXT = ("a filename was not supplied (nor was the CookieJar "
                          "instance initialised with one)");
 
-def _warn_unhandled_exception(){
+function _warn_unhandled_exception(){
     # There are a few catch-all except: statements in this module, for
     # catching input that's bad in unexpected ways.  Warn if any
     # exceptions are caught there.
     import warnings, traceback, StringIO;
     f = StringIO.StringIO();
-    traceback.print_exc(None, f);
+    traceback.print_exc(nil, f);
     msg = f.getvalue();
     warnings.warn("cookielib bug!\n%s" % msg, stacklevel=2);
 
@@ -71,22 +71,22 @@ def _warn_unhandled_exception(){
 
 }
 EPOCH_YEAR = 1970;
-def _timegm(tt){
+function _timegm(tt){
     year, month, mday, hour, min, sec = tt[:6];
     if ((year >= EPOCH_YEAR) and (1 <= month <= 12) and (1 <= mday <= 31) and
         (0 <= hour <= 24) and (0 <= min <= 59) and (0 <= sec <= 61)){
         return timegm(tt);
     } else{
-        return None;
+        return nil;
 
 }
 } DAYS = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"];
 MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun",
           "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 MONTHS_LOWER = [];
-for month in MONTHS{ MONTHS_LOWER.append(month.lower());
+for month in MONTHS{ MONTHS_LOWER.append(month.lower());}
 
-def time2isoz(t=None){
+function time2isoz(t=nil){
     """Return a string representing time in seconds since epoch, t.
 
     If the function is called without an argument, it will use the current
@@ -98,13 +98,13 @@ def time2isoz(t=None){
     1994-11-24 08:49:37Z
 
     """;
-    if t is None{ t = time.time();
+    if t is nil{ t = time.time();}
     year, mon, mday, hour, min, sec = time.gmtime(t)[:6];
     return "%04d-%02d-%02d %02d:%02d:%02dZ" % (
         year, mon, mday, hour, min, sec);
 
 }
-def time2netscape(t=None){
+function time2netscape(t=nil){
     """Return a string representing time in seconds since epoch, t.
 
     If the function is called without an argument, it will use the current
@@ -115,18 +115,18 @@ def time2netscape(t=None){
     Wed, DD-Mon-YYYY HH:MM:SS GMT
 
     """;
-    if t is None{ t = time.time();
+    if t is nil{ t = time.time();}
     year, mon, mday, hour, min, sec, wday = time.gmtime(t)[:7];
     return "%s, %02d-%s-%04d %02d:%02d:%02d GMT" % (
         DAYS[wday], mday, MONTHS[mon-1], year, hour, min, sec);
 
 
 }
-UTC_ZONES = {"GMT": None, "UTC": None, "UT": None, "Z": None};
+UTC_ZONES = {"GMT": nil, "UTC": nil, "UT": nil, "Z": nil};
 
 TIMEZONE_RE = re.compile(r"^([-+])?(\d\d?):?(\d\d)?$");
-def offset_from_tz_string(tz){
-    offset = None;
+function offset_from_tz_string(tz){
+    offset = nil;
     if tz in UTC_ZONES{
         offset = 0;
     } else{
@@ -140,7 +140,7 @@ def offset_from_tz_string(tz){
     } } } return offset;
 
 }
-def _str2time(day, mon, yr, hr, min, sec, tz){
+function _str2time(day, mon, yr, hr, min, sec, tz){
     # translate month name to number
     # month numbers start with 1 (January)
     try{
@@ -150,17 +150,17 @@ def _str2time(day, mon, yr, hr, min, sec, tz){
         try{
             imon = int(mon);
         } except ValueError{
-            return None;
+            return nil;
         } if 1 <= imon <= 12{
             mon = imon;
         } else{
-            return None;
+            return nil;
 
     # make sure clock elements are defined
     }
-    } if hr is None{ hr = 0;
-    if min is None{ min = 0;
-    if sec is None{ sec = 0;
+    } if hr is nil{ hr = 0;}
+    if min is nil{ min = 0;}
+    if sec is nil{ sec = 0;}
 
     yr = int(yr);
     day = int(day);
@@ -176,21 +176,21 @@ def _str2time(day, mon, yr, hr, min, sec, tz){
         yr = yr + cur_yr - m;
         m = m - tmp;
         if abs(m) > 50{
-            if m > 0{ yr = yr + 100;
-            else{ yr = yr - 100;
+            if m > 0{ yr = yr + 100;}
+            else{ yr = yr - 100;}
 
     # convert UTC time tuple to seconds since epoch (not timezone-adjusted)
     }
     } t = _timegm((yr, mon, day, hr, min, sec, tz));
 
-    if t is not None{
+    if t is not nil{
         # adjust time using timezone string, to get absolute time since epoch
-        if tz is None{
+        if tz is nil{
             tz = "UTC";
         } tz = tz.upper();
         offset = offset_from_tz_string(tz);
-        if offset is None{
-            return None;
+        if offset is nil{
+            return nil;
         } t = t - offset;
 
     }
@@ -219,7 +219,7 @@ LOOSE_HTTP_DATE_RE = re.compile(
        \s*
     (?:\(\w+\))?       # ASCII representation of timezone in parens.
        \s*$""", re.X);
-def http2time(text){
+function http2time(text){
     """Returns time in seconds since epoch of time represented by a string.
 
     Return value is an integer.
@@ -265,14 +265,14 @@ def http2time(text){
     text = WEEKDAY_RE.sub("", text, 1);  # Useless weekday
 
     # tz is time zone specifier string
-    day, mon, yr, hr, min, sec, tz = [None]*7;
+    day, mon, yr, hr, min, sec, tz = [nil]*7;
 
     # loose regexp parse
     m = LOOSE_HTTP_DATE_RE.search(text);
-    if m is not None{
+    if m is not nil{
         day, mon, yr, hr, min, sec, tz = m.groups();
     } else{
-        return None;  # bad format
+        return nil;  # bad format
 
     }
     return _str2time(day, mon, yr, hr, min, sec, tz);
@@ -294,7 +294,7 @@ ISO_DATE_RE = re.compile(
    ([-+]?\d\d?:?(:?\d\d)?
     |Z|z)?               # timezone  (Z is "zero meridian", i.e. GMT)
       \s*$""", re.X);
-def iso2time(text){
+function iso2time(text){
     """
     As for http2time, but parses the ISO 8601 formats:
 
@@ -310,16 +310,16 @@ def iso2time(text){
     text = text.lstrip();
 
     # tz is time zone specifier string
-    day, mon, yr, hr, min, sec, tz = [None]*7;
+    day, mon, yr, hr, min, sec, tz = [nil]*7;
 
     # loose regexp parse
     m = ISO_DATE_RE.search(text);
-    if m is not None{
+    if m is not nil{
         # XXX there's an extra bit of the timezone I'm ignoring here: is
         #   this the right thing to do?
         yr, mon, day, hr, min, sec, tz, _ = m.groups();
     } else{
-        return None;  # bad format
+        return nil;  # bad format
 
     }
     return _str2time(day, mon, yr, hr, min, sec, tz);
@@ -329,7 +329,7 @@ def iso2time(text){
 # -----------------------------------------------------------------------------
 
 }
-def unmatched(match){
+function unmatched(match){
     """Return unmatched part of re.Match object.""";
     start, end = match.span(0);
     return match.string[:start]+match.string[end:];
@@ -339,7 +339,7 @@ HEADER_TOKEN_RE =        re.compile(r"^\s*([^=\s;,]+)");
 HEADER_QUOTED_VALUE_RE = re.compile(r"^\s*=\s*\"([^\"\\]*(?:\\.[^\"\\]*)*)\"");
 HEADER_VALUE_RE =        re.compile(r"^\s*=\s*([^\s;,]*)");
 HEADER_ESCAPE_RE = re.compile(r"\\(.)");
-def split_header_words(header_values){
+function split_header_words(header_values){
     r"""Parse header values into a list of lists containing key,value pairs.
 
     The function knows how to deal with ",", ";" and "=" as well as quoted
@@ -407,12 +407,12 @@ def split_header_words(header_values){
                         value = value.rstrip();
                     } else{
                         # no value, a lone token
-                        value = None;
+                        value = nil;
                 } } pairs.append((name, value));
             } elif text.lstrip().startswith(","){
                 # concatenated headers, as per RFC 2616 section 4.2
                 text = text.lstrip()[1:];
-                if pairs{ result.append(pairs);
+                if pairs{ result.append(pairs);}
                 pairs = [];
             } else{
                 # skip junk
@@ -421,12 +421,12 @@ def split_header_words(header_values){
                     "split_header_words bug: '%s', '%s', %s" %
                     (orig_text, text, pairs));
                 text = non_junk;
-        } } if pairs{ result.append(pairs);
+        } } if pairs{ result.append(pairs);}
     } return result;
 
 }
 HEADER_JOIN_ESCAPE_RE = re.compile(r"([\"\\])");
-def join_header_words(lists){
+function join_header_words(lists){
     """Do the inverse (almost) of the conversion done by split_header_words.
 
     Takes a list of lists of (key, value) pairs and produces a single header
@@ -442,17 +442,17 @@ def join_header_words(lists){
     for pairs in lists{
         attr = [];
         for k, v in pairs{
-            if v is not None{
+            if v is not nil{
                 if not re.search(r"^\w+$", v){
                     v = HEADER_JOIN_ESCAPE_RE.sub(r"\\\1", v);  # escape " and \
                     v = '"%s"' % v;
                 } k = "%s=%s" % (k, v);
             } attr.append(k);
-        } if attr{ headers.append("; ".join(attr));
+        } if attr{ headers.append("; ".join(attr));}
     } return ", ".join(headers);
 
 }
-def _strip_quotes(text){
+function _strip_quotes(text){
     if text.startswith('"'){
         text = text[1:];
     } if text.endswith('"'){
@@ -460,7 +460,7 @@ def _strip_quotes(text){
     } return text;
 
 }
-def parse_ns_headers(ns_headers){
+function parse_ns_headers(ns_headers){
     """Ad-hoc parser for Netscape protocol cookie-attributes.
 
     The old Netscape cookie format for Set-Cookie can for instance contain
@@ -482,7 +482,7 @@ def parse_ns_headers(ns_headers){
     result = [];
     for ns_header in ns_headers{
         pairs = [];
-        version_set = False;
+        version_set = false;
 
         # XXX: The following does not strictly adhere to RFCs in that empty
         # names and values are legal (the former will only appear once and will
@@ -503,7 +503,7 @@ def parse_ns_headers(ns_headers){
             # allow for a distinction between present and empty and missing
             # altogether
             }
-            } val = val.strip() if sep else None;
+            } val = val.strip() if sep else nil;
 
             if ii != 0{
                 lc = key.lower();
@@ -513,12 +513,12 @@ def parse_ns_headers(ns_headers){
                 }
                 if key == "version"{
                     # This is an RFC 2109 cookie.
-                    if val is not None{
+                    if val is not nil{
                         val = _strip_quotes(val);
-                    } version_set = True;
+                    } version_set = true;
                 } elif key == "expires"{
                     # convert expires date to seconds since epoch
-                    if val is not None{
+                    if val is not nil{
                         val = http2time(_strip_quotes(val));  # None if invalid
             } } } pairs.append((key, val));
 
@@ -534,7 +534,7 @@ def parse_ns_headers(ns_headers){
 
 }
 IPV4_RE = re.compile(r"\.\d+$");
-def is_HDN(text){
+function is_HDN(text){
     """Return True if text is a host domain name.""";
     # XXX
     # This may well be wrong.  Which RFC is HDN defined in, if any (for
@@ -542,15 +542,15 @@ def is_HDN(text){
     # For the current implementation, what about IPv6?  Remember to look
     #  at other uses of IPV4_RE also, if change this.
     if IPV4_RE.search(text){
-        return False;
+        return false;
     } if text == ""{
-        return False;
+        return false;
     } if text[0] == "." or text[-1] == "."{
-        return False;
-    } return True;
+        return false;
+    } return true;
 
 }
-def domain_match(A, B){
+function domain_match(A, B){
     """Return True if domain A domain-matches domain B, according to RFC 2965.
 
     A and B may be host domain names or IP addresses.
@@ -576,32 +576,32 @@ def domain_match(A, B){
     A = A.lower();
     B = B.lower();
     if A == B{
-        return True;
+        return true;
     } if not is_HDN(A){
-        return False;
+        return false;
     } i = A.rfind(B);
     if i == -1 or i == 0{
         # A does not have form NB, or N is the empty string
-        return False;
+        return false;
     } if not B.startswith("."){
-        return False;
+        return false;
     } if not is_HDN(B[1:]){
-        return False;
-    } return True;
+        return false;
+    } return true;
 
 }
-def liberal_is_HDN(text){
+function liberal_is_HDN(text){
     """Return True if text is a sort-of-like a host domain name.
 
     For accepting/blocking domains.
 
     """;
     if IPV4_RE.search(text){
-        return False;
-    } return True;
+        return false;
+    } return true;
 
 }
-def user_domain_match(A, B){
+function user_domain_match(A, B){
     """For blocking/accepting domains.
 
     A and B may be host domain names or IP addresses.
@@ -612,18 +612,18 @@ def user_domain_match(A, B){
     if not (liberal_is_HDN(A) and liberal_is_HDN(B)){
         if A == B{
             # equal IP addresses
-            return True;
-        } return False;
+            return true;
+        } return false;
     } initial_dot = B.startswith(".");
     if initial_dot and A.endswith(B){
-        return True;
+        return true;
     } if not initial_dot and A == B{
-        return True;
-    } return False;
+        return true;
+    } return false;
 
 }
 cut_port_re = re.compile(r":\d+$");
-def request_host(request){
+function request_host(request){
     """Return request-host, as defined by RFC 2965.
 
     Variation from RFC: returned value is lowercased, for convenient
@@ -641,7 +641,7 @@ def request_host(request){
     return host.lower();
 
 }
-def eff_request_host(request){
+function eff_request_host(request){
     """Return a tuple (request-host, effective request-host name).
 
     As defined by RFC 2965, except both are lowercased.
@@ -653,7 +653,7 @@ def eff_request_host(request){
     } return req_host, erhn;
 
 }
-def request_path(request){
+function request_path(request){
     """Path component of request-URI, as defined by RFC 2965.""";
     url = request.get_full_url();
     parts = urlparse.urlsplit(url);
@@ -664,7 +664,7 @@ def request_path(request){
     } return path;
 
 }
-def request_port(request){
+function request_port(request){
     host = request.get_host();
     i = host.find(':');
     if i >= 0{
@@ -673,7 +673,7 @@ def request_port(request){
             int(port);
         } except ValueError{
             _debug("nonnumeric port: '%s'", port);
-            return None;
+            return nil;
     } } else{
         port = DEFAULT_HTTP_PORT;
     } return port;
@@ -683,9 +683,9 @@ def request_port(request){
 }
 HTTP_PATH_SAFE = "%/;:@&=+$,!~*'()";
 ESCAPED_CHAR_RE = re.compile(r"%([0-9a-fA-F][0-9a-fA-F])");
-def uppercase_escaped_char(match){
+function uppercase_escaped_char(match){
     return "%%%s" % match.group(1).upper();
-} def escape_path(path){
+} function escape_path(path){
     """Escape any invalid characters in HTTP URL, and uppercase all escapes.""";
     # There's no knowing what character encoding was used to create URLs
     # containing %-escapes, but since we have to pick one to escape invalid
@@ -702,7 +702,7 @@ def uppercase_escaped_char(match){
     return path;
 
 }
-def reach(h){
+function reach(h){
     """Return reach of host h, as defined by RFC 2965, section 1.
 
     The reach R of a host name H is defined as follows:
@@ -738,7 +738,7 @@ def reach(h){
     } } return h;
 
 }
-def is_third_party(request){
+function is_third_party(request){
     """
 
     RFC 2965, section 3.3.6:
@@ -750,9 +750,9 @@ def is_third_party(request){
     """;
     req_host = request_host(request);
     if not domain_match(req_host, reach(request.get_origin_req_host())){
-        return True;
+        return true;
     } else{
-        return False;
+        return false;
 
 
 }
@@ -774,7 +774,7 @@ def is_third_party(request){
 
     """;
 
-    def __init__(self, version, name, value,
+    function __init__( version, name, value,
                  port, port_specified,
                  domain, domain_specified, domain_initial_dot,
                  path, path_specified,
@@ -784,67 +784,67 @@ def is_third_party(request){
                  comment,
                  comment_url,
                  rest,
-                 rfc2109=False,
+                 rfc2109=false,
                  ){
 
-        if version is not None{ version = int(version);
-        if expires is not None{ expires = int(expires);
-        if port is None and port_specified is True{
+        if version is not nil{ version = int(version);}
+        if expires is not nil{ expires = int(expires);}
+        if port is nil and port_specified is true{
             raise ValueError("if port is None, port_specified must be false");
 
         }
-        self.version = version;
-        self.name = name;
-        self.value = value;
-        self.port = port;
-        self.port_specified = port_specified;
+        this.version = version;
+        this.name = name;
+        this.value = value;
+        this.port = port;
+        this.port_specified = port_specified;
         # normalise case, as per RFC 2965 section 3.3.3
-        self.domain = domain.lower();
-        self.domain_specified = domain_specified;
+        this.domain = domain.lower();
+        this.domain_specified = domain_specified;
         # Sigh.  We need to know whether the domain given in the
         # cookie-attribute had an initial dot, in order to follow RFC 2965
         # (as clarified in draft errata).  Needed for the returned $Domain
         # value.
-        self.domain_initial_dot = domain_initial_dot;
-        self.path = path;
-        self.path_specified = path_specified;
-        self.secure = secure;
-        self.expires = expires;
-        self.discard = discard;
-        self.comment = comment;
-        self.comment_url = comment_url;
-        self.rfc2109 = rfc2109;
+        this.domain_initial_dot = domain_initial_dot;
+        this.path = path;
+        this.path_specified = path_specified;
+        this.secure = secure;
+        this.expires = expires;
+        this.discard = discard;
+        this.comment = comment;
+        this.comment_url = comment_url;
+        this.rfc2109 = rfc2109;
 
-        self._rest = copy.copy(rest);
-
-    }
-    def has_nonstandard_attr(self, name){
-        return name in self._rest;
-    } def get_nonstandard_attr(self, name, default=None){
-        return self._rest.get(name, default);
-    } def set_nonstandard_attr(self, name, value){
-        self._rest[name] = value;
+        this._rest = copy.copy(rest);
 
     }
-    def is_expired(self, now=None){
-        if now is None{ now = time.time();
-        if (self.expires is not None) and (self.expires <= now){
-            return True;
-        } return False;
+    function has_nonstandard_attr( name){
+        return name in this._rest;
+    } function get_nonstandard_attr( name, default=nil){
+        return this._rest.get(name, default);
+    } function set_nonstandard_attr( name, value){
+        this._rest[name] = value;
 
     }
-    def __str__(self){
-        if self.port is None{ p = "";
-        else{ p = ":"+self.port;
-        limit = self.domain + p + self.path;
-        if self.value is not None{
-            namevalue = "%s=%s" % (self.name, self.value);
+    function is_expired( now=nil){
+        if now is nil{ now = time.time();}
+        if (this.expires is not nil) and (this.expires <= now){
+            return true;
+        } return false;
+
+    }
+    function __str__(){
+        if this.port is nil{ p = "";}
+        else{ p = ":"+this.port;}
+        limit = this.domain + p + this.path;
+        if this.value is not nil{
+            namevalue = "%s=%s" % (this.name, this.value);
         } else{
-            namevalue = self.name;
+            namevalue = this.name;
         } return "<Cookie %s for %s>" % (namevalue, limit);
 
     }
-    def __repr__(self){
+    function __repr__(){
         args = [];
         for name in ("version", "name", "value",
                      "port", "port_specified",
@@ -852,10 +852,10 @@ def is_third_party(request){
                      "path", "path_specified",
                      "secure", "expires", "discard", "comment", "comment_url",
                      ){
-            attr = getattr(self, name);
+            attr = getattr(this, name);
             args.append("%s=%s" % (name, repr(attr)));
-        } args.append("rest=%s" % repr(self._rest));
-        args.append("rfc2109=%s" % repr(self.rfc2109));
+        } args.append("rest=%s" % repr(this._rest));
+        args.append("rfc2109=%s" % repr(this.rfc2109));
         return "Cookie(%s)" % ", ".join(args);
 
 
@@ -869,7 +869,7 @@ def is_third_party(request){
     and RFC 2965 cookies -- override that if you want a customised policy.
 
     """;
-    def set_ok(self, cookie, request){
+    function set_ok( cookie, request){
         """Return true if (and only if) cookie should be accepted from server.
 
         Currently, pre-expired cookies never get this far -- the CookieJar
@@ -879,21 +879,21 @@ def is_third_party(request){
         raise NotImplementedError();
 
     }
-    def return_ok(self, cookie, request){
+    function return_ok( cookie, request){
         """Return true if (and only if) cookie should be returned to server.""";
         raise NotImplementedError();
 
     }
-    def domain_return_ok(self, domain, request){
+    function domain_return_ok( domain, request){
         """Return false if cookies should not be returned, given cookie domain.
         """;
-        return True;
+        return true;
 
     }
-    def path_return_ok(self, path, request){
+    function path_return_ok( path, request){
         """Return false if cookies should not be returned, given cookie path.
         """;
-        return True;
+        return true;
 
 
 }
@@ -907,76 +907,76 @@ def is_third_party(request){
     DomainLiberal = 0;
     DomainStrict = DomainStrictNoDots|DomainStrictNonDomain;
 
-    def __init__(self,
-                 blocked_domains=None, allowed_domains=None,
-                 netscape=True, rfc2965=False,
-                 rfc2109_as_netscape=None,
-                 hide_cookie2=False,
-                 strict_domain=False,
-                 strict_rfc2965_unverifiable=True,
-                 strict_ns_unverifiable=False,
+    function __init__(
+                 blocked_domains=nil, allowed_domains=nil,
+                 netscape=true, rfc2965=false,
+                 rfc2109_as_netscape=nil,
+                 hide_cookie2=false,
+                 strict_domain=false,
+                 strict_rfc2965_unverifiable=true,
+                 strict_ns_unverifiable=false,
                  strict_ns_domain=DomainLiberal,
-                 strict_ns_set_initial_dollar=False,
-                 strict_ns_set_path=False,
+                 strict_ns_set_initial_dollar=false,
+                 strict_ns_set_path=false,
                  ){
         """Constructor arguments should be passed as keyword arguments only.""";
-        self.netscape = netscape;
-        self.rfc2965 = rfc2965;
-        self.rfc2109_as_netscape = rfc2109_as_netscape;
-        self.hide_cookie2 = hide_cookie2;
-        self.strict_domain = strict_domain;
-        self.strict_rfc2965_unverifiable = strict_rfc2965_unverifiable;
-        self.strict_ns_unverifiable = strict_ns_unverifiable;
-        self.strict_ns_domain = strict_ns_domain;
-        self.strict_ns_set_initial_dollar = strict_ns_set_initial_dollar;
-        self.strict_ns_set_path = strict_ns_set_path;
+        this.netscape = netscape;
+        this.rfc2965 = rfc2965;
+        this.rfc2109_as_netscape = rfc2109_as_netscape;
+        this.hide_cookie2 = hide_cookie2;
+        this.strict_domain = strict_domain;
+        this.strict_rfc2965_unverifiable = strict_rfc2965_unverifiable;
+        this.strict_ns_unverifiable = strict_ns_unverifiable;
+        this.strict_ns_domain = strict_ns_domain;
+        this.strict_ns_set_initial_dollar = strict_ns_set_initial_dollar;
+        this.strict_ns_set_path = strict_ns_set_path;
 
-        if blocked_domains is not None{
-            self._blocked_domains = tuple(blocked_domains);
+        if blocked_domains is not nil{
+            this._blocked_domains = tuple(blocked_domains);
         } else{
-            self._blocked_domains = ();
+            this._blocked_domains = ();
 
         }
-        if allowed_domains is not None{
+        if allowed_domains is not nil{
             allowed_domains = tuple(allowed_domains);
-        } self._allowed_domains = allowed_domains;
+        } this._allowed_domains = allowed_domains;
 
     }
-    def blocked_domains(self){
+    function blocked_domains(){
         """Return the sequence of blocked domains (as a tuple).""";
-        return self._blocked_domains;
-    } def set_blocked_domains(self, blocked_domains){
+        return this._blocked_domains;
+    } function set_blocked_domains( blocked_domains){
         """Set the sequence of blocked domains.""";
-        self._blocked_domains = tuple(blocked_domains);
+        this._blocked_domains = tuple(blocked_domains);
 
     }
-    def is_blocked(self, domain){
-        for blocked_domain in self._blocked_domains{
+    function is_blocked( domain){
+        for blocked_domain in this._blocked_domains{
             if user_domain_match(domain, blocked_domain){
-                return True;
-        } } return False;
+                return true;
+        } } return false;
 
     }
-    def allowed_domains(self){
+    function allowed_domains(){
         """Return None, or the sequence of allowed domains (as a tuple).""";
-        return self._allowed_domains;
-    } def set_allowed_domains(self, allowed_domains){
+        return this._allowed_domains;
+    } function set_allowed_domains( allowed_domains){
         """Set the sequence of allowed domains, or None.""";
-        if allowed_domains is not None{
+        if allowed_domains is not nil{
             allowed_domains = tuple(allowed_domains);
-        } self._allowed_domains = allowed_domains;
+        } this._allowed_domains = allowed_domains;
 
     }
-    def is_not_allowed(self, domain){
-        if self._allowed_domains is None{
-            return False;
-        } for allowed_domain in self._allowed_domains{
+    function is_not_allowed( domain){
+        if this._allowed_domains is nil{
+            return false;
+        } for allowed_domain in this._allowed_domains{
             if user_domain_match(domain, allowed_domain){
-                return False;
-        } } return True;
+                return false;
+        } } return true;
 
     }
-    def set_ok(self, cookie, request){
+    function set_ok( cookie, request){
         """
         If you override .set_ok(), be sure to call this method.  If it returns
         false, so should your subclass (assuming your subclass wants to be more
@@ -985,80 +985,80 @@ def is_third_party(request){
         """;
         _debug(" - checking cookie %s=%s", cookie.name, cookie.value);
 
-        assert cookie.name is not None;
+        assert cookie.name is not nil;
 
         for n in "version", "verifiability", "name", "path", "domain", "port"{
             fn_name = "set_ok_"+n;
-            fn = getattr(self, fn_name);
+            fn = getattr(this, fn_name);
             if not fn(cookie, request){
-                return False;
+                return false;
 
         }
-        } return True;
+        } return true;
 
     }
-    def set_ok_version(self, cookie, request){
-        if cookie.version is None{
+    function set_ok_version( cookie, request){
+        if cookie.version is nil{
             # Version is always set to 0 by parse_ns_headers if it's a Netscape
             # cookie, so this must be an invalid RFC 2965 cookie.
             _debug("   Set-Cookie2 without version attribute (%s=%s)",
                    cookie.name, cookie.value);
-            return False;
-        } if cookie.version > 0 and not self.rfc2965{
+            return false;
+        } if cookie.version > 0 and not this.rfc2965{
             _debug("   RFC 2965 cookies are switched off");
-            return False;
-        } elif cookie.version == 0 and not self.netscape{
+            return false;
+        } elif cookie.version == 0 and not this.netscape{
             _debug("   Netscape cookies are switched off");
-            return False;
-        } return True;
+            return false;
+        } return true;
 
     }
-    def set_ok_verifiability(self, cookie, request){
+    function set_ok_verifiability( cookie, request){
         if request.is_unverifiable() and is_third_party(request){
-            if cookie.version > 0 and self.strict_rfc2965_unverifiable{
+            if cookie.version > 0 and this.strict_rfc2965_unverifiable{
                 _debug("   third-party RFC 2965 cookie during "
                              "unverifiable transaction");
-                return False;
-            } elif cookie.version == 0 and self.strict_ns_unverifiable{
+                return false;
+            } elif cookie.version == 0 and this.strict_ns_unverifiable{
                 _debug("   third-party Netscape cookie during "
                              "unverifiable transaction");
-                return False;
-        } } return True;
+                return false;
+        } } return true;
 
     }
-    def set_ok_name(self, cookie, request){
+    function set_ok_name( cookie, request){
         # Try and stop servers setting V0 cookies designed to hack other
         # servers that know both V0 and V1 protocols.
-        if (cookie.version == 0 and self.strict_ns_set_initial_dollar and
+        if (cookie.version == 0 and this.strict_ns_set_initial_dollar and
             cookie.name.startswith("$")){
             _debug("   illegal name (starts with '$'): '%s'", cookie.name);
-            return False;
-        } return True;
+            return false;
+        } return true;
 
     }
-    def set_ok_path(self, cookie, request){
+    function set_ok_path( cookie, request){
         if cookie.path_specified{
             req_path = request_path(request);
             if ((cookie.version > 0 or
-                 (cookie.version == 0 and self.strict_ns_set_path)) and
+                 (cookie.version == 0 and this.strict_ns_set_path)) and
                 not req_path.startswith(cookie.path)){
                 _debug("   path attribute %s is not a prefix of request "
                        "path %s", cookie.path, req_path);
-                return False;
-        } } return True;
+                return false;
+        } } return true;
 
     }
-    def set_ok_domain(self, cookie, request){
-        if self.is_blocked(cookie.domain){
+    function set_ok_domain( cookie, request){
+        if this.is_blocked(cookie.domain){
             _debug("   domain %s is in user block-list", cookie.domain);
-            return False;
-        } if self.is_not_allowed(cookie.domain){
+            return false;
+        } if this.is_not_allowed(cookie.domain){
             _debug("   domain %s is not in user allow-list", cookie.domain);
-            return False;
+            return false;
         } if cookie.domain_specified{
             req_host, erhn = eff_request_host(request);
             domain = cookie.domain;
-            if self.strict_domain and (domain.count(".") >= 2){
+            if this.strict_domain and (domain.count(".") >= 2){
                 # XXX This should probably be compared with the Konqueror
                 # (kcookiejar.cpp) and Mozilla implementations, but it's a
                 # losing battle.
@@ -1073,7 +1073,7 @@ def is_third_party(request){
                        "travel", "eu") and len(tld) == 2{
                         # domain like .co.uk
                         _debug("   country-code second level domain %s", domain);
-                        return False;
+                        return false;
             } } } if domain.startswith("."){
                 undotted_domain = domain[1:];
             } else{
@@ -1082,7 +1082,7 @@ def is_third_party(request){
             if not embedded_dots and domain != ".local"{
                 _debug("   non-local domain %s contains no embedded dot",
                        domain);
-                return False;
+                return false;
             } if cookie.version == 0{
                 if (not erhn.endswith(domain) and
                     (not erhn.startswith(".") and
@@ -1090,28 +1090,28 @@ def is_third_party(request){
                     _debug("   effective request-host %s (even with added "
                            "initial dot) does not end with %s",
                            erhn, domain);
-                    return False;
+                    return false;
             } } if (cookie.version > 0 or
-                (self.strict_ns_domain & self.DomainRFC2965Match)){
+                (this.strict_ns_domain & this.DomainRFC2965Match)){
                 if not domain_match(erhn, domain){
                     _debug("   effective request-host %s does not domain-match "
                            "%s", erhn, domain);
-                    return False;
+                    return false;
             } } if (cookie.version > 0 or
-                (self.strict_ns_domain & self.DomainStrictNoDots)){
+                (this.strict_ns_domain & this.DomainStrictNoDots)){
                 host_prefix = req_host[:-len(domain)];
                 if (host_prefix.find(".") >= 0 and
                     not IPV4_RE.search(req_host)){
                     _debug("   host prefix %s for domain %s contains a dot",
                            host_prefix, domain);
-                    return False;
-        } } } return True;
+                    return false;
+        } } } return true;
 
     }
-    def set_ok_port(self, cookie, request){
+    function set_ok_port( cookie, request){
         if cookie.port_specified{
             req_port = request_port(request);
-            if req_port is None{
+            if req_port is nil{
                 req_port = "80";
             } else{
                 req_port = str(req_port);
@@ -1120,17 +1120,17 @@ def is_third_party(request){
                     int(p);
                 } except ValueError{
                     _debug("   bad port %s (not numeric)", p);
-                    return False;
+                    return false;
                 } if p == req_port{
                     break;
             } } else{
                 _debug("   request port (%s) not found in %s",
                        req_port, cookie.port);
-                return False;
-        } } return True;
+                return false;
+        } } return true;
 
     }
-    def return_ok(self, cookie, request){
+    function return_ok( cookie, request){
         """
         If you override .return_ok(), be sure to call this method.  If it
         returns false, so should your subclass (assuming your subclass wants to
@@ -1143,53 +1143,53 @@ def is_third_party(request){
 
         for n in "version", "verifiability", "secure", "expires", "port", "domain"{
             fn_name = "return_ok_"+n;
-            fn = getattr(self, fn_name);
+            fn = getattr(this, fn_name);
             if not fn(cookie, request){
-                return False;
-        } } return True;
+                return false;
+        } } return true;
 
     }
-    def return_ok_version(self, cookie, request){
-        if cookie.version > 0 and not self.rfc2965{
+    function return_ok_version( cookie, request){
+        if cookie.version > 0 and not this.rfc2965{
             _debug("   RFC 2965 cookies are switched off");
-            return False;
-        } elif cookie.version == 0 and not self.netscape{
+            return false;
+        } elif cookie.version == 0 and not this.netscape{
             _debug("   Netscape cookies are switched off");
-            return False;
-        } return True;
+            return false;
+        } return true;
 
     }
-    def return_ok_verifiability(self, cookie, request){
+    function return_ok_verifiability( cookie, request){
         if request.is_unverifiable() and is_third_party(request){
-            if cookie.version > 0 and self.strict_rfc2965_unverifiable{
+            if cookie.version > 0 and this.strict_rfc2965_unverifiable{
                 _debug("   third-party RFC 2965 cookie during unverifiable "
                        "transaction");
-                return False;
-            } elif cookie.version == 0 and self.strict_ns_unverifiable{
+                return false;
+            } elif cookie.version == 0 and this.strict_ns_unverifiable{
                 _debug("   third-party Netscape cookie during unverifiable "
                        "transaction");
-                return False;
-        } } return True;
+                return false;
+        } } return true;
 
     }
-    def return_ok_secure(self, cookie, request){
+    function return_ok_secure( cookie, request){
         if cookie.secure and request.get_type() != "https"{
             _debug("   secure cookie with non-secure request");
-            return False;
-        } return True;
+            return false;
+        } return true;
 
     }
-    def return_ok_expires(self, cookie, request){
-        if cookie.is_expired(self._now){
+    function return_ok_expires( cookie, request){
+        if cookie.is_expired(this._now){
             _debug("   cookie expired");
-            return False;
-        } return True;
+            return false;
+        } return true;
 
     }
-    def return_ok_port(self, cookie, request){
+    function return_ok_port( cookie, request){
         if cookie.port{
             req_port = request_port(request);
-            if req_port is None{
+            if req_port is nil{
                 req_port = "80";
             } for p in cookie.port.split(","){
                 if p == req_port{
@@ -1197,35 +1197,35 @@ def is_third_party(request){
             } } else{
                 _debug("   request port %s does not match cookie port %s",
                        req_port, cookie.port);
-                return False;
-        } } return True;
+                return false;
+        } } return true;
 
     }
-    def return_ok_domain(self, cookie, request){
+    function return_ok_domain( cookie, request){
         req_host, erhn = eff_request_host(request);
         domain = cookie.domain;
 
         # strict check of non-domain cookies: Mozilla does this, MSIE5 doesn't
         if (cookie.version == 0 and
-            (self.strict_ns_domain & self.DomainStrictNonDomain) and
+            (this.strict_ns_domain & this.DomainStrictNonDomain) and
             not cookie.domain_specified and domain != erhn){
             _debug("   cookie with unspecified domain does not string-compare "
                    "equal to request domain");
-            return False;
+            return false;
 
         }
         if cookie.version > 0 and not domain_match(erhn, domain){
             _debug("   effective request-host name %s does not domain-match "
                    "RFC 2965 cookie domain %s", erhn, domain);
-            return False;
+            return false;
         } if cookie.version == 0 and not ("."+erhn).endswith(domain){
             _debug("   request-host %s does not match Netscape cookie domain "
                    "%s", req_host, domain);
-            return False;
-        } return True;
+            return false;
+        } return true;
 
     }
-    def domain_return_ok(self, domain, request){
+    function domain_return_ok( domain, request){
         # Liberal check of.  This is here as an optimization to avoid
         # having to load lots of MSIE cookie files unless necessary.
         req_host, erhn = eff_request_host(request);
@@ -1236,47 +1236,47 @@ def is_third_party(request){
         } if not (req_host.endswith(domain) or erhn.endswith(domain)){
             #_debug("   request domain %s does not match cookie domain %s",
             #       req_host, domain)
-            return False;
+            return false;
 
         }
-        if self.is_blocked(domain){
+        if this.is_blocked(domain){
             _debug("   domain %s is in user block-list", domain);
-            return False;
-        } if self.is_not_allowed(domain){
+            return false;
+        } if this.is_not_allowed(domain){
             _debug("   domain %s is not in user allow-list", domain);
-            return False;
+            return false;
 
         }
-        return True;
+        return true;
 
     }
-    def path_return_ok(self, path, request){
+    function path_return_ok( path, request){
         _debug("- checking cookie path=%s", path);
         req_path = request_path(request);
         if not req_path.startswith(path){
             _debug("  %s does not path-match %s", req_path, path);
-            return False;
-        } return True;
+            return false;
+        } return true;
 
 
 }
-} def vals_sorted_by_key(adict){
+} function vals_sorted_by_key(adict){
     keys = adict.keys();
     keys.sort();
     return map(adict.get, keys);
 
 }
-def deepvalues(mapping){
+function deepvalues(mapping){
     """Iterates over nested mapping, depth-first, in sorted order by key.""";
     values = vals_sorted_by_key(mapping);
     for obj in values{
-        mapping = False;
+        mapping = false;
         try{
             obj.items;
         } except AttributeError{
             pass;
         } else{
-            mapping = True;
+            mapping = true;
             for subobj in deepvalues(obj){
                 yield subobj;
         } } if not mapping{
@@ -1286,7 +1286,7 @@ def deepvalues(mapping){
 # Used as second parameter to dict.get() method, to distinguish absent
 # dict key from one with a None value.
 }
-} } class Absent{ pass;
+} } class Absent{ pass;}
 
 class CookieJar{
     """Collection of HTTP cookies.
@@ -1304,31 +1304,31 @@ class CookieJar{
 
     magic_re = r"^\#LWP-Cookies-(\d+\.\d+)";
 
-    def __init__(self, policy=None){
-        if policy is None{
+    function __init__( policy=nil){
+        if policy is nil{
             policy = DefaultCookiePolicy();
-        } self._policy = policy;
+        } this._policy = policy;
 
-        self._cookies_lock = _threading.RLock();
-        self._cookies = {};
-
-    }
-    def set_policy(self, policy){
-        self._policy = policy;
+        this._cookies_lock = _threading.RLock();
+        this._cookies = {};
 
     }
-    def _cookies_for_domain(self, domain, request){
+    function set_policy( policy){
+        this._policy = policy;
+
+    }
+    function _cookies_for_domain( domain, request){
         cookies = [];
-        if not self._policy.domain_return_ok(domain, request){
+        if not this._policy.domain_return_ok(domain, request){
             return [];
         } _debug("Checking %s for cookies to return", domain);
-        cookies_by_path = self._cookies[domain];
+        cookies_by_path = this._cookies[domain];
         for path in cookies_by_path.keys(){
-            if not self._policy.path_return_ok(path, request){
+            if not this._policy.path_return_ok(path, request){
                 continue;
             } cookies_by_name = cookies_by_path[path];
             for cookie in cookies_by_name.values(){
-                if not self._policy.return_ok(cookie, request){
+                if not this._policy.return_ok(cookie, request){
                     _debug("   not returning cookie");
                     continue;
                 } _debug("   it's a match");
@@ -1336,15 +1336,15 @@ class CookieJar{
         } } return cookies;
 
     }
-    def _cookies_for_request(self, request){
+    function _cookies_for_request( request){
         """Return a list of cookies to be returned to server.""";
         cookies = [];
-        for domain in self._cookies.keys(){
-            cookies.extend(self._cookies_for_domain(domain, request));
+        for domain in this._cookies.keys(){
+            cookies.extend(this._cookies_for_domain(domain, request));
         } return cookies;
 
     }
-    def _cookie_attrs(self, cookies){
+    function _cookie_attrs( cookies){
         """Return a list of cookie-attributes to be returned to server.
 
         like ['foo="bar"; $Path="/"', ...]
@@ -1354,9 +1354,9 @@ class CookieJar{
 
         """;
         # add cookies in order of most specific (ie. longest) path first
-        cookies.sort(key=lambda arg{ len(arg.path)}, reverse=True);
+        cookies.sort(key=lambda arg{ len(arg.path)}, reverse=true);
 
-        version_set = False;
+        version_set = false;
 
         attrs = [];
         for cookie in cookies{
@@ -1368,7 +1368,7 @@ class CookieJar{
             #  RFC 2965 errata, but that may never appear...
             version = cookie.version;
             if not version_set{
-                version_set = True;
+                version_set = true;
                 if version > 0{
                     attrs.append("$Version=%s" % version);
 
@@ -1376,15 +1376,15 @@ class CookieJar{
             # (not for Netscape protocol, which already has any quotes
             #  intact, due to the poorly-specified Netscape Cookie: syntax)
             }
-            } if ((cookie.value is not None) and
-                self.non_word_re.search(cookie.value) and version > 0){
-                value = self.quote_re.sub(r"\\\1", cookie.value);
+            } if ((cookie.value is not nil) and
+                this.non_word_re.search(cookie.value) and version > 0){
+                value = this.quote_re.sub(r"\\\1", cookie.value);
             } else{
                 value = cookie.value;
 
             # add cookie-attributes to be returned in Cookie header
             }
-            if cookie.value is None{
+            if cookie.value is nil{
                 attrs.append(cookie.name);
             } else{
                 attrs.append("%s=%s" % (cookie.name, value));
@@ -1397,7 +1397,7 @@ class CookieJar{
                         domain.startswith(".")){
                         domain = domain[1:];
                     } attrs.append('$Domain="%s"' % domain);
-                } if cookie.port is not None{
+                } if cookie.port is not nil{
                     p = "$Port";
                     if cookie.port_specified{
                         p = p + ('="%s"' % cookie.port);
@@ -1407,21 +1407,21 @@ class CookieJar{
         } } return attrs;
 
     }
-    def add_cookie_header(self, request){
+    function add_cookie_header( request){
         """Add correct Cookie: header to request (urllib2.Request object).
 
         The Cookie2 header is also added unless policy.hide_cookie2 is true.
 
         """;
         _debug("add_cookie_header");
-        self._cookies_lock.acquire();
+        this._cookies_lock.acquire();
         try{
 
-            self._policy._now = self._now = int(time.time());
+            this._policy._now = this._now = int(time.time());
 
-            cookies = self._cookies_for_request(request);
+            cookies = this._cookies_for_request(request);
 
-            attrs = self._cookie_attrs(cookies);
+            attrs = this._cookie_attrs(cookies);
             if attrs{
                 if not request.has_header("Cookie"){
                     request.add_unredirected_header(
@@ -1429,7 +1429,7 @@ class CookieJar{
 
             # if necessary, advertise that we know RFC 2965
             }
-            } if (self._policy.rfc2965 and not self._policy.hide_cookie2 and
+            } if (this._policy.rfc2965 and not this._policy.hide_cookie2 and
                 not request.has_header("Cookie2")){
                 for cookie in cookies{
                     if cookie.version != 1{
@@ -1438,13 +1438,13 @@ class CookieJar{
 
         }
         } } } finally{
-            self._cookies_lock.release();
+            this._cookies_lock.release();
 
         }
-        self.clear_expired_cookies();
+        this.clear_expired_cookies();
 
     }
-    def _normalized_cookie_tuples(self, attrs_set){
+    function _normalized_cookie_tuples( attrs_set){
         """Return list of tuples containing normalised cookie information.
 
         attrs_set is the list of lists of key,value pairs extracted from
@@ -1476,9 +1476,9 @@ class CookieJar{
             # should have Max-Age, but since V1 includes RFC 2109 cookies (and
             # since V0 cookies may be a mish-mash of Netscape and RFC 2109), we
             # accept either (but prefer Max-Age).
-            max_age_set = False;
+            max_age_set = false;
 
-            bad_cookie = False;
+            bad_cookie = false;
 
             standard = {};
             rest = {};
@@ -1487,17 +1487,17 @@ class CookieJar{
                 # don't lose case distinction for unknown fields
                 if lc in value_attrs or lc in boolean_attrs{
                     k = lc;
-                } if k in boolean_attrs and v is None{
+                } if k in boolean_attrs and v is nil{
                     # boolean cookie-attribute is present, but has no value
                     # (like "discard", rather than "port=80")
-                    v = True;
+                    v = true;
                 } if k in standard{
                     # only first value is significant
                     continue;
                 } if k == "domain"{
-                    if v is None{
+                    if v is nil{
                         _debug("   missing value for domain attribute");
-                        bad_cookie = True;
+                        bad_cookie = true;
                         break;
                     # RFC 2965 section 3.3.3
                     }
@@ -1506,18 +1506,18 @@ class CookieJar{
                     if max_age_set{
                         # Prefer max-age to expires (like Mozilla)
                         continue;
-                    } if v is None{
+                    } if v is nil{
                         _debug("   missing or invalid value for expires "
                               "attribute: treating as session cookie");
                         continue;
                 } } if k == "max-age"{
-                    max_age_set = True;
+                    max_age_set = true;
                     try{
                         v = int(v);
                     } except ValueError{
                         _debug("   missing or invalid (non-numeric) value for "
                               "max-age attribute");
-                        bad_cookie = True;
+                        bad_cookie = true;
                         break;
                     # convert RFC 2965 Max-Age to seconds since epoch
                     # XXX Strictly you're supposed to follow RFC 2616
@@ -1525,12 +1525,12 @@ class CookieJar{
                     #   is a request to discard (old and new) cookie, though.
                     }
                     k = "expires";
-                    v = self._now + v;
+                    v = this._now + v;
                 } if (k in value_attrs) or (k in boolean_attrs){
-                    if (v is None and
+                    if (v is nil and
                         k not in ("port", "comment", "commenturl")){
                         _debug("   missing value for %s attribute" % k);
-                        bad_cookie = True;
+                        bad_cookie = true;
                         break;
                     } standard[k] = v;
                 } else{
@@ -1547,7 +1547,7 @@ class CookieJar{
         return cookie_tuples;
 
     }
-    def _cookie_from_cookie_tuple(self, tup, request){
+    function _cookie_from_cookie_tuple( tup, request){
         # standard is dict of standard cookie-attributes, rest is dict of the
         # rest of them
         name, value, standard, rest = tup;
@@ -1558,24 +1558,24 @@ class CookieJar{
         expires = standard.get("expires", Absent);
 
         # set the easy defaults
-        version = standard.get("version", None);
-        if version is not None{
+        version = standard.get("version", nil);
+        if version is not nil{
             try{
                 version = int(version);
             } except ValueError{
-                return None;  # invalid version, ignore cookie
-        } } secure = standard.get("secure", False);
+                return nil;  # invalid version, ignore cookie
+        } } secure = standard.get("secure", false);
         # (discard is also set if expires is Absent)
-        discard = standard.get("discard", False);
-        comment = standard.get("comment", None);
-        comment_url = standard.get("commenturl", None);
+        discard = standard.get("discard", false);
+        comment = standard.get("comment", nil);
+        comment_url = standard.get("commenturl", nil);
 
         # set default path
         if path is not Absent and path != ""{
-            path_specified = True;
+            path_specified = true;
             path = escape_path(path);
         } else{
-            path_specified = False;
+            path_specified = false;
             path = request_path(request);
             i = path.rfind("/");
             if i != -1{
@@ -1584,13 +1584,13 @@ class CookieJar{
                     path = path[:i];
                 } else{
                     path = path[:i+1];
-            } } if len(path) == 0{ path = "/";
+            } } if len(path) == 0{ path = "/";}
 
         # set default domain
         }
         domain_specified = domain is not Absent;
         # but first we have to remember whether it starts with a dot
-        domain_initial_dot = False;
+        domain_initial_dot = false;
         if domain_specified{
             domain_initial_dot = bool(domain.startswith("."));
         } if domain is Absent{
@@ -1601,34 +1601,34 @@ class CookieJar{
 
         # set default port
         }
-        port_specified = False;
+        port_specified = false;
         if port is not Absent{
-            if port is None{
+            if port is nil{
                 # Port attr present, but has no value: default to request port.
                 # Cookie should then only be sent back on that port.
                 port = request_port(request);
             } else{
-                port_specified = True;
+                port_specified = true;
                 port = re.sub(r"\s+", "", port);
         } } else{
             # No port attr present.  Cookie can be sent back on any port.
-            port = None;
+            port = nil;
 
         # set default expires and discard
         }
         if expires is Absent{
-            expires = None;
-            discard = True;
-        } elif expires <= self._now{
+            expires = nil;
+            discard = true;
+        } elif expires <= this._now{
             # Expiry date in past is request to delete cookie.  This can't be
             # in DefaultCookiePolicy, because can't delete cookies there.
             try{
-                self.clear(domain, path, name);
+                this.clear(domain, path, name);
             } except KeyError{
                 pass;
             } _debug("Expiring cookie, domain='%s', path='%s', name='%s'",
                    domain, path, name);
-            return None;
+            return nil;
 
         }
         return Cookie(version,
@@ -1644,38 +1644,38 @@ class CookieJar{
                       rest);
 
     }
-    def _cookies_from_attrs_set(self, attrs_set, request){
-        cookie_tuples = self._normalized_cookie_tuples(attrs_set);
+    function _cookies_from_attrs_set( attrs_set, request){
+        cookie_tuples = this._normalized_cookie_tuples(attrs_set);
 
         cookies = [];
         for tup in cookie_tuples{
-            cookie = self._cookie_from_cookie_tuple(tup, request);
-            if cookie{ cookies.append(cookie);
+            cookie = this._cookie_from_cookie_tuple(tup, request);
+            if cookie{ cookies.append(cookie);}
         } return cookies;
 
     }
-    def _process_rfc2109_cookies(self, cookies){
-        rfc2109_as_ns = getattr(self._policy, 'rfc2109_as_netscape', None);
-        if rfc2109_as_ns is None{
-            rfc2109_as_ns = not self._policy.rfc2965;
+    function _process_rfc2109_cookies( cookies){
+        rfc2109_as_ns = getattr(this._policy, 'rfc2109_as_netscape', nil);
+        if rfc2109_as_ns is nil{
+            rfc2109_as_ns = not this._policy.rfc2965;
         } for cookie in cookies{
             if cookie.version == 1{
-                cookie.rfc2109 = True;
+                cookie.rfc2109 = true;
                 if rfc2109_as_ns{
                     # treat 2109 cookies as Netscape cookies rather than
                     # as RFC2965 cookies
                     cookie.version = 0;
 
     }
-    } } } def make_cookies(self, response, request){
+    } } } function make_cookies( response, request){
         """Return sequence of Cookie objects extracted from response object.""";
         # get cookie-attributes for RFC 2965 and Netscape protocols
         headers = response.info();
         rfc2965_hdrs = headers.getheaders("Set-Cookie2");
         ns_hdrs = headers.getheaders("Set-Cookie");
 
-        rfc2965 = self._policy.rfc2965;
-        netscape = self._policy.netscape;
+        rfc2965 = this._policy.rfc2965;
+        netscape = this._policy.netscape;
 
         if ((not rfc2965_hdrs and not ns_hdrs) or
             (not ns_hdrs and not rfc2965) or
@@ -1685,7 +1685,7 @@ class CookieJar{
 
         }
         try{
-            cookies = self._cookies_from_attrs_set(
+            cookies = this._cookies_from_attrs_set(
                 split_header_words(rfc2965_hdrs), request);
         } except Exception{
             _warn_unhandled_exception();
@@ -1695,12 +1695,12 @@ class CookieJar{
         if ns_hdrs and netscape{
             try{
                 # RFC 2109 and Netscape cookies
-                ns_cookies = self._cookies_from_attrs_set(
+                ns_cookies = this._cookies_from_attrs_set(
                     parse_ns_headers(ns_hdrs), request);
             } except Exception{
                 _warn_unhandled_exception();
                 ns_cookies = [];
-            } self._process_rfc2109_cookies(ns_cookies);
+            } this._process_rfc2109_cookies(ns_cookies);
 
             # Look for Netscape cookies (from Set-Cookie headers) that match
             # corresponding RFC 2965 cookies (from Set-Cookie2 headers).
@@ -1711,10 +1711,10 @@ class CookieJar{
             if rfc2965{
                 lookup = {};
                 for cookie in cookies{
-                    lookup[(cookie.domain, cookie.path, cookie.name)] = None;
+                    lookup[(cookie.domain, cookie.path, cookie.name)] = nil;
 
                 }
-                def no_matching_rfc2965(ns_cookie, lookup=lookup){
+                function no_matching_rfc2965(ns_cookie, lookup=lookup){
                     key = ns_cookie.domain, ns_cookie.path, ns_cookie.name;
                     return key not in lookup;
                 } ns_cookies = filter(no_matching_rfc2965, ns_cookies);
@@ -1727,51 +1727,51 @@ class CookieJar{
         } return cookies;
 
     }
-    def set_cookie_if_ok(self, cookie, request){
+    function set_cookie_if_ok( cookie, request){
         """Set a cookie if policy says it's OK to do so.""";
-        self._cookies_lock.acquire();
+        this._cookies_lock.acquire();
         try{
-            self._policy._now = self._now = int(time.time());
+            this._policy._now = this._now = int(time.time());
 
-            if self._policy.set_ok(cookie, request){
-                self.set_cookie(cookie);
+            if this._policy.set_ok(cookie, request){
+                this.set_cookie(cookie);
 
 
         }
         } finally{
-            self._cookies_lock.release();
+            this._cookies_lock.release();
 
     }
-    } def set_cookie(self, cookie){
+    } function set_cookie( cookie){
         """Set a cookie, without checking whether or not it should be set.""";
-        c = self._cookies;
-        self._cookies_lock.acquire();
+        c = this._cookies;
+        this._cookies_lock.acquire();
         try{
-            if cookie.domain not in c{ c[cookie.domain] = {};
+            if cookie.domain not in c{ c[cookie.domain] = {};}
             c2 = c[cookie.domain];
-            if cookie.path not in c2{ c2[cookie.path] = {};
+            if cookie.path not in c2{ c2[cookie.path] = {};}
             c3 = c2[cookie.path];
             c3[cookie.name] = cookie;
         } finally{
-            self._cookies_lock.release();
+            this._cookies_lock.release();
 
     }
-    } def extract_cookies(self, response, request){
+    } function extract_cookies( response, request){
         """Extract cookies from response, where allowable given the request.""";
         _debug("extract_cookies: %s", response.info());
-        self._cookies_lock.acquire();
+        this._cookies_lock.acquire();
         try{
-            self._policy._now = self._now = int(time.time());
+            this._policy._now = this._now = int(time.time());
 
-            for cookie in self.make_cookies(response, request){
-                if self._policy.set_ok(cookie, request){
+            for cookie in this.make_cookies(response, request){
+                if this._policy.set_ok(cookie, request){
                     _debug(" setting cookie: %s", cookie);
-                    self.set_cookie(cookie);
+                    this.set_cookie(cookie);
         } } } finally{
-            self._cookies_lock.release();
+            this._cookies_lock.release();
 
     }
-    } def clear(self, domain=None, path=None, name=None){
+    } function clear( domain=nil, path=nil, name=nil){
         """Clear some cookies.
 
         Invoking this method without arguments will clear all cookies.  If
@@ -1783,39 +1783,39 @@ class CookieJar{
         Raises KeyError if no matching cookie exists.
 
         """;
-        if name is not None{
-            if (domain is None) or (path is None){
+        if name is not nil{
+            if (domain is nil) or (path is nil){
                 raise ValueError(
                     "domain and path must be given to remove a cookie by name");
-            } del self._cookies[domain][path][name];
-        } elif path is not None{
-            if domain is None{
+            } del this._cookies[domain][path][name];
+        } elif path is not nil{
+            if domain is nil{
                 raise ValueError(
                     "domain must be given to remove cookies by path");
-            } del self._cookies[domain][path];
-        } elif domain is not None{
-            del self._cookies[domain];
+            } del this._cookies[domain][path];
+        } elif domain is not nil{
+            del this._cookies[domain];
         } else{
-            self._cookies = {};
+            this._cookies = {};
 
     }
-    } def clear_session_cookies(self){
+    } function clear_session_cookies(){
         """Discard all session cookies.
 
         Note that the .save() method won't save session cookies anyway, unless
         you ask otherwise by passing a true ignore_discard argument.
 
         """;
-        self._cookies_lock.acquire();
+        this._cookies_lock.acquire();
         try{
-            for cookie in self{
+            for cookie in this{
                 if cookie.discard{
-                    self.clear(cookie.domain, cookie.path, cookie.name);
+                    this.clear(cookie.domain, cookie.path, cookie.name);
         } } } finally{
-            self._cookies_lock.release();
+            this._cookies_lock.release();
 
     }
-    } def clear_expired_cookies(self){
+    } function clear_expired_cookies(){
         """Discard all expired cookies.
 
         You probably don't need to call this method: expired cookies are never
@@ -1825,108 +1825,108 @@ class CookieJar{
         otherwise by passing a true ignore_expires argument).
 
         """;
-        self._cookies_lock.acquire();
+        this._cookies_lock.acquire();
         try{
             now = time.time();
-            for cookie in self{
+            for cookie in this{
                 if cookie.is_expired(now){
-                    self.clear(cookie.domain, cookie.path, cookie.name);
+                    this.clear(cookie.domain, cookie.path, cookie.name);
         } } } finally{
-            self._cookies_lock.release();
+            this._cookies_lock.release();
 
     }
-    } def __iter__(self){
-        return deepvalues(self._cookies);
+    } function __iter__(){
+        return deepvalues(this._cookies);
 
     }
-    def __len__(self){
+    function __len__(){
         """Return number of contained cookies.""";
         i = 0;
-        for cookie in self{ i = i + 1;
+        for cookie in this{ i = i + 1;}
         return i;
 
     }
-    def __repr__(self){
+    function __repr__(){
         r = [];
-        for cookie in self{ r.append(repr(cookie));
-        return "<%s[%s]>" % (self.__class__.__name__, ", ".join(r));
+        for cookie in this{ r.append(repr(cookie));}
+        return "<%s[%s]>" % (this.__class__.__name__, ", ".join(r));
 
     }
-    def __str__(self){
+    function __str__(){
         r = [];
-        for cookie in self{ r.append(str(cookie));
-        return "<%s[%s]>" % (self.__class__.__name__, ", ".join(r));
+        for cookie in this{ r.append(str(cookie));}
+        return "<%s[%s]>" % (this.__class__.__name__, ", ".join(r));
 
 
 # derives from IOError for backwards-compatibility with Python 2.4.0
 }
-} class LoadError(IOError){ pass;
+} class LoadError(IOError){ pass;}
 
 class FileCookieJar(CookieJar){
     """CookieJar that can be loaded from and saved to a file.""";
 
-    def __init__(self, filename=None, delayload=False, policy=None){
+    function __init__( filename=nil, delayload=false, policy=nil){
         """
         Cookies are NOT loaded from the named file until either the .load() or
         .revert() method is called.
 
         """;
-        CookieJar.__init__(self, policy);
-        if filename is not None{
+        CookieJar.__init__(this, policy);
+        if filename is not nil{
             try{
                 filename+"";
             } except Exception{
                 raise ValueError("filename must be string-like");
-        } } self.filename = filename;
-        self.delayload = bool(delayload);
+        } } this.filename = filename;
+        this.delayload = bool(delayload);
 
     }
-    def save(self, filename=None, ignore_discard=False, ignore_expires=False){
+    function save( filename=nil, ignore_discard=false, ignore_expires=false){
         """Save cookies to a file.""";
         raise NotImplementedError();
 
     }
-    def load(self, filename=None, ignore_discard=False, ignore_expires=False){
+    function load( filename=nil, ignore_discard=false, ignore_expires=false){
         """Load cookies from a file.""";
-        if filename is None{
-            if self.filename is not None{ filename = self.filename;
-            else{ raise ValueError(MISSING_FILENAME_TEXT);
+        if filename is nil{
+            if this.filename is not nil{ filename = this.filename;}
+            else{ raise ValueError(MISSING_FILENAME_TEXT);}
 
         }
         f = open(filename);
         try{
-            self._really_load(f, filename, ignore_discard, ignore_expires);
+            this._really_load(f, filename, ignore_discard, ignore_expires);
         } finally{
             f.close();
 
     }
-    } def revert(self, filename=None,
-               ignore_discard=False, ignore_expires=False){
+    } function revert( filename=nil,
+               ignore_discard=false, ignore_expires=false){
         """Clear all cookies and reload cookies from a saved file.
 
         Raises LoadError (or IOError) if reversion is not successful; the
         object's state will not be altered if this happens.
 
         """;
-        if filename is None{
-            if self.filename is not None{ filename = self.filename;
-            else{ raise ValueError(MISSING_FILENAME_TEXT);
+        if filename is nil{
+            if this.filename is not nil{ filename = this.filename;}
+            else{ raise ValueError(MISSING_FILENAME_TEXT);}
 
         }
-        self._cookies_lock.acquire();
+        this._cookies_lock.acquire();
         try{
 
-            old_state = copy.deepcopy(self._cookies);
-            self._cookies = {};
+            old_state = copy.deepcopy(this._cookies);
+            this._cookies = {};
             try{
-                self.load(filename, ignore_discard, ignore_expires);
+                this.load(filename, ignore_discard, ignore_expires);
             } except (LoadError, IOError){
-                self._cookies = old_state;
+                this._cookies = old_state;
                 raise;
 
         }
         } finally{
-            self._cookies_lock.release();
+            this._cookies_lock.release();
 
 }
 } } from _LWPCookieJar import LWPCookieJar, lwp_cookie_str;

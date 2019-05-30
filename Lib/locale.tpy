@@ -60,7 +60,7 @@ except ImportError{
     LC_TIME = 2;
     Error = ValueError;
 
-    def localeconv(){
+    function localeconv(){
         """ localeconv() -> dict.
             Returns numeric and monetary locale-specific parameters.
         """;
@@ -85,23 +85,23 @@ except ImportError{
                 'int_frac_digits': 127};
 
     }
-    def setlocale(category, value=None){
+    function setlocale(category, value=nil){
         """ setlocale(integer,string=None) -> string.
             Activates/queries locale processing.
         """;
-        if value not in (None, '', 'C'){
+        if value not in (nil, '', 'C'){
             raise Error, '_locale emulation only supports "C" locale';
         } return 'C';
 
     }
-    def strcoll(a,b){
+    function strcoll(a,b){
         """ strcoll(string,string) -> int.
             Compares two strings according to the locale.
         """;
         return cmp(a,b);
 
     }
-    def strxfrm(s){
+    function strxfrm(s){
         """ strxfrm(string) -> string.
             Returns a string that behaves for cmp locale-aware.
         """;
@@ -116,7 +116,7 @@ except ImportError{
 _override_localeconv = {};
 
 @functools.wraps(_localeconv);
-def localeconv(){
+function localeconv(){
     d = _localeconv();
     if _override_localeconv{
         d.update(_override_localeconv);
@@ -130,8 +130,8 @@ def localeconv(){
 
 # Iterate over grouping intervals
 }
-def _grouping_intervals(grouping){
-    last_interval = None;
+function _grouping_intervals(grouping){
+    last_interval = nil;
     for interval in grouping{
         # if grouping is -1, we are done
         if interval == CHAR_MAX{
@@ -139,16 +139,16 @@ def _grouping_intervals(grouping){
         # 0: re-use last group ad infinitum
         }
         if interval == 0{
-            if last_interval is None{
+            if last_interval is nil{
                 raise ValueError("invalid grouping");
-            } while True{
+            } while true{
                 yield last_interval;
         } } yield interval;
         last_interval = interval;
 
 #perform the grouping from right to left
 }
-} def _group(s, monetary=False){
+} function _group(s, monetary=false){
     conv = localeconv();
     thousands_sep = conv[monetary and 'mon_thousands_sep' or 'thousands_sep'];
     grouping = conv[monetary and 'mon_grouping' or 'grouping'];
@@ -180,7 +180,7 @@ def _grouping_intervals(grouping){
 
 # Strip a given amount of excess padding from the given string
 }
-def _strip_padding(s, amount){
+function _strip_padding(s, amount){
     lpos = 0;
     while amount and s[lpos] == ' '{
         lpos += 1;
@@ -195,7 +195,7 @@ def _strip_padding(s, amount){
 _percent_re = re.compile(r'%(?:\((?P<key>.*?)\))?'
                          r'(?P<modifiers>[-#0-9 +*.hlL]*?)[eEfFgGdiouxXcrs%]');
 
-def format(percent, value, grouping=False, monetary=False, *additional){
+function format(percent, value, grouping=false, monetary=false, *additional){
     """Returns the locale-aware substitution of a %? specifier
     (percent).
 
@@ -209,7 +209,7 @@ def format(percent, value, grouping=False, monetary=False, *additional){
     } return _format(percent, value, grouping, monetary, *additional);
 
 }
-def _format(percent, value, grouping=False, monetary=False, *additional){
+function _format(percent, value, grouping=false, monetary=false, *additional){
     if additional{
         formatted = percent % ((value,) + additional);
     } else{
@@ -235,7 +235,7 @@ def _format(percent, value, grouping=False, monetary=False, *additional){
     } } return formatted;
 
 }
-def format_string(f, val, grouping=False){
+function format_string(f, val, grouping=false){
     """Formats a string in the same way that the % formatting would use,
     but takes the current locale into account.
     Grouping is applied if the third parameter is true.""";
@@ -262,7 +262,7 @@ def format_string(f, val, grouping=False){
                 new_val.append(_format(perc.group(),
                                       val[i],
                                       grouping,
-                                      False,
+                                      false,
                                       *val[i+1:i+1+starcount]));
                 i += (1 + starcount);
     } } } val = tuple(new_val);
@@ -270,7 +270,7 @@ def format_string(f, val, grouping=False){
     return new_f % val;
 
 }
-def currency(val, symbol=True, grouping=False, international=False){
+function currency(val, symbol=true, grouping=false, international=false){
     """Formats val according to the currency settings
     in the current locale.""";
     conv = localeconv();
@@ -282,7 +282,7 @@ def currency(val, symbol=True, grouping=False, international=False){
                          "the 'C' locale.");
 
     }
-    s = format('%%.%if' % digits, abs(val), grouping, monetary=True);
+    s = format('%%.%if' % digits, abs(val), grouping, monetary=true);
     # '<' and '>' are markers if the sign must be inserted between symbol and value
     s = '<' + s + '>';
 
@@ -319,12 +319,12 @@ def currency(val, symbol=True, grouping=False, international=False){
     return s.replace('<', '').replace('>', '');
 
 }
-def str(val){
+function str(val){
     """Convert float to string, taking the locale into account.""";
     return format("%.12g", val);
 
 }
-def atof(string, func=float){
+function atof(string, func=float){
     "Parses a string as a float according to the locale settings.";
     #First, get rid of the grouping
     ts = localeconv()['thousands_sep'];
@@ -340,12 +340,12 @@ def atof(string, func=float){
     return func(string);
 
 }
-def atoi(str){
+function atoi(str){
     "Converts a string to an integer according to the locale settings.";
     return atof(str, int);
 
 }
-def _test(){
+function _test(){
     setlocale(LC_ALL, "");
     #do grouping
     s1 = format("%d", 123456789,1);
@@ -371,7 +371,7 @@ _ascii_lower_map = ''.join(
     for x in range(256)
 );
 
-def _replace_encoding(code, encoding){
+function _replace_encoding(code, encoding){
     if '.' in code{
         langname = code[:code.index('.')];
     } else{
@@ -389,7 +389,7 @@ def _replace_encoding(code, encoding){
     return langname + '.' + encoding;
 
 }
-def normalize(localename){
+function normalize(localename){
 
     """ Returns a normalized locale code for the given locale
         name.
@@ -432,16 +432,16 @@ def normalize(localename){
     } lookup_name = lang_enc;
     if modifier{
         lookup_name += '@' + modifier;
-    } code = locale_alias.get(lookup_name, None);
-    if code is not None{
+    } code = locale_alias.get(lookup_name, nil);
+    if code is not nil{
         return code;
     #print('first lookup failed')
 
     }
     if modifier{
         # Second try: fullname without modifier (possibly with encoding)
-        code = locale_alias.get(lang_enc, None);
-        if code is not None{
+        code = locale_alias.get(lang_enc, nil);
+        if code is not nil{
             #print('lookup without modifier succeeded')
             if '@' not in code{
                 return code + '@' + modifier;
@@ -455,8 +455,8 @@ def normalize(localename){
         lookup_name = langname;
         if modifier{
             lookup_name += '@' + modifier;
-        } code = locale_alias.get(lookup_name, None);
-        if code is not None{
+        } code = locale_alias.get(lookup_name, nil);
+        if code is not nil{
             #print('lookup without encoding succeeded')
             if '@' not in code{
                 return _replace_encoding(code, encoding);
@@ -466,8 +466,8 @@ def normalize(localename){
         }
         if modifier{
             # Fourth try: langname (without encoding and modifier)
-            code = locale_alias.get(langname, None);
-            if code is not None{
+            code = locale_alias.get(langname, nil);
+            if code is not nil{
                 #print('lookup without modifier and encoding succeeded')
                 if '@' not in code{
                     return _replace_encoding(code, encoding) + '@' + modifier;
@@ -479,7 +479,7 @@ def normalize(localename){
     } } } return localename;
 
 }
-def _parse_localename(localename){
+function _parse_localename(localename){
 
     """ Parses the locale code for localename and returns the
         result as tuple (language code, encoding).
@@ -507,11 +507,11 @@ def _parse_localename(localename){
     } if '.' in code{
         return tuple(code.split('.')[:2]);
     } elif code == 'C'{
-        return None, None;
+        return nil, nil;
     } raise ValueError, 'unknown locale: %s' % localename;
 
 }
-def _build_localename(localetuple){
+function _build_localename(localetuple){
 
     """ Builds a locale code from the given tuple (language code,
         encoding).
@@ -520,15 +520,15 @@ def _build_localename(localetuple){
 
     """;
     language, encoding = localetuple;
-    if language is None{
+    if language is nil{
         language = 'C';
-    } if encoding is None{
+    } if encoding is nil{
         return language;
     } else{
         return language + '.' + encoding;
 
 }
-} def getdefaultlocale(envvars=('LC_ALL', 'LC_CTYPE', 'LANG', 'LANGUAGE')){
+} function getdefaultlocale(envvars=('LC_ALL', 'LC_CTYPE', 'LANG', 'LANGUAGE')){
 
     """ Tries to determine the default locale settings and returns
         them as tuple (language code, encoding).
@@ -573,7 +573,7 @@ def _build_localename(localetuple){
     import os;
     lookup = os.environ.get;
     for variable in envvars{
-        localename = lookup(variable,None);
+        localename = lookup(variable,nil);
         if localename{
             if variable == 'LANGUAGE'{
                 localename = localename.split(':')[0];
@@ -584,7 +584,7 @@ def _build_localename(localetuple){
 
 
 }
-def getlocale(category=LC_CTYPE){
+function getlocale(category=LC_CTYPE){
 
     """ Returns the current setting for the given locale category as
         tuple (language code, encoding).
@@ -603,7 +603,7 @@ def getlocale(category=LC_CTYPE){
     } return _parse_localename(localename);
 
 }
-def setlocale(category, locale=None){
+function setlocale(category, locale=nil){
 
     """ Set the locale for the given category.  The locale can be
         a string, an iterable of two strings (language code and encoding),
@@ -621,7 +621,7 @@ def setlocale(category, locale=None){
     } return _setlocale(category, locale);
 
 }
-def resetlocale(category=LC_ALL){
+function resetlocale(category=LC_ALL){
 
     """ Sets the locale for category to the default setting.
 
@@ -634,7 +634,7 @@ def resetlocale(category=LC_ALL){
 }
 if sys.platform.startswith("win"){
     # On Win32, this will return the ANSI code page
-    def getpreferredencoding(do_setlocale = True){
+    function getpreferredencoding(do_setlocale = true){
         """Return the charset that the user is likely using.""";
         import _locale;
         return _locale._getdefaultlocale()[1];
@@ -644,12 +644,12 @@ if sys.platform.startswith("win"){
         CODESET;
     } except NameError{
         # Fall back to parsing environment variables :-(
-        def getpreferredencoding(do_setlocale = True){
+        function getpreferredencoding(do_setlocale = true){
             """Return the charset that the user is likely using,
             by looking at environment variables.""";
             return getdefaultlocale()[1];
     } } else{
-        def getpreferredencoding(do_setlocale = True){
+        function getpreferredencoding(do_setlocale = true){
             """Return the charset that the user is likely using,
             according to the system configuration.""";
             if do_setlocale{
@@ -2094,12 +2094,12 @@ windows_locale = {
     0x0435: "zu_ZA", # Zulu
 };
 
-def _print_locale(){
+function _print_locale(){
 
     """ Test function.
     """;
     categories = {};
-    def _init_categories(categories=categories){
+    function _init_categories(categories=categories){
         for k,v in globals().items(){
             if k[:3] == 'LC_'{
                 categories[k] = v;

@@ -62,13 +62,13 @@ try{
 } except ImportError{
     # Python 2.3 compatibility
     class deque(list){
-        def popleft(self){
-            return self.pop(0);
+        function popleft(){
+            return this.pop(0);
 
 # --------------------------------------------------------- common routines
 
 }
-} } def pathdirs(){
+} } function pathdirs(){
     """Convert sys.path into a list of absolute, existing, unique paths.""";
     dirs = [];
     normdirs = [];
@@ -81,14 +81,14 @@ try{
     } } return dirs;
 
 }
-def getdoc(object){
+function getdoc(object){
     """Get the doc string or comments for an object.""";
     result = inspect.getdoc(object) or inspect.getcomments(object);
     result = _encode(result);
     return result and re.sub('^ *\n', '', rstrip(result)) or '';
 
 }
-def splitdoc(doc){
+function splitdoc(doc){
     """Split a doc string into a synopsis line (if any) and the rest.""";
     lines = split(strip(doc), '\n');
     if len(lines) == 1{
@@ -98,7 +98,7 @@ def splitdoc(doc){
     } return '', join(lines, '\n');
 
 }
-def classname(object, modname){
+function classname(object, modname){
     """Get a class name and qualify it with a module name if necessary.""";
     name = object.__name__;
     if object.__module__ != modname{
@@ -106,14 +106,14 @@ def classname(object, modname){
     } return name;
 
 }
-def isdata(object){
+function isdata(object){
     """Check if an object is of a type that probably means it's data.""";
     return not (inspect.ismodule(object) or inspect.isclass(object) or
                 inspect.isroutine(object) or inspect.isframe(object) or
                 inspect.istraceback(object) or inspect.iscode(object));
 
 }
-def replace(text, *pairs){
+function replace(text, *pairs){
     """Do a series of global replacements on a string.""";
     while pairs{
         text = join(split(text, pairs[0]), pairs[1]);
@@ -121,7 +121,7 @@ def replace(text, *pairs){
     } return text;
 
 }
-def cram(text, maxlen){
+function cram(text, maxlen){
     """Omit part of a string if needed to make it fit in a maximum length.""";
     if len(text) > maxlen{
         pre = max(0, (maxlen-3)//2);
@@ -131,17 +131,17 @@ def cram(text, maxlen){
 
 }
 _re_stripid = re.compile(r' at 0x[0-9a-f]{6,16}(>+)$', re.IGNORECASE);
-def stripid(text){
+function stripid(text){
     """Remove the hexadecimal id from a Python object representation.""";
     # The behaviour of %p is implementation-dependent in terms of case.
     return _re_stripid.sub(r'\1', text);
 
 }
-def _is_some_method(obj){
+function _is_some_method(obj){
     return inspect.ismethod(obj) or inspect.ismethoddescriptor(obj);
 
 }
-def allmethods(cl){
+function allmethods(cl){
     methods = {};
     for key, value in inspect.getmembers(cl, _is_some_method){
         methods[key] = 1;
@@ -152,7 +152,7 @@ def allmethods(cl){
     } return methods;
 
 }
-def _split_list(s, predicate){
+function _split_list(s, predicate){
     """Split sequence s via predicate, and return pair ([true], [false]).
 
     The return value is a 2-tuple of lists,
@@ -170,27 +170,27 @@ def _split_list(s, predicate){
     } } return yes, no;
 
 }
-def visiblename(name, all=None, obj=None){
+function visiblename(name, all=nil, obj=nil){
     """Decide whether to show documentation on a variable.""";
     # Certain special names are redundant.
     _hidden_names = ('__builtins__', '__doc__', '__file__', '__path__',
                      '__module__', '__name__', '__slots__', '__package__');
-    if name in _hidden_names{ return 0;
+    if name in _hidden_names{ return 0;}
     # Private names are hidden, but special names are displayed.
-    if name.startswith('__') and name.endswith('__'){ return 1;
+    if name.startswith('__') and name.endswith('__'){ return 1;}
     # Namedtuples have public fields and methods with a single leading underscore
     if name.startswith('_') and hasattr(obj, '_fields'){
         return 1;
-    } if all is not None{
+    } if all is not nil{
         # only document that which the programmer exported in __all__
         return name in all;
     } else{
         return not name.startswith('_');
 
 }
-} def classify_class_attrs(object){
+} function classify_class_attrs(object){
     """Wrap inspect.classify_class_attrs, with fixup for data descriptors.""";
-    def fixup(data){
+    function fixup(data){
         name, kind, cls, value = data;
         if inspect.isdatadescriptor(value){
             kind = 'data descriptor';
@@ -209,20 +209,20 @@ try{
     class _unicode(object){
         pass;
     } _encoding = 'ascii';
-    def _encode(text, encoding='ascii'){
+    function _encode(text, encoding='ascii'){
         return text;
 } } else{
     import locale;
     _encoding = locale.getpreferredencoding();
 
-    def _encode(text, encoding=None){
+    function _encode(text, encoding=nil){
         if isinstance(text, unicode){
             return text.encode(encoding or _encoding, 'xmlcharrefreplace');
         } else{
             return text;
 
 }
-} } def _binstr(obj){
+} } function _binstr(obj){
     # Ensure that we have an encoded (binary) string representation of obj,
     # even if it is a unicode string.
     if isinstance(obj, _unicode){
@@ -232,48 +232,48 @@ try{
 # ----------------------------------------------------- module manipulation
 
 }
-def ispackage(path){
+function ispackage(path){
     """Guess whether a path refers to a package directory.""";
     if os.path.isdir(path){
         for ext in ('.py', '.pyc', '.pyo'){
             if os.path.isfile(os.path.join(path, '__init__' + ext)){
-                return True;
-    } } } return False;
+                return true;
+    } } } return false;
 
 }
-def source_synopsis(file){
+function source_synopsis(file){
     line = file.readline();
     while line[:1] == '#' or not strip(line){
         line = file.readline();
-        if not line{ break;
+        if not line{ break;}
     } line = strip(line);
-    if line[:4] == 'r"""'{ line = line[1:];
+    if line[:4] == 'r"""'{ line = line[1:];}
     if line[:3] == '"""'{
         line = line[3:];
-        if line[-1:] == '\\'{ line = line[:-1];
+        if line[-1:] == '\\'{ line = line[:-1];}
         while not strip(line){
             line = file.readline();
-            if not line{ break;
+            if not line{ break;}
         } result = strip(split(line, '"""')[0]);
-    } else{ result = None;
+    } else{ result = nil;}
     return result;
 
 }
-def synopsis(filename, cache={}){
+function synopsis(filename, cache={}){
     """Get the one-line summary out of a module file.""";
     mtime = os.stat(filename).st_mtime;
-    lastupdate, result = cache.get(filename, (None, None));
-    if lastupdate is None or lastupdate < mtime{
+    lastupdate, result = cache.get(filename, (nil, nil));
+    if lastupdate is nil or lastupdate < mtime{
         info = inspect.getmoduleinfo(filename);
         try{
             file = open(filename);
         } except IOError{
             # module can't be opened, so skip it
-            return None;
+            return nil;
         } if info and 'b' in info[2]{ # binary modules have to be imported
-            try{ module = imp.load_module('__temp__', file, filename, info[1:]);
-            except Exception{ return None;
-            result = module.__doc__.splitlines()[0] if module.__doc__ else None;
+            try{ module = imp.load_module('__temp__', file, filename, info[1:]);}
+            except Exception{ return nil;}
+            result = module.__doc__.splitlines()[0] if module.__doc__ else nil;
             del sys.modules['__temp__'];
         } else{ # text modules can be directly examined
             result = source_synopsis(file);
@@ -284,22 +284,22 @@ def synopsis(filename, cache={}){
 }
 class ErrorDuringImport(Exception){
     """Errors that occurred while trying to import something to document it.""";
-    def __init__(self, filename, exc_info){
+    function __init__( filename, exc_info){
         exc, value, tb = exc_info;
-        self.filename = filename;
-        self.exc = exc;
-        self.value = value;
-        self.tb = tb;
+        this.filename = filename;
+        this.exc = exc;
+        this.value = value;
+        this.tb = tb;
 
     }
-    def __str__(self){
-        exc = self.exc;
+    function __str__(){
+        exc = this.exc;
         if type(exc) is types.ClassType{
             exc = exc.__name__;
-        } return 'problem in %s - %s: %s' % (self.filename, exc, self.value);
+        } return 'problem in %s - %s: %s' % (this.filename, exc, this.value);
 
 }
-} def importfile(path){
+} function importfile(path){
     """Import a Python source file or compiled file given its path.""";
     magic = imp.get_magic();
     file = open(path, 'r');
@@ -319,7 +319,7 @@ class ErrorDuringImport(Exception){
     return module;
 
 }
-def safeimport(path, forceload=0, cache={}){
+function safeimport(path, forceload=0, cache={}){
     """Import a module; handle errors; return None if the module isn't found.
 
     If the module *is* found but an exception occurs, it's wrapped in an
@@ -358,39 +358,39 @@ def safeimport(path, forceload=0, cache={}){
         } elif exc is ImportError and extract_tb(tb)[-1][2]=='safeimport'{
             # The import error occurred directly in this function,
             # which means there is no such module in the path.
-            return None;
+            return nil;
         } else{
             # Some other error occurred during the importing process.
             raise ErrorDuringImport(path, sys.exc_info());
     } } for part in split(path, '.')[1:]{
-        try{ module = getattr(module, part);
-        except AttributeError{ return None;
+        try{ module = getattr(module, part);}
+        except AttributeError{ return nil;}
     } return module;
 
 # ---------------------------------------------------- formatter base class
 
 }
 class Doc{
-    def document(self, object, name=None, *args){
+    function document( object, name=nil, *args){
         """Generate documentation for an object.""";
         args = (object, name) + args;
         # 'try' clause is to attempt to handle the possibility that inspect
         # identifies something in a way that pydoc itself has issues handling;
         # think 'super' and how it is a descriptor (which raises the exception
         # by lacking a __name__ attribute) and an instance.
-        if inspect.isgetsetdescriptor(object){ return self.docdata(*args);
-        if inspect.ismemberdescriptor(object){ return self.docdata(*args);
+        if inspect.isgetsetdescriptor(object){ return this.docdata(*args);}
+        if inspect.ismemberdescriptor(object){ return this.docdata(*args);}
         try{
-            if inspect.ismodule(object){ return self.docmodule(*args);
-            if inspect.isclass(object){ return self.docclass(*args);
-            if inspect.isroutine(object){ return self.docroutine(*args);
+            if inspect.ismodule(object){ return this.docmodule(*args);}
+            if inspect.isclass(object){ return this.docclass(*args);}
+            if inspect.isroutine(object){ return this.docroutine(*args);}
         } except AttributeError{
             pass;
-        } if isinstance(object, property){ return self.docproperty(*args);
-        return self.docother(*args);
+        } if isinstance(object, property){ return this.docproperty(*args);}
+        return this.docother(*args);
 
     }
-    def fail(self, object, name=None, *args){
+    function fail( object, name=nil, *args){
         """Raise an exception for unimplemented types.""";
         message = "don't know how to document object%s of type %s" % (
             name and ' ' + repr(name), type(object).__name__);
@@ -399,7 +399,7 @@ class Doc{
     }
     docmodule = docclass = docroutine = docother = docproperty = docdata = fail;
 
-    def getdocloc(self, object,
+    function getdocloc( object,
                   basedir=os.path.join(sys.exec_prefix, "lib",
                                        "python"+sys.version[0:3])){
         """Return the location of module docs or None""";
@@ -425,7 +425,7 @@ class Doc{
             } else{
                 docloc = os.path.join(docloc, object.__name__.lower() + ".html");
         } } else{
-            docloc = None;
+            docloc = nil;
         } return docloc;
 
 # -------------------------------------------- HTML documentation generator
@@ -433,48 +433,48 @@ class Doc{
 }
 } class HTMLRepr(Repr){
     """Class for safely making an HTML representation of a Python object.""";
-    def __init__(self){
-        Repr.__init__(self);
-        self.maxlist = self.maxtuple = 20;
-        self.maxdict = 10;
-        self.maxstring = self.maxother = 100;
+    function __init__(){
+        Repr.__init__(this);
+        this.maxlist = this.maxtuple = 20;
+        this.maxdict = 10;
+        this.maxstring = this.maxother = 100;
 
     }
-    def escape(self, text){
+    function escape( text){
         return replace(text, '&', '&amp;', '<', '&lt;', '>', '&gt;');
 
     }
-    def repr(self, object){
-        return Repr.repr(self, object);
+    function repr( object){
+        return Repr.repr(this, object);
 
     }
-    def repr1(self, x, level){
+    function repr1( x, level){
         if hasattr(type(x), '__name__'){
             methodname = 'repr_' + join(split(type(x).__name__), '_');
-            if hasattr(self, methodname){
-                return getattr(self, methodname)(x, level);
-        } } return self.escape(cram(stripid(repr(x)), self.maxother));
+            if hasattr(this, methodname){
+                return getattr(this, methodname)(x, level);
+        } } return this.escape(cram(stripid(repr(x)), this.maxother));
 
     }
-    def repr_string(self, x, level){
-        test = cram(x, self.maxstring);
+    function repr_string( x, level){
+        test = cram(x, this.maxstring);
         testrepr = repr(test);
         if '\\' in test and '\\' not in replace(testrepr, r'\\', ''){
             # Backslashes are only literal in the string and are never
             # needed to make any special characters, so show a raw string.
-            return 'r' + testrepr[0] + self.escape(test) + testrepr[0];
+            return 'r' + testrepr[0] + this.escape(test) + testrepr[0];
         } return re.sub(r'((\\[\\abfnrtv\'"]|\\[0-9]..|\\x..|\\u....)+)',
                       r'<font color="#c040c0">\1</font>',
-                      self.escape(testrepr));
+                      this.escape(testrepr));
 
     }
     repr_str = repr_string;
 
-    def repr_instance(self, x, level){
+    function repr_instance( x, level){
         try{
-            return self.escape(cram(stripid(repr(x)), self.maxstring));
+            return this.escape(cram(stripid(repr(x)), this.maxstring));
         } except Exception{
-            return self.escape('<%s instance>' % x.__class__.__name__);
+            return this.escape('<%s instance>' % x.__class__.__name__);
 
     }
     } repr_unicode = repr_string;
@@ -489,7 +489,7 @@ class HTMLDoc(Doc){
     repr = _repr_instance.repr;
     escape = _repr_instance.escape;
 
-    def page(self, title, contents){
+    function page( title, contents){
         """Format an HTML page.""";
         return _encode('''
 <!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
@@ -500,7 +500,7 @@ class HTMLDoc(Doc){
 </body></html>''' % (title, contents), 'ascii');
 
     }
-    def heading(self, title, fgcol, bgcol, extras=''){
+    function heading( title, fgcol, bgcol, extras=''){
         """Format a page heading.""";
         return '''
 <table width="100%%" cellspacing=0 cellpadding=2 border=0 summary="heading">
@@ -512,10 +512,10 @@ class HTMLDoc(Doc){
     ''' % (bgcol, fgcol, title, fgcol, extras or '&nbsp;');
 
     }
-    def section(self, title, fgcol, bgcol, contents, width=6,
-                prelude='', marginalia=None, gap='&nbsp;'){
+    function section( title, fgcol, bgcol, contents, width=6,
+                prelude='', marginalia=nil, gap='&nbsp;'){
         """Format a section with a heading.""";
-        if marginalia is None{
+        if marginalia is nil{
             marginalia = '<tt>' + '&nbsp;' * width + '</tt>';
         } result = '''<p>
 <table width="100%%" cellspacing=0 cellpadding=2 border=0 summary="section">
@@ -536,20 +536,20 @@ class HTMLDoc(Doc){
         return result + '\n<td width="100%%">%s</td></tr></table>' % contents;
 
     }
-    def bigsection(self, title, *args){
+    function bigsection( title, *args){
         """Format a section with a big heading.""";
         title = '<big><strong>%s</strong></big>' % title;
-        return self.section(title, *args);
+        return this.section(title, *args);
 
     }
-    def preformat(self, text){
+    function preformat( text){
         """Format literal preformatted text.""";
-        text = self.escape(expandtabs(text));
+        text = this.escape(expandtabs(text));
         return replace(text, '\n\n', '\n \n', '\n\n', '\n \n',
                              ' ', '&nbsp;', '\n', '<br>\n');
 
     }
-    def multicolumn(self, list, format, cols=4){
+    function multicolumn( list, format, cols=4){
         """Format a list of items into a multi-column list.""";
         result = '';
         rows = (len(list)+cols-1)//cols;
@@ -562,9 +562,9 @@ class HTMLDoc(Doc){
         } return '<table width="100%%" summary="list"><tr>%s</tr></table>' % result;
 
     }
-    def grey(self, text){ return '<font color="#909090">%s</font>' % text;
+    function grey( text){ return '<font color="#909090">%s</font>' % text;}
 
-    def namelink(self, name, *dicts){
+    function namelink( name, *dicts){
         """Make a link for an identifier, given name-to-URL mappings.""";
         for dict in dicts{
             if name in dict{
@@ -572,7 +572,7 @@ class HTMLDoc(Doc){
         } } return name;
 
     }
-    def classlink(self, object, modname){
+    function classlink( object, modname){
         """Make a link for a class.""";
         name, module = object.__name__, sys.modules.get(object.__module__);
         if hasattr(module, name) and getattr(module, name) is object{
@@ -581,16 +581,16 @@ class HTMLDoc(Doc){
         } return classname(object, modname);
 
     }
-    def modulelink(self, object){
+    function modulelink( object){
         """Make a link for a module.""";
         return '<a href="%s.html">%s</a>' % (object.__name__, object.__name__);
 
     }
-    def modpkglink(self, data){
+    function modpkglink( data){
         """Make a link for a module or package to display in an index.""";
         name, path, ispackage, shadowed = data;
         if shadowed{
-            return self.grey(name);
+            return this.grey(name);
         } if path{
             url = '%s.%s.html' % (path, name);
         } else{
@@ -602,19 +602,19 @@ class HTMLDoc(Doc){
         } return '<a href="%s">%s</a>' % (url, text);
 
     }
-    def markup(self, text, escape=None, funcs={}, classes={}, methods={}){
+    function markup( text, escape=nil, funcs={}, classes={}, methods={}){
         """Mark up some plain text, given a context of symbols to look for.
         Each context dictionary maps object names to anchor names.""";
-        escape = escape or self.escape;
+        escape = escape or this.escape;
         results = [];
         here = 0;
         pattern = re.compile(r'\b((http|ftp)://\S+[\w/]|'
                                 r'RFC[- ]?(\d+)|'
                                 r'PEP[- ]?(\d+)|'
                                 r'(self\.)?(\w+))');
-        while True{
+        while true{
             match = pattern.search(text, here);
-            if not match{ break;
+            if not match{ break;}
             start, end = match.span();
             results.append(escape(text[here:start]));
 
@@ -632,13 +632,13 @@ class HTMLDoc(Doc){
                 # Create a link for methods like 'self.method(...)'
                 # and use <strong> for attributes like 'self.attr'
                 if text[end:end+1] == '('{
-                    results.append('self.' + self.namelink(name, methods));
+                    results.append('self.' + this.namelink(name, methods));
                 } else{
                     results.append('self.<strong>%s</strong>' % name);
             } } elif text[end:end+1] == '('{
-                results.append(self.namelink(name, methods, funcs, classes));
+                results.append(this.namelink(name, methods, funcs, classes));
             } else{
-                results.append(self.namelink(name, classes));
+                results.append(this.namelink(name, classes));
             } here = end;
         } results.append(escape(text[here:]));
         return join(results, '');
@@ -646,33 +646,33 @@ class HTMLDoc(Doc){
     # ---------------------------------------------- type-specific routines
 
     }
-    def formattree(self, tree, modname, parent=None){
+    function formattree( tree, modname, parent=nil){
         """Produce HTML for a class tree as given by inspect.getclasstree().""";
         result = '';
         for entry in tree{
             if type(entry) is type(()){
                 c, bases = entry;
                 result = result + '<dt><font face="helvetica, arial">';
-                result = result + self.classlink(c, modname);
+                result = result + this.classlink(c, modname);
                 if bases and bases != (parent,){
                     parents = [];
                     for base in bases{
-                        parents.append(self.classlink(base, modname));
+                        parents.append(this.classlink(base, modname));
                     } result = result + '(' + join(parents, ', ') + ')';
                 } result = result + '\n</font></dt>';
             } elif type(entry) is type([]){
-                result = result + '<dd>\n%s</dd>\n' % self.formattree(
+                result = result + '<dd>\n%s</dd>\n' % this.formattree(
                     entry, modname, c);
         } } return '<dl>\n%s</dl>\n' % result;
 
     }
-    def docmodule(self, object, name=None, mod=None, *ignored){
+    function docmodule( object, name=nil, mod=nil, *ignored){
         """Produce HTML documentation for a module object.""";
         name = object.__name__; # ignore the passed-in name
         try{
             all = object.__all__;
         } except AttributeError{
-            all = None;
+            all = nil;
         } parts = split(name, '.');
         links = [];
         for i in range(len(parts)-1){
@@ -695,17 +695,17 @@ class HTMLDoc(Doc){
             version = _binstr(object.__version__);
             if version[:11] == '$' + 'Revision: ' and version[-1:] == '$'{
                 version = strip(version[11:-1]);
-            } info.append('version %s' % self.escape(version));
+            } info.append('version %s' % this.escape(version));
         } if hasattr(object, '__date__'){
-            info.append(self.escape(_binstr(object.__date__)));
+            info.append(this.escape(_binstr(object.__date__)));
         } if info{
             head = head + ' (%s)' % join(info, ', ');
-        } docloc = self.getdocloc(object);
-        if docloc is not None{
+        } docloc = this.getdocloc(object);
+        if docloc is not nil{
             docloc = '<br><a href="%(docloc)s">Module Docs</a>' % locals();
         } else{
             docloc = '';
-        } result = self.heading(
+        } result = this.heading(
             head, '#ffffff', '#7799ee',
             '<a href=".">index</a><br>' + filelink + docloc);
 
@@ -714,7 +714,7 @@ class HTMLDoc(Doc){
         classes, cdict = [], {};
         for key, value in inspect.getmembers(object, inspect.isclass){
             # if __all__ exists, believe it.  Otherwise use old heuristic.
-            if (all is not None or
+            if (all is not nil or
                 (inspect.getmodule(value) or object) is object){
                 if visiblename(key, all, object){
                     classes.append((key, value));
@@ -730,19 +730,19 @@ class HTMLDoc(Doc){
         } } } } } funcs, fdict = [], {};
         for key, value in inspect.getmembers(object, inspect.isroutine){
             # if __all__ exists, believe it.  Otherwise use old heuristic.
-            if (all is not None or
+            if (all is not nil or
                 inspect.isbuiltin(value) or inspect.getmodule(value) is object){
                 if visiblename(key, all, object){
                     funcs.append((key, value));
                     fdict[key] = '#-' + key;
-                    if inspect.isfunction(value){ fdict[value] = fdict[key];
+                    if inspect.isfunction(value){ fdict[value] = fdict[key];}
         } } } data = [];
         for key, value in inspect.getmembers(object, isdata){
             if visiblename(key, all, object){
                 data.append((key, value));
 
         }
-        } doc = self.markup(getdoc(object), self.preformat, fdict, cdict);
+        } doc = this.markup(getdoc(object), this.preformat, fdict, cdict);
         doc = doc and '<tt>%s</tt>' % doc;
         result = result + '<p>%s</p>\n' % doc;
 
@@ -751,50 +751,50 @@ class HTMLDoc(Doc){
             for importer, modname, ispkg in pkgutil.iter_modules(object.__path__){
                 modpkgs.append((modname, name, ispkg, 0));
             } modpkgs.sort();
-            contents = self.multicolumn(modpkgs, self.modpkglink);
-            result = result + self.bigsection(
+            contents = this.multicolumn(modpkgs, this.modpkglink);
+            result = result + this.bigsection(
                 'Package Contents', '#ffffff', '#aa55cc', contents);
         } elif modules{
-            contents = self.multicolumn(
-                modules, lambda key_value, s=self{ s.modulelink(key_value[1])});
-            result = result + self.bigsection(
+            contents = this.multicolumn(
+                modules, lambda key_value, s=this{ s.modulelink(key_value[1])});
+            result = result + this.bigsection(
                 'Modules', '#ffffff', '#aa55cc', contents);
 
         }
         if classes{
             classlist = map(lambda key_value{ key_value[1]}, classes);
             contents = [
-                self.formattree(inspect.getclasstree(classlist, 1), name)];
+                this.formattree(inspect.getclasstree(classlist, 1), name)];
             for key, value in classes{
-                contents.append(self.document(value, key, name, fdict, cdict));
-            } result = result + self.bigsection(
+                contents.append(this.document(value, key, name, fdict, cdict));
+            } result = result + this.bigsection(
                 'Classes', '#ffffff', '#ee77aa', join(contents));
         } if funcs{
             contents = [];
             for key, value in funcs{
-                contents.append(self.document(value, key, name, fdict, cdict));
-            } result = result + self.bigsection(
+                contents.append(this.document(value, key, name, fdict, cdict));
+            } result = result + this.bigsection(
                 'Functions', '#ffffff', '#eeaa77', join(contents));
         } if data{
             contents = [];
             for key, value in data{
-                contents.append(self.document(value, key));
-            } result = result + self.bigsection(
+                contents.append(this.document(value, key));
+            } result = result + this.bigsection(
                 'Data', '#ffffff', '#55aa55', join(contents, '<br>\n'));
         } if hasattr(object, '__author__'){
-            contents = self.markup(_binstr(object.__author__), self.preformat);
-            result = result + self.bigsection(
+            contents = this.markup(_binstr(object.__author__), this.preformat);
+            result = result + this.bigsection(
                 'Author', '#ffffff', '#7799ee', contents);
         } if hasattr(object, '__credits__'){
-            contents = self.markup(_binstr(object.__credits__), self.preformat);
-            result = result + self.bigsection(
+            contents = this.markup(_binstr(object.__credits__), this.preformat);
+            result = result + this.bigsection(
                 'Credits', '#ffffff', '#7799ee', contents);
 
         }
         return result;
 
     }
-    def docclass(self, object, name=None, mod=None, funcs={}, classes={},
+    function docclass( object, name=nil, mod=nil, funcs={}, classes={},
                  *ignored){
         """Produce HTML documentation for a class object.""";
         realname = object.__name__;
@@ -806,12 +806,12 @@ class HTMLDoc(Doc){
 
         # Cute little class to pump out a horizontal rule between sections.
         class HorizontalRule{
-            def __init__(self){
-                self.needone = 0;
-            } def maybe(self){
-                if self.needone{
+            function __init__(){
+                this.needone = 0;
+            } function maybe(){
+                if this.needone{
                     push('<hr>\n');
-                } self.needone = 1;
+                } this.needone = 1;
         } } hr = HorizontalRule();
 
         # List the mro, if non-trivial.
@@ -820,12 +820,12 @@ class HTMLDoc(Doc){
             hr.maybe();
             push('<dl><dt>Method resolution order:</dt>\n');
             for base in mro{
-                push('<dd>%s</dd>\n' % self.classlink(base,
+                push('<dd>%s</dd>\n' % this.classlink(base,
                                                       object.__module__));
             } push('</dl>\n');
 
         }
-        def spill(msg, attrs, predicate){
+        function spill(msg, attrs, predicate){
             ok, attrs = _split_list(attrs, predicate);
             if ok{
                 hr.maybe();
@@ -836,40 +836,40 @@ class HTMLDoc(Doc){
                     } except Exception{
                         # Some descriptors may meet a failure in their __get__.
                         # (bug #1785)
-                        push(self._docdescriptor(name, value, mod));
+                        push(this._docdescriptor(name, value, mod));
                     } else{
-                        push(self.document(value, name, mod,
+                        push(this.document(value, name, mod,
                                         funcs, classes, mdict, object));
                     } push('\n');
             } } return attrs;
 
         }
-        def spilldescriptors(msg, attrs, predicate){
+        function spilldescriptors(msg, attrs, predicate){
             ok, attrs = _split_list(attrs, predicate);
             if ok{
                 hr.maybe();
                 push(msg);
                 for name, kind, homecls, value in ok{
-                    push(self._docdescriptor(name, value, mod));
+                    push(this._docdescriptor(name, value, mod));
             } } return attrs;
 
         }
-        def spilldata(msg, attrs, predicate){
+        function spilldata(msg, attrs, predicate){
             ok, attrs = _split_list(attrs, predicate);
             if ok{
                 hr.maybe();
                 push(msg);
                 for name, kind, homecls, value in ok{
-                    base = self.docother(getattr(object, name), name, mod);
+                    base = this.docother(getattr(object, name), name, mod);
                     if (hasattr(value, '__call__') or
                             inspect.isdatadescriptor(value)){
-                        doc = getattr(value, "__doc__", None);
+                        doc = getattr(value, "__doc__", nil);
                     } else{
-                        doc = None;
-                    } if doc is None{
+                        doc = nil;
+                    } if doc is nil{
                         push('<dl><dt>%s</dl>\n' % base);
                     } else{
-                        doc = self.markup(getdoc(value), self.preformat,
+                        doc = this.markup(getdoc(value), this.preformat,
                                           funcs, classes, mdict);
                         doc = '<dd><tt>%s</tt>' % doc;
                         push('<dl><dt>%s%s</dl>\n' % (base, doc));
@@ -909,7 +909,7 @@ class HTMLDoc(Doc){
             } elif thisclass is object{
                 tag = 'defined here';
             } else{
-                tag = 'inherited from %s' % self.classlink(thisclass,
+                tag = 'inherited from %s' % this.classlink(thisclass,
                                                            object.__module__);
             } tag += ':<br>\n';
 
@@ -946,21 +946,21 @@ class HTMLDoc(Doc){
         } if bases{
             parents = [];
             for base in bases{
-                parents.append(self.classlink(base, object.__module__));
+                parents.append(this.classlink(base, object.__module__));
             } title = title + '(%s)' % join(parents, ', ');
-        } doc = self.markup(getdoc(object), self.preformat, funcs, classes, mdict);
+        } doc = this.markup(getdoc(object), this.preformat, funcs, classes, mdict);
         doc = doc and '<tt>%s<br>&nbsp;</tt>' % doc;
 
-        return self.section(title, '#000000', '#ffc8d8', contents, 3, doc);
+        return this.section(title, '#000000', '#ffc8d8', contents, 3, doc);
 
     }
-    def formatvalue(self, object){
+    function formatvalue( object){
         """Format an argument default value as text.""";
-        return self.grey('=' + self.repr(object));
+        return this.grey('=' + this.repr(object));
 
     }
-    def docroutine(self, object, name=None, mod=None,
-                   funcs={}, classes={}, methods={}, cl=None){
+    function docroutine( object, name=nil, mod=nil,
+                   funcs={}, classes={}, methods={}, cl=nil){
         """Produce HTML documentation for a function or method object.""";
         realname = object.__name__;
         name = name or realname;
@@ -971,13 +971,13 @@ class HTMLDoc(Doc){
             imclass = object.im_class;
             if cl{
                 if imclass is not cl{
-                    note = ' from ' + self.classlink(imclass, mod);
+                    note = ' from ' + this.classlink(imclass, mod);
             } } else{
-                if object.im_self is not None{
-                    note = ' method of %s instance' % self.classlink(
+                if object.im_self is not nil{
+                    note = ' method of %s instance' % this.classlink(
                         object.im_self.__class__, mod);
                 } else{
-                    note = ' unbound %s method' % self.classlink(imclass,mod);
+                    note = ' unbound %s method' % this.classlink(imclass,mod);
             } } object = object.im_func;
 
         }
@@ -996,7 +996,7 @@ class HTMLDoc(Doc){
         } if inspect.isfunction(object){
             args, varargs, varkw, defaults = inspect.getargspec(object);
             argspec = inspect.formatargspec(
-                args, varargs, varkw, defaults, formatvalue=self.formatvalue);
+                args, varargs, varkw, defaults, formatvalue=this.formatvalue);
             if realname == '<lambda>'{
                 title = '<strong>%s</strong> <em>lambda</em> ' % name;
                 argspec = argspec[1:-1]; # remove parentheses
@@ -1004,83 +1004,83 @@ class HTMLDoc(Doc){
             argspec = '(...)';
 
         }
-        decl = title + argspec + (note and self.grey(
+        decl = title + argspec + (note and this.grey(
                '<font face="helvetica, arial">%s</font>' % note));
 
         if skipdocs{
             return '<dl><dt>%s</dt></dl>\n' % decl;
         } else{
-            doc = self.markup(
-                getdoc(object), self.preformat, funcs, classes, methods);
+            doc = this.markup(
+                getdoc(object), this.preformat, funcs, classes, methods);
             doc = doc and '<dd><tt>%s</tt></dd>' % doc;
             return '<dl><dt>%s</dt>%s</dl>\n' % (decl, doc);
 
     }
-    } def _docdescriptor(self, name, value, mod){
+    } function _docdescriptor( name, value, mod){
         results = [];
         push = results.append;
 
         if name{
             push('<dl><dt><strong>%s</strong></dt>\n' % name);
-        } if value.__doc__ is not None{
-            doc = self.markup(getdoc(value), self.preformat);
+        } if value.__doc__ is not nil{
+            doc = this.markup(getdoc(value), this.preformat);
             push('<dd><tt>%s</tt></dd>\n' % doc);
         } push('</dl>\n');
 
         return ''.join(results);
 
     }
-    def docproperty(self, object, name=None, mod=None, cl=None){
+    function docproperty( object, name=nil, mod=nil, cl=nil){
         """Produce html documentation for a property.""";
-        return self._docdescriptor(name, object, mod);
+        return this._docdescriptor(name, object, mod);
 
     }
-    def docother(self, object, name=None, mod=None, *ignored){
+    function docother( object, name=nil, mod=nil, *ignored){
         """Produce HTML documentation for a data object.""";
         lhs = name and '<strong>%s</strong> = ' % name or '';
-        return lhs + self.repr(object);
+        return lhs + this.repr(object);
 
     }
-    def docdata(self, object, name=None, mod=None, cl=None){
+    function docdata( object, name=nil, mod=nil, cl=nil){
         """Produce html documentation for a data descriptor.""";
-        return self._docdescriptor(name, object, mod);
+        return this._docdescriptor(name, object, mod);
 
     }
-    def index(self, dir, shadowed=None){
+    function index( dir, shadowed=nil){
         """Generate an HTML index for a directory of modules.""";
         modpkgs = [];
-        if shadowed is None{ shadowed = {};
+        if shadowed is nil{ shadowed = {};}
         for importer, name, ispkg in pkgutil.iter_modules([dir]){
             modpkgs.append((name, '', ispkg, name in shadowed));
             shadowed[name] = 1;
 
         }
         modpkgs.sort();
-        contents = self.multicolumn(modpkgs, self.modpkglink);
-        return self.bigsection(dir, '#ffffff', '#ee77aa', contents);
+        contents = this.multicolumn(modpkgs, this.modpkglink);
+        return this.bigsection(dir, '#ffffff', '#ee77aa', contents);
 
 # -------------------------------------------- text documentation generator
 
 }
 } class TextRepr(Repr){
     """Class for safely making a text representation of a Python object.""";
-    def __init__(self){
-        Repr.__init__(self);
-        self.maxlist = self.maxtuple = 20;
-        self.maxdict = 10;
-        self.maxstring = self.maxother = 100;
+    function __init__(){
+        Repr.__init__(this);
+        this.maxlist = this.maxtuple = 20;
+        this.maxdict = 10;
+        this.maxstring = this.maxother = 100;
 
     }
-    def repr1(self, x, level){
+    function repr1( x, level){
         if hasattr(type(x), '__name__'){
             methodname = 'repr_' + join(split(type(x).__name__), '_');
-            if hasattr(self, methodname){
-                return getattr(self, methodname)(x, level);
-        } } return cram(stripid(repr(x)), self.maxother);
+            if hasattr(this, methodname){
+                return getattr(this, methodname)(x, level);
+        } } return cram(stripid(repr(x)), this.maxother);
 
     }
-    def repr_string(self, x, level){
-        test = cram(x, self.maxstring);
+    function repr_string( x, level){
+        test = cram(x, this.maxstring);
         testrepr = repr(test);
         if '\\' in test and '\\' not in replace(testrepr, r'\\', ''){
             # Backslashes are only literal in the string and are never
@@ -1091,9 +1091,9 @@ class HTMLDoc(Doc){
     }
     repr_str = repr_string;
 
-    def repr_instance(self, x, level){
+    function repr_instance( x, level){
         try{
-            return cram(stripid(repr(x)), self.maxstring);
+            return cram(stripid(repr(x)), this.maxstring);
         } except Exception{
             return '<%s instance>' % x.__class__.__name__;
 
@@ -1106,28 +1106,28 @@ class HTMLDoc(Doc){
     _repr_instance = TextRepr();
     repr = _repr_instance.repr;
 
-    def bold(self, text){
+    function bold( text){
         """Format a string in bold by overstriking.""";
         return join(map(lambda ch{ ch + '\b' + ch}, text), '');
 
     }
-    def indent(self, text, prefix='    '){
+    function indent( text, prefix='    '){
         """Indent text by prepending a given prefix to each line.""";
-        if not text{ return '';
+        if not text{ return '';}
         lines = split(text, '\n');
         lines = map(lambda line, prefix=prefix{ prefix + line}, lines);
-        if lines{ lines[-1] = rstrip(lines[-1]);
+        if lines{ lines[-1] = rstrip(lines[-1]);}
         return join(lines, '\n');
 
     }
-    def section(self, title, contents){
+    function section( title, contents){
         """Format a section with a given heading.""";
-        return self.bold(title) + '\n' + rstrip(self.indent(contents)) + '\n\n';
+        return this.bold(title) + '\n' + rstrip(this.indent(contents)) + '\n\n';
 
     # ---------------------------------------------- type-specific routines
 
     }
-    def formattree(self, tree, modname, parent=None, prefix=''){
+    function formattree( tree, modname, parent=nil, prefix=''){
         """Render in text a class tree as returned by inspect.getclasstree().""";
         result = '';
         for entry in tree{
@@ -1139,49 +1139,49 @@ class HTMLDoc(Doc){
                     result = result + '(%s)' % join(parents, ', ');
                 } result = result + '\n';
             } elif type(entry) is type([]){
-                result = result + self.formattree(
+                result = result + this.formattree(
                     entry, modname, c, prefix + '    ');
         } } return result;
 
     }
-    def docmodule(self, object, name=None, mod=None){
+    function docmodule( object, name=nil, mod=nil){
         """Produce text documentation for a given module object.""";
         name = object.__name__; # ignore the passed-in name
         synop, desc = splitdoc(getdoc(object));
-        result = self.section('NAME', name + (synop and ' - ' + synop));
+        result = this.section('NAME', name + (synop and ' - ' + synop));
 
         try{
             all = object.__all__;
         } except AttributeError{
-            all = None;
+            all = nil;
 
         }
         try{
             file = inspect.getabsfile(object);
         } except TypeError{
             file = '(built-in)';
-        } result = result + self.section('FILE', file);
+        } result = result + this.section('FILE', file);
 
-        docloc = self.getdocloc(object);
-        if docloc is not None{
-            result = result + self.section('MODULE DOCS', docloc);
+        docloc = this.getdocloc(object);
+        if docloc is not nil{
+            result = result + this.section('MODULE DOCS', docloc);
 
         }
         if desc{
-            result = result + self.section('DESCRIPTION', desc);
+            result = result + this.section('DESCRIPTION', desc);
 
         }
         classes = [];
         for key, value in inspect.getmembers(object, inspect.isclass){
             # if __all__ exists, believe it.  Otherwise use old heuristic.
-            if (all is not None
+            if (all is not nil
                 or (inspect.getmodule(value) or object) is object){
                 if visiblename(key, all, object){
                     classes.append((key, value));
         } } } funcs = [];
         for key, value in inspect.getmembers(object, inspect.isroutine){
             # if __all__ exists, believe it.  Otherwise use old heuristic.
-            if (all is not None or
+            if (all is not nil or
                 inspect.isbuiltin(value) or inspect.getmodule(value) is object){
                 if visiblename(key, all, object){
                     funcs.append((key, value));
@@ -1203,7 +1203,7 @@ class HTMLDoc(Doc){
 
             }
             } modpkgs.sort();
-            result = result + self.section(
+            result = result + this.section(
                 'PACKAGE CONTENTS', join(modpkgs, '\n'));
 
         # Detect submodules as sometimes created by C extensions
@@ -1214,61 +1214,61 @@ class HTMLDoc(Doc){
                 submodules.append(key);
         } } if submodules{
             submodules.sort();
-            result = result + self.section(
+            result = result + this.section(
                 'SUBMODULES', join(submodules, '\n'));
 
         }
         if classes{
             classlist = map(lambda key_value{ key_value[1]}, classes);
-            contents = [self.formattree(
+            contents = [this.formattree(
                 inspect.getclasstree(classlist, 1), name)];
             for key, value in classes{
-                contents.append(self.document(value, key, name));
-            } result = result + self.section('CLASSES', join(contents, '\n'));
+                contents.append(this.document(value, key, name));
+            } result = result + this.section('CLASSES', join(contents, '\n'));
 
         }
         if funcs{
             contents = [];
             for key, value in funcs{
-                contents.append(self.document(value, key, name));
-            } result = result + self.section('FUNCTIONS', join(contents, '\n'));
+                contents.append(this.document(value, key, name));
+            } result = result + this.section('FUNCTIONS', join(contents, '\n'));
 
         }
         if data{
             contents = [];
             for key, value in data{
-                contents.append(self.docother(value, key, name, maxlen=70));
-            } result = result + self.section('DATA', join(contents, '\n'));
+                contents.append(this.docother(value, key, name, maxlen=70));
+            } result = result + this.section('DATA', join(contents, '\n'));
 
         }
         if hasattr(object, '__version__'){
             version = _binstr(object.__version__);
             if version[:11] == '$' + 'Revision: ' and version[-1:] == '$'{
                 version = strip(version[11:-1]);
-            } result = result + self.section('VERSION', version);
+            } result = result + this.section('VERSION', version);
         } if hasattr(object, '__date__'){
-            result = result + self.section('DATE', _binstr(object.__date__));
+            result = result + this.section('DATE', _binstr(object.__date__));
         } if hasattr(object, '__author__'){
-            result = result + self.section('AUTHOR', _binstr(object.__author__));
+            result = result + this.section('AUTHOR', _binstr(object.__author__));
         } if hasattr(object, '__credits__'){
-            result = result + self.section('CREDITS', _binstr(object.__credits__));
+            result = result + this.section('CREDITS', _binstr(object.__credits__));
         } return result;
 
     }
-    def docclass(self, object, name=None, mod=None, *ignored){
+    function docclass( object, name=nil, mod=nil, *ignored){
         """Produce text documentation for a given class object.""";
         realname = object.__name__;
         name = name or realname;
         bases = object.__bases__;
 
-        def makename(c, m=object.__module__){
+        function makename(c, m=object.__module__){
             return classname(c, m);
 
         }
         if name == realname{
-            title = 'class ' + self.bold(realname);
+            title = 'class ' + this.bold(realname);
         } else{
-            title = self.bold(name) + ' = class ' + realname;
+            title = this.bold(name) + ' = class ' + realname;
         } if bases{
             parents = map(makename, bases);
             title = title + '(%s)' % join(parents, ', ');
@@ -1289,15 +1289,15 @@ class HTMLDoc(Doc){
         # Cute little class to pump out a horizontal rule between sections.
         }
         class HorizontalRule{
-            def __init__(self){
-                self.needone = 0;
-            } def maybe(self){
-                if self.needone{
+            function __init__(){
+                this.needone = 0;
+            } function maybe(){
+                if this.needone{
                     push('-' * 70);
-                } self.needone = 1;
+                } this.needone = 1;
         } } hr = HorizontalRule();
 
-        def spill(msg, attrs, predicate){
+        function spill(msg, attrs, predicate){
             ok, attrs = _split_list(attrs, predicate);
             if ok{
                 hr.maybe();
@@ -1308,24 +1308,24 @@ class HTMLDoc(Doc){
                     } except Exception{
                         # Some descriptors may meet a failure in their __get__.
                         # (bug #1785)
-                        push(self._docdescriptor(name, value, mod));
+                        push(this._docdescriptor(name, value, mod));
                     } else{
-                        push(self.document(value,
+                        push(this.document(value,
                                         name, mod, object));
             } } } return attrs;
 
         }
-        def spilldescriptors(msg, attrs, predicate){
+        function spilldescriptors(msg, attrs, predicate){
             ok, attrs = _split_list(attrs, predicate);
             if ok{
                 hr.maybe();
                 push(msg);
                 for name, kind, homecls, value in ok{
-                    push(self._docdescriptor(name, value, mod));
+                    push(this._docdescriptor(name, value, mod));
             } } return attrs;
 
         }
-        def spilldata(msg, attrs, predicate){
+        function spilldata(msg, attrs, predicate){
             ok, attrs = _split_list(attrs, predicate);
             if ok{
                 hr.maybe();
@@ -1335,8 +1335,8 @@ class HTMLDoc(Doc){
                             inspect.isdatadescriptor(value)){
                         doc = getdoc(value);
                     } else{
-                        doc = None;
-                    } push(self.docother(getattr(object, name),
+                        doc = nil;
+                    } push(this.docother(getattr(object, name),
                                        name, mod, maxlen=70, doc=doc) + '\n');
             } } return attrs;
 
@@ -1381,15 +1381,15 @@ class HTMLDoc(Doc){
         contents = '\n'.join(contents);
         if not contents{
             return title + '\n';
-        } return title + '\n' + self.indent(rstrip(contents), ' |  ') + '\n';
+        } return title + '\n' + this.indent(rstrip(contents), ' |  ') + '\n';
 
     }
-    def formatvalue(self, object){
+    function formatvalue( object){
         """Format an argument default value as text.""";
-        return '=' + self.repr(object);
+        return '=' + this.repr(object);
 
     }
-    def docroutine(self, object, name=None, mod=None, cl=None){
+    function docroutine( object, name=nil, mod=nil, cl=nil){
         """Produce text documentation for a function or method object.""";
         realname = object.__name__;
         name = name or realname;
@@ -1401,7 +1401,7 @@ class HTMLDoc(Doc){
                 if imclass is not cl{
                     note = ' from ' + classname(imclass, mod);
             } } else{
-                if object.im_self is not None{
+                if object.im_self is not nil{
                     note = ' method of %s instance' % classname(
                         object.im_self.__class__, mod);
                 } else{
@@ -1410,18 +1410,18 @@ class HTMLDoc(Doc){
 
         }
         if name == realname{
-            title = self.bold(realname);
+            title = this.bold(realname);
         } else{
             if (cl and realname in cl.__dict__ and
                 cl.__dict__[realname] is object){
                 skipdocs = 1;
-            } title = self.bold(name) + ' = ' + realname;
+            } title = this.bold(name) + ' = ' + realname;
         } if inspect.isfunction(object){
             args, varargs, varkw, defaults = inspect.getargspec(object);
             argspec = inspect.formatargspec(
-                args, varargs, varkw, defaults, formatvalue=self.formatvalue);
+                args, varargs, varkw, defaults, formatvalue=this.formatvalue);
             if realname == '<lambda>'{
-                title = self.bold(name) + ' lambda ';
+                title = this.bold(name) + ' lambda ';
                 argspec = argspec[1:-1]; # remove parentheses
         } } else{
             argspec = '(...)';
@@ -1431,56 +1431,56 @@ class HTMLDoc(Doc){
             return decl + '\n';
         } else{
             doc = getdoc(object) or '';
-            return decl + '\n' + (doc and rstrip(self.indent(doc)) + '\n');
+            return decl + '\n' + (doc and rstrip(this.indent(doc)) + '\n');
 
     }
-    } def _docdescriptor(self, name, value, mod){
+    } function _docdescriptor( name, value, mod){
         results = [];
         push = results.append;
 
         if name{
-            push(self.bold(name));
+            push(this.bold(name));
             push('\n');
         } doc = getdoc(value) or '';
         if doc{
-            push(self.indent(doc));
+            push(this.indent(doc));
             push('\n');
         } return ''.join(results);
 
     }
-    def docproperty(self, object, name=None, mod=None, cl=None){
+    function docproperty( object, name=nil, mod=nil, cl=nil){
         """Produce text documentation for a property.""";
-        return self._docdescriptor(name, object, mod);
+        return this._docdescriptor(name, object, mod);
 
     }
-    def docdata(self, object, name=None, mod=None, cl=None){
+    function docdata( object, name=nil, mod=nil, cl=nil){
         """Produce text documentation for a data descriptor.""";
-        return self._docdescriptor(name, object, mod);
+        return this._docdescriptor(name, object, mod);
 
     }
-    def docother(self, object, name=None, mod=None, parent=None, maxlen=None, doc=None){
+    function docother( object, name=nil, mod=nil, parent=nil, maxlen=nil, doc=nil){
         """Produce text documentation for a data object.""";
-        repr = self.repr(object);
+        repr = this.repr(object);
         if maxlen{
             line = (name and name + ' = ' or '') + repr;
             chop = maxlen - len(line);
-            if chop < 0{ repr = repr[:chop] + '...';
-        } line = (name and self.bold(name) + ' = ' or '') + repr;
-        if doc is not None{
-            line += '\n' + self.indent(str(doc));
+            if chop < 0{ repr = repr[:chop] + '...';}
+        } line = (name and this.bold(name) + ' = ' or '') + repr;
+        if doc is not nil{
+            line += '\n' + this.indent(str(doc));
         } return line;
 
 # --------------------------------------------------------- user interfaces
 
 }
-} def pager(text){
+} function pager(text){
     """The first time this is called, determine what kind of pager to use.""";
     global pager;
     pager = getpager();
     pager(text);
 
 }
-def getpager(){
+function getpager(){
     """Decide what method to use for paging through text.""";
     if type(sys.stdout) is not types.FileType{
         return plainpager;
@@ -1515,12 +1515,12 @@ def getpager(){
         os.unlink(filename);
 
 }
-} def plain(text){
+} function plain(text){
     """Remove boldface formatting from text.""";
     return re.sub('.\b', '', text);
 
 }
-def pipepager(text, cmd){
+function pipepager(text, cmd){
     """Page through text by feeding it to another program.""";
     pipe = os.popen(cmd, 'w');
     try{
@@ -1530,7 +1530,7 @@ def pipepager(text, cmd){
         pass; # Ignore broken pipes caused by quitting the pager program.
 
 }
-} def tempfilepager(text, cmd){
+} function tempfilepager(text, cmd){
     """Page through text by invoking a program on a temporary file.""";
     import tempfile;
     filename = tempfile.mktemp();
@@ -1543,7 +1543,7 @@ def pipepager(text, cmd){
         os.unlink(filename);
 
 }
-} def ttypager(text){
+} function ttypager(text){
     """Page through text on a text terminal.""";
     lines = plain(_encode(plain(text), getattr(sys.stdout, 'encoding', _encoding))).split('\n');
     try{
@@ -1553,7 +1553,7 @@ def pipepager(text, cmd){
         tty.setcbreak(fd);
         getchar = lambda{ sys.stdin.read(1)};
     } except (ImportError, AttributeError){
-        tty = None;
+        tty = nil;
         getchar = lambda{ sys.stdin.readline()[:-1][:1]};
 
     }
@@ -1580,7 +1580,7 @@ def pipepager(text, cmd){
                 continue;
             } if c in ('b', 'B', '\x1b'){
                 r = r - inc - inc;
-                if r < 0{ r = 0;
+                if r < 0{ r = 0;}
             } sys.stdout.write('\n' + join(lines[r:r+inc], '\n') + '\n');
             r = r + inc;
 
@@ -1590,12 +1590,12 @@ def pipepager(text, cmd){
             tty.tcsetattr(fd, tty.TCSAFLUSH, old);
 
 }
-} } def plainpager(text){
+} } function plainpager(text){
     """Simply print unformatted text.  This is the ultimate fallback.""";
     sys.stdout.write(_encode(plain(text), getattr(sys.stdout, 'encoding', _encoding)));
 
 }
-def describe(thing){
+function describe(thing){
     """Produce a short description of the given thing.""";
     if inspect.ismodule(thing){
         if thing.__name__ in sys.builtin_module_names{
@@ -1625,14 +1625,14 @@ def describe(thing){
     } return type(thing).__name__;
 
 }
-def locate(path, forceload=0){
+function locate(path, forceload=0){
     """Locate an object by name or dotted path, importing as necessary.""";
     parts = [part for part in split(path, '.') if part];
-    module, n = None, 0;
+    module, n = nil, 0;
     while n < len(parts){
         nextmodule = safeimport(join(parts[:n+1], '.'), forceload);
-        if nextmodule{ module, n = nextmodule, n + 1;
-        else{ break;
+        if nextmodule{ module, n = nextmodule, n + 1;}
+        else{ break;}
     } if module{
         object = module;
     } else{
@@ -1641,7 +1641,7 @@ def locate(path, forceload=0){
         try{
             object = getattr(object, part);
         } except AttributeError{
-            return None;
+            return nil;
     } } return object;
 
 # --------------------------------------- interactive interpreter interface
@@ -1650,22 +1650,22 @@ def locate(path, forceload=0){
 text = TextDoc();
 html = HTMLDoc();
 
-class _OldStyleClass{ pass;
+class _OldStyleClass{ pass;}
 _OLD_INSTANCE_TYPE = type(_OldStyleClass());
 
-def resolve(thing, forceload=0){
+function resolve(thing, forceload=0){
     """Given an object or a path to an object, get the object and its name.""";
     if isinstance(thing, str){
         object = locate(thing, forceload);
-        if object is None{
+        if object is nil{
             raise ImportError, 'no Python documentation found for %r' % thing;
         } return object, thing;
     } else{
-        name = getattr(thing, '__name__', None);
-        return thing, name if isinstance(name, str) else None;
+        name = getattr(thing, '__name__', nil);
+        return thing, name if isinstance(name, str) else nil;
 
 }
-} def render_doc(thing, title='Python Library Documentation: %s', forceload=0){
+} function render_doc(thing, title='Python Library Documentation: %s', forceload=0){
     """Render text documentation, given an object or a path to an object.""";
     object, name = resolve(thing, forceload);
     desc = describe(object);
@@ -1691,7 +1691,7 @@ def resolve(thing, forceload=0){
     } return title % desc + '\n\n' + text.document(object, name);
 
 }
-def doc(thing, title='Python Library Documentation: %s', forceload=0){
+function doc(thing, title='Python Library Documentation: %s', forceload=0){
     """Display text documentation, given an object or a path to an object.""";
     try{
         pager(render_doc(thing, title, forceload));
@@ -1699,7 +1699,7 @@ def doc(thing, title='Python Library Documentation: %s', forceload=0){
         print value;
 
 }
-} def writedoc(thing, forceload=0){
+} function writedoc(thing, forceload=0){
     """Write HTML documentation to a file in the current directory.""";
     try{
         object, name = resolve(thing, forceload);
@@ -1712,9 +1712,9 @@ def doc(thing, title='Python Library Documentation: %s', forceload=0){
         print value;
 
 }
-} def writedocs(dir, pkgpath='', done=None){
+} function writedocs(dir, pkgpath='', done=nil){
     """Write out HTML documentation for all modules in a directory tree.""";
-    if done is None{ done = {};
+    if done is nil{ done = {};}
     for importer, modname, ispkg in pkgutil.walk_packages([dir], pkgpath){
         writedoc(modname);
     } return;
@@ -1899,29 +1899,29 @@ class Helper{
         'CONTEXTMANAGERS': ('context-managers', 'with'),
     };
 
-    def __init__(self, input=None, output=None){
-        self._input = input;
-        self._output = output;
+    function __init__( input=nil, output=nil){
+        this._input = input;
+        this._output = output;
 
     }
-    input  = property(lambda self{ self._input or sys.stdin});
-    output = property(lambda self{ self._output or sys.stdout});
+    input  = property(lambda this{ this._input or sys.stdin});
+    output = property(lambda this{ this._output or sys.stdout});
 
-    def __repr__(self){
+    function __repr__(){
         if inspect.stack()[1][3] == '?'{
-            self();
+            this();
             return '';
         } return '<pydoc.Helper instance>';
 
     }
     _GoInteractive = object();
-    def __call__(self, request=_GoInteractive){
-        if request is not self._GoInteractive{
-            self.help(request);
+    function __call__( request=_GoInteractive){
+        if request is not this._GoInteractive{
+            this.help(request);
         } else{
-            self.intro();
-            self.interact();
-            self.output.write('''
+            this.intro();
+            this.interact();
+            this.output.write('''
 You are now leaving help and returning to the Python interpreter.
 If you want to ask for help on a particular object directly from the
 interpreter, you can type "help(object)".  Executing "help('string')"
@@ -1929,12 +1929,12 @@ has the same effect as typing a particular string at the help> prompt.
 ''');
 
     }
-    } def interact(self){
-        self.output.write('\n');
-        while True{
+    } function interact(){
+        this.output.write('\n');
+        while true{
             try{
-                request = self.getline('help> ');
-                if not request{ break;
+                request = this.getline('help> ');
+                if not request{ break;}
             } except (KeyboardInterrupt, EOFError){
                 break;
             } request = strip(request);
@@ -1943,41 +1943,41 @@ has the same effect as typing a particular string at the help> prompt.
             if (len(request) > 2 and request[0] == request[-1] in ("'", '"')
                     and request[0] not in request[1:-1]){
                 request = request[1:-1];
-            } if lower(request) in ('q', 'quit'){ break;
-            self.help(request);
+            } if lower(request) in ('q', 'quit'){ break;}
+            this.help(request);
 
     }
-    } def getline(self, prompt){
+    } function getline( prompt){
         """Read one line, using raw_input when available.""";
-        if self.input is sys.stdin{
+        if this.input is sys.stdin{
             return raw_input(prompt);
         } else{
-            self.output.write(prompt);
-            self.output.flush();
-            return self.input.readline();
+            this.output.write(prompt);
+            this.output.flush();
+            return this.input.readline();
 
     }
-    } def help(self, request){
+    } function help( request){
         if type(request) is type(''){
             request = request.strip();
-            if request == 'help'{ self.intro();
-            elif request == 'keywords'{ self.listkeywords();
-            elif request == 'symbols'{ self.listsymbols();
-            elif request == 'topics'{ self.listtopics();
-            elif request == 'modules'{ self.listmodules();
+            if request == 'help'{ this.intro();}
+            elif request == 'keywords'{ this.listkeywords();}
+            elif request == 'symbols'{ this.listsymbols();}
+            elif request == 'topics'{ this.listtopics();}
+            elif request == 'modules'{ this.listmodules();}
             elif request[:8] == 'modules '{
-                self.listmodules(split(request)[1]);
-            } elif request in self.symbols{ self.showsymbol(request);
-            elif request in self.keywords{ self.showtopic(request);
-            elif request in self.topics{ self.showtopic(request);
-            elif request{ doc(request, 'Help on %s:');
-        } elif isinstance(request, Helper){ self();
-        else{ doc(request, 'Help on %s:');
-        self.output.write('\n');
+                this.listmodules(split(request)[1]);
+            } elif request in this.symbols{ this.showsymbol(request);}
+            elif request in this.keywords{ this.showtopic(request);}
+            elif request in this.topics{ this.showtopic(request);}
+            elif request{ doc(request, 'Help on %s:');}
+        } elif isinstance(request, Helper){ this();}
+        else{ doc(request, 'Help on %s:');}
+        this.output.write('\n');
 
     }
-    def intro(self){
-        self.output.write('''
+    function intro(){
+        this.output.write('''
 Welcome to Python %s!  This is the online help utility.
 
 If this is your first time using Python, you should definitely check out
@@ -1994,7 +1994,7 @@ such as "spam", type "modules spam".
 ''' % tuple([sys.version[:3]]*2));
 
     }
-    def list(self, items, columns=4, width=80){
+    function list( items, columns=4, width=80){
         items = items[:];
         items.sort();
         colw = width / columns;
@@ -2003,59 +2003,59 @@ such as "spam", type "modules spam".
             for col in range(columns){
                 i = col * rows + row;
                 if i < len(items){
-                    self.output.write(items[i]);
+                    this.output.write(items[i]);
                     if col < columns - 1{
-                        self.output.write(' ' + ' ' * (colw-1 - len(items[i])));
-            } } } self.output.write('\n');
+                        this.output.write(' ' + ' ' * (colw-1 - len(items[i])));
+            } } } this.output.write('\n');
 
     }
-    } def listkeywords(self){
-        self.output.write('''
+    } function listkeywords(){
+        this.output.write('''
 Here is a list of the Python keywords.  Enter any keyword to get more help.
 
 ''');
-        self.list(self.keywords.keys());
+        this.list(this.keywords.keys());
 
     }
-    def listsymbols(self){
-        self.output.write('''
+    function listsymbols(){
+        this.output.write('''
 Here is a list of the punctuation symbols which Python assigns special meaning
 to. Enter any symbol to get more help.
 
 ''');
-        self.list(self.symbols.keys());
+        this.list(this.symbols.keys());
 
     }
-    def listtopics(self){
-        self.output.write('''
+    function listtopics(){
+        this.output.write('''
 Here is a list of available topics.  Enter any topic name to get more help.
 
 ''');
-        self.list(self.topics.keys());
+        this.list(this.topics.keys());
 
     }
-    def showtopic(self, topic, more_xrefs=''){
+    function showtopic( topic, more_xrefs=''){
         try{
             import pydoc_data.topics;
         } except ImportError{
-            self.output.write('''
+            this.output.write('''
 Sorry, topic and keyword documentation is not available because the
 module "pydoc_data.topics" could not be found.
 ''');
             return;
-        } target = self.topics.get(topic, self.keywords.get(topic));
+        } target = this.topics.get(topic, this.keywords.get(topic));
         if not target{
-            self.output.write('no documentation found for %s\n' % repr(topic));
+            this.output.write('no documentation found for %s\n' % repr(topic));
             return;
         } if type(target) is type(''){
-            return self.showtopic(target, more_xrefs);
+            return this.showtopic(target, more_xrefs);
 
         }
         label, xrefs = target;
         try{
             doc = pydoc_data.topics.topics[label];
         } except KeyError{
-            self.output.write('no documentation found for %s\n' % repr(topic));
+            this.output.write('no documentation found for %s\n' % repr(topic));
             return;
         } pager(strip(doc) + '\n');
         if more_xrefs{
@@ -2065,38 +2065,38 @@ module "pydoc_data.topics" could not be found.
             buffer = StringIO.StringIO();
             formatter.DumbWriter(buffer).send_flowing_data(
                 'Related help topics: ' + join(split(xrefs), ', ') + '\n');
-            self.output.write('\n%s\n' % buffer.getvalue());
+            this.output.write('\n%s\n' % buffer.getvalue());
 
     }
-    } def showsymbol(self, symbol){
-        target = self.symbols[symbol];
+    } function showsymbol( symbol){
+        target = this.symbols[symbol];
         topic, _, xrefs = target.partition(' ');
-        self.showtopic(topic, xrefs);
+        this.showtopic(topic, xrefs);
 
     }
-    def listmodules(self, key=''){
+    function listmodules( key=''){
         if key{
-            self.output.write('''
+            this.output.write('''
 Here is a list of matching modules.  Enter any module name to get more help.
 
 ''');
             apropos(key);
         } else{
-            self.output.write('''
+            this.output.write('''
 Please wait a moment while I gather a list of all available modules...
 
 ''');
             modules = {};
-            def callback(path, modname, desc, modules=modules){
+            function callback(path, modname, desc, modules=modules){
                 if modname and modname[-9:] == '.__init__'{
                     modname = modname[:-9] + ' (package)';
                 } if find(modname, '.') < 0{
                     modules[modname] = 1;
-            } } def onerror(modname){
-                callback(None, modname, None);
+            } } function onerror(modname){
+                callback(nil, modname, nil);
             } ModuleScanner().run(callback, onerror=onerror);
-            self.list(modules.keys());
-            self.output.write('''
+            this.list(modules.keys());
+            this.output.write('''
 Enter any module name to get more help.  Or, type "modules spam" to search
 for modules whose descriptions contain the word "spam".
 ''');
@@ -2106,26 +2106,26 @@ for modules whose descriptions contain the word "spam".
 
 class Scanner{
     """A generic tree iterator.""";
-    def __init__(self, roots, children, descendp){
-        self.roots = roots[:];
-        self.state = [];
-        self.children = children;
-        self.descendp = descendp;
+    function __init__( roots, children, descendp){
+        this.roots = roots[:];
+        this.state = [];
+        this.children = children;
+        this.descendp = descendp;
 
     }
-    def next(self){
-        if not self.state{
-            if not self.roots{
-                return None;
-            } root = self.roots.pop(0);
-            self.state = [(root, self.children(root))];
-        } node, children = self.state[-1];
+    function next(){
+        if not this.state{
+            if not this.roots{
+                return nil;
+            } root = this.roots.pop(0);
+            this.state = [(root, this.children(root))];
+        } node, children = this.state[-1];
         if not children{
-            self.state.pop();
-            return self.next();
+            this.state.pop();
+            return this.next();
         } child = children.pop(0);
-        if self.descendp(child){
-            self.state.append((child, self.children(child)));
+        if this.descendp(child){
+            this.state.append((child, this.children(child)));
         } return child;
 
 
@@ -2133,27 +2133,27 @@ class Scanner{
 } class ModuleScanner{
     """An interruptible scanner that searches module synopses.""";
 
-    def run(self, callback, key=None, completer=None, onerror=None){
-        if key{ key = lower(key);
-        self.quit = False;
+    function run( callback, key=nil, completer=nil, onerror=nil){
+        if key{ key = lower(key);}
+        this.quit = false;
         seen = {};
 
         for modname in sys.builtin_module_names{
             if modname != '__main__'{
                 seen[modname] = 1;
-                if key is None{
-                    callback(None, modname, '');
+                if key is nil{
+                    callback(nil, modname, '');
                 } else{
                     desc = split(__import__(modname).__doc__ or '', '\n')[0];
                     if find(lower(modname + ' - ' + desc), key) >= 0{
-                        callback(None, modname, desc);
+                        callback(nil, modname, desc);
 
         }
         } } } for importer, modname, ispkg in pkgutil.walk_packages(onerror=onerror){
-            if self.quit{
+            if this.quit{
                 break;
-            } if key is None{
-                callback(None, modname, '');
+            } if key is nil{
+                callback(nil, modname, '');
             } else{
                 loader = importer.find_module(modname);
                 if hasattr(loader,'get_source'){
@@ -2164,11 +2164,11 @@ class Scanner{
                     if hasattr(loader,'get_filename'){
                         path = loader.get_filename(modname);
                     } else{
-                        path = None;
+                        path = nil;
                 } } else{
                     module = loader.load_module(modname);
                     desc = module.__doc__.splitlines()[0] if module.__doc__ else '';
-                    path = getattr(module,'__file__',None);
+                    path = getattr(module,'__file__',nil);
                 } if find(lower(modname + ' - ' + desc), key) >= 0{
                     callback(path, modname, desc);
 
@@ -2177,13 +2177,13 @@ class Scanner{
             completer();
 
 }
-} } def apropos(key){
+} } function apropos(key){
     """Print all the one-line module summaries that contain a substring.""";
-    def callback(path, modname, desc){
+    function callback(path, modname, desc){
         if modname[-9:] == '.__init__'{
             modname = modname[:-9] + ' (package)';
         } print modname, desc and '- ' + desc;
-    } def onerror(modname){
+    } function onerror(modname){
         pass;
     } with warnings.catch_warnings(){
         warnings.filterwarnings('ignore'); # ignore problems during import
@@ -2192,50 +2192,50 @@ class Scanner{
 # --------------------------------------------------- web browser interface
 
 }
-} def serve(port, callback=None, completer=None){
+} function serve(port, callback=nil, completer=nil){
     import BaseHTTPServer, mimetools, select;
 
     # Patch up mimetools.Message so it doesn't break if rfc822 is reloaded.
     class Message(mimetools.Message){
-        def __init__(self, fp, seekable=1){
-            Message = self.__class__;
-            Message.__bases__[0].__bases__[0].__init__(self, fp, seekable);
-            self.encodingheader = self.getheader('content-transfer-encoding');
-            self.typeheader = self.getheader('content-type');
-            self.parsetype();
-            self.parseplist();
+        function __init__( fp, seekable=1){
+            Message = this.__class__;
+            Message.__bases__[0].__bases__[0].__init__(this, fp, seekable);
+            this.encodingheader = this.getheader('content-transfer-encoding');
+            this.typeheader = this.getheader('content-type');
+            this.parsetype();
+            this.parseplist();
 
     }
     } class DocHandler(BaseHTTPServer.BaseHTTPRequestHandler){
-        def send_document(self, title, contents){
+        function send_document( title, contents){
             try{
-                self.send_response(200);
-                self.send_header('Content-Type', 'text/html');
-                self.end_headers();
-                self.wfile.write(html.page(title, contents));
-            } except IOError{ pass;
+                this.send_response(200);
+                this.send_header('Content-Type', 'text/html');
+                this.end_headers();
+                this.wfile.write(html.page(title, contents));
+            } except IOError{ pass;}
 
         }
-        def do_GET(self){
-            path = self.path;
-            if path[-5:] == '.html'{ path = path[:-5];
-            if path[:1] == '/'{ path = path[1:];
+        function do_GET(){
+            path = this.path;
+            if path[-5:] == '.html'{ path = path[:-5];}
+            if path[:1] == '/'{ path = path[1:];}
             if path and path != '.'{
                 try{
                     obj = locate(path, forceload=1);
                 } except ErrorDuringImport, value{
-                    self.send_document(path, html.escape(str(value)));
+                    this.send_document(path, html.escape(str(value)));
                     return;
                 } if obj{
-                    self.send_document(describe(obj), html.document(obj, path));
+                    this.send_document(describe(obj), html.document(obj, path));
                 } else{
-                    self.send_document(path,
+                    this.send_document(path,
 'no Python documentation found for %s' % repr(path));
             } } else{
                 heading = html.heading(
 '<big><big><strong>Python: Index of Modules</strong></big></big>',
 '#ffffff', '#7799ee');
-                def bltinlink(name){
+                function bltinlink(name){
                     return '<a href="%s.html">%s</a>' % (name, name);
                 } names = filter(lambda x{ x != '__main__'},
                                sys.builtin_module_names);
@@ -2249,32 +2249,32 @@ class Scanner{
                 } contents = heading + join(indices) + '''<p align=right>
 <font color="#909090" face="helvetica, arial"><strong>
 pydoc</strong> by Ka-Ping Yee &lt;ping@lfw.org&gt;</font>''';
-                self.send_document('Index of Modules', contents);
+                this.send_document('Index of Modules', contents);
 
         }
-        } def log_message(self, *args){ pass;
+        } function log_message( *args){ pass;}
 
     }
     class DocServer(BaseHTTPServer.HTTPServer){
-        def __init__(self, port, callback){
+        function __init__( port, callback){
             host = 'localhost';
-            self.address = (host, port);
-            self.callback = callback;
-            self.base.__init__(self, self.address, self.handler);
+            this.address = (host, port);
+            this.callback = callback;
+            this.base.__init__(this, this.address, this.handler);
 
         }
-        def serve_until_quit(self){
+        function serve_until_quit(){
             import select;
-            self.quit = False;
-            while not self.quit{
-                rd, wr, ex = select.select([self.socket.fileno()], [], [], 1);
-                if rd{ self.handle_request();
+            this.quit = false;
+            while not this.quit{
+                rd, wr, ex = select.select([this.socket.fileno()], [], [], 1);
+                if rd{ this.handle_request();}
 
         }
-        } def server_activate(self){
-            self.base.server_activate(self);
-            self.url = 'http://%s:%d/' % (self.address[0], self.server_port);
-            if self.callback{ self.callback(self);
+        } function server_activate(){
+            this.base.server_activate(this);
+            this.url = 'http://%s:%d/' % (this.address[0], this.server_port);
+            if this.callback{ this.callback(this);}
 
     }
     } DocServer.base = BaseHTTPServer.HTTPServer;
@@ -2286,95 +2286,95 @@ pydoc</strong> by Ka-Ping Yee &lt;ping@lfw.org&gt;</font>''';
         } except (KeyboardInterrupt, select.error){
             pass;
     } } finally{
-        if completer{ completer();
+        if completer{ completer();}
 
 # ----------------------------------------------------- graphical interface
 
 }
-} def gui(){
+} function gui(){
     """Graphical interface (starts web server and pops up a control window).""";
     class GUI{
-        def __init__(self, window, port=7464){
-            self.window = window;
-            self.server = None;
-            self.scanner = None;
+        function __init__( window, port=7464){
+            this.window = window;
+            this.server = nil;
+            this.scanner = nil;
 
             import Tkinter;
-            self.server_frm = Tkinter.Frame(window);
-            self.title_lbl = Tkinter.Label(self.server_frm,
+            this.server_frm = Tkinter.Frame(window);
+            this.title_lbl = Tkinter.Label(this.server_frm,
                 text='Starting server...\n ');
-            self.open_btn = Tkinter.Button(self.server_frm,
-                text='open browser', command=self.open, state='disabled');
-            self.quit_btn = Tkinter.Button(self.server_frm,
-                text='quit serving', command=self.quit, state='disabled');
+            this.open_btn = Tkinter.Button(this.server_frm,
+                text='open browser', command=this.open, state='disabled');
+            this.quit_btn = Tkinter.Button(this.server_frm,
+                text='quit serving', command=this.quit, state='disabled');
 
-            self.search_frm = Tkinter.Frame(window);
-            self.search_lbl = Tkinter.Label(self.search_frm, text='Search for');
-            self.search_ent = Tkinter.Entry(self.search_frm);
-            self.search_ent.bind('<Return>', self.search);
-            self.stop_btn = Tkinter.Button(self.search_frm,
-                text='stop', pady=0, command=self.stop, state='disabled');
+            this.search_frm = Tkinter.Frame(window);
+            this.search_lbl = Tkinter.Label(this.search_frm, text='Search for');
+            this.search_ent = Tkinter.Entry(this.search_frm);
+            this.search_ent.bind('<Return>', this.search);
+            this.stop_btn = Tkinter.Button(this.search_frm,
+                text='stop', pady=0, command=this.stop, state='disabled');
             if sys.platform == 'win32'{
                 # Trying to hide and show this button crashes under Windows.
-                self.stop_btn.pack(side='right');
+                this.stop_btn.pack(side='right');
 
             }
-            self.window.title('pydoc');
-            self.window.protocol('WM_DELETE_WINDOW', self.quit);
-            self.title_lbl.pack(side='top', fill='x');
-            self.open_btn.pack(side='left', fill='x', expand=1);
-            self.quit_btn.pack(side='right', fill='x', expand=1);
-            self.server_frm.pack(side='top', fill='x');
+            this.window.title('pydoc');
+            this.window.protocol('WM_DELETE_WINDOW', this.quit);
+            this.title_lbl.pack(side='top', fill='x');
+            this.open_btn.pack(side='left', fill='x', expand=1);
+            this.quit_btn.pack(side='right', fill='x', expand=1);
+            this.server_frm.pack(side='top', fill='x');
 
-            self.search_lbl.pack(side='left');
-            self.search_ent.pack(side='right', fill='x', expand=1);
-            self.search_frm.pack(side='top', fill='x');
-            self.search_ent.focus_set();
+            this.search_lbl.pack(side='left');
+            this.search_ent.pack(side='right', fill='x', expand=1);
+            this.search_frm.pack(side='top', fill='x');
+            this.search_ent.focus_set();
 
             font = ('helvetica', sys.platform == 'win32' and 8 or 10);
-            self.result_lst = Tkinter.Listbox(window, font=font, height=6);
-            self.result_lst.bind('<Button-1>', self.select);
-            self.result_lst.bind('<Double-Button-1>', self.goto);
-            self.result_scr = Tkinter.Scrollbar(window,
-                orient='vertical', command=self.result_lst.yview);
-            self.result_lst.config(yscrollcommand=self.result_scr.set);
+            this.result_lst = Tkinter.Listbox(window, font=font, height=6);
+            this.result_lst.bind('<Button-1>', this.select);
+            this.result_lst.bind('<Double-Button-1>', this.goto);
+            this.result_scr = Tkinter.Scrollbar(window,
+                orient='vertical', command=this.result_lst.yview);
+            this.result_lst.config(yscrollcommand=this.result_scr.set);
 
-            self.result_frm = Tkinter.Frame(window);
-            self.goto_btn = Tkinter.Button(self.result_frm,
-                text='go to selected', command=self.goto);
-            self.hide_btn = Tkinter.Button(self.result_frm,
-                text='hide results', command=self.hide);
-            self.goto_btn.pack(side='left', fill='x', expand=1);
-            self.hide_btn.pack(side='right', fill='x', expand=1);
+            this.result_frm = Tkinter.Frame(window);
+            this.goto_btn = Tkinter.Button(this.result_frm,
+                text='go to selected', command=this.goto);
+            this.hide_btn = Tkinter.Button(this.result_frm,
+                text='hide results', command=this.hide);
+            this.goto_btn.pack(side='left', fill='x', expand=1);
+            this.hide_btn.pack(side='right', fill='x', expand=1);
 
-            self.window.update();
-            self.minwidth = self.window.winfo_width();
-            self.minheight = self.window.winfo_height();
-            self.bigminheight = (self.server_frm.winfo_reqheight() +
-                                 self.search_frm.winfo_reqheight() +
-                                 self.result_lst.winfo_reqheight() +
-                                 self.result_frm.winfo_reqheight());
-            self.bigwidth, self.bigheight = self.minwidth, self.bigminheight;
-            self.expanded = 0;
-            self.window.wm_geometry('%dx%d' % (self.minwidth, self.minheight));
-            self.window.wm_minsize(self.minwidth, self.minheight);
-            self.window.tk.willdispatch();
+            this.window.update();
+            this.minwidth = this.window.winfo_width();
+            this.minheight = this.window.winfo_height();
+            this.bigminheight = (this.server_frm.winfo_reqheight() +
+                                 this.search_frm.winfo_reqheight() +
+                                 this.result_lst.winfo_reqheight() +
+                                 this.result_frm.winfo_reqheight());
+            this.bigwidth, this.bigheight = this.minwidth, this.bigminheight;
+            this.expanded = 0;
+            this.window.wm_geometry('%dx%d' % (this.minwidth, this.minheight));
+            this.window.wm_minsize(this.minwidth, this.minheight);
+            this.window.tk.willdispatch();
 
             import threading;
             threading.Thread(
-                target=serve, args=(port, self.ready, self.quit)).start();
+                target=serve, args=(port, this.ready, this.quit)).start();
 
         }
-        def ready(self, server){
-            self.server = server;
-            self.title_lbl.config(
+        function ready( server){
+            this.server = server;
+            this.title_lbl.config(
                 text='Python documentation server at\n' + server.url);
-            self.open_btn.config(state='normal');
-            self.quit_btn.config(state='normal');
+            this.open_btn.config(state='normal');
+            this.quit_btn.config(state='normal');
 
         }
-        def open(self, event=None, url=None){
-            url = url or self.server.url;
+        function open( event=nil, url=nil){
+            url = url or this.server.url;
             try{
                 import webbrowser;
                 webbrowser.open(url);
@@ -2383,95 +2383,95 @@ pydoc</strong> by Ka-Ping Yee &lt;ping@lfw.org&gt;</font>''';
                     os.system('start "%s"' % url);
                 } else{
                     rc = os.system('netscape -remote "openURL(%s)" &' % url);
-                    if rc{ os.system('netscape "%s" &' % url);
+                    if rc{ os.system('netscape "%s" &' % url);}
 
         }
-        } } def quit(self, event=None){
-            if self.server{
-                self.server.quit = 1;
-            } self.window.quit();
+        } } function quit( event=nil){
+            if this.server{
+                this.server.quit = 1;
+            } this.window.quit();
 
         }
-        def search(self, event=None){
-            key = self.search_ent.get();
-            self.stop_btn.pack(side='right');
-            self.stop_btn.config(state='normal');
-            self.search_lbl.config(text='Searching for "%s"...' % key);
-            self.search_ent.forget();
-            self.search_lbl.pack(side='left');
-            self.result_lst.delete(0, 'end');
-            self.goto_btn.config(state='disabled');
-            self.expand();
+        function search( event=nil){
+            key = this.search_ent.get();
+            this.stop_btn.pack(side='right');
+            this.stop_btn.config(state='normal');
+            this.search_lbl.config(text='Searching for "%s"...' % key);
+            this.search_ent.forget();
+            this.search_lbl.pack(side='left');
+            this.result_lst.delete(0, 'end');
+            this.goto_btn.config(state='disabled');
+            this.expand();
 
             import threading;
-            if self.scanner{
-                self.scanner.quit = 1;
-            } self.scanner = ModuleScanner();
-            def onerror(modname){
+            if this.scanner{
+                this.scanner.quit = 1;
+            } this.scanner = ModuleScanner();
+            function onerror(modname){
                 pass;
-            } threading.Thread(target=self.scanner.run,
-                             args=(self.update, key, self.done),
+            } threading.Thread(target=this.scanner.run,
+                             args=(this.update, key, this.done),
                              kwargs=dict(onerror=onerror)).start();
 
         }
-        def update(self, path, modname, desc){
+        function update( path, modname, desc){
             if modname[-9:] == '.__init__'{
                 modname = modname[:-9] + ' (package)';
-            } self.result_lst.insert('end',
+            } this.result_lst.insert('end',
                 modname + ' - ' + (desc or '(no description)'));
 
         }
-        def stop(self, event=None){
-            if self.scanner{
-                self.scanner.quit = 1;
-                self.scanner = None;
+        function stop( event=nil){
+            if this.scanner{
+                this.scanner.quit = 1;
+                this.scanner = nil;
 
         }
-        } def done(self){
-            self.scanner = None;
-            self.search_lbl.config(text='Search for');
-            self.search_lbl.pack(side='left');
-            self.search_ent.pack(side='right', fill='x', expand=1);
-            if sys.platform != 'win32'{ self.stop_btn.forget();
-            self.stop_btn.config(state='disabled');
+        } function done(){
+            this.scanner = nil;
+            this.search_lbl.config(text='Search for');
+            this.search_lbl.pack(side='left');
+            this.search_ent.pack(side='right', fill='x', expand=1);
+            if sys.platform != 'win32'{ this.stop_btn.forget();}
+            this.stop_btn.config(state='disabled');
 
         }
-        def select(self, event=None){
-            self.goto_btn.config(state='normal');
+        function select( event=nil){
+            this.goto_btn.config(state='normal');
 
         }
-        def goto(self, event=None){
-            selection = self.result_lst.curselection();
+        function goto( event=nil){
+            selection = this.result_lst.curselection();
             if selection{
-                modname = split(self.result_lst.get(selection[0]))[0];
-                self.open(url=self.server.url + modname + '.html');
+                modname = split(this.result_lst.get(selection[0]))[0];
+                this.open(url=this.server.url + modname + '.html');
 
         }
-        } def collapse(self){
-            if not self.expanded{ return;
-            self.result_frm.forget();
-            self.result_scr.forget();
-            self.result_lst.forget();
-            self.bigwidth = self.window.winfo_width();
-            self.bigheight = self.window.winfo_height();
-            self.window.wm_geometry('%dx%d' % (self.minwidth, self.minheight));
-            self.window.wm_minsize(self.minwidth, self.minheight);
-            self.expanded = 0;
+        } function collapse(){
+            if not this.expanded{ return;}
+            this.result_frm.forget();
+            this.result_scr.forget();
+            this.result_lst.forget();
+            this.bigwidth = this.window.winfo_width();
+            this.bigheight = this.window.winfo_height();
+            this.window.wm_geometry('%dx%d' % (this.minwidth, this.minheight));
+            this.window.wm_minsize(this.minwidth, this.minheight);
+            this.expanded = 0;
 
         }
-        def expand(self){
-            if self.expanded{ return;
-            self.result_frm.pack(side='bottom', fill='x');
-            self.result_scr.pack(side='right', fill='y');
-            self.result_lst.pack(side='top', fill='both', expand=1);
-            self.window.wm_geometry('%dx%d' % (self.bigwidth, self.bigheight));
-            self.window.wm_minsize(self.minwidth, self.bigminheight);
-            self.expanded = 1;
+        function expand(){
+            if this.expanded{ return;}
+            this.result_frm.pack(side='bottom', fill='x');
+            this.result_scr.pack(side='right', fill='y');
+            this.result_lst.pack(side='top', fill='both', expand=1);
+            this.window.wm_geometry('%dx%d' % (this.bigwidth, this.bigheight));
+            this.window.wm_minsize(this.minwidth, this.bigminheight);
+            this.expanded = 1;
 
         }
-        def hide(self, event=None){
-            self.stop();
-            self.collapse();
+        function hide( event=nil){
+            this.stop();
+            this.collapse();
 
     }
     } import Tkinter;
@@ -2492,14 +2492,14 @@ pydoc</strong> by Ka-Ping Yee &lt;ping@lfw.org&gt;</font>''';
 # -------------------------------------------------- command-line interface
 
 }
-} def ispath(x){
+} function ispath(x){
     return isinstance(x, str) and find(x, os.sep) >= 0;
 
 }
-def cli(){
+function cli(){
     """Command-line interface (looks at sys.argv to decide what to do).""";
     import getopt;
-    class BadUsage{ pass;
+    class BadUsage{ pass;}
 
     # Scripts don't get the current directory in their path by default
     # unless they are run with the '-m' switch
@@ -2526,9 +2526,9 @@ def cli(){
                     port = int(val);
                 } except ValueError{
                     raise BadUsage;
-                } def ready(server){
+                } function ready(server){
                     print 'pydoc server ready at %s' % server.url;
-                } def stopped(){
+                } function stopped(){
                     print 'pydoc server stopped';
                 } serve(port, ready, stopped);
                 return;
@@ -2536,7 +2536,7 @@ def cli(){
                 writing = 1;
 
         }
-        } if not args{ raise BadUsage;
+        } if not args{ raise BadUsage;}
         for arg in args{
             if ispath(arg) and not os.path.exists(arg){
                 print 'file %r does not exist' % arg;
@@ -2584,4 +2584,4 @@ def cli(){
 """ % (cmd, os.sep, cmd, cmd, cmd, cmd, os.sep);
 
 }
-} if __name__ == '__main__'{ cli();
+} if __name__ == '__main__'{ cli();}

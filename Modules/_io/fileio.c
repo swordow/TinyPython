@@ -528,7 +528,7 @@ fileio_readinto(fileio *self, PyObject *args)
     PyBuffer_Release(&pbuf);
     if (n < 0) {
         if (errno == EAGAIN)
-            Py_RETURN_NONE;
+            Py_RETURN_NIL;
         PyErr_SetFromErrno(PyExc_IOError);
         return NULL;
     }
@@ -630,7 +630,7 @@ fileio_readall(fileio *self)
                 if (total > 0)
                     break;
                 Py_DECREF(result);
-                Py_RETURN_NONE;
+                Py_RETURN_NIL;
             }
             Py_DECREF(result);
             PyErr_SetFromErrno(PyExc_IOError);
@@ -692,7 +692,7 @@ fileio_read(fileio *self, PyObject *args)
     if (n < 0) {
         Py_DECREF(bytes);
         if (errno == EAGAIN)
-            Py_RETURN_NONE;
+            Py_RETURN_NIL;
         PyErr_SetFromErrno(PyExc_IOError);
         return NULL;
     }
@@ -746,7 +746,7 @@ fileio_write(fileio *self, PyObject *args)
 
     if (n < 0) {
         if (errno == EAGAIN)
-            Py_RETURN_NONE;
+            Py_RETURN_NIL;
         PyErr_SetFromErrno(PyExc_IOError);
         return NULL;
     }
@@ -857,7 +857,7 @@ fileio_truncate(fileio *self, PyObject *args)
     if (!PyArg_ParseTuple(args, "|O", &posobj))
         return NULL;
 
-    if (posobj == Py_None || posobj == NULL) {
+    if (posobj == Py_Nil || posobj == NULL) {
         /* Get the current position. */
         posobj = portable_lseek(fd, NULL, 1);
         if (posobj == NULL)

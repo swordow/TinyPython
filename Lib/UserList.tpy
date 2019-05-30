@@ -3,89 +3,89 @@
 import collections;
 
 class UserList(collections.MutableSequence){
-    def __init__(self, initlist=None){
-        self.data = [];
-        if initlist is not None{
+    function __init__( initlist=nil){
+        this.data = [];
+        if initlist is not nil{
             # XXX should this accept an arbitrary sequence?
-            if type(initlist) == type(self.data){
-                self.data[:] = initlist;
+            if type(initlist) == type(this.data){
+                this.data[:] = initlist;
             } elif isinstance(initlist, UserList){
-                self.data[:] = initlist.data[:];
+                this.data[:] = initlist.data[:];
             } else{
-                self.data = list(initlist);
-    } } } def __repr__(self){ return repr(self.data);
-    def __lt__(self, other){ return self.data <  self.__cast(other);
-    def __le__(self, other){ return self.data <= self.__cast(other);
-    def __eq__(self, other){ return self.data == self.__cast(other);
-    def __ne__(self, other){ return self.data != self.__cast(other);
-    def __gt__(self, other){ return self.data >  self.__cast(other);
-    def __ge__(self, other){ return self.data >= self.__cast(other);
-    def __cast(self, other){
-        if isinstance(other, UserList){ return other.data;
-        else{ return other;
-    } def __cmp__(self, other){
-        return cmp(self.data, self.__cast(other));
-    } __hash__ = None; # Mutable sequence, so not hashable
-    def __contains__(self, item){ return item in self.data;
-    def __len__(self){ return len(self.data);
-    def __getitem__(self, i){ return self.data[i];
-    def __setitem__(self, i, item){ self.data[i] = item;
-    def __delitem__(self, i){ del self.data[i];
-    def __getslice__(self, i, j){
+                this.data = list(initlist);
+    } } } function __repr__(){ return repr(this.data);}
+    function __lt__( other){ return this.data <  this.__cast(other);}
+    function __le__( other){ return this.data <= this.__cast(other);}
+    function __eq__( other){ return this.data == this.__cast(other);}
+    function __ne__( other){ return this.data != this.__cast(other);}
+    function __gt__( other){ return this.data >  this.__cast(other);}
+    function __ge__( other){ return this.data >= this.__cast(other);}
+    function __cast( other){
+        if isinstance(other, UserList){ return other.data;}
+        else{ return other;}
+    } function __cmp__( other){
+        return cmp(this.data, this.__cast(other));
+    } __hash__ = nil; # Mutable sequence, so not hashable
+    function __contains__( item){ return item in this.data;}
+    function __len__(){ return len(this.data);}
+    function __getitem__( i){ return this.data[i];}
+    function __setitem__( i, item){ this.data[i] = item;}
+    function __delitem__( i){ del this.data[i];}
+    function __getslice__( i, j){
         i = max(i, 0); j = max(j, 0);
-        return self.__class__(self.data[i:j]);
-    } def __setslice__(self, i, j, other){
+        return this.__class__(this.data[i:j]);
+    } function __setslice__( i, j, other){
         i = max(i, 0); j = max(j, 0);
         if isinstance(other, UserList){
-            self.data[i:j] = other.data;
-        } elif isinstance(other, type(self.data)){
-            self.data[i:j] = other;
+            this.data[i:j] = other.data;
+        } elif isinstance(other, type(this.data)){
+            this.data[i:j] = other;
         } else{
-            self.data[i:j] = list(other);
-    } } def __delslice__(self, i, j){
+            this.data[i:j] = list(other);
+    } } function __delslice__( i, j){
         i = max(i, 0); j = max(j, 0);
-        del self.data[i:j];
-    } def __add__(self, other){
+        del this.data[i:j];
+    } function __add__( other){
         if isinstance(other, UserList){
-            return self.__class__(self.data + other.data);
-        } elif isinstance(other, type(self.data)){
-            return self.__class__(self.data + other);
+            return this.__class__(this.data + other.data);
+        } elif isinstance(other, type(this.data)){
+            return this.__class__(this.data + other);
         } else{
-            return self.__class__(self.data + list(other));
-    } } def __radd__(self, other){
+            return this.__class__(this.data + list(other));
+    } } function __radd__( other){
         if isinstance(other, UserList){
-            return self.__class__(other.data + self.data);
-        } elif isinstance(other, type(self.data)){
-            return self.__class__(other + self.data);
+            return this.__class__(other.data + this.data);
+        } elif isinstance(other, type(this.data)){
+            return this.__class__(other + this.data);
         } else{
-            return self.__class__(list(other) + self.data);
-    } } def __iadd__(self, other){
+            return this.__class__(list(other) + this.data);
+    } } function __iadd__( other){
         if isinstance(other, UserList){
-            self.data += other.data;
-        } elif isinstance(other, type(self.data)){
-            self.data += other;
+            this.data += other.data;
+        } elif isinstance(other, type(this.data)){
+            this.data += other;
         } else{
-            self.data += list(other);
-        } return self;
-    } def __mul__(self, n){
-        return self.__class__(self.data*n);
+            this.data += list(other);
+        } return this;
+    } function __mul__( n){
+        return this.__class__(this.data*n);
     } __rmul__ = __mul__;
-    def __imul__(self, n){
-        self.data *= n;
-        return self;
-    } def append(self, item){ self.data.append(item);
-    def insert(self, i, item){ self.data.insert(i, item);
-    def pop(self, i=-1){ return self.data.pop(i);
-    def remove(self, item){ self.data.remove(item);
-    def count(self, item){ return self.data.count(item);
-    def index(self, item, *args){ return self.data.index(item, *args);
-    def reverse(self){ self.data.reverse();
-    def sort(self, *args, **kwds){ self.data.sort(*args, **kwds);
-    def extend(self, other){
+    function __imul__( n){
+        this.data *= n;
+        return this;
+    } function append( item){ this.data.append(item);}
+    function insert( i, item){ this.data.insert(i, item);}
+    function pop( i=-1){ return this.data.pop(i);}
+    function remove( item){ this.data.remove(item);}
+    function count( item){ return this.data.count(item);}
+    function index( item, *args){ return this.data.index(item, *args);}
+    function reverse(){ this.data.reverse();}
+    function sort( *args, **kwds){ this.data.sort(*args, **kwds);}
+    function extend( other){
         if isinstance(other, UserList){
-            self.data.extend(other.data);
+            this.data.extend(other.data);
         } else{
-            self.data.extend(other);
+            this.data.extend(other);
 
 }
 } }

@@ -27,9 +27,9 @@ class error(Exception){
 # Externally visible function. Load form.
 #
 }
-def parse_form(filename, formname){
+function parse_form(filename, formname){
     forms = checkcache(filename);
-    if forms is None{
+    if forms is nil{
         forms = parse_forms(filename);
     } if forms.has_key(formname){
         return forms[formname];
@@ -40,14 +40,14 @@ def parse_form(filename, formname){
 # Externally visible function. Load all forms.
 #
 }
-} def parse_forms(filename){
+} function parse_forms(filename){
     forms = checkcache(filename);
-    if forms is not None{ return forms;
+    if forms is not nil{ return forms;}
     fp = _open_formfile(filename);
     nforms = _parse_fd_header(fp);
     forms = {};
     for i in range(nforms){
-        form = _parse_fd_form(fp, None);
+        form = _parse_fd_form(fp, nil);
         forms[form[0].Name] = form;
     } writecache(filename, forms);
     return forms;
@@ -58,7 +58,7 @@ def parse_form(filename, formname){
 }
 MAGIC = '.fdc';
 _internal_cache = {};                    # Used by frozen scripts only
-def checkcache(filename){
+function checkcache(filename){
     if _internal_cache.has_key(filename){
         altforms = _internal_cache[filename];
         return _unpack_cache(altforms);
@@ -70,16 +70,16 @@ def checkcache(filename){
         fp = open(cachename, 'r');
     } except IOError{
         #print 'flp: no cache file', cachename
-        return None;
+        return nil;
     } try{
         if fp.read(4) != MAGIC{
             print 'flp: bad magic word in cache file', cachename;
-            return None;
+            return nil;
         } cache_mtime = rdlong(fp);
         file_mtime = getmtime(filename);
         if cache_mtime != file_mtime{
             #print 'flp: outdated cache file', cachename
-            return None;
+            return nil;
         #print 'flp: valid cache file', cachename
         }
         altforms = marshal.load(fp);
@@ -88,7 +88,7 @@ def checkcache(filename){
         fp.close();
 
 }
-} def _unpack_cache(altforms){
+} function _unpack_cache(altforms){
     forms = {};
     for name in altforms.keys(){
         altobj, altlist = altforms[name];
@@ -103,31 +103,31 @@ def checkcache(filename){
     } return forms;
 
 }
-def rdlong(fp){
+function rdlong(fp){
     s = fp.read(4);
-    if len(s) != 4{ return None;
+    if len(s) != 4{ return nil;}
     a, b, c, d = s[0], s[1], s[2], s[3];
     return ord(a)<<24 | ord(b)<<16 | ord(c)<<8 | ord(d);
 
 }
-def wrlong(fp, x){
+function wrlong(fp, x){
     a, b, c, d = (x>>24)&0xff, (x>>16)&0xff, (x>>8)&0xff, x&0xff;
     fp.write(chr(a) + chr(b) + chr(c) + chr(d));
 
 }
-def getmtime(filename){
+function getmtime(filename){
     import os;
     from stat import ST_MTIME;
     try{
         return os.stat(filename)[ST_MTIME];
     } except os.error{
-        return None;
+        return nil;
 
 #
 # Internal: write cached version of the form (parsing is too slow!)
 #
 }
-} def writecache(filename, forms){
+} function writecache(filename, forms){
     import marshal;
     fp, filename = _open_formfile2(filename);
     fp.close();
@@ -156,7 +156,7 @@ def getmtime(filename){
 # the script!)
 #
 }
-def freeze(filename){
+function freeze(filename){
     forms = parse_forms(filename);
     altforms = _pack_cache(forms);
     print 'import flp';
@@ -166,13 +166,13 @@ def freeze(filename){
 # Internal: create the data structure to be placed in the cache
 #
 }
-def _pack_cache(forms){
+function _pack_cache(forms){
     altforms = {};
     for name in forms.keys(){
         obj, list = forms[name];
         altobj = obj.__dict__;
         altlist = [];
-        for obj in list{ altlist.append(obj.__dict__);
+        for obj in list{ altlist.append(obj.__dict__);}
         altforms[name] = altobj, altlist;
     } return altforms;
 
@@ -180,18 +180,18 @@ def _pack_cache(forms){
 # Internal: Locate form file (using PYTHONPATH) and open file
 #
 }
-def _open_formfile(filename){
+function _open_formfile(filename){
     return _open_formfile2(filename)[0];
 
 }
-def _open_formfile2(filename){
+function _open_formfile2(filename){
     if filename[-3:] != '.fd'{
         filename = filename + '.fd';
     } if filename[0] == '/'{
         try{
             fp = open(filename,'r');
         } except IOError{
-            fp = None;
+            fp = nil;
     } } else{
         for pc in sys.path{
             pn = os.path.join(pc, filename);
@@ -200,8 +200,8 @@ def _open_formfile2(filename){
                 filename = pn;
                 break;
             } except IOError{
-                fp = None;
-    } } } if fp is None{
+                fp = nil;
+    } } } if fp is nil{
         raise error, 'Cannot find forms file ' + filename;
     } return fp, filename;
 
@@ -209,7 +209,7 @@ def _open_formfile2(filename){
 # Internal: parse the fd file header, return number of forms
 #
 }
-def _parse_fd_header(file){
+function _parse_fd_header(file){
     # First read the magic header line
     datum = _parse_1_line(file);
     if datum != ('Magic', 12321){
@@ -226,12 +226,12 @@ def _parse_fd_header(file){
 # the special value None means 'always parse it'.
 #
 }
-def _parse_fd_form(file, name){
+function _parse_fd_form(file, name){
     datum = _parse_1_line(file);
     if datum != FORMLINE{
         raise error, 'Missing === FORM === line';
     } form = _parse_object(file);
-    if form.Name == name or name is None{
+    if form.Name == name or name is nil{
         objs = [];
         for j in range(form.Numberofobjects){
             obj = _parse_object(file);
@@ -240,24 +240,24 @@ def _parse_fd_form(file, name){
     } else{
         for j in range(form.Numberofobjects){
             _skip_object(file);
-    } } return None;
+    } } return nil;
 
 #
 # Internal class: a convenient place to store object info fields
 #
 }
 class _newobj{
-    def add(self, name, value){
-        self.__dict__[name] = value;
-    } def make(self, dict){
+    function add( name, value){
+        this.__dict__[name] = value;
+    } function make( dict){
         for name in dict.keys(){
-            self.add(name, dict[name]);
+            this.add(name, dict[name]);
 
 #
 # Internal parsing routines.
 #
 }
-} } def _parse_string(str){
+} } function _parse_string(str){
     if '\\' in str{
         s = '\'' + str + '\'';
         try{
@@ -267,11 +267,11 @@ class _newobj{
     } } return str;
 
 }
-def _parse_num(str){
+function _parse_num(str){
     return eval(str);
 
 }
-def _parse_numlist(str){
+function _parse_numlist(str){
     slist = string.split(str);
     nlist = [];
     for i in slist{
@@ -296,7 +296,7 @@ _parse_func = { \
 import re;
 prog = re.compile('^([^:]*): *(.*)');
 
-def _parse_line(line){
+function _parse_line(line){
     match = prog.match(line);
     if not match{
         return line;
@@ -313,21 +313,21 @@ def _parse_line(line){
     return (name, value);
 
 }
-def _readline(file){
+function _readline(file){
     line = file.readline();
     if not line{
         raise EOFError;
     } return line[:-1];
 
 }
-def _parse_1_line(file){
+function _parse_1_line(file){
     line = _readline(file);
     while line == ''{
         line = _readline(file);
     } return _parse_line(line);
 
 }
-def _skip_object(file){
+function _skip_object(file){
     line = '';
     while not line in (SPLITLINE, FORMLINE, ENDLINE){
         pos = file.tell();
@@ -336,7 +336,7 @@ def _skip_object(file){
         file.seek(pos);
 
 }
-} def _parse_object(file){
+} function _parse_object(file){
     obj = _newobj();
     while 1{
         pos = file.tell();
@@ -357,7 +357,7 @@ def _skip_object(file){
 # External - Create a form and link to an instance variable.
 #
 }
-} def create_full_form(inst, (fdata, odatalist)){
+} function create_full_form(inst, (fdata, odatalist)){
     form = create_form(fdata);
     exec 'inst.'+fdata.Name+' = form\n';
     for odata in odatalist{
@@ -368,7 +368,7 @@ def _skip_object(file){
 # variable.
 #
 }
-} def merge_full_form(inst, form, (fdata, odatalist)){
+} function merge_full_form(inst, form, (fdata, odatalist)){
     exec 'inst.'+fdata.Name+' = form\n';
     if odatalist[0].Class != FL.BOX{
         raise error, 'merge_full_form() expects FL.BOX as first obj';
@@ -384,7 +384,7 @@ def _skip_object(file){
 # External Create_form - Create form from parameters
 #
 }
-} def create_form(fdata){
+} function create_form(fdata){
     import fl;
     return fl.make_form(FL.NO_BOX, fdata.Width, fdata.Height);
 
@@ -393,7 +393,7 @@ def _skip_object(file){
 # no callbacks. Returns the object created.
 #
 }
-def create_object(form, odata){
+function create_object(form, odata){
     obj = _create_object(form, odata);
     if odata.Callback{
         raise error, 'Creating free object with callback';
@@ -402,7 +402,7 @@ def create_object(form, odata){
 # External create_object_instance - Create object in an instance.
 #
 }
-def create_object_instance(inst, form, odata){
+function create_object_instance(inst, form, odata){
     obj = _create_object(form, odata);
     if odata.Callback{
         cbfunc = eval('inst.'+odata.Callback);
@@ -413,7 +413,7 @@ def create_object_instance(inst, form, odata){
 # Internal _create_object: Create the object and fill options
 #
 }
-} def _create_object(form, odata){
+} function _create_object(form, odata){
     crfunc = _select_crfunc(form, odata.Class);
     obj = crfunc(odata.Type, odata.Box[0], odata.Box[1], odata.Box[2], \
             odata.Box[3], odata.Label);
@@ -430,34 +430,34 @@ def create_object_instance(inst, form, odata){
 # Internal crfunc: helper function that returns correct create function
 #
 }
-def _select_crfunc(fm, cl){
-    if cl == FL.BEGIN_GROUP{ return fm.bgn_group;
-    elif cl == FL.END_GROUP{ return fm.end_group;
-    elif cl == FL.BITMAP{ return fm.add_bitmap;
-    elif cl == FL.BOX{ return fm.add_box;
-    elif cl == FL.BROWSER{ return fm.add_browser;
-    elif cl == FL.BUTTON{ return fm.add_button;
-    elif cl == FL.CHART{ return fm.add_chart;
-    elif cl == FL.CHOICE{ return fm.add_choice;
-    elif cl == FL.CLOCK{ return fm.add_clock;
-    elif cl == FL.COUNTER{ return fm.add_counter;
-    elif cl == FL.DIAL{ return fm.add_dial;
-    elif cl == FL.FREE{ return fm.add_free;
-    elif cl == FL.INPUT{ return fm.add_input;
-    elif cl == FL.LIGHTBUTTON{ return fm.add_lightbutton;
-    elif cl == FL.MENU{ return fm.add_menu;
-    elif cl == FL.POSITIONER{ return fm.add_positioner;
-    elif cl == FL.ROUNDBUTTON{ return fm.add_roundbutton;
-    elif cl == FL.SLIDER{ return fm.add_slider;
-    elif cl == FL.VALSLIDER{ return fm.add_valslider;
-    elif cl == FL.TEXT{ return fm.add_text;
-    elif cl == FL.TIMER{ return fm.add_timer;
+function _select_crfunc(fm, cl){
+    if cl == FL.BEGIN_GROUP{ return fm.bgn_group;}
+    elif cl == FL.END_GROUP{ return fm.end_group;}
+    elif cl == FL.BITMAP{ return fm.add_bitmap;}
+    elif cl == FL.BOX{ return fm.add_box;}
+    elif cl == FL.BROWSER{ return fm.add_browser;}
+    elif cl == FL.BUTTON{ return fm.add_button;}
+    elif cl == FL.CHART{ return fm.add_chart;}
+    elif cl == FL.CHOICE{ return fm.add_choice;}
+    elif cl == FL.CLOCK{ return fm.add_clock;}
+    elif cl == FL.COUNTER{ return fm.add_counter;}
+    elif cl == FL.DIAL{ return fm.add_dial;}
+    elif cl == FL.FREE{ return fm.add_free;}
+    elif cl == FL.INPUT{ return fm.add_input;}
+    elif cl == FL.LIGHTBUTTON{ return fm.add_lightbutton;}
+    elif cl == FL.MENU{ return fm.add_menu;}
+    elif cl == FL.POSITIONER{ return fm.add_positioner;}
+    elif cl == FL.ROUNDBUTTON{ return fm.add_roundbutton;}
+    elif cl == FL.SLIDER{ return fm.add_slider;}
+    elif cl == FL.VALSLIDER{ return fm.add_valslider;}
+    elif cl == FL.TEXT{ return fm.add_text;}
+    elif cl == FL.TIMER{ return fm.add_timer;}
     else{
         raise error, 'Unknown object type: %r' % (cl,);
 
 
 }
-} def test(){
+} function test(){
     import time;
     t0 = time.time();
     if len(sys.argv) == 2{
@@ -477,7 +477,7 @@ def _select_crfunc(fm, cl){
         print 'Usage: test fdfile [form]';
 
 }
-} def _printform(form){
+} function _printform(form){
     f = form[0];
     objs = form[1];
     print 'Form ', f.Name, ', size: ', f.Width, f.Height, ' Nobj ', f.Numberofobjects;

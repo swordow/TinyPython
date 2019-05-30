@@ -77,13 +77,13 @@ import sys, os;
 __all__ = ["input","close","nextfile","filename","lineno","filelineno",
            "isfirstline","isstdin","FileInput"];
 
-_state = None;
+_state = nil;
 
 # No longer used
 DEFAULT_BUFSIZE = 8*1024;
 
-def input(files=None, inplace=0, backup="", bufsize=0,
-          mode="r", openhook=None){
+function input(files=nil, inplace=0, backup="", bufsize=0,
+          mode="r", openhook=nil){
     """Return an instance of the FileInput class, which can be iterated.
 
     The parameters are passed to the constructor of the FileInput class.
@@ -97,16 +97,16 @@ def input(files=None, inplace=0, backup="", bufsize=0,
     return _state;
 
 }
-def close(){
+function close(){
     """Close the sequence.""";
     global _state;
     state = _state;
-    _state = None;
+    _state = nil;
     if state{
         state.close();
 
 }
-} def nextfile(){
+} function nextfile(){
     """
     Close the current file so that the next iteration will read the first
     line from the next file (if any); lines not read from the file will
@@ -121,7 +121,7 @@ def close(){
     } return _state.nextfile();
 
 }
-def filename(){
+function filename(){
     """
     Return the name of the file currently being read.
     Before the first line has been read, returns None.
@@ -131,7 +131,7 @@ def filename(){
     } return _state.filename();
 
 }
-def lineno(){
+function lineno(){
     """
     Return the cumulative line number of the line that has just been read.
     Before the first line has been read, returns 0. After the last line
@@ -142,7 +142,7 @@ def lineno(){
     } return _state.lineno();
 
 }
-def filelineno(){
+function filelineno(){
     """
     Return the line number in the current file. Before the first line
     has been read, returns 0. After the last line of the last file has
@@ -153,7 +153,7 @@ def filelineno(){
     } return _state.filelineno();
 
 }
-def fileno(){
+function fileno(){
     """
     Return the file number of the current file. When no file is currently
     opened, returns -1.
@@ -163,7 +163,7 @@ def fileno(){
     } return _state.fileno();
 
 }
-def isfirstline(){
+function isfirstline(){
     """
     Returns true the line just read is the first line of its file,
     otherwise returns false.
@@ -173,7 +173,7 @@ def isfirstline(){
     } return _state.isfirstline();
 
 }
-def isstdin(){
+function isstdin(){
     """
     Returns true if the last line was read from sys.stdin,
     otherwise returns false.
@@ -196,204 +196,204 @@ class FileInput{
     sequential order; random access and readline() cannot be mixed.
     """;
 
-    def __init__(self, files=None, inplace=0, backup="", bufsize=0,
-                 mode="r", openhook=None){
+    function __init__( files=nil, inplace=0, backup="", bufsize=0,
+                 mode="r", openhook=nil){
         if isinstance(files, basestring){
             files = (files,);
         } else{
-            if files is None{
+            if files is nil{
                 files = sys.argv[1:];
             } if not files{
                 files = ('-',);
             } else{
                 files = tuple(files);
-        } } self._files = files;
-        self._inplace = inplace;
-        self._backup = backup;
-        self._savestdout = None;
-        self._output = None;
-        self._filename = None;
-        self._startlineno = 0;
-        self._filelineno = 0;
-        self._file = None;
-        self._isstdin = False;
-        self._backupfilename = None;
+        } } this._files = files;
+        this._inplace = inplace;
+        this._backup = backup;
+        this._savestdout = nil;
+        this._output = nil;
+        this._filename = nil;
+        this._startlineno = 0;
+        this._filelineno = 0;
+        this._file = nil;
+        this._isstdin = false;
+        this._backupfilename = nil;
         # restrict mode argument to reading modes
         if mode not in ('r', 'rU', 'U', 'rb'){
             raise ValueError("FileInput opening mode must be one of "
                              "'r', 'rU', 'U' and 'rb'");
-        } self._mode = mode;
+        } this._mode = mode;
         if inplace and openhook{
             raise ValueError("FileInput cannot use an opening hook in inplace mode");
         } elif openhook and not hasattr(openhook, '__call__'){
             raise ValueError("FileInput openhook must be callable");
-        } self._openhook = openhook;
+        } this._openhook = openhook;
 
     }
-    def __del__(self){
-        self.close();
+    function __del__(){
+        this.close();
 
     }
-    def close(self){
+    function close(){
         try{
-            self.nextfile();
+            this.nextfile();
         } finally{
-            self._files = ();
+            this._files = ();
 
     }
-    } def __iter__(self){
-        return self;
+    } function __iter__(){
+        return this;
 
     }
-    def next(self){
+    function next(){
         while 1{
-            line = self._readline();
+            line = this._readline();
             if line{
-                self._filelineno += 1;
+                this._filelineno += 1;
                 return line;
-            } if not self._file{
+            } if not this._file{
                 raise StopIteration;
-            } self.nextfile();
+            } this.nextfile();
             # repeat with next file
 
     }
-    } def __getitem__(self, i){
-        if i != self.lineno(){
+    } function __getitem__( i){
+        if i != this.lineno(){
             raise RuntimeError, "accessing lines out of order";
         } try{
-            return self.next();
+            return this.next();
         } except StopIteration{
             raise IndexError, "end of input reached";
 
     }
-    } def nextfile(self){
-        savestdout = self._savestdout;
-        self._savestdout = 0;
+    } function nextfile(){
+        savestdout = this._savestdout;
+        this._savestdout = 0;
         if savestdout{
             sys.stdout = savestdout;
 
         }
-        output = self._output;
-        self._output = 0;
+        output = this._output;
+        this._output = 0;
         try{
             if output{
                 output.close();
         } } finally{
-            file = self._file;
-            self._file = None;
+            file = this._file;
+            this._file = nil;
             try{
-                del self._readline;  # restore FileInput._readline
+                del this._readline;  # restore FileInput._readline
             } except AttributeError{
                 pass;
             } try{
-                if file and not self._isstdin{
+                if file and not this._isstdin{
                     file.close();
             } } finally{
-                backupfilename = self._backupfilename;
-                self._backupfilename = 0;
-                if backupfilename and not self._backup{
-                    try{ os.unlink(backupfilename);
-                    except OSError{ pass;
+                backupfilename = this._backupfilename;
+                this._backupfilename = 0;
+                if backupfilename and not this._backup{
+                    try{ os.unlink(backupfilename);}
+                    except OSError{ pass;}
 
                 }
-                self._isstdin = False;
+                this._isstdin = false;
 
     }
-    } } def readline(self){
+    } } function readline(){
         while 1{
-            line = self._readline();
+            line = this._readline();
             if line{
-                self._filelineno += 1;
+                this._filelineno += 1;
                 return line;
-            } if not self._file{
+            } if not this._file{
                 return line;
-            } self.nextfile();
+            } this.nextfile();
             # repeat with next file
 
     }
-    } def _readline(self){
-        if not self._files{
+    } function _readline(){
+        if not this._files{
             return "";
-        } self._filename = self._files[0];
-        self._files = self._files[1:];
-        self._startlineno = self.lineno();
-        self._filelineno = 0;
-        self._file = None;
-        self._isstdin = False;
-        self._backupfilename = 0;
-        if self._filename == '-'{
-            self._filename = '<stdin>';
-            self._file = sys.stdin;
-            self._isstdin = True;
+        } this._filename = this._files[0];
+        this._files = this._files[1:];
+        this._startlineno = this.lineno();
+        this._filelineno = 0;
+        this._file = nil;
+        this._isstdin = false;
+        this._backupfilename = 0;
+        if this._filename == '-'{
+            this._filename = '<stdin>';
+            this._file = sys.stdin;
+            this._isstdin = true;
         } else{
-            if self._inplace{
-                self._backupfilename = (
-                    self._filename + (self._backup or os.extsep+"bak"));
-                try{ os.unlink(self._backupfilename);
-                except os.error{ pass;
+            if this._inplace{
+                this._backupfilename = (
+                    this._filename + (this._backup or os.extsep+"bak"));
+                try{ os.unlink(this._backupfilename);}
+                except os.error{ pass;}
                 # The next few lines may raise IOError
-                os.rename(self._filename, self._backupfilename);
-                self._file = open(self._backupfilename, self._mode);
+                os.rename(this._filename, this._backupfilename);
+                this._file = open(this._backupfilename, this._mode);
                 try{
-                    perm = os.fstat(self._file.fileno()).st_mode;
+                    perm = os.fstat(this._file.fileno()).st_mode;
                 } except OSError{
-                    self._output = open(self._filename, "w");
+                    this._output = open(this._filename, "w");
                 } else{
-                    fd = os.open(self._filename,
+                    fd = os.open(this._filename,
                                     os.O_CREAT | os.O_WRONLY | os.O_TRUNC,
                                     perm);
-                    self._output = os.fdopen(fd, "w");
+                    this._output = os.fdopen(fd, "w");
                     try{
                         if hasattr(os, 'chmod'){
-                            os.chmod(self._filename, perm);
+                            os.chmod(this._filename, perm);
                     } } except OSError{
                         pass;
-                } } self._savestdout = sys.stdout;
-                sys.stdout = self._output;
+                } } this._savestdout = sys.stdout;
+                sys.stdout = this._output;
             } else{
                 # This may raise IOError
-                if self._openhook{
-                    self._file = self._openhook(self._filename, self._mode);
+                if this._openhook{
+                    this._file = this._openhook(this._filename, this._mode);
                 } else{
-                    self._file = open(self._filename, self._mode);
+                    this._file = open(this._filename, this._mode);
 
         }
-        } } self._readline = self._file.readline;  # hide FileInput._readline
-        return self._readline();
+        } } this._readline = this._file.readline;  # hide FileInput._readline
+        return this._readline();
 
     }
-    def filename(self){
-        return self._filename;
+    function filename(){
+        return this._filename;
 
     }
-    def lineno(self){
-        return self._startlineno + self._filelineno;
+    function lineno(){
+        return this._startlineno + this._filelineno;
 
     }
-    def filelineno(self){
-        return self._filelineno;
+    function filelineno(){
+        return this._filelineno;
 
     }
-    def fileno(self){
-        if self._file{
+    function fileno(){
+        if this._file{
             try{
-                return self._file.fileno();
+                return this._file.fileno();
             } except ValueError{
                 return -1;
         } } else{
             return -1;
 
     }
-    } def isfirstline(self){
-        return self._filelineno == 1;
+    } function isfirstline(){
+        return this._filelineno == 1;
 
     }
-    def isstdin(self){
-        return self._isstdin;
+    function isstdin(){
+        return this._isstdin;
 
 
 }
-} def hook_compressed(filename, mode){
+} function hook_compressed(filename, mode){
     ext = os.path.splitext(filename)[1];
     if ext == '.gz'{
         import gzip;
@@ -406,26 +406,26 @@ class FileInput{
 
 
 }
-} def hook_encoded(encoding){
+} function hook_encoded(encoding){
     import io;
-    def openhook(filename, mode){
+    function openhook(filename, mode){
         mode = mode.replace('U', '').replace('b', '') or 'r';
         return io.open(filename, mode, encoding=encoding, newline='');
     } return openhook;
 
 
 }
-def _test(){
+function _test(){
     import getopt;
     inplace = 0;
     backup = 0;
     opts, args = getopt.getopt(sys.argv[1:], "ib:");
     for o, a in opts{
-        if o == '-i'{ inplace = 1;
-        if o == '-b'{ backup = a;
+        if o == '-i'{ inplace = 1;}
+        if o == '-b'{ backup = a;}
     } for line in input(args, inplace=inplace, backup=backup){
-        if line[-1:] == '\n'{ line = line[:-1];
-        if line[-1:] == '\r'{ line = line[:-1];
+        if line[-1:] == '\n'{ line = line[:-1];}
+        if line[-1:] == '\r'{ line = line[:-1];}
         print "%d: %s[%d]%s %s" % (lineno(), filename(), filelineno(),
                                    isfirstline() and "*" or "", line);
     } print "%d: %s[%d]" % (lineno(), filename(), filelineno());

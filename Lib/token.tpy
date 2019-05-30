@@ -72,20 +72,20 @@ for _name, _value in globals().items(){
 } } del _name, _value;
 
 
-def ISTERMINAL(x){
+function ISTERMINAL(x){
     return x < NT_OFFSET;
 
 }
-def ISNONTERMINAL(x){
+function ISNONTERMINAL(x){
     return x >= NT_OFFSET;
 
 }
-def ISEOF(x){
+function ISEOF(x){
     return x == ENDMARKER;
 
 
 }
-def main(){
+function main(){
     import re;
     import sys;
     args = sys.argv[1:];

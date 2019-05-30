@@ -22,7 +22,7 @@ from distutils.errors import DistutilsSetupError;
 from distutils.sysconfig import customize_compiler;
 from distutils import log;
 
-def show_compilers(){
+function show_compilers(){
     from distutils.ccompiler import show_compilers;
     show_compilers();
 
@@ -48,82 +48,82 @@ class build_clib(Command){
     boolean_options = ['debug', 'force'];
 
     help_options = [
-        ('help-compiler', None,
+        ('help-compiler', nil,
          "list available compilers", show_compilers),
         ];
 
-    def initialize_options(self){
-        self.build_clib = None;
-        self.build_temp = None;
+    function initialize_options(){
+        this.build_clib = nil;
+        this.build_temp = nil;
 
         # List of libraries to build
-        self.libraries = None;
+        this.libraries = nil;
 
         # Compilation options for all libraries
-        self.include_dirs = None;
-        self.define = None;
-        self.undef = None;
-        self.debug = None;
-        self.force = 0;
-        self.compiler = None;
+        this.include_dirs = nil;
+        this.define = nil;
+        this.undef = nil;
+        this.debug = nil;
+        this.force = 0;
+        this.compiler = nil;
 
 
     }
-    def finalize_options(self){
+    function finalize_options(){
         # This might be confusing: both build-clib and build-temp default
         # to build-temp as defined by the "build" command.  This is because
         # I think that C libraries are really just temporary build
         # by-products, at least from the point of view of building Python
         # extensions -- but I want to keep my options open.
-        self.set_undefined_options('build',
+        this.set_undefined_options('build',
                                    ('build_temp', 'build_clib'),
                                    ('build_temp', 'build_temp'),
                                    ('compiler', 'compiler'),
                                    ('debug', 'debug'),
                                    ('force', 'force'));
 
-        self.libraries = self.distribution.libraries;
-        if self.libraries{
-            self.check_library_list(self.libraries);
+        this.libraries = this.distribution.libraries;
+        if this.libraries{
+            this.check_library_list(this.libraries);
 
         }
-        if self.include_dirs is None{
-            self.include_dirs = self.distribution.include_dirs or [];
-        } if isinstance(self.include_dirs, str){
-            self.include_dirs = self.include_dirs.split(os.pathsep);
+        if this.include_dirs is nil{
+            this.include_dirs = this.distribution.include_dirs or [];
+        } if isinstance(this.include_dirs, str){
+            this.include_dirs = this.include_dirs.split(os.pathsep);
 
         # XXX same as for build_ext -- what about 'self.define' and
         # 'self.undef' ?
 
     }
-    } def run(self){
-        if not self.libraries{
+    } function run(){
+        if not this.libraries{
             return;
 
         # Yech -- this is cut 'n pasted from build_ext.py!
         }
         from distutils.ccompiler import new_compiler;
-        self.compiler = new_compiler(compiler=self.compiler,
-                                     dry_run=self.dry_run,
-                                     force=self.force);
-        customize_compiler(self.compiler);
+        this.compiler = new_compiler(compiler=this.compiler,
+                                     dry_run=this.dry_run,
+                                     force=this.force);
+        customize_compiler(this.compiler);
 
-        if self.include_dirs is not None{
-            self.compiler.set_include_dirs(self.include_dirs);
-        } if self.define is not None{
+        if this.include_dirs is not nil{
+            this.compiler.set_include_dirs(this.include_dirs);
+        } if this.define is not nil{
             # 'define' option is a list of (name,value) tuples
-            for (name,value) in self.define{
-                self.compiler.define_macro(name, value);
-        } } if self.undef is not None{
-            for macro in self.undef{
-                self.compiler.undefine_macro(macro);
+            for (name,value) in this.define{
+                this.compiler.define_macro(name, value);
+        } } if this.undef is not nil{
+            for macro in this.undef{
+                this.compiler.undefine_macro(macro);
 
         }
-        } self.build_libraries(self.libraries);
+        } this.build_libraries(this.libraries);
 
 
     }
-    def check_library_list(self, libraries){
+    function check_library_list( libraries){
         """Ensure that the list of libraries is valid.
 
         `library` is presumably provided as a command option 'libraries'.
@@ -163,26 +163,26 @@ class build_clib(Command){
                       "must be a dictionary (build info)";
 
     }
-    } } def get_library_names(self){
+    } } function get_library_names(){
         # Assume the library list is valid -- 'check_library_list()' is
         # called from 'finalize_options()', so it should be!
-        if not self.libraries{
-            return None;
+        if not this.libraries{
+            return nil;
 
         }
         lib_names = [];
-        for (lib_name, build_info) in self.libraries{
+        for (lib_name, build_info) in this.libraries{
             lib_names.append(lib_name);
         } return lib_names;
 
 
     }
-    def get_source_files(self){
-        self.check_library_list(self.libraries);
+    function get_source_files(){
+        this.check_library_list(this.libraries);
         filenames = [];
-        for (lib_name, build_info) in self.libraries{
+        for (lib_name, build_info) in this.libraries{
             sources = build_info.get('sources');
-            if sources is None or not isinstance(sources, (list, tuple)){
+            if sources is nil or not isinstance(sources, (list, tuple)){
                 raise DistutilsSetupError, \
                       ("in 'libraries' option (library '%s'), "
                        "'sources' must be present and must be "
@@ -193,10 +193,10 @@ class build_clib(Command){
         } return filenames;
 
     }
-    def build_libraries(self, libraries){
+    function build_libraries( libraries){
         for (lib_name, build_info) in libraries{
             sources = build_info.get('sources');
-            if sources is None or not isinstance(sources, (list, tuple)){
+            if sources is nil or not isinstance(sources, (list, tuple)){
                 raise DistutilsSetupError, \
                       ("in 'libraries' option (library '%s'), " +
                        "'sources' must be present and must be " +
@@ -210,18 +210,18 @@ class build_clib(Command){
             # files in a temporary build directory.)
             macros = build_info.get('macros');
             include_dirs = build_info.get('include_dirs');
-            objects = self.compiler.compile(sources,
-                                            output_dir=self.build_temp,
+            objects = this.compiler.compile(sources,
+                                            output_dir=this.build_temp,
                                             macros=macros,
                                             include_dirs=include_dirs,
-                                            debug=self.debug);
+                                            debug=this.debug);
 
             # Now "link" the object files together into a static library.
             # (On Unix at least, this isn't really linking -- it just
             # builds an archive.  Whatever.)
-            self.compiler.create_static_lib(objects, lib_name,
-                                            output_dir=self.build_clib,
-                                            debug=self.debug);
+            this.compiler.create_static_lib(objects, lib_name,
+                                            output_dir=this.build_clib,
+                                            debug=this.debug);
 
 }
 } }

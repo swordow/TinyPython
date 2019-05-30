@@ -39,72 +39,72 @@ class EMXCCompiler (UnixCCompiler){
     res_extension = ".res";      # compiled resource file
     exe_extension = ".exe";
 
-    def __init__ (self,
+    function __init__ (
                   verbose=0,
                   dry_run=0,
                   force=0){
 
-        UnixCCompiler.__init__ (self, verbose, dry_run, force);
+        UnixCCompiler.__init__ (this, verbose, dry_run, force);
 
         (status, details) = check_config_h();
-        self.debug_print("Python's GCC status: %s (details: %s)" %
+        this.debug_print("Python's GCC status: %s (details: %s)" %
                          (status, details));
         if status is not CONFIG_H_OK{
-            self.warn(
+            this.warn(
                 "Python's pyconfig.h doesn't seem to support your compiler.  " +
                 ("Reason: %s." % details) +
                 "Compiling may fail because of undefined preprocessor macros.");
 
         }
-        (self.gcc_version, self.ld_version) = \
+        (this.gcc_version, this.ld_version) = \
             get_versions();
-        self.debug_print(self.compiler_type + ": gcc %s, ld %s\n" %
-                         (self.gcc_version,
-                          self.ld_version) );
+        this.debug_print(this.compiler_type + ": gcc %s, ld %s\n" %
+                         (this.gcc_version,
+                          this.ld_version) );
 
         # Hard-code GCC because that's what this is all about.
         # XXX optimization, warnings etc. should be customizable.
-        self.set_executables(compiler='gcc -Zomf -Zmt -O3 -fomit-frame-pointer -mprobe -Wall',
+        this.set_executables(compiler='gcc -Zomf -Zmt -O3 -fomit-frame-pointer -mprobe -Wall',
                              compiler_so='gcc -Zomf -Zmt -O3 -fomit-frame-pointer -mprobe -Wall',
                              linker_exe='gcc -Zomf -Zmt -Zcrtdll',
                              linker_so='gcc -Zomf -Zmt -Zcrtdll -Zdll');
 
         # want the gcc library statically linked (so that we don't have
         # to distribute a version dependent on the compiler we have)
-        self.dll_libraries=["gcc"];
+        this.dll_libraries=["gcc"];
 
     # __init__ ()
 
     }
-    def _compile(self, obj, src, ext, cc_args, extra_postargs, pp_opts){
+    function _compile( obj, src, ext, cc_args, extra_postargs, pp_opts){
         if ext == '.rc'{
             # gcc requires '.rc' compiled to binary ('.res') files !!!
             try{
-                self.spawn(["rc", "-r", src]);
+                this.spawn(["rc", "-r", src]);
             } except DistutilsExecError, msg{
                 raise CompileError, msg;
         } } else{ # for other files use the C-compiler
             try{
-                self.spawn(self.compiler_so + cc_args + [src, '-o', obj] +
+                this.spawn(this.compiler_so + cc_args + [src, '-o', obj] +
                            extra_postargs);
             } except DistutilsExecError, msg{
                 raise CompileError, msg;
 
     }
-    } } def link (self,
+    } } function link (
               target_desc,
               objects,
               output_filename,
-              output_dir=None,
-              libraries=None,
-              library_dirs=None,
-              runtime_library_dirs=None,
-              export_symbols=None,
+              output_dir=nil,
+              libraries=nil,
+              library_dirs=nil,
+              runtime_library_dirs=nil,
+              export_symbols=nil,
               debug=0,
-              extra_preargs=None,
-              extra_postargs=None,
-              build_temp=None,
-              target_lang=None){
+              extra_preargs=nil,
+              extra_postargs=nil,
+              build_temp=nil,
+              target_lang=nil){
 
         # use separate copies, so we can modify the lists
         extra_preargs = copy.copy(extra_preargs or []);
@@ -112,12 +112,12 @@ class EMXCCompiler (UnixCCompiler){
         objects = copy.copy(objects or []);
 
         # Additional libraries
-        libraries.extend(self.dll_libraries);
+        libraries.extend(this.dll_libraries);
 
         # handle export symbols by creating a def-file
         # with executables this only works with gcc/ld as linker
-        if ((export_symbols is not None) and
-            (target_desc != self.EXECUTABLE)){
+        if ((export_symbols is not nil) and
+            (target_desc != this.EXECUTABLE)){
             # (The linker doesn't do anything if output is up-to-date.
             # So it would probably better to check if we really need this,
             # but for this we had to insert some unchanged parts of
@@ -142,7 +142,7 @@ class EMXCCompiler (UnixCCompiler){
                 "EXPORTS"];
             for sym in export_symbols{
                 contents.append('  "%s"' % sym);
-            } self.execute(write_file, (def_file, contents),
+            } this.execute(write_file, (def_file, contents),
                          "writing %s" % def_file);
 
             # next add options for def-file and to creating import libraries
@@ -163,7 +163,7 @@ class EMXCCompiler (UnixCCompiler){
             extra_preargs.append("-s");
 
         }
-        UnixCCompiler.link(self,
+        UnixCCompiler.link(this,
                            target_desc,
                            objects,
                            output_filename,
@@ -171,7 +171,7 @@ class EMXCCompiler (UnixCCompiler){
                            libraries,
                            library_dirs,
                            runtime_library_dirs,
-                           None, # export_symbols, we do this in our def-file
+                           nil, # export_symbols, we do this in our def-file
                            debug,
                            extra_preargs,
                            extra_postargs,
@@ -185,16 +185,16 @@ class EMXCCompiler (UnixCCompiler){
     # override the object_filenames method from CCompiler to
     # support rc and res-files
     }
-    def object_filenames (self,
+    function object_filenames (
                           source_filenames,
                           strip_dir=0,
                           output_dir=''){
-        if output_dir is None{ output_dir = '';
+        if output_dir is nil{ output_dir = '';}
         obj_names = [];
         for src_name in source_filenames{
             # use normcase to make sure '.rc' is really '.rc' and not '.RC'
             (base, ext) = os.path.splitext (os.path.normcase(src_name));
-            if ext not in (self.src_extensions + ['.rc']){
+            if ext not in (this.src_extensions + ['.rc']){
                 raise UnknownFileError, \
                       "unknown file type '%s' (from '%s')" % \
                       (ext, src_name);
@@ -203,10 +203,10 @@ class EMXCCompiler (UnixCCompiler){
             } if ext == '.rc'{
                 # these need to be compiled to object files
                 obj_names.append (os.path.join (output_dir,
-                                            base + self.res_extension));
+                                            base + this.res_extension));
             } else{
                 obj_names.append (os.path.join (output_dir,
-                                            base + self.obj_extension));
+                                            base + this.obj_extension));
         } } return obj_names;
 
     # object_filenames ()
@@ -214,7 +214,7 @@ class EMXCCompiler (UnixCCompiler){
     # override the find_library_file method from UnixCCompiler
     # to deal with file naming/searching differences
     }
-    def find_library_file(self, dirs, lib, debug=0){
+    function find_library_file( dirs, lib, debug=0){
         shortlib = '%s.lib' % lib;
         longlib = 'lib%s.lib' % lib;    # this form very rare
 
@@ -235,7 +235,7 @@ class EMXCCompiler (UnixCCompiler){
 
         # Oops, didn't find it in *any* of 'dirs'
         }
-        } return None;
+        } return nil;
 
 # class EMXCCompiler
 
@@ -249,7 +249,7 @@ class EMXCCompiler (UnixCCompiler){
 CONFIG_H_NOTOK = "not ok";
 CONFIG_H_UNCERTAIN = "uncertain";
 
-def check_config_h(){
+function check_config_h(){
 
     """Check if the current Python installation (specifically, pyconfig.h)
     appears amenable to building extensions with GCC.  Returns a tuple
@@ -305,7 +305,7 @@ def check_config_h(){
 
 
 }
-} } def get_versions(){
+} } function get_versions(){
     """ Try to find out the versions of gcc and ld.
         If not possible it returns None for it.
     """;
@@ -324,13 +324,13 @@ def check_config_h(){
         if result{
             gcc_version = StrictVersion(result.group(1));
         } else{
-            gcc_version = None;
+            gcc_version = nil;
     } } else{
-        gcc_version = None;
+        gcc_version = nil;
     # EMX ld has no way of reporting version number, and we use GCC
     # anyway - so we can link OMF DLLs
     }
-    ld_version = None;
+    ld_version = nil;
     return (gcc_version, ld_version);
 
 }

@@ -214,7 +214,7 @@ structseq_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
             dict, type->tp_members[i-n_unnamed_fields].name))) {
         }
         else {
-            ob = Py_None;
+            ob = Py_Nil;
         }
         Py_INCREF(ob);
         res->ob_item[i] = ob;

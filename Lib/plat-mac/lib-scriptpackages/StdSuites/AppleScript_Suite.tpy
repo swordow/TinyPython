@@ -12,7 +12,7 @@ _code = 'ascr';
 
 class AppleScript_Suite_Events{
 
-    def _26_(self, _object, _attributes={}, **_arguments){
+    function _26_( _object, _attributes={}, **_arguments){
         """&: Concatenation
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -21,11 +21,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = 'ccat';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -35,7 +35,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def _2a_(self, _object, _attributes={}, **_arguments){
+    } function _2a_( _object, _attributes={}, **_arguments){
         """*: Multiplication
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -44,11 +44,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = '*   ';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -58,7 +58,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def _2b_(self, _object, _attributes={}, **_arguments){
+    } function _2b_( _object, _attributes={}, **_arguments){
         """+: Addition
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -67,11 +67,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = '+   ';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -81,7 +81,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def _2d_(self, _object, _attributes={}, **_arguments){
+    } function _2d_( _object, _attributes={}, **_arguments){
         """-: Subtraction
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -90,11 +90,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = '-   ';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -104,7 +104,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def _3c_(self, _object, _attributes={}, **_arguments){
+    } function _3c_( _object, _attributes={}, **_arguments){
         """<: Less than
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -113,11 +113,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = '<   ';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -127,7 +127,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def _3d_(self, _object, _attributes={}, **_arguments){
+    } function _3d_( _object, _attributes={}, **_arguments){
         """=: Equality
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -136,11 +136,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = '=   ';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -150,7 +150,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def _3e_(self, _object, _attributes={}, **_arguments){
+    } function _3e_( _object, _attributes={}, **_arguments){
         """>: Greater than
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -159,11 +159,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = '>   ';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -204,7 +204,7 @@ class AppleScript_Suite_Events{
         'without' : 'wout',
     };
 
-    def Call_a5_subroutine(self, _object=None, _attributes={}, **_arguments){
+    function Call_a5_subroutine( _object=nil, _attributes={}, **_arguments){
         """Call\xa5subroutine: A subroutine call
         Required argument: anything
         Keyword argument at: a preposition
@@ -241,11 +241,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = 'psbr';
 
-        aetools.keysubst(_arguments, self._argmap_Call_a5_subroutine);
+        aetools.keysubst(_arguments, this._argmap_Call_a5_subroutine);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -255,7 +255,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def _5e_(self, _object, _attributes={}, **_arguments){
+    } function _5e_( _object, _attributes={}, **_arguments){
         """^: Exponentiation
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -264,11 +264,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = '^   ';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -278,18 +278,18 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def activate(self, _no_object=None, _attributes={}, **_arguments){
+    } function activate( _no_object=nil, _attributes={}, **_arguments){
         """activate: Bring the targeted application program to the front
         Keyword argument _attributes: AppleEvent attribute dictionary
         """;
         _code = 'misc';
         _subcode = 'actv';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -299,7 +299,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def and_(self, _object, _attributes={}, **_arguments){
+    } function and_( _object, _attributes={}, **_arguments){
         """and: Logical conjunction
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -308,11 +308,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = 'AND ';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -322,7 +322,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def as_(self, _object, _attributes={}, **_arguments){
+    } function as_( _object, _attributes={}, **_arguments){
         """as: Coercion
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -331,11 +331,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = 'coer';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -345,7 +345,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def contains(self, _object, _attributes={}, **_arguments){
+    } function contains( _object, _attributes={}, **_arguments){
         """contains: Containment
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -354,11 +354,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = 'cont';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -368,7 +368,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def div(self, _object, _attributes={}, **_arguments){
+    } function div( _object, _attributes={}, **_arguments){
         """div: Quotient
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -377,11 +377,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = 'div ';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -391,18 +391,18 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def end_tell(self, _no_object=None, _attributes={}, **_arguments){
+    } function end_tell( _no_object=nil, _attributes={}, **_arguments){
         """end tell: Record or log an \xd4end tell\xd5 statement
         Keyword argument _attributes: AppleEvent attribute dictionary
         """;
         _code = 'ascr';
         _subcode = 'tend';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -412,7 +412,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def ends_with(self, _object, _attributes={}, **_arguments){
+    } function ends_with( _object, _attributes={}, **_arguments){
         """ends with: Ends with
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -421,11 +421,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = 'ends';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -442,7 +442,7 @@ class AppleScript_Suite_Events{
         'to' : 'errt',
     };
 
-    def error(self, _object=None, _attributes={}, **_arguments){
+    function error( _object=nil, _attributes={}, **_arguments){
         """error: Raise an error
         Required argument: anything
         Keyword argument number: an error number
@@ -454,11 +454,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = 'err ';
 
-        aetools.keysubst(_arguments, self._argmap_error);
+        aetools.keysubst(_arguments, this._argmap_error);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -468,7 +468,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def idle(self, _no_object=None, _attributes={}, **_arguments){
+    } function idle( _no_object=nil, _attributes={}, **_arguments){
         """idle: Sent to a script application when it is idle
         Keyword argument _attributes: AppleEvent attribute dictionary
         Returns: the number of seconds to wait for next idle event
@@ -476,11 +476,11 @@ class AppleScript_Suite_Events{
         _code = 'misc';
         _subcode = 'idle';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -490,18 +490,18 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def launch(self, _no_object=None, _attributes={}, **_arguments){
+    } function launch( _no_object=nil, _attributes={}, **_arguments){
         """launch: Start an application for scripting
         Keyword argument _attributes: AppleEvent attribute dictionary
         """;
         _code = 'ascr';
         _subcode = 'noop';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -511,7 +511,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def log(self, _object, _attributes={}, **_arguments){
+    } function log( _object, _attributes={}, **_arguments){
         """log: Cause a comment to be logged
         Required argument: undocumented, typecode 'TEXT'
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -519,11 +519,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = 'cmnt';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -533,7 +533,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def mod(self, _object, _attributes={}, **_arguments){
+    } function mod( _object, _attributes={}, **_arguments){
         """mod: Remainder
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -542,11 +542,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = 'mod ';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -556,7 +556,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def negate(self, _object, _attributes={}, **_arguments){
+    } function negate( _object, _attributes={}, **_arguments){
         """negate: Numeric negation
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -565,11 +565,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = 'neg ';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -579,7 +579,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def not_(self, _object, _attributes={}, **_arguments){
+    } function not_( _object, _attributes={}, **_arguments){
         """not: Logical negation
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -588,11 +588,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = 'NOT ';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -602,7 +602,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def or_(self, _object, _attributes={}, **_arguments){
+    } function or_( _object, _attributes={}, **_arguments){
         """or: Logical disjunction
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -611,11 +611,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = 'OR  ';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -625,18 +625,18 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def start_log(self, _no_object=None, _attributes={}, **_arguments){
+    } function start_log( _no_object=nil, _attributes={}, **_arguments){
         """start log: Start event logging in the script editor
         Keyword argument _attributes: AppleEvent attribute dictionary
         """;
         _code = 'ToyS';
         _subcode = 'log1';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -646,7 +646,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def starts_with(self, _object, _attributes={}, **_arguments){
+    } function starts_with( _object, _attributes={}, **_arguments){
         """starts with: Starts with
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -655,11 +655,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = 'bgwt';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -669,18 +669,18 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def stop_log(self, _no_object=None, _attributes={}, **_arguments){
+    } function stop_log( _no_object=nil, _attributes={}, **_arguments){
         """stop log: Stop event logging in the script editor
         Keyword argument _attributes: AppleEvent attribute dictionary
         """;
         _code = 'ToyS';
         _subcode = 'log0';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -690,18 +690,18 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def tell(self, _no_object=None, _attributes={}, **_arguments){
+    } function tell( _no_object=nil, _attributes={}, **_arguments){
         """tell: Record or log a \xd4tell\xd5 statement
         Keyword argument _attributes: AppleEvent attribute dictionary
         """;
         _code = 'ascr';
         _subcode = 'tell';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -711,7 +711,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def _ad_(self, _object, _attributes={}, **_arguments){
+    } function _ad_( _object, _attributes={}, **_arguments){
         """\xad: Inequality
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -720,11 +720,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = '\xad   ';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -734,7 +734,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def _b2_(self, _object, _attributes={}, **_arguments){
+    } function _b2_( _object, _attributes={}, **_arguments){
         """\xb2: Less than or equal to
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -743,11 +743,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = '<=  ';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -757,7 +757,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def _b3_(self, _object, _attributes={}, **_arguments){
+    } function _b3_( _object, _attributes={}, **_arguments){
         """\xb3: Greater than or equal to
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -766,11 +766,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = '>=  ';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -780,7 +780,7 @@ class AppleScript_Suite_Events{
             return _arguments['----'];
 
     }
-    } def _d6_(self, _object, _attributes={}, **_arguments){
+    } function _d6_( _object, _attributes={}, **_arguments){
         """\xd6: Division
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -789,11 +789,11 @@ class AppleScript_Suite_Events{
         _code = 'ascr';
         _subcode = '/   ';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);

@@ -67,7 +67,7 @@ if sys.version_info[0] >= 3 {
 
 }
 } HIGHEST_PROTOCOL = cPickle.HIGHEST_PROTOCOL;
-def _dumps(object, protocol){
+function _dumps(object, protocol){
     return cPickle.dumps(object, protocol=protocol);
 
 }
@@ -81,8 +81,8 @@ if sys.version_info < (2, 6) {
 
 
 }
-def open(filename, flags=db.DB_CREATE, mode=0660, filetype=db.DB_HASH,
-         dbenv=None, dbname=None){
+function open(filename, flags=db.DB_CREATE, mode=0660, filetype=db.DB_HASH,
+         dbenv=nil, dbname=nil){
     """
     A simple factory function for compatibility with the standard
     shleve.py module.  It can be used like this, where key is a string
@@ -118,71 +118,71 @@ def open(filename, flags=db.DB_CREATE, mode=0660, filetype=db.DB_HASH,
 #---------------------------------------------------------------------------
 
 }
-class DBShelveError(db.DBError){ pass;
+class DBShelveError(db.DBError){ pass;}
 
 
 class DBShelf(MutableMapping){
     """A shelf to hold pickled objects, built upon a bsddb DB object.  It
     automatically pickles/unpickles data objects going to/from the DB.
     """;
-    def __init__(self, dbenv=None){
-        self.db = db.DB(dbenv);
-        self._closed = True;
+    function __init__( dbenv=nil){
+        this.db = db.DB(dbenv);
+        this._closed = true;
         if HIGHEST_PROTOCOL{
-            self.protocol = HIGHEST_PROTOCOL;
+            this.protocol = HIGHEST_PROTOCOL;
         } else{
-            self.protocol = 1;
+            this.protocol = 1;
 
 
     }
-    } def __del__(self){
-        self.close();
+    } function __del__(){
+        this.close();
 
 
     }
-    def __getattr__(self, name){
+    function __getattr__( name){
         """Many methods we can just pass through to the DB object.
         (See below)
         """;
-        return getattr(self.db, name);
+        return getattr(this.db, name);
 
 
     #-----------------------------------
     # Dictionary access methods
 
     }
-    def __len__(self){
-        return len(self.db);
+    function __len__(){
+        return len(this.db);
 
 
     }
-    def __getitem__(self, key){
-        data = self.db[key];
+    function __getitem__( key){
+        data = this.db[key];
         return cPickle.loads(data);
 
 
     }
-    def __setitem__(self, key, value){
-        data = _dumps(value, self.protocol);
-        self.db[key] = data;
+    function __setitem__( key, value){
+        data = _dumps(value, this.protocol);
+        this.db[key] = data;
 
 
     }
-    def __delitem__(self, key){
-        del self.db[key];
+    function __delitem__( key){
+        del this.db[key];
 
 
     }
-    def keys(self, txn=None){
-        if txn is not None{
-            return self.db.keys(txn);
+    function keys( txn=nil){
+        if txn is not nil{
+            return this.db.keys(txn);
         } else{
-            return self.db.keys();
+            return this.db.keys();
 
     }
     } if sys.version_info >= (2, 6) {
-        def __iter__(self) {  # XXX: Load all keys in memory :-(
-            for k in self.db.keys() {
+        function __iter__() {  # XXX: Load all keys in memory :-(
+            for k in this.db.keys() {
                 yield k;
 
         # Do this when "DB"  support iteration
@@ -193,31 +193,31 @@ class DBShelf(MutableMapping){
 
 
     }
-    } } def open(self, *args, **kwargs){
-        self.db.open(*args, **kwargs);
-        self._closed = False;
+    } } function open( *args, **kwargs){
+        this.db.open(*args, **kwargs);
+        this._closed = false;
 
 
     }
-    def close(self, *args, **kwargs){
-        self.db.close(*args, **kwargs);
-        self._closed = True;
+    function close( *args, **kwargs){
+        this.db.close(*args, **kwargs);
+        this._closed = true;
 
 
     }
-    def __repr__(self){
-        if self._closed{
-            return '<DBShelf @ 0x%x - closed>' % (id(self));
+    function __repr__(){
+        if this._closed{
+            return '<DBShelf @ 0x%x - closed>' % (id(this));
         } else{
-            return repr(dict(self.iteritems()));
+            return repr(dict(this.iteritems()));
 
 
     }
-    } def items(self, txn=None){
-        if txn is not None{
-            items = self.db.items(txn);
+    } function items( txn=nil){
+        if txn is not nil{
+            items = this.db.items(txn);
         } else{
-            items = self.db.items();
+            items = this.db.items();
         } newitems = [];
 
         for k, v in items{
@@ -225,11 +225,11 @@ class DBShelf(MutableMapping){
         } return newitems;
 
     }
-    def values(self, txn=None){
-        if txn is not None{
-            values = self.db.values(txn);
+    function values( txn=nil){
+        if txn is not nil{
+            values = this.db.values(txn);
         } else{
-            values = self.db.values();
+            values = this.db.values();
 
         }
         return map(cPickle.loads, values);
@@ -238,20 +238,20 @@ class DBShelf(MutableMapping){
     # Other methods
 
     }
-    def __append(self, value, txn=None){
-        data = _dumps(value, self.protocol);
-        return self.db.append(data, txn);
+    function __append( value, txn=nil){
+        data = _dumps(value, this.protocol);
+        return this.db.append(data, txn);
 
     }
-    def append(self, value, txn=None){
-        if self.get_type() == db.DB_RECNO{
-            return self.__append(value, txn=txn);
+    function append( value, txn=nil){
+        if this.get_type() == db.DB_RECNO{
+            return this.__append(value, txn=txn);
         } raise DBShelveError, "append() only supported when dbshelve opened with filetype=dbshelve.db.DB_RECNO";
 
 
     }
-    def associate(self, secondaryDB, callback, flags=0){
-        def _shelf_callback(priKey, priData, realCallback=callback){
+    function associate( secondaryDB, callback, flags=0){
+        function _shelf_callback(priKey, priData, realCallback=callback){
             # Safe in Python 2.x because expresion short circuit
             if sys.version_info[0] < 3 or isinstance(priData, bytes) {
                 data = cPickle.loads(priData);
@@ -260,17 +260,17 @@ class DBShelf(MutableMapping){
             } return realCallback(priKey, data);
 
         }
-        return self.db.associate(secondaryDB, _shelf_callback, flags);
+        return this.db.associate(secondaryDB, _shelf_callback, flags);
 
 
     #def get(self, key, default=None, txn=None, flags=0):
     }
-    def get(self, *args, **kw){
+    function get( *args, **kw){
         # We do it with *args and **kw so if the default value wasn't
         # given nothing is passed to the extension module.  That way
         # an exception can be raised if set_get_returns_none is turned
         # off.
-        data = self.db.get(*args, **kw);
+        data = this.db.get(*args, **kw);
         try{
             return cPickle.loads(data);
         } except (EOFError, TypeError, cPickle.UnpicklingError){
@@ -278,27 +278,27 @@ class DBShelf(MutableMapping){
                          # so it doesn't need unpickled.
 
     }
-    } def get_both(self, key, value, txn=None, flags=0){
-        data = _dumps(value, self.protocol);
-        data = self.db.get(key, data, txn, flags);
+    } function get_both( key, value, txn=nil, flags=0){
+        data = _dumps(value, this.protocol);
+        data = this.db.get(key, data, txn, flags);
         return cPickle.loads(data);
 
 
     }
-    def cursor(self, txn=None, flags=0){
-        c = DBShelfCursor(self.db.cursor(txn, flags));
-        c.protocol = self.protocol;
+    function cursor( txn=nil, flags=0){
+        c = DBShelfCursor(this.db.cursor(txn, flags));
+        c.protocol = this.protocol;
         return c;
 
 
     }
-    def put(self, key, value, txn=None, flags=0){
-        data = _dumps(value, self.protocol);
-        return self.db.put(key, data, txn, flags);
+    function put( key, value, txn=nil, flags=0){
+        data = _dumps(value, this.protocol);
+        return this.db.put(key, data, txn, flags);
 
 
     }
-    def join(self, cursorList, flags=0){
+    function join( cursorList, flags=0){
         raise NotImplementedError;
 
 
@@ -316,97 +316,97 @@ class DBShelf(MutableMapping){
 } class DBShelfCursor{
     """
     """;
-    def __init__(self, cursor){
-        self.dbc = cursor;
+    function __init__( cursor){
+        this.dbc = cursor;
 
     }
-    def __del__(self){
-        self.close();
+    function __del__(){
+        this.close();
 
 
     }
-    def __getattr__(self, name){
+    function __getattr__( name){
         """Some methods we can just pass through to the cursor object.  (See below)""";
-        return getattr(self.dbc, name);
+        return getattr(this.dbc, name);
 
 
     #----------------------------------------------
 
     }
-    def dup(self, flags=0){
-        c = DBShelfCursor(self.dbc.dup(flags));
-        c.protocol = self.protocol;
+    function dup( flags=0){
+        c = DBShelfCursor(this.dbc.dup(flags));
+        c.protocol = this.protocol;
         return c;
 
 
     }
-    def put(self, key, value, flags=0){
-        data = _dumps(value, self.protocol);
-        return self.dbc.put(key, data, flags);
+    function put( key, value, flags=0){
+        data = _dumps(value, this.protocol);
+        return this.dbc.put(key, data, flags);
 
 
     }
-    def get(self, *args){
+    function get( *args){
         count = len(args);  # a method overloading hack
-        method = getattr(self, 'get_%d' % count);
+        method = getattr(this, 'get_%d' % count);
         method(*args);
 
     }
-    def get_1(self, flags){
-        rec = self.dbc.get(flags);
-        return self._extract(rec);
+    function get_1( flags){
+        rec = this.dbc.get(flags);
+        return this._extract(rec);
 
     }
-    def get_2(self, key, flags){
-        rec = self.dbc.get(key, flags);
-        return self._extract(rec);
+    function get_2( key, flags){
+        rec = this.dbc.get(key, flags);
+        return this._extract(rec);
 
     }
-    def get_3(self, key, value, flags){
-        data = _dumps(value, self.protocol);
-        rec = self.dbc.get(key, flags);
-        return self._extract(rec);
-
-
-    }
-    def current(self, flags=0){ return self.get_1(flags|db.DB_CURRENT);
-    def first(self, flags=0){ return self.get_1(flags|db.DB_FIRST);
-    def last(self, flags=0){ return self.get_1(flags|db.DB_LAST);
-    def next(self, flags=0){ return self.get_1(flags|db.DB_NEXT);
-    def prev(self, flags=0){ return self.get_1(flags|db.DB_PREV);
-    def consume(self, flags=0){ return self.get_1(flags|db.DB_CONSUME);
-    def next_dup(self, flags=0){ return self.get_1(flags|db.DB_NEXT_DUP);
-    def next_nodup(self, flags=0){ return self.get_1(flags|db.DB_NEXT_NODUP);
-    def prev_nodup(self, flags=0){ return self.get_1(flags|db.DB_PREV_NODUP);
-
-
-    def get_both(self, key, value, flags=0){
-        data = _dumps(value, self.protocol);
-        rec = self.dbc.get_both(key, flags);
-        return self._extract(rec);
+    function get_3( key, value, flags){
+        data = _dumps(value, this.protocol);
+        rec = this.dbc.get(key, flags);
+        return this._extract(rec);
 
 
     }
-    def set(self, key, flags=0){
-        rec = self.dbc.set(key, flags);
-        return self._extract(rec);
+    function current( flags=0){ return this.get_1(flags|db.DB_CURRENT);}
+    function first( flags=0){ return this.get_1(flags|db.DB_FIRST);}
+    function last( flags=0){ return this.get_1(flags|db.DB_LAST);}
+    function next( flags=0){ return this.get_1(flags|db.DB_NEXT);}
+    function prev( flags=0){ return this.get_1(flags|db.DB_PREV);}
+    function consume( flags=0){ return this.get_1(flags|db.DB_CONSUME);}
+    function next_dup( flags=0){ return this.get_1(flags|db.DB_NEXT_DUP);}
+    function next_nodup( flags=0){ return this.get_1(flags|db.DB_NEXT_NODUP);}
+    function prev_nodup( flags=0){ return this.get_1(flags|db.DB_PREV_NODUP);}
+
+
+    function get_both( key, value, flags=0){
+        data = _dumps(value, this.protocol);
+        rec = this.dbc.get_both(key, flags);
+        return this._extract(rec);
+
 
     }
-    def set_range(self, key, flags=0){
-        rec = self.dbc.set_range(key, flags);
-        return self._extract(rec);
+    function set( key, flags=0){
+        rec = this.dbc.set(key, flags);
+        return this._extract(rec);
 
     }
-    def set_recno(self, recno, flags=0){
-        rec = self.dbc.set_recno(recno, flags);
-        return self._extract(rec);
+    function set_range( key, flags=0){
+        rec = this.dbc.set_range(key, flags);
+        return this._extract(rec);
+
+    }
+    function set_recno( recno, flags=0){
+        rec = this.dbc.set_recno(recno, flags);
+        return this._extract(rec);
 
     }
     set_both = get_both;
 
-    def _extract(self, rec){
-        if rec is None{
-            return None;
+    function _extract( rec){
+        if rec is nil{
+            return nil;
         } else{
             key, data = rec;
             # Safe in Python 2.x because expresion short circuit

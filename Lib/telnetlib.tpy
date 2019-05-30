@@ -185,7 +185,7 @@ class Telnet{
 
     """;
 
-    def __init__(self, host=None, port=0,
+    function __init__( host=nil, port=0,
                  timeout=socket._GLOBAL_DEFAULT_TIMEOUT){
         """Constructor.
 
@@ -193,25 +193,25 @@ class Telnet{
         With a hostname argument, it connects the instance; port number
         and timeout are optional.
         """;
-        self.debuglevel = DEBUGLEVEL;
-        self.host = host;
-        self.port = port;
-        self.timeout = timeout;
-        self.sock = None;
-        self.rawq = '';
-        self.irawq = 0;
-        self.cookedq = '';
-        self.eof = 0;
-        self.iacseq = ''; # Buffer for IAC sequence.
-        self.sb = 0; # flag for SB and SE sequence.
-        self.sbdataq = '';
-        self.option_callback = None;
-        self._has_poll = hasattr(select, 'poll');
-        if host is not None{
-            self.open(host, port, timeout);
+        this.debuglevel = DEBUGLEVEL;
+        this.host = host;
+        this.port = port;
+        this.timeout = timeout;
+        this.sock = nil;
+        this.rawq = '';
+        this.irawq = 0;
+        this.cookedq = '';
+        this.eof = 0;
+        this.iacseq = ''; # Buffer for IAC sequence.
+        this.sb = 0; # flag for SB and SE sequence.
+        this.sbdataq = '';
+        this.option_callback = nil;
+        this._has_poll = hasattr(select, 'poll');
+        if host is not nil{
+            this.open(host, port, timeout);
 
     }
-    } def open(self, host, port=0, timeout=socket._GLOBAL_DEFAULT_TIMEOUT){
+    } function open( host, port=0, timeout=socket._GLOBAL_DEFAULT_TIMEOUT){
         """Connect to a host.
 
         The optional second argument is the port number, which
@@ -219,66 +219,66 @@ class Telnet{
 
         Don't try to reopen an already connected instance.
         """;
-        self.eof = 0;
+        this.eof = 0;
         if not port{
             port = TELNET_PORT;
-        } self.host = host;
-        self.port = port;
-        self.timeout = timeout;
-        self.sock = socket.create_connection((host, port), timeout);
+        } this.host = host;
+        this.port = port;
+        this.timeout = timeout;
+        this.sock = socket.create_connection((host, port), timeout);
 
     }
-    def __del__(self){
+    function __del__(){
         """Destructor -- close the connection.""";
-        self.close();
+        this.close();
 
     }
-    def msg(self, msg, *args){
+    function msg( msg, *args){
         """Print a debug message, when the debug level is > 0.
 
         If extra arguments are present, they are substituted in the
         message using the standard string formatting operator.
 
         """;
-        if self.debuglevel > 0{
-            print 'Telnet(%s,%s):' % (self.host, self.port),;
+        if this.debuglevel > 0{
+            print 'Telnet(%s,%s):' % (this.host, this.port),;
             if args{
                 print msg % args;
             } else{
                 print msg;
 
     }
-    } } def set_debuglevel(self, debuglevel){
+    } } function set_debuglevel( debuglevel){
         """Set the debug level.
 
         The higher it is, the more debug output you get (on sys.stdout).
 
         """;
-        self.debuglevel = debuglevel;
+        this.debuglevel = debuglevel;
 
     }
-    def close(self){
+    function close(){
         """Close the connection.""";
-        sock = self.sock;
-        self.sock = 0;
-        self.eof = 1;
-        self.iacseq = '';
-        self.sb = 0;
+        sock = this.sock;
+        this.sock = 0;
+        this.eof = 1;
+        this.iacseq = '';
+        this.sb = 0;
         if sock{
             sock.close();
 
     }
-    } def get_socket(self){
+    } function get_socket(){
         """Return the socket object used internally.""";
-        return self.sock;
+        return this.sock;
 
     }
-    def fileno(self){
+    function fileno(){
         """Return the fileno() of the socket object used internally.""";
-        return self.sock.fileno();
+        return this.sock.fileno();
 
     }
-    def write(self, buffer){
+    function write( buffer){
         """Write a string to the socket, doubling any IAC characters.
 
         Can block if the connection is blocked.  May raise
@@ -287,11 +287,11 @@ class Telnet{
         """;
         if IAC in buffer{
             buffer = buffer.replace(IAC, IAC+IAC);
-        } self.msg("send %r", buffer);
-        self.sock.sendall(buffer);
+        } this.msg("send %r", buffer);
+        this.sock.sendall(buffer);
 
     }
-    def read_until(self, match, timeout=None){
+    function read_until( match, timeout=nil){
         """Read until a given string is encountered or until timeout.
 
         When no match is found, return whatever is available instead,
@@ -299,125 +299,125 @@ class Telnet{
         is closed and no cooked data is available.
 
         """;
-        if self._has_poll{
-            return self._read_until_with_poll(match, timeout);
+        if this._has_poll{
+            return this._read_until_with_poll(match, timeout);
         } else{
-            return self._read_until_with_select(match, timeout);
+            return this._read_until_with_select(match, timeout);
 
     }
-    } def _read_until_with_poll(self, match, timeout){
+    } function _read_until_with_poll( match, timeout){
         """Read until a given string is encountered or until timeout.
 
         This method uses select.poll() to implement the timeout.
         """;
         n = len(match);
         call_timeout = timeout;
-        if timeout is not None{
+        if timeout is not nil{
             from time import time;
             time_start = time();
-        } self.process_rawq();
-        i = self.cookedq.find(match);
+        } this.process_rawq();
+        i = this.cookedq.find(match);
         if i < 0{
             poller = select.poll();
             poll_in_or_priority_flags = select.POLLIN | select.POLLPRI;
-            poller.register(self, poll_in_or_priority_flags);
-            while i < 0 and not self.eof{
+            poller.register(this, poll_in_or_priority_flags);
+            while i < 0 and not this.eof{
                 try{
                     # Poll takes its timeout in milliseconds.
-                    ready = poller.poll(None if timeout is None
+                    ready = poller.poll(nil if timeout is nil
                                         else 1000 * call_timeout);
                 } except select.error as e{
                     if e[0] == errno.EINTR{
-                        if timeout is not None{
+                        if timeout is not nil{
                             elapsed = time() - time_start;
                             call_timeout = timeout-elapsed;
                         } continue;
                     } raise;
                 } for fd, mode in ready{
                     if mode & poll_in_or_priority_flags{
-                        i = max(0, len(self.cookedq)-n);
-                        self.fill_rawq();
-                        self.process_rawq();
-                        i = self.cookedq.find(match, i);
-                } } if timeout is not None{
+                        i = max(0, len(this.cookedq)-n);
+                        this.fill_rawq();
+                        this.process_rawq();
+                        i = this.cookedq.find(match, i);
+                } } if timeout is not nil{
                     elapsed = time() - time_start;
                     if elapsed >= timeout{
                         break;
                     } call_timeout = timeout-elapsed;
-            } } poller.unregister(self);
+            } } poller.unregister(this);
         } if i >= 0{
             i = i + n;
-            buf = self.cookedq[:i];
-            self.cookedq = self.cookedq[i:];
+            buf = this.cookedq[:i];
+            this.cookedq = this.cookedq[i:];
             return buf;
-        } return self.read_very_lazy();
+        } return this.read_very_lazy();
 
     }
-    def _read_until_with_select(self, match, timeout=None){
+    function _read_until_with_select( match, timeout=nil){
         """Read until a given string is encountered or until timeout.
 
         The timeout is implemented using select.select().
         """;
         n = len(match);
-        self.process_rawq();
-        i = self.cookedq.find(match);
+        this.process_rawq();
+        i = this.cookedq.find(match);
         if i >= 0{
             i = i+n;
-            buf = self.cookedq[:i];
-            self.cookedq = self.cookedq[i:];
+            buf = this.cookedq[:i];
+            this.cookedq = this.cookedq[i:];
             return buf;
-        } s_reply = ([self], [], []);
+        } s_reply = ([this], [], []);
         s_args = s_reply;
-        if timeout is not None{
+        if timeout is not nil{
             s_args = s_args + (timeout,);
             from time import time;
             time_start = time();
-        } while not self.eof and select.select(*s_args) == s_reply{
-            i = max(0, len(self.cookedq)-n);
-            self.fill_rawq();
-            self.process_rawq();
-            i = self.cookedq.find(match, i);
+        } while not this.eof and select.select(*s_args) == s_reply{
+            i = max(0, len(this.cookedq)-n);
+            this.fill_rawq();
+            this.process_rawq();
+            i = this.cookedq.find(match, i);
             if i >= 0{
                 i = i+n;
-                buf = self.cookedq[:i];
-                self.cookedq = self.cookedq[i:];
+                buf = this.cookedq[:i];
+                this.cookedq = this.cookedq[i:];
                 return buf;
-            } if timeout is not None{
+            } if timeout is not nil{
                 elapsed = time() - time_start;
                 if elapsed >= timeout{
                     break;
                 } s_args = s_reply + (timeout-elapsed,);
-        } } return self.read_very_lazy();
+        } } return this.read_very_lazy();
 
     }
-    def read_all(self){
+    function read_all(){
         """Read all data until EOF; block until connection closed.""";
-        self.process_rawq();
-        while not self.eof{
-            self.fill_rawq();
-            self.process_rawq();
-        } buf = self.cookedq;
-        self.cookedq = '';
+        this.process_rawq();
+        while not this.eof{
+            this.fill_rawq();
+            this.process_rawq();
+        } buf = this.cookedq;
+        this.cookedq = '';
         return buf;
 
     }
-    def read_some(self){
+    function read_some(){
         """Read at least one byte of cooked data unless EOF is hit.
 
         Return '' if EOF is hit.  Block if no data is immediately
         available.
 
         """;
-        self.process_rawq();
-        while not self.cookedq and not self.eof{
-            self.fill_rawq();
-            self.process_rawq();
-        } buf = self.cookedq;
-        self.cookedq = '';
+        this.process_rawq();
+        while not this.cookedq and not this.eof{
+            this.fill_rawq();
+            this.process_rawq();
+        } buf = this.cookedq;
+        this.cookedq = '';
         return buf;
 
     }
-    def read_very_eager(self){
+    function read_very_eager(){
         """Read everything that's possible without blocking in I/O (eager).
 
         Raise EOFError if connection closed and no cooked data
@@ -425,14 +425,14 @@ class Telnet{
         Don't block unless in the midst of an IAC sequence.
 
         """;
-        self.process_rawq();
-        while not self.eof and self.sock_avail(){
-            self.fill_rawq();
-            self.process_rawq();
-        } return self.read_very_lazy();
+        this.process_rawq();
+        while not this.eof and this.sock_avail(){
+            this.fill_rawq();
+            this.process_rawq();
+        } return this.read_very_lazy();
 
     }
-    def read_eager(self){
+    function read_eager(){
         """Read readily available data.
 
         Raise EOFError if connection closed and no cooked data
@@ -440,14 +440,14 @@ class Telnet{
         Don't block unless in the midst of an IAC sequence.
 
         """;
-        self.process_rawq();
-        while not self.cookedq and not self.eof and self.sock_avail(){
-            self.fill_rawq();
-            self.process_rawq();
-        } return self.read_very_lazy();
+        this.process_rawq();
+        while not this.cookedq and not this.eof and this.sock_avail(){
+            this.fill_rawq();
+            this.process_rawq();
+        } return this.read_very_lazy();
 
     }
-    def read_lazy(self){
+    function read_lazy(){
         """Process and return data that's already in the queues (lazy).
 
         Raise EOFError if connection closed and no data available.
@@ -455,25 +455,25 @@ class Telnet{
         unless in the midst of an IAC sequence.
 
         """;
-        self.process_rawq();
-        return self.read_very_lazy();
+        this.process_rawq();
+        return this.read_very_lazy();
 
     }
-    def read_very_lazy(self){
+    function read_very_lazy(){
         """Return any data available in the cooked queue (very lazy).
 
         Raise EOFError if connection closed and no data available.
         Return '' if no cooked data available otherwise.  Don't block.
 
         """;
-        buf = self.cookedq;
-        self.cookedq = '';
-        if not buf and self.eof and not self.rawq{
+        buf = this.cookedq;
+        this.cookedq = '';
+        if not buf and this.eof and not this.rawq{
             raise EOFError, 'telnet connection closed';
         } return buf;
 
     }
-    def read_sb_data(self){
+    function read_sb_data(){
         """Return any data available in the SB ... SE queue.
 
         Return '' if no SB ... SE available. Should only be called
@@ -481,17 +481,17 @@ class Telnet{
         found, old unread SB data will be discarded. Don't block.
 
         """;
-        buf = self.sbdataq;
-        self.sbdataq = '';
+        buf = this.sbdataq;
+        this.sbdataq = '';
         return buf;
 
     }
-    def set_option_negotiation_callback(self, callback){
+    function set_option_negotiation_callback( callback){
         """Provide a callback function called after each receipt of a telnet option.""";
-        self.option_callback = callback;
+        this.option_callback = callback;
 
     }
-    def process_rawq(self){
+    function process_rawq(){
         """Transfer from raw queue to cooked queue.
 
         Set self.eof when connection is closed.  Don't block unless in
@@ -500,124 +500,124 @@ class Telnet{
         """;
         buf = ['', ''];
         try{
-            while self.rawq{
-                c = self.rawq_getchar();
-                if not self.iacseq{
+            while this.rawq{
+                c = this.rawq_getchar();
+                if not this.iacseq{
                     if c == theNULL{
                         continue;
                     } if c == "\021"{
                         continue;
                     } if c != IAC{
-                        buf[self.sb] = buf[self.sb] + c;
+                        buf[this.sb] = buf[this.sb] + c;
                         continue;
                     } else{
-                        self.iacseq += c;
-                } } elif len(self.iacseq) == 1{
+                        this.iacseq += c;
+                } } elif len(this.iacseq) == 1{
                     # 'IAC: IAC CMD [OPTION only for WILL/WONT/DO/DONT]'
                     if c in (DO, DONT, WILL, WONT){
-                        self.iacseq += c;
+                        this.iacseq += c;
                         continue;
 
                     }
-                    self.iacseq = '';
+                    this.iacseq = '';
                     if c == IAC{
-                        buf[self.sb] = buf[self.sb] + c;
+                        buf[this.sb] = buf[this.sb] + c;
                     } else{
                         if c == SB{ # SB ... SE start.
-                            self.sb = 1;
-                            self.sbdataq = '';
+                            this.sb = 1;
+                            this.sbdataq = '';
                         } elif c == SE{
-                            self.sb = 0;
-                            self.sbdataq = self.sbdataq + buf[1];
+                            this.sb = 0;
+                            this.sbdataq = this.sbdataq + buf[1];
                             buf[1] = '';
-                        } if self.option_callback{
+                        } if this.option_callback{
                             # Callback is supposed to look into
                             # the sbdataq
-                            self.option_callback(self.sock, c, NOOPT);
+                            this.option_callback(this.sock, c, NOOPT);
                         } else{
                             # We can't offer automatic processing of
                             # suboptions. Alas, we should not get any
                             # unless we did a WILL/DO before.
-                            self.msg('IAC %d not recognized' % ord(c));
-                } } } elif len(self.iacseq) == 2{
-                    cmd = self.iacseq[1];
-                    self.iacseq = '';
+                            this.msg('IAC %d not recognized' % ord(c));
+                } } } elif len(this.iacseq) == 2{
+                    cmd = this.iacseq[1];
+                    this.iacseq = '';
                     opt = c;
                     if cmd in (DO, DONT){
-                        self.msg('IAC %s %d',
+                        this.msg('IAC %s %d',
                             cmd == DO and 'DO' or 'DONT', ord(opt));
-                        if self.option_callback{
-                            self.option_callback(self.sock, cmd, opt);
+                        if this.option_callback{
+                            this.option_callback(this.sock, cmd, opt);
                         } else{
-                            self.sock.sendall(IAC + WONT + opt);
+                            this.sock.sendall(IAC + WONT + opt);
                     } } elif cmd in (WILL, WONT){
-                        self.msg('IAC %s %d',
+                        this.msg('IAC %s %d',
                             cmd == WILL and 'WILL' or 'WONT', ord(opt));
-                        if self.option_callback{
-                            self.option_callback(self.sock, cmd, opt);
+                        if this.option_callback{
+                            this.option_callback(this.sock, cmd, opt);
                         } else{
-                            self.sock.sendall(IAC + DONT + opt);
+                            this.sock.sendall(IAC + DONT + opt);
         } } } } } except EOFError{ # raised by self.rawq_getchar()
-            self.iacseq = ''; # Reset on EOF
-            self.sb = 0;
+            this.iacseq = ''; # Reset on EOF
+            this.sb = 0;
             pass;
-        } self.cookedq = self.cookedq + buf[0];
-        self.sbdataq = self.sbdataq + buf[1];
+        } this.cookedq = this.cookedq + buf[0];
+        this.sbdataq = this.sbdataq + buf[1];
 
     }
-    def rawq_getchar(self){
+    function rawq_getchar(){
         """Get next char from raw queue.
 
         Block if no data is immediately available.  Raise EOFError
         when connection is closed.
 
         """;
-        if not self.rawq{
-            self.fill_rawq();
-            if self.eof{
+        if not this.rawq{
+            this.fill_rawq();
+            if this.eof{
                 raise EOFError;
-        } } c = self.rawq[self.irawq];
-        self.irawq = self.irawq + 1;
-        if self.irawq >= len(self.rawq){
-            self.rawq = '';
-            self.irawq = 0;
+        } } c = this.rawq[this.irawq];
+        this.irawq = this.irawq + 1;
+        if this.irawq >= len(this.rawq){
+            this.rawq = '';
+            this.irawq = 0;
         } return c;
 
     }
-    def fill_rawq(self){
+    function fill_rawq(){
         """Fill raw queue from exactly one recv() system call.
 
         Block if no data is immediately available.  Set self.eof when
         connection is closed.
 
         """;
-        if self.irawq >= len(self.rawq){
-            self.rawq = '';
-            self.irawq = 0;
+        if this.irawq >= len(this.rawq){
+            this.rawq = '';
+            this.irawq = 0;
         # The buffer size should be fairly small so as to avoid quadratic
         # behavior in process_rawq() above
         }
-        buf = self.sock.recv(50);
-        self.msg("recv %r", buf);
-        self.eof = (not buf);
-        self.rawq = self.rawq + buf;
+        buf = this.sock.recv(50);
+        this.msg("recv %r", buf);
+        this.eof = (not buf);
+        this.rawq = this.rawq + buf;
 
     }
-    def sock_avail(self){
+    function sock_avail(){
         """Test whether data is available on the socket.""";
-        return select.select([self], [], [], 0) == ([self], [], []);
+        return select.select([this], [], [], 0) == ([this], [], []);
 
     }
-    def interact(self){
+    function interact(){
         """Interaction function, emulates a very dumb telnet client.""";
         if sys.platform == "win32"{
-            self.mt_interact();
+            this.mt_interact();
             return;
         } while 1{
-            rfd, wfd, xfd = select.select([self, sys.stdin], [], []);
-            if self in rfd{
+            rfd, wfd, xfd = select.select([this, sys.stdin], [], []);
+            if this in rfd{
                 try{
-                    text = self.read_eager();
+                    text = this.read_eager();
                 } except EOFError{
                     print '*** Connection closed by remote host ***';
                     break;
@@ -628,25 +628,25 @@ class Telnet{
                 line = sys.stdin.readline();
                 if not line{
                     break;
-                } self.write(line);
+                } this.write(line);
 
     }
-    } } def mt_interact(self){
+    } } function mt_interact(){
         """Multithreaded version of interact().""";
         import thread;
-        thread.start_new_thread(self.listener, ());
+        thread.start_new_thread(this.listener, ());
         while 1{
             line = sys.stdin.readline();
             if not line{
                 break;
-            } self.write(line);
+            } this.write(line);
 
     }
-    } def listener(self){
+    } function listener(){
         """Helper for mt_interact() -- this executes in the other thread.""";
         while 1{
             try{
-                data = self.read_eager();
+                data = this.read_eager();
             } except EOFError{
                 print '*** Connection closed by remote host ***';
                 return;
@@ -656,7 +656,7 @@ class Telnet{
                 sys.stdout.flush();
 
     }
-    } } def expect(self, list, timeout=None){
+    } } function expect( list, timeout=nil){
         """Read until one from a list of a regular expressions matches.
 
         The first argument is a list of regular expressions, either
@@ -678,120 +678,120 @@ class Telnet{
         results are undeterministic, and may depend on the I/O timing.
 
         """;
-        if self._has_poll{
-            return self._expect_with_poll(list, timeout);
+        if this._has_poll{
+            return this._expect_with_poll(list, timeout);
         } else{
-            return self._expect_with_select(list, timeout);
+            return this._expect_with_select(list, timeout);
 
     }
-    } def _expect_with_poll(self, expect_list, timeout=None){
+    } function _expect_with_poll( expect_list, timeout=nil){
         """Read until one from a list of a regular expressions matches.
 
         This method uses select.poll() to implement the timeout.
         """;
-        re = None;
+        re = nil;
         expect_list = expect_list[:];
         indices = range(len(expect_list));
         for i in indices{
             if not hasattr(expect_list[i], "search"){
-                if not re{ import re;
+                if not re{ import re;}
                 expect_list[i] = re.compile(expect_list[i]);
         } } call_timeout = timeout;
-        if timeout is not None{
+        if timeout is not nil{
             from time import time;
             time_start = time();
-        } self.process_rawq();
-        m = None;
+        } this.process_rawq();
+        m = nil;
         for i in indices{
-            m = expect_list[i].search(self.cookedq);
+            m = expect_list[i].search(this.cookedq);
             if m{
                 e = m.end();
-                text = self.cookedq[:e];
-                self.cookedq = self.cookedq[e:];
+                text = this.cookedq[:e];
+                this.cookedq = this.cookedq[e:];
                 break;
         } } if not m{
             poller = select.poll();
             poll_in_or_priority_flags = select.POLLIN | select.POLLPRI;
-            poller.register(self, poll_in_or_priority_flags);
-            while not m and not self.eof{
+            poller.register(this, poll_in_or_priority_flags);
+            while not m and not this.eof{
                 try{
-                    ready = poller.poll(None if timeout is None
+                    ready = poller.poll(nil if timeout is nil
                                         else 1000 * call_timeout);
                 } except select.error as e{
                     if e[0] == errno.EINTR{
-                        if timeout is not None{
+                        if timeout is not nil{
                             elapsed = time() - time_start;
                             call_timeout = timeout-elapsed;
                         } continue;
                     } raise;
                 } for fd, mode in ready{
                     if mode & poll_in_or_priority_flags{
-                        self.fill_rawq();
-                        self.process_rawq();
+                        this.fill_rawq();
+                        this.process_rawq();
                         for i in indices{
-                            m = expect_list[i].search(self.cookedq);
+                            m = expect_list[i].search(this.cookedq);
                             if m{
                                 e = m.end();
-                                text = self.cookedq[:e];
-                                self.cookedq = self.cookedq[e:];
+                                text = this.cookedq[:e];
+                                this.cookedq = this.cookedq[e:];
                                 break;
-                } } } } if timeout is not None{
+                } } } } if timeout is not nil{
                     elapsed = time() - time_start;
                     if elapsed >= timeout{
                         break;
                     } call_timeout = timeout-elapsed;
-            } } poller.unregister(self);
+            } } poller.unregister(this);
         } if m{
             return (i, m, text);
-        } text = self.read_very_lazy();
-        if not text and self.eof{
+        } text = this.read_very_lazy();
+        if not text and this.eof{
             raise EOFError;
-        } return (-1, None, text);
+        } return (-1, nil, text);
 
     }
-    def _expect_with_select(self, list, timeout=None){
+    function _expect_with_select( list, timeout=nil){
         """Read until one from a list of a regular expressions matches.
 
         The timeout is implemented using select.select().
         """;
-        re = None;
+        re = nil;
         list = list[:];
         indices = range(len(list));
         for i in indices{
             if not hasattr(list[i], "search"){
-                if not re{ import re;
+                if not re{ import re;}
                 list[i] = re.compile(list[i]);
-        } } if timeout is not None{
+        } } if timeout is not nil{
             from time import time;
             time_start = time();
         } while 1{
-            self.process_rawq();
+            this.process_rawq();
             for i in indices{
-                m = list[i].search(self.cookedq);
+                m = list[i].search(this.cookedq);
                 if m{
                     e = m.end();
-                    text = self.cookedq[:e];
-                    self.cookedq = self.cookedq[e:];
+                    text = this.cookedq[:e];
+                    this.cookedq = this.cookedq[e:];
                     return (i, m, text);
-            } } if self.eof{
+            } } if this.eof{
                 break;
-            } if timeout is not None{
+            } if timeout is not nil{
                 elapsed = time() - time_start;
                 if elapsed >= timeout{
                     break;
-                } s_args = ([self.fileno()], [], [], timeout-elapsed);
+                } s_args = ([this.fileno()], [], [], timeout-elapsed);
                 r, w, x = select.select(*s_args);
                 if not r{
                     break;
-            } } self.fill_rawq();
-        } text = self.read_very_lazy();
-        if not text and self.eof{
+            } } this.fill_rawq();
+        } text = this.read_very_lazy();
+        if not text and this.eof{
             raise EOFError;
-        } return (-1, None, text);
+        } return (-1, nil, text);
 
 
 }
-} def test(){
+} function test(){
     """Test program for telnetlib.
 
     Usage: python telnetlib.py [-d] ... [host [port]]

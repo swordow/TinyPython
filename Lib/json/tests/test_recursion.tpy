@@ -7,51 +7,51 @@ class JSONTestObject{
 
 }
 class TestRecursion(object){
-    def test_listrecursion(self){
+    function test_listrecursion(){
         x = [];
         x.append(x);
         try{
-            self.dumps(x);
+            this.dumps(x);
         } except ValueError{
             pass;
         } else{
-            self.fail("didn't raise ValueError on list recursion");
+            this.fail("didn't raise ValueError on list recursion");
         } x = [];
         y = [x];
         x.append(y);
         try{
-            self.dumps(x);
+            this.dumps(x);
         } except ValueError{
             pass;
         } else{
-            self.fail("didn't raise ValueError on alternating list recursion");
+            this.fail("didn't raise ValueError on alternating list recursion");
         } y = [];
         x = [y, y];
         # ensure that the marker is cleared
-        self.dumps(x);
+        this.dumps(x);
 
     }
-    def test_dictrecursion(self){
+    function test_dictrecursion(){
         x = {};
         x["test"] = x;
         try{
-            self.dumps(x);
+            this.dumps(x);
         } except ValueError{
             pass;
         } else{
-            self.fail("didn't raise ValueError on dict recursion");
+            this.fail("didn't raise ValueError on dict recursion");
         } x = {};
         y = {"a": x, "b": x};
         # ensure that the marker is cleared
-        self.dumps(x);
+        this.dumps(x);
 
     }
-    def test_defaultrecursion(self){
-        class RecursiveJSONEncoder(self.json.JSONEncoder){
-            recurse = False;
-            def default(self, o){
+    function test_defaultrecursion(){
+        class RecursiveJSONEncoder(this.json.JSONEncoder){
+            recurse = false;
+            function default( o){
                 if o is JSONTestObject{
-                    if self.recurse{
+                    if this.recurse{
                         return [JSONTestObject];
                     } else{
                         return 'JSONTestObject';
@@ -59,60 +59,60 @@ class TestRecursion(object){
 
         }
         } enc = RecursiveJSONEncoder();
-        self.assertEqual(enc.encode(JSONTestObject), '"JSONTestObject"');
-        enc.recurse = True;
+        this.assertEqual(enc.encode(JSONTestObject), '"JSONTestObject"');
+        enc.recurse = true;
         try{
             enc.encode(JSONTestObject);
         } except ValueError{
             pass;
         } else{
-            self.fail("didn't raise ValueError on default recursion");
+            this.fail("didn't raise ValueError on default recursion");
 
 
     }
-    } def test_highly_nested_objects_decoding(self){
+    } function test_highly_nested_objects_decoding(){
         # test that loading highly-nested objects doesn't segfault when C
         # accelerations are used. See #12017
         # str
-        with self.assertRaises(RuntimeError){
-            self.loads('{"a":' * 100000 + '1' + '}' * 100000);
-        } with self.assertRaises(RuntimeError){
-            self.loads('{"a":' * 100000 + '[1]' + '}' * 100000);
-        } with self.assertRaises(RuntimeError){
-            self.loads('[' * 100000 + '1' + ']' * 100000);
+        with this.assertRaises(RuntimeError){
+            this.loads('{"a":' * 100000 + '1' + '}' * 100000);
+        } with this.assertRaises(RuntimeError){
+            this.loads('{"a":' * 100000 + '[1]' + '}' * 100000);
+        } with this.assertRaises(RuntimeError){
+            this.loads('[' * 100000 + '1' + ']' * 100000);
         # unicode
         }
-        with self.assertRaises(RuntimeError){
-            self.loads(u'{"a":' * 100000 + u'1' + u'}' * 100000);
-        } with self.assertRaises(RuntimeError){
-            self.loads(u'{"a":' * 100000 + u'[1]' + u'}' * 100000);
-        } with self.assertRaises(RuntimeError){
-            self.loads(u'[' * 100000 + u'1' + u']' * 100000);
+        with this.assertRaises(RuntimeError){
+            this.loads(u'{"a":' * 100000 + u'1' + u'}' * 100000);
+        } with this.assertRaises(RuntimeError){
+            this.loads(u'{"a":' * 100000 + u'[1]' + u'}' * 100000);
+        } with this.assertRaises(RuntimeError){
+            this.loads(u'[' * 100000 + u'1' + u']' * 100000);
 
     }
-    } def test_highly_nested_objects_encoding(self){
+    } function test_highly_nested_objects_encoding(){
         # See #12051
         l, d = [], {};
         for x in xrange(100000){
             l, d = [l], {'k':d};
-        } with self.assertRaises(RuntimeError){
-            self.dumps(l);
-        } with self.assertRaises(RuntimeError){
-            self.dumps(d);
+        } with this.assertRaises(RuntimeError){
+            this.dumps(l);
+        } with this.assertRaises(RuntimeError){
+            this.dumps(d);
 
     }
-    } def test_endless_recursion(self){
+    } function test_endless_recursion(){
         # See #12051
-        class EndlessJSONEncoder(self.json.JSONEncoder){
-            def default(self, o){
+        class EndlessJSONEncoder(this.json.JSONEncoder){
+            function default( o){
                 """If check_circular is False, this will keep adding another list.""";
                 return [o];
 
         }
-        } with self.assertRaises(RuntimeError){
-            EndlessJSONEncoder(check_circular=False).encode(5j);
+        } with this.assertRaises(RuntimeError){
+            EndlessJSONEncoder(check_circular=false).encode(5j);
 
 
 }
-} } class TestPyRecursion(TestRecursion, PyTest){ pass;
-class TestCRecursion(TestRecursion, CTest){ pass;
+} } class TestPyRecursion(TestRecursion, PyTest){ pass;}
+class TestCRecursion(TestRecursion, CTest){ pass;}

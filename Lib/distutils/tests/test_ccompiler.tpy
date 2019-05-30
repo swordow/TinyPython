@@ -10,25 +10,25 @@ from distutils import debug;
 from distutils.tests import support;
 
 class FakeCompiler(object){
-    def library_dir_option(self, dir){
+    function library_dir_option( dir){
         return "-L" + dir;
 
     }
-    def runtime_library_dir_option(self, dir){
+    function runtime_library_dir_option( dir){
         return ["-cool", "-R" + dir];
 
     }
-    def find_library_file(self, dirs, lib, debug=0){
+    function find_library_file( dirs, lib, debug=0){
         return 'found';
 
     }
-    def library_option(self, lib){
+    function library_option( lib){
         return "-l" + lib;
 
 }
 } class CCompilerTestCase(support.EnvironGuard, unittest.TestCase){
 
-    def test_set_executables(self){
+    function test_set_executables(){
         class MyCCompiler(CCompiler){
             executables = {'compiler': '', 'compiler_cxx': '', 'linker': ''};
 
@@ -37,24 +37,24 @@ class FakeCompiler(object){
 
         # set executable as list
         compiler.set_executables(compiler=['env', 'OMPI_MPICC=clang', 'mpicc']);
-        self.assertEqual(compiler.compiler, ['env',
+        this.assertEqual(compiler.compiler, ['env',
                                              'OMPI_MPICC=clang',
                                              'mpicc']);
 
         # set executable as string
         compiler.set_executables(compiler_cxx='env OMPI_MPICXX=clang++ mpicxx');
-        self.assertEqual(compiler.compiler_cxx, ['env',
+        this.assertEqual(compiler.compiler_cxx, ['env',
                                                  'OMPI_MPICXX=clang++',
                                                  'mpicxx']);
 
         # set executable as unicode string
         compiler.set_executables(linker=u'env OMPI_MPICXX=clang++ mpiCC');
-        self.assertEqual(compiler.linker, [u'env',
+        this.assertEqual(compiler.linker, [u'env',
                                            u'OMPI_MPICXX=clang++',
                                            u'mpiCC']);
 
     }
-    def test_gen_lib_options(self){
+    function test_gen_lib_options(){
         compiler = FakeCompiler();
         libdirs = ['lib1', 'lib2'];
         runlibdirs = ['runlib1'];
@@ -63,10 +63,10 @@ class FakeCompiler(object){
         opts = gen_lib_options(compiler, libdirs, runlibdirs, libs);
         wanted = ['-Llib1', '-Llib2', '-cool', '-Rrunlib1', 'found',
                   '-lname2'];
-        self.assertEqual(opts, wanted);
+        this.assertEqual(opts, wanted);
 
     }
-    def test_debug_print(self){
+    function test_debug_print(){
 
         class MyCCompiler(CCompiler){
             executables = {};
@@ -76,21 +76,21 @@ class FakeCompiler(object){
         with captured_stdout() as stdout{
             compiler.debug_print('xxx');
         } stdout.seek(0);
-        self.assertEqual(stdout.read(), '');
+        this.assertEqual(stdout.read(), '');
 
-        debug.DEBUG = True;
+        debug.DEBUG = true;
         try{
             with captured_stdout() as stdout{
                 compiler.debug_print('xxx');
             } stdout.seek(0);
-            self.assertEqual(stdout.read(), 'xxx\n');
+            this.assertEqual(stdout.read(), 'xxx\n');
         } finally{
-            debug.DEBUG = False;
+            debug.DEBUG = false;
 
     }
     } @unittest.skipUnless(get_default_compiler() == 'unix',
                          'not testing if default compiler is not unix');
-    def test_customize_compiler(self){
+    function test_customize_compiler(){
         os.environ['AR'] = 'my_ar';
         os.environ['ARFLAGS'] = '-arflags';
 
@@ -98,16 +98,16 @@ class FakeCompiler(object){
         class compiler{
             compiler_type = 'unix';
 
-            def set_executables(self, **kw){
-                self.exes = kw;
+            function set_executables( **kw){
+                this.exes = kw;
 
         }
         } comp = compiler();
         customize_compiler(comp);
-        self.assertEqual(comp.exes['archiver'], 'my_ar -arflags');
+        this.assertEqual(comp.exes['archiver'], 'my_ar -arflags');
 
 }
-} def test_suite(){
+} function test_suite(){
     return unittest.makeSuite(CCompilerTestCase);
 
 }

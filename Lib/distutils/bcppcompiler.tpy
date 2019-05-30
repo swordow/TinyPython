@@ -50,48 +50,48 @@ class BCPPCompiler(CCompiler) {
     exe_extension = '.exe';
 
 
-    def __init__ (self,
+    function __init__ (
                   verbose=0,
                   dry_run=0,
                   force=0){
 
-        CCompiler.__init__ (self, verbose, dry_run, force);
+        CCompiler.__init__ (this, verbose, dry_run, force);
 
         # These executables are assumed to all be in the path.
         # Borland doesn't seem to use any special registry settings to
         # indicate their installation locations.
 
-        self.cc = "bcc32.exe";
-        self.linker = "ilink32.exe";
-        self.lib = "tlib.exe";
+        this.cc = "bcc32.exe";
+        this.linker = "ilink32.exe";
+        this.lib = "tlib.exe";
 
-        self.preprocess_options = None;
-        self.compile_options = ['/tWM', '/O2', '/q', '/g0'];
-        self.compile_options_debug = ['/tWM', '/Od', '/q', '/g0'];
+        this.preprocess_options = nil;
+        this.compile_options = ['/tWM', '/O2', '/q', '/g0'];
+        this.compile_options_debug = ['/tWM', '/Od', '/q', '/g0'];
 
-        self.ldflags_shared = ['/Tpd', '/Gn', '/q', '/x'];
-        self.ldflags_shared_debug = ['/Tpd', '/Gn', '/q', '/x'];
-        self.ldflags_static = [];
-        self.ldflags_exe = ['/Gn', '/q', '/x'];
-        self.ldflags_exe_debug = ['/Gn', '/q', '/x','/r'];
+        this.ldflags_shared = ['/Tpd', '/Gn', '/q', '/x'];
+        this.ldflags_shared_debug = ['/Tpd', '/Gn', '/q', '/x'];
+        this.ldflags_static = [];
+        this.ldflags_exe = ['/Gn', '/q', '/x'];
+        this.ldflags_exe_debug = ['/Gn', '/q', '/x','/r'];
 
 
     # -- Worker methods ------------------------------------------------
 
     }
-    def compile(self, sources,
-                output_dir=None, macros=None, include_dirs=None, debug=0,
-                extra_preargs=None, extra_postargs=None, depends=None){
+    function compile( sources,
+                output_dir=nil, macros=nil, include_dirs=nil, debug=0,
+                extra_preargs=nil, extra_postargs=nil, depends=nil){
 
         macros, objects, extra_postargs, pp_opts, build = \
-                self._setup_compile(output_dir, macros, include_dirs, sources,
+                this._setup_compile(output_dir, macros, include_dirs, sources,
                                     depends, extra_postargs);
         compile_opts = extra_preargs or [];
         compile_opts.append ('-c');
         if debug{
-            compile_opts.extend (self.compile_options_debug);
+            compile_opts.extend (this.compile_options_debug);
         } else{
-            compile_opts.extend (self.compile_options);
+            compile_opts.extend (this.compile_options);
 
         }
         for obj in objects{
@@ -105,7 +105,7 @@ class BCPPCompiler(CCompiler) {
             obj = os.path.normpath(obj);
             # XXX _setup_compile() did a mkpath() too but before the normpath.
             # Is it possible to skip the normpath?
-            self.mkpath(os.path.dirname(obj));
+            this.mkpath(os.path.dirname(obj));
 
             if ext == '.res'{
                 # This is already a binary file -- skip it.
@@ -113,16 +113,16 @@ class BCPPCompiler(CCompiler) {
             } if ext == '.rc'{
                 # This needs to be compiled to a .res file -- do it now.
                 try{
-                    self.spawn (["brcc32", "-fo", obj, src]);
+                    this.spawn (["brcc32", "-fo", obj, src]);
                 } except DistutilsExecError, msg{
                     raise CompileError, msg;
                 } continue; # the 'for' loop
 
             # The next two are both for the real compiler.
             }
-            if ext in self._c_extensions{
+            if ext in this._c_extensions{
                 input_opt = "";
-            } elif ext in self._cpp_extensions{
+            } elif ext in this._cpp_extensions{
                 input_opt = "-P";
             } else{
                 # Unknown file type -- no extra options.  The compiler
@@ -137,7 +137,7 @@ class BCPPCompiler(CCompiler) {
             # Note that the source file names must appear at the end of
             # the command line.
             try{
-                self.spawn ([self.cc] + compile_opts + pp_opts +
+                this.spawn ([this.cc] + compile_opts + pp_opts +
                             [input_opt, output_opt] +
                             extra_postargs + [src]);
             } except DistutilsExecError, msg{
@@ -150,23 +150,23 @@ class BCPPCompiler(CCompiler) {
 
 
     }
-    def create_static_lib (self,
+    function create_static_lib (
                            objects,
                            output_libname,
-                           output_dir=None,
+                           output_dir=nil,
                            debug=0,
-                           target_lang=None){
+                           target_lang=nil){
 
-        (objects, output_dir) = self._fix_object_args (objects, output_dir);
+        (objects, output_dir) = this._fix_object_args (objects, output_dir);
         output_filename = \
-            self.library_filename (output_libname, output_dir=output_dir);
+            this.library_filename (output_libname, output_dir=output_dir);
 
-        if self._need_link (objects, output_filename){
+        if this._need_link (objects, output_filename){
             lib_args = [output_filename, '/u'] + objects;
             if debug{
                 pass;                    # XXX what goes here?
             } try{
-                self.spawn ([self.lib] + lib_args);
+                this.spawn ([this.lib] + lib_args);
             } except DistutilsExecError, msg{
                 raise LibError, msg;
         } } else{
@@ -176,57 +176,57 @@ class BCPPCompiler(CCompiler) {
 
 
     }
-    } def link (self,
+    } function link (
               target_desc,
               objects,
               output_filename,
-              output_dir=None,
-              libraries=None,
-              library_dirs=None,
-              runtime_library_dirs=None,
-              export_symbols=None,
+              output_dir=nil,
+              libraries=nil,
+              library_dirs=nil,
+              runtime_library_dirs=nil,
+              export_symbols=nil,
               debug=0,
-              extra_preargs=None,
-              extra_postargs=None,
-              build_temp=None,
-              target_lang=None){
+              extra_preargs=nil,
+              extra_postargs=nil,
+              build_temp=nil,
+              target_lang=nil){
 
         # XXX this ignores 'build_temp'!  should follow the lead of
         # msvccompiler.py
 
-        (objects, output_dir) = self._fix_object_args (objects, output_dir);
+        (objects, output_dir) = this._fix_object_args (objects, output_dir);
         (libraries, library_dirs, runtime_library_dirs) = \
-            self._fix_lib_args (libraries, library_dirs, runtime_library_dirs);
+            this._fix_lib_args (libraries, library_dirs, runtime_library_dirs);
 
         if runtime_library_dirs{
             log.warn("I don't know what to do with 'runtime_library_dirs': %s",
                      str(runtime_library_dirs));
 
         }
-        if output_dir is not None{
+        if output_dir is not nil{
             output_filename = os.path.join (output_dir, output_filename);
 
         }
-        if self._need_link (objects, output_filename){
+        if this._need_link (objects, output_filename){
 
             # Figure out linker args based on type of target.
             if target_desc == CCompiler.EXECUTABLE{
                 startup_obj = 'c0w32';
                 if debug{
-                    ld_args = self.ldflags_exe_debug[:];
+                    ld_args = this.ldflags_exe_debug[:];
                 } else{
-                    ld_args = self.ldflags_exe[:];
+                    ld_args = this.ldflags_exe[:];
             } } else{
                 startup_obj = 'c0d32';
                 if debug{
-                    ld_args = self.ldflags_shared_debug[:];
+                    ld_args = this.ldflags_shared_debug[:];
                 } else{
-                    ld_args = self.ldflags_shared[:];
+                    ld_args = this.ldflags_shared[:];
 
 
             # Create a temporary exports file for use by the linker
             }
-            } if export_symbols is None{
+            } if export_symbols is nil{
                 def_file = '';
             } else{
                 head, tail = os.path.split (output_filename);
@@ -236,7 +236,7 @@ class BCPPCompiler(CCompiler) {
                 contents = ['EXPORTS'];
                 for sym in (export_symbols or []){
                     contents.append('  %s=_%s' % (sym, sym));
-                } self.execute(write_file, (def_file, contents),
+                } this.execute(write_file, (def_file, contents),
                              "writing %s" % def_file);
 
             # Borland C++ has problems with '/' in paths
@@ -280,8 +280,8 @@ class BCPPCompiler(CCompiler) {
             for lib in libraries{
                 # see if we find it and if there is a bcpp specific lib
                 # (xxx_bcpp.lib)
-                libfile = self.find_library_file(library_dirs, lib, debug);
-                if libfile is None{
+                libfile = this.find_library_file(library_dirs, lib, debug);
+                if libfile is nil{
                     ld_args.append(lib);
                     # probably a BCPP internal library -- don't warn
                 }
@@ -307,9 +307,9 @@ class BCPPCompiler(CCompiler) {
                 ld_args.extend(extra_postargs);
 
             }
-            self.mkpath (os.path.dirname (output_filename));
+            this.mkpath (os.path.dirname (output_filename));
             try{
-                self.spawn ([self.linker] + ld_args);
+                this.spawn ([this.linker] + ld_args);
             } except DistutilsExecError, msg{
                 raise LinkError, msg;
 
@@ -323,7 +323,7 @@ class BCPPCompiler(CCompiler) {
 
 
     }
-    } def find_library_file (self, dirs, lib, debug=0){
+    } function find_library_file ( dirs, lib, debug=0){
         # List of effective library names to try, in order of preference:
         # xxx_bcpp.lib is better than xxx.lib
         # and xxx_d.lib is better than xxx.lib if debug is set
@@ -342,25 +342,25 @@ class BCPPCompiler(CCompiler) {
         }
         for dir in dirs{
             for name in try_names{
-                libfile = os.path.join(dir, self.library_filename(name));
+                libfile = os.path.join(dir, this.library_filename(name));
                 if os.path.exists(libfile){
                     return libfile;
         } } } else{
             # Oops, didn't find it in *any* of 'dirs'
-            return None;
+            return nil;
 
     # overwrite the one from CCompiler to support rc and res-files
     }
-    } def object_filenames (self,
+    } function object_filenames (
                           source_filenames,
                           strip_dir=0,
                           output_dir=''){
-        if output_dir is None{ output_dir = '';
+        if output_dir is nil{ output_dir = '';}
         obj_names = [];
         for src_name in source_filenames{
             # use normcase to make sure '.rc' is really '.rc' and not '.RC'
             (base, ext) = os.path.splitext (os.path.normcase(src_name));
-            if ext not in (self.src_extensions + ['.rc','.res']){
+            if ext not in (this.src_extensions + ['.rc','.res']){
                 raise UnknownFileError, \
                       "unknown file type '%s' (from '%s')" % \
                       (ext, src_name);
@@ -374,25 +374,25 @@ class BCPPCompiler(CCompiler) {
                 obj_names.append (os.path.join (output_dir, base + '.res'));
             } else{
                 obj_names.append (os.path.join (output_dir,
-                                            base + self.obj_extension));
+                                            base + this.obj_extension));
         } } return obj_names;
 
     # object_filenames ()
 
     }
-    def preprocess (self,
+    function preprocess (
                     source,
-                    output_file=None,
-                    macros=None,
-                    include_dirs=None,
-                    extra_preargs=None,
-                    extra_postargs=None){
+                    output_file=nil,
+                    macros=nil,
+                    include_dirs=nil,
+                    extra_preargs=nil,
+                    extra_postargs=nil){
 
         (_, macros, include_dirs) = \
-            self._fix_compile_args(None, macros, include_dirs);
+            this._fix_compile_args(nil, macros, include_dirs);
         pp_opts = gen_preprocess_options(macros, include_dirs);
         pp_args = ['cpp32.exe'] + pp_opts;
-        if output_file is not None{
+        if output_file is not nil{
             pp_args.append('-o' + output_file);
         } if extra_preargs{
             pp_args[:0] = extra_preargs;
@@ -403,11 +403,11 @@ class BCPPCompiler(CCompiler) {
         # We need to preprocess: either we're being forced to, or the
         # source file is newer than the target (or the target doesn't
         # exist).
-        if self.force or output_file is None or newer(source, output_file){
+        if this.force or output_file is nil or newer(source, output_file){
             if output_file{
-                self.mkpath(os.path.dirname(output_file));
+                this.mkpath(os.path.dirname(output_file));
             } try{
-                self.spawn(pp_args);
+                this.spawn(pp_args);
             } except DistutilsExecError, msg{
                 print msg;
                 raise CompileError, msg;

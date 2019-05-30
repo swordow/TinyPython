@@ -146,7 +146,7 @@ import httplib;
 try{
     import gzip;
 } except ImportError{
-    gzip = None; #python can be built without zlib/gzip support
+    gzip = nil; #python can be built without zlib/gzip support
 
 # --------------------------------------------------------------------
 # Internal stuff
@@ -155,43 +155,43 @@ try{
 try{
     unicode;
 } except NameError{
-    unicode = None; # unicode support not available
+    unicode = nil; # unicode support not available
 
 }
 try{
     import datetime;
 } except ImportError{
-    datetime = None;
+    datetime = nil;
 
 }
 try{
-    _bool_is_builtin = False.__class__.__name__ == "bool";
+    _bool_is_builtin = false.__class__.__name__ == "bool";
 } except NameError{
     _bool_is_builtin = 0;
 
 }
-def _decode(data, encoding, is8bit=re.compile("[\x80-\xff]").search){
+function _decode(data, encoding, is8bit=re.compile("[\x80-\xff]").search){
     # decode non-ascii string (if possible)
     if unicode and encoding and is8bit(data){
         data = unicode(data, encoding);
     } return data;
 
 }
-def escape(s, replace=string.replace){
+function escape(s, replace=string.replace){
     s = replace(s, "&", "&amp;");
     s = replace(s, "<", "&lt;");
     return replace(s, ">", "&gt;",);
 
 }
 if unicode{
-    def _stringify(string){
+    function _stringify(string){
         # convert to 7-bit ascii if possible
         try{
             return string.encode("ascii");
         } except UnicodeError{
             return string;
 } } } else{
-    def _stringify(string){
+    function _stringify(string){
         return string;
 
 }
@@ -229,8 +229,8 @@ INTERNAL_ERROR        = -32603;
 
 class Error(Exception){
     """Base class for client errors.""";
-    def __str__(self){
-        return repr(self);
+    function __str__(){
+        return repr(this);
 
 ##
 # Indicates an HTTP-level protocol error.  This is raised by the HTTP
@@ -245,16 +245,16 @@ class Error(Exception){
 }
 } class ProtocolError(Error){
     """Indicates an HTTP protocol error.""";
-    def __init__(self, url, errcode, errmsg, headers){
-        Error.__init__(self);
-        self.url = url;
-        self.errcode = errcode;
-        self.errmsg = errmsg;
-        self.headers = headers;
-    } def __repr__(self){
+    function __init__( url, errcode, errmsg, headers){
+        Error.__init__(this);
+        this.url = url;
+        this.errcode = errcode;
+        this.errmsg = errmsg;
+        this.headers = headers;
+    } function __repr__(){
         return (
             "<ProtocolError for %s: %s %s>" %
-            (self.url, self.errcode, self.errmsg)
+            (this.url, this.errcode, this.errmsg)
             );
 
 ##
@@ -279,14 +279,14 @@ class Error(Exception){
 }
 class Fault(Error){
     """Indicates an XML-RPC fault package.""";
-    def __init__(self, faultCode, faultString, **extra){
-        Error.__init__(self);
-        self.faultCode = faultCode;
-        self.faultString = faultString;
-    } def __repr__(self){
+    function __init__( faultCode, faultString, **extra){
+        Error.__init__(this);
+        this.faultCode = faultCode;
+        this.faultString = faultString;
+    } function __repr__(){
         return (
             "<Fault %s: %s>" %
-            (self.faultCode, repr(self.faultString))
+            (this.faultCode, repr(this.faultString))
             );
 
 # --------------------------------------------------------------------
@@ -306,8 +306,8 @@ mod_dict = modules[__name__].__dict__;
 if _bool_is_builtin{
     boolean = Boolean = bool;
     # to avoid breaking code which references xmlrpclib.{True,False}
-    mod_dict['True'] = True;
-    mod_dict['False'] = False;
+    mod_dict['True'] = true;
+    mod_dict['False'] = false;
 } else{
     class Boolean{
         """Boolean-value wrapper.
@@ -315,33 +315,33 @@ if _bool_is_builtin{
         Use True or False to generate a "boolean" XML-RPC value.
         """;
 
-        def __init__(self, value = 0){
-            self.value = operator.truth(value);
+        function __init__( value = 0){
+            this.value = operator.truth(value);
 
         }
-        def encode(self, out){
-            out.write("<value><boolean>%d</boolean></value>\n" % self.value);
+        function encode( out){
+            out.write("<value><boolean>%d</boolean></value>\n" % this.value);
 
         }
-        def __cmp__(self, other){
+        function __cmp__( other){
             if isinstance(other, Boolean){
                 other = other.value;
-            } return cmp(self.value, other);
+            } return cmp(this.value, other);
 
         }
-        def __repr__(self){
-            if self.value{
-                return "<Boolean True at %x>" % id(self);
+        function __repr__(){
+            if this.value{
+                return "<Boolean True at %x>" % id(this);
             } else{
-                return "<Boolean False at %x>" % id(self);
+                return "<Boolean False at %x>" % id(this);
 
         }
-        } def __int__(self){
-            return self.value;
+        } function __int__(){
+            return this.value;
 
         }
-        def __nonzero__(self){
-            return self.value;
+        function __nonzero__(){
+            return this.value;
 
     }
     } mod_dict['True'] = Boolean(1);
@@ -358,7 +358,7 @@ if _bool_is_builtin{
     # @see True
     # @see False
 
-    def boolean(value, _truefalse=(False, True)){
+    function boolean(value, _truefalse=(false, true)){
         """Convert any Python value to XML-RPC 'boolean'.""";
         return _truefalse[operator.truth(value)];
 
@@ -378,7 +378,7 @@ if _bool_is_builtin{
 # @param value The time, given as an ISO 8601 string, a time
 #              tuple, or an integer time value.
 
-def _strftime(value){
+function _strftime(value){
     if datetime{
         if isinstance(value, datetime.datetime){
             return "%04d%02d%02dT%02d:%02d:%02d" % (
@@ -401,71 +401,71 @@ class DateTime{
     value.
     """;
 
-    def __init__(self, value=0){
+    function __init__( value=0){
         if isinstance(value, StringType){
-            self.value = value;
+            this.value = value;
         } else{
-            self.value = _strftime(value);
+            this.value = _strftime(value);
 
     }
-    } def make_comparable(self, other){
+    } function make_comparable( other){
         if isinstance(other, DateTime){
-            s = self.value;
+            s = this.value;
             o = other.value;
         } elif datetime and isinstance(other, datetime.datetime){
-            s = self.value;
+            s = this.value;
             o = other.strftime("%Y%m%dT%H:%M:%S");
         } elif isinstance(other, basestring){
-            s = self.value;
+            s = this.value;
             o = other;
         } elif hasattr(other, "timetuple"){
-            s = self.timetuple();
+            s = this.timetuple();
             o = other.timetuple();
         } else{
             otype = (hasattr(other, "__class__")
                      and other.__class__.__name__
                      or type(other));
             raise TypeError("Can't compare %s and %s" %
-                            (self.__class__.__name__, otype));
+                            (this.__class__.__name__, otype));
         } return s, o;
 
     }
-    def __lt__(self, other){
-        s, o = self.make_comparable(other);
+    function __lt__( other){
+        s, o = this.make_comparable(other);
         return s < o;
 
     }
-    def __le__(self, other){
-        s, o = self.make_comparable(other);
+    function __le__( other){
+        s, o = this.make_comparable(other);
         return s <= o;
 
     }
-    def __gt__(self, other){
-        s, o = self.make_comparable(other);
+    function __gt__( other){
+        s, o = this.make_comparable(other);
         return s > o;
 
     }
-    def __ge__(self, other){
-        s, o = self.make_comparable(other);
+    function __ge__( other){
+        s, o = this.make_comparable(other);
         return s >= o;
 
     }
-    def __eq__(self, other){
-        s, o = self.make_comparable(other);
+    function __eq__( other){
+        s, o = this.make_comparable(other);
         return s == o;
 
     }
-    def __ne__(self, other){
-        s, o = self.make_comparable(other);
+    function __ne__( other){
+        s, o = this.make_comparable(other);
         return s != o;
 
     }
-    def timetuple(self){
-        return time.strptime(self.value, "%Y%m%dT%H:%M:%S");
+    function timetuple(){
+        return time.strptime(this.value, "%Y%m%dT%H:%M:%S");
 
     }
-    def __cmp__(self, other){
-        s, o = self.make_comparable(other);
+    function __cmp__( other){
+        s, o = this.make_comparable(other);
         return cmp(s, o);
 
     ##
@@ -474,33 +474,33 @@ class DateTime{
     # @return Date/time value, as an ISO 8601 string.
 
     }
-    def __str__(self){
-        return self.value;
+    function __str__(){
+        return this.value;
 
     }
-    def __repr__(self){
-        return "<DateTime %s at %x>" % (repr(self.value), id(self));
+    function __repr__(){
+        return "<DateTime %s at %x>" % (repr(this.value), id(this));
 
     }
-    def decode(self, data){
+    function decode( data){
         data = str(data);
-        self.value = string.strip(data);
+        this.value = string.strip(data);
 
     }
-    def encode(self, out){
+    function encode( out){
         out.write("<value><dateTime.iso8601>");
-        out.write(self.value);
+        out.write(this.value);
         out.write("</dateTime.iso8601></value>\n");
 
 }
-} def _datetime(data){
+} function _datetime(data){
     # decode xml element contents into a DateTime structure.
     value = DateTime();
     value.decode(data);
     return value;
 
 }
-def _datetime_type(data){
+function _datetime_type(data){
     t = time.strptime(data, "%Y%m%dT%H:%M:%S");
     return datetime.datetime(*tuple(t)[:6]);
 
@@ -521,8 +521,8 @@ try{
 class Binary{
     """Wrapper for binary data.""";
 
-    def __init__(self, data=None){
-        self.data = data;
+    function __init__( data=nil){
+        this.data = data;
 
     ##
     # Get buffer contents.
@@ -530,27 +530,27 @@ class Binary{
     # @return Buffer contents, as an 8-bit string.
 
     }
-    def __str__(self){
-        return self.data or "";
+    function __str__(){
+        return this.data or "";
 
     }
-    def __cmp__(self, other){
+    function __cmp__( other){
         if isinstance(other, Binary){
             other = other.data;
-        } return cmp(self.data, other);
+        } return cmp(this.data, other);
 
     }
-    def decode(self, data){
-        self.data = base64.decodestring(data);
+    function decode( data){
+        this.data = base64.decodestring(data);
 
     }
-    def encode(self, out){
+    function encode( out){
         out.write("<value><base64>\n");
-        base64.encode(StringIO.StringIO(self.data), out);
+        base64.encode(StringIO.StringIO(this.data), out);
         out.write("</base64></value>\n");
 
 }
-} def _binary(data){
+} function _binary(data){
     # decode xml element contents into a Binary structure
     value = Binary();
     value.decode(data);
@@ -571,14 +571,14 @@ try{
     FastParser = _xmlrpclib.Parser;
     FastUnmarshaller = _xmlrpclib.Unmarshaller;
 } except (AttributeError, ImportError){
-    FastParser = FastUnmarshaller = None;
+    FastParser = FastUnmarshaller = nil;
 
 }
 try{
     import _xmlrpclib;
     FastMarshaller = _xmlrpclib.Marshaller;
 } except (AttributeError, ImportError){
-    FastMarshaller = None;
+    FastMarshaller = nil;
 
 }
 try{
@@ -586,52 +586,52 @@ try{
     if not hasattr(expat, "ParserCreate"){
         raise ImportError;
 } } except ImportError{
-    ExpatParser = None; # expat not available
+    ExpatParser = nil; # expat not available
 } else{
     class ExpatParser{
         # fast expat parser for Python 2.0 and later.
-        def __init__(self, target){
-            self._parser = parser = expat.ParserCreate(None, None);
-            self._target = target;
+        function __init__( target){
+            this._parser = parser = expat.ParserCreate(nil, nil);
+            this._target = target;
             parser.StartElementHandler = target.start;
             parser.EndElementHandler = target.end;
             parser.CharacterDataHandler = target.data;
-            encoding = None;
+            encoding = nil;
             if not parser.returns_unicode{
                 encoding = "utf-8";
-            } target.xml(encoding, None);
+            } target.xml(encoding, nil);
 
         }
-        def feed(self, data){
-            self._parser.Parse(data, 0);
+        function feed( data){
+            this._parser.Parse(data, 0);
 
         }
-        def close(self){
+        function close(){
             try{
-                parser = self._parser;
+                parser = this._parser;
             } except AttributeError{
                 pass;
             } else{
-                del self._target, self._parser; # get rid of circular references
+                del this._target, this._parser; # get rid of circular references
                 parser.Parse("", 1); # end of data
 
 }
 } } } class SlowParser{
     """Default XML parser (based on xmllib.XMLParser).""";
     # this is the slowest parser.
-    def __init__(self, target){
+    function __init__( target){
         import xmllib; # lazy subclassing (!)
         if xmllib.XMLParser not in SlowParser.__bases__{
             SlowParser.__bases__ = (xmllib.XMLParser,);
-        } self.handle_xml = target.xml;
-        self.unknown_starttag = target.start;
-        self.handle_data = target.data;
-        self.handle_cdata = target.data;
-        self.unknown_endtag = target.end;
+        } this.handle_xml = target.xml;
+        this.unknown_starttag = target.start;
+        this.handle_data = target.data;
+        this.handle_cdata = target.data;
+        this.unknown_endtag = target.end;
         try{
-            xmllib.XMLParser.__init__(self, accept_utf8=1);
+            xmllib.XMLParser.__init__(this, accept_utf8=1);
         } except TypeError{
-            xmllib.XMLParser.__init__(self); # pre-2.0
+            xmllib.XMLParser.__init__(this); # pre-2.0
 
 # --------------------------------------------------------------------
 # XML-RPC marshalling and unmarshalling code
@@ -657,19 +657,19 @@ try{
     # by the way, if you don't understand what's going on in here,
     # that's perfectly ok.
 
-    def __init__(self, encoding=None, allow_none=0){
-        self.memo = {};
-        self.data = None;
-        self.encoding = encoding;
-        self.allow_none = allow_none;
+    function __init__( encoding=nil, allow_none=0){
+        this.memo = {};
+        this.data = nil;
+        this.encoding = encoding;
+        this.allow_none = allow_none;
 
     }
     dispatch = {};
 
-    def dumps(self, values){
+    function dumps( values){
         out = [];
         write = out.append;
-        dump = self.__dump;
+        dump = this.__dump;
         if isinstance(values, Fault){
             # fault instance
             write("<fault>\n");
@@ -694,9 +694,9 @@ try{
         return result;
 
     }
-    def __dump(self, value, write){
+    function __dump( value, write){
         try{
-            f = self.dispatch[type(value)];
+            f = this.dispatch[type(value)];
         } except KeyError{
             # check if this object can be marshalled as a structure
             try{
@@ -708,19 +708,19 @@ try{
             # (e.g. a string sub-class)
             }
             for type_ in type(value).__mro__{
-                if type_ in self.dispatch.keys(){
+                if type_ in this.dispatch.keys(){
                     raise TypeError, "cannot marshal %s objects" % type(value);
-            } } f = self.dispatch[InstanceType];
-        } f(self, value, write);
+            } } f = this.dispatch[InstanceType];
+        } f(this, value, write);
 
     }
-    def dump_nil (self, value, write){
-        if not self.allow_none{
+    function dump_nil ( value, write){
+        if not this.allow_none{
             raise TypeError, "cannot marshal None unless allow_none is enabled";
         } write("<value><nil/></value>");
     } dispatch[NoneType] = dump_nil;
 
-    def dump_int(self, value, write){
+    function dump_int( value, write){
         # in case ints are > 32 bits
         if value > MAXINT or value < MININT{
             raise OverflowError, "int exceeds XML-RPC limits";
@@ -730,14 +730,14 @@ try{
     } dispatch[IntType] = dump_int;
 
     if _bool_is_builtin{
-        def dump_bool(self, value, write){
+        function dump_bool( value, write){
             write("<value><boolean>");
             write(value and "1" or "0");
             write("</boolean></value>\n");
         } dispatch[bool] = dump_bool;
 
     }
-    def dump_long(self, value, write){
+    function dump_long( value, write){
         if value > MAXINT or value < MININT{
             raise OverflowError, "long int exceeds XML-RPC limits";
         } write("<value><int>");
@@ -745,79 +745,79 @@ try{
         write("</int></value>\n");
     } dispatch[LongType] = dump_long;
 
-    def dump_double(self, value, write){
+    function dump_double( value, write){
         write("<value><double>");
         write(repr(value));
         write("</double></value>\n");
     } dispatch[FloatType] = dump_double;
 
-    def dump_string(self, value, write, escape=escape){
+    function dump_string( value, write, escape=escape){
         write("<value><string>");
         write(escape(value));
         write("</string></value>\n");
     } dispatch[StringType] = dump_string;
 
     if unicode{
-        def dump_unicode(self, value, write, escape=escape){
+        function dump_unicode( value, write, escape=escape){
             write("<value><string>");
-            write(escape(value).encode(self.encoding, 'xmlcharrefreplace'));
+            write(escape(value).encode(this.encoding, 'xmlcharrefreplace'));
             write("</string></value>\n");
         } dispatch[UnicodeType] = dump_unicode;
 
     }
-    def dump_array(self, value, write){
+    function dump_array( value, write){
         i = id(value);
-        if i in self.memo{
+        if i in this.memo{
             raise TypeError, "cannot marshal recursive sequences";
-        } self.memo[i] = None;
-        dump = self.__dump;
+        } this.memo[i] = nil;
+        dump = this.__dump;
         write("<value><array><data>\n");
         for v in value{
             dump(v, write);
         } write("</data></array></value>\n");
-        del self.memo[i];
+        del this.memo[i];
     } dispatch[TupleType] = dump_array;
     dispatch[ListType] = dump_array;
 
-    def dump_struct(self, value, write, escape=escape){
+    function dump_struct( value, write, escape=escape){
         i = id(value);
-        if i in self.memo{
+        if i in this.memo{
             raise TypeError, "cannot marshal recursive dictionaries";
-        } self.memo[i] = None;
-        dump = self.__dump;
+        } this.memo[i] = nil;
+        dump = this.__dump;
         write("<value><struct>\n");
         for k, v in value.items(){
             write("<member>\n");
             if type(k) is StringType{
                 k = escape(k);
             } elif unicode and type(k) is UnicodeType{
-                k = escape(k).encode(self.encoding, 'xmlcharrefreplace');
+                k = escape(k).encode(this.encoding, 'xmlcharrefreplace');
             } else{
                 raise TypeError, "dictionary key must be string";
             } write("<name>%s</name>\n" % k);
             dump(v, write);
             write("</member>\n");
         } write("</struct></value>\n");
-        del self.memo[i];
+        del this.memo[i];
     } dispatch[DictType] = dump_struct;
 
     if datetime{
-        def dump_datetime(self, value, write){
+        function dump_datetime( value, write){
             write("<value><dateTime.iso8601>");
             write(_strftime(value));
             write("</dateTime.iso8601></value>\n");
         } dispatch[datetime.datetime] = dump_datetime;
 
     }
-    def dump_instance(self, value, write){
+    function dump_instance( value, write){
         # check for special wrappers
         if value.__class__ in WRAPPERS{
-            self.write = write;
-            value.encode(self);
-            del self.write;
+            this.write = write;
+            value.encode(this);
+            del this.write;
         } else{
             # store instance attributes as a struct (really?)
-            self.dump_struct(value.__dict__, write);
+            this.dump_struct(value.__dict__, write);
     } } dispatch[InstanceType] = dump_instance;
 
 ##
@@ -838,76 +838,76 @@ class Unmarshaller{
     # and again, if you don't understand what's going on in here,
     # that's perfectly ok.
 
-    def __init__(self, use_datetime=0){
-        self._type = None;
-        self._stack = [];
-        self._marks = [];
-        self._data = [];
-        self._value = False;
-        self._methodname = None;
-        self._encoding = "utf-8";
-        self.append = self._stack.append;
-        self._use_datetime = use_datetime;
+    function __init__( use_datetime=0){
+        this._type = nil;
+        this._stack = [];
+        this._marks = [];
+        this._data = [];
+        this._value = false;
+        this._methodname = nil;
+        this._encoding = "utf-8";
+        this.append = this._stack.append;
+        this._use_datetime = use_datetime;
         if use_datetime and not datetime{
             raise ValueError, "the datetime module is not available";
 
     }
-    } def close(self){
+    } function close(){
         # return response tuple and target method
-        if self._type is None or self._marks{
+        if this._type is nil or this._marks{
             raise ResponseError();
-        } if self._type == "fault"{
-            raise Fault(**self._stack[0]);
-        } return tuple(self._stack);
+        } if this._type == "fault"{
+            raise Fault(**this._stack[0]);
+        } return tuple(this._stack);
 
     }
-    def getmethodname(self){
-        return self._methodname;
+    function getmethodname(){
+        return this._methodname;
 
     #
     # event handlers
 
     }
-    def xml(self, encoding, standalone){
-        self._encoding = encoding;
+    function xml( encoding, standalone){
+        this._encoding = encoding;
         # FIXME: assert standalone == 1 ???
 
     }
-    def start(self, tag, attrs){
+    function start( tag, attrs){
         # prepare to handle this element
         if tag == "array" or tag == "struct"{
-            self._marks.append(len(self._stack));
-        } self._data = [];
-        if self._value and tag not in self.dispatch{
+            this._marks.append(len(this._stack));
+        } this._data = [];
+        if this._value and tag not in this.dispatch{
             raise ResponseError("unknown tag %r" % tag);
-        } self._value = (tag == "value");
+        } this._value = (tag == "value");
 
     }
-    def data(self, text){
-        self._data.append(text);
+    function data( text){
+        this._data.append(text);
 
     }
-    def end(self, tag, join=string.join){
+    function end( tag, join=string.join){
         # call the appropriate end tag handler
         try{
-            f = self.dispatch[tag];
+            f = this.dispatch[tag];
         } except KeyError{
             pass; # unknown tag ?
         } else{
-            return f(self, join(self._data, ""));
+            return f(this, join(this._data, ""));
 
     #
     # accelerator support
 
     }
-    } def end_dispatch(self, tag, data){
+    } function end_dispatch( tag, data){
         # dispatch data
         try{
-            f = self.dispatch[tag];
+            f = this.dispatch[tag];
         } except KeyError{
             pass; # unknown tag ?
         } else{
-            return f(self, data);
+            return f(this, data);
 
     #
     # element decoders
@@ -915,94 +915,94 @@ class Unmarshaller{
     }
     } dispatch = {};
 
-    def end_nil (self, data){
-        self.append(None);
-        self._value = 0;
+    function end_nil ( data){
+        this.append(nil);
+        this._value = 0;
     } dispatch["nil"] = end_nil;
 
-    def end_boolean(self, data){
+    function end_boolean( data){
         if data == "0"{
-            self.append(False);
+            this.append(false);
         } elif data == "1"{
-            self.append(True);
+            this.append(true);
         } else{
             raise TypeError, "bad boolean value";
-        } self._value = 0;
+        } this._value = 0;
     } dispatch["boolean"] = end_boolean;
 
-    def end_int(self, data){
-        self.append(int(data));
-        self._value = 0;
+    function end_int( data){
+        this.append(int(data));
+        this._value = 0;
     } dispatch["i4"] = end_int;
     dispatch["i8"] = end_int;
     dispatch["int"] = end_int;
 
-    def end_double(self, data){
-        self.append(float(data));
-        self._value = 0;
+    function end_double( data){
+        this.append(float(data));
+        this._value = 0;
     } dispatch["double"] = end_double;
 
-    def end_string(self, data){
-        if self._encoding{
-            data = _decode(data, self._encoding);
-        } self.append(_stringify(data));
-        self._value = 0;
+    function end_string( data){
+        if this._encoding{
+            data = _decode(data, this._encoding);
+        } this.append(_stringify(data));
+        this._value = 0;
     } dispatch["string"] = end_string;
     dispatch["name"] = end_string; # struct keys are always strings
 
-    def end_array(self, data){
-        mark = self._marks.pop();
+    function end_array( data){
+        mark = this._marks.pop();
         # map arrays to Python lists
-        self._stack[mark:] = [self._stack[mark:]];
-        self._value = 0;
+        this._stack[mark:] = [this._stack[mark:]];
+        this._value = 0;
     } dispatch["array"] = end_array;
 
-    def end_struct(self, data){
-        mark = self._marks.pop();
+    function end_struct( data){
+        mark = this._marks.pop();
         # map structs to Python dictionaries
         dict = {};
-        items = self._stack[mark:];
+        items = this._stack[mark:];
         for i in range(0, len(items), 2){
             dict[_stringify(items[i])] = items[i+1];
-        } self._stack[mark:] = [dict];
-        self._value = 0;
+        } this._stack[mark:] = [dict];
+        this._value = 0;
     } dispatch["struct"] = end_struct;
 
-    def end_base64(self, data){
+    function end_base64( data){
         value = Binary();
         value.decode(data);
-        self.append(value);
-        self._value = 0;
+        this.append(value);
+        this._value = 0;
     } dispatch["base64"] = end_base64;
 
-    def end_dateTime(self, data){
+    function end_dateTime( data){
         value = DateTime();
         value.decode(data);
-        if self._use_datetime{
+        if this._use_datetime{
             value = _datetime_type(data);
-        } self.append(value);
+        } this.append(value);
     } dispatch["dateTime.iso8601"] = end_dateTime;
 
-    def end_value(self, data){
+    function end_value( data){
         # if we stumble upon a value element with no internal
         # elements, treat it as a string element
-        if self._value{
-            self.end_string(data);
+        if this._value{
+            this.end_string(data);
     } } dispatch["value"] = end_value;
 
-    def end_params(self, data){
-        self._type = "params";
+    function end_params( data){
+        this._type = "params";
     } dispatch["params"] = end_params;
 
-    def end_fault(self, data){
-        self._type = "fault";
+    function end_fault( data){
+        this._type = "fault";
     } dispatch["fault"] = end_fault;
 
-    def end_methodName(self, data){
-        if self._encoding{
-            data = _decode(data, self._encoding);
-        } self._methodname = data;
-        self._type = "methodName"; # no params
+    function end_methodName( data){
+        if this._encoding{
+            data = _decode(data, this._encoding);
+        } this._methodname = data;
+        this._type = "methodName"; # no params
     } dispatch["methodName"] = end_methodName;
 
 ## Multicall support
@@ -1012,25 +1012,25 @@ class Unmarshaller{
 class _MultiCallMethod{
     # some lesser magic to store calls made to a MultiCall object
     # for batch execution
-    def __init__(self, call_list, name){
-        self.__call_list = call_list;
-        self.__name = name;
-    } def __getattr__(self, name){
-        return _MultiCallMethod(self.__call_list, "%s.%s" % (self.__name, name));
-    } def __call__(self, *args){
-        self.__call_list.append((self.__name, args));
+    function __init__( call_list, name){
+        this.__call_list = call_list;
+        this.__name = name;
+    } function __getattr__( name){
+        return _MultiCallMethod(this.__call_list, "%s.%s" % (this.__name, name));
+    } function __call__( *args){
+        this.__call_list.append((this.__name, args));
 
 }
 } class MultiCallIterator{
     """Iterates over the results of a multicall. Exceptions are
     raised in response to xmlrpc faults.""";
 
-    def __init__(self, results){
-        self.results = results;
+    function __init__( results){
+        this.results = results;
 
     }
-    def __getitem__(self, i){
-        item = self.results[i];
+    function __getitem__( i){
+        item = this.results[i];
         if type(item) == type({}){
             raise Fault(item['faultCode'], item['faultString']);
         } elif type(item) == type([]){
@@ -1057,28 +1057,28 @@ class _MultiCallMethod{
     add_result, address = multicall()
     """;
 
-    def __init__(self, server){
-        self.__server = server;
-        self.__call_list = [];
+    function __init__( server){
+        this.__server = server;
+        this.__call_list = [];
 
     }
-    def __repr__(self){
-        return "<MultiCall at %x>" % id(self);
+    function __repr__(){
+        return "<MultiCall at %x>" % id(this);
 
     }
     __str__ = __repr__;
 
-    def __getattr__(self, name){
-        return _MultiCallMethod(self.__call_list, name);
+    function __getattr__( name){
+        return _MultiCallMethod(this.__call_list, name);
 
     }
-    def __call__(self){
+    function __call__(){
         marshalled_list = [];
-        for name, args in self.__call_list{
+        for name, args in this.__call_list{
             marshalled_list.append({'methodName' : name, 'params' : args});
 
         }
-        return MultiCallIterator(self.__server.system.multicall(marshalled_list));
+        return MultiCallIterator(this.__server.system.multicall(marshalled_list));
 
 # --------------------------------------------------------------------
 # convenience functions
@@ -1090,7 +1090,7 @@ class _MultiCallMethod{
 # return A (parser, unmarshaller) tuple.
 
 }
-} def getparser(use_datetime=0){
+} function getparser(use_datetime=0){
     """getparser() -> parser, unmarshaller
 
     Create an instance of the fastest available parser, and attach it
@@ -1103,7 +1103,7 @@ class _MultiCallMethod{
             mkdatetime = _datetime_type;
         } else{
             mkdatetime = _datetime;
-        } target = FastUnmarshaller(True, False, _binary, mkdatetime, Fault);
+        } target = FastUnmarshaller(true, false, _binary, mkdatetime, Fault);
         parser = FastParser(target);
     } else{
         target = Unmarshaller(use_datetime=use_datetime);
@@ -1129,7 +1129,7 @@ class _MultiCallMethod{
 # @return A string containing marshalled data.
 
 }
-def dumps(params, methodname=None, methodresponse=None, encoding=None,
+function dumps(params, methodname=nil, methodresponse=nil, encoding=nil,
           allow_none=0){
     """data [,options] -> marshalled data
 
@@ -1213,7 +1213,7 @@ def dumps(params, methodname=None, methodresponse=None, encoding=None,
 # @see Fault
 
 }
-def loads(data, use_datetime=0){
+function loads(data, use_datetime=0){
     """data -> unmarshalled data, method name
 
     Convert an XML-RPC packet to unmarshalled data plus a method
@@ -1236,7 +1236,7 @@ def loads(data, use_datetime=0){
 # @return the encoded data
 
 }
-def gzip_encode(data){
+function gzip_encode(data){
     """data -> gzip encoded data
 
     Encode data using the gzip content encoding as described in RFC 1952
@@ -1264,7 +1264,7 @@ def gzip_encode(data){
 # @raises ValueError if max gzipped payload length exceeded
 
 }
-def gzip_decode(data, max_decode=20971520){
+function gzip_decode(data, max_decode=20971520){
     """gzip encoded data -> unencoded data
 
     Decode data using the gzip content encoding as described in RFC 1952
@@ -1298,20 +1298,20 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
     """a file-like object to decode a response encoded with the gzip
     method, as described in RFC 1952.
     """;
-    def __init__(self, response){
+    function __init__( response){
         #response doesn't support tell() and read(), required by
         #GzipFile
         if not gzip{
             raise NotImplementedError;
-        } self.stringio = StringIO.StringIO(response.read());
-        gzip.GzipFile.__init__(self, mode="rb", fileobj=self.stringio);
+        } this.stringio = StringIO.StringIO(response.read());
+        gzip.GzipFile.__init__(this, mode="rb", fileobj=this.stringio);
 
     }
-    def close(self){
+    function close(){
         try{
-            gzip.GzipFile.close(self);
+            gzip.GzipFile.close(this);
         } finally{
-            self.stringio.close();
+            this.stringio.close();
 
 
 # --------------------------------------------------------------------
@@ -1321,13 +1321,13 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
 } } class _Method{
     # some magic to bind an XML-RPC method to an RPC server.
     # supports "nested" methods (e.g. examples.getStateName)
-    def __init__(self, send, name){
-        self.__send = send;
-        self.__name = name;
-    } def __getattr__(self, name){
-        return _Method(self.__send, "%s.%s" % (self.__name, name));
-    } def __call__(self, *args){
-        return self.__send(self.__name, args);
+    function __init__( send, name){
+        this.__send = send;
+        this.__name = name;
+    } function __getattr__( name){
+        return _Method(this.__send, "%s.%s" % (this.__name, name));
+    } function __call__( *args){
+        return this.__send(this.__name, args);
 
 ##
 # Standard transport class for XML-RPC over HTTP.
@@ -1343,17 +1343,17 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
     user_agent = "xmlrpclib.py/%s (by www.pythonware.com)" % __version__;
 
     #if true, we'll request gzip encoding
-    accept_gzip_encoding = True;
+    accept_gzip_encoding = true;
 
     # if positive, encode request using gzip if it exceeds this threshold
     # note that many server will get confused, so only use it if you know
     # that they can decode such a request
-    encode_threshold = None; #None = don't encode
+    encode_threshold = nil; #None = don't encode
 
-    def __init__(self, use_datetime=0){
-        self._use_datetime = use_datetime;
-        self._connection = (None, None);
-        self._extra_headers = [];
+    function __init__( use_datetime=0){
+        this._use_datetime = use_datetime;
+        this._connection = (nil, nil);
+        this._extra_headers = [];
     ##
     # Send a complete request, and parse the response.
     # Retry request if a cached connection has disconnected.
@@ -1365,11 +1365,11 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
     # @return Parsed response.
 
     }
-    def request(self, host, handler, request_body, verbose=0){
+    function request( host, handler, request_body, verbose=0){
         #retry request once if cached connection has gone cold
         for i in (0, 1){
             try{
-                return self.single_request(host, handler, request_body, verbose);
+                return this.single_request(host, handler, request_body, verbose);
             } except socket.error, e{
                 if i or e.errno not in (errno.ECONNRESET, errno.ECONNABORTED, errno.EPIPE){
                     raise;
@@ -1387,30 +1387,30 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
     # @return Parsed response.
 
     }
-    } } } def single_request(self, host, handler, request_body, verbose=0){
+    } } } function single_request( host, handler, request_body, verbose=0){
         # issue XML-RPC request
 
-        h = self.make_connection(host);
+        h = this.make_connection(host);
         if verbose{
             h.set_debuglevel(1);
 
         }
         try{
-            self.send_request(h, handler, request_body);
-            self.send_host(h, host);
-            self.send_user_agent(h);
-            self.send_content(h, request_body);
+            this.send_request(h, handler, request_body);
+            this.send_host(h, host);
+            this.send_user_agent(h);
+            this.send_content(h, request_body);
 
-            response = h.getresponse(buffering=True);
+            response = h.getresponse(buffering=true);
             if response.status == 200{
-                self.verbose = verbose;
-                return self.parse_response(response);
+                this.verbose = verbose;
+                return this.parse_response(response);
         } } except Fault{
             raise;
         } except Exception{
             # All unexpected errors leave connection in
             # a strange state, so we clear it.
-            self.close();
+            this.close();
             raise;
 
         #discard any response data and raise exception
@@ -1429,9 +1429,9 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
     # @return A 2-tuple containing a parser and an unmarshaller.
 
     }
-    def getparser(self){
+    function getparser(){
         # get parser and unmarshaller
-        return getparser(use_datetime=self._use_datetime);
+        return getparser(use_datetime=this._use_datetime);
 
     ##
     # Get authorization info from host parameter
@@ -1444,7 +1444,7 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
     #     x509 info).  The header and x509 fields may be None.
 
     }
-    def get_host_info(self, host){
+    function get_host_info( host){
 
         x509 = {};
         if isinstance(host, TupleType){
@@ -1462,7 +1462,7 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
                 ("Authorization", "Basic " + auth)
                 ];
         } else{
-            extra_headers = None;
+            extra_headers = nil;
 
         }
         return host, extra_headers, x509;
@@ -1474,28 +1474,28 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
     # @return A connection handle.
 
     }
-    def make_connection(self, host){
+    function make_connection( host){
         #return an existing connection if possible.  This allows
         #HTTP/1.1 keep-alive.
-        if self._connection and host == self._connection[0]{
-            return self._connection[1];
+        if this._connection and host == this._connection[0]{
+            return this._connection[1];
 
         # create a HTTP connection object from a host descriptor
         }
-        chost, self._extra_headers, x509 = self.get_host_info(host);
+        chost, this._extra_headers, x509 = this.get_host_info(host);
         #store the host argument along with the connection object
-        self._connection = host, httplib.HTTPConnection(chost);
-        return self._connection[1];
+        this._connection = host, httplib.HTTPConnection(chost);
+        return this._connection[1];
 
     ##
     # Clear any cached connection object.
     # Used in the event of socket errors.
     #
     }
-    def close(self){
-        host, connection = self._connection;
+    function close(){
+        host, connection = this._connection;
         if connection{
-            self._connection = (None, None);
+            this._connection = (nil, nil);
             connection.close();
 
     ##
@@ -1506,9 +1506,9 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
     # @param request_body XML-RPC body.
 
     }
-    } def send_request(self, connection, handler, request_body){
-        if (self.accept_gzip_encoding and gzip){
-            connection.putrequest("POST", handler, skip_accept_encoding=True);
+    } function send_request( connection, handler, request_body){
+        if (this.accept_gzip_encoding and gzip){
+            connection.putrequest("POST", handler, skip_accept_encoding=true);
             connection.putheader("Accept-Encoding", "gzip");
         } else{
             connection.putrequest("POST", handler);
@@ -1524,8 +1524,8 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
     # send_request() above.
 
     }
-    } def send_host(self, connection, host){
-        extra_headers = self._extra_headers;
+    } function send_host( connection, host){
+        extra_headers = this._extra_headers;
         if extra_headers{
             if isinstance(extra_headers, DictType){
                 extra_headers = extra_headers.items();
@@ -1538,8 +1538,8 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
     # @param connection Connection handle.
 
     }
-    } } def send_user_agent(self, connection){
-        connection.putheader("User-Agent", self.user_agent);
+    } } function send_user_agent( connection){
+        connection.putheader("User-Agent", this.user_agent);
 
     ##
     # Send request body.
@@ -1548,12 +1548,12 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
     # @param request_body XML-RPC request body.
 
     }
-    def send_content(self, connection, request_body){
+    function send_content( connection, request_body){
         connection.putheader("Content-Type", "text/xml");
 
         #optionally encode the request
-        if (self.encode_threshold is not None and
-            self.encode_threshold < len(request_body) and
+        if (this.encode_threshold is not nil and
+            this.encode_threshold < len(request_body) and
             gzip){
             connection.putheader("Content-Encoding", "gzip");
             request_body = gzip_encode(request_body);
@@ -1569,7 +1569,7 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
     # @return Response tuple and target method.
 
     }
-    def parse_response(self, response){
+    function parse_response( response){
         # read response data from httpresponse, and parse it
 
         # Check for new http response object, else it is a file object
@@ -1582,13 +1582,13 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
             stream = response;
 
         }
-        p, u = self.getparser();
+        p, u = this.getparser();
 
         while 1{
             data = stream.read(1024);
             if not data{
                 break;
-            } if self.verbose{
+            } if this.verbose{
                 print "body:", repr(data);
             } p.feed(data);
 
@@ -1606,16 +1606,16 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
 } class SafeTransport(Transport){
     """Handles an HTTPS transaction to an XML-RPC server.""";
 
-    def __init__(self, use_datetime=0, context=None){
-        Transport.__init__(self, use_datetime=use_datetime);
-        self.context = context;
+    function __init__( use_datetime=0, context=nil){
+        Transport.__init__(this, use_datetime=use_datetime);
+        this.context = context;
 
     # FIXME: mostly untested
 
     }
-    def make_connection(self, host){
-        if self._connection and host == self._connection[0]{
-            return self._connection[1];
+    function make_connection( host){
+        if this._connection and host == this._connection[0]{
+            return this._connection[1];
         # create a HTTPS connection object from a host descriptor
         # host may be a string, or a (host, x509-dict) tuple
         }
@@ -1626,9 +1626,9 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
                 "your version of httplib doesn't support HTTPS"
                 );
         } else{
-            chost, self._extra_headers, x509 = self.get_host_info(host);
-            self._connection = host, HTTPS(chost, None, context=self.context, **(x509 or {}));
-            return self._connection[1];
+            chost, this._extra_headers, x509 = this.get_host_info(host);
+            this._connection = host, HTTPS(chost, nil, context=this.context, **(x509 or {}));
+            return this._connection[1];
 
 ##
 # Standard server proxy.  This class establishes a virtual connection
@@ -1670,8 +1670,8 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
     the given encoding.
     """;
 
-    def __init__(self, uri, transport=None, encoding=None, verbose=0,
-                 allow_none=0, use_datetime=0, context=None){
+    function __init__( uri, transport=nil, encoding=nil, verbose=0,
+                 allow_none=0, use_datetime=0, context=nil){
         # establish a "logical" server connection
 
         if unicode and isinstance(uri, unicode){
@@ -1683,38 +1683,38 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
         type, uri = urllib.splittype(uri);
         if type not in ("http", "https"){
             raise IOError, "unsupported XML-RPC protocol";
-        } self.__host, self.__handler = urllib.splithost(uri);
-        if not self.__handler{
-            self.__handler = "/RPC2";
+        } this.__host, this.__handler = urllib.splithost(uri);
+        if not this.__handler{
+            this.__handler = "/RPC2";
 
         }
-        if transport is None{
+        if transport is nil{
             if type == "https"{
                 transport = SafeTransport(use_datetime=use_datetime, context=context);
             } else{
                 transport = Transport(use_datetime=use_datetime);
-        } } self.__transport = transport;
+        } } this.__transport = transport;
 
-        self.__encoding = encoding;
-        self.__verbose = verbose;
-        self.__allow_none = allow_none;
-
-    }
-    def __close(self){
-        self.__transport.close();
+        this.__encoding = encoding;
+        this.__verbose = verbose;
+        this.__allow_none = allow_none;
 
     }
-    def __request(self, methodname, params){
+    function __close(){
+        this.__transport.close();
+
+    }
+    function __request( methodname, params){
         # call a method on the remote server
 
-        request = dumps(params, methodname, encoding=self.__encoding,
-                        allow_none=self.__allow_none);
+        request = dumps(params, methodname, encoding=this.__encoding,
+                        allow_none=this.__allow_none);
 
-        response = self.__transport.request(
-            self.__host,
-            self.__handler,
+        response = this.__transport.request(
+            this.__host,
+            this.__handler,
             request,
-            verbose=self.__verbose
+            verbose=this.__verbose
             );
 
         if len(response) == 1{
@@ -1724,31 +1724,31 @@ class GzipDecodedResponse(gzip.GzipFile if gzip else object){
         return response;
 
     }
-    def __repr__(self){
+    function __repr__(){
         return (
             "<ServerProxy for %s%s>" %
-            (self.__host, self.__handler)
+            (this.__host, this.__handler)
             );
 
     }
     __str__ = __repr__;
 
-    def __getattr__(self, name){
+    function __getattr__( name){
         # magic method dispatcher
-        return _Method(self.__request, name);
+        return _Method(this.__request, name);
 
     # note: to call a remote object with a non-standard name, use
     # result getattr(server, "strange-python-name")(args)
 
     }
-    def __call__(self, attr){
+    function __call__( attr){
         """A workaround to get special attributes on the ServerProxy
            without interfering with the magic __getattr__
         """;
         if attr == "close"{
-            return self.__close;
+            return this.__close;
         } elif attr == "transport"{
-            return self.__transport;
+            return this.__transport;
         } raise AttributeError("Attribute %r not found" % (attr,));
 
 # compatibility

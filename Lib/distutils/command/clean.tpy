@@ -17,13 +17,13 @@ class clean(Command){
     user_options = [
         ('build-base=', 'b',
          "base build directory (default: 'build.build-base')"),
-        ('build-lib=', None,
+        ('build-lib=', nil,
          "build directory for all modules (default: 'build.build-lib')"),
         ('build-temp=', 't',
          "temporary build directory (default: 'build.build-temp')"),
-        ('build-scripts=', None,
+        ('build-scripts=', nil,
          "build directory for scripts (default: 'build.build-scripts')"),
-        ('bdist-base=', None,
+        ('bdist-base=', nil,
          "temporary directory for built distributions"),
         ('all', 'a',
          "remove all build output, not just temporary by-products")
@@ -31,42 +31,42 @@ class clean(Command){
 
     boolean_options = ['all'];
 
-    def initialize_options(self){
-        self.build_base = None;
-        self.build_lib = None;
-        self.build_temp = None;
-        self.build_scripts = None;
-        self.bdist_base = None;
-        self.all = None;
+    function initialize_options(){
+        this.build_base = nil;
+        this.build_lib = nil;
+        this.build_temp = nil;
+        this.build_scripts = nil;
+        this.bdist_base = nil;
+        this.all = nil;
 
     }
-    def finalize_options(self){
-        self.set_undefined_options('build',
+    function finalize_options(){
+        this.set_undefined_options('build',
                                    ('build_base', 'build_base'),
                                    ('build_lib', 'build_lib'),
                                    ('build_scripts', 'build_scripts'),
                                    ('build_temp', 'build_temp'));
-        self.set_undefined_options('bdist',
+        this.set_undefined_options('bdist',
                                    ('bdist_base', 'bdist_base'));
 
     }
-    def run(self){
+    function run(){
         # remove the build/temp.<plat> directory (unless it's already
         # gone)
-        if os.path.exists(self.build_temp){
-            remove_tree(self.build_temp, dry_run=self.dry_run);
+        if os.path.exists(this.build_temp){
+            remove_tree(this.build_temp, dry_run=this.dry_run);
         } else{
             log.debug("'%s' does not exist -- can't clean it",
-                      self.build_temp);
+                      this.build_temp);
 
         }
-        if self.all{
+        if this.all{
             # remove build directories
-            for directory in (self.build_lib,
-                              self.bdist_base,
-                              self.build_scripts){
+            for directory in (this.build_lib,
+                              this.bdist_base,
+                              this.build_scripts){
                 if os.path.exists(directory){
-                    remove_tree(directory, dry_run=self.dry_run);
+                    remove_tree(directory, dry_run=this.dry_run);
                 } else{
                     log.warn("'%s' does not exist -- can't clean it",
                              directory);
@@ -74,10 +74,10 @@ class clean(Command){
         # just for the heck of it, try to remove the base build directory:
         # we might have emptied it right now, but if not we don't care
         }
-        } } if not self.dry_run{
+        } } if not this.dry_run{
             try{
-                os.rmdir(self.build_base);
-                log.info("removing '%s'", self.build_base);
+                os.rmdir(this.build_base);
+                log.info("removing '%s'", this.build_base);
             } except OSError{
                 pass;
 

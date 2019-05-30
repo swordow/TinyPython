@@ -123,8 +123,8 @@ static PyObject *ResObj_MacLoadResource(ResourceObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -141,8 +141,8 @@ static PyObject *ResObj_ReleaseResource(ResourceObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -159,8 +159,8 @@ static PyObject *ResObj_DetachResource(ResourceObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -228,8 +228,8 @@ static PyObject *ResObj_SetResInfo(ResourceObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -255,8 +255,8 @@ static PyObject *ResObj_AddResource(ResourceObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -314,8 +314,8 @@ static PyObject *ResObj_SetResAttrs(ResourceObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -332,8 +332,8 @@ static PyObject *ResObj_ChangedResource(ResourceObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -350,8 +350,8 @@ static PyObject *ResObj_RemoveResource(ResourceObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -368,8 +368,8 @@ static PyObject *ResObj_WriteResource(ResourceObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -389,8 +389,8 @@ static PyObject *ResObj_SetResourceSize(ResourceObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -446,8 +446,8 @@ static PyObject *ResObj_LoadResource(ResourceObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -681,8 +681,8 @@ static PyObject *Res_CloseResFile(PyObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -697,8 +697,8 @@ static PyObject *Res_ResError(PyObject *_self, PyObject *_args)
         return NULL;
     _err = ResError();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -736,8 +736,8 @@ static PyObject *Res_UseResFile(PyObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -838,8 +838,8 @@ static PyObject *Res_SetResLoad(PyObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1086,8 +1086,8 @@ static PyObject *Res_UpdateResFile(PyObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1106,8 +1106,8 @@ static PyObject *Res_SetResPurge(PyObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1150,8 +1150,8 @@ static PyObject *Res_SetResFileAttrs(PyObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1234,8 +1234,8 @@ static PyObject *Res_HCreateResFile(PyObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1287,8 +1287,8 @@ static PyObject *Res_FSpCreateResFile(PyObject *_self, PyObject *_args)
         OSErr _err = ResError();
         if (_err != noErr) return PyMac_Error(_err);
     }
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 #endif /* !__LP64__ */
@@ -1309,8 +1309,8 @@ static PyObject *Res_InsertResourceFile(PyObject *_self, PyObject *_args)
     _err = InsertResourceFile(refNum,
                               where);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1327,8 +1327,8 @@ static PyObject *Res_DetachResourceFile(PyObject *_self, PyObject *_args)
         return NULL;
     _err = DetachResourceFile(refNum);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1697,8 +1697,8 @@ static PyMethodDef Res_methods[] = {
 PyObject *OptResObj_New(Handle itself)
 {
     if (itself == NULL) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     return ResObj_New(itself);
 }
@@ -1707,7 +1707,7 @@ int OptResObj_Convert(PyObject *v, Handle *p_itself)
 {
     PyObject *tmp;
 
-    if ( v == Py_None ) {
+    if ( v == Py_Nil ) {
         *p_itself = NULL;
         return 1;
     }

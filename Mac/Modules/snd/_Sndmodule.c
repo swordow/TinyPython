@@ -86,8 +86,8 @@ static PyObject *SndCh_SndDoCommand(SndChannelObject *_self, PyObject *_args)
                         &cmd,
                         noWait);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -102,8 +102,8 @@ static PyObject *SndCh_SndDoImmediate(SndChannelObject *_self, PyObject *_args)
     _err = SndDoImmediate(_self->ob_itself,
                           &cmd);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -121,8 +121,8 @@ static PyObject *SndCh_SndPlay(SndChannelObject *_self, PyObject *_args)
                    sndHandle,
                    async);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -158,8 +158,8 @@ static PyObject *SndCh_SndGetInfo(SndChannelObject *_self, PyObject *_args)
                       selector,
                       infoPtr);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -177,8 +177,8 @@ static PyObject *SndCh_SndSetInfo(SndChannelObject *_self, PyObject *_args)
                       selector,
                       infoPtr);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -436,8 +436,8 @@ static PyObject *Snd_SysBeep(PyObject *_self, PyObject *_args)
                           &duration))
         return NULL;
     SysBeep(duration);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -454,7 +454,7 @@ static PyObject *Snd_SndNewChannel(PyObject *_self, PyObject *_args)
                           &init,
                           &userRoutine))
         return NULL;
-    if (userRoutine != Py_None && !PyCallable_Check(userRoutine))
+    if (userRoutine != Py_Nil && !PyCallable_Check(userRoutine))
     {
         PyErr_SetString(PyExc_TypeError, "callback must be callable");
         goto userRoutine__error__;
@@ -466,7 +466,7 @@ static PyObject *Snd_SndNewChannel(PyObject *_self, PyObject *_args)
     if (_err != noErr) return PyMac_Error(_err);
     _res = Py_BuildValue("O&",
                          SndCh_New, chan);
-    if (_res != NULL && userRoutine != Py_None)
+    if (_res != NULL && userRoutine != Py_Nil)
     {
         SndChannelObject *p = (SndChannelObject *)_res;
         p->ob_itself->userInfo = (long)p;
@@ -528,8 +528,8 @@ static PyObject *Snd_SndSetSysBeepState(PyObject *_self, PyObject *_args)
         return NULL;
     _err = SndSetSysBeepState(sysBeepState);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -557,8 +557,8 @@ static PyObject *Snd_SetSysBeepVolume(PyObject *_self, PyObject *_args)
         return NULL;
     _err = SetSysBeepVolume(level);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -586,8 +586,8 @@ static PyObject *Snd_SetDefaultOutputVolume(PyObject *_self, PyObject *_args)
         return NULL;
     _err = SetDefaultOutputVolume(level);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -737,8 +737,8 @@ static PyObject *Snd_SPBSignInDevice(PyObject *_self, PyObject *_args)
     _err = SPBSignInDevice(deviceRefNum,
                            deviceName);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -752,8 +752,8 @@ static PyObject *Snd_SPBSignOutDevice(PyObject *_self, PyObject *_args)
         return NULL;
     _err = SPBSignOutDevice(deviceRefNum);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -807,8 +807,8 @@ static PyObject *Snd_SPBCloseDevice(PyObject *_self, PyObject *_args)
         return NULL;
     _err = SPBCloseDevice(inRefNum);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -825,8 +825,8 @@ static PyObject *Snd_SPBRecord(PyObject *_self, PyObject *_args)
     _err = SPBRecord(inParamPtr,
                      asynchFlag);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -840,8 +840,8 @@ static PyObject *Snd_SPBPauseRecording(PyObject *_self, PyObject *_args)
         return NULL;
     _err = SPBPauseRecording(inRefNum);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -855,8 +855,8 @@ static PyObject *Snd_SPBResumeRecording(PyObject *_self, PyObject *_args)
         return NULL;
     _err = SPBResumeRecording(inRefNum);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -870,8 +870,8 @@ static PyObject *Snd_SPBStopRecording(PyObject *_self, PyObject *_args)
         return NULL;
     _err = SPBStopRecording(inRefNum);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -923,8 +923,8 @@ static PyObject *Snd_SPBGetDeviceInfo(PyObject *_self, PyObject *_args)
                             infoType,
                             infoData);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -944,8 +944,8 @@ static PyObject *Snd_SPBSetDeviceInfo(PyObject *_self, PyObject *_args)
                             infoType,
                             infoData);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 

@@ -129,8 +129,8 @@ static PyObject *ListObj_LDelColumn(ListObject *_self, PyObject *_args)
     LDelColumn(count,
                colNum,
                _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -146,8 +146,8 @@ static PyObject *ListObj_LDelRow(ListObject *_self, PyObject *_args)
     LDelRow(count,
         rowNum,
         _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -216,8 +216,8 @@ static PyObject *ListObj_LSize(ListObject *_self, PyObject *_args)
     LSize(listWidth,
           listHeight,
           _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -230,8 +230,8 @@ static PyObject *ListObj_LSetDrawingMode(ListObject *_self, PyObject *_args)
         return NULL;
     LSetDrawingMode(drawIt,
                     _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -247,8 +247,8 @@ static PyObject *ListObj_LScroll(ListObject *_self, PyObject *_args)
     LScroll(dCols,
         dRows,
         _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -258,8 +258,8 @@ static PyObject *ListObj_LAutoScroll(ListObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     LAutoScroll(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -272,8 +272,8 @@ static PyObject *ListObj_LUpdate(ListObject *_self, PyObject *_args)
         return NULL;
     LUpdate(theRgn,
         _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -286,8 +286,8 @@ static PyObject *ListObj_LActivate(ListObject *_self, PyObject *_args)
         return NULL;
     LActivate(act,
               _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -300,8 +300,8 @@ static PyObject *ListObj_LCellSize(ListObject *_self, PyObject *_args)
         return NULL;
     LCellSize(cSize,
               _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -338,8 +338,8 @@ static PyObject *ListObj_LAddToCell(ListObject *_self, PyObject *_args)
     LAddToCell(dataPtr__in__, dataPtr__len__,
                theCell,
                _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -352,8 +352,8 @@ static PyObject *ListObj_LClrCell(ListObject *_self, PyObject *_args)
         return NULL;
     LClrCell(theCell,
              _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -415,8 +415,8 @@ static PyObject *ListObj_LSetCell(ListObject *_self, PyObject *_args)
     LSetCell(dataPtr__in__, dataPtr__len__,
              theCell,
              _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -432,8 +432,8 @@ static PyObject *ListObj_LSetSelect(ListObject *_self, PyObject *_args)
     LSetSelect(setIt,
                theCell,
                _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -446,8 +446,8 @@ static PyObject *ListObj_LDraw(ListObject *_self, PyObject *_args)
         return NULL;
     LDraw(theCell,
           _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -900,8 +900,8 @@ static PyObject *List_SetListViewBounds(PyObject *_self, PyObject *_args)
         return NULL;
     SetListViewBounds(list,
                       &view);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -916,8 +916,8 @@ static PyObject *List_SetListPort(PyObject *_self, PyObject *_args)
         return NULL;
     SetListPort(list,
                 port);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -932,8 +932,8 @@ static PyObject *List_SetListCellIndent(PyObject *_self, PyObject *_args)
         return NULL;
     SetListCellIndent(list,
                       &indent);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -948,8 +948,8 @@ static PyObject *List_SetListClickTime(PyObject *_self, PyObject *_args)
         return NULL;
     SetListClickTime(list,
                      time);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -964,8 +964,8 @@ static PyObject *List_SetListRefCon(PyObject *_self, PyObject *_args)
         return NULL;
     SetListRefCon(list,
                   refCon);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -980,8 +980,8 @@ static PyObject *List_SetListUserHandle(PyObject *_self, PyObject *_args)
         return NULL;
     SetListUserHandle(list,
                       userHandle);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -996,8 +996,8 @@ static PyObject *List_SetListFlags(PyObject *_self, PyObject *_args)
         return NULL;
     SetListFlags(list,
                  listFlags);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1012,8 +1012,8 @@ static PyObject *List_SetListSelectionFlags(PyObject *_self, PyObject *_args)
         return NULL;
     SetListSelectionFlags(list,
                           selectionFlags);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 

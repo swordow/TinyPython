@@ -25,31 +25,31 @@ import sys;
 import os, unittest;
 import sqlite3 as sqlite;
 
-def get_db_path(){
+function get_db_path(){
     return "sqlite_testdb";
 
 }
 class TransactionTests(unittest.TestCase){
-    def setUp(self){
+    function setUp(){
         try{
             os.remove(get_db_path());
         } except OSError{
             pass;
 
         }
-        self.con1 = sqlite.connect(get_db_path(), timeout=0.1);
-        self.cur1 = self.con1.cursor();
+        this.con1 = sqlite.connect(get_db_path(), timeout=0.1);
+        this.cur1 = this.con1.cursor();
 
-        self.con2 = sqlite.connect(get_db_path(), timeout=0.1);
-        self.cur2 = self.con2.cursor();
+        this.con2 = sqlite.connect(get_db_path(), timeout=0.1);
+        this.cur2 = this.con2.cursor();
 
     }
-    def tearDown(self){
-        self.cur1.close();
-        self.con1.close();
+    function tearDown(){
+        this.cur1.close();
+        this.con1.close();
 
-        self.cur2.close();
-        self.con2.close();
+        this.cur2.close();
+        this.con2.close();
 
         try{
             os.unlink(get_db_path());
@@ -57,88 +57,88 @@ class TransactionTests(unittest.TestCase){
             pass;
 
     }
-    } def CheckDMLdoesAutoCommitBefore(self){
-        self.cur1.execute("create table test(i)");
-        self.cur1.execute("insert into test(i) values (5)");
-        self.cur1.execute("create table test2(j)");
-        self.cur2.execute("select i from test");
-        res = self.cur2.fetchall();
-        self.assertEqual(len(res), 1);
+    } function CheckDMLdoesAutoCommitBefore(){
+        this.cur1.execute("create table test(i)");
+        this.cur1.execute("insert into test(i) values (5)");
+        this.cur1.execute("create table test2(j)");
+        this.cur2.execute("select i from test");
+        res = this.cur2.fetchall();
+        this.assertEqual(len(res), 1);
 
     }
-    def CheckInsertStartsTransaction(self){
-        self.cur1.execute("create table test(i)");
-        self.cur1.execute("insert into test(i) values (5)");
-        self.cur2.execute("select i from test");
-        res = self.cur2.fetchall();
-        self.assertEqual(len(res), 0);
+    function CheckInsertStartsTransaction(){
+        this.cur1.execute("create table test(i)");
+        this.cur1.execute("insert into test(i) values (5)");
+        this.cur2.execute("select i from test");
+        res = this.cur2.fetchall();
+        this.assertEqual(len(res), 0);
 
     }
-    def CheckUpdateStartsTransaction(self){
-        self.cur1.execute("create table test(i)");
-        self.cur1.execute("insert into test(i) values (5)");
-        self.con1.commit();
-        self.cur1.execute("update test set i=6");
-        self.cur2.execute("select i from test");
-        res = self.cur2.fetchone()[0];
-        self.assertEqual(res, 5);
+    function CheckUpdateStartsTransaction(){
+        this.cur1.execute("create table test(i)");
+        this.cur1.execute("insert into test(i) values (5)");
+        this.con1.commit();
+        this.cur1.execute("update test set i=6");
+        this.cur2.execute("select i from test");
+        res = this.cur2.fetchone()[0];
+        this.assertEqual(res, 5);
 
     }
-    def CheckDeleteStartsTransaction(self){
-        self.cur1.execute("create table test(i)");
-        self.cur1.execute("insert into test(i) values (5)");
-        self.con1.commit();
-        self.cur1.execute("delete from test");
-        self.cur2.execute("select i from test");
-        res = self.cur2.fetchall();
-        self.assertEqual(len(res), 1);
+    function CheckDeleteStartsTransaction(){
+        this.cur1.execute("create table test(i)");
+        this.cur1.execute("insert into test(i) values (5)");
+        this.con1.commit();
+        this.cur1.execute("delete from test");
+        this.cur2.execute("select i from test");
+        res = this.cur2.fetchall();
+        this.assertEqual(len(res), 1);
 
     }
-    def CheckReplaceStartsTransaction(self){
-        self.cur1.execute("create table test(i)");
-        self.cur1.execute("insert into test(i) values (5)");
-        self.con1.commit();
-        self.cur1.execute("replace into test(i) values (6)");
-        self.cur2.execute("select i from test");
-        res = self.cur2.fetchall();
-        self.assertEqual(len(res), 1);
-        self.assertEqual(res[0][0], 5);
+    function CheckReplaceStartsTransaction(){
+        this.cur1.execute("create table test(i)");
+        this.cur1.execute("insert into test(i) values (5)");
+        this.con1.commit();
+        this.cur1.execute("replace into test(i) values (6)");
+        this.cur2.execute("select i from test");
+        res = this.cur2.fetchall();
+        this.assertEqual(len(res), 1);
+        this.assertEqual(res[0][0], 5);
 
     }
-    def CheckToggleAutoCommit(self){
-        self.cur1.execute("create table test(i)");
-        self.cur1.execute("insert into test(i) values (5)");
-        self.con1.isolation_level = None;
-        self.assertEqual(self.con1.isolation_level, None);
-        self.cur2.execute("select i from test");
-        res = self.cur2.fetchall();
-        self.assertEqual(len(res), 1);
+    function CheckToggleAutoCommit(){
+        this.cur1.execute("create table test(i)");
+        this.cur1.execute("insert into test(i) values (5)");
+        this.con1.isolation_level = nil;
+        this.assertEqual(this.con1.isolation_level, nil);
+        this.cur2.execute("select i from test");
+        res = this.cur2.fetchall();
+        this.assertEqual(len(res), 1);
 
-        self.con1.isolation_level = "DEFERRED";
-        self.assertEqual(self.con1.isolation_level , "DEFERRED");
-        self.cur1.execute("insert into test(i) values (5)");
-        self.cur2.execute("select i from test");
-        res = self.cur2.fetchall();
-        self.assertEqual(len(res), 1);
+        this.con1.isolation_level = "DEFERRED";
+        this.assertEqual(this.con1.isolation_level , "DEFERRED");
+        this.cur1.execute("insert into test(i) values (5)");
+        this.cur2.execute("select i from test");
+        res = this.cur2.fetchall();
+        this.assertEqual(len(res), 1);
 
     }
-    def CheckRaiseTimeout(self){
+    function CheckRaiseTimeout(){
         if sqlite.sqlite_version_info < (3, 2, 2){
             # This will fail (hang) on earlier versions of sqlite.
             # Determine exact version it was fixed. 3.2.1 hangs.
             return;
-        } self.cur1.execute("create table test(i)");
-        self.cur1.execute("insert into test(i) values (5)");
+        } this.cur1.execute("create table test(i)");
+        this.cur1.execute("insert into test(i) values (5)");
         try{
-            self.cur2.execute("insert into test(i) values (5)");
-            self.fail("should have raised an OperationalError");
+            this.cur2.execute("insert into test(i) values (5)");
+            this.fail("should have raised an OperationalError");
         } except sqlite.OperationalError{
             pass;
         } except Exception{
-            self.fail("should have raised an OperationalError");
+            this.fail("should have raised an OperationalError");
 
     }
-    } def CheckLocking(self){
+    } function CheckLocking(){
         """
         This tests the improved concurrency with pysqlite 2.3.4. You needed
         to roll back con2 before you could commit con1.
@@ -147,21 +147,21 @@ class TransactionTests(unittest.TestCase){
             # This will fail (hang) on earlier versions of sqlite.
             # Determine exact version it was fixed. 3.2.1 hangs.
             return;
-        } self.cur1.execute("create table test(i)");
-        self.cur1.execute("insert into test(i) values (5)");
+        } this.cur1.execute("create table test(i)");
+        this.cur1.execute("insert into test(i) values (5)");
         try{
-            self.cur2.execute("insert into test(i) values (5)");
-            self.fail("should have raised an OperationalError");
+            this.cur2.execute("insert into test(i) values (5)");
+            this.fail("should have raised an OperationalError");
         } except sqlite.OperationalError{
             pass;
         } except Exception{
-            self.fail("should have raised an OperationalError");
+            this.fail("should have raised an OperationalError");
         # NO self.con2.rollback() HERE!!!
         }
-        self.con1.commit();
+        this.con1.commit();
 
     }
-    def CheckRollbackCursorConsistency(self){
+    function CheckRollbackCursorConsistency(){
         """
         Checks if cursors on the connection are set into a "reset" state
         when a rollback is done on the connection.
@@ -175,49 +175,49 @@ class TransactionTests(unittest.TestCase){
         con.rollback();
         try{
             cur.fetchall();
-            self.fail("InterfaceError should have been raised");
+            this.fail("InterfaceError should have been raised");
         } except sqlite.InterfaceError, e{
             pass;
         } except Exception{
-            self.fail("InterfaceError should have been raised");
+            this.fail("InterfaceError should have been raised");
 
 }
 } } class SpecialCommandTests(unittest.TestCase){
-    def setUp(self){
-        self.con = sqlite.connect(":memory:");
-        self.cur = self.con.cursor();
+    function setUp(){
+        this.con = sqlite.connect(":memory:");
+        this.cur = this.con.cursor();
 
     }
-    def CheckVacuum(self){
-        self.cur.execute("create table test(i)");
-        self.cur.execute("insert into test(i) values (5)");
-        self.cur.execute("vacuum");
+    function CheckVacuum(){
+        this.cur.execute("create table test(i)");
+        this.cur.execute("insert into test(i) values (5)");
+        this.cur.execute("vacuum");
 
     }
-    def CheckDropTable(self){
-        self.cur.execute("create table test(i)");
-        self.cur.execute("insert into test(i) values (5)");
-        self.cur.execute("drop table test");
+    function CheckDropTable(){
+        this.cur.execute("create table test(i)");
+        this.cur.execute("insert into test(i) values (5)");
+        this.cur.execute("drop table test");
 
     }
-    def CheckPragma(self){
-        self.cur.execute("create table test(i)");
-        self.cur.execute("insert into test(i) values (5)");
-        self.cur.execute("pragma count_changes=1");
+    function CheckPragma(){
+        this.cur.execute("create table test(i)");
+        this.cur.execute("insert into test(i) values (5)");
+        this.cur.execute("pragma count_changes=1");
 
     }
-    def tearDown(self){
-        self.cur.close();
-        self.con.close();
+    function tearDown(){
+        this.cur.close();
+        this.con.close();
 
 }
-} def suite(){
+} function suite(){
     default_suite = unittest.makeSuite(TransactionTests, "Check");
     special_command_suite = unittest.makeSuite(SpecialCommandTests, "Check");
     return unittest.TestSuite((default_suite, special_command_suite));
 
 }
-def test(){
+function test(){
     runner = unittest.TextTestRunner();
     runner.run(suite());
 

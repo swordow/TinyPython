@@ -17,15 +17,15 @@ from cStringIO import StringIO;
 
 
 # This function will become a method of the Message class
-def walk(self){
+function walk(){
     """Walk over the message tree, yielding each subpart.
 
     The walk is performed in depth-first order.  This method is a
     generator.
     """;
-    yield self;
-    if self.is_multipart(){
-        for subpart in self.get_payload(){
+    yield this;
+    if this.is_multipart(){
+        for subpart in this.get_payload(){
             for subsubpart in subpart.walk(){
                 yield subsubpart;
 
@@ -33,7 +33,7 @@ def walk(self){
 
 # These two functions are imported into the Iterators.py interface module.
 }
-} } } def body_line_iterator(msg, decode=False){
+} } } function body_line_iterator(msg, decode=false){
     """Iterate over the parts, returning string payloads line-by-line.
 
     Optional decode (default False) is passed through to .get_payload().
@@ -46,7 +46,7 @@ def walk(self){
 
 
 }
-} } } def typed_subpart_iterator(msg, maintype='text', subtype=None){
+} } } function typed_subpart_iterator(msg, maintype='text', subtype=nil){
     """Iterate over the subparts with a given MIME type.
 
     Use `maintype' as the main MIME type to match against; this defaults to
@@ -55,15 +55,15 @@ def walk(self){
     """;
     for subpart in msg.walk(){
         if subpart.get_content_maintype() == maintype{
-            if subtype is None or subpart.get_content_subtype() == subtype{
+            if subtype is nil or subpart.get_content_subtype() == subtype{
                 yield subpart;
 
 
 
 }
-} } } def _structure(msg, fp=None, level=0, include_default=False){
+} } } function _structure(msg, fp=nil, level=0, include_default=false){
     """A handy debugging aid""";
-    if fp is None{
+    if fp is nil{
         fp = sys.stdout;
     } tab = ' ' * (level * 4);
     print >> fp, tab + msg.get_content_type(),;

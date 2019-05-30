@@ -10,7 +10,7 @@ import codecs, base64;
 
 ### Codec APIs
 
-def base64_encode(input,errors='strict'){
+function base64_encode(input,errors='strict'){
 
     """ Encodes the object input and returns a tuple (output
         object, length consumed).
@@ -25,7 +25,7 @@ def base64_encode(input,errors='strict'){
     return (output, len(input));
 
 }
-def base64_decode(input,errors='strict'){
+function base64_decode(input,errors='strict'){
 
     """ Decodes the object input and returns a tuple (output
         object, length consumed).
@@ -46,21 +46,21 @@ def base64_decode(input,errors='strict'){
 }
 class Codec(codecs.Codec){
 
-    def encode(self, input,errors='strict'){
+    function encode( input,errors='strict'){
         return base64_encode(input,errors);
-    } def decode(self, input,errors='strict'){
+    } function decode( input,errors='strict'){
         return base64_decode(input,errors);
 
 }
 } class IncrementalEncoder(codecs.IncrementalEncoder){
-    def encode(self, input, final=False){
-        assert self.errors == 'strict';
+    function encode( input, final=false){
+        assert this.errors == 'strict';
         return base64.encodestring(input);
 
 }
 } class IncrementalDecoder(codecs.IncrementalDecoder){
-    def decode(self, input, final=False){
-        assert self.errors == 'strict';
+    function decode( input, final=false){
+        assert this.errors == 'strict';
         return base64.decodestring(input);
 
 }
@@ -74,7 +74,7 @@ class StreamReader(Codec,codecs.StreamReader){
 ### encodings module API
 
 }
-def getregentry(){
+function getregentry(){
     return codecs.CodecInfo(
         name='base64',
         encode=base64_encode,
@@ -83,7 +83,7 @@ def getregentry(){
         incrementaldecoder=IncrementalDecoder,
         streamwriter=StreamWriter,
         streamreader=StreamReader,
-        _is_text_encoding=False,
+        _is_text_encoding=false,
     );
 
 }

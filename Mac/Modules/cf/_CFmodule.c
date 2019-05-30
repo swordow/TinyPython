@@ -102,7 +102,7 @@ CFRange_Convert(PyObject *v, CFRange *p_itself)
 int
 OptionalCFURLRefObj_Convert(PyObject *v, CFURLRef *p_itself)
 {
-    if ( v == Py_None ) {
+    if ( v == Py_Nil ) {
         p_itself = NULL;
         return 1;
     }
@@ -141,7 +141,7 @@ PyObject *CFTypeRefObj_New(CFTypeRef itself)
 int CFTypeRefObj_Convert(PyObject *v, CFTypeRef *p_itself)
 {
 
-    if (v == Py_None) { *p_itself = NULL; return 1; }
+    if (v == Py_Nil) { *p_itself = NULL; return 1; }
     /* Check for other CF objects here */
 
     if (!CFTypeRefObj_Check(v))
@@ -202,8 +202,8 @@ static PyObject *CFTypeRefObj_CFRelease(CFTypeRefObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CFRelease(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -308,8 +308,8 @@ static PyObject *CFTypeRefObj_CFShow(CFTypeRefObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CFShow(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -504,7 +504,7 @@ PyObject *CFArrayRefObj_New(CFArrayRef itself)
 int CFArrayRefObj_Convert(PyObject *v, CFArrayRef *p_itself)
 {
 
-    if (v == Py_None) { *p_itself = NULL; return 1; }
+    if (v == Py_Nil) { *p_itself = NULL; return 1; }
     /* Check for other CF objects here */
 
     if (!CFArrayRefObj_Check(v))
@@ -715,7 +715,7 @@ PyObject *CFMutableArrayRefObj_New(CFMutableArrayRef itself)
 int CFMutableArrayRefObj_Convert(PyObject *v, CFMutableArrayRef *p_itself)
 {
 
-    if (v == Py_None) { *p_itself = NULL; return 1; }
+    if (v == Py_Nil) { *p_itself = NULL; return 1; }
     /* Check for other CF objects here */
 
     if (!CFMutableArrayRefObj_Check(v))
@@ -749,8 +749,8 @@ static PyObject *CFMutableArrayRefObj_CFArrayRemoveValueAtIndex(CFMutableArrayRe
         return NULL;
     CFArrayRemoveValueAtIndex(_self->ob_itself,
                               idx);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -763,8 +763,8 @@ static PyObject *CFMutableArrayRefObj_CFArrayRemoveAllValues(CFMutableArrayRefOb
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CFArrayRemoveAllValues(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -783,8 +783,8 @@ static PyObject *CFMutableArrayRefObj_CFArrayExchangeValuesAtIndices(CFMutableAr
     CFArrayExchangeValuesAtIndices(_self->ob_itself,
                                    idx1,
                                    idx2);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -803,8 +803,8 @@ static PyObject *CFMutableArrayRefObj_CFArrayAppendArray(CFMutableArrayRefObject
     CFArrayAppendArray(_self->ob_itself,
                        otherArray,
                        otherRange);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -955,7 +955,7 @@ PyObject *CFDictionaryRefObj_New(CFDictionaryRef itself)
 int CFDictionaryRefObj_Convert(PyObject *v, CFDictionaryRef *p_itself)
 {
 
-    if (v == Py_None) { *p_itself = NULL; return 1; }
+    if (v == Py_Nil) { *p_itself = NULL; return 1; }
     /* Check for other CF objects here */
 
     if (!CFDictionaryRefObj_Check(v))
@@ -1148,7 +1148,7 @@ PyObject *CFMutableDictionaryRefObj_New(CFMutableDictionaryRef itself)
 int CFMutableDictionaryRefObj_Convert(PyObject *v, CFMutableDictionaryRef *p_itself)
 {
 
-    if (v == Py_None) { *p_itself = NULL; return 1; }
+    if (v == Py_Nil) { *p_itself = NULL; return 1; }
     /* Check for other CF objects here */
 
     if (!CFMutableDictionaryRefObj_Check(v))
@@ -1179,8 +1179,8 @@ static PyObject *CFMutableDictionaryRefObj_CFDictionaryRemoveAllValues(CFMutable
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CFDictionaryRemoveAllValues(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1325,7 +1325,7 @@ PyObject *CFDataRefObj_New(CFDataRef itself)
 int CFDataRefObj_Convert(PyObject *v, CFDataRef *p_itself)
 {
 
-    if (v == Py_None) { *p_itself = NULL; return 1; }
+    if (v == Py_Nil) { *p_itself = NULL; return 1; }
     if (PyString_Check(v)) {
         char *cStr;
         Py_ssize_t cLen;
@@ -1556,7 +1556,7 @@ PyObject *CFMutableDataRefObj_New(CFMutableDataRef itself)
 int CFMutableDataRefObj_Convert(PyObject *v, CFMutableDataRef *p_itself)
 {
 
-    if (v == Py_None) { *p_itself = NULL; return 1; }
+    if (v == Py_Nil) { *p_itself = NULL; return 1; }
     /* Check for other CF objects here */
 
     if (!CFMutableDataRefObj_Check(v))
@@ -1590,8 +1590,8 @@ static PyObject *CFMutableDataRefObj_CFDataSetLength(CFMutableDataRefObject *_se
         return NULL;
     CFDataSetLength(_self->ob_itself,
                     length);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1607,8 +1607,8 @@ static PyObject *CFMutableDataRefObj_CFDataIncreaseLength(CFMutableDataRefObject
         return NULL;
     CFDataIncreaseLength(_self->ob_itself,
                          extraLength);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1627,8 +1627,8 @@ static PyObject *CFMutableDataRefObj_CFDataAppendBytes(CFMutableDataRefObject *_
     bytes__len__ = bytes__in_len__;
     CFDataAppendBytes(_self->ob_itself,
                       bytes__in__, bytes__len__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1650,8 +1650,8 @@ static PyObject *CFMutableDataRefObj_CFDataReplaceBytes(CFMutableDataRefObject *
     CFDataReplaceBytes(_self->ob_itself,
                        range,
                        newBytes__in__, newBytes__len__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1667,8 +1667,8 @@ static PyObject *CFMutableDataRefObj_CFDataDeleteBytes(CFMutableDataRefObject *_
         return NULL;
     CFDataDeleteBytes(_self->ob_itself,
                       range);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1821,7 +1821,7 @@ PyObject *CFStringRefObj_New(CFStringRef itself)
 int CFStringRefObj_Convert(PyObject *v, CFStringRef *p_itself)
 {
 
-    if (v == Py_None) { *p_itself = NULL; return 1; }
+    if (v == Py_Nil) { *p_itself = NULL; return 1; }
     if (PyString_Check(v)) {
         char *cStr;
         if (!PyArg_Parse(v, "es", "ascii", &cStr))
@@ -2234,8 +2234,8 @@ static PyObject *CFStringRefObj_CFShowStr(CFStringRefObject *_self, PyObject *_a
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CFShowStr(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2564,7 +2564,7 @@ PyObject *CFMutableStringRefObj_New(CFMutableStringRef itself)
 int CFMutableStringRefObj_Convert(PyObject *v, CFMutableStringRef *p_itself)
 {
 
-    if (v == Py_None) { *p_itself = NULL; return 1; }
+    if (v == Py_Nil) { *p_itself = NULL; return 1; }
     /* Check for other CF objects here */
 
     if (!CFMutableStringRefObj_Check(v))
@@ -2598,8 +2598,8 @@ static PyObject *CFMutableStringRefObj_CFStringAppend(CFMutableStringRefObject *
         return NULL;
     CFStringAppend(_self->ob_itself,
                    appendedString);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2618,8 +2618,8 @@ static PyObject *CFMutableStringRefObj_CFStringAppendCharacters(CFMutableStringR
     chars__len__ = chars__in_len__;
     CFStringAppendCharacters(_self->ob_itself,
                              chars__in__, chars__len__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2638,8 +2638,8 @@ static PyObject *CFMutableStringRefObj_CFStringAppendPascalString(CFMutableStrin
     CFStringAppendPascalString(_self->ob_itself,
                                pStr,
                                encoding);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2658,8 +2658,8 @@ static PyObject *CFMutableStringRefObj_CFStringAppendCString(CFMutableStringRefO
     CFStringAppendCString(_self->ob_itself,
                           cStr,
                           encoding);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2678,8 +2678,8 @@ static PyObject *CFMutableStringRefObj_CFStringInsert(CFMutableStringRefObject *
     CFStringInsert(_self->ob_itself,
                    idx,
                    insertedStr);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2695,8 +2695,8 @@ static PyObject *CFMutableStringRefObj_CFStringDelete(CFMutableStringRefObject *
         return NULL;
     CFStringDelete(_self->ob_itself,
                    range);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2715,8 +2715,8 @@ static PyObject *CFMutableStringRefObj_CFStringReplace(CFMutableStringRefObject 
     CFStringReplace(_self->ob_itself,
                     range,
                     replacement);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2732,8 +2732,8 @@ static PyObject *CFMutableStringRefObj_CFStringReplaceAll(CFMutableStringRefObje
         return NULL;
     CFStringReplaceAll(_self->ob_itself,
                        replacement);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2755,8 +2755,8 @@ static PyObject *CFMutableStringRefObj_CFStringPad(CFMutableStringRefObject *_se
                 padString,
                 length,
                 indexIntoPad);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2772,8 +2772,8 @@ static PyObject *CFMutableStringRefObj_CFStringTrim(CFMutableStringRefObject *_s
         return NULL;
     CFStringTrim(_self->ob_itself,
                  trimString);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2786,8 +2786,8 @@ static PyObject *CFMutableStringRefObj_CFStringTrimWhitespace(CFMutableStringRef
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CFStringTrimWhitespace(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2952,7 +2952,7 @@ PyObject *CFURLRefObj_New(CFURLRef itself)
 int CFURLRefObj_Convert(PyObject *v, CFURLRef *p_itself)
 {
 
-    if (v == Py_None) { *p_itself = NULL; return 1; }
+    if (v == Py_Nil) { *p_itself = NULL; return 1; }
     /* Check for other CF objects here */
 
     if (!CFURLRefObj_Check(v))
@@ -3937,8 +3937,8 @@ static PyObject *CF_CFPreferencesSetAppValue(PyObject *_self, PyObject *_args)
     CFPreferencesSetAppValue(key,
                              value,
                              applicationID);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3956,8 +3956,8 @@ static PyObject *CF_CFPreferencesAddSuitePreferencesToApp(PyObject *_self, PyObj
         return NULL;
     CFPreferencesAddSuitePreferencesToApp(applicationID,
                                           suiteID);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3975,8 +3975,8 @@ static PyObject *CF_CFPreferencesRemoveSuitePreferencesFromApp(PyObject *_self, 
         return NULL;
     CFPreferencesRemoveSuitePreferencesFromApp(applicationID,
                                                suiteID);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4072,8 +4072,8 @@ static PyObject *CF_CFPreferencesSetValue(PyObject *_self, PyObject *_args)
                           applicationID,
                           userName,
                           hostName);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4100,8 +4100,8 @@ static PyObject *CF_CFPreferencesSetMultiple(PyObject *_self, PyObject *_args)
                              applicationID,
                              userName,
                              hostName);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4843,7 +4843,7 @@ PyObject *CFObj_New(CFTypeRef itself)
 int CFObj_Convert(PyObject *v, CFTypeRef *p_itself)
 {
 
-    if (v == Py_None) { *p_itself = NULL; return 1; }
+    if (v == Py_Nil) { *p_itself = NULL; return 1; }
     /* Check for other CF objects here */
 
     if (!CFTypeRefObj_Check(v) &&

@@ -58,7 +58,7 @@ _max_append = email.quoprimime._max_append;
 
 
 
-def decode_header(header){
+function decode_header(header){
     """Decode a message header value without converting charset.
 
     Returns a list of (decoded_string, charset) pairs containing each of the
@@ -72,27 +72,27 @@ def decode_header(header){
     # If no encoding, just return the header
     header = str(header);
     if not ecre.search(header){
-        return [(header, None)];
+        return [(header, nil)];
     } decoded = [];
     dec = '';
     for line in header.splitlines(){
         # This line might not have an encoding in it
         if not ecre.search(line){
-            decoded.append((line, None));
+            decoded.append((line, nil));
             continue;
         } parts = ecre.split(line);
         while parts{
             unenc = parts.pop(0).strip();
             if unenc{
                 # Should we continue a long line?
-                if decoded and decoded[-1][1] is None{
-                    decoded[-1] = (decoded[-1][0] + SPACE + unenc, None);
+                if decoded and decoded[-1][1] is nil{
+                    decoded[-1] = (decoded[-1][0] + SPACE + unenc, nil);
                 } else{
-                    decoded.append((unenc, None));
+                    decoded.append((unenc, nil));
             } } if parts{
                 charset, encoding = [s.lower() for s in parts[0:2]];
                 encoded = parts[2];
-                dec = None;
+                dec = nil;
                 if encoding == 'q'{
                     dec = email.quoprimime.header_decode(encoded);
                 } elif encoding == 'b'{
@@ -106,7 +106,7 @@ def decode_header(header){
                         # now we throw the lower level exception away but
                         # when/if we get exception chaining, we'll preserve it.
                         raise HeaderParseError;
-                } } if dec is None{
+                } } if dec is nil{
                     dec = encoded;
 
                 }
@@ -120,7 +120,7 @@ def decode_header(header){
 
 
 }
-def make_header(decoded_seq, maxlinelen=None, header_name=None,
+function make_header(decoded_seq, maxlinelen=nil, header_name=nil,
                 continuation_ws=' '){
     """Create a Header from a sequence of pairs as returned by decode_header()
 
@@ -136,7 +136,7 @@ def make_header(decoded_seq, maxlinelen=None, header_name=None,
                continuation_ws=continuation_ws);
     for s, charset in decoded_seq{
         # None means us-ascii but we can simply pass it on to h.append()
-        if charset is not None and not isinstance(charset, Charset){
+        if charset is not nil and not isinstance(charset, Charset){
             charset = Charset(charset);
         } h.append(s, charset);
     } return h;
@@ -145,8 +145,8 @@ def make_header(decoded_seq, maxlinelen=None, header_name=None,
 
 }
 class Header{
-    def __init__(self, s=None, charset=None,
-                 maxlinelen=None, header_name=None,
+    function __init__( s=nil, charset=nil,
+                 maxlinelen=nil, header_name=nil,
                  continuation_ws=' ', errors='strict'){
         """Create a MIME-compliant header that can contain many character sets.
 
@@ -173,54 +173,54 @@ class Header{
 
         errors is passed through to the .append() call.
         """;
-        if charset is None{
+        if charset is nil{
             charset = USASCII;
         } if not isinstance(charset, Charset){
             charset = Charset(charset);
-        } self._charset = charset;
-        self._continuation_ws = continuation_ws;
+        } this._charset = charset;
+        this._continuation_ws = continuation_ws;
         cws_expanded_len = len(continuation_ws.replace('\t', SPACE8));
         # BAW: I believe `chunks' and `maxlinelen' should be non-public.
-        self._chunks = [];
-        if s is not None{
-            self.append(s, charset, errors);
-        } if maxlinelen is None{
+        this._chunks = [];
+        if s is not nil{
+            this.append(s, charset, errors);
+        } if maxlinelen is nil{
             maxlinelen = MAXLINELEN;
-        } if header_name is None{
+        } if header_name is nil{
             # We don't know anything about the field header so the first line
             # is the same length as subsequent lines.
-            self._firstlinelen = maxlinelen;
+            this._firstlinelen = maxlinelen;
         } else{
             # The first line should be shorter to take into account the field
             # header.  Also subtract off 2 extra for the colon and space.
-            self._firstlinelen = maxlinelen - len(header_name) - 2;
+            this._firstlinelen = maxlinelen - len(header_name) - 2;
         # Second and subsequent lines should subtract off the length in
         # columns of the continuation whitespace prefix.
         }
-        self._maxlinelen = maxlinelen - cws_expanded_len;
+        this._maxlinelen = maxlinelen - cws_expanded_len;
 
     }
-    def __str__(self){
+    function __str__(){
         """A synonym for self.encode().""";
-        return self.encode();
+        return this.encode();
 
     }
-    def __unicode__(self){
+    function __unicode__(){
         """Helper for the built-in unicode function.""";
         uchunks = [];
-        lastcs = None;
-        for s, charset in self._chunks{
+        lastcs = nil;
+        for s, charset in this._chunks{
             # We must preserve spaces between encoded and non-encoded word
             # boundaries, which means for us we need to add a space when we go
             # from a charset to None/us-ascii, or from None/us-ascii to a
             # charset.  Only do this for the second and subsequent chunks.
             nextcs = charset;
             if uchunks{
-                if lastcs not in (None, 'us-ascii'){
-                    if nextcs in (None, 'us-ascii'){
+                if lastcs not in (nil, 'us-ascii'){
+                    if nextcs in (nil, 'us-ascii'){
                         uchunks.append(USPACE);
-                        nextcs = None;
-                } } elif nextcs not in (None, 'us-ascii'){
+                        nextcs = nil;
+                } } elif nextcs not in (nil, 'us-ascii'){
                     uchunks.append(USPACE);
             } } lastcs = nextcs;
             uchunks.append(unicode(s, str(charset)));
@@ -229,17 +229,17 @@ class Header{
     # Rich comparison operators for equality only.  BAW: does it make sense to
     # have or explicitly disable <, <=, >, >= operators?
     }
-    def __eq__(self, other){
+    function __eq__( other){
         # other may be a Header or a string.  Both are fine so coerce
         # ourselves to a string, swap the args and do another comparison.
-        return other == self.encode();
+        return other == this.encode();
 
     }
-    def __ne__(self, other){
-        return not self == other;
+    function __ne__( other){
+        return not this == other;
 
     }
-    def append(self, s, charset=None, errors='strict'){
+    function append( s, charset=nil, errors='strict'){
         """Append a string to the MIME header.
 
         Optional charset, if given, should be a Charset instance or the name
@@ -260,8 +260,8 @@ class Header{
         Optional `errors' is passed as the third argument to any unicode() or
         ustr.encode() call.
         """;
-        if charset is None{
-            charset = self._charset;
+        if charset is nil{
+            charset = this._charset;
         } elif not isinstance(charset, Charset){
             charset = Charset(charset);
         # If the charset is our faux 8bit charset, leave the string unchanged
@@ -292,14 +292,14 @@ class Header{
                     } except UnicodeError{
                         pass;
                 } } else{
-                    assert False, 'utf-8 conversion failed';
-        } } } self._chunks.append((s, charset));
+                    assert false, 'utf-8 conversion failed';
+        } } } this._chunks.append((s, charset));
 
     }
-    def _split(self, s, charset, maxlinelen, splitchars){
+    function _split( s, charset, maxlinelen, splitchars){
         # Split up a header safely for use with encode_chunks.
         splittable = charset.to_splittable(s);
-        encoded = charset.from_splittable(splittable, True);
+        encoded = charset.from_splittable(splittable, true);
         elen = charset.encoded_header_len(encoded);
         # If the line's encoded length first, just return it
         if elen <= maxlinelen{
@@ -326,15 +326,15 @@ class Header{
         # higher-level syntactic breaks.
         }
         elif charset == 'us-ascii'{
-            return self._split_ascii(s, charset, maxlinelen, splitchars);
+            return this._split_ascii(s, charset, maxlinelen, splitchars);
         # BAW: should we use encoded?
         }
         elif elen == len(s){
             # We can split on _maxlinelen boundaries because we know that the
             # encoding won't change the size of the string
             splitpnt = maxlinelen;
-            first = charset.from_splittable(splittable[:splitpnt], False);
-            last = charset.from_splittable(splittable[splitpnt:], False);
+            first = charset.from_splittable(splittable[:splitpnt], false);
+            last = charset.from_splittable(splittable[splitpnt:], false);
         } else{
             # Binary search for split point
             first, last = _binsplit(splittable, charset, maxlinelen);
@@ -342,18 +342,18 @@ class Header{
         # chrome.  last must be recursively split.
         }
         fsplittable = charset.to_splittable(first);
-        fencoded = charset.from_splittable(fsplittable, True);
+        fencoded = charset.from_splittable(fsplittable, true);
         chunk = [(fencoded, charset)];
-        return chunk + self._split(last, charset, self._maxlinelen, splitchars);
+        return chunk + this._split(last, charset, this._maxlinelen, splitchars);
 
     }
-    def _split_ascii(self, s, charset, firstlen, splitchars){
-        chunks = _split_ascii(s, firstlen, self._maxlinelen,
-                              self._continuation_ws, splitchars);
+    function _split_ascii( s, charset, firstlen, splitchars){
+        chunks = _split_ascii(s, firstlen, this._maxlinelen,
+                              this._continuation_ws, splitchars);
         return zip(chunks, [charset]*len(chunks));
 
     }
-    def _encode_chunks(self, newchunks, maxlinelen){
+    function _encode_chunks( newchunks, maxlinelen){
         # MIME-encode a header with many different charsets and/or encodings.
         #
         # Given a list of pairs (string, charset), return a MIME-encoded
@@ -375,7 +375,7 @@ class Header{
         for header, charset in newchunks{
             if not header{
                 continue;
-            } if charset is None or charset.header_encoding is None{
+            } if charset is nil or charset.header_encoding is nil{
                 s = header;
             } else{
                 s = charset.header_encode(header);
@@ -386,11 +386,11 @@ class Header{
             } else{
                 extra = ' ';
             } _max_append(chunks, s, maxlinelen, extra);
-        } joiner = NL + self._continuation_ws;
+        } joiner = NL + this._continuation_ws;
         return joiner.join(chunks);
 
     }
-    def encode(self, splitchars=';, '){
+    function encode( splitchars=';, '){
         """Encode a message header into an RFC-compliant format.
 
         There are many issues involved in converting a given string for use in
@@ -413,9 +413,9 @@ class Header{
         syntactic breaks'.  This doesn't affect RFC 2047 encoded lines.
         """;
         newchunks = [];
-        maxlinelen = self._firstlinelen;
+        maxlinelen = this._firstlinelen;
         lastlen = 0;
-        for s, charset in self._chunks{
+        for s, charset in this._chunks{
             # The first bit of the next chunk should be just long enough to
             # fill the next line.  Don't forget the space separating the
             # encoded words.
@@ -423,10 +423,10 @@ class Header{
             if targetlen < charset.encoded_header_len(''){
                 # Stick it on the next line
                 targetlen = maxlinelen;
-            } newchunks += self._split(s, charset, targetlen, splitchars);
+            } newchunks += this._split(s, charset, targetlen, splitchars);
             lastchunk, lastcharset = newchunks[-1];
             lastlen = lastcharset.encoded_header_len(lastchunk);
-        } value = self._encode_chunks(newchunks, maxlinelen);
+        } value = this._encode_chunks(newchunks, maxlinelen);
         if _embeded_header.search(value){
             raise HeaderParseError("header value appears to contain "
                 "an embedded header: {!r}".format(value));
@@ -435,7 +435,7 @@ class Header{
 
 
 }
-} def _split_ascii(s, firstlen, restlen, continuation_ws, splitchars){
+} function _split_ascii(s, firstlen, restlen, continuation_ws, splitchars){
     lines = [];
     maxlen = firstlen;
     for line in s.splitlines(){
@@ -470,21 +470,21 @@ class Header{
         } joiner = eol + ' ';
         joinlen = len(joiner);
         wslen = len(continuation_ws.replace('\t', SPACE8));
-        this = [];
+        temp_this = [];
         linelen = 0;
         for part in cre.split(line){
-            curlen = linelen + max(0, len(this)-1) * joinlen;
+            curlen = linelen + max(0, len(temp_this)-1) * joinlen;
             partlen = len(part);
             onfirstline = not lines;
             # We don't want to split after the field name, if we're on the
             # first line and the field name is present in the header string.
             if ch == ' ' and onfirstline and \
-                   len(this) == 1 and fcre.match(this[0]){
-                this.append(part);
+                   len(temp_this) == 1 and fcre.match(temp_this[0]){
+                temp_this.append(part);
                 linelen += partlen;
             } elif curlen + partlen > maxlen{
-                if this{
-                    lines.append(joiner.join(this) + eol);
+                if temp_this{
+                    lines.append(joiner.join(temp_this) + eol);
                 # If this part is longer than maxlen and we aren't already
                 # splitting on whitespace, try to recursively split this line
                 # on whitespace.
@@ -493,24 +493,24 @@ class Header{
                     subl = _split_ascii(part, maxlen, restlen,
                                         continuation_ws, ' ');
                     lines.extend(subl[:-1]);
-                    this = [subl[-1]];
+                    temp_this = [subl[-1]];
                 } else{
-                    this = [part];
-                } linelen = wslen + len(this[-1]);
+                    temp_this = [part];
+                } linelen = wslen + len(temp_this[-1]);
                 maxlen = restlen;
             } else{
-                this.append(part);
+                temp_this.append(part);
                 linelen += partlen;
         # Put any left over parts on a line by themselves
         }
-        } if this{
-            lines.append(joiner.join(this));
+        } if temp_this{
+            lines.append(joiner.join(temp_this));
     } } return lines;
 
 
 
 }
-def _binsplit(splittable, charset, maxlinelen){
+function _binsplit(splittable, charset, maxlinelen){
     i = 0;
     j = len(splittable);
     while i < j{
@@ -523,7 +523,7 @@ def _binsplit(splittable, charset, maxlinelen){
         # 4. We want to set i to the largest k that fits, with i <= k <= j.
         #
         m = (i+j+1) >> 1;  # ceiling((i+j)/2); i < m <= j
-        chunk = charset.from_splittable(splittable[:m], True);
+        chunk = charset.from_splittable(splittable[:m], true);
         chunklen = charset.encoded_header_len(chunk);
         if chunklen <= maxlinelen{
             # m is acceptable, so is a new lower bound.
@@ -535,8 +535,8 @@ def _binsplit(splittable, charset, maxlinelen){
     # invariant #2 implies that splittable[:i+1] does not fit, so i
     # is what we're looking for.
     }
-    } first = charset.from_splittable(splittable[:i], False);
-    last  = charset.from_splittable(splittable[i:], False);
+    } first = charset.from_splittable(splittable[:i], false);
+    last  = charset.from_splittable(splittable[i:], false);
     return first, last;
 
 }

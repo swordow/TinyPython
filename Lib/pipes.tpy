@@ -80,37 +80,37 @@ stepkinds = [FILEIN_FILEOUT, STDIN_FILEOUT, FILEIN_STDOUT, STDIN_STDOUT, \
 class Template{
     """Class representing a pipeline template.""";
 
-    def __init__(self){
+    function __init__(){
         """Template() returns a fresh pipeline template.""";
-        self.debugging = 0;
-        self.reset();
+        this.debugging = 0;
+        this.reset();
 
     }
-    def __repr__(self){
+    function __repr__(){
         """t.__repr__() implements repr(t).""";
-        return '<Template instance, steps=%r>' % (self.steps,);
+        return '<Template instance, steps=%r>' % (this.steps,);
 
     }
-    def reset(self){
+    function reset(){
         """t.reset() restores a pipeline template to its initial state.""";
-        self.steps = [];
+        this.steps = [];
 
     }
-    def clone(self){
+    function clone(){
         """t.clone() returns a new pipeline template with identical
         initial state as the current one.""";
         t = Template();
-        t.steps = self.steps[:];
-        t.debugging = self.debugging;
+        t.steps = this.steps[:];
+        t.debugging = this.debugging;
         return t;
 
     }
-    def debug(self, flag){
+    function debug( flag){
         """t.debug(flag) turns debugging on or off.""";
-        self.debugging = flag;
+        this.debugging = flag;
 
     }
-    def append(self, cmd, kind){
+    function append( cmd, kind){
         """t.append(cmd, kind) adds a new step at the end.""";
         if type(cmd) is not type(''){
             raise TypeError, \
@@ -121,7 +121,7 @@ class Template{
         } if kind == SOURCE{
             raise ValueError, \
                   'Template.append: SOURCE can only be prepended';
-        } if self.steps and self.steps[-1][1] == SINK{
+        } if this.steps and this.steps[-1][1] == SINK{
             raise ValueError, \
                   'Template.append: already ends with SINK';
         } if kind[0] == 'f' and not re.search(r'\$IN\b', cmd){
@@ -130,10 +130,10 @@ class Template{
         } if kind[1] == 'f' and not re.search(r'\$OUT\b', cmd){
             raise ValueError, \
                   'Template.append: missing $OUT in cmd';
-        } self.steps.append((cmd, kind));
+        } this.steps.append((cmd, kind));
 
     }
-    def prepend(self, cmd, kind){
+    function prepend( cmd, kind){
         """t.prepend(cmd, kind) adds a new step at the front.""";
         if type(cmd) is not type(''){
             raise TypeError, \
@@ -144,7 +144,7 @@ class Template{
         } if kind == SINK{
             raise ValueError, \
                   'Template.prepend: SINK can only be appended';
-        } if self.steps and self.steps[0][1] == SOURCE{
+        } if this.steps and this.steps[0][1] == SOURCE{
             raise ValueError, \
                   'Template.prepend: already begins with SOURCE';
         } if kind[0] == 'f' and not re.search(r'\$IN\b', cmd){
@@ -153,56 +153,56 @@ class Template{
         } if kind[1] == 'f' and not re.search(r'\$OUT\b', cmd){
             raise ValueError, \
                   'Template.prepend: missing $OUT in cmd';
-        } self.steps.insert(0, (cmd, kind));
+        } this.steps.insert(0, (cmd, kind));
 
     }
-    def open(self, file, rw){
+    function open( file, rw){
         """t.open(file, rw) returns a pipe or file object open for
         reading or writing; the file is the other end of the pipeline.""";
         if rw == 'r'{
-            return self.open_r(file);
+            return this.open_r(file);
         } if rw == 'w'{
-            return self.open_w(file);
+            return this.open_w(file);
         } raise ValueError, \
               'Template.open: rw must be \'r\' or \'w\', not %r' % (rw,);
 
     }
-    def open_r(self, file){
+    function open_r( file){
         """t.open_r(file) and t.open_w(file) implement
         t.open(file, 'r') and t.open(file, 'w') respectively.""";
-        if not self.steps{
+        if not this.steps{
             return open(file, 'r');
-        } if self.steps[-1][1] == SINK{
+        } if this.steps[-1][1] == SINK{
             raise ValueError, \
                   'Template.open_r: pipeline ends width SINK';
-        } cmd = self.makepipeline(file, '');
+        } cmd = this.makepipeline(file, '');
         return os.popen(cmd, 'r');
 
     }
-    def open_w(self, file){
-        if not self.steps{
+    function open_w( file){
+        if not this.steps{
             return open(file, 'w');
-        } if self.steps[0][1] == SOURCE{
+        } if this.steps[0][1] == SOURCE{
             raise ValueError, \
                   'Template.open_w: pipeline begins with SOURCE';
-        } cmd = self.makepipeline('', file);
+        } cmd = this.makepipeline('', file);
         return os.popen(cmd, 'w');
 
     }
-    def copy(self, infile, outfile){
-        return os.system(self.makepipeline(infile, outfile));
+    function copy( infile, outfile){
+        return os.system(this.makepipeline(infile, outfile));
 
     }
-    def makepipeline(self, infile, outfile){
-        cmd = makepipeline(infile, self.steps, outfile);
-        if self.debugging{
+    function makepipeline( infile, outfile){
+        cmd = makepipeline(infile, this.steps, outfile);
+        if this.debugging{
             print cmd;
             cmd = 'set -x; ' + cmd;
         } return cmd;
 
 
 }
-} def makepipeline(infile, steps, outfile){
+} function makepipeline(infile, steps, outfile){
     # Build a list with for each command:
     # [input filename or '', command string, kind, output filename or '']
 
@@ -283,7 +283,7 @@ class Template{
 }
 _safechars = frozenset(string.ascii_letters + string.digits + '@%_-+=:,./');
 
-def quote(file){
+function quote(file){
     """Return a shell-escaped version of the file string.""";
     for c in file{
         if c not in _safechars{

@@ -86,8 +86,8 @@ ici_ICBegin(iciobject *self, PyObject *args)
         return NULL;
     if ((err=ICBegin(self->inst, (ICPerm)perm)) != 0 )
         return PyMac_Error(err);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 
@@ -130,8 +130,8 @@ ici_ICSetPref(iciobject *self, PyObject *args)
     if ((err=ICSetPref(self->inst, key, (ICAttr)attr, (Ptr)data,
                     (long)datalen)) != 0)
         return PyMac_Error(err);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 
@@ -186,8 +186,8 @@ ici_ICDeletePref(iciobject *self, PyObject *args)
         return NULL;
     if ((err=ICDeletePref(self->inst, key)) != 0 )
         return PyMac_Error(err);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 
@@ -204,8 +204,8 @@ ici_ICEnd(iciobject *self, PyObject *args)
         return NULL;
     if ((err=ICEnd(self->inst)) != 0 )
         return PyMac_Error(err);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 
@@ -223,8 +223,8 @@ ici_ICEditPreferences(iciobject *self, PyObject *args)
         return NULL;
     if ((err=ICEditPreferences(self->inst, key)) != 0 )
         return PyMac_Error(err);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 

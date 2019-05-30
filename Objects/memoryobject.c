@@ -344,8 +344,8 @@ _IntTupleFromSsizet(int len, Py_ssize_t *vals)
     PyObject *intTuple;
 
     if (vals == NULL) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     intTuple = PyTuple_New(len);
     if (!intTuple) return NULL;

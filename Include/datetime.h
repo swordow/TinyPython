@@ -212,11 +212,11 @@ static PyDateTime_CAPI *PyDateTimeAPI = NULL;
 
 #define PyDateTime_FromDateAndTime(year, month, day, hour, min, sec, usec) \
     PyDateTimeAPI->DateTime_FromDateAndTime(year, month, day, hour, \
-        min, sec, usec, Py_None, PyDateTimeAPI->DateTimeType)
+        min, sec, usec, Py_Nil, PyDateTimeAPI->DateTimeType)
 
 #define PyTime_FromTime(hour, minute, second, usecond) \
     PyDateTimeAPI->Time_FromTime(hour, minute, second, usecond, \
-        Py_None, PyDateTimeAPI->TimeType)
+        Py_Nil, PyDateTimeAPI->TimeType)
 
 #define PyDelta_FromDSU(days, seconds, useconds) \
     PyDateTimeAPI->Delta_FromDelta(days, seconds, useconds, 1, \

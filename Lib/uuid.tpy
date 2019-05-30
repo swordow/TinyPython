@@ -100,8 +100,8 @@ class UUID(object){
                     when the variant is RFC_4122)
     """;
 
-    def __init__(self, hex=None, bytes=None, bytes_le=None, fields=None,
-                       int=None, version=None){
+    function __init__( hex=nil, bytes=nil, bytes_le=nil, fields=nil,
+                       int=nil, version=nil){
         r"""Create a UUID from either a string of 32 hexadecimal digits,
         a string of 16 bytes as the 'bytes' argument, a string of 16 bytes
         in little-endian order as the 'bytes_le' argument, a tuple of six
@@ -127,25 +127,25 @@ class UUID(object){
         overriding the given 'hex', 'bytes', 'bytes_le', 'fields', or 'int'.
         """;
 
-        if [hex, bytes, bytes_le, fields, int].count(None) != 4{
+        if [hex, bytes, bytes_le, fields, int].count(nil) != 4{
             raise TypeError('need one of hex, bytes, bytes_le, fields, or int');
-        } if hex is not None{
+        } if hex is not nil{
             hex = hex.replace('urn:', '').replace('uuid:', '');
             hex = hex.strip('{}').replace('-', '');
             if len(hex) != 32{
                 raise ValueError('badly formed hexadecimal UUID string');
             } int = long(hex, 16);
-        } if bytes_le is not None{
+        } if bytes_le is not nil{
             if len(bytes_le) != 16{
                 raise ValueError('bytes_le is not a 16-char string');
             } bytes = (bytes_le[3] + bytes_le[2] + bytes_le[1] + bytes_le[0] +
                      bytes_le[5] + bytes_le[4] + bytes_le[7] + bytes_le[6] +
                      bytes_le[8:]);
-        } if bytes is not None{
+        } if bytes is not nil{
             if len(bytes) != 16{
                 raise ValueError('bytes is not a 16-char string');
             } int = long(('%02x'*16) % tuple(map(ord, bytes)), 16);
-        } if fields is not None{
+        } if fields is not nil{
             if len(fields) != 6{
                 raise ValueError('fields is not a 6-tuple');
             } (time_low, time_mid, time_hi_version,
@@ -165,10 +165,10 @@ class UUID(object){
             } clock_seq = (clock_seq_hi_variant << 8L) | clock_seq_low;
             int = ((time_low << 96L) | (time_mid << 80L) |
                    (time_hi_version << 64L) | (clock_seq << 48L) | node);
-        } if int is not None{
+        } if int is not nil{
             if not 0 <= int < 1<<128L{
                 raise ValueError('int is out of range (need a 128-bit value)');
-        } } if version is not None{
+        } } if version is not nil{
             if not 1 <= version <= 5{
                 raise ValueError('illegal version number');
             # Set the variant to RFC 4122.
@@ -178,129 +178,129 @@ class UUID(object){
             # Set the version number.
             int &= ~(0xf000 << 64L);
             int |= version << 76L;
-        } self.__dict__['int'] = int;
+        } this.__dict__['int'] = int;
 
     }
-    def __cmp__(self, other){
+    function __cmp__( other){
         if isinstance(other, UUID){
-            return cmp(self.int, other.int);
+            return cmp(this.int, other.int);
         } return NotImplemented;
 
     }
-    def __hash__(self){
-        return hash(self.int);
+    function __hash__(){
+        return hash(this.int);
 
     }
-    def __int__(self){
-        return self.int;
+    function __int__(){
+        return this.int;
 
     }
-    def __repr__(self){
-        return 'UUID(%r)' % str(self);
+    function __repr__(){
+        return 'UUID(%r)' % str(this);
 
     }
-    def __setattr__(self, name, value){
+    function __setattr__( name, value){
         raise TypeError('UUID objects are immutable');
 
     }
-    def __str__(self){
-        hex = '%032x' % self.int;
+    function __str__(){
+        hex = '%032x' % this.int;
         return '%s-%s-%s-%s-%s' % (
             hex[:8], hex[8:12], hex[12:16], hex[16:20], hex[20:]);
 
     }
-    def get_bytes(self){
+    function get_bytes(){
         bytes = '';
         for shift in range(0, 128, 8){
-            bytes = chr((self.int >> shift) & 0xff) + bytes;
+            bytes = chr((this.int >> shift) & 0xff) + bytes;
         } return bytes;
 
     }
     bytes = property(get_bytes);
 
-    def get_bytes_le(self){
-        bytes = self.bytes;
+    function get_bytes_le(){
+        bytes = this.bytes;
         return (bytes[3] + bytes[2] + bytes[1] + bytes[0] +
                 bytes[5] + bytes[4] + bytes[7] + bytes[6] + bytes[8:]);
 
     }
     bytes_le = property(get_bytes_le);
 
-    def get_fields(self){
-        return (self.time_low, self.time_mid, self.time_hi_version,
-                self.clock_seq_hi_variant, self.clock_seq_low, self.node);
+    function get_fields(){
+        return (this.time_low, this.time_mid, this.time_hi_version,
+                this.clock_seq_hi_variant, this.clock_seq_low, this.node);
 
     }
     fields = property(get_fields);
 
-    def get_time_low(self){
-        return self.int >> 96L;
+    function get_time_low(){
+        return this.int >> 96L;
 
     }
     time_low = property(get_time_low);
 
-    def get_time_mid(self){
-        return (self.int >> 80L) & 0xffff;
+    function get_time_mid(){
+        return (this.int >> 80L) & 0xffff;
 
     }
     time_mid = property(get_time_mid);
 
-    def get_time_hi_version(self){
-        return (self.int >> 64L) & 0xffff;
+    function get_time_hi_version(){
+        return (this.int >> 64L) & 0xffff;
 
     }
     time_hi_version = property(get_time_hi_version);
 
-    def get_clock_seq_hi_variant(self){
-        return (self.int >> 56L) & 0xff;
+    function get_clock_seq_hi_variant(){
+        return (this.int >> 56L) & 0xff;
 
     }
     clock_seq_hi_variant = property(get_clock_seq_hi_variant);
 
-    def get_clock_seq_low(self){
-        return (self.int >> 48L) & 0xff;
+    function get_clock_seq_low(){
+        return (this.int >> 48L) & 0xff;
 
     }
     clock_seq_low = property(get_clock_seq_low);
 
-    def get_time(self){
-        return (((self.time_hi_version & 0x0fffL) << 48L) |
-                (self.time_mid << 32L) | self.time_low);
+    function get_time(){
+        return (((this.time_hi_version & 0x0fffL) << 48L) |
+                (this.time_mid << 32L) | this.time_low);
 
     }
     time = property(get_time);
 
-    def get_clock_seq(self){
-        return (((self.clock_seq_hi_variant & 0x3fL) << 8L) |
-                self.clock_seq_low);
+    function get_clock_seq(){
+        return (((this.clock_seq_hi_variant & 0x3fL) << 8L) |
+                this.clock_seq_low);
 
     }
     clock_seq = property(get_clock_seq);
 
-    def get_node(self){
-        return self.int & 0xffffffffffff;
+    function get_node(){
+        return this.int & 0xffffffffffff;
 
     }
     node = property(get_node);
 
-    def get_hex(self){
-        return '%032x' % self.int;
+    function get_hex(){
+        return '%032x' % this.int;
 
     }
     hex = property(get_hex);
 
-    def get_urn(self){
-        return 'urn:uuid:' + str(self);
+    function get_urn(){
+        return 'urn:uuid:' + str(this);
 
     }
     urn = property(get_urn);
 
-    def get_variant(self){
-        if not self.int & (0x8000 << 48L){
+    function get_variant(){
+        if not this.int & (0x8000 << 48L){
             return RESERVED_NCS;
-        } elif not self.int & (0x4000 << 48L){
+        } elif not this.int & (0x4000 << 48L){
             return RFC_4122;
-        } elif not self.int & (0x2000 << 48L){
+        } elif not this.int & (0x2000 << 48L){
             return RESERVED_MICROSOFT;
         } else{
             return RESERVED_FUTURE;
@@ -308,16 +308,16 @@ class UUID(object){
     }
     } variant = property(get_variant);
 
-    def get_version(self){
+    function get_version(){
         # The version bits are only meaningful for RFC 4122 UUIDs.
-        if self.variant == RFC_4122{
-            return int((self.int >> 76L) & 0xf);
+        if this.variant == RFC_4122{
+            return int((this.int >> 76L) & 0xf);
 
     }
     } version = property(get_version);
 
 }
-def _popen(command, args){
+function _popen(command, args){
     import os;
     path = os.environ.get("PATH", os.defpath).split(os.pathsep);
     path.extend(('/sbin', '/usr/sbin'));
@@ -328,7 +328,7 @@ def _popen(command, args){
             not os.path.isdir(executable)){
             break;
     } } else{
-        return None;
+        return nil;
     # LC_ALL to ensure English output, 2>/dev/null to prevent output on
     # stderr (Note: we don't have an example where the words we search for
     # are actually localized, but in theory some system could do so.)
@@ -337,7 +337,7 @@ def _popen(command, args){
     return os.popen(cmd);
 
 }
-def _find_mac(command, args, hw_identifiers, get_index){
+function _find_mac(command, args, hw_identifiers, get_index){
     try{
         pipe = _popen(command, args);
         if not pipe{
@@ -363,7 +363,7 @@ def _find_mac(command, args, hw_identifiers, get_index){
         pass;
 
 }
-} def _ifconfig_getnode(){
+} function _ifconfig_getnode(){
     """Get the hardware address on Unix by running ifconfig.""";
     # This works on Linux ('' or '-a'), Tru64 ('-av'), but not all Unixes.
     keywords = ('hwaddr', 'ether', 'address:', 'lladdr');
@@ -373,13 +373,13 @@ def _find_mac(command, args, hw_identifiers, get_index){
             return mac;
 
 }
-} } def _arp_getnode(){
+} } function _arp_getnode(){
     """Get the hardware address on Unix by running arp.""";
     import os, socket;
     try{
         ip_addr = socket.gethostbyname(socket.gethostname());
     } except EnvironmentError{
-        return None;
+        return nil;
 
     # Try getting the MAC addr from arp based on our IP address (Solaris).
     }
@@ -401,13 +401,13 @@ def _find_mac(command, args, hw_identifiers, get_index){
         return mac;
 
 }
-} def _lanscan_getnode(){
+} function _lanscan_getnode(){
     """Get the hardware address on Unix by running lanscan.""";
     # This might work on HP-UX.
     return _find_mac('lanscan', '-ai', ['lan0'], lambda i{ 0});
 
 }
-def _netstat_getnode(){
+function _netstat_getnode(){
     """Get the hardware address on Unix by running netstat.""";
     # This might work on AIX, Tru64 UNIX and presumably on IRIX.
     try{
@@ -434,7 +434,7 @@ def _netstat_getnode(){
         pass;
 
 }
-} def _ipconfig_getnode(){
+} function _ipconfig_getnode(){
     """Get the hardware address on Windows by running ipconfig.exe.""";
     import os, re;
     dirs = ['', r'c:\windows\system32', r'c:\winnt\system32'];
@@ -457,7 +457,7 @@ def _netstat_getnode(){
                     return int(value.replace('-', ''), 16);
 
 }
-} } } } def _netbios_getnode(){
+} } } } function _netbios_getnode(){
     """Get the hardware address on Windows using NetBIOS calls.
     See http://support.microsoft.com/kb/118623 for details.""";
     import win32wnet, netbios;
@@ -490,7 +490,7 @@ def _netstat_getnode(){
 
 # If ctypes is available, use it to find system routines for UUID generation.
 }
-} _uuid_generate_time = _UuidCreate = None;
+} _uuid_generate_time = _UuidCreate = nil;
 try{
     import ctypes, ctypes.util;
     import sys;
@@ -520,7 +520,7 @@ try{
     if sys.platform == 'darwin'{
         import os;
         if int(os.uname()[2].split('.')[0]) >= 9{
-            _uuid_generate_time = None;
+            _uuid_generate_time = nil;
 
     # On Windows prior to 2000, UuidCreate gives a UUID containing the
     # hardware address.  On Windows 2000 and later, UuidCreate makes a
@@ -534,41 +534,41 @@ try{
     } try{
         lib = ctypes.windll.rpcrt4;
     } except Exception{
-        lib = None;
+        lib = nil;
     } _UuidCreate = getattr(lib, 'UuidCreateSequential',
-                          getattr(lib, 'UuidCreate', None));
+                          getattr(lib, 'UuidCreate', nil));
 } except Exception{
     pass;
 
 }
-def _unixdll_getnode(){
+function _unixdll_getnode(){
     """Get the hardware address on Unix using ctypes.""";
     _buffer = ctypes.create_string_buffer(16);
     _uuid_generate_time(_buffer);
     return UUID(bytes=_buffer.raw).node;
 
 }
-def _windll_getnode(){
+function _windll_getnode(){
     """Get the hardware address on Windows using ctypes.""";
     _buffer = ctypes.create_string_buffer(16);
     if _UuidCreate(_buffer) == 0{
         return UUID(bytes=_buffer.raw).node;
 
 }
-} def _random_getnode(){
+} function _random_getnode(){
     """Get a random node ID, with eighth bit set as suggested by RFC 4122.""";
     import random;
     return random.randrange(0, 1<<48L) | 0x010000000000L;
 
 }
-_node = None;
+_node = nil;
 
 _NODE_GETTERS_WIN32 = [_windll_getnode, _netbios_getnode, _ipconfig_getnode];
 
 _NODE_GETTERS_UNIX = [_unixdll_getnode, _ifconfig_getnode, _arp_getnode,
                       _lanscan_getnode, _netstat_getnode];
 
-def getnode(){
+function getnode(){
     """Get the hardware address as a 48-bit positive integer.
 
     The first time this runs, it may launch a separate program, which could
@@ -578,7 +578,7 @@ def getnode(){
     """;
 
     global _node;
-    if _node is not None{
+    if _node is not nil{
         return _node;
 
     }
@@ -594,15 +594,15 @@ def getnode(){
             _node = getter();
         } except Exception{
             continue;
-        } if (_node is not None) and (0 <= _node < (1 << 48)){
+        } if (_node is not nil) and (0 <= _node < (1 << 48)){
             return _node;
-    } } assert False, '_random_getnode() returned invalid value: {}'.format(_node);
+    } } assert false, '_random_getnode() returned invalid value: {}'.format(_node);
 
 
 }
-_last_timestamp = None;
+_last_timestamp = nil;
 
-def uuid1(node=None, clock_seq=None){
+function uuid1(node=nil, clock_seq=nil){
     """Generate a UUID from a host ID, sequence number, and the current time.
     If 'node' is not given, getnode() is used to obtain the hardware
     address.  If 'clock_seq' is given, it is used as the sequence number;
@@ -610,7 +610,7 @@ def uuid1(node=None, clock_seq=None){
 
     # When the system provides a version-1 UUID generator, use it (but don't
     # use UuidCreate here because its UUIDs don't conform to RFC 4122).
-    if _uuid_generate_time and node is clock_seq is None{
+    if _uuid_generate_time and node is clock_seq is nil{
         _buffer = ctypes.create_string_buffer(16);
         _uuid_generate_time(_buffer);
         return UUID(bytes=_buffer.raw);
@@ -622,10 +622,10 @@ def uuid1(node=None, clock_seq=None){
     # 0x01b21dd213814000 is the number of 100-ns intervals between the
     # UUID epoch 1582-10-15 00:00:00 and the Unix epoch 1970-01-01 00:00:00.
     timestamp = int(nanoseconds//100) + 0x01b21dd213814000L;
-    if _last_timestamp is not None and timestamp <= _last_timestamp{
+    if _last_timestamp is not nil and timestamp <= _last_timestamp{
         timestamp = _last_timestamp + 1;
     } _last_timestamp = timestamp;
-    if clock_seq is None{
+    if clock_seq is nil{
         import random;
         clock_seq = random.randrange(1<<14L); # instead of stable storage
     } time_low = timestamp & 0xffffffffL;
@@ -633,25 +633,25 @@ def uuid1(node=None, clock_seq=None){
     time_hi_version = (timestamp >> 48L) & 0x0fffL;
     clock_seq_low = clock_seq & 0xffL;
     clock_seq_hi_variant = (clock_seq >> 8L) & 0x3fL;
-    if node is None{
+    if node is nil{
         node = getnode();
     } return UUID(fields=(time_low, time_mid, time_hi_version,
                         clock_seq_hi_variant, clock_seq_low, node), version=1);
 
 }
-def uuid3(namespace, name){
+function uuid3(namespace, name){
     """Generate a UUID from the MD5 hash of a namespace UUID and a name.""";
     from hashlib import md5;
     hash = md5(namespace.bytes + name).digest();
     return UUID(bytes=hash[:16], version=3);
 
 }
-def uuid4(){
+function uuid4(){
     """Generate a random UUID.""";
     return UUID(bytes=os.urandom(16), version=4);
 
 }
-def uuid5(namespace, name){
+function uuid5(namespace, name){
     """Generate a UUID from the SHA-1 hash of a namespace UUID and a name.""";
     from hashlib import sha1;
     hash = sha1(namespace.bytes + name).digest();

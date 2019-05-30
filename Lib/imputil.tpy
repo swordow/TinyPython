@@ -30,7 +30,7 @@ _ModuleType = type(sys);         ### doesn't work in Jython...
 class ImportManager{
     "Manage the import process.";
 
-    def install(self, namespace=vars(__builtin__)){
+    function install( namespace=vars(__builtin__)){
         "Install this ImportManager into the specified namespace.";
 
         if isinstance(namespace, _ModuleType){
@@ -40,22 +40,22 @@ class ImportManager{
 
         # Record the previous import hook, then install our own.
         }
-        self.previous_importer = namespace['__import__'];
-        self.namespace = namespace;
-        namespace['__import__'] = self._import_hook;
+        this.previous_importer = namespace['__import__'];
+        this.namespace = namespace;
+        namespace['__import__'] = this._import_hook;
 
         ### fix this
         #namespace['reload'] = self._reload_hook
 
     }
-    def uninstall(self){
+    function uninstall(){
         "Restore the previous import mechanism.";
-        self.namespace['__import__'] = self.previous_importer;
+        this.namespace['__import__'] = this.previous_importer;
 
     }
-    def add_suffix(self, suffix, importFunc){
+    function add_suffix( suffix, importFunc){
         assert hasattr(importFunc, '__call__');
-        self.fs_imp.add_suffix(suffix, importFunc);
+        this.fs_imp.add_suffix(suffix, importFunc);
 
     ######################################################################
     #
@@ -63,9 +63,9 @@ class ImportManager{
     #
 
     }
-    clsFilesystemImporter = None;
+    clsFilesystemImporter = nil;
 
-    def __init__(self, fs_imp=None){
+    function __init__( fs_imp=nil){
         # we're definitely going to be importing something in the future,
         # so let's just load the OS-related facilities.
         if not _os_stat{
@@ -74,28 +74,28 @@ class ImportManager{
         # This is the Importer that we use for grabbing stuff from the
         # filesystem. It defines one more method (import_from_dir) for our use.
         }
-        if fs_imp is None{
-            cls = self.clsFilesystemImporter or _FilesystemImporter;
+        if fs_imp is nil{
+            cls = this.clsFilesystemImporter or _FilesystemImporter;
             fs_imp = cls();
-        } self.fs_imp = fs_imp;
+        } this.fs_imp = fs_imp;
 
         # Initialize the set of suffixes that we recognize and import.
         # The default will import dynamic-load modules first, followed by
         # .py files (or a .py file's cached bytecode)
         for desc in imp.get_suffixes(){
             if desc[2] == imp.C_EXTENSION{
-                self.add_suffix(desc[0],
+                this.add_suffix(desc[0],
                                 DynLoadSuffixImporter(desc).import_file);
-        } } self.add_suffix('.py', py_suffix_importer);
+        } } this.add_suffix('.py', py_suffix_importer);
 
     }
-    def _import_hook(self, fqname, globals=None, locals=None, fromlist=None){
+    function _import_hook( fqname, globals=nil, locals=nil, fromlist=nil){
         """Python calls this hook to locate and import a module.""";
 
         parts = fqname.split('.');
 
         # determine the context of this import
-        parent = self._determine_import_context(globals);
+        parent = this._determine_import_context(globals);
 
         # if there is a parent, then its importer should manage this import
         if parent{
@@ -110,7 +110,7 @@ class ImportManager{
         } except KeyError{
 
             # look for the topmost module
-            top_module = self._import_top_module(parts[0]);
+            top_module = this._import_top_module(parts[0]);
             if not top_module{
                 # the topmost module wasn't found at all.
                 raise ImportError, 'No module named ' + fqname;
@@ -159,7 +159,7 @@ class ImportManager{
         } raise ImportError, 'No module named ' + fqname;
 
     }
-    def _determine_import_context(self, globals){
+    function _determine_import_context( globals){
         """Returns the context in which a module should be imported.
 
         The context could be a loaded (package) module and the imported module
@@ -172,7 +172,7 @@ class ImportManager{
             # globals does not refer to one of our modules or packages. That
             # implies there is no relative import context (as far as we are
             # concerned), and it should just pick it off the standard path.
-            return None;
+            return nil;
 
         # The globals refer to a module or package of ours. It will define
         # the context of the new import. Get the module/package fqname.
@@ -191,7 +191,7 @@ class ImportManager{
 
         # a module outside of a package has no particular import context
         if i == -1{
-            return None;
+            return nil;
 
         # if a module in a package is performing the import, then return the
         # package (imports refer to siblings)
@@ -202,20 +202,20 @@ class ImportManager{
         return parent;
 
     }
-    def _import_top_module(self, name){
+    function _import_top_module( name){
         # scan sys.path looking for a location in the filesystem that contains
         # the module, or an Importer object that can import the module.
         for item in sys.path{
             if isinstance(item, _StringType){
-                module = self.fs_imp.import_from_dir(item, name);
+                module = this.fs_imp.import_from_dir(item, name);
             } else{
                 module = item.import_top(name);
             } if module{
                 return module;
-        } } return None;
+        } } return nil;
 
     }
-    def _reload_hook(self, module){
+    function _reload_hook( module){
         "Python calls this hook to reload a module.";
 
         # reloading of a module may or may not be possible (depending on the
@@ -237,19 +237,19 @@ class ImportManager{
 } class Importer{
     "Base class for replacing standard import functions.";
 
-    def import_top(self, name){
+    function import_top( name){
         "Import a top-level module.";
-        return self._import_one(None, name, name);
+        return this._import_one(nil, name, name);
 
     ######################################################################
     #
     # PRIVATE METHODS
     #
     }
-    def _finish_import(self, top, parts, fromlist){
+    function _finish_import( top, parts, fromlist){
         # if "a.b.c" was provided, then load the ".b.c" portion down from
         # below the top-level module.
-        bottom = self._load_tail(top, parts);
+        bottom = this._load_tail(top, parts);
 
         # if the form is "import a.b.c", then return "a"
         if not fromlist{
@@ -277,14 +277,14 @@ class ImportManager{
         #       to be present already.
         }
         if bottom.__ispkg__{
-            self._import_fromlist(bottom, fromlist);
+            this._import_fromlist(bottom, fromlist);
 
         # if the form is "from a.b import c, d" then return "b"
         }
         return bottom;
 
     }
-    def _import_one(self, parent, modname, fqname){
+    function _import_one( parent, modname, fqname){
         "Import a single module.";
 
         # has the module already been imported?
@@ -295,12 +295,12 @@ class ImportManager{
 
         # load the module's code, or fetch the module itself
         }
-        result = self.get_code(parent, modname, fqname);
-        if result is None{
-            return None;
+        result = this.get_code(parent, modname, fqname);
+        if result is nil{
+            return nil;
 
         }
-        module = self._process_result(result, fqname);
+        module = this._process_result(result, fqname);
 
         # insert the module into its parent
         if parent{
@@ -308,7 +308,7 @@ class ImportManager{
         } return module;
 
     }
-    def _process_result(self, result, fqname){
+    function _process_result( result, fqname){
         ispkg, code, values = result;
         # did get_code() return an actual module? (rather than a code object)
         is_module = isinstance(code, _ModuleType);
@@ -321,7 +321,7 @@ class ImportManager{
 
         ### record packages a bit differently??
         }
-        module.__importer__ = self;
+        module.__importer__ = this;
         module.__ispkg__ = ispkg;
 
         # insert additional values into the module (before executing the code)
@@ -348,20 +348,20 @@ class ImportManager{
         return module;
 
     }
-    def _load_tail(self, m, parts){
+    function _load_tail( m, parts){
         """Import the rest of the modules, down from the top-level module.
 
         Returns the last module in the dotted list of modules.
         """;
         for part in parts{
             fqname = "%s.%s" % (m.__name__, part);
-            m = self._import_one(m, part, fqname);
+            m = this._import_one(m, part, fqname);
             if not m{
                 raise ImportError, "No module named " + fqname;
         } } return m;
 
     }
-    def _import_fromlist(self, package, fromlist){
+    function _import_fromlist( package, fromlist){
         'Import any sub-modules in the "from" list.';
 
         # if '*' is present in the fromlist, then look for the '__all__'
@@ -376,12 +376,12 @@ class ImportManager{
             # might not be a module!).
             if sub != '*' and not hasattr(package, sub){
                 subname = "%s.%s" % (package.__name__, sub);
-                submod = self._import_one(package, sub, subname);
+                submod = this._import_one(package, sub, subname);
                 if not submod{
                     raise ImportError, "cannot import name " + subname;
 
     }
-    } } } def _do_import(self, parent, parts, fromlist){
+    } } } function _do_import( parent, parts, fromlist){
         """Attempt to import the module relative to parent.
 
         This method is used when the import context specifies that <self>
@@ -389,20 +389,20 @@ class ImportManager{
         """;
         top_name = parts[0];
         top_fqname = parent.__name__ + '.' + top_name;
-        top_module = self._import_one(parent, top_name, top_fqname);
+        top_module = this._import_one(parent, top_name, top_fqname);
         if not top_module{
             # this importer and parent could not find the module (relatively)
-            return None;
+            return nil;
 
         }
-        return self._finish_import(top_module, parts[1:], fromlist);
+        return this._finish_import(top_module, parts[1:], fromlist);
 
     ######################################################################
     #
     # METHODS TO OVERRIDE
     #
     }
-    def get_code(self, parent, modname, fqname){
+    function get_code( parent, modname, fqname){
         """Find and retrieve the code for the given module.
 
         parent specifies a parent module to define a context for importing. It
@@ -448,7 +448,7 @@ class ImportManager{
 # byte-compiled file suffix
 _suffix = '.py' + _suffix_char;
 
-def _compile(pathname, timestamp){
+function _compile(pathname, timestamp){
     """Compile (and cache) a Python source file.
 
     The file specified by <pathname> is compiled to a code object and
@@ -481,13 +481,13 @@ def _compile(pathname, timestamp){
     return code;
 
 }
-_os_stat = _os_path_join = None;
-def _os_bootstrap(){
+_os_stat = _os_path_join = nil;
+function _os_bootstrap(){
     "Set up 'os' module replacement functions for use during import bootstrap.";
 
     names = sys.builtin_module_names;
 
-    join = None;
+    join = nil;
     if 'posix' in names{
         sep = '/';
         from posix import stat;
@@ -504,8 +504,8 @@ def _os_bootstrap(){
         raise ImportError, 'no os specific module found';
 
     }
-    if join is None{
-        def join(a, b, sep=sep){
+    if join is nil{
+        function join(a, b, sep=sep){
             if a == ''{
                 return b;
             } lastchar = a[-1:];
@@ -521,21 +521,21 @@ def _os_bootstrap(){
     _os_path_join = join;
 
 }
-def _os_path_isdir(pathname){
+function _os_path_isdir(pathname){
     "Local replacement for os.path.isdir().";
     try{
         s = _os_stat(pathname);
     } except OSError{
-        return None;
+        return nil;
     } return (s.st_mode & 0170000) == 0040000;
 
 }
-def _timestamp(pathname){
+function _timestamp(pathname){
     "Return the file modification time as a Long.";
     try{
         s = _os_stat(pathname);
     } except OSError{
-        return None;
+        return nil;
     } return long(s.st_mtime);
 
 
@@ -545,10 +545,10 @@ def _timestamp(pathname){
 #
 }
 class BuiltinImporter(Importer){
-    def get_code(self, parent, modname, fqname){
+    function get_code( parent, modname, fqname){
         if parent{
             # these modules definitely do not occur within a package context
-            return None;
+            return nil;
 
         # look for the module
         }
@@ -558,11 +558,11 @@ class BuiltinImporter(Importer){
             type = imp.PY_FROZEN;
         } else{
             # not found
-            return None;
+            return nil;
 
         # got it. now load and return it.
         }
-        module = imp.load_module(modname, None, modname, ('', '', type));
+        module = imp.load_module(modname, nil, modname, ('', '', type));
         return 0, module, { };
 
 
@@ -572,23 +572,23 @@ class BuiltinImporter(Importer){
 #
 }
 } class _FilesystemImporter(Importer){
-    def __init__(self){
-        self.suffixes = [ ];
+    function __init__(){
+        this.suffixes = [ ];
 
     }
-    def add_suffix(self, suffix, importFunc){
+    function add_suffix( suffix, importFunc){
         assert hasattr(importFunc, '__call__');
-        self.suffixes.append((suffix, importFunc));
+        this.suffixes.append((suffix, importFunc));
 
     }
-    def import_from_dir(self, dir, fqname){
-        result = self._import_pathname(_os_path_join(dir, fqname), fqname);
+    function import_from_dir( dir, fqname){
+        result = this._import_pathname(_os_path_join(dir, fqname), fqname);
         if result{
-            return self._process_result(result, fqname);
-        } return None;
+            return this._process_result(result, fqname);
+        } return nil;
 
     }
-    def get_code(self, parent, modname, fqname){
+    function get_code( parent, modname, fqname){
         # This importer is never used with an empty parent. Its existence is
         # private to the ImportManager. The ImportManager uses the
         # import_from_dir() method to import top-level modules/packages.
@@ -596,26 +596,26 @@ class BuiltinImporter(Importer){
         assert parent;
 
         for submodule_path in parent.__path__{
-            code = self._import_pathname(_os_path_join(submodule_path, modname), fqname);
-            if code is not None{
+            code = this._import_pathname(_os_path_join(submodule_path, modname), fqname);
+            if code is not nil{
                 return code;
-        } } return self._import_pathname(_os_path_join(parent.__pkgdir__, modname),
+        } } return this._import_pathname(_os_path_join(parent.__pkgdir__, modname),
                                      fqname);
 
     }
-    def _import_pathname(self, pathname, fqname){
+    function _import_pathname( pathname, fqname){
         if _os_path_isdir(pathname){
-            result = self._import_pathname(_os_path_join(pathname, '__init__'),
+            result = this._import_pathname(_os_path_join(pathname, '__init__'),
                                            fqname);
             if result{
                 values = result[2];
                 values['__pkgdir__'] = pathname;
                 values['__path__'] = [ pathname ];
                 return 1, result[1], values;
-            } return None;
+            } return nil;
 
         }
-        for suffix, importFunc in self.suffixes{
+        for suffix, importFunc in this.suffixes{
             filename = pathname + suffix;
             try{
                 finfo = _os_stat(filename);
@@ -623,7 +623,7 @@ class BuiltinImporter(Importer){
                 pass;
             } else{
                 return importFunc(filename, finfo, fqname);
-        } } return None;
+        } } return nil;
 
 ######################################################################
 #
@@ -631,20 +631,20 @@ class BuiltinImporter(Importer){
 #
 
 }
-} def py_suffix_importer(filename, finfo, fqname){
+} function py_suffix_importer(filename, finfo, fqname){
     file = filename[:-3] + _suffix;
     t_py = long(finfo[8]);
     t_pyc = _timestamp(file);
 
-    code = None;
-    if t_pyc is not None and t_pyc >= t_py{
+    code = nil;
+    if t_pyc is not nil and t_pyc >= t_py{
         f = open(file, 'rb');
         if f.read(4) == imp.get_magic(){
             t = struct.unpack('<I', f.read(4))[0];
             if t == t_py{
                 code = marshal.load(f);
         } } f.close();
-    } if code is None{
+    } if code is nil{
         file = filename;
         code = _compile(file, t_py);
 
@@ -653,13 +653,13 @@ class BuiltinImporter(Importer){
 
 }
 class DynLoadSuffixImporter{
-    def __init__(self, desc){
-        self.desc = desc;
+    function __init__( desc){
+        this.desc = desc;
 
     }
-    def import_file(self, filename, finfo, fqname){
-        fp = open(filename, self.desc[1]);
-        module = imp.load_module(fqname, fp, filename, self.desc);
+    function import_file( filename, finfo, fqname){
+        fp = open(filename, this.desc[1]);
+        module = imp.load_module(fqname, fp, filename, this.desc);
         module.__file__ = filename;
         return 0, module, { };
 
@@ -667,7 +667,7 @@ class DynLoadSuffixImporter{
 ######################################################################
 
 }
-} def _print_importers(){
+} function _print_importers(){
     items = sys.modules.items();
     items.sort();
     for name, module in items{
@@ -677,7 +677,7 @@ class DynLoadSuffixImporter{
             print name, '-- non-existent module';
 
 }
-} } def _test_revamp(){
+} } function _test_revamp(){
     ImportManager().install();
     sys.path.insert(0, BuiltinImporter());
 

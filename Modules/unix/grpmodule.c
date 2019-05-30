@@ -60,14 +60,14 @@ mkgrent(struct group *p)
 #define SET(i,val) PyStructSequence_SET_ITEM(v, i, val)
     SET(setIndex++, PyString_FromString(p->gr_name));
 #ifdef __VMS
-    SET(setIndex++, Py_None);
-    Py_INCREF(Py_None);
+    SET(setIndex++, Py_Nil);
+    Py_INCREF(Py_Nil);
 #else
     if (p->gr_passwd)
 	    SET(setIndex++, PyString_FromString(p->gr_passwd));
     else {
-	    SET(setIndex++, Py_None);
-	    Py_INCREF(Py_None);
+	    SET(setIndex++, Py_Nil);
+	    Py_INCREF(Py_Nil);
     }
 #endif
     SET(setIndex++, _PyInt_FromGid(p->gr_gid));

@@ -33,7 +33,7 @@ extsep = '.';
 sep = '/';
 pathsep = ':';
 defpath = ':/bin:/usr/bin';
-altsep = None;
+altsep = nil;
 devnull = '/dev/null';
 
 # Normalize the case of a pathname.  Trivial in Posix, string.lower on Mac.
@@ -41,7 +41,7 @@ devnull = '/dev/null';
 # normalizations (such as optimizing '../' away) are not allowed
 # (another function should be defined to do that).
 
-def normcase(s){
+function normcase(s){
     """Normalize case of pathname.  Has no effect under Posix""";
     return s;
 
@@ -50,7 +50,7 @@ def normcase(s){
 # Trivial in Posix, harder on the Mac or MS-DOS.
 
 }
-def isabs(s){
+function isabs(s){
     """Test whether a path is absolute""";
     return s.startswith('/');
 
@@ -60,7 +60,7 @@ def isabs(s){
 # Insert a '/' unless the first part is empty or already ends in '/'.
 
 }
-def join(a, *p){
+function join(a, *p){
     """Join two or more pathname components, inserting '/' as needed.
     If any component is an absolute path, all previous path components
     will be discarded.  An empty last part will result in a path that
@@ -82,7 +82,7 @@ def join(a, *p){
 # Trailing '/'es are stripped from head unless it is the root.
 
 }
-def split(p){
+function split(p){
     """Split a pathname.  Returns tuple "(head, tail)" where "tail" is
     everything after the final slash.  Either part may be empty.""";
     i = p.rfind('/') + 1;
@@ -98,14 +98,14 @@ def split(p){
 # It is always true that root + ext == p.
 
 }
-def splitext(p){
+function splitext(p){
     return genericpath._splitext(p, sep, altsep, extsep);
 } splitext.__doc__ = genericpath._splitext.__doc__;
 
 # Split a pathname into a drive specification and the rest of the
 # path.  Useful on DOS/Windows/NT; on Unix, the drive is always empty.
 
-def splitdrive(p){
+function splitdrive(p){
     """Split a pathname into drive and path. On Posix, drive is always
     empty.""";
     return '', p;
@@ -114,7 +114,7 @@ def splitdrive(p){
 # Return the tail (basename) part of a path, same as split(path)[1].
 
 }
-def basename(p){
+function basename(p){
     """Returns the final component of a pathname""";
     i = p.rfind('/') + 1;
     return p[i:];
@@ -123,7 +123,7 @@ def basename(p){
 # Return the head (dirname) part of a path, same as split(path)[0].
 
 }
-def dirname(p){
+function dirname(p){
     """Returns the directory component of a pathname""";
     i = p.rfind('/') + 1;
     head = p[:i];
@@ -136,30 +136,30 @@ def dirname(p){
 # This will always return false on systems where os.lstat doesn't exist.
 
 }
-def islink(path){
+function islink(path){
     """Test whether a path is a symbolic link""";
     try{
         st = os.lstat(path);
     } except (os.error, AttributeError){
-        return False;
+        return false;
     } return stat.S_ISLNK(st.st_mode);
 
 # Being true for dangling symbolic links is also useful.
 
 }
-def lexists(path){
+function lexists(path){
     """Test whether a path exists.  Returns True for broken symbolic links""";
     try{
         os.lstat(path);
     } except os.error{
-        return False;
-    } return True;
+        return false;
+    } return true;
 
 
 # Are two filenames really pointing to the same file?
 
 }
-def samefile(f1, f2){
+function samefile(f1, f2){
     """Test whether two pathnames reference the same actual file""";
     s1 = os.stat(f1);
     s2 = os.stat(f2);
@@ -170,7 +170,7 @@ def samefile(f1, f2){
 # (Not necessarily the same file descriptor!)
 
 }
-def sameopenfile(fp1, fp2){
+function sameopenfile(fp1, fp2){
     """Test whether two open file objects reference the same file""";
     s1 = os.fstat(fp1);
     s2 = os.fstat(fp2);
@@ -181,7 +181,7 @@ def sameopenfile(fp1, fp2){
 # describing the same file?
 
 }
-def samestat(s1, s2){
+function samestat(s1, s2){
     """Test whether two stat buffers reference the same file""";
     return s1.st_ino == s2.st_ino and \
            s1.st_dev == s2.st_dev;
@@ -191,25 +191,25 @@ def samestat(s1, s2){
 # (Does this work for all UNIXes?  Is it even guaranteed to work by Posix?)
 
 }
-def ismount(path){
+function ismount(path){
     """Test whether a path is a mount point""";
     if islink(path){
         # A symlink can never be a mount point
-        return False;
+        return false;
     } try{
         s1 = os.lstat(path);
         s2 = os.lstat(realpath(join(path, '..')));
     } except os.error{
-        return False; # It doesn't exist -- so not a mount point :-)
+        return false; # It doesn't exist -- so not a mount point :-)
     } dev1 = s1.st_dev;
     dev2 = s2.st_dev;
     if dev1 != dev2{
-        return True;     # path/.. on a different device as path
+        return true;     # path/.. on a different device as path
     } ino1 = s1.st_ino;
     ino2 = s2.st_ino;
     if ino1 == ino2{
-        return True;     # path/.. is the same i-node as path
-    } return False;
+        return true;     # path/.. is the same i-node as path
+    } return false;
 
 
 # Directory tree walk.
@@ -221,7 +221,7 @@ def ismount(path){
 # or to impose a different order of visiting.
 
 }
-def walk(top, func, arg){
+function walk(top, func, arg){
     """Directory tree walk with callback function.
 
     For each directory in the directory tree rooted at top (including top
@@ -262,7 +262,7 @@ def walk(top, func, arg){
 # variable expansion.)
 
 }
-} } def expanduser(path){
+} } function expanduser(path){
     """Expand ~ and ~user constructions.  If user or $HOME is unknown,
     do nothing.""";
     if not path.startswith('~'){
@@ -299,10 +299,10 @@ def walk(top, func, arg){
 # Non-existent variables are left unchanged.
 
 }
-_varprog = None;
-_uvarprog = None;
+_varprog = nil;
+_uvarprog = nil;
 
-def expandvars(path){
+function expandvars(path){
     """Expand shell variables of form $var and ${var}.  Unknown variables
     are left unchanged.""";
     global _varprog, _uvarprog;
@@ -319,9 +319,9 @@ def expandvars(path){
             import re;
             _varprog = re.compile(r'\$(\w+|\{[^}]*\})');
         } varprog = _varprog;
-        encoding = None;
+        encoding = nil;
     } i = 0;
-    while True{
+    while true{
         m = varprog.search(path, i);
         if not m{
             break;
@@ -349,7 +349,7 @@ def expandvars(path){
 # if it contains symbolic links!
 
 }
-def normpath(path){
+function normpath(path){
     """Normalize path, eliminating double slashes, etc.""";
     # Preserve unicode (if path is unicode)
     slash, dot = (u'/', u'.') if isinstance(path, _unicode) else ('/', '.');
@@ -379,7 +379,7 @@ def normpath(path){
 
 
 }
-def abspath(path){
+function abspath(path){
     """Return an absolute path.""";
     if not isabs(path){
         if isinstance(path, _unicode){
@@ -394,7 +394,7 @@ def abspath(path){
 # filesystem).
 
 }
-def realpath(filename){
+function realpath(filename){
     """Return the canonical path of the specified filename, eliminating any
 symbolic links encountered in the path.""";
     path, ok = _joinrealpath('', filename, {});
@@ -403,7 +403,7 @@ symbolic links encountered in the path.""";
 # Join two paths, normalizing and eliminating any symbolic links
 # encountered in the second path.
 }
-def _joinrealpath(path, rest, seen){
+function _joinrealpath(path, rest, seen){
     if isabs(rest){
         rest = rest[1:];
         path = sep;
@@ -432,27 +432,27 @@ def _joinrealpath(path, rest, seen){
         if newpath in seen{
             # Already seen this path
             path = seen[newpath];
-            if path is not None{
+            if path is not nil{
                 # use cached value
                 continue;
             # The symlink is not resolved, so we must have a symlink loop.
             # Return already resolved part + rest of the path unchanged.
             }
-            return join(newpath, rest), False;
-        } seen[newpath] = None; # not resolved symlink
+            return join(newpath, rest), false;
+        } seen[newpath] = nil; # not resolved symlink
         path, ok = _joinrealpath(path, os.readlink(newpath), seen);
         if not ok{
-            return join(path, rest), False;
+            return join(path, rest), false;
         } seen[newpath] = path; # resolved symlink
 
     }
-    return path, True;
+    return path, true;
 
 
 }
 supports_unicode_filenames = (sys.platform == 'darwin');
 
-def relpath(path, start=curdir){
+function relpath(path, start=curdir){
     """Return a relative version of a path""";
 
     if not path{

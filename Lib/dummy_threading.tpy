@@ -11,9 +11,9 @@ from sys import modules as sys_modules;
 import dummy_thread;
 
 # Declaring now so as to not have to nest ``try``s to get proper clean-up.
-holding_thread = False;
-holding_threading = False;
-holding__threading_local = False;
+holding_thread = false;
+holding_threading = false;
+holding__threading_local = false;
 
 try{
     # Could have checked if ``thread`` was not in sys.modules and gone
@@ -21,7 +21,7 @@ try{
     # ``threading`` below.
     if 'thread' in sys_modules{
         held_thread = sys_modules['thread'];
-        holding_thread = True;
+        holding_thread = true;
     # Must have some module named ``thread`` that implements its API
     # in order to initially import ``threading``.
     }
@@ -32,7 +32,7 @@ try{
         # trying to import it more than needed by saving it if it is
         # already imported before deleting it.
         held_threading = sys_modules['threading'];
-        holding_threading = True;
+        holding_threading = true;
         del sys_modules['threading'];
 
     }
@@ -41,7 +41,7 @@ try{
         # trying to import it more than needed by saving it if it is
         # already imported before deleting it.
         held__threading_local = sys_modules['_threading_local'];
-        holding__threading_local = True;
+        holding__threading_local = true;
         del sys_modules['_threading_local'];
 
     }

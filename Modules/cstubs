@@ -119,8 +119,8 @@ gl_varray(self, args)
 	}
 	
 	if (n == 0) {
-		Py_INCREF(Py_None);
-		return Py_None;
+		Py_INCREF(Py_Nil);
+		return Py_Nil;
 	}
 	if (n > 0)
 		w = (*getitem)(v, 0);
@@ -153,8 +153,8 @@ gl_varray(self, args)
 		v3d(vec);
 	}
 	
-	Py_INCREF(Py_None);
-	return Py_None;
+	Py_INCREF(Py_Nil);
+	return Py_Nil;
 }
 
 /*
@@ -236,8 +236,8 @@ gen_nvarray(args, inorm)
 		v3f(vec);
 	}
 	
-	Py_INCREF(Py_None);
-	return Py_None;
+	Py_INCREF(Py_Nil);
+	return Py_Nil;
 }
 
 /* nurbssurface(s_knots[], t_knots[], ctl[][], s_order, t_order, type).
@@ -327,8 +327,8 @@ gl_nurbssurface(self, args)
 	PyMem_DEL(arg2);
 	PyMem_DEL(arg4);
 	PyMem_DEL(arg5);
-	Py_INCREF(Py_None);
-	return Py_None;
+	Py_INCREF(Py_Nil);
+	return Py_Nil;
 }
 
 /* nurbscurve(knots, ctlpoints, order, type).
@@ -390,8 +390,8 @@ gl_nurbscurve(self, args)
 	nurbscurve( arg1 , arg2 , arg3 , arg4 , arg5 , arg6 );
 	PyMem_DEL(arg2);
 	PyMem_DEL(arg4);
-	Py_INCREF(Py_None);
-	return Py_None;
+	Py_INCREF(Py_Nil);
+	return Py_Nil;
 }
 
 /* pwlcurve(points, type).
@@ -435,8 +435,8 @@ gl_pwlcurve(self, args)
 	}
 	pwlcurve(npoints, data, sizeof(double)*ncoords, type);
 	PyMem_DEL(data);
-	Py_INCREF(Py_None);
-	return Py_None;
+	Py_INCREF(Py_Nil);
+	return Py_Nil;
 }
 
 
@@ -461,8 +461,8 @@ pick_select(args, func)
 		return PyErr_NoMemory();
 	}
 	(*func)(pickbuffer, pickbuffersize);
-	Py_INCREF(Py_None);
-	return Py_None;
+	Py_INCREF(Py_Nil);
+	return Py_Nil;
 }
 
 static PyObject *
@@ -638,8 +638,8 @@ gl_lrectwrite(self, args)
 	}
 #endif
 	lrectwrite( x1 , y1 , x2 , y2 , (unsigned long *) parray );
-	Py_INCREF(Py_None);
-	return Py_None;
+	Py_INCREF(Py_Nil);
+	return Py_Nil;
 }
 
 % lrectread
@@ -864,8 +864,8 @@ gl_clear(self, args)
 	PyObject *args;
 {
 	__GLclear( );
-	Py_INCREF(Py_None);
-	return Py_None;
+	Py_INCREF(Py_Nil);
+	return Py_Nil;
 }
 
 /* End of manually written stubs */

@@ -72,7 +72,7 @@ Dlg_PassFilterProc(PyObject *callback)
     static ModalFilterUPP UnivFilterUpp = NULL;
 
     Dlg_FilterProc_callback = NULL;
-    if (callback == Py_None) {
+    if (callback == Py_Nil) {
         Py_XDECREF(tmp);
         return NULL;
     }
@@ -138,7 +138,7 @@ typedef struct DialogObject {
 PyObject *DlgObj_New(DialogPtr itself)
 {
     DialogObject *it;
-    if (itself == NULL) { Py_INCREF(Py_None); return Py_None; }
+    if (itself == NULL) { Py_INCREF(Py_Nil); return Py_Nil; }
     it = PyObject_NEW(DialogObject, &Dialog_Type);
     if (it == NULL) return NULL;
     it->ob_itself = itself;
@@ -148,7 +148,7 @@ PyObject *DlgObj_New(DialogPtr itself)
 
 int DlgObj_Convert(PyObject *v, DialogPtr *p_itself)
 {
-    if (v == Py_None) { *p_itself = NULL; return 1; }
+    if (v == Py_Nil) { *p_itself = NULL; return 1; }
     if (PyInt_Check(v)) { *p_itself = (DialogPtr)PyInt_AsLong(v);
                           return 1; }
     if (!DlgObj_Check(v))
@@ -175,8 +175,8 @@ static PyObject *DlgObj_DrawDialog(DialogObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     DrawDialog(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -192,8 +192,8 @@ static PyObject *DlgObj_UpdateDialog(DialogObject *_self, PyObject *_args)
         return NULL;
     UpdateDialog(_self->ob_itself,
                  updateRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -209,8 +209,8 @@ static PyObject *DlgObj_HideDialogItem(DialogObject *_self, PyObject *_args)
         return NULL;
     HideDialogItem(_self->ob_itself,
                    itemNo);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -226,8 +226,8 @@ static PyObject *DlgObj_ShowDialogItem(DialogObject *_self, PyObject *_args)
         return NULL;
     ShowDialogItem(_self->ob_itself,
                    itemNo);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -258,8 +258,8 @@ static PyObject *DlgObj_DialogCut(DialogObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     DialogCut(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -272,8 +272,8 @@ static PyObject *DlgObj_DialogPaste(DialogObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     DialogPaste(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -286,8 +286,8 @@ static PyObject *DlgObj_DialogCopy(DialogObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     DialogCopy(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -300,8 +300,8 @@ static PyObject *DlgObj_DialogDelete(DialogObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     DialogDelete(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -351,8 +351,8 @@ static PyObject *DlgObj_SetDialogItem(DialogObject *_self, PyObject *_args)
                   itemType,
                   item,
                   &box);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -374,8 +374,8 @@ static PyObject *DlgObj_SelectDialogItemText(DialogObject *_self, PyObject *_arg
                          itemNo,
                          strtSel,
                          endSel);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -394,8 +394,8 @@ static PyObject *DlgObj_AppendDITL(DialogObject *_self, PyObject *_args)
     AppendDITL(_self->ob_itself,
                theHandle,
                method);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -426,8 +426,8 @@ static PyObject *DlgObj_ShortenDITL(DialogObject *_self, PyObject *_args)
         return NULL;
     ShortenDITL(_self->ob_itself,
                 numberItems);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -454,8 +454,8 @@ static PyObject *DlgObj_InsertDialogItem(DialogObject *_self, PyObject *_args)
                             itemHandle,
                             &box);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -479,8 +479,8 @@ static PyObject *DlgObj_RemoveDialogItems(DialogObject *_self, PyObject *_args)
                              amountToRemove,
                              disposeItemData);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -521,8 +521,8 @@ static PyObject *DlgObj_SetDialogDefaultItem(DialogObject *_self, PyObject *_arg
     _err = SetDialogDefaultItem(_self->ob_itself,
                                 newItem);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -540,8 +540,8 @@ static PyObject *DlgObj_SetDialogCancelItem(DialogObject *_self, PyObject *_args
     _err = SetDialogCancelItem(_self->ob_itself,
                                newItem);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -559,8 +559,8 @@ static PyObject *DlgObj_SetDialogTracksCursor(DialogObject *_self, PyObject *_ar
     _err = SetDialogTracksCursor(_self->ob_itself,
                                  tracks);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -575,8 +575,8 @@ static PyObject *DlgObj_AutoSizeDialog(DialogObject *_self, PyObject *_args)
         return NULL;
     _err = AutoSizeDialog(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -621,8 +621,8 @@ static PyObject *DlgObj_MoveDialogItem(DialogObject *_self, PyObject *_args)
                           inHoriz,
                           inVert);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -646,8 +646,8 @@ static PyObject *DlgObj_SizeDialogItem(DialogObject *_self, PyObject *_args)
                           inWidth,
                           inHeight);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -668,8 +668,8 @@ static PyObject *DlgObj_AppendDialogItemList(DialogObject *_self, PyObject *_arg
                                 ditlID,
                                 method);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -690,8 +690,8 @@ static PyObject *DlgObj_SetDialogTimeout(DialogObject *_self, PyObject *_args)
                             inButtonToPress,
                             inSecondsToWait);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -733,8 +733,8 @@ static PyObject *DlgObj_SetModalDialogEventMask(DialogObject *_self, PyObject *_
     _err = SetModalDialogEventMask(_self->ob_itself,
                                    inMask);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -840,8 +840,8 @@ static PyObject *DlgObj_SetPortDialogPort(DialogObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     SetPortDialogPort(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1277,8 +1277,8 @@ static PyObject *Dlg_ParamText(PyObject *_self, PyObject *_args)
               param1,
               param2,
               param3);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1314,8 +1314,8 @@ static PyObject *Dlg_SetDialogItemText(PyObject *_self, PyObject *_args)
         return NULL;
     SetDialogItemText(item,
                       text);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1345,8 +1345,8 @@ static PyObject *Dlg_SetDialogFont(PyObject *_self, PyObject *_args)
                           &fontNum))
         return NULL;
     SetDialogFont(fontNum);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1359,8 +1359,8 @@ static PyObject *Dlg_ResetAlertStage(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     ResetAlertStage();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1384,8 +1384,8 @@ static PyObject *Dlg_GetParamText(PyObject *_self, PyObject *_args)
                  param1,
                  param2,
                  param3);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1458,15 +1458,15 @@ static PyObject *Dlg_SetUserItemHandler(PyObject *_self, PyObject *_args)
         if (!PyArg_ParseTuple(_args, "|O", &new))
             return NULL;
 
-        if (Dlg_UserItemProc_callback && new && new != Py_None) {
+        if (Dlg_UserItemProc_callback && new && new != Py_Nil) {
             PyErr_SetString(Dlg_Error, "Another UserItemProc is already installed");
             return NULL;
         }
 
-        if (new == NULL || new == Py_None) {
+        if (new == NULL || new == Py_Nil) {
             new = NULL;
-            _res = Py_None;
-            Py_INCREF(Py_None);
+            _res = Py_Nil;
+            Py_INCREF(Py_Nil);
         } else {
             Py_INCREF(new);
             _res = Py_BuildValue("O&", ResObj_New, (Handle)NewUserItemUPP(Dlg_UnivUserItemProc));
@@ -1541,7 +1541,7 @@ DlgObj_WhichDialog(DialogPtr d)
     PyObject *it;
 
     if (d == NULL) {
-        it = Py_None;
+        it = Py_Nil;
         Py_INCREF(it);
     } else {
         WindowPtr w = GetDialogWindow(d);
@@ -1553,7 +1553,7 @@ DlgObj_WhichDialog(DialogPtr d)
             it = WinObj_New(w);
             ((WindowObject *)it)->ob_freeit = NULL;
 #else
-            it = Py_None;
+            it = Py_Nil;
             Py_INCREF(it);
 #endif
         } else {

@@ -7,7 +7,7 @@ import os;
 
 __all__ = ["url2pathname","pathname2url"];
 
-def url2pathname(pathname){
+function url2pathname(pathname){
     """OS-specific conversion from a relative URL of the 'file' scheme
     to a file system path; not recommended for general use.""";
     #
@@ -52,7 +52,7 @@ def url2pathname(pathname){
     return urllib.unquote(rv);
 
 }
-def pathname2url(pathname){
+function pathname2url(pathname){
     """OS-specific conversion from a file system path to a relative URL
     of the 'file' scheme; not recommended for general use.""";
     if '/' in pathname{
@@ -78,7 +78,7 @@ def pathname2url(pathname){
         return '/'.join(components);
 
 }
-} def _pncomp2url(component){
+} function _pncomp2url(component){
     component = urllib.quote(component[:31], safe='');  # We want to quote slashes
     return component;
 

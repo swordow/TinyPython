@@ -20,7 +20,7 @@ class Number(object){
     __slots__ = ();
 
     # Concrete numeric types must provide their own hash implementation
-    __hash__ = None;
+    __hash__ = nil;
 
 
 ## Notes on Decimal
@@ -46,18 +46,18 @@ class Complex(Number){
     __slots__ = ();
 
     @abstractmethod;
-    def __complex__(self){
+    function __complex__(){
         """Return a builtin complex instance. Called for complex(self).""";
 
     # Will be __bool__ in 3.0.
     }
-    def __nonzero__(self){
+    function __nonzero__(){
         """True if self != 0. Called for bool(self).""";
-        return self != 0;
+        return this != 0;
 
     }
     @abstractproperty;
-    def real(self){
+    function real(){
         """Retrieve the real component of this number.
 
         This should subclass Real.
@@ -66,7 +66,7 @@ class Complex(Number){
 
     }
     @abstractproperty;
-    def imag(self){
+    function imag(){
         """Retrieve the imaginary component of this number.
 
         This should subclass Real.
@@ -75,53 +75,53 @@ class Complex(Number){
 
     }
     @abstractmethod;
-    def __add__(self, other){
+    function __add__( other){
         """self + other""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __radd__(self, other){
+    function __radd__( other){
         """other + self""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __neg__(self){
+    function __neg__(){
         """-self""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __pos__(self){
+    function __pos__(){
         """+self""";
         raise NotImplementedError;
 
     }
-    def __sub__(self, other){
+    function __sub__( other){
         """self - other""";
-        return self + -other;
+        return this + -other;
 
     }
-    def __rsub__(self, other){
+    function __rsub__( other){
         """other - self""";
-        return -self + other;
+        return -this + other;
 
     }
     @abstractmethod;
-    def __mul__(self, other){
+    function __mul__( other){
         """self * other""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __rmul__(self, other){
+    function __rmul__( other){
         """other * self""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __div__(self, other){
+    function __div__( other){
         """self / other without __future__ division
 
         May promote to float.
@@ -130,13 +130,13 @@ class Complex(Number){
 
     }
     @abstractmethod;
-    def __rdiv__(self, other){
+    function __rdiv__( other){
         """other / self without __future__ division""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __truediv__(self, other){
+    function __truediv__( other){
         """self / other with __future__ division.
 
         Should promote to float when necessary.
@@ -145,45 +145,45 @@ class Complex(Number){
 
     }
     @abstractmethod;
-    def __rtruediv__(self, other){
+    function __rtruediv__( other){
         """other / self with __future__ division""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __pow__(self, exponent){
+    function __pow__( exponent){
         """self**exponent; should promote to float or complex when necessary.""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __rpow__(self, base){
+    function __rpow__( base){
         """base ** self""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __abs__(self){
+    function __abs__(){
         """Returns the Real distance from 0. Called for abs(self).""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def conjugate(self){
+    function conjugate(){
         """(x+y*i).conjugate() returns (x-y*i).""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __eq__(self, other){
+    function __eq__( other){
         """self == other""";
         raise NotImplementedError;
 
     }
-    def __ne__(self, other){
+    function __ne__( other){
         """self != other""";
         # The default __ne__ doesn't negate __eq__ until 3.0.
-        return not (self == other);
+        return not (this == other);
 
 }
 } Complex.register(complex);
@@ -201,7 +201,7 @@ class Real(Complex){
     __slots__ = ();
 
     @abstractmethod;
-    def __float__(self){
+    function __float__(){
         """Any Real can be converted to a native float object.
 
         Called for float(self).""";
@@ -209,7 +209,7 @@ class Real(Complex){
 
     }
     @abstractmethod;
-    def __trunc__(self){
+    function __trunc__(){
         """trunc(self): Truncates self to an Integral.
 
         Returns an Integral i such that:
@@ -222,50 +222,50 @@ class Real(Complex){
         raise NotImplementedError;
 
     }
-    def __divmod__(self, other){
+    function __divmod__( other){
         """divmod(self, other): The pair (self // other, self % other).
 
         Sometimes this can be computed faster than the pair of
         operations.
         """;
-        return (self // other, self % other);
+        return (this // other, this % other);
 
     }
-    def __rdivmod__(self, other){
+    function __rdivmod__( other){
         """divmod(other, self): The pair (self // other, self % other).
 
         Sometimes this can be computed faster than the pair of
         operations.
         """;
-        return (other // self, other % self);
+        return (other // this, other % this);
 
     }
     @abstractmethod;
-    def __floordiv__(self, other){
+    function __floordiv__( other){
         """self // other: The floor() of self/other.""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __rfloordiv__(self, other){
+    function __rfloordiv__( other){
         """other // self: The floor() of other/self.""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __mod__(self, other){
+    function __mod__( other){
         """self % other""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __rmod__(self, other){
+    function __rmod__( other){
         """other % self""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __lt__(self, other){
+    function __lt__( other){
         """self < other
 
         < on Reals defines a total ordering, except perhaps for NaN.""";
@@ -273,32 +273,32 @@ class Real(Complex){
 
     }
     @abstractmethod;
-    def __le__(self, other){
+    function __le__( other){
         """self <= other""";
         raise NotImplementedError;
 
     # Concrete implementations of Complex abstract methods.
     }
-    def __complex__(self){
+    function __complex__(){
         """complex(self) == complex(float(self), 0)""";
-        return complex(float(self));
+        return complex(float(this));
 
     }
     @property;
-    def real(self){
+    function real(){
         """Real numbers are their real component.""";
-        return +self;
+        return +this;
 
     }
     @property;
-    def imag(self){
+    function imag(){
         """Real numbers have no imaginary component.""";
         return 0;
 
     }
-    def conjugate(self){
+    function conjugate(){
         """Conjugate is a no-op for Reals.""";
-        return +self;
+        return +this;
 
 }
 } Real.register(float);
@@ -310,17 +310,17 @@ class Rational(Real){
     __slots__ = ();
 
     @abstractproperty;
-    def numerator(self){
+    function numerator(){
         raise NotImplementedError;
 
     }
     @abstractproperty;
-    def denominator(self){
+    function denominator(){
         raise NotImplementedError;
 
     # Concrete implementation of Real's conversion to float.
     }
-    def __float__(self){
+    function __float__(){
         """float(self) = self.numerator / self.denominator
 
         It's important that this conversion use the integer's "true"
@@ -328,7 +328,7 @@ class Rational(Real){
         so that ratios of huge integers convert without overflowing.
 
         """;
-        return self.numerator / self.denominator;
+        return this.numerator / this.denominator;
 
 
 }
@@ -338,18 +338,18 @@ class Rational(Real){
     __slots__ = ();
 
     @abstractmethod;
-    def __long__(self){
+    function __long__(){
         """long(self)""";
         raise NotImplementedError;
 
     }
-    def __index__(self){
+    function __index__(){
         """Called whenever an index is needed, such as in slicing""";
-        return long(self);
+        return long(this);
 
     }
     @abstractmethod;
-    def __pow__(self, exponent, modulus=None){
+    function __pow__( exponent, modulus=nil){
         """self ** exponent % modulus, but maybe faster.
 
         Accept the modulus argument if you want to support the
@@ -361,85 +361,85 @@ class Rational(Real){
 
     }
     @abstractmethod;
-    def __lshift__(self, other){
+    function __lshift__( other){
         """self << other""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __rlshift__(self, other){
+    function __rlshift__( other){
         """other << self""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __rshift__(self, other){
+    function __rshift__( other){
         """self >> other""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __rrshift__(self, other){
+    function __rrshift__( other){
         """other >> self""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __and__(self, other){
+    function __and__( other){
         """self & other""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __rand__(self, other){
+    function __rand__( other){
         """other & self""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __xor__(self, other){
+    function __xor__( other){
         """self ^ other""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __rxor__(self, other){
+    function __rxor__( other){
         """other ^ self""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __or__(self, other){
+    function __or__( other){
         """self | other""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __ror__(self, other){
+    function __ror__( other){
         """other | self""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def __invert__(self){
+    function __invert__(){
         """~self""";
         raise NotImplementedError;
 
     # Concrete implementations of Rational and Real abstract methods.
     }
-    def __float__(self){
+    function __float__(){
         """float(self) == float(long(self))""";
-        return float(long(self));
+        return float(long(this));
 
     }
     @property;
-    def numerator(self){
+    function numerator(){
         """Integers are their own numerators.""";
-        return +self;
+        return +this;
 
     }
     @property;
-    def denominator(self){
+    function denominator(){
         """Integers have a denominator of 1.""";
         return 1;
 

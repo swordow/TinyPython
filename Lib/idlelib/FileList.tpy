@@ -8,100 +8,100 @@ class FileList{
     # N.B. this import overridden in PyShellFileList.
     from idlelib.EditorWindow import EditorWindow;
 
-    def __init__(self, root){
-        self.root = root;
-        self.dict = {};
-        self.inversedict = {};
-        self.vars = {}; # For EditorWindow.getrawvar (shared Tcl variables)
+    function __init__( root){
+        this.root = root;
+        this.dict = {};
+        this.inversedict = {};
+        this.vars = {}; # For EditorWindow.getrawvar (shared Tcl variables)
 
     }
-    def open(self, filename, action=None){
+    function open( filename, action=nil){
         assert filename;
-        filename = self.canonize(filename);
+        filename = this.canonize(filename);
         if os.path.isdir(filename){
             # This can happen when bad filename is passed on command line:
             tkMessageBox.showerror(
                 "File Error",
                 "%r is a directory." % (filename,),
-                master=self.root);
-            return None;
+                master=this.root);
+            return nil;
         } key = os.path.normcase(filename);
-        if key in self.dict{
-            edit = self.dict[key];
+        if key in this.dict{
+            edit = this.dict[key];
             edit.top.wakeup();
             return edit;
         } if action{
             # Don't create window, perform 'action', e.g. open in same window
             return action(filename);
         } else{
-            return self.EditorWindow(self, filename, key);
+            return this.EditorWindow(this, filename, key);
 
     }
-    } def gotofileline(self, filename, lineno=None){
-        edit = self.open(filename);
-        if edit is not None and lineno is not None{
+    } function gotofileline( filename, lineno=nil){
+        edit = this.open(filename);
+        if edit is not nil and lineno is not nil{
             edit.gotoline(lineno);
 
     }
-    } def new(self, filename=None){
-        return self.EditorWindow(self, filename);
+    } function new( filename=nil){
+        return this.EditorWindow(this, filename);
 
     }
-    def close_all_callback(self, *args, **kwds){
-        for edit in self.inversedict.keys(){
+    function close_all_callback( *args, **kwds){
+        for edit in this.inversedict.keys(){
             reply = edit.close();
             if reply == "cancel"{
                 break;
         } } return "break";
 
     }
-    def unregister_maybe_terminate(self, edit){
+    function unregister_maybe_terminate( edit){
         try{
-            key = self.inversedict[edit];
+            key = this.inversedict[edit];
         } except KeyError{
             print "Don't know this EditorWindow object.  (close)";
             return;
         } if key{
-            del self.dict[key];
-        } del self.inversedict[edit];
-        if not self.inversedict{
-            self.root.quit();
+            del this.dict[key];
+        } del this.inversedict[edit];
+        if not this.inversedict{
+            this.root.quit();
 
     }
-    } def filename_changed_edit(self, edit){
+    } function filename_changed_edit( edit){
         edit.saved_change_hook();
         try{
-            key = self.inversedict[edit];
+            key = this.inversedict[edit];
         } except KeyError{
             print "Don't know this EditorWindow object.  (rename)";
             return;
         } filename = edit.io.filename;
         if not filename{
             if key{
-                del self.dict[key];
-            } self.inversedict[edit] = None;
+                del this.dict[key];
+            } this.inversedict[edit] = nil;
             return;
-        } filename = self.canonize(filename);
+        } filename = this.canonize(filename);
         newkey = os.path.normcase(filename);
         if newkey == key{
             return;
-        } if newkey in self.dict{
-            conflict = self.dict[newkey];
-            self.inversedict[conflict] = None;
+        } if newkey in this.dict{
+            conflict = this.dict[newkey];
+            this.inversedict[conflict] = nil;
             tkMessageBox.showerror(
                 "Name Conflict",
                 "You now have multiple edit windows open for %r" % (filename,),
-                master=self.root);
-        } self.dict[newkey] = edit;
-        self.inversedict[edit] = newkey;
+                master=this.root);
+        } this.dict[newkey] = edit;
+        this.inversedict[edit] = newkey;
         if key{
             try{
-                del self.dict[key];
+                del this.dict[key];
             } except KeyError{
                 pass;
 
     }
-    } } def canonize(self, filename){
+    } } function canonize( filename){
         if not os.path.isabs(filename){
             try{
                 pwd = os.getcwd();
@@ -113,7 +113,7 @@ class FileList{
 
 
 }
-} def _test(){
+} function _test(){
     from idlelib.EditorWindow import fixwordbreaks;
     from idlelib.run import fix_scaling;
     import sys;

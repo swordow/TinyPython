@@ -15,18 +15,18 @@ try{
     import ctypes;
     ctypes.windll.kernel32.GetFinalPathNameByHandleW;
 } except (ImportError, AttributeError){
-    def convert_path(s){
+    function convert_path(s){
         return s;
 } } else{
-    def convert_path(s){
+    function convert_path(s){
         assert isinstance(s, str);   # sys.prefix contains only bytes
         udir = s.decode("mbcs");
         hdir = ctypes.windll.kernel32.\
             CreateFileW(udir, 0x80, # FILE_READ_ATTRIBUTES
                         1,          # FILE_SHARE_READ
-                        None, 3,    # OPEN_EXISTING
+                        nil, 3,    # OPEN_EXISTING
                         0x02000000, # FILE_FLAG_BACKUP_SEMANTICS
-                        None);
+                        nil);
         if hdir == -1{
             # Cannot open directory, give up
             return s;

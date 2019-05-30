@@ -60,28 +60,28 @@ from Queue import Queue;
 
 class DummyProcess(threading.Thread){
 
-    def __init__(self, group=None, target=None, name=None, args=(), kwargs={}){
-        threading.Thread.__init__(self, group, target, name, args, kwargs);
-        self._pid = None;
-        self._children = weakref.WeakKeyDictionary();
-        self._start_called = False;
-        self._parent = current_process();
+    function __init__( group=nil, target=nil, name=nil, args=(), kwargs={}){
+        threading.Thread.__init__(this, group, target, name, args, kwargs);
+        this._pid = nil;
+        this._children = weakref.WeakKeyDictionary();
+        this._start_called = false;
+        this._parent = current_process();
 
     }
-    def start(self){
-        assert self._parent is current_process();
-        self._start_called = True;
-        if hasattr(self._parent, '_children'){
-            self._parent._children[self] = None;
-        } threading.Thread.start(self);
+    function start(){
+        assert this._parent is current_process();
+        this._start_called = true;
+        if hasattr(this._parent, '_children'){
+            this._parent._children[this] = nil;
+        } threading.Thread.start(this);
 
     }
     @property;
-    def exitcode(self){
-        if self._start_called and not self.is_alive(){
+    function exitcode(){
+        if this._start_called and not this.is_alive(){
             return 0;
         } else{
-            return None;
+            return nil;
 
 #
 #
@@ -100,15 +100,15 @@ Process = DummyProcess;
 current_process = threading.current_thread;
 current_process()._children = weakref.WeakKeyDictionary();
 
-def active_children(){
+function active_children(){
     children = current_process()._children;
     for p in list(children){
         if not p.is_alive(){
-            children.pop(p, None);
+            children.pop(p, nil);
     } } return list(children);
 
 }
-def freeze_support(){
+function freeze_support(){
     pass;
 
 #
@@ -117,10 +117,10 @@ def freeze_support(){
 
 }
 class Namespace(object){
-    def __init__(self, **kwds){
-        self.__dict__.update(kwds);
-    } def __repr__(self){
-        items = self.__dict__.items();
+    function __init__( **kwds){
+        this.__dict__.update(kwds);
+    } function __repr__(){
+        items = this.__dict__.items();
         temp = [];
         for name, value in items{
             if not name.startswith('_'){
@@ -132,32 +132,32 @@ class Namespace(object){
 } dict = dict;
 list = list;
 
-def Array(typecode, sequence, lock=True){
+function Array(typecode, sequence, lock=true){
     return array.array(typecode, sequence);
 
 }
 class Value(object){
-    def __init__(self, typecode, value, lock=True){
-        self._typecode = typecode;
-        self._value = value;
-    } def _get(self){
-        return self._value;
-    } def _set(self, value){
-        self._value = value;
+    function __init__( typecode, value, lock=true){
+        this._typecode = typecode;
+        this._value = value;
+    } function _get(){
+        return this._value;
+    } function _set( value){
+        this._value = value;
     } value = property(_get, _set);
-    def __repr__(self){
-        return '<%s(%r, %r)>'%(type(self).__name__,self._typecode,self._value);
+    function __repr__(){
+        return '<%s(%r, %r)>'%(type(this).__name__,this._typecode,this._value);
 
 }
-} def Manager(){
+} function Manager(){
     return sys.modules[__name__];
 
 }
-def shutdown(){
+function shutdown(){
     pass;
 
 }
-def Pool(processes=None, initializer=None, initargs=()){
+function Pool(processes=nil, initializer=nil, initargs=()){
     from multiprocessing.pool import ThreadPool;
     return ThreadPool(processes, initializer, initargs);
 

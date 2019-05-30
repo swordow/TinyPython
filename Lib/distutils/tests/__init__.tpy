@@ -21,7 +21,7 @@ from test.test_support import run_unittest;
 here = os.path.dirname(__file__) or os.curdir;
 
 
-def test_suite(){
+function test_suite(){
     suite = unittest.TestSuite();
     for fn in os.listdir(here){
         if fn.startswith("test") and fn.endswith(".py"){

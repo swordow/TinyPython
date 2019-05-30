@@ -990,7 +990,7 @@ set_update(PySetObject *so, PyObject *args)
         if (set_update_internal(so, other) == -1)
             return NULL;
     }
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(update_doc,
@@ -1169,7 +1169,7 @@ static PyObject *
 set_clear(PySetObject *so)
 {
     set_clear_internal(so);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(clear_doc, "Remove all elements from this set.");
@@ -1358,7 +1358,7 @@ set_intersection_update(PySetObject *so, PyObject *other)
         return NULL;
     set_swap_bodies(so, (PySetObject *)tmp);
     Py_DECREF(tmp);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject *
@@ -1371,7 +1371,7 @@ set_intersection_update_multi(PySetObject *so, PyObject *args)
         return NULL;
     set_swap_bodies(so, (PySetObject *)tmp);
     Py_DECREF(tmp);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(intersection_update_doc,
@@ -1518,7 +1518,7 @@ set_difference_update(PySetObject *so, PyObject *args)
         if (set_difference_update_internal(so, other) == -1)
             return NULL;
     }
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(difference_update_doc,
@@ -1668,7 +1668,7 @@ set_symmetric_difference_update(PySetObject *so, PyObject *other)
             }
             Py_DECREF(key);
         }
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     }
 
     if (PyAnySet_Check(other)) {
@@ -1694,7 +1694,7 @@ set_symmetric_difference_update(PySetObject *so, PyObject *other)
         }
     }
     Py_DECREF(otherset);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(symmetric_difference_update_doc,
@@ -1855,7 +1855,7 @@ set_add(PySetObject *so, PyObject *key)
 {
     if (set_add_key(so, key) == -1)
         return NULL;
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(add_doc,
@@ -1920,7 +1920,7 @@ set_remove(PySetObject *so, PyObject *key)
         set_key_error(key);
         return NULL;
     }
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(remove_doc,
@@ -1947,7 +1947,7 @@ set_discard(PySetObject *so, PyObject *key)
         if (rv == -1)
             return NULL;
     }
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(discard_doc,
@@ -1969,7 +1969,7 @@ set_reduce(PySetObject *so)
     dict = PyObject_GetAttrString((PyObject *)so, "__dict__");
     if (dict == NULL) {
         PyErr_Clear();
-        dict = Py_None;
+        dict = Py_Nil;
         Py_INCREF(dict);
     }
     result = PyTuple_Pack(3, Py_TYPE(so), args, dict);
@@ -2426,8 +2426,8 @@ test_c_api(PySetObject *so)
     assert(PySet_GET_SIZE(ob) == 3);
 
     /* Raise TypeError for non-iterable constructor arguments */
-    assertRaises(PySet_New(Py_None) == NULL, PyExc_TypeError);
-    assertRaises(PyFrozenSet_New(Py_None) == NULL, PyExc_TypeError);
+    assertRaises(PySet_New(Py_Nil) == NULL, PyExc_TypeError);
+    assertRaises(PyFrozenSet_New(Py_Nil) == NULL, PyExc_TypeError);
 
     /* Raise TypeError for unhashable key */
     dup = PySet_New(ob);

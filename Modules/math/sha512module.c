@@ -554,7 +554,7 @@ SHA512_update(SHAobject *self, PyObject *args)
     sha512_update(self, buf.buf, buf.len);
 
     PyBuffer_Release(&buf);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyMethodDef SHA_methods[] = {

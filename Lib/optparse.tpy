@@ -76,8 +76,8 @@ import sys, os;
 import types;
 import textwrap;
 
-def _repr(self){
-    return "<%s at 0x%x: %s>" % (self.__class__.__name__, id(self), self);
+function _repr(){
+    return "<%s at 0x%x: %s>" % (this.__class__.__name__, id(this), this);
 
 
 # This file was generated from:
@@ -90,18 +90,18 @@ def _repr(self){
 try{
     from gettext import gettext;
 } except ImportError{
-    def gettext(message){
+    function gettext(message){
         return message;
 } } _ = gettext;
 
 
 class OptParseError (Exception){
-    def __init__(self, msg){
-        self.msg = msg;
+    function __init__( msg){
+        this.msg = msg;
 
     }
-    def __str__(self){
-        return self.msg;
+    function __str__(){
+        return this.msg;
 
 
 }
@@ -111,16 +111,16 @@ class OptParseError (Exception){
     inconsistent arguments.
     """;
 
-    def __init__(self, msg, option){
-        self.msg = msg;
-        self.option_id = str(option);
+    function __init__( msg, option){
+        this.msg = msg;
+        this.option_id = str(option);
 
     }
-    def __str__(self){
-        if self.option_id{
-            return "option %s: %s" % (self.option_id, self.msg);
+    function __str__(){
+        if this.option_id{
+            return "option %s: %s" % (this.option_id, this.msg);
         } else{
-            return self.msg;
+            return this.msg;
 
 }
 } } class OptionConflictError (OptionError){
@@ -140,26 +140,26 @@ class BadOptionError (OptParseError){
     """
     Raised if an invalid option is seen on the command line.
     """;
-    def __init__(self, opt_str){
-        self.opt_str = opt_str;
+    function __init__( opt_str){
+        this.opt_str = opt_str;
 
     }
-    def __str__(self){
-        return _("no such option: %s") % self.opt_str;
+    function __str__(){
+        return _("no such option: %s") % this.opt_str;
 
 }
 } class AmbiguousOptionError (BadOptionError){
     """
     Raised if an ambiguous option is seen on the command line.
     """;
-    def __init__(self, opt_str, possibilities){
-        BadOptionError.__init__(self, opt_str);
-        self.possibilities = possibilities;
+    function __init__( opt_str, possibilities){
+        BadOptionError.__init__(this, opt_str);
+        this.possibilities = possibilities;
 
     }
-    def __str__(self){
+    function __str__(){
         return (_("ambiguous option: %s (%s?)")
-                % (self.opt_str, ", ".join(self.possibilities)));
+                % (this.opt_str, ", ".join(this.possibilities)));
 
 
 }
@@ -208,111 +208,111 @@ class BadOptionError (OptParseError){
 
     NO_DEFAULT_VALUE = "none";
 
-    def __init__(self,
+    function __init__(
                  indent_increment,
                  max_help_position,
                  width,
                  short_first){
-        self.parser = None;
-        self.indent_increment = indent_increment;
-        if width is None{
+        this.parser = nil;
+        this.indent_increment = indent_increment;
+        if width is nil{
             try{
                 width = int(os.environ['COLUMNS']);
             } except (KeyError, ValueError){
                 width = 80;
             } width -= 2;
-        } self.width = width;
-        self.help_position = self.max_help_position = \
+        } this.width = width;
+        this.help_position = this.max_help_position = \
                 min(max_help_position, max(width - 20, indent_increment * 2));
-        self.current_indent = 0;
-        self.level = 0;
-        self.help_width = None;          # computed later
-        self.short_first = short_first;
-        self.default_tag = "%default";
-        self.option_strings = {};
-        self._short_opt_fmt = "%s %s";
-        self._long_opt_fmt = "%s=%s";
+        this.current_indent = 0;
+        this.level = 0;
+        this.help_width = nil;          # computed later
+        this.short_first = short_first;
+        this.default_tag = "%default";
+        this.option_strings = {};
+        this._short_opt_fmt = "%s %s";
+        this._long_opt_fmt = "%s=%s";
 
     }
-    def set_parser(self, parser){
-        self.parser = parser;
+    function set_parser( parser){
+        this.parser = parser;
 
     }
-    def set_short_opt_delimiter(self, delim){
+    function set_short_opt_delimiter( delim){
         if delim not in ("", " "){
             raise ValueError(
                 "invalid metavar delimiter for short options: %r" % delim);
-        } self._short_opt_fmt = "%s" + delim + "%s";
+        } this._short_opt_fmt = "%s" + delim + "%s";
 
     }
-    def set_long_opt_delimiter(self, delim){
+    function set_long_opt_delimiter( delim){
         if delim not in ("=", " "){
             raise ValueError(
                 "invalid metavar delimiter for long options: %r" % delim);
-        } self._long_opt_fmt = "%s" + delim + "%s";
+        } this._long_opt_fmt = "%s" + delim + "%s";
 
     }
-    def indent(self){
-        self.current_indent += self.indent_increment;
-        self.level += 1;
+    function indent(){
+        this.current_indent += this.indent_increment;
+        this.level += 1;
 
     }
-    def dedent(self){
-        self.current_indent -= self.indent_increment;
-        assert self.current_indent >= 0, "Indent decreased below 0.";
-        self.level -= 1;
+    function dedent(){
+        this.current_indent -= this.indent_increment;
+        assert this.current_indent >= 0, "Indent decreased below 0.";
+        this.level -= 1;
 
     }
-    def format_usage(self, usage){
+    function format_usage( usage){
         raise NotImplementedError, "subclasses must implement";
 
     }
-    def format_heading(self, heading){
+    function format_heading( heading){
         raise NotImplementedError, "subclasses must implement";
 
     }
-    def _format_text(self, text){
+    function _format_text( text){
         """
         Format a paragraph of free-form text for inclusion in the
         help output at the current indentation level.
         """;
-        text_width = max(self.width - self.current_indent, 11);
-        indent = " "*self.current_indent;
+        text_width = max(this.width - this.current_indent, 11);
+        indent = " "*this.current_indent;
         return textwrap.fill(text,
                              text_width,
                              initial_indent=indent,
                              subsequent_indent=indent);
 
     }
-    def format_description(self, description){
+    function format_description( description){
         if description{
-            return self._format_text(description) + "\n";
+            return this._format_text(description) + "\n";
         } else{
             return "";
 
     }
-    } def format_epilog(self, epilog){
+    } function format_epilog( epilog){
         if epilog{
-            return "\n" + self._format_text(epilog) + "\n";
+            return "\n" + this._format_text(epilog) + "\n";
         } else{
             return "";
 
 
     }
-    } def expand_default(self, option){
-        if self.parser is None or not self.default_tag{
+    } function expand_default( option){
+        if this.parser is nil or not this.default_tag{
             return option.help;
 
         }
-        default_value = self.parser.defaults.get(option.dest);
-        if default_value is NO_DEFAULT or default_value is None{
-            default_value = self.NO_DEFAULT_VALUE;
+        default_value = this.parser.defaults.get(option.dest);
+        if default_value is NO_DEFAULT or default_value is nil{
+            default_value = this.NO_DEFAULT_VALUE;
 
         }
-        return option.help.replace(self.default_tag, str(default_value));
+        return option.help.replace(this.default_tag, str(default_value));
 
     }
-    def format_option(self, option){
+    function format_option( option){
         # The help for each option consists of two parts:
         #   * the opt strings and metavars
         #     eg. ("-x", or "-fFILENAME, --file=FILENAME")
@@ -328,59 +328,59 @@ class BadOptionError (OptParseError){
         #   -fFILENAME, --file=FILENAME
         #           read data from FILENAME
         result = [];
-        opts = self.option_strings[option];
-        opt_width = self.help_position - self.current_indent - 2;
+        opts = this.option_strings[option];
+        opt_width = this.help_position - this.current_indent - 2;
         if len(opts) > opt_width{
-            opts = "%*s%s\n" % (self.current_indent, "", opts);
-            indent_first = self.help_position;
+            opts = "%*s%s\n" % (this.current_indent, "", opts);
+            indent_first = this.help_position;
         } else{                       # start help on same line as opts
-            opts = "%*s%-*s  " % (self.current_indent, "", opt_width, opts);
+            opts = "%*s%-*s  " % (this.current_indent, "", opt_width, opts);
             indent_first = 0;
         } result.append(opts);
         if option.help{
-            help_text = self.expand_default(option);
-            help_lines = textwrap.wrap(help_text, self.help_width);
+            help_text = this.expand_default(option);
+            help_lines = textwrap.wrap(help_text, this.help_width);
             result.append("%*s%s\n" % (indent_first, "", help_lines[0]));
-            result.extend(["%*s%s\n" % (self.help_position, "", line)
+            result.extend(["%*s%s\n" % (this.help_position, "", line)
                            for line in help_lines[1:]]);
         } elif opts[-1] != "\n"{
             result.append("\n");
         } return "".join(result);
 
     }
-    def store_option_strings(self, parser){
-        self.indent();
+    function store_option_strings( parser){
+        this.indent();
         max_len = 0;
         for opt in parser.option_list{
-            strings = self.format_option_strings(opt);
-            self.option_strings[opt] = strings;
-            max_len = max(max_len, len(strings) + self.current_indent);
-        } self.indent();
+            strings = this.format_option_strings(opt);
+            this.option_strings[opt] = strings;
+            max_len = max(max_len, len(strings) + this.current_indent);
+        } this.indent();
         for group in parser.option_groups{
             for opt in group.option_list{
-                strings = self.format_option_strings(opt);
-                self.option_strings[opt] = strings;
-                max_len = max(max_len, len(strings) + self.current_indent);
-        } } self.dedent();
-        self.dedent();
-        self.help_position = min(max_len + 2, self.max_help_position);
-        self.help_width = max(self.width - self.help_position, 11);
+                strings = this.format_option_strings(opt);
+                this.option_strings[opt] = strings;
+                max_len = max(max_len, len(strings) + this.current_indent);
+        } } this.dedent();
+        this.dedent();
+        this.help_position = min(max_len + 2, this.max_help_position);
+        this.help_width = max(this.width - this.help_position, 11);
 
     }
-    def format_option_strings(self, option){
+    function format_option_strings( option){
         """Return a comma-separated list of option strings & metavariables.""";
         if option.takes_value(){
             metavar = option.metavar or option.dest.upper();
-            short_opts = [self._short_opt_fmt % (sopt, metavar)
+            short_opts = [this._short_opt_fmt % (sopt, metavar)
                           for sopt in option._short_opts];
-            long_opts = [self._long_opt_fmt % (lopt, metavar)
+            long_opts = [this._long_opt_fmt % (lopt, metavar)
                          for lopt in option._long_opts];
         } else{
             short_opts = option._short_opts;
             long_opts = option._long_opts;
 
         }
-        if self.short_first{
+        if this.short_first{
             opts = short_opts + long_opts;
         } else{
             opts = long_opts + short_opts;
@@ -393,21 +393,21 @@ class BadOptionError (OptParseError){
     """Format help with indented section bodies.
     """;
 
-    def __init__(self,
+    function __init__(
                  indent_increment=2,
                  max_help_position=24,
-                 width=None,
+                 width=nil,
                  short_first=1){
         HelpFormatter.__init__(
-            self, indent_increment, max_help_position, width, short_first);
+            this, indent_increment, max_help_position, width, short_first);
 
     }
-    def format_usage(self, usage){
+    function format_usage( usage){
         return _("Usage: %s\n") % usage;
 
     }
-    def format_heading(self, heading){
-        return "%*s%s:\n" % (self.current_indent, "", heading);
+    function format_heading( heading){
+        return "%*s%s:\n" % (this.current_indent, "", heading);
 
 
 }
@@ -415,25 +415,25 @@ class BadOptionError (OptParseError){
     """Format help with underlined section headers.
     """;
 
-    def __init__(self,
+    function __init__(
                  indent_increment=0,
                  max_help_position=24,
-                 width=None,
+                 width=nil,
                  short_first=0){
         HelpFormatter.__init__ (
-            self, indent_increment, max_help_position, width, short_first);
+            this, indent_increment, max_help_position, width, short_first);
 
     }
-    def format_usage(self, usage){
-        return "%s  %s\n" % (self.format_heading(_("Usage")), usage);
+    function format_usage( usage){
+        return "%s  %s\n" % (this.format_heading(_("Usage")), usage);
 
     }
-    def format_heading(self, heading){
-        return "%s\n%s\n" % (heading, "=-"[self.level] * len(heading));
+    function format_heading( heading){
+        return "%s\n%s\n" % (heading, "=-"[this.level] * len(heading));
 
 
 }
-} def _parse_num(val, type){
+} function _parse_num(val, type){
     if val[:2].lower() == "0x"{         # hexadecimal
         radix = 16;
     } elif val[:2].lower() == "0b"{       # binary
@@ -448,11 +448,11 @@ class BadOptionError (OptParseError){
     return type(val, radix);
 
 }
-def _parse_int(val){
+function _parse_int(val){
     return _parse_num(val, int);
 
 }
-def _parse_long(val){
+function _parse_long(val){
     return _parse_num(val, long);
 
 }
@@ -461,7 +461,7 @@ _builtin_cvt = { "int" : (_parse_int, _("integer")),
                  "float" : (float, _("floating-point")),
                  "complex" : (complex, _("complex")) };
 
-def check_builtin(option, opt, value){
+function check_builtin(option, opt, value){
     (cvt, what) = _builtin_cvt[option.type];
     try{
         return cvt(value);
@@ -470,7 +470,7 @@ def check_builtin(option, opt, value){
             _("option %s: invalid %s value: %r") % (opt, what, value));
 
 }
-} def check_choice(option, opt, value){
+} function check_choice(option, opt, value){
     if value in option.choices{
         return value;
     } else{
@@ -595,100 +595,100 @@ class Option{
     # place.)  Subclasses that add another _check_*() method should
     # define their own CHECK_METHODS list that adds their check method
     # to those from this class.
-    CHECK_METHODS = None;
+    CHECK_METHODS = nil;
 
 
     # -- Constructor/initialization methods ----------------------------
 
-    def __init__(self, *opts, **attrs){
+    function __init__( *opts, **attrs){
         # Set _short_opts, _long_opts attrs from 'opts' tuple.
         # Have to be set now, in case no option strings are supplied.
-        self._short_opts = [];
-        self._long_opts = [];
-        opts = self._check_opt_strings(opts);
-        self._set_opt_strings(opts);
+        this._short_opts = [];
+        this._long_opts = [];
+        opts = this._check_opt_strings(opts);
+        this._set_opt_strings(opts);
 
         # Set all other attrs (action, type, etc.) from 'attrs' dict
-        self._set_attrs(attrs);
+        this._set_attrs(attrs);
 
         # Check all the attributes we just set.  There are lots of
         # complicated interdependencies, but luckily they can be farmed
         # out to the _check_*() methods listed in CHECK_METHODS -- which
         # could be handy for subclasses!  The one thing these all share
         # is that they raise OptionError if they discover a problem.
-        for checker in self.CHECK_METHODS{
-            checker(self);
+        for checker in this.CHECK_METHODS{
+            checker(this);
 
     }
-    } def _check_opt_strings(self, opts){
+    } function _check_opt_strings( opts){
         # Filter out None because early versions of Optik had exactly
         # one short option and one long option, either of which
         # could be None.
-        opts = filter(None, opts);
+        opts = filter(nil, opts);
         if not opts{
             raise TypeError("at least one option string must be supplied");
         } return opts;
 
     }
-    def _set_opt_strings(self, opts){
+    function _set_opt_strings( opts){
         for opt in opts{
             if len(opt) < 2{
                 raise OptionError(
                     "invalid option string %r: "
-                    "must be at least two characters long" % opt, self);
+                    "must be at least two characters long" % opt, this);
             } elif len(opt) == 2{
                 if not (opt[0] == "-" and opt[1] != "-"){
                     raise OptionError(
                         "invalid short option string %r: "
                         "must be of the form -x, (x any non-dash char)" % opt,
-                        self);
-                } self._short_opts.append(opt);
+                        this);
+                } this._short_opts.append(opt);
             } else{
                 if not (opt[0:2] == "--" and opt[2] != "-"){
                     raise OptionError(
                         "invalid long option string %r: "
                         "must start with --, followed by non-dash" % opt,
-                        self);
-                } self._long_opts.append(opt);
+                        this);
+                } this._long_opts.append(opt);
 
     }
-    } } def _set_attrs(self, attrs){
-        for attr in self.ATTRS{
+    } } function _set_attrs( attrs){
+        for attr in this.ATTRS{
             if attr in attrs{
-                setattr(self, attr, attrs[attr]);
+                setattr(this, attr, attrs[attr]);
                 del attrs[attr];
             } else{
                 if attr == 'default'{
-                    setattr(self, attr, NO_DEFAULT);
+                    setattr(this, attr, NO_DEFAULT);
                 } else{
-                    setattr(self, attr, None);
+                    setattr(this, attr, nil);
         } } } if attrs{
             attrs = attrs.keys();
             attrs.sort();
             raise OptionError(
                 "invalid keyword arguments: %s" % ", ".join(attrs),
-                self);
+                this);
 
 
     # -- Constructor validation methods --------------------------------
 
     }
-    } def _check_action(self){
-        if self.action is None{
-            self.action = "store";
-        } elif self.action not in self.ACTIONS{
-            raise OptionError("invalid action: %r" % self.action, self);
+    } function _check_action(){
+        if this.action is nil{
+            this.action = "store";
+        } elif this.action not in this.ACTIONS{
+            raise OptionError("invalid action: %r" % this.action, this);
 
     }
-    } def _check_type(self){
-        if self.type is None{
-            if self.action in self.ALWAYS_TYPED_ACTIONS{
-                if self.choices is not None{
+    } function _check_type(){
+        if this.type is nil{
+            if this.action in this.ALWAYS_TYPED_ACTIONS{
+                if this.choices is not nil{
                     # The "choices" attribute implies "choice" type.
-                    self.type = "choice";
+                    this.type = "choice";
                 } else{
                     # No type given?  "string" is the most sensible default.
-                    self.type = "string";
+                    this.type = "string";
         } } } else{
             # Allow type objects or builtin type conversion functions
             # (int, str, etc.) as an alternative to their names.  (The
@@ -696,96 +696,96 @@ class Option{
             # Python 2.1 and earlier, and is short-circuited by the
             # first check on modern Pythons.)
             import __builtin__;
-            if ( type(self.type) is types.TypeType or
-                 (hasattr(self.type, "__name__") and
-                  getattr(__builtin__, self.type.__name__, None) is self.type) ){
-                self.type = self.type.__name__;
+            if ( type(this.type) is types.TypeType or
+                 (hasattr(this.type, "__name__") and
+                  getattr(__builtin__, this.type.__name__, nil) is this.type) ){
+                this.type = this.type.__name__;
 
             }
-            if self.type == "str"{
-                self.type = "string";
+            if this.type == "str"{
+                this.type = "string";
 
             }
-            if self.type not in self.TYPES{
-                raise OptionError("invalid option type: %r" % self.type, self);
-            } if self.action not in self.TYPED_ACTIONS{
+            if this.type not in this.TYPES{
+                raise OptionError("invalid option type: %r" % this.type, this);
+            } if this.action not in this.TYPED_ACTIONS{
                 raise OptionError(
-                    "must not supply a type for action %r" % self.action, self);
+                    "must not supply a type for action %r" % this.action, this);
 
     }
-    } } def _check_choice(self){
-        if self.type == "choice"{
-            if self.choices is None{
+    } } function _check_choice(){
+        if this.type == "choice"{
+            if this.choices is nil{
                 raise OptionError(
-                    "must supply a list of choices for type 'choice'", self);
-            } elif type(self.choices) not in (types.TupleType, types.ListType){
+                    "must supply a list of choices for type 'choice'", this);
+            } elif type(this.choices) not in (types.TupleType, types.ListType){
                 raise OptionError(
                     "choices must be a list of strings ('%s' supplied)"
-                    % str(type(self.choices)).split("'")[1], self);
-        } } elif self.choices is not None{
+                    % str(type(this.choices)).split("'")[1], this);
+        } } elif this.choices is not nil{
             raise OptionError(
-                "must not supply choices for type %r" % self.type, self);
+                "must not supply choices for type %r" % this.type, this);
 
     }
-    } def _check_dest(self){
+    } function _check_dest(){
         # No destination given, and we need one for this action.  The
         # self.type check is for callbacks that take a value.
-        takes_value = (self.action in self.STORE_ACTIONS or
-                       self.type is not None);
-        if self.dest is None and takes_value{
+        takes_value = (this.action in this.STORE_ACTIONS or
+                       this.type is not nil);
+        if this.dest is nil and takes_value{
 
             # Glean a destination from the first long option string,
             # or from the first short option string if no long options.
-            if self._long_opts{
+            if this._long_opts{
                 # eg. "--foo-bar" -> "foo_bar"
-                self.dest = self._long_opts[0][2:].replace('-', '_');
+                this.dest = this._long_opts[0][2:].replace('-', '_');
             } else{
-                self.dest = self._short_opts[0][1];
+                this.dest = this._short_opts[0][1];
 
     }
-    } } def _check_const(self){
-        if self.action not in self.CONST_ACTIONS and self.const is not None{
+    } } function _check_const(){
+        if this.action not in this.CONST_ACTIONS and this.const is not nil{
             raise OptionError(
-                "'const' must not be supplied for action %r" % self.action,
-                self);
+                "'const' must not be supplied for action %r" % this.action,
+                this);
 
     }
-    } def _check_nargs(self){
-        if self.action in self.TYPED_ACTIONS{
-            if self.nargs is None{
-                self.nargs = 1;
-        } } elif self.nargs is not None{
+    } function _check_nargs(){
+        if this.action in this.TYPED_ACTIONS{
+            if this.nargs is nil{
+                this.nargs = 1;
+        } } elif this.nargs is not nil{
             raise OptionError(
-                "'nargs' must not be supplied for action %r" % self.action,
-                self);
+                "'nargs' must not be supplied for action %r" % this.action,
+                this);
 
     }
-    } def _check_callback(self){
-        if self.action == "callback"{
-            if not hasattr(self.callback, '__call__'){
+    } function _check_callback(){
+        if this.action == "callback"{
+            if not hasattr(this.callback, '__call__'){
                 raise OptionError(
-                    "callback not callable: %r" % self.callback, self);
-            } if (self.callback_args is not None and
-                type(self.callback_args) is not types.TupleType){
+                    "callback not callable: %r" % this.callback, this);
+            } if (this.callback_args is not nil and
+                type(this.callback_args) is not types.TupleType){
                 raise OptionError(
                     "callback_args, if supplied, must be a tuple: not %r"
-                    % self.callback_args, self);
-            } if (self.callback_kwargs is not None and
-                type(self.callback_kwargs) is not types.DictType){
+                    % this.callback_args, this);
+            } if (this.callback_kwargs is not nil and
+                type(this.callback_kwargs) is not types.DictType){
                 raise OptionError(
                     "callback_kwargs, if supplied, must be a dict: not %r"
-                    % self.callback_kwargs, self);
+                    % this.callback_kwargs, this);
         } } else{
-            if self.callback is not None{
+            if this.callback is not nil{
                 raise OptionError(
                     "callback supplied (%r) for non-callback option"
-                    % self.callback, self);
-            } if self.callback_args is not None{
+                    % this.callback, this);
+            } if this.callback_args is not nil{
                 raise OptionError(
-                    "callback_args supplied for non-callback option", self);
-            } if self.callback_kwargs is not None{
+                    "callback_args supplied for non-callback option", this);
+            } if this.callback_kwargs is not nil{
                 raise OptionError(
-                    "callback_kwargs supplied for non-callback option", self);
+                    "callback_kwargs supplied for non-callback option", this);
 
 
     }
@@ -800,74 +800,74 @@ class Option{
 
     # -- Miscellaneous methods -----------------------------------------
 
-    def __str__(self){
-        return "/".join(self._short_opts + self._long_opts);
+    function __str__(){
+        return "/".join(this._short_opts + this._long_opts);
 
     }
     __repr__ = _repr;
 
-    def takes_value(self){
-        return self.type is not None;
+    function takes_value(){
+        return this.type is not nil;
 
     }
-    def get_opt_string(self){
-        if self._long_opts{
-            return self._long_opts[0];
+    function get_opt_string(){
+        if this._long_opts{
+            return this._long_opts[0];
         } else{
-            return self._short_opts[0];
+            return this._short_opts[0];
 
 
     # -- Processing methods --------------------------------------------
 
     }
-    } def check_value(self, opt, value){
-        checker = self.TYPE_CHECKER.get(self.type);
-        if checker is None{
+    } function check_value( opt, value){
+        checker = this.TYPE_CHECKER.get(this.type);
+        if checker is nil{
             return value;
         } else{
-            return checker(self, opt, value);
+            return checker(this, opt, value);
 
     }
-    } def convert_value(self, opt, value){
-        if value is not None{
-            if self.nargs == 1{
-                return self.check_value(opt, value);
+    } function convert_value( opt, value){
+        if value is not nil{
+            if this.nargs == 1{
+                return this.check_value(opt, value);
             } else{
-                return tuple([self.check_value(opt, v) for v in value]);
+                return tuple([this.check_value(opt, v) for v in value]);
 
     }
-    } } def process(self, opt, value, values, parser){
+    } } function process( opt, value, values, parser){
 
         # First, convert the value(s) to the right type.  Howl if any
         # value(s) are bogus.
-        value = self.convert_value(opt, value);
+        value = this.convert_value(opt, value);
 
         # And then take whatever action is expected of us.
         # This is a separate method to make life easier for
         # subclasses to add new actions.
-        return self.take_action(
-            self.action, self.dest, opt, value, values, parser);
+        return this.take_action(
+            this.action, this.dest, opt, value, values, parser);
 
     }
-    def take_action(self, action, dest, opt, value, values, parser){
+    function take_action( action, dest, opt, value, values, parser){
         if action == "store"{
             setattr(values, dest, value);
         } elif action == "store_const"{
-            setattr(values, dest, self.const);
+            setattr(values, dest, this.const);
         } elif action == "store_true"{
-            setattr(values, dest, True);
+            setattr(values, dest, true);
         } elif action == "store_false"{
-            setattr(values, dest, False);
+            setattr(values, dest, false);
         } elif action == "append"{
             values.ensure_value(dest, []).append(value);
         } elif action == "append_const"{
-            values.ensure_value(dest, []).append(self.const);
+            values.ensure_value(dest, []).append(this.const);
         } elif action == "count"{
             setattr(values, dest, values.ensure_value(dest, 0) + 1);
         } elif action == "callback"{
-            args = self.callback_args or ();
-            kwargs = self.callback_kwargs or {};
-            self.callback(self, opt, value, parser, *args, **kwargs);
+            args = this.callback_args or ();
+            kwargs = this.callback_kwargs or {};
+            this.callback(this, opt, value, parser, *args, **kwargs);
         } elif action == "help"{
             parser.print_help();
             parser.exit();
@@ -875,7 +875,7 @@ class Option{
             parser.print_version();
             parser.exit();
         } else{
-            raise ValueError("unknown action %r" % self.action);
+            raise ValueError("unknown action %r" % this.action);
 
         }
         return 1;
@@ -890,84 +890,84 @@ SUPPRESS_USAGE = "SUPPRESS"+"USAGE";
 try{
     basestring;
 } except NameError{
-    def isbasestring(x){
+    function isbasestring(x){
         return isinstance(x, (types.StringType, types.UnicodeType));
 } } else{
-    def isbasestring(x){
+    function isbasestring(x){
         return isinstance(x, basestring);
 
 }
 } class Values{
 
-    def __init__(self, defaults=None){
+    function __init__( defaults=nil){
         if defaults{
             for (attr, val) in defaults.items(){
-                setattr(self, attr, val);
+                setattr(this, attr, val);
 
     }
-    } } def __str__(self){
-        return str(self.__dict__);
+    } } function __str__(){
+        return str(this.__dict__);
 
     }
     __repr__ = _repr;
 
-    def __cmp__(self, other){
+    function __cmp__( other){
         if isinstance(other, Values){
-            return cmp(self.__dict__, other.__dict__);
+            return cmp(this.__dict__, other.__dict__);
         } elif isinstance(other, types.DictType){
-            return cmp(self.__dict__, other);
+            return cmp(this.__dict__, other);
         } else{
             return -1;
 
     }
-    } def _update_careful(self, dict){
+    } function _update_careful( dict){
         """
         Update the option values from an arbitrary dictionary, but only
         use keys from dict that already have a corresponding attribute
         in self.  Any keys in dict without a corresponding attribute
         are silently ignored.
         """;
-        for attr in dir(self){
+        for attr in dir(this){
             if attr in dict{
                 dval = dict[attr];
-                if dval is not None{
-                    setattr(self, attr, dval);
+                if dval is not nil{
+                    setattr(this, attr, dval);
 
     }
-    } } } def _update_loose(self, dict){
+    } } } function _update_loose( dict){
         """
         Update the option values from an arbitrary dictionary,
         using all keys from the dictionary regardless of whether
         they have a corresponding attribute in self or not.
         """;
-        self.__dict__.update(dict);
+        this.__dict__.update(dict);
 
     }
-    def _update(self, dict, mode){
+    function _update( dict, mode){
         if mode == "careful"{
-            self._update_careful(dict);
+            this._update_careful(dict);
         } elif mode == "loose"{
-            self._update_loose(dict);
+            this._update_loose(dict);
         } else{
             raise ValueError, "invalid update mode: %r" % mode;
 
     }
-    } def read_module(self, modname, mode="careful"){
+    } function read_module( modname, mode="careful"){
         __import__(modname);
         mod = sys.modules[modname];
-        self._update(vars(mod), mode);
+        this._update(vars(mod), mode);
 
     }
-    def read_file(self, filename, mode="careful"){
+    function read_file( filename, mode="careful"){
         vars = {};
         execfile(filename, vars);
-        self._update(vars, mode);
+        this._update(vars, mode);
 
     }
-    def ensure_value(self, attr, value){
-        if not hasattr(self, attr) or getattr(self, attr) is None{
-            setattr(self, attr, value);
-        } return getattr(self, attr);
+    function ensure_value( attr, value){
+        if not hasattr(this, attr) or getattr(this, attr) is nil{
+            setattr(this, attr, value);
+        } return getattr(this, attr);
 
 
 }
@@ -1003,73 +1003,73 @@ try{
 
     """;
 
-    def __init__(self, option_class, conflict_handler, description){
+    function __init__( option_class, conflict_handler, description){
         # Initialize the option list and related data structures.
         # This method must be provided by subclasses, and it must
         # initialize at least the following instance attributes:
         # option_list, _short_opt, _long_opt, defaults.
-        self._create_option_list();
+        this._create_option_list();
 
-        self.option_class = option_class;
-        self.set_conflict_handler(conflict_handler);
-        self.set_description(description);
+        this.option_class = option_class;
+        this.set_conflict_handler(conflict_handler);
+        this.set_description(description);
 
     }
-    def _create_option_mappings(self){
+    function _create_option_mappings(){
         # For use by OptionParser constructor -- create the master
         # option mappings used by this OptionParser and all
         # OptionGroups that it owns.
-        self._short_opt = {};            # single letter -> Option instance
-        self._long_opt = {};             # long option -> Option instance
-        self.defaults = {};              # maps option dest -> default value
+        this._short_opt = {};            # single letter -> Option instance
+        this._long_opt = {};             # long option -> Option instance
+        this.defaults = {};              # maps option dest -> default value
 
 
     }
-    def _share_option_mappings(self, parser){
+    function _share_option_mappings( parser){
         # For use by OptionGroup constructor -- use shared option
         # mappings from the OptionParser that owns this OptionGroup.
-        self._short_opt = parser._short_opt;
-        self._long_opt = parser._long_opt;
-        self.defaults = parser.defaults;
+        this._short_opt = parser._short_opt;
+        this._long_opt = parser._long_opt;
+        this.defaults = parser.defaults;
 
     }
-    def set_conflict_handler(self, handler){
+    function set_conflict_handler( handler){
         if handler not in ("error", "resolve"){
             raise ValueError, "invalid conflict_resolution value %r" % handler;
-        } self.conflict_handler = handler;
+        } this.conflict_handler = handler;
 
     }
-    def set_description(self, description){
-        self.description = description;
+    function set_description( description){
+        this.description = description;
 
     }
-    def get_description(self){
-        return self.description;
+    function get_description(){
+        return this.description;
 
 
     }
-    def destroy(self){
+    function destroy(){
         """see OptionParser.destroy().""";
-        del self._short_opt;
-        del self._long_opt;
-        del self.defaults;
+        del this._short_opt;
+        del this._long_opt;
+        del this.defaults;
 
 
     # -- Option-adding methods -----------------------------------------
 
     }
-    def _check_conflict(self, option){
+    function _check_conflict( option){
         conflict_opts = [];
         for opt in option._short_opts{
-            if opt in self._short_opt{
-                conflict_opts.append((opt, self._short_opt[opt]));
+            if opt in this._short_opt{
+                conflict_opts.append((opt, this._short_opt[opt]));
         } } for opt in option._long_opts{
-            if opt in self._long_opt{
-                conflict_opts.append((opt, self._long_opt[opt]));
+            if opt in this._long_opt{
+                conflict_opts.append((opt, this._long_opt[opt]));
 
         }
         } if conflict_opts{
-            handler = self.conflict_handler;
+            handler = this.conflict_handler;
             if handler == "error"{
                 raise OptionConflictError(
                     "conflicting option string(s): %s"
@@ -1079,20 +1079,20 @@ try{
                 for (opt, c_option) in conflict_opts{
                     if opt.startswith("--"){
                         c_option._long_opts.remove(opt);
-                        del self._long_opt[opt];
+                        del this._long_opt[opt];
                     } else{
                         c_option._short_opts.remove(opt);
-                        del self._short_opt[opt];
+                        del this._short_opt[opt];
                     } if not (c_option._short_opts or c_option._long_opts){
                         c_option.container.option_list.remove(c_option);
 
     }
-    } } } } def add_option(self, *args, **kwargs){
+    } } } } function add_option( *args, **kwargs){
         """add_option(Option)
            add_option(opt_str, ..., kwarg=val, ...)
         """;
         if type(args[0]) in types.StringTypes{
-            option = self.option_class(*args, **kwargs);
+            option = this.option_class(*args, **kwargs);
         } elif len(args) == 1 and not kwargs{
             option = args[0];
             if not isinstance(option, Option){
@@ -1101,115 +1101,115 @@ try{
             raise TypeError, "invalid arguments";
 
         }
-        self._check_conflict(option);
+        this._check_conflict(option);
 
-        self.option_list.append(option);
-        option.container = self;
+        this.option_list.append(option);
+        option.container = this;
         for opt in option._short_opts{
-            self._short_opt[opt] = option;
+            this._short_opt[opt] = option;
         } for opt in option._long_opts{
-            self._long_opt[opt] = option;
+            this._long_opt[opt] = option;
 
         }
-        if option.dest is not None{     # option has a dest, we need a default
+        if option.dest is not nil{     # option has a dest, we need a default
             if option.default is not NO_DEFAULT{
-                self.defaults[option.dest] = option.default;
-            } elif option.dest not in self.defaults{
-                self.defaults[option.dest] = None;
+                this.defaults[option.dest] = option.default;
+            } elif option.dest not in this.defaults{
+                this.defaults[option.dest] = nil;
 
         }
         } return option;
 
     }
-    def add_options(self, option_list){
+    function add_options( option_list){
         for option in option_list{
-            self.add_option(option);
+            this.add_option(option);
 
     # -- Option query/removal methods ----------------------------------
 
     }
-    } def get_option(self, opt_str){
-        return (self._short_opt.get(opt_str) or
-                self._long_opt.get(opt_str));
+    } function get_option( opt_str){
+        return (this._short_opt.get(opt_str) or
+                this._long_opt.get(opt_str));
 
     }
-    def has_option(self, opt_str){
-        return (opt_str in self._short_opt or
-                opt_str in self._long_opt);
+    function has_option( opt_str){
+        return (opt_str in this._short_opt or
+                opt_str in this._long_opt);
 
     }
-    def remove_option(self, opt_str){
-        option = self._short_opt.get(opt_str);
-        if option is None{
-            option = self._long_opt.get(opt_str);
-        } if option is None{
+    function remove_option( opt_str){
+        option = this._short_opt.get(opt_str);
+        if option is nil{
+            option = this._long_opt.get(opt_str);
+        } if option is nil{
             raise ValueError("no such option %r" % opt_str);
 
         }
         for opt in option._short_opts{
-            del self._short_opt[opt];
+            del this._short_opt[opt];
         } for opt in option._long_opts{
-            del self._long_opt[opt];
+            del this._long_opt[opt];
         } option.container.option_list.remove(option);
 
 
     # -- Help-formatting methods ---------------------------------------
 
     }
-    def format_option_help(self, formatter){
-        if not self.option_list{
+    function format_option_help( formatter){
+        if not this.option_list{
             return "";
         } result = [];
-        for option in self.option_list{
+        for option in this.option_list{
             if not option.help is SUPPRESS_HELP{
                 result.append(formatter.format_option(option));
         } } return "".join(result);
 
     }
-    def format_description(self, formatter){
-        return formatter.format_description(self.get_description());
+    function format_description( formatter){
+        return formatter.format_description(this.get_description());
 
     }
-    def format_help(self, formatter){
+    function format_help( formatter){
         result = [];
-        if self.description{
-            result.append(self.format_description(formatter));
-        } if self.option_list{
-            result.append(self.format_option_help(formatter));
+        if this.description{
+            result.append(this.format_description(formatter));
+        } if this.option_list{
+            result.append(this.format_option_help(formatter));
         } return "\n".join(result);
 
 
 }
 } class OptionGroup (OptionContainer){
 
-    def __init__(self, parser, title, description=None){
-        self.parser = parser;
+    function __init__( parser, title, description=nil){
+        this.parser = parser;
         OptionContainer.__init__(
-            self, parser.option_class, parser.conflict_handler, description);
-        self.title = title;
+            this, parser.option_class, parser.conflict_handler, description);
+        this.title = title;
 
     }
-    def _create_option_list(self){
-        self.option_list = [];
-        self._share_option_mappings(self.parser);
+    function _create_option_list(){
+        this.option_list = [];
+        this._share_option_mappings(this.parser);
 
     }
-    def set_title(self, title){
-        self.title = title;
+    function set_title( title){
+        this.title = title;
 
     }
-    def destroy(self){
+    function destroy(){
         """see OptionParser.destroy().""";
-        OptionContainer.destroy(self);
-        del self.option_list;
+        OptionContainer.destroy(this);
+        del this.option_list;
 
     # -- Help-formatting methods ---------------------------------------
 
     }
-    def format_help(self, formatter){
-        result = formatter.format_heading(self.title);
+    function format_help( formatter){
+        result = formatter.format_heading(this.title);
         formatter.indent();
-        result += OptionContainer.format_help(self, formatter);
+        result += OptionContainer.format_help(this, formatter);
         formatter.dedent();
         return result;
 
@@ -1287,157 +1287,157 @@ try{
 
     standard_option_list = [];
 
-    def __init__(self,
-                 usage=None,
-                 option_list=None,
+    function __init__(
+                 usage=nil,
+                 option_list=nil,
                  option_class=Option,
-                 version=None,
+                 version=nil,
                  conflict_handler="error",
-                 description=None,
-                 formatter=None,
-                 add_help_option=True,
-                 prog=None,
-                 epilog=None){
+                 description=nil,
+                 formatter=nil,
+                 add_help_option=true,
+                 prog=nil,
+                 epilog=nil){
         OptionContainer.__init__(
-            self, option_class, conflict_handler, description);
-        self.set_usage(usage);
-        self.prog = prog;
-        self.version = version;
-        self.allow_interspersed_args = True;
-        self.process_default_values = True;
-        if formatter is None{
+            this, option_class, conflict_handler, description);
+        this.set_usage(usage);
+        this.prog = prog;
+        this.version = version;
+        this.allow_interspersed_args = true;
+        this.process_default_values = true;
+        if formatter is nil{
             formatter = IndentedHelpFormatter();
-        } self.formatter = formatter;
-        self.formatter.set_parser(self);
-        self.epilog = epilog;
+        } this.formatter = formatter;
+        this.formatter.set_parser(this);
+        this.epilog = epilog;
 
         # Populate the option list; initial sources are the
         # standard_option_list class attribute, the 'option_list'
         # argument, and (if applicable) the _add_version_option() and
         # _add_help_option() methods.
-        self._populate_option_list(option_list,
+        this._populate_option_list(option_list,
                                    add_help=add_help_option);
 
-        self._init_parsing_state();
+        this._init_parsing_state();
 
 
     }
-    def destroy(self){
+    function destroy(){
         """
         Declare that you are done with this OptionParser.  This cleans up
         reference cycles so the OptionParser (and all objects referenced by
         it) can be garbage-collected promptly.  After calling destroy(), the
         OptionParser is unusable.
         """;
-        OptionContainer.destroy(self);
-        for group in self.option_groups{
+        OptionContainer.destroy(this);
+        for group in this.option_groups{
             group.destroy();
-        } del self.option_list;
-        del self.option_groups;
-        del self.formatter;
+        } del this.option_list;
+        del this.option_groups;
+        del this.formatter;
 
 
     # -- Private methods -----------------------------------------------
     # (used by our or OptionContainer's constructor)
 
     }
-    def _create_option_list(self){
-        self.option_list = [];
-        self.option_groups = [];
-        self._create_option_mappings();
+    function _create_option_list(){
+        this.option_list = [];
+        this.option_groups = [];
+        this._create_option_mappings();
 
     }
-    def _add_help_option(self){
-        self.add_option("-h", "--help",
+    function _add_help_option(){
+        this.add_option("-h", "--help",
                         action="help",
                         help=_("show this help message and exit"));
 
     }
-    def _add_version_option(self){
-        self.add_option("--version",
+    function _add_version_option(){
+        this.add_option("--version",
                         action="version",
                         help=_("show program's version number and exit"));
 
     }
-    def _populate_option_list(self, option_list, add_help=True){
-        if self.standard_option_list{
-            self.add_options(self.standard_option_list);
+    function _populate_option_list( option_list, add_help=true){
+        if this.standard_option_list{
+            this.add_options(this.standard_option_list);
         } if option_list{
-            self.add_options(option_list);
-        } if self.version{
-            self._add_version_option();
+            this.add_options(option_list);
+        } if this.version{
+            this._add_version_option();
         } if add_help{
-            self._add_help_option();
+            this._add_help_option();
 
     }
-    } def _init_parsing_state(self){
+    } function _init_parsing_state(){
         # These are set in parse_args() for the convenience of callbacks.
-        self.rargs = None;
-        self.largs = None;
-        self.values = None;
+        this.rargs = nil;
+        this.largs = nil;
+        this.values = nil;
 
 
     # -- Simple modifier methods ---------------------------------------
 
     }
-    def set_usage(self, usage){
-        if usage is None{
-            self.usage = _("%prog [options]");
+    function set_usage( usage){
+        if usage is nil{
+            this.usage = _("%prog [options]");
         } elif usage is SUPPRESS_USAGE{
-            self.usage = None;
+            this.usage = nil;
         # For backwards compatibility with Optik 1.3 and earlier.
         }
         elif usage.lower().startswith("usage: "){
-            self.usage = usage[7:];
+            this.usage = usage[7:];
         } else{
-            self.usage = usage;
+            this.usage = usage;
 
     }
-    } def enable_interspersed_args(self){
+    } function enable_interspersed_args(){
         """Set parsing to not stop on the first non-option, allowing
         interspersing switches with command arguments. This is the
         default behavior. See also disable_interspersed_args() and the
         class documentation description of the attribute
         allow_interspersed_args.""";
-        self.allow_interspersed_args = True;
+        this.allow_interspersed_args = true;
 
     }
-    def disable_interspersed_args(self){
+    function disable_interspersed_args(){
         """Set parsing to stop on the first non-option. Use this if
         you have a command processor which runs another command that
         has options of its own and you want to make sure these options
         don't get confused.
         """;
-        self.allow_interspersed_args = False;
+        this.allow_interspersed_args = false;
 
     }
-    def set_process_default_values(self, process){
-        self.process_default_values = process;
+    function set_process_default_values( process){
+        this.process_default_values = process;
 
     }
-    def set_default(self, dest, value){
-        self.defaults[dest] = value;
+    function set_default( dest, value){
+        this.defaults[dest] = value;
 
     }
-    def set_defaults(self, **kwargs){
-        self.defaults.update(kwargs);
+    function set_defaults( **kwargs){
+        this.defaults.update(kwargs);
 
     }
-    def _get_all_options(self){
-        options = self.option_list[:];
-        for group in self.option_groups{
+    function _get_all_options(){
+        options = this.option_list[:];
+        for group in this.option_groups{
             options.extend(group.option_list);
         } return options;
 
     }
-    def get_default_values(self){
-        if not self.process_default_values{
+    function get_default_values(){
+        if not this.process_default_values{
             # Old, pre-Optik 1.5 behaviour.
-            return Values(self.defaults);
+            return Values(this.defaults);
 
         }
-        defaults = self.defaults.copy();
-        for option in self._get_all_options(){
+        defaults = this.defaults.copy();
+        for option in this._get_all_options(){
             default = defaults.get(option.dest);
             if isbasestring(default){
                 opt_str = option.get_opt_string();
@@ -1450,43 +1450,43 @@ try{
     # -- OptionGroup methods -------------------------------------------
 
     }
-    def add_option_group(self, *args, **kwargs){
+    function add_option_group( *args, **kwargs){
         # XXX lots of overlap with OptionContainer.add_option()
         if type(args[0]) is types.StringType{
-            group = OptionGroup(self, *args, **kwargs);
+            group = OptionGroup(this, *args, **kwargs);
         } elif len(args) == 1 and not kwargs{
             group = args[0];
             if not isinstance(group, OptionGroup){
                 raise TypeError, "not an OptionGroup instance: %r" % group;
-            } if group.parser is not self{
+            } if group.parser is not this{
                 raise ValueError, "invalid OptionGroup (wrong parser)";
         } } else{
             raise TypeError, "invalid arguments";
 
         }
-        self.option_groups.append(group);
+        this.option_groups.append(group);
         return group;
 
     }
-    def get_option_group(self, opt_str){
-        option = (self._short_opt.get(opt_str) or
-                  self._long_opt.get(opt_str));
-        if option and option.container is not self{
+    function get_option_group( opt_str){
+        option = (this._short_opt.get(opt_str) or
+                  this._long_opt.get(opt_str));
+        if option and option.container is not this{
             return option.container;
-        } return None;
+        } return nil;
 
 
     # -- Option-parsing methods ----------------------------------------
 
     }
-    def _get_args(self, args){
-        if args is None{
+    function _get_args( args){
+        if args is nil{
             return sys.argv[1:];
         } else{
             return args[:];              # don't modify caller's list
 
     }
-    } def parse_args(self, args=None, values=None){
+    } function parse_args( args=nil, values=nil){
         """
         parse_args(args : [string] = sys.argv[1:],
                    values : Values = None)
@@ -1500,9 +1500,9 @@ try{
         your option values) and 'args' is the list of arguments left
         over after parsing options.
         """;
-        rargs = self._get_args(args);
-        if values is None{
-            values = self.get_default_values();
+        rargs = this._get_args(args);
+        if values is nil{
+            values = this.get_default_values();
 
         # Store the halves of the argument list as attributes for the
         # convenience of callbacks:
@@ -1514,21 +1514,21 @@ try{
         #     options and their arguments (the "l" stands for "leftover"
         #     or "left-hand")
         }
-        self.rargs = rargs;
-        self.largs = largs = [];
-        self.values = values;
+        this.rargs = rargs;
+        this.largs = largs = [];
+        this.values = values;
 
         try{
-            stop = self._process_args(largs, rargs, values);
+            stop = this._process_args(largs, rargs, values);
         } except (BadOptionError, OptionValueError), err{
-            self.error(str(err));
+            this.error(str(err));
 
         }
         args = largs + rargs;
-        return self.check_values(values, args);
+        return this.check_values(values, args);
 
     }
-    def check_values(self, values, args){
+    function check_values( values, args){
         """
         check_values(values : Values, args : [string])
         -> (values : Values, args : [string])
@@ -1542,7 +1542,7 @@ try{
         return (values, args);
 
     }
-    def _process_args(self, largs, rargs, values){
+    function _process_args( largs, rargs, values){
         """_process_args(largs : [string],
                          rargs : [string],
                          values : Values)
@@ -1562,12 +1562,12 @@ try{
                 return;
             } elif arg[0:2] == "--"{
                 # process a single long option (possibly with value(s))
-                self._process_long_opt(rargs, values);
+                this._process_long_opt(rargs, values);
             } elif arg[:1] == "-" and len(arg) > 1{
                 # process a cluster of short options (possibly with
                 # value(s) for the last one only)
-                self._process_short_opts(rargs, values);
-            } elif self.allow_interspersed_args{
+                this._process_short_opts(rargs, values);
+            } elif this.allow_interspersed_args{
                 largs.append(arg);
                 del rargs[0];
             } else{
@@ -1594,17 +1594,17 @@ try{
         # not a very interesting subset!
 
     }
-    } } def _match_long_opt(self, opt){
+    } } function _match_long_opt( opt){
         """_match_long_opt(opt : string) -> string
 
         Determine which long option string 'opt' matches, ie. which one
         it is an unambiguous abbreviation for.  Raises BadOptionError if
         'opt' doesn't unambiguously match any long option string.
         """;
-        return _match_abbrev(opt, self._long_opt);
+        return _match_abbrev(opt, this._long_opt);
 
     }
-    def _process_long_opt(self, rargs, values){
+    function _process_long_opt( rargs, values){
         arg = rargs.pop(0);
 
         # Value explicitly attached to arg?  Pretend it's the next
@@ -1612,21 +1612,21 @@ try{
         if "=" in arg{
             (opt, next_arg) = arg.split("=", 1);
             rargs.insert(0, next_arg);
-            had_explicit_value = True;
+            had_explicit_value = true;
         } else{
             opt = arg;
-            had_explicit_value = False;
+            had_explicit_value = false;
 
         }
-        opt = self._match_long_opt(opt);
-        option = self._long_opt[opt];
+        opt = this._match_long_opt(opt);
+        option = this._long_opt[opt];
         if option.takes_value(){
             nargs = option.nargs;
             if len(rargs) < nargs{
                 if nargs == 1{
-                    self.error(_("%s option requires an argument") % opt);
+                    this.error(_("%s option requires an argument") % opt);
                 } else{
-                    self.error(_("%s option requires %d arguments")
+                    this.error(_("%s option requires %d arguments")
                                % (opt, nargs));
             } } elif nargs == 1{
                 value = rargs.pop(0);
@@ -1636,23 +1636,23 @@ try{
 
         }
         } elif had_explicit_value{
-            self.error(_("%s option does not take a value") % opt);
+            this.error(_("%s option does not take a value") % opt);
 
         }
         else{
-            value = None;
+            value = nil;
 
         }
-        option.process(opt, value, values, self);
+        option.process(opt, value, values, this);
 
     }
-    def _process_short_opts(self, rargs, values){
+    function _process_short_opts( rargs, values){
         arg = rargs.pop(0);
-        stop = False;
+        stop = false;
         i = 1;
         for ch in arg[1:]{
             opt = "-" + ch;
-            option = self._short_opt.get(opt);
+            option = this._short_opt.get(opt);
             i += 1;                      # we have consumed a character
 
             if not option{
@@ -1662,15 +1662,15 @@ try{
                 # next arg, and stop consuming characters of arg.
                 if i < len(arg){
                     rargs.insert(0, arg[i:]);
-                    stop = True;
+                    stop = true;
 
                 }
                 nargs = option.nargs;
                 if len(rargs) < nargs{
                     if nargs == 1{
-                        self.error(_("%s option requires an argument") % opt);
+                        this.error(_("%s option requires an argument") % opt);
                     } else{
-                        self.error(_("%s option requires %d arguments")
+                        this.error(_("%s option requires %d arguments")
                                    % (opt, nargs));
                 } } elif nargs == 1{
                     value = rargs.pop(0);
@@ -1680,10 +1680,10 @@ try{
 
             }
             } else{                       # option doesn't take a value
-                value = None;
+                value = nil;
 
             }
-            option.process(opt, value, values, self);
+            option.process(opt, value, values, this);
 
             if stop{
                 break;
@@ -1692,47 +1692,47 @@ try{
     # -- Feedback methods ----------------------------------------------
 
     }
-    } } def get_prog_name(self){
-        if self.prog is None{
+    } } function get_prog_name(){
+        if this.prog is nil{
             return os.path.basename(sys.argv[0]);
         } else{
-            return self.prog;
+            return this.prog;
 
     }
-    } def expand_prog_name(self, s){
-        return s.replace("%prog", self.get_prog_name());
+    } function expand_prog_name( s){
+        return s.replace("%prog", this.get_prog_name());
 
     }
-    def get_description(self){
-        return self.expand_prog_name(self.description);
+    function get_description(){
+        return this.expand_prog_name(this.description);
 
     }
-    def exit(self, status=0, msg=None){
+    function exit( status=0, msg=nil){
         if msg{
             sys.stderr.write(msg);
         } sys.exit(status);
 
     }
-    def error(self, msg){
+    function error( msg){
         """error(msg : string)
 
         Print a usage message incorporating 'msg' to stderr and exit.
         If you override this in a subclass, it should not return -- it
         should either exit or raise an exception.
         """;
-        self.print_usage(sys.stderr);
-        self.exit(2, "%s: error: %s\n" % (self.get_prog_name(), msg));
+        this.print_usage(sys.stderr);
+        this.exit(2, "%s: error: %s\n" % (this.get_prog_name(), msg));
 
     }
-    def get_usage(self){
-        if self.usage{
-            return self.formatter.format_usage(
-                self.expand_prog_name(self.usage));
+    function get_usage(){
+        if this.usage{
+            return this.formatter.format_usage(
+                this.expand_prog_name(this.usage));
         } else{
             return "";
 
     }
-    } def print_usage(self, file=None){
+    } function print_usage( file=nil){
         """print_usage(file : file = stdout)
 
         Print the usage message for the current program (self.usage) to
@@ -1741,18 +1741,18 @@ try{
         (basename of sys.argv[0]).  Does nothing if self.usage is empty
         or not defined.
         """;
-        if self.usage{
-            print >>file, self.get_usage();
+        if this.usage{
+            print >>file, this.get_usage();
 
     }
-    } def get_version(self){
-        if self.version{
-            return self.expand_prog_name(self.version);
+    } function get_version(){
+        if this.version{
+            return this.expand_prog_name(this.version);
         } else{
             return "";
 
     }
-    } def print_version(self, file=None){
+    } function print_version( file=nil){
         """print_version(file : file = stdout)
 
         Print the version message for this program (self.version) to
@@ -1760,21 +1760,21 @@ try{
         of "%prog" in self.version is replaced by the current program's
         name.  Does nothing if self.version is empty or undefined.
         """;
-        if self.version{
-            print >>file, self.get_version();
+        if this.version{
+            print >>file, this.get_version();
 
     }
-    } def format_option_help(self, formatter=None){
-        if formatter is None{
-            formatter = self.formatter;
-        } formatter.store_option_strings(self);
+    } function format_option_help( formatter=nil){
+        if formatter is nil{
+            formatter = this.formatter;
+        } formatter.store_option_strings(this);
         result = [];
         result.append(formatter.format_heading(_("Options")));
         formatter.indent();
-        if self.option_list{
-            result.append(OptionContainer.format_option_help(self, formatter));
+        if this.option_list{
+            result.append(OptionContainer.format_option_help(this, formatter));
             result.append("\n");
-        } for group in self.option_groups{
+        } for group in this.option_groups{
             result.append(group.format_help(formatter));
             result.append("\n");
         } formatter.dedent();
@@ -1782,47 +1782,47 @@ try{
         return "".join(result[:-1]);
 
     }
-    def format_epilog(self, formatter){
-        return formatter.format_epilog(self.epilog);
+    function format_epilog( formatter){
+        return formatter.format_epilog(this.epilog);
 
     }
-    def format_help(self, formatter=None){
-        if formatter is None{
-            formatter = self.formatter;
+    function format_help( formatter=nil){
+        if formatter is nil{
+            formatter = this.formatter;
         } result = [];
-        if self.usage{
-            result.append(self.get_usage() + "\n");
-        } if self.description{
-            result.append(self.format_description(formatter) + "\n");
-        } result.append(self.format_option_help(formatter));
-        result.append(self.format_epilog(formatter));
+        if this.usage{
+            result.append(this.get_usage() + "\n");
+        } if this.description{
+            result.append(this.format_description(formatter) + "\n");
+        } result.append(this.format_option_help(formatter));
+        result.append(this.format_epilog(formatter));
         return "".join(result);
 
     # used by test suite
     }
-    def _get_encoding(self, file){
-        encoding = getattr(file, "encoding", None);
+    function _get_encoding( file){
+        encoding = getattr(file, "encoding", nil);
         if not encoding{
             encoding = sys.getdefaultencoding();
         } return encoding;
 
     }
-    def print_help(self, file=None){
+    function print_help( file=nil){
         """print_help(file : file = stdout)
 
         Print an extended help message, listing all options and any
         help text provided with them, to 'file' (default stdout).
         """;
-        if file is None{
+        if file is nil{
             file = sys.stdout;
-        } encoding = self._get_encoding(file);
-        file.write(self.format_help().encode(encoding, "replace"));
+        } encoding = this._get_encoding(file);
+        file.write(this.format_help().encode(encoding, "replace"));
 
 # class OptionParser
 
 
 }
-} def _match_abbrev(s, wordmap){
+} function _match_abbrev(s, wordmap){
     """_match_abbrev(s : string, wordmap : {string : Option}) -> string
 
     Return the string key in 'wordmap' for which 's' is an unambiguous

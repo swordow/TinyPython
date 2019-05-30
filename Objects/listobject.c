@@ -783,7 +783,7 @@ listinsert(PyListObject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, "nO:insert", &i, &v))
         return NULL;
     if (ins1(self, i, v) == 0)
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     return NULL;
 }
 
@@ -791,7 +791,7 @@ static PyObject *
 listappend(PyListObject *self, PyObject *v)
 {
     if (app1(self, v) == 0)
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     return NULL;
 }
 
@@ -818,7 +818,7 @@ listextend(PyListObject *self, PyObject *b)
         if (n == 0) {
             /* short circuit when b is empty */
             Py_DECREF(b);
-            Py_RETURN_NONE;
+            Py_RETURN_NIL;
         }
         m = Py_SIZE(self);
         if (list_resize(self, m + n) == -1) {
@@ -839,7 +839,7 @@ listextend(PyListObject *self, PyObject *b)
             dest[i] = o;
         }
         Py_DECREF(b);
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     }
 
     it = PyObject_GetIter(b);
@@ -897,7 +897,7 @@ listextend(PyListObject *self, PyObject *b)
         list_resize(self, Py_SIZE(self));  /* shrinking can't fail */
 
     Py_DECREF(it);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 
   error:
     Py_DECREF(it);
@@ -2036,7 +2036,7 @@ build_cmpwrapper(PyObject *cmpfunc)
 }
 
 /* An adaptive, stable, natural mergesort.  See listsort.txt.
- * Returns Py_None on success, NULL on error.  Even in case of error, the
+ * Returns Py_Nil on success, NULL on error.  Even in case of error, the
  * list will be some permutation of its input state (nothing is lost or
  * duplicated).
  */
@@ -2065,12 +2065,12 @@ listsort(PyListObject *self, PyObject *args, PyObject *kwds)
             kwlist, &compare, &keyfunc, &reverse))
             return NULL;
     }
-    if (compare == Py_None)
+    if (compare == Py_Nil)
         compare = NULL;
     if (compare != NULL &&
         PyErr_WarnPy3k("the cmp argument is not supported in 3.x", 1) < 0)
         return NULL;
-    if (keyfunc == Py_None)
+    if (keyfunc == Py_Nil)
         keyfunc = NULL;
     if (compare != NULL && keyfunc != NULL) {
         compare = build_cmpwrapper(compare);
@@ -2167,7 +2167,7 @@ listsort(PyListObject *self, PyObject *args, PyObject *kwds)
     assert(ms.pending[0].len == saved_ob_size);
 
 succeed:
-    result = Py_None;
+    result = Py_Nil;
 fail:
     if (keyfunc != NULL) {
         for (i=0 ; i < saved_ob_size ; i++) {
@@ -2231,7 +2231,7 @@ listreverse(PyListObject *self)
 {
     if (Py_SIZE(self) > 1)
         reverse_slice(self->ob_item, self->ob_item + Py_SIZE(self));
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 int
@@ -2344,7 +2344,7 @@ listremove(PyListObject *self, PyObject *v)
         if (cmp > 0) {
             if (list_ass_slice(self, i, i+1,
                                (PyObject *)NULL) == 0)
-                Py_RETURN_NONE;
+                Py_RETURN_NIL;
             return NULL;
         }
         else if (cmp < 0)

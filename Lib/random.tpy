@@ -88,17 +88,17 @@ class Random(_random.Random){
 
     VERSION = 3;     # used by getstate/setstate
 
-    def __init__(self, x=None){
+    function __init__( x=nil){
         """Initialize an instance.
 
         Optional argument x controls seeding, as for Random.seed().
         """;
 
-        self.seed(x);
-        self.gauss_next = None;
+        this.seed(x);
+        this.gauss_next = nil;
 
     }
-    def seed(self, a=None){
+    function seed( a=nil){
         """Initialize internal state of the random number generator.
 
         None or no argument seeds from current time or from an operating
@@ -109,7 +109,7 @@ class Random(_random.Random){
         PYTHONHASHSEED environment variable is enabled.
         """;
 
-        if a is None{
+        if a is nil{
             try{
                 # Seed with enough bytes to span the 19937 bit
                 # state space for the Mersenne Twister
@@ -119,23 +119,23 @@ class Random(_random.Random){
                 a = long(time.time() * 256); # use fractional seconds
 
         }
-        } super(Random, self).seed(a);
-        self.gauss_next = None;
+        } super(Random, this).seed(a);
+        this.gauss_next = nil;
 
     }
-    def getstate(self){
+    function getstate(){
         """Return internal state; can be passed to setstate() later.""";
-        return self.VERSION, super(Random, self).getstate(), self.gauss_next;
+        return this.VERSION, super(Random, this).getstate(), this.gauss_next;
 
     }
-    def setstate(self, state){
+    function setstate( state){
         """Restore internal state from object returned by getstate().""";
         version = state[0];
         if version == 3{
-            version, internalstate, self.gauss_next = state;
-            super(Random, self).setstate(internalstate);
+            version, internalstate, this.gauss_next = state;
+            super(Random, this).setstate(internalstate);
         } elif version == 2{
-            version, internalstate, self.gauss_next = state;
+            version, internalstate, this.gauss_next = state;
             # In version 2, the state was saved as signed ints, which causes
             #   inconsistencies between 32/64-bit systems. The state is
             #   really unsigned 32-bit ints, so we convert negative ints from
@@ -144,14 +144,14 @@ class Random(_random.Random){
                 internalstate = tuple( long(x) % (2**32) for x in internalstate );
             } except ValueError, e{
                 raise TypeError, e;
-            } super(Random, self).setstate(internalstate);
+            } super(Random, this).setstate(internalstate);
         } else{
             raise ValueError("state with version %s passed to "
                              "Random.setstate() of version %s" %
-                             (version, self.VERSION));
+                             (version, this.VERSION));
 
     }
-    } def jumpahead(self, n){
+    } function jumpahead( n){
         """Change the internal state to one that is likely far away
         from the current state.  This method will not be in Py3.x,
         so it is better to simply reseed.
@@ -159,9 +159,9 @@ class Random(_random.Random){
         # The super.jumpahead() method uses shuffling to change state,
         # so it needs a large and "interesting" n to work with.  Here,
         # we use hashing to create a large n for the shuffle.
-        s = repr(n) + repr(self.getstate());
+        s = repr(n) + repr(this.getstate());
         n = int(_hashlib.new('sha512', s).hexdigest(), 16);
-        super(Random, self).jumpahead(n);
+        super(Random, this).jumpahead(n);
 
 ## ---- Methods below this point do not need to be overridden when
 ## ---- subclassing for the purpose of using a different core generator.
@@ -169,21 +169,21 @@ class Random(_random.Random){
 ## -------------------- pickle support  -------------------
 
     }
-    def __getstate__(self){ # for pickle
-        return self.getstate();
+    function __getstate__(){ # for pickle
+        return this.getstate();
 
     }
-    def __setstate__(self, state){  # for pickle
-        self.setstate(state);
+    function __setstate__( state){  # for pickle
+        this.setstate(state);
 
     }
-    def __reduce__(self){
-        return self.__class__, (), self.getstate();
+    function __reduce__(){
+        return this.__class__, (), this.getstate();
 
 ## -------------------- integer methods  -------------------
 
     }
-    def randrange(self, start, stop=None, step=1, _int=int, _maxwidth=1L<<BPF){
+    function randrange( start, stop=nil, step=1, _int=int, _maxwidth=1L<<BPF){
         """Choose a random item from range(start, stop[, step]).
 
         This fixes the problem with randint() which includes the
@@ -196,11 +196,11 @@ class Random(_random.Random){
         istart = _int(start);
         if istart != start{
             raise ValueError, "non-integer arg 1 for randrange()";
-        } if stop is None{
+        } if stop is nil{
             if istart > 0{
                 if istart >= _maxwidth{
-                    return self._randbelow(istart);
-                } return _int(self.random() * istart);
+                    return this._randbelow(istart);
+                } return _int(this.random() * istart);
             } raise ValueError, "empty range for randrange()";
 
         # stop argument supplied.
@@ -224,8 +224,8 @@ class Random(_random.Random){
             # compatibility).
 
             if width >= _maxwidth{
-                return _int(istart + self._randbelow(width));
-            } return _int(istart + _int(self.random()*width));
+                return _int(istart + this._randbelow(width));
+            } return _int(istart + _int(this.random()*width));
         } if step == 1{
             raise ValueError, "empty range for randrange() (%d,%d, %d)" % (istart, istop, width);
 
@@ -247,18 +247,18 @@ class Random(_random.Random){
 
         }
         if n >= _maxwidth{
-            return istart + istep*self._randbelow(n);
-        } return istart + istep*_int(self.random() * n);
+            return istart + istep*this._randbelow(n);
+        } return istart + istep*_int(this.random() * n);
 
     }
-    def randint(self, a, b){
+    function randint( a, b){
         """Return random integer in range [a, b], including both end points.
         """;
 
-        return self.randrange(a, b+1);
+        return this.randrange(a, b+1);
 
     }
-    def _randbelow(self, n, _log=_log, _int=int, _maxwidth=1L<<BPF,
+    function _randbelow( n, _log=_log, _int=int, _maxwidth=1L<<BPF,
                    _Method=_MethodType, _BuiltinMethod=_BuiltinMethodType){
         """Return a random int in the range [0,n)
 
@@ -267,14 +267,14 @@ class Random(_random.Random){
         """;
 
         try{
-            getrandbits = self.getrandbits;
+            getrandbits = this.getrandbits;
         } except AttributeError{
             pass;
         } else{
             # Only call self.getrandbits if the original random() builtin method
             # has not been overridden or if a new getrandbits() was supplied.
             # This assures that the two methods correspond.
-            if type(self.random) is _BuiltinMethod or type(getrandbits) is _Method{
+            if type(this.random) is _BuiltinMethod or type(getrandbits) is _Method{
                 k = _int(1.00001 + _log(n-1, 2.0));   # 2**k > n-1 > 2**(k-2)
                 r = getrandbits(k);
                 while r >= n{
@@ -283,17 +283,17 @@ class Random(_random.Random){
         } } if n >= _maxwidth{
             _warn("Underlying random() generator does not supply \n"
                 "enough bits to choose from a population range this large");
-        } return _int(self.random() * n);
+        } return _int(this.random() * n);
 
 ## -------------------- sequence methods  -------------------
 
     }
-    def choice(self, seq){
+    function choice( seq){
         """Choose a random element from a non-empty sequence.""";
-        return seq[int(self.random() * len(seq))];  # raises IndexError if seq is empty
+        return seq[int(this.random() * len(seq))];  # raises IndexError if seq is empty
 
     }
-    def shuffle(self, x, random=None){
+    function shuffle( x, random=nil){
         """x, random=random.random -> shuffle list x in place; return None.
 
         Optional arg random is a 0-argument function returning a random
@@ -301,8 +301,8 @@ class Random(_random.Random){
 
         """;
 
-        if random is None{
-            random = self.random;
+        if random is nil{
+            random = this.random;
         } _int = int;
         for i in reversed(xrange(1, len(x))){
             # pick an element in x[:i+1] with which to exchange x[i]
@@ -310,7 +310,7 @@ class Random(_random.Random){
             x[i], x[j] = x[j], x[i];
 
     }
-    } def sample(self, population, k){
+    } function sample( population, k){
         """Chooses k unique random elements from a population sequence.
 
         Returns a new list containing elements from the population while
@@ -341,9 +341,9 @@ class Random(_random.Random){
         n = len(population);
         if not 0 <= k <= n{
             raise ValueError("sample larger than population");
-        } random = self.random;
+        } random = this.random;
         _int = int;
-        result = [None] * k;
+        result = [nil] * k;
         setsize = 21;        # size of a small set minus size of an empty list
         if k > 5{
             setsize += 4 ** _ceil(_log(k * 3, 4)); # table size for big sets
@@ -368,7 +368,7 @@ class Random(_random.Random){
             } } except (TypeError, KeyError){   # handle (at least) sets
                 if isinstance(population, list){
                     raise;
-                } return self.sample(tuple(population), k);
+                } return this.sample(tuple(population), k);
         } } return result;
 
 ## -------------------- real-valued distributions  -------------------
@@ -376,14 +376,14 @@ class Random(_random.Random){
 ## -------------------- uniform distribution -------------------
 
     }
-    def uniform(self, a, b){
+    function uniform( a, b){
         "Get a random number in the range [a, b) or [a, b] depending on rounding.";
-        return a + (b-a) * self.random();
+        return a + (b-a) * this.random();
 
 ## -------------------- triangular --------------------
 
     }
-    def triangular(self, low=0.0, high=1.0, mode=None){
+    function triangular( low=0.0, high=1.0, mode=nil){
         """Triangular distribution.
 
         Continuous distribution bounded by given lower and upper limits,
@@ -392,9 +392,9 @@ class Random(_random.Random){
         http://en.wikipedia.org/wiki/Triangular_distribution
 
         """;
-        u = self.random();
+        u = this.random();
         try{
-            c = 0.5 if mode is None else (mode - low) / (high - low);
+            c = 0.5 if mode is nil else (mode - low) / (high - low);
         } except ZeroDivisionError{
             return low;
         } if u > c{
@@ -406,7 +406,7 @@ class Random(_random.Random){
 ## -------------------- normal distribution --------------------
 
     }
-    def normalvariate(self, mu, sigma){
+    function normalvariate( mu, sigma){
         """Normal distribution.
 
         mu is the mean, and sigma is the standard deviation.
@@ -419,7 +419,7 @@ class Random(_random.Random){
         # variables using the ratio of uniform deviates", ACM Trans
         # Math Software, 3, (1977), pp257-260.
 
-        random = self.random;
+        random = this.random;
         while 1{
             u1 = random();
             u2 = 1.0 - random();
@@ -432,7 +432,7 @@ class Random(_random.Random){
 ## -------------------- lognormal distribution --------------------
 
     }
-    def lognormvariate(self, mu, sigma){
+    function lognormvariate( mu, sigma){
         """Log normal distribution.
 
         If you take the natural logarithm of this distribution, you'll get a
@@ -440,12 +440,12 @@ class Random(_random.Random){
         mu can have any value, and sigma must be greater than zero.
 
         """;
-        return _exp(self.normalvariate(mu, sigma));
+        return _exp(this.normalvariate(mu, sigma));
 
 ## -------------------- exponential distribution --------------------
 
     }
-    def expovariate(self, lambd){
+    function expovariate( lambd){
         """Exponential distribution.
 
         lambd is 1.0 divided by the desired mean.  It should be
@@ -460,12 +460,12 @@ class Random(_random.Random){
 
         # we use 1-random() instead of random() to preclude the
         # possibility of taking the log of zero.
-        return -_log(1.0 - self.random())/lambd;
+        return -_log(1.0 - this.random())/lambd;
 
 ## -------------------- von Mises distribution --------------------
 
     }
-    def vonmisesvariate(self, mu, kappa){
+    function vonmisesvariate( mu, kappa){
         """Circular data distribution.
 
         mu is the mean angle, expressed in radians between 0 and 2*pi, and
@@ -485,7 +485,7 @@ class Random(_random.Random){
         # Thanks to Magnus Kessler for a correction to the
         # implementation of step 4.
 
-        random = self.random;
+        random = this.random;
         if kappa <= 1e-6{
             return TWOPI * random();
 
@@ -517,7 +517,7 @@ class Random(_random.Random){
 ## -------------------- gamma distribution --------------------
 
     }
-    def gammavariate(self, alpha, beta){
+    function gammavariate( alpha, beta){
         """Gamma distribution.  Not the gamma function!
 
         Conditions on the parameters are alpha > 0 and beta > 0.
@@ -538,7 +538,7 @@ class Random(_random.Random){
             raise ValueError, 'gammavariate: alpha and beta must be > 0.0';
 
         }
-        random = self.random;
+        random = this.random;
         if alpha > 1.0{
 
             # Uses R.C.H. Cheng, "The generation of Gamma
@@ -593,7 +593,7 @@ class Random(_random.Random){
 ## -------------------- Gauss (faster alternative) --------------------
 
     }
-    } def gauss(self, mu, sigma){
+    } function gauss( mu, sigma){
         """Gaussian distribution.
 
         mu is the mean, and sigma is the standard deviation.  This is
@@ -621,14 +621,14 @@ class Random(_random.Random){
         # didn't want to slow this down in the serial case by using a
         # lock here.)
 
-        random = self.random;
-        z = self.gauss_next;
-        self.gauss_next = None;
-        if z is None{
+        random = this.random;
+        z = this.gauss_next;
+        this.gauss_next = nil;
+        if z is nil{
             x2pi = random() * TWOPI;
             g2rad = _sqrt(-2.0 * _log(1.0 - random()));
             z = _cos(x2pi) * g2rad;
-            self.gauss_next = _sin(x2pi) * g2rad;
+            this.gauss_next = _sin(x2pi) * g2rad;
 
         }
         return mu + z*sigma;
@@ -648,7 +648,7 @@ class Random(_random.Random){
 ## was dead wrong, and how it probably got that way.
 
     }
-    def betavariate(self, alpha, beta){
+    function betavariate( alpha, beta){
         """Beta distribution.
 
         Conditions on the parameters are alpha > 0 and beta > 0.
@@ -658,26 +658,26 @@ class Random(_random.Random){
 
         # This version due to Janne Sinkkonen, and matches all the std
         # texts (e.g., Knuth Vol 2 Ed 3 pg 134 "the beta distribution").
-        y = self.gammavariate(alpha, 1.);
+        y = this.gammavariate(alpha, 1.);
         if y == 0{
             return 0.0;
         } else{
-            return y / (y + self.gammavariate(beta, 1.));
+            return y / (y + this.gammavariate(beta, 1.));
 
 ## -------------------- Pareto --------------------
 
     }
-    } def paretovariate(self, alpha){
+    } function paretovariate( alpha){
         """Pareto distribution.  alpha is the shape parameter.""";
         # Jain, pg. 495
 
-        u = 1.0 - self.random();
+        u = 1.0 - this.random();
         return 1.0 / pow(u, 1.0/alpha);
 
 ## -------------------- Weibull --------------------
 
     }
-    def weibullvariate(self, alpha, beta){
+    function weibullvariate( alpha, beta){
         """Weibull distribution.
 
         alpha is the scale parameter and beta is the shape parameter.
@@ -685,7 +685,7 @@ class Random(_random.Random){
         """;
         # Jain, pg. 499; bug fix courtesy Bill Arms
 
-        u = 1.0 - self.random();
+        u = 1.0 - this.random();
         return alpha * pow(-_log(u), 1.0/beta);
 
 ## -------------------- Wichmann-Hill -------------------
@@ -695,7 +695,7 @@ class Random(_random.Random){
 
     VERSION = 1;     # used by getstate/setstate
 
-    def seed(self, a=None){
+    function seed( a=nil){
         """Initialize internal state from hashable object.
 
         None or no argument seeds from current time or from an operating
@@ -709,7 +709,7 @@ class Random(_random.Random){
         Wichmann-Hill generator).
         """;
 
-        if a is None{
+        if a is nil{
             try{
                 a = long(_hexlify(_urandom(16)), 16);
             } except NotImplementedError{
@@ -724,12 +724,12 @@ class Random(_random.Random){
         a, x = divmod(a, 30268);
         a, y = divmod(a, 30306);
         a, z = divmod(a, 30322);
-        self._seed = int(x)+1, int(y)+1, int(z)+1;
+        this._seed = int(x)+1, int(y)+1, int(z)+1;
 
-        self.gauss_next = None;
+        this.gauss_next = nil;
 
     }
-    def random(self){
+    function random(){
         """Get the next random number in the range [0.0, 1.0).""";
 
         # Wichman-Hill random number generator.
@@ -749,11 +749,11 @@ class Random(_random.Random){
 
         # This part is thread-unsafe:
         # BEGIN CRITICAL SECTION
-        x, y, z = self._seed;
+        x, y, z = this._seed;
         x = (171 * x) % 30269;
         y = (172 * y) % 30307;
         z = (170 * z) % 30323;
-        self._seed = x, y, z;
+        this._seed = x, y, z;
         # END CRITICAL SECTION
 
         # Note:  on a platform using IEEE-754 double arithmetic, this can
@@ -761,23 +761,23 @@ class Random(_random.Random){
         return (x/30269.0 + y/30307.0 + z/30323.0) % 1.0;
 
     }
-    def getstate(self){
+    function getstate(){
         """Return internal state; can be passed to setstate() later.""";
-        return self.VERSION, self._seed, self.gauss_next;
+        return this.VERSION, this._seed, this.gauss_next;
 
     }
-    def setstate(self, state){
+    function setstate( state){
         """Restore internal state from object returned by getstate().""";
         version = state[0];
         if version == 1{
-            version, self._seed, self.gauss_next = state;
+            version, this._seed, this.gauss_next = state;
         } else{
             raise ValueError("state with version %s passed to "
                              "Random.setstate() of version %s" %
-                             (version, self.VERSION));
+                             (version, this.VERSION));
 
     }
-    } def jumpahead(self, n){
+    } function jumpahead( n){
         """Act as if n calls to random() were made, but quickly.
 
         n is an int, greater than or equal to 0.
@@ -793,14 +793,14 @@ class Random(_random.Random){
 
         if not n >= 0{
             raise ValueError("n must be >= 0");
-        } x, y, z = self._seed;
+        } x, y, z = this._seed;
         x = int(x * pow(171, n, 30269)) % 30269;
         y = int(y * pow(172, n, 30307)) % 30307;
         z = int(z * pow(170, n, 30323)) % 30323;
-        self._seed = x, y, z;
+        this._seed = x, y, z;
 
     }
-    def __whseed(self, x=0, y=0, z=0){
+    function __whseed( x=0, y=0, z=0){
         """Set the Wichmann-Hill seed from (x, y, z).
 
         These must be integers in the range [0, 256).
@@ -820,12 +820,12 @@ class Random(_random.Random){
             t, z = divmod(t, 256);
         # Zero is a poor seed, so substitute 1
         }
-        self._seed = (x or 1, y or 1, z or 1);
+        this._seed = (x or 1, y or 1, z or 1);
 
-        self.gauss_next = None;
+        this.gauss_next = nil;
 
     }
-    def whseed(self, a=None){
+    function whseed( a=nil){
         """Seed from hashable object's hash code.
 
         None or no argument seeds from current time.  It is not guaranteed
@@ -836,8 +836,8 @@ class Random(_random.Random){
         used prior to Python 2.1.  Use the .seed() method instead.
         """;
 
-        if a is None{
-            self.__whseed();
+        if a is nil{
+            this.__whseed();
             return;
         } a = hash(a);
         a, x = divmod(a, 256);
@@ -846,7 +846,7 @@ class Random(_random.Random){
         x = (x + a) % 256 or 1;
         y = (y + a) % 256 or 1;
         z = (z + a) % 256 or 1;
-        self.__whseed(x, y, z);
+        this.__whseed(x, y, z);
 
 ## --------------- Operating System Random Source  ------------------
 
@@ -859,12 +859,12 @@ class Random(_random.Random){
      Not available on all systems (see os.urandom() for details).
     """;
 
-    def random(self){
+    function random(){
         """Get the next random number in the range [0.0, 1.0).""";
         return (long(_hexlify(_urandom(7)), 16) >> 3) * RECIP_BPF;
 
     }
-    def getrandbits(self, k){
+    function getrandbits( k){
         """getrandbits(k) -> x.  Generates a long int with k random bits.""";
         if k <= 0{
             raise ValueError('number of bits must be greater than zero');
@@ -875,12 +875,12 @@ class Random(_random.Random){
         return x >> (bytes * 8 - k);             # trim excess bits
 
     }
-    def _stub(self, *args, **kwds){
+    function _stub( *args, **kwds){
         "Stub method.  Not used for a system random number generator.";
-        return None;
+        return nil;
     } seed = jumpahead = _stub;
 
-    def _notimplemented(self, *args, **kwds){
+    function _notimplemented( *args, **kwds){
         "Method should not be called for a system random number generator.";
         raise NotImplementedError('System entropy source does not have state.');
     } getstate = setstate = _notimplemented;
@@ -888,7 +888,7 @@ class Random(_random.Random){
 ## -------------------- test program --------------------
 
 }
-def _test_generator(n, func, args){
+function _test_generator(n, func, args){
     import time;
     print n, 'times', func.__name__;
     total = 0.0;
@@ -911,7 +911,7 @@ def _test_generator(n, func, args){
 
 
 }
-def _test(N=2000){
+function _test(N=2000){
     _test_generator(N, random, ());
     _test_generator(N, normalvariate, (0.0, 1.0));
     _test_generator(N, lognormvariate, (0.0, 1.0));

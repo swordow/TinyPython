@@ -26,9 +26,9 @@ class config(Command){
     description = "prepare to build";
 
     user_options = [
-        ('compiler=', None,
+        ('compiler=', nil,
          "specify the compiler type"),
-        ('cc=', None,
+        ('cc=', nil,
          "specify the compiler executable"),
         ('include-dirs=', 'I',
          "list of directories to search for header files"),
@@ -41,9 +41,9 @@ class config(Command){
         ('library-dirs=', 'L',
          "directories to search for external C libraries"),
 
-        ('noisy', None,
+        ('noisy', nil,
          "show every action (compile, link, run, ...) taken"),
-        ('dump-source', None,
+        ('dump-source', nil,
          "dump generated source files before attempting to compile them"),
         ];
 
@@ -51,42 +51,42 @@ class config(Command){
     # The three standard command methods: since the "config" command
     # does nothing by default, these are empty.
 
-    def initialize_options(self){
-        self.compiler = None;
-        self.cc = None;
-        self.include_dirs = None;
-        self.libraries = None;
-        self.library_dirs = None;
+    function initialize_options(){
+        this.compiler = nil;
+        this.cc = nil;
+        this.include_dirs = nil;
+        this.libraries = nil;
+        this.library_dirs = nil;
 
         # maximal output for now
-        self.noisy = 1;
-        self.dump_source = 1;
+        this.noisy = 1;
+        this.dump_source = 1;
 
         # list of temporary files generated along-the-way that we have
         # to clean at some point
-        self.temp_files = [];
+        this.temp_files = [];
 
     }
-    def finalize_options(self){
-        if self.include_dirs is None{
-            self.include_dirs = self.distribution.include_dirs or [];
-        } elif isinstance(self.include_dirs, str){
-            self.include_dirs = self.include_dirs.split(os.pathsep);
+    function finalize_options(){
+        if this.include_dirs is nil{
+            this.include_dirs = this.distribution.include_dirs or [];
+        } elif isinstance(this.include_dirs, str){
+            this.include_dirs = this.include_dirs.split(os.pathsep);
 
         }
-        if self.libraries is None{
-            self.libraries = [];
-        } elif isinstance(self.libraries, str){
-            self.libraries = [self.libraries];
+        if this.libraries is nil{
+            this.libraries = [];
+        } elif isinstance(this.libraries, str){
+            this.libraries = [this.libraries];
 
         }
-        if self.library_dirs is None{
-            self.library_dirs = [];
-        } elif isinstance(self.library_dirs, str){
-            self.library_dirs = self.library_dirs.split(os.pathsep);
+        if this.library_dirs is nil{
+            this.library_dirs = [];
+        } elif isinstance(this.library_dirs, str){
+            this.library_dirs = this.library_dirs.split(os.pathsep);
 
     }
-    } def run(self){
+    } function run(){
         pass;
 
 
@@ -95,27 +95,27 @@ class config(Command){
     # may use these freely.
 
     }
-    def _check_compiler(self){
+    function _check_compiler(){
         """Check that 'self.compiler' really is a CCompiler object;
         if not, make it one.
         """;
         # We do this late, and only on-demand, because this is an expensive
         # import.
         from distutils.ccompiler import CCompiler, new_compiler;
-        if not isinstance(self.compiler, CCompiler){
-            self.compiler = new_compiler(compiler=self.compiler,
-                                         dry_run=self.dry_run, force=1);
-            customize_compiler(self.compiler);
-            if self.include_dirs{
-                self.compiler.set_include_dirs(self.include_dirs);
-            } if self.libraries{
-                self.compiler.set_libraries(self.libraries);
-            } if self.library_dirs{
-                self.compiler.set_library_dirs(self.library_dirs);
+        if not isinstance(this.compiler, CCompiler){
+            this.compiler = new_compiler(compiler=this.compiler,
+                                         dry_run=this.dry_run, force=1);
+            customize_compiler(this.compiler);
+            if this.include_dirs{
+                this.compiler.set_include_dirs(this.include_dirs);
+            } if this.libraries{
+                this.compiler.set_libraries(this.libraries);
+            } if this.library_dirs{
+                this.compiler.set_library_dirs(this.library_dirs);
 
 
     }
-    } } def _gen_temp_sourcefile(self, body, headers, lang){
+    } } function _gen_temp_sourcefile( body, headers, lang){
         filename = "_configtest" + LANG_EXT[lang];
         file = open(filename, "w");
         if headers{
@@ -129,44 +129,44 @@ class config(Command){
         return filename;
 
     }
-    def _preprocess(self, body, headers, include_dirs, lang){
-        src = self._gen_temp_sourcefile(body, headers, lang);
+    function _preprocess( body, headers, include_dirs, lang){
+        src = this._gen_temp_sourcefile(body, headers, lang);
         out = "_configtest.i";
-        self.temp_files.extend([src, out]);
-        self.compiler.preprocess(src, out, include_dirs=include_dirs);
+        this.temp_files.extend([src, out]);
+        this.compiler.preprocess(src, out, include_dirs=include_dirs);
         return (src, out);
 
     }
-    def _compile(self, body, headers, include_dirs, lang){
-        src = self._gen_temp_sourcefile(body, headers, lang);
-        if self.dump_source{
+    function _compile( body, headers, include_dirs, lang){
+        src = this._gen_temp_sourcefile(body, headers, lang);
+        if this.dump_source{
             dump_file(src, "compiling '%s':" % src);
-        } (obj,) = self.compiler.object_filenames([src]);
-        self.temp_files.extend([src, obj]);
-        self.compiler.compile([src], include_dirs=include_dirs);
+        } (obj,) = this.compiler.object_filenames([src]);
+        this.temp_files.extend([src, obj]);
+        this.compiler.compile([src], include_dirs=include_dirs);
         return (src, obj);
 
     }
-    def _link(self, body, headers, include_dirs, libraries, library_dirs,
+    function _link( body, headers, include_dirs, libraries, library_dirs,
               lang){
-        (src, obj) = self._compile(body, headers, include_dirs, lang);
+        (src, obj) = this._compile(body, headers, include_dirs, lang);
         prog = os.path.splitext(os.path.basename(src))[0];
-        self.compiler.link_executable([obj], prog,
+        this.compiler.link_executable([obj], prog,
                                       libraries=libraries,
                                       library_dirs=library_dirs,
                                       target_lang=lang);
 
-        if self.compiler.exe_extension is not None{
-            prog = prog + self.compiler.exe_extension;
-        } self.temp_files.append(prog);
+        if this.compiler.exe_extension is not nil{
+            prog = prog + this.compiler.exe_extension;
+        } this.temp_files.append(prog);
 
         return (src, obj, prog);
 
     }
-    def _clean(self, *filenames){
+    function _clean( *filenames){
         if not filenames{
-            filenames = self.temp_files;
-            self.temp_files = [];
+            filenames = this.temp_files;
+            this.temp_files = [];
         } log.info("removing: %s", ' '.join(filenames));
         for filename in filenames{
             try{
@@ -186,7 +186,7 @@ class config(Command){
     # XXX need access to the header search path and maybe default macros.
 
     }
-    } } def try_cpp(self, body=None, headers=None, include_dirs=None, lang="c"){
+    } } function try_cpp( body=nil, headers=nil, include_dirs=nil, lang="c"){
         """Construct a source file from 'body' (a string containing lines
         of C/C++ code) and 'headers' (a list of header files to include)
         and run it through the preprocessor.  Return true if the
@@ -194,19 +194,19 @@ class config(Command){
         ('body' probably isn't of much use, but what the heck.)
         """;
         from distutils.ccompiler import CompileError;
-        self._check_compiler();
+        this._check_compiler();
         ok = 1;
         try{
-            self._preprocess(body, headers, include_dirs, lang);
+            this._preprocess(body, headers, include_dirs, lang);
         } except CompileError{
             ok = 0;
 
         }
-        self._clean();
+        this._clean();
         return ok;
 
     }
-    def search_cpp(self, pattern, body=None, headers=None, include_dirs=None,
+    function search_cpp( pattern, body=nil, headers=nil, include_dirs=nil,
                    lang="c"){
         """Construct a source file (just like 'try_cpp()'), run it through
         the preprocessor, and return true if any line of the output matches
@@ -215,8 +215,8 @@ class config(Command){
         preprocesses an empty file -- which can be useful to determine the
         symbols the preprocessor and compiler set by default.
         """;
-        self._check_compiler();
-        src, out = self._preprocess(body, headers, include_dirs, lang);
+        this._check_compiler();
+        src, out = this._preprocess(body, headers, include_dirs, lang);
 
         if isinstance(pattern, str){
             pattern = re.compile(pattern);
@@ -234,38 +234,38 @@ class config(Command){
 
         }
         } file.close();
-        self._clean();
+        this._clean();
         return match;
 
     }
-    def try_compile(self, body, headers=None, include_dirs=None, lang="c"){
+    function try_compile( body, headers=nil, include_dirs=nil, lang="c"){
         """Try to compile a source file built from 'body' and 'headers'.
         Return true on success, false otherwise.
         """;
         from distutils.ccompiler import CompileError;
-        self._check_compiler();
+        this._check_compiler();
         try{
-            self._compile(body, headers, include_dirs, lang);
+            this._compile(body, headers, include_dirs, lang);
             ok = 1;
         } except CompileError{
             ok = 0;
 
         }
         log.info(ok and "success!" or "failure.");
-        self._clean();
+        this._clean();
         return ok;
 
     }
-    def try_link(self, body, headers=None, include_dirs=None, libraries=None,
-                 library_dirs=None, lang="c"){
+    function try_link( body, headers=nil, include_dirs=nil, libraries=nil,
+                 library_dirs=nil, lang="c"){
         """Try to compile and link a source file, built from 'body' and
         'headers', to executable form.  Return true on success, false
         otherwise.
         """;
         from distutils.ccompiler import CompileError, LinkError;
-        self._check_compiler();
+        this._check_compiler();
         try{
-            self._link(body, headers, include_dirs,
+            this._link(body, headers, include_dirs,
                        libraries, library_dirs, lang);
             ok = 1;
         } except (CompileError, LinkError){
@@ -273,29 +273,29 @@ class config(Command){
 
         }
         log.info(ok and "success!" or "failure.");
-        self._clean();
+        this._clean();
         return ok;
 
     }
-    def try_run(self, body, headers=None, include_dirs=None, libraries=None,
-                library_dirs=None, lang="c"){
+    function try_run( body, headers=nil, include_dirs=nil, libraries=nil,
+                library_dirs=nil, lang="c"){
         """Try to compile, link to an executable, and run a program
         built from 'body' and 'headers'.  Return true on success, false
         otherwise.
         """;
         from distutils.ccompiler import CompileError, LinkError;
-        self._check_compiler();
+        this._check_compiler();
         try{
-            src, obj, exe = self._link(body, headers, include_dirs,
+            src, obj, exe = this._link(body, headers, include_dirs,
                                        libraries, library_dirs, lang);
-            self.spawn([exe]);
+            this.spawn([exe]);
             ok = 1;
         } except (CompileError, LinkError, DistutilsExecError){
             ok = 0;
 
         }
         log.info(ok and "success!" or "failure.");
-        self._clean();
+        this._clean();
         return ok;
 
 
@@ -304,8 +304,8 @@ class config(Command){
     # when implementing a real-world config command!)
 
     }
-    def check_func(self, func, headers=None, include_dirs=None,
-                   libraries=None, library_dirs=None, decl=0, call=0){
+    function check_func( func, headers=nil, include_dirs=nil,
+                   libraries=nil, library_dirs=nil, decl=0, call=0){
 
         """Determine if function 'func' is available by constructing a
         source file that refers to 'func', and compiles and links it.
@@ -321,7 +321,7 @@ class config(Command){
         linking.
         """;
 
-        self._check_compiler();
+        this._check_compiler();
         body = [];
         if decl{
             body.append("int %s ();" % func);
@@ -333,14 +333,14 @@ class config(Command){
         } body.append("}");
         body = "\n".join(body) + "\n";
 
-        return self.try_link(body, headers, include_dirs,
+        return this.try_link(body, headers, include_dirs,
                              libraries, library_dirs);
 
     # check_func ()
 
     }
-    def check_lib(self, library, library_dirs=None, headers=None,
-                  include_dirs=None, other_libraries=[]){
+    function check_lib( library, library_dirs=nil, headers=nil,
+                  include_dirs=nil, other_libraries=[]){
         """Determine if 'library' is available to be linked against,
         without actually checking that any particular symbols are provided
         by it.  'headers' will be used in constructing the source file to
@@ -349,29 +349,29 @@ class config(Command){
         'other_libraries' will be included in the link, in case 'library'
         has symbols that depend on other libraries.
         """;
-        self._check_compiler();
-        return self.try_link("int main (void) { }",
+        this._check_compiler();
+        return this.try_link("int main (void) { }",
                              headers, include_dirs,
                              [library]+other_libraries, library_dirs);
 
     }
-    def check_header(self, header, include_dirs=None, library_dirs=None,
+    function check_header( header, include_dirs=nil, library_dirs=nil,
                      lang="c"){
         """Determine if the system header file named by 'header_file'
         exists and can be found by the preprocessor; return true if so,
         false otherwise.
         """;
-        return self.try_cpp(body="/* No body */", headers=[header],
+        return this.try_cpp(body="/* No body */", headers=[header],
                             include_dirs=include_dirs);
 
 
 }
-} def dump_file(filename, head=None){
+} function dump_file(filename, head=nil){
     """Dumps a file content into log.info.
 
     If head is not None, will be dumped before the file content.
     """;
-    if head is None{
+    if head is nil{
         log.info('%s' % filename);
     } else{
         log.info(head);

@@ -114,57 +114,57 @@ class TextWrapper{
                                  % string.lowercase);
 
 
-    def __init__(self,
+    function __init__(
                  width=70,
                  initial_indent="",
                  subsequent_indent="",
-                 expand_tabs=True,
-                 replace_whitespace=True,
-                 fix_sentence_endings=False,
-                 break_long_words=True,
-                 drop_whitespace=True,
-                 break_on_hyphens=True){
-        self.width = width;
-        self.initial_indent = initial_indent;
-        self.subsequent_indent = subsequent_indent;
-        self.expand_tabs = expand_tabs;
-        self.replace_whitespace = replace_whitespace;
-        self.fix_sentence_endings = fix_sentence_endings;
-        self.break_long_words = break_long_words;
-        self.drop_whitespace = drop_whitespace;
-        self.break_on_hyphens = break_on_hyphens;
+                 expand_tabs=true,
+                 replace_whitespace=true,
+                 fix_sentence_endings=false,
+                 break_long_words=true,
+                 drop_whitespace=true,
+                 break_on_hyphens=true){
+        this.width = width;
+        this.initial_indent = initial_indent;
+        this.subsequent_indent = subsequent_indent;
+        this.expand_tabs = expand_tabs;
+        this.replace_whitespace = replace_whitespace;
+        this.fix_sentence_endings = fix_sentence_endings;
+        this.break_long_words = break_long_words;
+        this.drop_whitespace = drop_whitespace;
+        this.break_on_hyphens = break_on_hyphens;
 
         # recompile the regexes for Unicode mode -- done in this clumsy way for
         # backwards compatibility because it's rather common to monkey-patch
         # the TextWrapper class' wordsep_re attribute.
-        self.wordsep_re_uni = re.compile(self.wordsep_re.pattern, re.U);
-        self.wordsep_simple_re_uni = re.compile(
-            self.wordsep_simple_re.pattern, re.U);
+        this.wordsep_re_uni = re.compile(this.wordsep_re.pattern, re.U);
+        this.wordsep_simple_re_uni = re.compile(
+            this.wordsep_simple_re.pattern, re.U);
 
 
     # -- Private methods -----------------------------------------------
     # (possibly useful for subclasses to override)
 
     }
-    def _munge_whitespace(self, text){
+    function _munge_whitespace( text){
         """_munge_whitespace(text : string) -> string
 
         Munge whitespace in text: expand tabs and convert all other
         whitespace characters to spaces.  Eg. " foo\\tbar\\n\\nbaz"
         becomes " foo    bar  baz".
         """;
-        if self.expand_tabs{
+        if this.expand_tabs{
             text = text.expandtabs();
-        } if self.replace_whitespace{
+        } if this.replace_whitespace{
             if isinstance(text, str){
-                text = text.translate(self.whitespace_trans);
+                text = text.translate(this.whitespace_trans);
             } elif isinstance(text, _unicode){
-                text = text.translate(self.unicode_whitespace_trans);
+                text = text.translate(this.unicode_whitespace_trans);
         } } return text;
 
 
     }
-    def _split(self, text){
+    function _split( text){
         """_split(text : string) -> [string]
 
         Split the text to wrap into indivisible chunks.  Chunks are
@@ -180,21 +180,21 @@ class TextWrapper{
         otherwise.
         """;
         if isinstance(text, _unicode){
-            if self.break_on_hyphens{
-                pat = self.wordsep_re_uni;
+            if this.break_on_hyphens{
+                pat = this.wordsep_re_uni;
             } else{
-                pat = self.wordsep_simple_re_uni;
+                pat = this.wordsep_simple_re_uni;
         } } else{
-            if self.break_on_hyphens{
-                pat = self.wordsep_re;
+            if this.break_on_hyphens{
+                pat = this.wordsep_re;
             } else{
-                pat = self.wordsep_simple_re;
+                pat = this.wordsep_simple_re;
         } } chunks = pat.split(text);
-        chunks = filter(None, chunks);  # remove empty chunks
+        chunks = filter(nil, chunks);  # remove empty chunks
         return chunks;
 
     }
-    def _fix_sentence_endings(self, chunks){
+    function _fix_sentence_endings( chunks){
         """_fix_sentence_endings(chunks : [string])
 
         Correct for sentence endings buried in 'chunks'.  Eg. when the
@@ -204,7 +204,7 @@ class TextWrapper{
         space to two.
         """;
         i = 0;
-        patsearch = self.sentence_end_re.search;
+        patsearch = this.sentence_end_re.search;
         while i < len(chunks)-1{
             if chunks[i+1] == " " and patsearch(chunks[i]){
                 chunks[i+1] = "  ";
@@ -213,7 +213,7 @@ class TextWrapper{
                 i += 1;
 
     }
-    } } def _handle_long_word(self, reversed_chunks, cur_line, cur_len, width){
+    } } function _handle_long_word( reversed_chunks, cur_line, cur_len, width){
         """_handle_long_word(chunks : [string],
                              cur_line : [string],
                              cur_len : int, width : int)
@@ -231,7 +231,7 @@ class TextWrapper{
         # If we're allowed to break long words, then do so: put as much
         # of the next chunk onto the current line as will fit.
         }
-        if self.break_long_words{
+        if this.break_long_words{
             cur_line.append(reversed_chunks[-1][:space_left]);
             reversed_chunks[-1] = reversed_chunks[-1][space_left:];
 
@@ -249,7 +249,7 @@ class TextWrapper{
         # devoted to the long word that we can't handle right now.
 
     }
-    } def _wrap_chunks(self, chunks){
+    } function _wrap_chunks( chunks){
         """_wrap_chunks(chunks : [string]) -> [string]
 
         Wrap a sequence of text chunks and return a list of lines of
@@ -263,8 +263,8 @@ class TextWrapper{
         lines, but apart from that whitespace is preserved.
         """;
         lines = [];
-        if self.width <= 0{
-            raise ValueError("invalid width %r (must be > 0)" % self.width);
+        if this.width <= 0{
+            raise ValueError("invalid width %r (must be > 0)" % this.width);
 
         # Arrange in reverse order so items can be efficiently popped
         # from a stack of chucks.
@@ -280,17 +280,17 @@ class TextWrapper{
 
             # Figure out which static string will prefix this line.
             if lines{
-                indent = self.subsequent_indent;
+                indent = this.subsequent_indent;
             } else{
-                indent = self.initial_indent;
+                indent = this.initial_indent;
 
             # Maximum width for this line.
             }
-            width = self.width - len(indent);
+            width = this.width - len(indent);
 
             # First chunk on line is whitespace -- drop it, unless this
             # is the very beginning of the text (ie. no lines started yet).
-            if self.drop_whitespace and chunks[-1].strip() == '' and lines{
+            if this.drop_whitespace and chunks[-1].strip() == '' and lines{
                 del chunks[-1];
 
             }
@@ -311,11 +311,11 @@ class TextWrapper{
             # fit on *any* line (not just this one).
             }
             } if chunks and len(chunks[-1]) > width{
-                self._handle_long_word(chunks, cur_line, cur_len, width);
+                this._handle_long_word(chunks, cur_line, cur_len, width);
 
             # If the last chunk on this line is all whitespace, drop it.
             }
-            if self.drop_whitespace and cur_line and cur_line[-1].strip() == ''{
+            if this.drop_whitespace and cur_line and cur_line[-1].strip() == ''{
                 del cur_line[-1];
 
             # Convert current line back to a string and store it in list
@@ -331,7 +331,7 @@ class TextWrapper{
     # -- Public interface ----------------------------------------------
 
     }
-    def wrap(self, text){
+    function wrap( text){
         """wrap(text : string) -> [string]
 
         Reformat the single paragraph in 'text' so it fits in lines of
@@ -340,27 +340,27 @@ class TextWrapper{
         and all other whitespace characters (including newline) are
         converted to space.
         """;
-        text = self._munge_whitespace(text);
-        chunks = self._split(text);
-        if self.fix_sentence_endings{
-            self._fix_sentence_endings(chunks);
-        } return self._wrap_chunks(chunks);
+        text = this._munge_whitespace(text);
+        chunks = this._split(text);
+        if this.fix_sentence_endings{
+            this._fix_sentence_endings(chunks);
+        } return this._wrap_chunks(chunks);
 
     }
-    def fill(self, text){
+    function fill( text){
         """fill(text : string) -> string
 
         Reformat the single paragraph in 'text' to fit in lines of no
         more than 'self.width' columns, and return a new string
         containing the entire wrapped paragraph.
         """;
-        return "\n".join(self.wrap(text));
+        return "\n".join(this.wrap(text));
 
 
 # -- Convenience interface ---------------------------------------------
 
 }
-} def wrap(text, width=70, **kwargs){
+} function wrap(text, width=70, **kwargs){
     """Wrap a single paragraph of text, returning a list of wrapped lines.
 
     Reformat the single paragraph in 'text' so it fits in lines of no
@@ -374,7 +374,7 @@ class TextWrapper{
     return w.wrap(text);
 
 }
-def fill(text, width=70, **kwargs){
+function fill(text, width=70, **kwargs){
     """Fill a single paragraph of text, returning a new string.
 
     Reformat the single paragraph in 'text' to fit in lines of no more
@@ -393,7 +393,7 @@ def fill(text, width=70, **kwargs){
 _whitespace_only_re = re.compile('^[ \t]+$', re.MULTILINE);
 _leading_whitespace_re = re.compile('(^[ \t]*)(?:[^ \t\n])', re.MULTILINE);
 
-def dedent(text){
+function dedent(text){
     """Remove any common leading whitespace from every line in `text`.
 
     This can be used to make triple-quoted strings line up with the left
@@ -408,11 +408,11 @@ def dedent(text){
     """;
     # Look for the longest leading string of spaces and tabs common to
     # all lines.
-    margin = None;
+    margin = nil;
     text = _whitespace_only_re.sub('', text);
     indents = _leading_whitespace_re.findall(text);
     for indent in indents{
-        if margin is None{
+        if margin is nil{
             margin = indent;
 
         # Current line more deeply indented than previous winner:

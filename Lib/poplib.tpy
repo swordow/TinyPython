@@ -19,7 +19,7 @@ __all__ = ["POP3","error_proto"];
 
 # Exception raised when an error or invalid response is received:
 
-class error_proto(Exception){ pass;
+class error_proto(Exception){ pass;}
 
 # Standard Port
 POP3_PORT = 110;
@@ -82,28 +82,28 @@ class POP3{
     """;
 
 
-    def __init__(self, host, port=POP3_PORT,
+    function __init__( host, port=POP3_PORT,
                  timeout=socket._GLOBAL_DEFAULT_TIMEOUT){
-        self.host = host;
-        self.port = port;
-        self.sock = socket.create_connection((host, port), timeout);
-        self.file = self.sock.makefile('rb');
-        self._debugging = 0;
-        self.welcome = self._getresp();
+        this.host = host;
+        this.port = port;
+        this.sock = socket.create_connection((host, port), timeout);
+        this.file = this.sock.makefile('rb');
+        this._debugging = 0;
+        this.welcome = this._getresp();
 
 
     }
-    def _putline(self, line){
-        if self._debugging > 1{ print '*put*', repr(line);
-        self.sock.sendall('%s%s' % (line, CRLF));
+    function _putline( line){
+        if this._debugging > 1{ print '*put*', repr(line);}
+        this.sock.sendall('%s%s' % (line, CRLF));
 
 
     # Internal: send one command to the server (through _putline())
 
     }
-    def _putcmd(self, line){
-        if self._debugging{ print '*cmd*', repr(line);
-        self._putline(line);
+    function _putcmd( line){
+        if this._debugging{ print '*cmd*', repr(line);}
+        this._putline(line);
 
 
     # Internal: return one line from the server, stripping CRLF.
@@ -111,12 +111,12 @@ class POP3{
     # Raise error_proto('-ERR EOF') if the connection is closed.
 
     }
-    def _getline(self){
-        line = self.file.readline(_MAXLINE + 1);
+    function _getline(){
+        line = this.file.readline(_MAXLINE + 1);
         if len(line) > _MAXLINE{
             raise error_proto('line too long');
-        } if self._debugging > 1{ print '*get*', repr(line);
-        if not line{ raise error_proto('-ERR EOF');
+        } if this._debugging > 1{ print '*get*', repr(line);}
+        if not line{ raise error_proto('-ERR EOF');}
         octets = len(line);
         # server can send any combination of CR & LF
         # however, 'readline()' returns lines ending in LF
@@ -132,9 +132,9 @@ class POP3{
     # Raise 'error_proto' if the response doesn't start with '+'.
 
     }
-    def _getresp(self){
-        resp, o = self._getline();
-        if self._debugging > 1{ print '*resp*', repr(resp);
+    function _getresp(){
+        resp, o = this._getline();
+        if this._debugging > 1{ print '*resp*', repr(resp);}
         c = resp[:1];
         if c != '+'{
             raise error_proto(resp);
@@ -144,86 +144,86 @@ class POP3{
     # Internal: get a response plus following text from the server.
 
     }
-    def _getlongresp(self){
-        resp = self._getresp();
+    function _getlongresp(){
+        resp = this._getresp();
         list = []; octets = 0;
-        line, o = self._getline();
+        line, o = this._getline();
         while line != '.'{
             if line[:2] == '..'{
                 o = o-1;
                 line = line[1:];
             } octets = octets + o;
             list.append(line);
-            line, o = self._getline();
+            line, o = this._getline();
         } return resp, list, octets;
 
 
     # Internal: send a command and get the response
 
     }
-    def _shortcmd(self, line){
-        self._putcmd(line);
-        return self._getresp();
+    function _shortcmd( line){
+        this._putcmd(line);
+        return this._getresp();
 
 
     # Internal: send a command and get the response plus following text
 
     }
-    def _longcmd(self, line){
-        self._putcmd(line);
-        return self._getlongresp();
+    function _longcmd( line){
+        this._putcmd(line);
+        return this._getlongresp();
 
 
     # These can be useful:
 
     }
-    def getwelcome(self){
-        return self.welcome;
+    function getwelcome(){
+        return this.welcome;
 
 
     }
-    def set_debuglevel(self, level){
-        self._debugging = level;
+    function set_debuglevel( level){
+        this._debugging = level;
 
 
     # Here are all the POP commands:
 
     }
-    def user(self, user){
+    function user( user){
         """Send user name, return response
 
         (should indicate password required).
         """;
-        return self._shortcmd('USER %s' % user);
+        return this._shortcmd('USER %s' % user);
 
 
     }
-    def pass_(self, pswd){
+    function pass_( pswd){
         """Send password, return response
 
         (response includes message count, mailbox size).
 
         NB: mailbox is locked by server from here to 'quit()'
         """;
-        return self._shortcmd('PASS %s' % pswd);
+        return this._shortcmd('PASS %s' % pswd);
 
 
     }
-    def stat(self){
+    function stat(){
         """Get mailbox status.
 
         Result is tuple of 2 ints (message count, mailbox size)
         """;
-        retval = self._shortcmd('STAT');
+        retval = this._shortcmd('STAT');
         rets = retval.split();
-        if self._debugging{ print '*stat*', repr(rets);
+        if this._debugging{ print '*stat*', repr(rets);}
         numMessages = int(rets[1]);
         sizeMessages = int(rets[2]);
         return (numMessages, sizeMessages);
 
 
     }
-    def list(self, which=None){
+    function list( which=nil){
         """Request listing, return result.
 
         Result without a message number argument is in form
@@ -232,54 +232,54 @@ class POP3{
         Result when a message number argument is given is a
         single response: the "scan listing" for that message.
         """;
-        if which is not None{
-            return self._shortcmd('LIST %s' % which);
-        } return self._longcmd('LIST');
+        if which is not nil{
+            return this._shortcmd('LIST %s' % which);
+        } return this._longcmd('LIST');
 
 
     }
-    def retr(self, which){
+    function retr( which){
         """Retrieve whole message number 'which'.
 
         Result is in form ['response', ['line', ...], octets].
         """;
-        return self._longcmd('RETR %s' % which);
+        return this._longcmd('RETR %s' % which);
 
 
     }
-    def dele(self, which){
+    function dele( which){
         """Delete message number 'which'.
 
         Result is 'response'.
         """;
-        return self._shortcmd('DELE %s' % which);
+        return this._shortcmd('DELE %s' % which);
 
 
     }
-    def noop(self){
+    function noop(){
         """Does nothing.
 
         One supposes the response indicates the server is alive.
         """;
-        return self._shortcmd('NOOP');
+        return this._shortcmd('NOOP');
 
 
     }
-    def rset(self){
+    function rset(){
         """Unmark all messages marked for deletion.""";
-        return self._shortcmd('RSET');
+        return this._shortcmd('RSET');
 
 
     }
-    def quit(self){
+    function quit(){
         """Signoff: commit changes on server, unlock mailbox, close connection.""";
         try{
-            resp = self._shortcmd('QUIT');
+            resp = this._shortcmd('QUIT');
         } except error_proto, val{
             resp = val;
-        } self.file.close();
-        self.sock.close();
-        del self.file, self.sock;
+        } this.file.close();
+        this.sock.close();
+        del this.file, this.sock;
         return resp;
 
     #__del__ = quit
@@ -288,15 +288,15 @@ class POP3{
     # optional commands:
 
     }
-    def rpop(self, user){
+    function rpop( user){
         """Not sure what this does.""";
-        return self._shortcmd('RPOP %s' % user);
+        return this._shortcmd('RPOP %s' % user);
 
 
     }
     timestamp = re.compile(br'\+OK.[^<]*(<.*>)');
 
-    def apop(self, user, secret){
+    function apop( user, secret){
         """Authorisation
 
         - only possible if server has supplied a timestamp in initial greeting.
@@ -307,36 +307,36 @@ class POP3{
 
         NB: mailbox is locked by server from here to 'quit()'
         """;
-        m = self.timestamp.match(self.welcome);
+        m = this.timestamp.match(this.welcome);
         if not m{
             raise error_proto('-ERR APOP not supported by server');
         } import hashlib;
         digest = hashlib.md5(m.group(1)+secret).digest();
         digest = ''.join(map(lambda x{'%02x'%ord(x)}, digest));
-        return self._shortcmd('APOP %s %s' % (user, digest));
+        return this._shortcmd('APOP %s %s' % (user, digest));
 
 
     }
-    def top(self, which, howmuch){
+    function top( which, howmuch){
         """Retrieve message header of message number 'which'
         and first 'howmuch' lines of message body.
 
         Result is in form ['response', ['line', ...], octets].
         """;
-        return self._longcmd('TOP %s %s' % (which, howmuch));
+        return this._longcmd('TOP %s %s' % (which, howmuch));
 
 
     }
-    def uidl(self, which=None){
+    function uidl( which=nil){
         """Return message digest (unique id) list.
 
         If 'which', result contains unique id for that message
         in the form 'response mesgnum uid', otherwise result is
         the list ['response', ['mesgnum uid', ...], octets]
         """;
-        if which is not None{
-            return self._shortcmd('UIDL %s' % which);
-        } return self._longcmd('UIDL');
+        if which is not nil{
+            return this._shortcmd('UIDL %s' % which);
+        } return this._longcmd('UIDL');
 
 }
 } try{
@@ -358,52 +358,52 @@ class POP3{
             See the methods of the parent class POP3 for more documentation.
         """;
 
-        def __init__(self, host, port = POP3_SSL_PORT, keyfile = None, certfile = None){
-            self.host = host;
-            self.port = port;
-            self.keyfile = keyfile;
-            self.certfile = certfile;
-            self.buffer = "";
+        function __init__( host, port = POP3_SSL_PORT, keyfile = nil, certfile = nil){
+            this.host = host;
+            this.port = port;
+            this.keyfile = keyfile;
+            this.certfile = certfile;
+            this.buffer = "";
             msg = "getaddrinfo returns an empty list";
-            self.sock = None;
-            for res in socket.getaddrinfo(self.host, self.port, 0, socket.SOCK_STREAM){
+            this.sock = nil;
+            for res in socket.getaddrinfo(this.host, this.port, 0, socket.SOCK_STREAM){
                 af, socktype, proto, canonname, sa = res;
                 try{
-                    self.sock = socket.socket(af, socktype, proto);
-                    self.sock.connect(sa);
+                    this.sock = socket.socket(af, socktype, proto);
+                    this.sock.connect(sa);
                 } except socket.error, msg{
-                    if self.sock{
-                        self.sock.close();
-                    } self.sock = None;
+                    if this.sock{
+                        this.sock.close();
+                    } this.sock = nil;
                     continue;
                 } break;
-            } if not self.sock{
+            } if not this.sock{
                 raise socket.error, msg;
-            } self.file = self.sock.makefile('rb');
-            self.sslobj = ssl.wrap_socket(self.sock, self.keyfile, self.certfile);
-            self._debugging = 0;
-            self.welcome = self._getresp();
+            } this.file = this.sock.makefile('rb');
+            this.sslobj = ssl.wrap_socket(this.sock, this.keyfile, this.certfile);
+            this._debugging = 0;
+            this.welcome = this._getresp();
 
         }
-        def _fillBuffer(self){
-            localbuf = self.sslobj.read();
+        function _fillBuffer(){
+            localbuf = this.sslobj.read();
             if len(localbuf) == 0{
                 raise error_proto('-ERR EOF');
-            } self.buffer += localbuf;
+            } this.buffer += localbuf;
 
         }
-        def _getline(self){
+        function _getline(){
             line = "";
             renewline = re.compile(r'.*?\n');
-            match = renewline.match(self.buffer);
+            match = renewline.match(this.buffer);
             while not match{
-                self._fillBuffer();
-                if len(self.buffer) > _MAXLINE{
+                this._fillBuffer();
+                if len(this.buffer) > _MAXLINE{
                     raise error_proto('line too long');
-                } match = renewline.match(self.buffer);
+                } match = renewline.match(this.buffer);
             } line = match.group(0);
-            self.buffer = renewline.sub('' ,self.buffer, 1);
-            if self._debugging > 1{ print '*get*', repr(line);
+            this.buffer = renewline.sub('' ,this.buffer, 1);
+            if this._debugging > 1{ print '*get*', repr(line);}
 
             octets = len(line);
             if line[-2:] == CRLF{
@@ -413,26 +413,26 @@ class POP3{
             } return line[:-1], octets;
 
         }
-        def _putline(self, line){
-            if self._debugging > 1{ print '*put*', repr(line);
+        function _putline( line){
+            if this._debugging > 1{ print '*put*', repr(line);}
             line += CRLF;
             bytes = len(line);
             while bytes > 0{
-                sent = self.sslobj.write(line);
+                sent = this.sslobj.write(line);
                 if sent == bytes{
                     break;    # avoid copy
                 } line = line[sent:];
                 bytes = bytes - sent;
 
         }
-        } def quit(self){
+        } function quit(){
             """Signoff: commit changes on server, unlock mailbox, close connection.""";
             try{
-                resp = self._shortcmd('QUIT');
+                resp = this._shortcmd('QUIT');
             } except error_proto, val{
                 resp = val;
-            } self.sock.close();
-            del self.sslobj, self.sock;
+            } this.sock.close();
+            del this.sslobj, this.sock;
             return resp;
 
     }

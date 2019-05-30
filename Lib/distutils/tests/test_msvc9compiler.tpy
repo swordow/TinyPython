@@ -93,58 +93,58 @@ _CLEANED_MANIFEST = """\
 if sys.platform=="win32"{
     from distutils.msvccompiler import get_build_version;
     if get_build_version()>=8.0{
-        SKIP_MESSAGE = None;
+        SKIP_MESSAGE = nil;
     } else{
         SKIP_MESSAGE = "These tests are only for MSVC8.0 or above";
 } } else{
     SKIP_MESSAGE = "These tests are only for win32";
 
 }
-@unittest.skipUnless(SKIP_MESSAGE is None, SKIP_MESSAGE);
+@unittest.skipUnless(SKIP_MESSAGE is nil, SKIP_MESSAGE);
 class msvc9compilerTestCase(support.TempdirManager,
                             unittest.TestCase){
 
-    def test_no_compiler(self){
+    function test_no_compiler(){
         # makes sure query_vcvarsall raises
         # a DistutilsPlatformError if the compiler
         # is not found
         from distutils.msvc9compiler import query_vcvarsall;
-        def _find_vcvarsall(version){
-            return None;
+        function _find_vcvarsall(version){
+            return nil;
 
         }
         from distutils import msvc9compiler;
         old_find_vcvarsall = msvc9compiler.find_vcvarsall;
         msvc9compiler.find_vcvarsall = _find_vcvarsall;
         try{
-            self.assertRaises(DistutilsPlatformError, query_vcvarsall,
+            this.assertRaises(DistutilsPlatformError, query_vcvarsall,
                              'wont find this version');
         } finally{
             msvc9compiler.find_vcvarsall = old_find_vcvarsall;
 
     }
-    } def test_reg_class(self){
+    } function test_reg_class(){
         from distutils.msvc9compiler import Reg;
-        self.assertRaises(KeyError, Reg.get_value, 'xxx', 'xxx');
+        this.assertRaises(KeyError, Reg.get_value, 'xxx', 'xxx');
 
         # looking for values that should exist on all
         # windows registry versions.
         path = r'Control Panel\Desktop';
         v = Reg.get_value(path, u'dragfullwindows');
-        self.assertIn(v, (u'0', u'1', u'2'));
+        this.assertIn(v, (u'0', u'1', u'2'));
 
         import _winreg;
         HKCU = _winreg.HKEY_CURRENT_USER;
         keys = Reg.read_keys(HKCU, 'xxxx');
-        self.assertEqual(keys, None);
+        this.assertEqual(keys, nil);
 
         keys = Reg.read_keys(HKCU, r'Control Panel');
-        self.assertIn('Desktop', keys);
+        this.assertIn('Desktop', keys);
 
     }
-    def test_remove_visual_c_ref(self){
+    function test_remove_visual_c_ref(){
         from distutils.msvc9compiler import MSVCCompiler;
-        tempdir = self.mkdtemp();
+        tempdir = this.mkdtemp();
         manifest = os.path.join(tempdir, 'manifest');
         f = open(manifest, 'w');
         try{
@@ -166,12 +166,12 @@ class msvc9compilerTestCase(support.TempdirManager,
 
         # makes sure the manifest was properly cleaned
         }
-        self.assertEqual(content, _CLEANED_MANIFEST);
+        this.assertEqual(content, _CLEANED_MANIFEST);
 
     }
-    def test_remove_entire_manifest(self){
+    function test_remove_entire_manifest(){
         from distutils.msvc9compiler import MSVCCompiler;
-        tempdir = self.mkdtemp();
+        tempdir = this.mkdtemp();
         manifest = os.path.join(tempdir, 'manifest');
         f = open(manifest, 'w');
         try{
@@ -182,11 +182,11 @@ class msvc9compilerTestCase(support.TempdirManager,
         }
         compiler = MSVCCompiler();
         got = compiler._remove_visual_c_ref(manifest);
-        self.assertIsNone(got);
+        this.assertIsNone(got);
 
 
 }
-} def test_suite(){
+} function test_suite(){
     return unittest.makeSuite(msvc9compilerTestCase);
 
 }

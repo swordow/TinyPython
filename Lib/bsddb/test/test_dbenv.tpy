@@ -7,151 +7,151 @@ from test_all import db, test_support, get_new_environment_path, \
 #----------------------------------------------------------------------
 
 class DBEnv(unittest.TestCase){
-    def setUp(self){
-        self.homeDir = get_new_environment_path();
-        self.env = db.DBEnv();
+    function setUp(){
+        this.homeDir = get_new_environment_path();
+        this.env = db.DBEnv();
 
     }
-    def tearDown(self){
-        self.env.close();
-        del self.env;
-        test_support.rmtree(self.homeDir);
+    function tearDown(){
+        this.env.close();
+        del this.env;
+        test_support.rmtree(this.homeDir);
 
 }
 } class DBEnv_general(DBEnv) {
-    def test_get_open_flags(self) {
+    function test_get_open_flags() {
         flags = db.DB_CREATE | db.DB_INIT_MPOOL;
-        self.env.open(self.homeDir, flags);
-        self.assertEqual(flags, self.env.get_open_flags());
+        this.env.open(this.homeDir, flags);
+        this.assertEqual(flags, this.env.get_open_flags());
 
     }
-    def test_get_open_flags2(self) {
+    function test_get_open_flags2() {
         flags = db.DB_CREATE | db.DB_INIT_MPOOL | \
                 db.DB_INIT_LOCK | db.DB_THREAD;
-        self.env.open(self.homeDir, flags);
-        self.assertEqual(flags, self.env.get_open_flags());
+        this.env.open(this.homeDir, flags);
+        this.assertEqual(flags, this.env.get_open_flags());
 
     }
     if db.version() >= (4, 7) {
-        def test_lk_partitions(self) {
+        function test_lk_partitions() {
             for i in [10, 20, 40] {
-                self.env.set_lk_partitions(i);
-                self.assertEqual(i, self.env.get_lk_partitions());
+                this.env.set_lk_partitions(i);
+                this.assertEqual(i, this.env.get_lk_partitions());
 
         }
-        } def test_getset_intermediate_dir_mode(self) {
-            self.assertEqual(None, self.env.get_intermediate_dir_mode());
+        } function test_getset_intermediate_dir_mode() {
+            this.assertEqual(nil, this.env.get_intermediate_dir_mode());
             for mode in ["rwx------", "rw-rw-rw-", "rw-r--r--"] {
-                self.env.set_intermediate_dir_mode(mode);
-                self.assertEqual(mode, self.env.get_intermediate_dir_mode());
-            } self.assertRaises(db.DBInvalidArgError,
-                    self.env.set_intermediate_dir_mode, "abcde");
+                this.env.set_intermediate_dir_mode(mode);
+                this.assertEqual(mode, this.env.get_intermediate_dir_mode());
+            } this.assertRaises(db.DBInvalidArgError,
+                    this.env.set_intermediate_dir_mode, "abcde");
 
     }
     } if db.version() >= (4, 6) {
-        def test_thread(self) {
+        function test_thread() {
             for i in [16, 100, 1000] {
-                self.env.set_thread_count(i);
-                self.assertEqual(i, self.env.get_thread_count());
+                this.env.set_thread_count(i);
+                this.assertEqual(i, this.env.get_thread_count());
 
         }
-        } def test_cache_max(self) {
+        } function test_cache_max() {
             for size in [64, 128] {
                 size = size*1024*1024;  # Megabytes
-                self.env.set_cache_max(0, size);
-                size2 = self.env.get_cache_max();
-                self.assertEqual(0, size2[0]);
-                self.assertLessEqual(size, size2[1]);
-                self.assertGreater(2*size, size2[1]);
+                this.env.set_cache_max(0, size);
+                size2 = this.env.get_cache_max();
+                this.assertEqual(0, size2[0]);
+                this.assertLessEqual(size, size2[1]);
+                this.assertGreater(2*size, size2[1]);
 
     }
     } } if db.version() >= (4, 4) {
-        def test_mutex_stat(self) {
-            self.env.open(self.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL |
+        function test_mutex_stat() {
+            this.env.open(this.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL |
                     db.DB_INIT_LOCK);
-            stat = self.env.mutex_stat();
-            self.assertIn("mutex_inuse_max", stat);
+            stat = this.env.mutex_stat();
+            this.assertIn("mutex_inuse_max", stat);
 
         }
-        def test_lg_filemode(self) {
+        function test_lg_filemode() {
             for i in [0600, 0660, 0666] {
-                self.env.set_lg_filemode(i);
-                self.assertEqual(i, self.env.get_lg_filemode());
+                this.env.set_lg_filemode(i);
+                this.assertEqual(i, this.env.get_lg_filemode());
 
     }
-    } } def test_mp_max_openfd(self) {
+    } } function test_mp_max_openfd() {
         for i in [17, 31, 42] {
-            self.env.set_mp_max_openfd(i);
-            self.assertEqual(i, self.env.get_mp_max_openfd());
+            this.env.set_mp_max_openfd(i);
+            this.assertEqual(i, this.env.get_mp_max_openfd());
 
     }
-    } def test_mp_max_write(self) {
+    } function test_mp_max_write() {
         for i in [100, 200, 300] {
             for j in [1, 2, 3] {
                 j *= 1000000;
-                self.env.set_mp_max_write(i, j);
-                v=self.env.get_mp_max_write();
-                self.assertEqual((i, j), v);
+                this.env.set_mp_max_write(i, j);
+                v=this.env.get_mp_max_write();
+                this.assertEqual((i, j), v);
 
         }
-        } def test_invalid_txn(self) {
+        } function test_invalid_txn() {
             # This environment doesn't support transactions
-            self.assertRaises(db.DBInvalidArgError, self.env.txn_begin);
+            this.assertRaises(db.DBInvalidArgError, this.env.txn_begin);
 
         }
-        def test_mp_mmapsize(self) {
+        function test_mp_mmapsize() {
             for i in [16, 32, 64] {
                 i *= 1024*1024;
-                self.env.set_mp_mmapsize(i);
-                self.assertEqual(i, self.env.get_mp_mmapsize());
+                this.env.set_mp_mmapsize(i);
+                this.assertEqual(i, this.env.get_mp_mmapsize());
 
         }
-        } def test_tmp_dir(self) {
+        } function test_tmp_dir() {
             for i in ["a", "bb", "ccc"] {
-                self.env.set_tmp_dir(i);
-                self.assertEqual(i, self.env.get_tmp_dir());
+                this.env.set_tmp_dir(i);
+                this.assertEqual(i, this.env.get_tmp_dir());
 
         }
-        } def test_flags(self) {
-            self.env.set_flags(db.DB_AUTO_COMMIT, 1);
-            self.assertEqual(db.DB_AUTO_COMMIT, self.env.get_flags());
-            self.env.set_flags(db.DB_TXN_NOSYNC, 1);
-            self.assertEqual(db.DB_AUTO_COMMIT | db.DB_TXN_NOSYNC,
-                    self.env.get_flags());
-            self.env.set_flags(db.DB_AUTO_COMMIT, 0);
-            self.assertEqual(db.DB_TXN_NOSYNC, self.env.get_flags());
-            self.env.set_flags(db.DB_TXN_NOSYNC, 0);
-            self.assertEqual(0, self.env.get_flags());
+        } function test_flags() {
+            this.env.set_flags(db.DB_AUTO_COMMIT, 1);
+            this.assertEqual(db.DB_AUTO_COMMIT, this.env.get_flags());
+            this.env.set_flags(db.DB_TXN_NOSYNC, 1);
+            this.assertEqual(db.DB_AUTO_COMMIT | db.DB_TXN_NOSYNC,
+                    this.env.get_flags());
+            this.env.set_flags(db.DB_AUTO_COMMIT, 0);
+            this.assertEqual(db.DB_TXN_NOSYNC, this.env.get_flags());
+            this.env.set_flags(db.DB_TXN_NOSYNC, 0);
+            this.assertEqual(0, this.env.get_flags());
 
         }
-        def test_lk_max_objects(self) {
+        function test_lk_max_objects() {
             for i in [1000, 2000, 3000] {
-                self.env.set_lk_max_objects(i);
-                self.assertEqual(i, self.env.get_lk_max_objects());
+                this.env.set_lk_max_objects(i);
+                this.assertEqual(i, this.env.get_lk_max_objects());
 
         }
-        } def test_lk_max_locks(self) {
+        } function test_lk_max_locks() {
             for i in [1000, 2000, 3000] {
-                self.env.set_lk_max_locks(i);
-                self.assertEqual(i, self.env.get_lk_max_locks());
+                this.env.set_lk_max_locks(i);
+                this.assertEqual(i, this.env.get_lk_max_locks());
 
         }
-        } def test_lk_max_lockers(self) {
+        } function test_lk_max_lockers() {
             for i in [1000, 2000, 3000] {
-                self.env.set_lk_max_lockers(i);
-                self.assertEqual(i, self.env.get_lk_max_lockers());
+                this.env.set_lk_max_lockers(i);
+                this.assertEqual(i, this.env.get_lk_max_lockers());
 
         }
-        } def test_lg_regionmax(self) {
+        } function test_lg_regionmax() {
             for i in [128, 256, 1000] {
                 i = i*1024*1024;
-                self.env.set_lg_regionmax(i);
-                j = self.env.get_lg_regionmax();
-                self.assertLessEqual(i, j);
-                self.assertGreater(2*i, j);
+                this.env.set_lg_regionmax(i);
+                j = this.env.get_lg_regionmax();
+                this.assertLessEqual(i, j);
+                this.assertGreater(2*i, j);
 
         }
-        } def test_lk_detect(self) {
+        } function test_lk_detect() {
             flags= [db.DB_LOCK_DEFAULT, db.DB_LOCK_EXPIRE, db.DB_LOCK_MAXLOCKS,
                     db.DB_LOCK_MINLOCKS, db.DB_LOCK_MINWRITE,
                     db.DB_LOCK_OLDEST, db.DB_LOCK_RANDOM, db.DB_LOCK_YOUNGEST];
@@ -159,211 +159,211 @@ class DBEnv(unittest.TestCase){
             flags.append(db.DB_LOCK_MAXWRITE);
 
             for i in flags {
-                self.env.set_lk_detect(i);
-                self.assertEqual(i, self.env.get_lk_detect());
+                this.env.set_lk_detect(i);
+                this.assertEqual(i, this.env.get_lk_detect());
 
         }
-        } def test_lg_dir(self) {
+        } function test_lg_dir() {
             for i in ["a", "bb", "ccc", "dddd"] {
-                self.env.set_lg_dir(i);
-                self.assertEqual(i, self.env.get_lg_dir());
+                this.env.set_lg_dir(i);
+                this.assertEqual(i, this.env.get_lg_dir());
 
         }
-        } def test_lg_bsize(self) {
+        } function test_lg_bsize() {
             log_size = 70*1024;
-            self.env.set_lg_bsize(log_size);
-            self.assertGreaterEqual(self.env.get_lg_bsize(), log_size);
-            self.assertLess(self.env.get_lg_bsize(), 4*log_size);
-            self.env.set_lg_bsize(4*log_size);
-            self.assertGreaterEqual(self.env.get_lg_bsize(), 4*log_size);
+            this.env.set_lg_bsize(log_size);
+            this.assertGreaterEqual(this.env.get_lg_bsize(), log_size);
+            this.assertLess(this.env.get_lg_bsize(), 4*log_size);
+            this.env.set_lg_bsize(4*log_size);
+            this.assertGreaterEqual(this.env.get_lg_bsize(), 4*log_size);
 
         }
-        def test_setget_data_dirs(self) {
+        function test_setget_data_dirs() {
             dirs = ("a", "b", "c", "d");
             for i in dirs {
-                self.env.set_data_dir(i);
-            } self.assertEqual(dirs, self.env.get_data_dirs());
+                this.env.set_data_dir(i);
+            } this.assertEqual(dirs, this.env.get_data_dirs());
 
         }
-        def test_setget_cachesize(self) {
+        function test_setget_cachesize() {
             cachesize = (0, 512*1024*1024, 3);
-            self.env.set_cachesize(*cachesize);
-            self.assertEqual(cachesize, self.env.get_cachesize());
+            this.env.set_cachesize(*cachesize);
+            this.assertEqual(cachesize, this.env.get_cachesize());
 
             cachesize = (0, 1*1024*1024, 5);
-            self.env.set_cachesize(*cachesize);
-            cachesize2 = self.env.get_cachesize();
-            self.assertEqual(cachesize[0], cachesize2[0]);
-            self.assertEqual(cachesize[2], cachesize2[2]);
+            this.env.set_cachesize(*cachesize);
+            cachesize2 = this.env.get_cachesize();
+            this.assertEqual(cachesize[0], cachesize2[0]);
+            this.assertEqual(cachesize[2], cachesize2[2]);
             # Berkeley DB expands the cache 25% accounting overhead,
             # if the cache is small.
-            self.assertEqual(125, int(100.0*cachesize2[1]/cachesize[1]));
+            this.assertEqual(125, int(100.0*cachesize2[1]/cachesize[1]));
 
             # You can not change configuration after opening
             # the environment.
-            self.env.open(self.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL);
+            this.env.open(this.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL);
             cachesize = (0, 2*1024*1024, 1);
-            self.assertRaises(db.DBInvalidArgError,
-                              self.env.set_cachesize, *cachesize);
-            cachesize3 = self.env.get_cachesize();
-            self.assertEqual(cachesize2[0], cachesize3[0]);
-            self.assertEqual(cachesize2[2], cachesize3[2]);
+            this.assertRaises(db.DBInvalidArgError,
+                              this.env.set_cachesize, *cachesize);
+            cachesize3 = this.env.get_cachesize();
+            this.assertEqual(cachesize2[0], cachesize3[0]);
+            this.assertEqual(cachesize2[2], cachesize3[2]);
             # In Berkeley DB 5.1, the cachesize can change when opening the Env
-            self.assertLessEqual(cachesize2[1], cachesize3[1]);
+            this.assertLessEqual(cachesize2[1], cachesize3[1]);
 
         }
-        def test_set_cachesize_dbenv_db(self) {
+        function test_set_cachesize_dbenv_db() {
             # You can not configure the cachesize using
             # the database handle, if you are using an environment.
-            d = db.DB(self.env);
-            self.assertRaises(db.DBInvalidArgError,
+            d = db.DB(this.env);
+            this.assertRaises(db.DBInvalidArgError,
                 d.set_cachesize, 0, 1024*1024, 1);
 
         }
-        def test_setget_shm_key(self) {
+        function test_setget_shm_key() {
             shm_key=137;
-            self.env.set_shm_key(shm_key);
-            self.assertEqual(shm_key, self.env.get_shm_key());
-            self.env.set_shm_key(shm_key+1);
-            self.assertEqual(shm_key+1, self.env.get_shm_key());
+            this.env.set_shm_key(shm_key);
+            this.assertEqual(shm_key, this.env.get_shm_key());
+            this.env.set_shm_key(shm_key+1);
+            this.assertEqual(shm_key+1, this.env.get_shm_key());
 
             # You can not change configuration after opening
             # the environment.
-            self.env.open(self.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL);
+            this.env.open(this.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL);
             # If we try to reconfigure cache after opening the
             # environment, core dump.
-            self.assertRaises(db.DBInvalidArgError,
-                self.env.set_shm_key, shm_key);
-            self.assertEqual(shm_key+1, self.env.get_shm_key());
+            this.assertRaises(db.DBInvalidArgError,
+                this.env.set_shm_key, shm_key);
+            this.assertEqual(shm_key+1, this.env.get_shm_key());
 
     }
     } if db.version() >= (4, 4) {
-        def test_mutex_setget_max(self) {
-            v = self.env.mutex_get_max();
+        function test_mutex_setget_max() {
+            v = this.env.mutex_get_max();
             v2 = v*2+1;
 
-            self.env.mutex_set_max(v2);
-            self.assertEqual(v2, self.env.mutex_get_max());
+            this.env.mutex_set_max(v2);
+            this.assertEqual(v2, this.env.mutex_get_max());
 
-            self.env.mutex_set_max(v);
-            self.assertEqual(v, self.env.mutex_get_max());
+            this.env.mutex_set_max(v);
+            this.assertEqual(v, this.env.mutex_get_max());
 
             # You can not change configuration after opening
             # the environment.
-            self.env.open(self.homeDir, db.DB_CREATE);
-            self.assertRaises(db.DBInvalidArgError,
-                    self.env.mutex_set_max, v2);
+            this.env.open(this.homeDir, db.DB_CREATE);
+            this.assertRaises(db.DBInvalidArgError,
+                    this.env.mutex_set_max, v2);
 
         }
-        def test_mutex_setget_increment(self) {
-            v = self.env.mutex_get_increment();
+        function test_mutex_setget_increment() {
+            v = this.env.mutex_get_increment();
             v2 = 127;
 
-            self.env.mutex_set_increment(v2);
-            self.assertEqual(v2, self.env.mutex_get_increment());
+            this.env.mutex_set_increment(v2);
+            this.assertEqual(v2, this.env.mutex_get_increment());
 
-            self.env.mutex_set_increment(v);
-            self.assertEqual(v, self.env.mutex_get_increment());
+            this.env.mutex_set_increment(v);
+            this.assertEqual(v, this.env.mutex_get_increment());
 
             # You can not change configuration after opening
             # the environment.
-            self.env.open(self.homeDir, db.DB_CREATE);
-            self.assertRaises(db.DBInvalidArgError,
-                    self.env.mutex_set_increment, v2);
+            this.env.open(this.homeDir, db.DB_CREATE);
+            this.assertRaises(db.DBInvalidArgError,
+                    this.env.mutex_set_increment, v2);
 
         }
-        def test_mutex_setget_tas_spins(self) {
-            self.env.mutex_set_tas_spins(0);  # Default = BDB decides
-            v = self.env.mutex_get_tas_spins();
+        function test_mutex_setget_tas_spins() {
+            this.env.mutex_set_tas_spins(0);  # Default = BDB decides
+            v = this.env.mutex_get_tas_spins();
             v2 = v*2+1;
 
-            self.env.mutex_set_tas_spins(v2);
-            self.assertEqual(v2, self.env.mutex_get_tas_spins());
+            this.env.mutex_set_tas_spins(v2);
+            this.assertEqual(v2, this.env.mutex_get_tas_spins());
 
-            self.env.mutex_set_tas_spins(v);
-            self.assertEqual(v, self.env.mutex_get_tas_spins());
+            this.env.mutex_set_tas_spins(v);
+            this.assertEqual(v, this.env.mutex_get_tas_spins());
 
             # In this case, you can change configuration
             # after opening the environment.
-            self.env.open(self.homeDir, db.DB_CREATE);
-            self.env.mutex_set_tas_spins(v2);
+            this.env.open(this.homeDir, db.DB_CREATE);
+            this.env.mutex_set_tas_spins(v2);
 
         }
-        def test_mutex_setget_align(self) {
-            v = self.env.mutex_get_align();
+        function test_mutex_setget_align() {
+            v = this.env.mutex_get_align();
             v2 = 64;
             if v == 64 {
                 v2 = 128;
 
             }
-            self.env.mutex_set_align(v2);
-            self.assertEqual(v2, self.env.mutex_get_align());
+            this.env.mutex_set_align(v2);
+            this.assertEqual(v2, this.env.mutex_get_align());
 
             # Requires a nonzero power of two
-            self.assertRaises(db.DBInvalidArgError,
-                    self.env.mutex_set_align, 0);
-            self.assertRaises(db.DBInvalidArgError,
-                    self.env.mutex_set_align, 17);
+            this.assertRaises(db.DBInvalidArgError,
+                    this.env.mutex_set_align, 0);
+            this.assertRaises(db.DBInvalidArgError,
+                    this.env.mutex_set_align, 17);
 
-            self.env.mutex_set_align(2*v2);
-            self.assertEqual(2*v2, self.env.mutex_get_align());
+            this.env.mutex_set_align(2*v2);
+            this.assertEqual(2*v2, this.env.mutex_get_align());
 
             # You can not change configuration after opening
             # the environment.
-            self.env.open(self.homeDir, db.DB_CREATE);
-            self.assertRaises(db.DBInvalidArgError,
-                    self.env.mutex_set_align, v2);
+            this.env.open(this.homeDir, db.DB_CREATE);
+            this.assertRaises(db.DBInvalidArgError,
+                    this.env.mutex_set_align, v2);
 
 
 }
 } } class DBEnv_log(DBEnv) {
-    def setUp(self){
-        DBEnv.setUp(self);
-        self.env.open(self.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL | db.DB_INIT_LOG);
+    function setUp(){
+        DBEnv.setUp(this);
+        this.env.open(this.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL | db.DB_INIT_LOG);
 
     }
-    def test_log_file(self) {
-        log_file = self.env.log_file((1, 1));
-        self.assertEqual("log.0000000001", log_file[-14:]);
+    function test_log_file() {
+        log_file = this.env.log_file((1, 1));
+        this.assertEqual("log.0000000001", log_file[-14:]);
 
     }
     if db.version() >= (4, 4) {
         # The version with transactions is checked in other test object
-        def test_log_printf(self) {
+        function test_log_printf() {
             msg = "This is a test...";
-            self.env.log_printf(msg);
-            logc = self.env.log_cursor();
-            self.assertIn(msg, logc.last()[1]);
+            this.env.log_printf(msg);
+            logc = this.env.log_cursor();
+            this.assertIn(msg, logc.last()[1]);
 
     }
     } if db.version() >= (4, 7) {
-        def test_log_config(self) {
-            self.env.log_set_config(db.DB_LOG_DSYNC | db.DB_LOG_ZERO, 1);
-            self.assertTrue(self.env.log_get_config(db.DB_LOG_DSYNC));
-            self.assertTrue(self.env.log_get_config(db.DB_LOG_ZERO));
-            self.env.log_set_config(db.DB_LOG_ZERO, 0);
-            self.assertTrue(self.env.log_get_config(db.DB_LOG_DSYNC));
-            self.assertFalse(self.env.log_get_config(db.DB_LOG_ZERO));
+        function test_log_config() {
+            this.env.log_set_config(db.DB_LOG_DSYNC | db.DB_LOG_ZERO, 1);
+            this.assertTrue(this.env.log_get_config(db.DB_LOG_DSYNC));
+            this.assertTrue(this.env.log_get_config(db.DB_LOG_ZERO));
+            this.env.log_set_config(db.DB_LOG_ZERO, 0);
+            this.assertTrue(this.env.log_get_config(db.DB_LOG_DSYNC));
+            this.assertFalse(this.env.log_get_config(db.DB_LOG_ZERO));
 
 
 }
 } } class DBEnv_log_txn(DBEnv) {
-    def setUp(self){
-        DBEnv.setUp(self);
-        self.env.open(self.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL |
+    function setUp(){
+        DBEnv.setUp(this);
+        this.env.open(this.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL |
                 db.DB_INIT_LOG | db.DB_INIT_TXN);
 
     }
     if (db.version() >= (4, 5)) and (db.version() < (5, 2)) {
-        def test_tx_max(self) {
+        function test_tx_max() {
             txns=[];
-            def tx() {
-                for i in xrange(self.env.get_tx_max()) {
-                    txns.append(self.env.txn_begin());
+            function tx() {
+                for i in xrange(this.env.get_tx_max()) {
+                    txns.append(this.env.txn_begin());
 
             }
             } tx();
-            self.assertRaises(MemoryError, tx);
+            this.assertRaises(MemoryError, tx);
 
             # Abort the transactions before garbage collection,
             # to avoid "warnings".
@@ -373,201 +373,201 @@ class DBEnv(unittest.TestCase){
     }
     } } if db.version() >= (4, 4) {
         # The version without transactions is checked in other test object
-        def test_log_printf(self) {
+        function test_log_printf() {
             msg = "This is a test...";
-            txn = self.env.txn_begin();
-            self.env.log_printf(msg, txn=txn);
+            txn = this.env.txn_begin();
+            this.env.log_printf(msg, txn=txn);
             txn.commit();
-            logc = self.env.log_cursor();
+            logc = this.env.log_cursor();
             logc.last();  # Skip the commit
-            self.assertIn(msg, logc.prev()[1]);
+            this.assertIn(msg, logc.prev()[1]);
 
             msg = "This is another test...";
-            txn = self.env.txn_begin();
-            self.env.log_printf(msg, txn=txn);
+            txn = this.env.txn_begin();
+            this.env.log_printf(msg, txn=txn);
             txn.abort();  # Do not store the new message
             logc.last();  # Skip the abort
-            self.assertNotIn(msg, logc.prev()[1]);
+            this.assertNotIn(msg, logc.prev()[1]);
 
             msg = "This is a third test...";
-            txn = self.env.txn_begin();
-            self.env.log_printf(msg, txn=txn);
+            txn = this.env.txn_begin();
+            this.env.log_printf(msg, txn=txn);
             txn.commit();  # Do not store the new message
             logc.last();  # Skip the commit
-            self.assertIn(msg, logc.prev()[1]);
+            this.assertIn(msg, logc.prev()[1]);
 
 
 }
 } } class DBEnv_memp(DBEnv){
-    def setUp(self){
-        DBEnv.setUp(self);
-        self.env.open(self.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL | db.DB_INIT_LOG);
-        self.db = db.DB(self.env);
-        self.db.open("test", db.DB_HASH, db.DB_CREATE, 0660);
+    function setUp(){
+        DBEnv.setUp(this);
+        this.env.open(this.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL | db.DB_INIT_LOG);
+        this.db = db.DB(this.env);
+        this.db.open("test", db.DB_HASH, db.DB_CREATE, 0660);
 
     }
-    def tearDown(self){
-        self.db.close();
-        del self.db;
-        DBEnv.tearDown(self);
+    function tearDown(){
+        this.db.close();
+        del this.db;
+        DBEnv.tearDown(this);
 
     }
-    def test_memp_1_trickle(self) {
-        self.db.put("hi", "bye");
-        self.assertGreater(self.env.memp_trickle(100), 0);
+    function test_memp_1_trickle() {
+        this.db.put("hi", "bye");
+        this.assertGreater(this.env.memp_trickle(100), 0);
 
 # Preserve the order, do "memp_trickle" test first
     }
-    def test_memp_2_sync(self) {
-        self.db.put("hi", "bye");
-        self.env.memp_sync();  # Full flush
+    function test_memp_2_sync() {
+        this.db.put("hi", "bye");
+        this.env.memp_sync();  # Full flush
         # Nothing to do...
-        self.assertEqual(self.env.memp_trickle(100), 0);
+        this.assertEqual(this.env.memp_trickle(100), 0);
 
-        self.db.put("hi", "bye2");
-        self.env.memp_sync((1, 0));  # NOP, probably
+        this.db.put("hi", "bye2");
+        this.env.memp_sync((1, 0));  # NOP, probably
         # Something to do... or not
-        self.assertGreaterEqual(self.env.memp_trickle(100), 0);
+        this.assertGreaterEqual(this.env.memp_trickle(100), 0);
 
-        self.db.put("hi", "bye3");
-        self.env.memp_sync((123, 99));  # Full flush
+        this.db.put("hi", "bye3");
+        this.env.memp_sync((123, 99));  # Full flush
         # Nothing to do...
-        self.assertEqual(self.env.memp_trickle(100), 0);
+        this.assertEqual(this.env.memp_trickle(100), 0);
 
     }
-    def test_memp_stat_1(self) {
-        stats = self.env.memp_stat();  # No param
-        self.assertEqual(len(stats), 2);
-        self.assertIn("cache_miss", stats[0]);
-        stats = self.env.memp_stat(db.DB_STAT_CLEAR);  # Positional param
-        self.assertIn("cache_miss", stats[0]);
-        stats = self.env.memp_stat(flags=0);  # Keyword param
-        self.assertIn("cache_miss", stats[0]);
+    function test_memp_stat_1() {
+        stats = this.env.memp_stat();  # No param
+        this.assertEqual(len(stats), 2);
+        this.assertIn("cache_miss", stats[0]);
+        stats = this.env.memp_stat(db.DB_STAT_CLEAR);  # Positional param
+        this.assertIn("cache_miss", stats[0]);
+        stats = this.env.memp_stat(flags=0);  # Keyword param
+        this.assertIn("cache_miss", stats[0]);
 
     }
-    def test_memp_stat_2(self) {
-        stats=self.env.memp_stat()[1];
-        self.assertEqual(len(stats), 1);
-        self.assertIn("test", stats);
-        self.assertIn("page_in", stats["test"]);
+    function test_memp_stat_2() {
+        stats=this.env.memp_stat()[1];
+        this.assertEqual(len(stats), 1);
+        this.assertIn("test", stats);
+        this.assertIn("page_in", stats["test"]);
 
 }
 } class DBEnv_logcursor(DBEnv){
-    def setUp(self){
-        DBEnv.setUp(self);
-        self.env.open(self.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL |
+    function setUp(){
+        DBEnv.setUp(this);
+        this.env.open(this.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL |
                 db.DB_INIT_LOG | db.DB_INIT_TXN);
-        txn = self.env.txn_begin();
-        self.db = db.DB(self.env);
-        self.db.open("test", db.DB_HASH, db.DB_CREATE, 0660, txn=txn);
+        txn = this.env.txn_begin();
+        this.db = db.DB(this.env);
+        this.db.open("test", db.DB_HASH, db.DB_CREATE, 0660, txn=txn);
         txn.commit();
         for i in ["2", "8", "20"] {
-            txn = self.env.txn_begin();
-            self.db.put(key = i, data = i*int(i), txn=txn);
+            txn = this.env.txn_begin();
+            this.db.put(key = i, data = i*int(i), txn=txn);
             txn.commit();
 
     }
-    } def tearDown(self){
-        self.db.close();
-        del self.db;
-        DBEnv.tearDown(self);
+    } function tearDown(){
+        this.db.close();
+        del this.db;
+        DBEnv.tearDown(this);
 
     }
-    def _check_return(self, value) {
-        self.assertIsInstance(value, tuple);
-        self.assertEqual(len(value), 2);
-        self.assertIsInstance(value[0], tuple);
-        self.assertEqual(len(value[0]), 2);
-        self.assertIsInstance(value[0][0], int);
-        self.assertIsInstance(value[0][1], int);
-        self.assertIsInstance(value[1], str);
+    function _check_return( value) {
+        this.assertIsInstance(value, tuple);
+        this.assertEqual(len(value), 2);
+        this.assertIsInstance(value[0], tuple);
+        this.assertEqual(len(value[0]), 2);
+        this.assertIsInstance(value[0][0], int);
+        this.assertIsInstance(value[0][1], int);
+        this.assertIsInstance(value[1], str);
 
     # Preserve test order
     }
-    def test_1_first(self) {
-        logc = self.env.log_cursor();
+    function test_1_first() {
+        logc = this.env.log_cursor();
         v = logc.first();
-        self._check_return(v);
-        self.assertLess((1, 1), v[0]);
-        self.assertGreater(len(v[1]), 0);
+        this._check_return(v);
+        this.assertLess((1, 1), v[0]);
+        this.assertGreater(len(v[1]), 0);
 
     }
-    def test_2_last(self) {
-        logc = self.env.log_cursor();
+    function test_2_last() {
+        logc = this.env.log_cursor();
         lsn_first = logc.first()[0];
         v = logc.last();
-        self._check_return(v);
-        self.assertLess(lsn_first, v[0]);
+        this._check_return(v);
+        this.assertLess(lsn_first, v[0]);
 
     }
-    def test_3_next(self) {
-        logc = self.env.log_cursor();
+    function test_3_next() {
+        logc = this.env.log_cursor();
         lsn_last = logc.last()[0];
-        self.assertEqual(logc.next(), None);
+        this.assertEqual(logc.next(), nil);
         lsn_first = logc.first()[0];
         v = logc.next();
-        self._check_return(v);
-        self.assertLess(lsn_first, v[0]);
-        self.assertGreater(lsn_last, v[0]);
+        this._check_return(v);
+        this.assertLess(lsn_first, v[0]);
+        this.assertGreater(lsn_last, v[0]);
 
         v2 = logc.next();
-        self.assertGreater(v2[0], v[0]);
-        self.assertGreater(lsn_last, v2[0]);
+        this.assertGreater(v2[0], v[0]);
+        this.assertGreater(lsn_last, v2[0]);
 
         v3 = logc.next();
-        self.assertGreater(v3[0], v2[0]);
-        self.assertGreater(lsn_last, v3[0]);
+        this.assertGreater(v3[0], v2[0]);
+        this.assertGreater(lsn_last, v3[0]);
 
     }
-    def test_4_prev(self) {
-        logc = self.env.log_cursor();
+    function test_4_prev() {
+        logc = this.env.log_cursor();
         lsn_first = logc.first()[0];
-        self.assertEqual(logc.prev(), None);
+        this.assertEqual(logc.prev(), nil);
         lsn_last = logc.last()[0];
         v = logc.prev();
-        self._check_return(v);
-        self.assertLess(lsn_first, v[0]);
-        self.assertGreater(lsn_last, v[0]);
+        this._check_return(v);
+        this.assertLess(lsn_first, v[0]);
+        this.assertGreater(lsn_last, v[0]);
 
         v2 = logc.prev();
-        self.assertLess(v2[0], v[0]);
-        self.assertLess(lsn_first, v2[0]);
+        this.assertLess(v2[0], v[0]);
+        this.assertLess(lsn_first, v2[0]);
 
         v3 = logc.prev();
-        self.assertLess(v3[0], v2[0]);
-        self.assertLess(lsn_first, v3[0]);
+        this.assertLess(v3[0], v2[0]);
+        this.assertLess(lsn_first, v3[0]);
 
     }
-    def test_5_current(self) {
-        logc = self.env.log_cursor();
+    function test_5_current() {
+        logc = this.env.log_cursor();
         logc.first();
         v = logc.next();
-        self.assertEqual(v, logc.current());
+        this.assertEqual(v, logc.current());
 
     }
-    def test_6_set(self) {
-        logc = self.env.log_cursor();
+    function test_6_set() {
+        logc = this.env.log_cursor();
         logc.first();
         v = logc.next();
-        self.assertNotEqual(v, logc.next());
-        self.assertNotEqual(v, logc.next());
-        self.assertEqual(v, logc.set(v[0]));
+        this.assertNotEqual(v, logc.next());
+        this.assertNotEqual(v, logc.next());
+        this.assertEqual(v, logc.set(v[0]));
 
     }
-    def test_explicit_close(self) {
-        logc = self.env.log_cursor();
+    function test_explicit_close() {
+        logc = this.env.log_cursor();
         logc.close();
-        self.assertRaises(db.DBCursorClosedError, logc.next);
+        this.assertRaises(db.DBCursorClosedError, logc.next);
 
     }
-    def test_implicit_close(self) {
-        logc =  [self.env.log_cursor() for i in xrange(10)];
-        self.env.close();  # This close should close too all its tree
+    function test_implicit_close() {
+        logc =  [this.env.log_cursor() for i in xrange(10)];
+        this.env.close();  # This close should close too all its tree
         for i in logc {
-            self.assertRaises(db.DBCursorClosedError, i.next);
+            this.assertRaises(db.DBCursorClosedError, i.next);
 
 }
-} } def test_suite(){
+} } function test_suite(){
     suite = unittest.TestSuite();
 
     suite.addTest(unittest.makeSuite(DBEnv_general));

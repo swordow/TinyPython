@@ -15,29 +15,29 @@ import errno;
 try{
     import zlib;
     del zlib;
-    _ZLIB_SUPPORTED = True;
+    _ZLIB_SUPPORTED = true;
 } except ImportError{
-    _ZLIB_SUPPORTED = False;
+    _ZLIB_SUPPORTED = false;
 
 }
 try{
     import bz2;
     del bz2;
-    _BZ2_SUPPORTED = True;
+    _BZ2_SUPPORTED = true;
 } except ImportError{
-    _BZ2_SUPPORTED = False;
+    _BZ2_SUPPORTED = false;
 
 }
 try{
     from pwd import getpwnam;
 } except ImportError{
-    getpwnam = None;
+    getpwnam = nil;
 
 }
 try{
     from grp import getgrnam;
 } except ImportError{
-    getgrnam = None;
+    getgrnam = nil;
 
 }
 __all__ = ["copyfileobj", "copyfile", "copymode", "copystat", "copy", "copy2",
@@ -62,10 +62,10 @@ class ExecError(EnvironmentError){
 try{
     WindowsError;
 } except NameError{
-    WindowsError = None;
+    WindowsError = nil;
 
 }
-def copyfileobj(fsrc, fdst, length=16*1024){
+function copyfileobj(fsrc, fdst, length=16*1024){
     """copy data from file-like object fsrc to file-like object fdst""";
     while 1{
         buf = fsrc.read(length);
@@ -74,13 +74,13 @@ def copyfileobj(fsrc, fdst, length=16*1024){
         } fdst.write(buf);
 
 }
-} def _samefile(src, dst){
+} function _samefile(src, dst){
     # Macintosh, Unix.
     if hasattr(os.path, 'samefile'){
         try{
             return os.path.samefile(src, dst);
         } except OSError{
-            return False;
+            return false;
 
     # All other platforms: check for same pathname.
     }
@@ -88,7 +88,7 @@ def copyfileobj(fsrc, fdst, length=16*1024){
             os.path.normcase(os.path.abspath(dst)));
 
 }
-def copyfile(src, dst){
+function copyfile(src, dst){
     """Copy data from src to dst""";
     if _samefile(src, dst){
         raise Error("`%s` and `%s` are the same file" % (src, dst));
@@ -111,7 +111,7 @@ def copyfile(src, dst){
             copyfileobj(fsrc, fdst);
 
 }
-} } def copymode(src, dst){
+} } function copymode(src, dst){
     """Copy mode bits from src to dst""";
     if hasattr(os, 'chmod'){
         st = os.stat(src);
@@ -119,7 +119,7 @@ def copyfile(src, dst){
         os.chmod(dst, mode);
 
 }
-} def copystat(src, dst){
+} function copystat(src, dst){
     """Copy file metadata
 
     Copy the permission bits, last access time, last modification time, and
@@ -144,7 +144,7 @@ def copyfile(src, dst){
                 raise;
 
 }
-} } } def copy(src, dst){
+} } } function copy(src, dst){
     """Copy data and mode bits ("cp src dst").
 
     The destination may be a directory.
@@ -156,7 +156,7 @@ def copyfile(src, dst){
     copymode(src, dst);
 
 }
-def copy2(src, dst){
+function copy2(src, dst){
     """Copy data and metadata. Return the file's destination.
 
     Metadata is copied with copystat(). Please see the copystat function
@@ -171,12 +171,12 @@ def copy2(src, dst){
     copystat(src, dst);
 
 }
-def ignore_patterns(*patterns){
+function ignore_patterns(*patterns){
     """Function that can be used as copytree() ignore parameter.
 
     Patterns is a sequence of glob-style patterns
     that are used to exclude files""";
-    def _ignore_patterns(path, names){
+    function _ignore_patterns(path, names){
         ignored_names = [];
         for pattern in patterns{
             ignored_names.extend(fnmatch.filter(names, pattern));
@@ -184,7 +184,7 @@ def ignore_patterns(*patterns){
     } return _ignore_patterns;
 
 }
-def copytree(src, dst, symlinks=False, ignore=None){
+function copytree(src, dst, symlinks=false, ignore=nil){
     """Recursively copy a directory tree using copy2().
 
     The destination directory must not already exist.
@@ -211,7 +211,7 @@ def copytree(src, dst, symlinks=False, ignore=None){
 
     """;
     names = os.listdir(src);
-    if ignore is not None{
+    if ignore is not nil{
         ignored_names = ignore(src, names);
     } else{
         ignored_names = set();
@@ -243,7 +243,7 @@ def copytree(src, dst, symlinks=False, ignore=None){
     } } try{
         copystat(src, dst);
     } except OSError, why{
-        if WindowsError is not None and isinstance(why, WindowsError){
+        if WindowsError is not nil and isinstance(why, WindowsError){
             # Copying file access times may fail on Windows
             pass;
         } else{
@@ -252,7 +252,7 @@ def copytree(src, dst, symlinks=False, ignore=None){
         raise Error, errors;
 
 }
-} def rmtree(path, ignore_errors=False, onerror=None){
+} function rmtree(path, ignore_errors=false, onerror=nil){
     """Recursively delete a directory tree.
 
     If ignore_errors is set, errors are ignored; otherwise, if onerror
@@ -264,10 +264,10 @@ def copytree(src, dst, symlinks=False, ignore=None){
 
     """;
     if ignore_errors{
-        def onerror(*args){
+        function onerror(*args){
             pass;
-    } } elif onerror is None{
-        def onerror(*args){
+    } } elif onerror is nil{
+        function onerror(*args){
             raise;
     } } try{
         if os.path.islink(path){
@@ -302,14 +302,14 @@ def copytree(src, dst, symlinks=False, ignore=None){
 
 
 }
-} def _basename(path){
+} function _basename(path){
     # A basename() variant which first strips the trailing slash, if present.
     # Thus we always get the last component of the path, even for directories.
     sep = os.path.sep + (os.path.altsep or '');
     return os.path.basename(path.rstrip(sep));
 
 }
-def move(src, dst){
+function move(src, dst){
     """Recursively move a file or directory to another location. This is
     similar to the Unix "mv" command.
 
@@ -344,14 +344,14 @@ def move(src, dst){
         if os.path.isdir(src){
             if _destinsrc(src, dst){
                 raise Error, "Cannot move a directory '%s' into itself '%s'." % (src, dst);
-            } copytree(src, real_dst, symlinks=True);
+            } copytree(src, real_dst, symlinks=true);
             rmtree(src);
         } else{
             copy2(src, real_dst);
             os.unlink(src);
 
 }
-} } def _destinsrc(src, dst){
+} } function _destinsrc(src, dst){
     src = abspath(src);
     dst = abspath(dst);
     if not src.endswith(os.path.sep){
@@ -361,34 +361,34 @@ def move(src, dst){
     } return dst.startswith(src);
 
 }
-def _get_gid(name){
+function _get_gid(name){
     """Returns a gid, given a group name.""";
-    if getgrnam is None or name is None{
-        return None;
+    if getgrnam is nil or name is nil{
+        return nil;
     } try{
         result = getgrnam(name);
     } except KeyError{
-        result = None;
-    } if result is not None{
+        result = nil;
+    } if result is not nil{
         return result[2];
-    } return None;
+    } return nil;
 
 }
-def _get_uid(name){
+function _get_uid(name){
     """Returns an uid, given a user name.""";
-    if getpwnam is None or name is None{
-        return None;
+    if getpwnam is nil or name is nil{
+        return nil;
     } try{
         result = getpwnam(name);
     } except KeyError{
-        result = None;
-    } if result is not None{
+        result = nil;
+    } if result is not nil{
         return result[2];
-    } return None;
+    } return nil;
 
 }
-def _make_tarball(base_name, base_dir, compress="gzip", verbose=0, dry_run=0,
-                  owner=None, group=None, logger=None){
+function _make_tarball(base_name, base_dir, compress="gzip", verbose=0, dry_run=0,
+                  owner=nil, group=nil, logger=nil){
     """Create a (possibly compressed) tar file from all the files under
     'base_dir'.
 
@@ -403,7 +403,7 @@ def _make_tarball(base_name, base_dir, compress="gzip", verbose=0, dry_run=0,
 
     Returns the output filename.
     """;
-    if compress is None{
+    if compress is nil{
         tar_compression = '';
     } elif _ZLIB_SUPPORTED and compress == 'gzip'{
         tar_compression = 'gz';
@@ -419,7 +419,7 @@ def _make_tarball(base_name, base_dir, compress="gzip", verbose=0, dry_run=0,
     archive_dir = os.path.dirname(archive_name);
 
     if archive_dir and not os.path.exists(archive_dir){
-        if logger is not None{
+        if logger is not nil{
             logger.info("creating %s", archive_dir);
         } if not dry_run{
             os.makedirs(archive_dir);
@@ -429,18 +429,18 @@ def _make_tarball(base_name, base_dir, compress="gzip", verbose=0, dry_run=0,
     }
     } import tarfile;  # late import so Python build itself doesn't break
 
-    if logger is not None{
+    if logger is not nil{
         logger.info('Creating tar archive');
 
     }
     uid = _get_uid(owner);
     gid = _get_gid(group);
 
-    def _set_uid_gid(tarinfo){
-        if gid is not None{
+    function _set_uid_gid(tarinfo){
+        if gid is not nil{
             tarinfo.gid = gid;
             tarinfo.gname = group;
-        } if uid is not None{
+        } if uid is not nil{
             tarinfo.uid = uid;
             tarinfo.uname = owner;
         } return tarinfo;
@@ -457,14 +457,14 @@ def _make_tarball(base_name, base_dir, compress="gzip", verbose=0, dry_run=0,
     } return archive_name;
 
 }
-def _call_external_zip(base_dir, zip_filename, verbose, dry_run, logger){
+function _call_external_zip(base_dir, zip_filename, verbose, dry_run, logger){
     # XXX see if we want to keep an external call here
     if verbose{
         zipoptions = "-r";
     } else{
         zipoptions = "-rq";
     } cmd = ["zip", zipoptions, zip_filename, base_dir];
-    if logger is not None{
+    if logger is not nil{
         logger.info(' '.join(cmd));
     } if dry_run{
         return;
@@ -480,7 +480,7 @@ def _call_external_zip(base_dir, zip_filename, verbose, dry_run, logger){
             "find a standalone zip utility") % zip_filename;
 
 }
-} def _make_zipfile(base_name, base_dir, verbose=0, dry_run=0, logger=None){
+} function _make_zipfile(base_name, base_dir, verbose=0, dry_run=0, logger=nil){
     """Create a zip file from all the files under 'base_dir'.
 
     The output zip file will be named 'base_name' + ".zip".  Uses either the
@@ -493,7 +493,7 @@ def _call_external_zip(base_dir, zip_filename, verbose, dry_run, logger){
     archive_dir = os.path.dirname(base_name);
 
     if archive_dir and not os.path.exists(archive_dir){
-        if logger is not None{
+        if logger is not nil{
             logger.info("creating %s", archive_dir);
         } if not dry_run{
             os.makedirs(archive_dir);
@@ -505,13 +505,13 @@ def _call_external_zip(base_dir, zip_filename, verbose, dry_run, logger){
         import zlib;
         import zipfile;
     } except ImportError{
-        zipfile = None;
+        zipfile = nil;
 
     }
-    if zipfile is None{
+    if zipfile is nil{
         _call_external_zip(base_dir, zip_filename, verbose, dry_run, logger);
     } else{
-        if logger is not None{
+        if logger is not nil{
             logger.info("creating '%s' and adding '%s' to it",
                         zip_filename, base_dir);
 
@@ -522,19 +522,19 @@ def _call_external_zip(base_dir, zip_filename, verbose, dry_run, logger){
                 path = os.path.normpath(base_dir);
                 if path != os.curdir{
                     zf.write(path, path);
-                    if logger is not None{
+                    if logger is not nil{
                         logger.info("adding '%s'", path);
                 } } for dirpath, dirnames, filenames in os.walk(base_dir){
                     for name in sorted(dirnames){
                         path = os.path.normpath(os.path.join(dirpath, name));
                         zf.write(path, path);
-                        if logger is not None{
+                        if logger is not nil{
                             logger.info("adding '%s'", path);
                     } } for name in filenames{
                         path = os.path.normpath(os.path.join(dirpath, name));
                         if os.path.isfile(path){
                             zf.write(path, path);
-                            if logger is not None{
+                            if logger is not nil{
                                 logger.info("adding '%s'", path);
 
     }
@@ -542,7 +542,7 @@ def _call_external_zip(base_dir, zip_filename, verbose, dry_run, logger){
 
 }
 _ARCHIVE_FORMATS = {
-    'tar':   (_make_tarball, [('compress', None)], "uncompressed tar file"),
+    'tar':   (_make_tarball, [('compress', nil)], "uncompressed tar file"),
     'zip':   (_make_zipfile, [], "ZIP file")
 };
 
@@ -556,7 +556,7 @@ if _BZ2_SUPPORTED{
                                 "bzip2'ed tar-file");
 
 }
-def get_archive_formats(){
+function get_archive_formats(){
     """Returns a list of supported formats for archiving and unarchiving.
 
     Each element of the returned sequence is a tuple (name, description)
@@ -567,7 +567,7 @@ def get_archive_formats(){
     return formats;
 
 }
-def register_archive_format(name, function, extra_args=None, description=''){
+function register_archive_format(name, arg_function, extra_args=nil, description=''){
     """Registers an archive format.
 
     name is the name of the format. function is the callable that will be
@@ -576,10 +576,10 @@ def register_archive_format(name, function, extra_args=None, description=''){
     description can be provided to describe the format, and will be returned
     by the get_archive_formats() function.
     """;
-    if extra_args is None{
+    if extra_args is nil{
         extra_args = [];
-    } if not isinstance(function, collections.Callable){
-        raise TypeError('The %s object is not callable' % function);
+    } if not isinstance(arg_function, collections.Callable){
+        raise TypeError('The %s object is not callable' % arg_function);
     } if not isinstance(extra_args, (tuple, list)){
         raise TypeError('extra_args needs to be a sequence');
     } for element in extra_args{
@@ -587,15 +587,15 @@ def register_archive_format(name, function, extra_args=None, description=''){
             raise TypeError('extra_args elements are : (arg_name, value)');
 
     }
-    } _ARCHIVE_FORMATS[name] = (function, extra_args, description);
+    } _ARCHIVE_FORMATS[name] = (arg_function, extra_args, description);
 
 }
-def unregister_archive_format(name){
+function unregister_archive_format(name){
     del _ARCHIVE_FORMATS[name];
 
 }
-def make_archive(base_name, format, root_dir=None, base_dir=None, verbose=0,
-                 dry_run=0, owner=None, group=None, logger=None){
+function make_archive(base_name, format, root_dir=nil, base_dir=nil, verbose=0,
+                 dry_run=0, owner=nil, group=nil, logger=nil){
     """Create an archive file (eg. zip or tar).
 
     'base_name' is the name of the file to create, minus any format-specific
@@ -613,15 +613,15 @@ def make_archive(base_name, format, root_dir=None, base_dir=None, verbose=0,
     uses the current owner and group.
     """;
     save_cwd = os.getcwd();
-    if root_dir is not None{
-        if logger is not None{
+    if root_dir is not nil{
+        if logger is not nil{
             logger.debug("changing into '%s'", root_dir);
         } base_name = os.path.abspath(base_name);
         if not dry_run{
             os.chdir(root_dir);
 
     }
-    } if base_dir is None{
+    } if base_dir is nil{
         base_dir = os.curdir;
 
     }
@@ -646,8 +646,8 @@ def make_archive(base_name, format, root_dir=None, base_dir=None, verbose=0,
     try{
         filename = func(base_name, base_dir, **kwargs);
     } finally{
-        if root_dir is not None{
-            if logger is not None{
+        if root_dir is not nil{
+            if logger is not nil{
                 logger.debug("changing back to '%s'", save_cwd);
             } os.chdir(save_cwd);
 

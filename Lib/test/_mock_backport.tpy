@@ -43,20 +43,20 @@ if 'java' in sys.platform{
 
 
 }
-FILTER_DIR = True;
+FILTER_DIR = true;
 
 # Workaround for issue #12370
 # Without this, the __class__ properties wouldn't be set correctly
 _safe_super = super;
 
-def _is_instance_mock(obj){
+function _is_instance_mock(obj){
     # can't use isinstance on Mock objects because they override __class__
     # The base class for all mocks is NonCallableMock
     return issubclass(type(obj), NonCallableMock);
 
 
 }
-def _is_exception(obj){
+function _is_exception(obj){
     return (
         isinstance(obj, BaseExceptions) or
         isinstance(obj, type) and issubclass(obj, BaseExceptions)
@@ -75,7 +75,7 @@ DescriptorTypes = (
 );
 
 
-def _get_signature_object(func, as_instance, eat_self){
+function _get_signature_object(func, as_instance, eat_self){
     """
     Given an arbitrary, possibly callable object, try to create a suitable
     signature object.
@@ -86,42 +86,42 @@ def _get_signature_object(func, as_instance, eat_self){
         try{
             func = func.__init__;
         } except AttributeError{
-            return None;
+            return nil;
         # Skip the `self` argument in __init__
         }
-        eat_self = True;
+        eat_self = true;
     } elif not isinstance(func, FunctionTypes){
         # If we really want to model an instance of the passed type,
         # __call__ should be looked up, not __init__.
         try{
             func = func.__call__;
         } except AttributeError{
-            return None;
+            return nil;
     } } if eat_self{
-        sig_func = partial(func, None);
+        sig_func = partial(func, nil);
     } else{
         sig_func = func;
     } try{
         return func, inspect.signature(sig_func);
     } except ValueError{
         # Certain callable types are not supported by inspect.signature()
-        return None;
+        return nil;
 
 
 }
-} def _check_signature(func, mock, skipfirst, instance=False){
+} function _check_signature(func, mock, skipfirst, instance=false){
     sig = _get_signature_object(func, instance, skipfirst);
-    if sig is None{
+    if sig is nil{
         return;
     } func, sig = sig;
-    def checksig(_mock_self, *args, **kwargs){
+    function checksig(_mock_self, *args, **kwargs){
         sig.bind(*args, **kwargs);
     } _copy_func_details(func, checksig);
     type(mock)._mock_check_sig = checksig;
 
 
 }
-def _copy_func_details(func, funcopy){
+function _copy_func_details(func, funcopy){
     funcopy.__name__ = func.__name__;
     funcopy.__doc__ = func.__doc__;
     try{
@@ -146,40 +146,40 @@ def _copy_func_details(func, funcopy){
 
 
 }
-} def _callable(obj){
+} function _callable(obj){
     if isinstance(obj, type){
-        return True;
-    } if getattr(obj, '__call__', None) is not None{
-        return True;
-    } return False;
+        return true;
+    } if getattr(obj, '__call__', nil) is not nil{
+        return true;
+    } return false;
 
 
 }
-def _is_list(obj){
+function _is_list(obj){
     # checks for list or tuples
     # XXXX badly named!
     return type(obj) in (list, tuple);
 
 
 }
-def _instance_callable(obj){
+function _instance_callable(obj){
     """Given an object, return True if the object is callable.
     For classes, return True if instances would be callable.""";
     if not isinstance(obj, type){
         # already an instance
-        return getattr(obj, '__call__', None) is not None;
+        return getattr(obj, '__call__', nil) is not nil;
 
     # *could* be broken by a class overriding __mro__ or __dict__ via
     # a metaclass
     }
     for base in (obj,) + obj.__mro__{
-        if base.__dict__.get('__call__') is not None{
-            return True;
-    } } return False;
+        if base.__dict__.get('__call__') is not nil{
+            return true;
+    } } return false;
 
 
 }
-def _set_signature(mock, original, instance=False){
+function _set_signature(mock, original, instance=false){
     # creates a function with signature (*args, **kwargs) that delegates to a
     # mock. It still does signature checking by calling a lambda with the same
     # signature as the original.
@@ -189,10 +189,10 @@ def _set_signature(mock, original, instance=False){
     }
     skipfirst = isinstance(original, type);
     result = _get_signature_object(original, instance, skipfirst);
-    if result is None{
+    if result is nil{
         return;
     } func, sig = result;
-    def checksig(*args, **kwargs){
+    function checksig(*args, **kwargs){
         sig.bind(*args, **kwargs);
     } _copy_func_details(func, checksig);
 
@@ -210,7 +210,7 @@ def _set_signature(mock, original, instance=False){
 
 
 }
-def _setup_func(funcopy, mock){
+function _setup_func(funcopy, mock){
     funcopy.mock = mock;
 
     # can't use isinstance with mocks
@@ -218,15 +218,15 @@ def _setup_func(funcopy, mock){
         return;
 
     }
-    def assert_called_with(*args, **kwargs){
+    function assert_called_with(*args, **kwargs){
         return mock.assert_called_with(*args, **kwargs);
-    } def assert_called_once_with(*args, **kwargs){
+    } function assert_called_once_with(*args, **kwargs){
         return mock.assert_called_once_with(*args, **kwargs);
-    } def assert_has_calls(*args, **kwargs){
+    } function assert_has_calls(*args, **kwargs){
         return mock.assert_has_calls(*args, **kwargs);
-    } def assert_any_call(*args, **kwargs){
+    } function assert_any_call(*args, **kwargs){
         return mock.assert_any_call(*args, **kwargs);
-    } def reset_mock(){
+    } function reset_mock(){
         funcopy.method_calls = _CallList();
         funcopy.mock_calls = _CallList();
         mock.reset_mock();
@@ -235,9 +235,9 @@ def _setup_func(funcopy, mock){
             ret.reset_mock();
 
     }
-    } funcopy.called = False;
+    } funcopy.called = false;
     funcopy.call_count = 0;
-    funcopy.call_args = None;
+    funcopy.call_args = nil;
     funcopy.call_args_list = _CallList();
     funcopy.method_calls = _CallList();
     funcopy.mock_calls = _CallList();
@@ -256,33 +256,33 @@ def _setup_func(funcopy, mock){
 
 
 }
-def _is_magic(name){
+function _is_magic(name){
     return '__%s__' % name[2:-2] == name;
 
 
 }
 class _SentinelObject(object){
     "A unique, named, sentinel object.";
-    def __init__(self, name){
-        self.name = name;
+    function __init__( name){
+        this.name = name;
 
     }
-    def __repr__(self){
-        return 'sentinel.%s' % self.name;
+    function __repr__(){
+        return 'sentinel.%s' % this.name;
 
 
 }
 } class _Sentinel(object){
     """Access attributes to return a named object, usable as a sentinel.""";
-    def __init__(self){
-        self._sentinels = {};
+    function __init__(){
+        this._sentinels = {};
 
     }
-    def __getattr__(self, name){
+    function __getattr__( name){
         if name == '__bases__'{
             # Without this help(unittest.mock) raises an exception
             raise AttributeError;
-        } return self._sentinels.setdefault(name, _SentinelObject(name));
+        } return this._sentinels.setdefault(name, _SentinelObject(name));
 
 
 }
@@ -293,7 +293,7 @@ _missing = sentinel.MISSING;
 _deleted = sentinel.DELETED;
 
 
-def _copy(value){
+function _copy(value){
     if type(value) in (dict, list, tuple, set){
         return type(value)(value);
     } return value;
@@ -309,18 +309,18 @@ _allowed_names = set(
 );
 
 
-def _delegating_property(name){
+function _delegating_property(name){
     _allowed_names.add(name);
     _the_name = '_mock_' + name;
-    def _get(self, name=name, _the_name=_the_name){
-        sig = self._mock_delegate;
-        if sig is None{
-            return getattr(self, _the_name);
+    function _get( name=name, _the_name=_the_name){
+        sig = this._mock_delegate;
+        if sig is nil{
+            return getattr(this, _the_name);
         } return getattr(sig, name);
-    } def _set(self, value, name=name, _the_name=_the_name){
-        sig = self._mock_delegate;
-        if sig is None{
-            self.__dict__[_the_name] = value;
+    } function _set( value, name=name, _the_name=_the_name){
+        sig = this._mock_delegate;
+        if sig is nil{
+            this.__dict__[_the_name] = value;
         } else{
             setattr(sig, name, value);
 
@@ -332,42 +332,42 @@ def _delegating_property(name){
 }
 class _CallList(list){
 
-    def __contains__(self, value){
+    function __contains__( value){
         if not isinstance(value, list){
-            return list.__contains__(self, value);
+            return list.__contains__(this, value);
         } len_value = len(value);
-        len_self = len(self);
+        len_self = len(this);
         if len_value > len_self{
-            return False;
+            return false;
 
         }
         for i in range(0, len_self - len_value + 1){
-            sub_list = self[i:i+len_value];
+            sub_list = this[i:i+len_value];
             if sub_list == value{
-                return True;
-        } } return False;
+                return true;
+        } } return false;
 
     }
-    def __repr__(self){
-        return pprint.pformat(list(self));
+    function __repr__(){
+        return pprint.pformat(list(this));
 
 
 }
-} def _check_and_set_parent(parent, value, name, new_name){
+} function _check_and_set_parent(parent, value, name, new_name){
     if not _is_instance_mock(value){
-        return False;
+        return false;
     } if ((value._mock_name or value._mock_new_name) or
-        (value._mock_parent is not None) or
-        (value._mock_new_parent is not None)){
-        return False;
+        (value._mock_parent is not nil) or
+        (value._mock_new_parent is not nil)){
+        return false;
 
     }
     _parent = parent;
-    while _parent is not None{
+    while _parent is not nil{
         # setting a mock (value) as a child or return value of itself
         # should not modify the mock
         if _parent is value{
-            return False;
+            return false;
         } _parent = _parent._mock_new_parent;
 
     }
@@ -377,23 +377,23 @@ class _CallList(list){
     } if name{
         value._mock_parent = parent;
         value._mock_name = name;
-    } return True;
+    } return true;
 
 # Internal class to identify if we wrapped an iterator object or not.
 }
 class _MockIter(object){
-    def __init__(self, obj){
-        self.obj = iter(obj);
-    } def __iter__(self){
-        return self;
-    } def __next__(self){
-        return next(self.obj);
+    function __init__( obj){
+        this.obj = iter(obj);
+    } function __iter__(){
+        return this;
+    } function __next__(){
+        return next(this.obj);
 
 }
 } class Base(object){
     _mock_return_value = DEFAULT;
-    _mock_side_effect = None;
-    def __init__(self, *args, **kwargs){
+    _mock_side_effect = nil;
+    function __init__( *args, **kwargs){
         pass;
 
 
@@ -402,7 +402,7 @@ class _MockIter(object){
 } class NonCallableMock(Base){
     """A non-callable version of `Mock`""";
 
-    def __new__(cls, *args, **kw){
+    function __new__(cls, *args, **kw){
         # every instance has its own class
         # so we can create magic methods on the
         # class without stomping on other mocks
@@ -412,36 +412,36 @@ class _MockIter(object){
 
 
     }
-    def __init__(
-            self, spec=None, wraps=None, name=None, spec_set=None,
-            parent=None, _spec_state=None, _new_name='', _new_parent=None,
-            _spec_as_instance=False, _eat_self=None, unsafe=False, **kwargs
+    function __init__(
+             spec=nil, wraps=nil, name=nil, spec_set=nil,
+            parent=nil, _spec_state=nil, _new_name='', _new_parent=nil,
+            _spec_as_instance=false, _eat_self=nil, unsafe=false, **kwargs
         ){
-        if _new_parent is None{
+        if _new_parent is nil{
             _new_parent = parent;
 
         }
-        __dict__ = self.__dict__;
+        __dict__ = this.__dict__;
         __dict__['_mock_parent'] = parent;
         __dict__['_mock_name'] = name;
         __dict__['_mock_new_name'] = _new_name;
         __dict__['_mock_new_parent'] = _new_parent;
 
-        if spec_set is not None{
+        if spec_set is not nil{
             spec = spec_set;
-            spec_set = True;
-        } if _eat_self is None{
-            _eat_self = parent is not None;
+            spec_set = true;
+        } if _eat_self is nil{
+            _eat_self = parent is not nil;
 
         }
-        self._mock_add_spec(spec, spec_set, _spec_as_instance, _eat_self);
+        this._mock_add_spec(spec, spec_set, _spec_as_instance, _eat_self);
 
         __dict__['_mock_children'] = {};
         __dict__['_mock_wraps'] = wraps;
-        __dict__['_mock_delegate'] = None;
+        __dict__['_mock_delegate'] = nil;
 
-        __dict__['_mock_called'] = False;
-        __dict__['_mock_call_args'] = None;
+        __dict__['_mock_called'] = false;
+        __dict__['_mock_call_args'] = nil;
         __dict__['_mock_call_count'] = 0;
         __dict__['_mock_call_args_list'] = _CallList();
         __dict__['_mock_mock_calls'] = _CallList();
@@ -450,46 +450,46 @@ class _MockIter(object){
         __dict__['_mock_unsafe'] = unsafe;
 
         if kwargs{
-            self.configure_mock(**kwargs);
+            this.configure_mock(**kwargs);
 
         }
-        _safe_super(NonCallableMock, self).__init__(
+        _safe_super(NonCallableMock, this).__init__(
             spec, wraps, name, spec_set, parent,
             _spec_state
         );
 
 
     }
-    def attach_mock(self, mock, attribute){
+    function attach_mock( mock, attribute){
         """
         Attach a mock as an attribute of this one, replacing its name and
         parent. Calls to the attached mock will be recorded in the
         `method_calls` and `mock_calls` attributes of this one.""";
-        mock._mock_parent = None;
-        mock._mock_new_parent = None;
+        mock._mock_parent = nil;
+        mock._mock_new_parent = nil;
         mock._mock_name = '';
-        mock._mock_new_name = None;
+        mock._mock_new_name = nil;
 
-        setattr(self, attribute, mock);
+        setattr(this, attribute, mock);
 
 
     }
-    def mock_add_spec(self, spec, spec_set=False){
+    function mock_add_spec( spec, spec_set=false){
         """Add a spec to a mock. `spec` can either be an object or a
         list of strings. Only attributes on the `spec` can be fetched as
         attributes from the mock.
 
         If `spec_set` is True then only attributes on the spec can be set.""";
-        self._mock_add_spec(spec, spec_set);
+        this._mock_add_spec(spec, spec_set);
 
 
     }
-    def _mock_add_spec(self, spec, spec_set, _spec_as_instance=False,
-                       _eat_self=False){
-        _spec_class = None;
-        _spec_signature = None;
+    function _mock_add_spec( spec, spec_set, _spec_as_instance=false,
+                       _eat_self=false){
+        _spec_class = nil;
+        _spec_signature = nil;
 
-        if spec is not None and not _is_list(spec){
+        if spec is not nil and not _is_list(spec){
             if isinstance(spec, type){
                 _spec_class = spec;
             } else{
@@ -501,7 +501,7 @@ class _MockIter(object){
             spec = dir(spec);
 
         }
-        __dict__ = self.__dict__;
+        __dict__ = this.__dict__;
         __dict__['_spec_class'] = _spec_class;
         __dict__['_spec_set'] = spec_set;
         __dict__['_spec_signature'] = _spec_signature;
@@ -509,27 +509,27 @@ class _MockIter(object){
 
 
     }
-    def __get_return_value(self){
-        ret = self._mock_return_value;
-        if self._mock_delegate is not None{
-            ret = self._mock_delegate.return_value;
+    function __get_return_value(){
+        ret = this._mock_return_value;
+        if this._mock_delegate is not nil{
+            ret = this._mock_delegate.return_value;
 
         }
         if ret is DEFAULT{
-            ret = self._get_child_mock(
-                _new_parent=self, _new_name='()'
+            ret = this._get_child_mock(
+                _new_parent=this, _new_name='()'
             );
-            self.return_value = ret;
+            this.return_value = ret;
         } return ret;
 
 
     }
-    def __set_return_value(self, value){
-        if self._mock_delegate is not None{
-            self._mock_delegate.return_value = value;
+    function __set_return_value( value){
+        if this._mock_delegate is not nil{
+            this._mock_delegate.return_value = value;
         } else{
-            self._mock_return_value = value;
-            _check_and_set_parent(self, value, None, '()');
+            this._mock_return_value = value;
+            _check_and_set_parent(this, value, nil, '()');
 
     }
     } __return_value_doc = "The value to be returned when the mock is called.";
@@ -538,10 +538,10 @@ class _MockIter(object){
 
 
     @property;
-    def __class__(self){
-        if self._spec_class is None{
-            return type(self);
-        } return self._spec_class;
+    function __class__(){
+        if this._spec_class is nil{
+            return type(this);
+        } return this._spec_class;
 
     }
     called = _delegating_property('called');
@@ -551,22 +551,22 @@ class _MockIter(object){
     mock_calls = _delegating_property('mock_calls');
 
 
-    def __get_side_effect(self){
-        delegated = self._mock_delegate;
-        if delegated is None{
-            return self._mock_side_effect;
+    function __get_side_effect(){
+        delegated = this._mock_delegate;
+        if delegated is nil{
+            return this._mock_side_effect;
         } sf = delegated.side_effect;
-        if sf is not None and not callable(sf) and not isinstance(sf, _MockIter){
+        if sf is not nil and not callable(sf) and not isinstance(sf, _MockIter){
             sf = _MockIter(sf);
             delegated.side_effect = sf;
         } return sf;
 
     }
-    def __set_side_effect(self, value){
+    function __set_side_effect( value){
         value = _try_iter(value);
-        delegated = self._mock_delegate;
-        if delegated is None{
-            self._mock_side_effect = value;
+        delegated = this._mock_delegate;
+        if delegated is nil{
+            this._mock_side_effect = value;
         } else{
             delegated.side_effect = value;
 
@@ -574,28 +574,28 @@ class _MockIter(object){
     } side_effect = property(__get_side_effect, __set_side_effect);
 
 
-    def reset_mock(self){
+    function reset_mock(){
         "Restore the mock object to its initial state.";
-        self.called = False;
-        self.call_args = None;
-        self.call_count = 0;
-        self.mock_calls = _CallList();
-        self.call_args_list = _CallList();
-        self.method_calls = _CallList();
+        this.called = false;
+        this.call_args = nil;
+        this.call_count = 0;
+        this.mock_calls = _CallList();
+        this.call_args_list = _CallList();
+        this.method_calls = _CallList();
 
-        for child in self._mock_children.values(){
+        for child in this._mock_children.values(){
             if isinstance(child, _SpecState){
                 continue;
             } child.reset_mock();
 
         }
-        ret = self._mock_return_value;
-        if _is_instance_mock(ret) and ret is not self{
+        ret = this._mock_return_value;
+        if _is_instance_mock(ret) and ret is not this{
             ret.reset_mock();
 
 
     }
-    } def configure_mock(self, **kwargs){
+    } function configure_mock( **kwargs){
         """Set attributes on the mock through keyword arguments.
 
         Attributes plus return values and side effects can be set on child
@@ -611,42 +611,42 @@ class _MockIter(object){
                                key=lambda entry{ entry[0].count('.')}){
             args = arg.split('.');
             final = args.pop();
-            obj = self;
+            obj = this;
             for entry in args{
                 obj = getattr(obj, entry);
             } setattr(obj, final, val);
 
 
     }
-    } def __getattr__(self, name){
+    } function __getattr__( name){
         if name in {'_mock_methods', '_mock_unsafe'}{
             raise AttributeError(name);
-        } elif self._mock_methods is not None{
-            if name not in self._mock_methods or name in _all_magics{
+        } elif this._mock_methods is not nil{
+            if name not in this._mock_methods or name in _all_magics{
                 raise AttributeError("Mock object has no attribute %r" % name);
         } } elif _is_magic(name){
             raise AttributeError(name);
-        } if not self._mock_unsafe{
+        } if not this._mock_unsafe{
             if name.startswith(('assert', 'assret')){
                 raise AttributeError(name);
 
         }
-        } result = self._mock_children.get(name);
+        } result = this._mock_children.get(name);
         if result is _deleted{
             raise AttributeError(name);
-        } elif result is None{
-            wraps = None;
-            if self._mock_wraps is not None{
+        } elif result is nil{
+            wraps = nil;
+            if this._mock_wraps is not nil{
                 # XXXX should we get the attribute without triggering code
                 # execution?
-                wraps = getattr(self._mock_wraps, name);
+                wraps = getattr(this._mock_wraps, name);
 
             }
-            result = self._get_child_mock(
-                parent=self, name=name, wraps=wraps, _new_name=name,
-                _new_parent=self
+            result = this._get_child_mock(
+                parent=this, name=name, wraps=wraps, _new_name=name,
+                _new_parent=this
             );
-            self._mock_children[name]  = result;
+            this._mock_children[name]  = result;
 
         }
         elif isinstance(result, _SpecState){
@@ -654,23 +654,23 @@ class _MockIter(object){
                 result.spec, result.spec_set, result.instance,
                 result.parent, result.name
             );
-            self._mock_children[name]  = result;
+            this._mock_children[name]  = result;
 
         }
         return result;
 
 
     }
-    def __repr__(self){
-        _name_list = [self._mock_new_name];
-        _parent = self._mock_new_parent;
-        last = self;
+    function __repr__(){
+        _name_list = [this._mock_new_name];
+        _parent = this._mock_new_parent;
+        last = this;
 
         dot = '.';
         if _name_list == ['()']{
             dot = '';
         } seen = set();
-        while _parent is not None{
+        while _parent is not nil{
             last = _parent;
 
             _name_list.append(_parent._mock_new_name + dot);
@@ -701,122 +701,122 @@ class _MockIter(object){
 
         }
         spec_string = '';
-        if self._spec_class is not None{
+        if this._spec_class is not nil{
             spec_string = ' spec=%r';
-            if self._spec_set{
+            if this._spec_set{
                 spec_string = ' spec_set=%r';
-            } spec_string = spec_string % self._spec_class.__name__;
+            } spec_string = spec_string % this._spec_class.__name__;
         } return "<%s%s%s id='%s'>" % (
-            type(self).__name__,
+            type(this).__name__,
             name_string,
             spec_string,
-            id(self)
+            id(this)
         );
 
 
     }
-    def __dir__(self){
+    function __dir__(){
         """Filter the output of `dir(mock)` to only useful members.""";
         if not FILTER_DIR{
-            return object.__dir__(self);
+            return object.__dir__(this);
 
         }
-        extras = self._mock_methods or [];
-        from_type = dir(type(self));
-        from_dict = list(self.__dict__);
+        extras = this._mock_methods or [];
+        from_type = dir(type(this));
+        from_dict = list(this.__dict__);
 
         from_type = [e for e in from_type if not e.startswith('_')];
         from_dict = [e for e in from_dict if not e.startswith('_') or
                      _is_magic(e)];
         return sorted(set(extras + from_type + from_dict +
-                          list(self._mock_children)));
+                          list(this._mock_children)));
 
 
     }
-    def __setattr__(self, name, value){
+    function __setattr__( name, value){
         if name in _allowed_names{
             # property setters go through here
-            return object.__setattr__(self, name, value);
-        } elif (self._spec_set and self._mock_methods is not None and
-            name not in self._mock_methods and
-            name not in self.__dict__){
+            return object.__setattr__(this, name, value);
+        } elif (this._spec_set and this._mock_methods is not nil and
+            name not in this._mock_methods and
+            name not in this.__dict__){
             raise AttributeError("Mock object has no attribute '%s'" % name);
         } elif name in _unsupported_magics{
             msg = 'Attempting to set unsupported magic method %r.' % name;
             raise AttributeError(msg);
         } elif name in _all_magics{
-            if self._mock_methods is not None and name not in self._mock_methods{
+            if this._mock_methods is not nil and name not in this._mock_methods{
                 raise AttributeError("Mock object has no attribute '%s'" % name);
 
             }
             if not _is_instance_mock(value){
-                setattr(type(self), name, _get_method(name, value));
+                setattr(type(this), name, _get_method(name, value));
                 original = value;
-                value = lambda *args, **kw{ original(self, *args, **kw)};
+                value = lambda *args, **kw{ original(this, *args, **kw)};
             } else{
                 # only set _new_name and not name so that mock_calls is tracked
                 # but not method calls
-                _check_and_set_parent(self, value, None, name);
-                setattr(type(self), name, value);
-                self._mock_children[name] = value;
+                _check_and_set_parent(this, value, nil, name);
+                setattr(type(this), name, value);
+                this._mock_children[name] = value;
         } } elif name == '__class__'{
-            self._spec_class = value;
+            this._spec_class = value;
             return;
         } else{
-            if _check_and_set_parent(self, value, name, name){
-                self._mock_children[name] = value;
-        } } return object.__setattr__(self, name, value);
+            if _check_and_set_parent(this, value, name, name){
+                this._mock_children[name] = value;
+        } } return object.__setattr__(this, name, value);
 
 
     }
-    def __delattr__(self, name){
-        if name in _all_magics and name in type(self).__dict__{
-            delattr(type(self), name);
-            if name not in self.__dict__{
+    function __delattr__( name){
+        if name in _all_magics and name in type(this).__dict__{
+            delattr(type(this), name);
+            if name not in this.__dict__{
                 # for magic methods that are still MagicProxy objects and
                 # not set on the instance itself
                 return;
 
         }
-        } if name in self.__dict__{
-            object.__delattr__(self, name);
+        } if name in this.__dict__{
+            object.__delattr__(this, name);
 
         }
-        obj = self._mock_children.get(name, _missing);
+        obj = this._mock_children.get(name, _missing);
         if obj is _deleted{
             raise AttributeError(name);
         } if obj is not _missing{
-            del self._mock_children[name];
-        } self._mock_children[name] = _deleted;
+            del this._mock_children[name];
+        } this._mock_children[name] = _deleted;
 
 
     }
-    def _format_mock_call_signature(self, args, kwargs){
-        name = self._mock_name or 'mock';
+    function _format_mock_call_signature( args, kwargs){
+        name = this._mock_name or 'mock';
         return _format_call_signature(name, args, kwargs);
 
 
     }
-    def _format_mock_failure_message(self, args, kwargs){
+    function _format_mock_failure_message( args, kwargs){
         message = 'Expected call: %s\nActual call: %s';
-        expected_string = self._format_mock_call_signature(args, kwargs);
-        call_args = self.call_args;
+        expected_string = this._format_mock_call_signature(args, kwargs);
+        call_args = this.call_args;
         if len(call_args) == 3{
             call_args = call_args[1:];
-        } actual_string = self._format_mock_call_signature(*call_args);
+        } actual_string = this._format_mock_call_signature(*call_args);
         return message % (expected_string, actual_string);
 
 
     }
-    def _call_matcher(self, _call){
+    function _call_matcher( _call){
         """
         Given a call (or simply an (args, kwargs) tuple), return a
         comparison key suitable for matching with other calls.
         This is a best effort method which relies on the spec's signature,
         if available, or falls back on the arguments themselves.
         """;
-        sig = self._spec_signature;
-        if sig is not None{
+        sig = this._spec_signature;
+        if sig is not nil{
             if len(_call) == 2{
                 name = '';
                 args, kwargs = _call;
@@ -825,55 +825,55 @@ class _MockIter(object){
             } try{
                 return name, sig.bind(*args, **kwargs);
             } except TypeError as e{
-                return e.with_traceback(None);
+                return e.with_traceback(nil);
         } } else{
             return _call;
 
     }
-    } def assert_not_called(_mock_self){
+    } function assert_not_called(_mock_self){
         """assert that the mock was never called.
         """;
-        self = _mock_self;
-        if self.call_count != 0{
+        this = _mock_self;
+        if this.call_count != 0{
             msg = ("Expected '%s' to not have been called. Called %s times." %
-                   (self._mock_name or 'mock', self.call_count));
+                   (this._mock_name or 'mock', this.call_count));
             raise AssertionError(msg);
 
     }
-    } def assert_called_with(_mock_self, *args, **kwargs){
+    } function assert_called_with(_mock_self, *args, **kwargs){
         """assert that the mock was called with the specified arguments.
 
         Raises an AssertionError if the args and keyword args passed in are
         different to the last call to the mock.""";
-        self = _mock_self;
-        if self.call_args is None{
-            expected = self._format_mock_call_signature(args, kwargs);
+        this = _mock_self;
+        if this.call_args is nil{
+            expected = this._format_mock_call_signature(args, kwargs);
             raise AssertionError('Expected call: %s\nNot called' % (expected,));
 
         }
-        def _error_message(){
-            msg = self._format_mock_failure_message(args, kwargs);
+        function _error_message(){
+            msg = this._format_mock_failure_message(args, kwargs);
             return msg;
-        } expected = self._call_matcher((args, kwargs));
-        actual = self._call_matcher(self.call_args);
+        } expected = this._call_matcher((args, kwargs));
+        actual = this._call_matcher(this.call_args);
         if expected != actual{
             raise AssertionError(_error_message());
 
 
     }
-    } def assert_called_once_with(_mock_self, *args, **kwargs){
+    } function assert_called_once_with(_mock_self, *args, **kwargs){
         """assert that the mock was called exactly once and with the specified
         arguments.""";
-        self = _mock_self;
-        if not self.call_count == 1{
+        this = _mock_self;
+        if not this.call_count == 1{
             msg = ("Expected '%s' to be called once. Called %s times." %
-                   (self._mock_name or 'mock', self.call_count));
+                   (this._mock_name or 'mock', this.call_count));
             raise AssertionError(msg);
-        } return self.assert_called_with(*args, **kwargs);
+        } return this.assert_called_with(*args, **kwargs);
 
 
     }
-    def assert_has_calls(self, calls, any_order=False){
+    function assert_has_calls( calls, any_order=false){
         """assert the mock has been called with the specified calls.
         The `mock_calls` list is checked for the calls.
 
@@ -883,13 +883,13 @@ class _MockIter(object){
 
         If `any_order` is True then the calls can be in any order, but
         they must all appear in `mock_calls`.""";
-        expected = [self._call_matcher(c) for c in calls];
-        all_calls = _CallList(self._call_matcher(c) for c in self.mock_calls);
+        expected = [this._call_matcher(c) for c in calls];
+        all_calls = _CallList(this._call_matcher(c) for c in this.mock_calls);
         if not any_order{
             if expected not in all_calls{
                 raise AssertionError(
                     'Calls not found.\nExpected: %r\n'
-                    'Actual: %r' % (calls, self.mock_calls)
+                    'Actual: %r' % (calls, this.mock_calls)
                 );
             } return;
 
@@ -909,23 +909,23 @@ class _MockIter(object){
 
 
     }
-    } def assert_any_call(self, *args, **kwargs){
+    } function assert_any_call( *args, **kwargs){
         """assert the mock has been called with the specified arguments.
 
         The assert passes if the mock has *ever* been called, unlike
         `assert_called_with` and `assert_called_once_with` that only pass if
         the call is the most recent one.""";
-        expected = self._call_matcher((args, kwargs));
-        actual = [self._call_matcher(c) for c in self.call_args_list];
+        expected = this._call_matcher((args, kwargs));
+        actual = [this._call_matcher(c) for c in this.call_args_list];
         if expected not in actual{
-            expected_string = self._format_mock_call_signature(args, kwargs);
+            expected_string = this._format_mock_call_signature(args, kwargs);
             raise AssertionError(
                 '%s call not found' % expected_string
             );
 
 
     }
-    } def _get_child_mock(self, **kw){
+    } function _get_child_mock( **kw){
         """Create the child mocks for attributes and return value.
         By default child mocks will be the same type as the parent.
         Subclasses of Mock may want to override this to customize the way
@@ -933,7 +933,7 @@ class _MockIter(object){
 
         For non-callable mocks the callable variant will be used (rather than
         any custom subclass).""";
-        _type = type(self);
+        _type = type(this);
         if not issubclass(_type, CallableMixin){
             if issubclass(_type, NonCallableMagicMock){
                 klass = MagicMock;
@@ -946,8 +946,8 @@ class _MockIter(object){
 
 
 }
-} def _try_iter(obj){
-    if obj is None{
+} function _try_iter(obj){
+    if obj is nil{
         return obj;
     } if _is_exception(obj){
         return obj;
@@ -965,27 +965,27 @@ class _MockIter(object){
 }
 } class CallableMixin(Base){
 
-    def __init__(self, spec=None, side_effect=None, return_value=DEFAULT,
-                 wraps=None, name=None, spec_set=None, parent=None,
-                 _spec_state=None, _new_name='', _new_parent=None, **kwargs){
-        self.__dict__['_mock_return_value'] = return_value;
+    function __init__( spec=nil, side_effect=nil, return_value=DEFAULT,
+                 wraps=nil, name=nil, spec_set=nil, parent=nil,
+                 _spec_state=nil, _new_name='', _new_parent=nil, **kwargs){
+        this.__dict__['_mock_return_value'] = return_value;
 
-        _safe_super(CallableMixin, self).__init__(
+        _safe_super(CallableMixin, this).__init__(
             spec, wraps, name, spec_set, parent,
             _spec_state, _new_name, _new_parent, **kwargs
         );
 
-        self.side_effect = side_effect;
+        this.side_effect = side_effect;
 
 
     }
-    def _mock_check_sig(self, *args, **kwargs){
+    function _mock_check_sig( *args, **kwargs){
         # stub method that can be replaced with one with a specific signature
         pass;
 
 
     }
-    def __call__(_mock_self, *args, **kwargs){
+    function __call__(_mock_self, *args, **kwargs){
         # can't use self in-case a function / method we are mocking uses self
         # in the signature
         _mock_self._mock_check_sig(*args, **kwargs);
@@ -993,23 +993,23 @@ class _MockIter(object){
 
 
     }
-    def _mock_call(_mock_self, *args, **kwargs){
-        self = _mock_self;
-        self.called = True;
-        self.call_count += 1;
-        _new_name = self._mock_new_name;
-        _new_parent = self._mock_new_parent;
+    function _mock_call(_mock_self, *args, **kwargs){
+        this = _mock_self;
+        this.called = true;
+        this.call_count += 1;
+        _new_name = this._mock_new_name;
+        _new_parent = this._mock_new_parent;
 
-        _call = _Call((args, kwargs), two=True);
-        self.call_args = _call;
-        self.call_args_list.append(_call);
-        self.mock_calls.append(_Call(('', args, kwargs)));
+        _call = _Call((args, kwargs), two=true);
+        this.call_args = _call;
+        this.call_args_list.append(_call);
+        this.mock_calls.append(_Call(('', args, kwargs)));
 
         seen = set();
         skip_next_dot = _new_name == '()';
-        do_method_calls = self._mock_parent is not None;
-        name = self._mock_name;
-        while _new_parent is not None{
+        do_method_calls = this._mock_parent is not nil;
+        name = this._mock_name;
+        while _new_parent is not nil{
             this_mock_call = _Call((_new_name, args, kwargs));
             if _new_parent._mock_new_name{
                 dot = '.';
@@ -1017,9 +1017,9 @@ class _MockIter(object){
                     dot = '';
 
                 }
-                skip_next_dot = False;
+                skip_next_dot = false;
                 if _new_parent._mock_new_name == '()'{
-                    skip_next_dot = True;
+                    skip_next_dot = true;
 
                 }
                 _new_name = _new_parent._mock_new_name + dot + _new_name;
@@ -1032,7 +1032,7 @@ class _MockIter(object){
                     this_method_call = _Call((name, args, kwargs));
                 } _new_parent.method_calls.append(this_method_call);
 
-                do_method_calls = _new_parent._mock_parent is not None;
+                do_method_calls = _new_parent._mock_parent is not nil;
                 if do_method_calls{
                     name = _new_parent._mock_name + '.' + name;
 
@@ -1048,8 +1048,8 @@ class _MockIter(object){
 
         }
         ret_val = DEFAULT;
-        effect = self.side_effect;
-        if effect is not None{
+        effect = this.side_effect;
+        if effect is not nil{
             if _is_exception(effect){
                 raise effect;
 
@@ -1059,18 +1059,18 @@ class _MockIter(object){
                 if _is_exception(result){
                     raise result;
                 } if result is DEFAULT{
-                    result = self.return_value;
+                    result = this.return_value;
                 } return result;
 
             }
             ret_val = effect(*args, **kwargs);
 
         }
-        if (self._mock_wraps is not None and
-             self._mock_return_value is DEFAULT){
-            return self._mock_wraps(*args, **kwargs);
+        if (this._mock_wraps is not nil and
+             this._mock_return_value is DEFAULT){
+            return this._mock_wraps(*args, **kwargs);
         } if ret_val is DEFAULT{
-            ret_val = self.return_value;
+            ret_val = this.return_value;
         } return ret_val;
 
 
@@ -1130,7 +1130,7 @@ class _MockIter(object){
 
 
 }
-def _dot_lookup(thing, comp, import_path){
+function _dot_lookup(thing, comp, import_path){
     try{
         return getattr(thing, comp);
     } except AttributeError{
@@ -1139,7 +1139,7 @@ def _dot_lookup(thing, comp, import_path){
 
 
 }
-} def _importer(target){
+} function _importer(target){
     components = target.split('.');
     import_path = components.pop(0);
     thing = __import__(import_path);
@@ -1151,7 +1151,7 @@ def _dot_lookup(thing, comp, import_path){
 
 
 }
-def _is_started(patcher){
+function _is_started(patcher){
     # XXXX horrible
     return hasattr(patcher, 'is_local');
 
@@ -1159,60 +1159,60 @@ def _is_started(patcher){
 }
 class _patch(object){
 
-    attribute_name = None;
+    attribute_name = nil;
     _active_patches = [];
 
-    def __init__(
-            self, getter, attribute, new, spec, create,
+    function __init__(
+             getter, attribute, new, spec, create,
             spec_set, autospec, new_callable, kwargs
         ){
-        if new_callable is not None{
+        if new_callable is not nil{
             if new is not DEFAULT{
                 raise ValueError(
                     "Cannot use 'new' and 'new_callable' together"
                 );
-            } if autospec is not None{
+            } if autospec is not nil{
                 raise ValueError(
                     "Cannot use 'autospec' and 'new_callable' together"
                 );
 
         }
-        } self.getter = getter;
-        self.attribute = attribute;
-        self.new = new;
-        self.new_callable = new_callable;
-        self.spec = spec;
-        self.create = create;
-        self.has_local = False;
-        self.spec_set = spec_set;
-        self.autospec = autospec;
-        self.kwargs = kwargs;
-        self.additional_patchers = [];
+        } this.getter = getter;
+        this.attribute = attribute;
+        this.new = new;
+        this.new_callable = new_callable;
+        this.spec = spec;
+        this.create = create;
+        this.has_local = false;
+        this.spec_set = spec_set;
+        this.autospec = autospec;
+        this.kwargs = kwargs;
+        this.additional_patchers = [];
 
 
     }
-    def copy(self){
+    function copy(){
         patcher = _patch(
-            self.getter, self.attribute, self.new, self.spec,
-            self.create, self.spec_set,
-            self.autospec, self.new_callable, self.kwargs
+            this.getter, this.attribute, this.new, this.spec,
+            this.create, this.spec_set,
+            this.autospec, this.new_callable, this.kwargs
         );
-        patcher.attribute_name = self.attribute_name;
+        patcher.attribute_name = this.attribute_name;
         patcher.additional_patchers = [
-            p.copy() for p in self.additional_patchers
+            p.copy() for p in this.additional_patchers
         ];
         return patcher;
 
 
     }
-    def __call__(self, func){
+    function __call__( func){
         if isinstance(func, type){
-            return self.decorate_class(func);
-        } return self.decorate_callable(func);
+            return this.decorate_class(func);
+        } return this.decorate_callable(func);
 
 
     }
-    def decorate_class(self, klass){
+    function decorate_class( klass){
         for attr in dir(klass){
             if not attr.startswith(patch.TEST_PREFIX){
                 continue;
@@ -1223,20 +1223,20 @@ class _patch(object){
                 continue;
 
             }
-            patcher = self.copy();
+            patcher = this.copy();
             setattr(klass, attr, patcher(attr_value));
         } return klass;
 
 
     }
-    def decorate_callable(self, func){
+    function decorate_callable( func){
         if hasattr(func, 'patchings'){
-            func.patchings.append(self);
+            func.patchings.append(this);
             return func;
 
         }
         @wraps(func);
-        def patched(*args, **keywargs){
+        function patched(*args, **keywargs){
             extra_args = [];
             entered_patchers = [];
 
@@ -1245,7 +1245,7 @@ class _patch(object){
                 for patching in patched.patchings{
                     arg = patching.__enter__();
                     entered_patchers.append(patching);
-                    if patching.attribute_name is not None{
+                    if patching.attribute_name is not nil{
                         keywargs.update(arg);
                     } elif patching.new is DEFAULT{
                         extra_args.append(arg);
@@ -1269,31 +1269,31 @@ class _patch(object){
                     patching.__exit__(*exc_info);
 
         }
-        } } patched.patchings = [self];
+        } } patched.patchings = [this];
         return patched;
 
 
     }
-    def get_original(self){
-        target = self.getter();
-        name = self.attribute;
+    function get_original(){
+        target = this.getter();
+        name = this.attribute;
 
         original = DEFAULT;
-        local = False;
+        local = false;
 
         try{
             original = target.__dict__[name];
         } except (AttributeError, KeyError){
             original = getattr(target, name, DEFAULT);
         } else{
-            local = True;
+            local = true;
 
         }
         if name in _builtins and isinstance(target, ModuleType){
-            self.create = True;
+            this.create = true;
 
         }
-        if not self.create and original is DEFAULT{
+        if not this.create and original is DEFAULT{
             raise AttributeError(
                 "%s does not have the attribute %r" % (target, name)
             );
@@ -1301,62 +1301,62 @@ class _patch(object){
 
 
     }
-    def __enter__(self){
+    function __enter__(){
         """Perform the patch.""";
-        new, spec, spec_set = self.new, self.spec, self.spec_set;
-        autospec, kwargs = self.autospec, self.kwargs;
-        new_callable = self.new_callable;
-        self.target = self.getter();
+        new, spec, spec_set = this.new, this.spec, this.spec_set;
+        autospec, kwargs = this.autospec, this.kwargs;
+        new_callable = this.new_callable;
+        this.target = this.getter();
 
         # normalise False to None
-        if spec is False{
-            spec = None;
-        } if spec_set is False{
-            spec_set = None;
-        } if autospec is False{
-            autospec = None;
+        if spec is false{
+            spec = nil;
+        } if spec_set is false{
+            spec_set = nil;
+        } if autospec is false{
+            autospec = nil;
 
         }
-        if spec is not None and autospec is not None{
+        if spec is not nil and autospec is not nil{
             raise TypeError("Can't specify spec and autospec");
-        } if ((spec is not None or autospec is not None) and
-            spec_set not in (True, None)){
+        } if ((spec is not nil or autospec is not nil) and
+            spec_set not in (true, nil)){
             raise TypeError("Can't provide explicit spec_set *and* spec or autospec");
 
         }
-        original, local = self.get_original();
+        original, local = this.get_original();
 
-        if new is DEFAULT and autospec is None{
-            inherit = False;
-            if spec is True{
+        if new is DEFAULT and autospec is nil{
+            inherit = false;
+            if spec is true{
                 # set spec to the object we are replacing
                 spec = original;
-                if spec_set is True{
+                if spec_set is true{
                     spec_set = original;
-                    spec = None;
-            } } elif spec is not None{
-                if spec_set is True{
+                    spec = nil;
+            } } elif spec is not nil{
+                if spec_set is true{
                     spec_set = spec;
-                    spec = None;
-            } } elif spec_set is True{
+                    spec = nil;
+            } } elif spec_set is true{
                 spec_set = original;
 
             }
-            if spec is not None or spec_set is not None{
+            if spec is not nil or spec_set is not nil{
                 if original is DEFAULT{
                     raise TypeError("Can't use 'spec' with create=True");
                 } if isinstance(original, type){
                     # If we're patching out a class and there is a spec
-                    inherit = True;
+                    inherit = true;
 
             }
             } Klass = MagicMock;
             _kwargs = {};
-            if new_callable is not None{
+            if new_callable is not nil{
                 Klass = new_callable;
-            } elif spec is not None or spec_set is not None{
+            } elif spec is not nil or spec_set is not nil{
                 this_spec = spec;
-                if spec_set is not None{
+                if spec_set is not nil{
                     this_spec = spec_set;
                 } if _is_list(this_spec){
                     not_callable = '__call__' not in this_spec;
@@ -1366,16 +1366,16 @@ class _patch(object){
                     Klass = NonCallableMagicMock;
 
             }
-            } if spec is not None{
+            } if spec is not nil{
                 _kwargs['spec'] = spec;
-            } if spec_set is not None{
+            } if spec_set is not nil{
                 _kwargs['spec_set'] = spec_set;
 
             # add a name to mocks
             }
             if (isinstance(Klass, type) and
-                issubclass(Klass, NonCallableMock) and self.attribute){
-                _kwargs['name'] = self.attribute;
+                issubclass(Klass, NonCallableMock) and this.attribute){
+                _kwargs['name'] = this.attribute;
 
             }
             _kwargs.update(kwargs);
@@ -1385,7 +1385,7 @@ class _patch(object){
                 # we can only tell if the instance should be callable if the
                 # spec is not a list
                 this_spec = spec;
-                if spec_set is not None{
+                if spec_set is not nil{
                     this_spec = spec_set;
                 } if (not _is_list(this_spec) and not
                     _instance_callable(this_spec)){
@@ -1395,7 +1395,7 @@ class _patch(object){
                 _kwargs.pop('name');
                 new.return_value = Klass(_new_parent=new, _new_name='()',
                                          **_kwargs);
-        } } elif autospec is not None{
+        } } elif autospec is not nil{
             # spec is ignored, new *must* be default, spec_set is treated
             # as a boolean. Should we check spec is not None and that spec_set
             # is a bool?
@@ -1407,12 +1407,12 @@ class _patch(object){
             } if original is DEFAULT{
                 raise TypeError("Can't use 'autospec' with create=True");
             } spec_set = bool(spec_set);
-            if autospec is True{
+            if autospec is true{
                 autospec = original;
 
             }
             new = create_autospec(autospec, spec_set=spec_set,
-                                  _name=self.attribute, **kwargs);
+                                  _name=this.attribute, **kwargs);
         } elif kwargs{
             # can't set keyword args when we aren't creating the mock
             # XXXX If new is a Mock we could call new.configure_mock(**kwargs)
@@ -1421,14 +1421,14 @@ class _patch(object){
         }
         new_attr = new;
 
-        self.temp_original = original;
-        self.is_local = local;
-        setattr(self.target, self.attribute, new_attr);
-        if self.attribute_name is not None{
+        this.temp_original = original;
+        this.is_local = local;
+        setattr(this.target, this.attribute, new_attr);
+        if this.attribute_name is not nil{
             extra_args = {};
-            if self.new is DEFAULT{
-                extra_args[self.attribute_name] =  new;
-            } for patching in self.additional_patchers{
+            if this.new is DEFAULT{
+                extra_args[this.attribute_name] =  new;
+            } for patching in this.additional_patchers{
                 arg = patching.__enter__();
                 if patching.new is DEFAULT{
                     extra_args.update(arg);
@@ -1439,53 +1439,53 @@ class _patch(object){
 
 
     }
-    def __exit__(self, *exc_info){
+    function __exit__( *exc_info){
         """Undo the patch.""";
-        if not _is_started(self){
+        if not _is_started(this){
             raise RuntimeError('stop called on unstarted patcher');
 
         }
-        if self.is_local and self.temp_original is not DEFAULT{
-            setattr(self.target, self.attribute, self.temp_original);
+        if this.is_local and this.temp_original is not DEFAULT{
+            setattr(this.target, this.attribute, this.temp_original);
         } else{
-            delattr(self.target, self.attribute);
-            if not self.create and not hasattr(self.target, self.attribute){
+            delattr(this.target, this.attribute);
+            if not this.create and not hasattr(this.target, this.attribute){
                 # needed for proxy objects like django settings
-                setattr(self.target, self.attribute, self.temp_original);
+                setattr(this.target, this.attribute, this.temp_original);
 
         }
-        } del self.temp_original;
-        del self.is_local;
-        del self.target;
-        for patcher in reversed(self.additional_patchers){
+        } del this.temp_original;
+        del this.is_local;
+        del this.target;
+        for patcher in reversed(this.additional_patchers){
             if _is_started(patcher){
                 patcher.__exit__(*exc_info);
 
 
     }
-    } } def start(self){
+    } } function start(){
         """Activate a patch, returning any created mock.""";
-        result = self.__enter__();
-        self._active_patches.append(self);
+        result = this.__enter__();
+        this._active_patches.append(this);
         return result;
 
 
     }
-    def stop(self){
+    function stop(){
         """Stop an active patch.""";
         try{
-            self._active_patches.remove(self);
+            this._active_patches.remove(this);
         } except ValueError{
             # If the patch hasn't been started this will fail
             pass;
 
         }
-        return self.__exit__();
+        return this.__exit__();
 
 
 
 }
-} def _get_target(target){
+} function _get_target(target){
     try{
         target, attribute = target.rsplit('.', 1);
     } except (TypeError, ValueError){
@@ -1496,10 +1496,10 @@ class _patch(object){
 
 
 }
-def _patch_object(
-        target, attribute, new=DEFAULT, spec=None,
-        create=False, spec_set=None, autospec=None,
-        new_callable=None, **kwargs
+function _patch_object(
+        target, attribute, new=DEFAULT, spec=nil,
+        create=false, spec_set=nil, autospec=nil,
+        new_callable=nil, **kwargs
     ){
     """
     patch the named member (`attribute`) on an object (`target`) with a mock
@@ -1522,8 +1522,8 @@ def _patch_object(
 
 
 }
-def _patch_multiple(target, spec=None, create=False, spec_set=None,
-                    autospec=None, new_callable=None, **kwargs){
+function _patch_multiple(target, spec=nil, create=false, spec_set=nil,
+                    autospec=nil, new_callable=nil, **kwargs){
     """Perform multiple patches in a single call. It takes the object to be
     patched (either as an object or a string to fetch the object by importing)
     and keyword arguments for the patches::
@@ -1574,9 +1574,9 @@ def _patch_multiple(target, spec=None, create=False, spec_set=None,
 
 
 }
-def patch(
-        target, new=DEFAULT, spec=None, create=False,
-        spec_set=None, autospec=None, new_callable=None, **kwargs
+function patch(
+        target, new=DEFAULT, spec=nil, create=false,
+        spec_set=nil, autospec=nil, new_callable=nil, **kwargs
     ){
     """
     `patch` acts as a function decorator, class decorator or a context
@@ -1680,56 +1680,56 @@ class _patch_dict(object){
     `patch.TEST_PREFIX` for choosing which methods to wrap.
     """;
 
-    def __init__(self, in_dict, values=(), clear=False, **kwargs){
+    function __init__( in_dict, values=(), clear=false, **kwargs){
         if isinstance(in_dict, str){
             in_dict = _importer(in_dict);
-        } self.in_dict = in_dict;
+        } this.in_dict = in_dict;
         # support any argument supported by dict(...) constructor
-        self.values = dict(values);
-        self.values.update(kwargs);
-        self.clear = clear;
-        self._original = None;
+        this.values = dict(values);
+        this.values.update(kwargs);
+        this.clear = clear;
+        this._original = nil;
 
 
     }
-    def __call__(self, f){
+    function __call__( f){
         if isinstance(f, type){
-            return self.decorate_class(f);
+            return this.decorate_class(f);
         } @wraps(f);
-        def _inner(*args, **kw){
-            self._patch_dict();
+        function _inner(*args, **kw){
+            this._patch_dict();
             try{
                 return f(*args, **kw);
             } finally{
-                self._unpatch_dict();
+                this._unpatch_dict();
 
         }
         } return _inner;
 
 
     }
-    def decorate_class(self, klass){
+    function decorate_class( klass){
         for attr in dir(klass){
             attr_value = getattr(klass, attr);
             if (attr.startswith(patch.TEST_PREFIX) and
                  hasattr(attr_value, "__call__")){
-                decorator = _patch_dict(self.in_dict, self.values, self.clear);
+                decorator = _patch_dict(this.in_dict, this.values, this.clear);
                 decorated = decorator(attr_value);
                 setattr(klass, attr, decorated);
         } } return klass;
 
 
     }
-    def __enter__(self){
+    function __enter__(){
         """Patch the dict.""";
-        self._patch_dict();
+        this._patch_dict();
 
 
     }
-    def _patch_dict(self){
-        values = self.values;
-        in_dict = self.in_dict;
-        clear = self.clear;
+    function _patch_dict(){
+        values = this.values;
+        in_dict = this.in_dict;
+        clear = this.clear;
 
         try{
             original = in_dict.copy();
@@ -1739,7 +1739,7 @@ class _patch_dict(object){
             original = {};
             for key in in_dict{
                 original[key] = in_dict[key];
-        } } self._original = original;
+        } } this._original = original;
 
         if clear{
             _clear_dict(in_dict);
@@ -1754,9 +1754,9 @@ class _patch_dict(object){
 
 
     }
-    } } def _unpatch_dict(self){
-        in_dict = self.in_dict;
-        original = self._original;
+    } } function _unpatch_dict(){
+        in_dict = this.in_dict;
+        original = this._original;
 
         _clear_dict(in_dict);
 
@@ -1768,10 +1768,10 @@ class _patch_dict(object){
 
 
     }
-    } } def __exit__(self, *args){
+    } } function __exit__( *args){
         """Unpatch the dict.""";
-        self._unpatch_dict();
-        return False;
+        this._unpatch_dict();
+        return false;
 
     }
     start = __enter__;
@@ -1779,7 +1779,7 @@ class _patch_dict(object){
 
 
 }
-def _clear_dict(in_dict){
+function _clear_dict(in_dict){
     try{
         in_dict.clear();
     } except AttributeError{
@@ -1789,7 +1789,7 @@ def _clear_dict(in_dict){
 
 
 }
-} } def _patch_stopall(){
+} } function _patch_stopall(){
     """Stop all active patches. LIFO to unroll nested patches.""";
     for patch in reversed(_patch._active_patches){
         patch.stop();
@@ -1831,10 +1831,10 @@ _non_defaults = set('__%s__' % method for method in [
 ]);
 
 
-def _get_method(name, func){
+function _get_method(name, func){
     "Turns a callable object (like a mock) into a real function";
-    def method(self, *args, **kw){
-        return func(self, *args, **kw);
+    function method( *args, **kw){
+        return func(this, *args, **kw);
     } method.__name__ = name;
     return method;
 
@@ -1855,9 +1855,9 @@ _unsupported_magics = set([
 ]);
 
 _calculate_return_value = {
-    '__hash__': lambda self{ object.__hash__(self)},
-    '__str__': lambda self{ object.__str__(self)},
-    '__sizeof__': lambda self{ object.__sizeof__(self)},
+    '__hash__': lambda this{ object.__hash__(this)},
+    '__str__': lambda this{ object.__str__(this)},
+    '__sizeof__': lambda this{ object.__sizeof__(this)},
 };
 
 _return_values = {
@@ -1866,36 +1866,36 @@ _return_values = {
     '__le__': NotImplemented,
     '__ge__': NotImplemented,
     '__int__': 1,
-    '__contains__': False,
+    '__contains__': false,
     '__len__': 0,
-    '__exit__': False,
+    '__exit__': false,
     '__complex__': 1j,
     '__float__': 1.0,
-    '__bool__': True,
+    '__bool__': true,
     '__index__': 1,
 };
 
 
-def _get_eq(self){
-    def __eq__(other){
-        ret_val = self.__eq__._mock_return_value;
+function _get_eq(){
+    function __eq__(other){
+        ret_val = this.__eq__._mock_return_value;
         if ret_val is not DEFAULT{
             return ret_val;
-        } return self is other;
+        } return this is other;
     } return __eq__;
 
 }
-def _get_ne(self){
-    def __ne__(other){
-        if self.__ne__._mock_return_value is not DEFAULT{
+function _get_ne(){
+    function __ne__(other){
+        if this.__ne__._mock_return_value is not DEFAULT{
             return DEFAULT;
-        } return self is not other;
+        } return this is not other;
     } return __ne__;
 
 }
-def _get_iter(self){
-    def __iter__(){
-        ret_val = self.__iter__._mock_return_value;
+function _get_iter(){
+    function __iter__(){
+        ret_val = this.__iter__._mock_return_value;
         if ret_val is DEFAULT{
             return iter([]);
         # if ret_val was already an iterator, then calling iter on it should
@@ -1913,7 +1913,7 @@ _side_effect_methods = {
 
 
 
-def _set_return_value(mock, method, name){
+function _set_return_value(mock, method, name){
     fixed = _return_values.get(name, DEFAULT);
     if fixed is not DEFAULT{
         method.return_value = fixed;
@@ -1921,7 +1921,7 @@ def _set_return_value(mock, method, name){
 
     }
     return_calulator = _calculate_return_value.get(name);
-    if return_calulator is not None{
+    if return_calulator is not nil{
         try{
             return_value = return_calulator(mock);
         } except AttributeError{
@@ -1933,54 +1933,54 @@ def _set_return_value(mock, method, name){
 
     }
     side_effector = _side_effect_methods.get(name);
-    if side_effector is not None{
+    if side_effector is not nil{
         method.side_effect = side_effector(mock);
 
 
 
 }
 } class MagicMixin(object){
-    def __init__(self, *args, **kw){
-        _safe_super(MagicMixin, self).__init__(*args, **kw);
-        self._mock_set_magics();
+    function __init__( *args, **kw){
+        _safe_super(MagicMixin, this).__init__(*args, **kw);
+        this._mock_set_magics();
 
 
     }
-    def _mock_set_magics(self){
+    function _mock_set_magics(){
         these_magics = _magics;
 
-        if self._mock_methods is not None{
-            these_magics = _magics.intersection(self._mock_methods);
+        if this._mock_methods is not nil{
+            these_magics = _magics.intersection(this._mock_methods);
 
             remove_magics = set();
             remove_magics = _magics - these_magics;
 
             for entry in remove_magics{
-                if entry in type(self).__dict__{
+                if entry in type(this).__dict__{
                     # remove unneeded magic methods
-                    delattr(self, entry);
+                    delattr(this, entry);
 
         # don't overwrite existing attributes if called a second time
         }
-        } } these_magics = these_magics - set(type(self).__dict__);
+        } } these_magics = these_magics - set(type(this).__dict__);
 
-        _type = type(self);
+        _type = type(this);
         for entry in these_magics{
-            setattr(_type, entry, MagicProxy(entry, self));
+            setattr(_type, entry, MagicProxy(entry, this));
 
 
 
 }
 } } class NonCallableMagicMock(MagicMixin, NonCallableMock){
     """A version of `MagicMock` that isn't callable.""";
-    def mock_add_spec(self, spec, spec_set=False){
+    function mock_add_spec( spec, spec_set=false){
         """Add a spec to a mock. `spec` can either be an object or a
         list of strings. Only attributes on the `spec` can be fetched as
         attributes from the mock.
 
         If `spec_set` is True then only attributes on the spec can be set.""";
-        self._mock_add_spec(spec, spec_set);
-        self._mock_set_magics();
+        this._mock_add_spec(spec, spec_set);
+        this._mock_set_magics();
 
 
 
@@ -1996,32 +1996,32 @@ def _set_return_value(mock, method, name){
 
     Attributes and the return value of a `MagicMock` will also be `MagicMocks`.
     """;
-    def mock_add_spec(self, spec, spec_set=False){
+    function mock_add_spec( spec, spec_set=false){
         """Add a spec to a mock. `spec` can either be an object or a
         list of strings. Only attributes on the `spec` can be fetched as
         attributes from the mock.
 
         If `spec_set` is True then only attributes on the spec can be set.""";
-        self._mock_add_spec(spec, spec_set);
-        self._mock_set_magics();
+        this._mock_add_spec(spec, spec_set);
+        this._mock_set_magics();
 
 
 
 }
 } class MagicProxy(object){
-    def __init__(self, name, parent){
-        self.name = name;
-        self.parent = parent;
+    function __init__( name, parent){
+        this.name = name;
+        this.parent = parent;
 
     }
-    def __call__(self, *args, **kwargs){
-        m = self.create_mock();
+    function __call__( *args, **kwargs){
+        m = this.create_mock();
         return m(*args, **kwargs);
 
     }
-    def create_mock(self){
-        entry = self.name;
-        parent = self.parent;
+    function create_mock(){
+        entry = this.name;
+        parent = this.parent;
         m = parent._get_child_mock(name=entry, _new_name=entry,
                                    _new_parent=parent);
         setattr(parent, entry, m);
@@ -2029,8 +2029,8 @@ def _set_return_value(mock, method, name){
         return m;
 
     }
-    def __get__(self, obj, _type=None){
-        return self.create_mock();
+    function __get__( obj, _type=nil){
+        return this.create_mock();
 
 
 
@@ -2040,15 +2040,15 @@ def _set_return_value(mock, method, name){
 
     __hash__ = object.__hash__;
 
-    def __eq__(self, other){
-        return True;
+    function __eq__( other){
+        return true;
 
     }
-    def __ne__(self, other){
-        return False;
+    function __ne__( other){
+        return false;
 
     }
-    def __repr__(self){
+    function __repr__(){
         return '<ANY>';
 
 }
@@ -2056,7 +2056,7 @@ def _set_return_value(mock, method, name){
 
 
 
-def _format_call_signature(name, args, kwargs){
+function _format_call_signature(name, args, kwargs){
     message = '%s(%%s)' % name;
     formatted_args = '';
     args_string = ', '.join([repr(arg) for arg in args]);
@@ -2098,8 +2098,8 @@ class _Call(tuple){
 
     __hash__ = object.__hash__;
 
-    def __new__(cls, value=(), name=None, parent=None, two=False,
-                from_kall=True){
+    function __new__(cls, value=(), name=nil, parent=nil, two=false,
+                from_kall=true){
         name = '';
         args = ();
         kwargs = {};
@@ -2134,28 +2134,28 @@ class _Call(tuple){
 
 
     }
-    def __init__(self, value=(), name=None, parent=None, two=False,
-                 from_kall=True){
-        self.name = name;
-        self.parent = parent;
-        self.from_kall = from_kall;
+    function __init__( value=(), name=nil, parent=nil, two=false,
+                 from_kall=true){
+        this.name = name;
+        this.parent = parent;
+        this.from_kall = from_kall;
 
 
     }
-    def __eq__(self, other){
+    function __eq__( other){
         if other is ANY{
-            return True;
+            return true;
         } try{
             len_other = len(other);
         } except TypeError{
-            return False;
+            return false;
 
         }
         self_name = '';
-        if len(self) == 2{
-            self_args, self_kwargs = self;
+        if len(this) == 2{
+            self_args, self_kwargs = this;
         } else{
-            self_name, self_args, self_kwargs = self;
+            self_name, self_args, self_kwargs = this;
 
         }
         other_name = '';
@@ -2189,7 +2189,7 @@ class _Call(tuple){
 
         }
         } if self_name and other_name != self_name{
-            return False;
+            return false;
 
         # this order is important for ANY to work!
         }
@@ -2197,50 +2197,50 @@ class _Call(tuple){
 
 
     }
-    def __ne__(self, other){
-        return not self.__eq__(other);
+    function __ne__( other){
+        return not this.__eq__(other);
 
 
     }
-    def __call__(self, *args, **kwargs){
-        if self.name is None{
+    function __call__( *args, **kwargs){
+        if this.name is nil{
             return _Call(('', args, kwargs), name='()');
 
         }
-        name = self.name + '()';
-        return _Call((self.name, args, kwargs), name=name, parent=self);
+        name = this.name + '()';
+        return _Call((this.name, args, kwargs), name=name, parent=this);
 
 
     }
-    def __getattr__(self, attr){
-        if self.name is None{
-            return _Call(name=attr, from_kall=False);
-        } name = '%s.%s' % (self.name, attr);
-        return _Call(name=name, parent=self, from_kall=False);
+    function __getattr__( attr){
+        if this.name is nil{
+            return _Call(name=attr, from_kall=false);
+        } name = '%s.%s' % (this.name, attr);
+        return _Call(name=name, parent=this, from_kall=false);
 
 
     }
-    def count(self, *args, **kwargs){
-        return self.__getattr__('count')(*args, **kwargs);
+    function count( *args, **kwargs){
+        return this.__getattr__('count')(*args, **kwargs);
 
     }
-    def index(self, *args, **kwargs){
-        return self.__getattr__('index')(*args, **kwargs);
+    function index( *args, **kwargs){
+        return this.__getattr__('index')(*args, **kwargs);
 
     }
-    def __repr__(self){
-        if not self.from_kall{
-            name = self.name or 'call';
+    function __repr__(){
+        if not this.from_kall{
+            name = this.name or 'call';
             if name.startswith('()'){
                 name = 'call%s' % name;
             } return name;
 
         }
-        if len(self) == 2{
+        if len(this) == 2{
             name = 'call';
-            args, kwargs = self;
+            args, kwargs = this;
         } else{
-            name, args, kwargs = self;
+            name, args, kwargs = this;
             if not name{
                 name = 'call';
             } elif not name.startswith('()'){
@@ -2251,13 +2251,13 @@ class _Call(tuple){
 
 
     }
-    def call_list(self){
+    function call_list(){
         """For a call object that represents multiple calls, `call_list`
         returns a list of all the intermediate calls as well as the
         final call.""";
         vals = [];
-        thing = self;
-        while thing is not None{
+        thing = this;
+        while thing is not nil{
             if thing.from_kall{
                 vals.append(thing);
             } thing = thing.parent;
@@ -2265,12 +2265,12 @@ class _Call(tuple){
 
 
 }
-} call = _Call(from_kall=False);
+} call = _Call(from_kall=false);
 
 
 
-def create_autospec(spec, spec_set=False, instance=False, _parent=None,
-                    _name=None, **kwargs){
+function create_autospec(spec, spec_set=false, instance=false, _parent=nil,
+                    _name=nil, **kwargs){
     """Create a mock object using another object as a spec. Attributes on the
     mock will use the corresponding attribute on the `spec` object as their
     spec.
@@ -2299,11 +2299,11 @@ def create_autospec(spec, spec_set=False, instance=False, _parent=None,
     _kwargs = {'spec': spec};
     if spec_set{
         _kwargs = {'spec_set': spec};
-    } elif spec is None{
+    } elif spec is nil{
         # None we mock with a normal mock without a spec
         _kwargs = {};
     } if _kwargs and instance{
-        _kwargs['_spec_as_instance'] = True;
+        _kwargs['_spec_as_instance'] = true;
 
     }
     _kwargs.update(kwargs);
@@ -2322,7 +2322,7 @@ def create_autospec(spec, spec_set=False, instance=False, _parent=None,
     _name = _kwargs.pop('name', _name);
 
     _new_name = _name;
-    if _parent is None{
+    if _parent is nil{
         # for a top level object no _new_name should be set
         _new_name = '';
 
@@ -2338,12 +2338,12 @@ def create_autospec(spec, spec_set=False, instance=False, _parent=None,
         _check_signature(spec, mock, is_type, instance);
 
     }
-    if _parent is not None and not instance{
+    if _parent is not nil and not instance{
         _parent._mock_children[_name] = mock;
 
     }
     if is_type and not instance and 'return_value' not in kwargs{
-        mock.return_value = create_autospec(spec, spec_set, instance=True,
+        mock.return_value = create_autospec(spec, spec_set, instance=true,
                                             _name='()', _parent=mock);
 
     }
@@ -2403,7 +2403,7 @@ def create_autospec(spec, spec_set=False, instance=False, _parent=None,
 
 
 }
-def _must_skip(spec, entry, is_type){
+function _must_skip(spec, entry, is_type){
     """
     Return whether we should skip the first argument on spec's `entry`
     attribute.
@@ -2411,7 +2411,7 @@ def _must_skip(spec, entry, is_type){
     if not isinstance(spec, type){
         if entry in getattr(spec, '__dict__', {}){
             # instance attribute - shouldn't skip
-            return False;
+            return false;
         } spec = spec.__class__;
 
     }
@@ -2420,13 +2420,13 @@ def _must_skip(spec, entry, is_type){
         if result is DEFAULT{
             continue;
         } if isinstance(result, (staticmethod, classmethod)){
-            return False;
-        } elif isinstance(getattr(result, '__get__', None), MethodWrapperTypes){
+            return false;
+        } elif isinstance(getattr(result, '__get__', nil), MethodWrapperTypes){
             # Normal method => skip if looked up on type
             # (if looked up on instance, self is already skipped)
             return is_type;
         } else{
-            return False;
+            return false;
 
     # shouldn't get here unless function is a dynamically provided attribute
     # XXXX untested behaviour
@@ -2435,7 +2435,7 @@ def _must_skip(spec, entry, is_type){
 
 
 }
-def _get_class(obj){
+function _get_class(obj){
     try{
         return obj.__class__;
     } except AttributeError{
@@ -2446,14 +2446,14 @@ def _get_class(obj){
 }
 } class _SpecState(object){
 
-    def __init__(self, spec, spec_set=False, parent=None,
-                 name=None, ids=None, instance=False){
-        self.spec = spec;
-        self.ids = ids;
-        self.spec_set = spec_set;
-        self.parent = parent;
-        self.instance = instance;
-        self.name = name;
+    function __init__( spec, spec_set=false, parent=nil,
+                 name=nil, ids=nil, instance=false){
+        this.spec = spec;
+        this.ids = ids;
+        this.spec_set = spec_set;
+        this.parent = parent;
+        this.instance = instance;
+        this.name = name;
 
 
 }
@@ -2469,9 +2469,9 @@ MethodWrapperTypes = (
 );
 
 
-file_spec = None;
+file_spec = nil;
 
-def _iterate_read_data(read_data){
+function _iterate_read_data(read_data){
     # Helper for mock_open:
     # Retrieve lines from read_data via a generator so that separate calls to
     # readline, read, and readlines are properly interleaved
@@ -2492,7 +2492,7 @@ def _iterate_read_data(read_data){
         yield line;
 
 }
-} def mock_open(mock=None, read_data=''){
+} function mock_open(mock=nil, read_data=''){
     """
     A helper function to create a mock to replace the use of `open`. It works
     for `open` called directly or used as a context manager.
@@ -2504,21 +2504,21 @@ def _iterate_read_data(read_data){
     `read_data` is a string for the `read` methoddline`, and `readlines` of the
     file handle to return.  This is an empty string by default.
     """;
-    def _readlines_side_effect(*args, **kwargs){
-        if handle.readlines.return_value is not None{
+    function _readlines_side_effect(*args, **kwargs){
+        if handle.readlines.return_value is not nil{
             return handle.readlines.return_value;
         } return list(_data);
 
     }
-    def _read_side_effect(*args, **kwargs){
-        if handle.read.return_value is not None{
+    function _read_side_effect(*args, **kwargs){
+        if handle.read.return_value is not nil{
             return handle.read.return_value;
         } return ''.join(_data);
 
     }
-    def _readline_side_effect(){
-        if handle.readline.return_value is not None{
-            while True{
+    function _readline_side_effect(){
+        if handle.readline.return_value is not nil{
+            while true{
                 yield handle.readline.return_value;
         } } for line in _data{
             yield line;
@@ -2526,12 +2526,12 @@ def _iterate_read_data(read_data){
 
     }
     } global file_spec;
-    if file_spec is None{
+    if file_spec is nil{
         import _io;
         file_spec = list(set(dir(_io.TextIOWrapper)).union(set(dir(_io.BytesIO))));
 
     }
-    if mock is None{
+    if mock is nil{
         mock = MagicMock(name='open', spec=open);
 
     }
@@ -2540,10 +2540,10 @@ def _iterate_read_data(read_data){
 
     _data = _iterate_read_data(read_data);
 
-    handle.write.return_value = None;
-    handle.read.return_value = None;
-    handle.readline.return_value = None;
-    handle.readlines.return_value = None;
+    handle.write.return_value = nil;
+    handle.read.return_value = nil;
+    handle.readline.return_value = nil;
+    handle.readlines.return_value = nil;
 
     handle.read.side_effect = _read_side_effect;
     handle.readline.side_effect = _readline_side_effect();
@@ -2563,14 +2563,14 @@ class PropertyMock(Mock){
     Fetching a `PropertyMock` instance from an object calls the mock, with
     no args. Setting it calls the mock with the value being set.
     """;
-    def _get_child_mock(self, **kwargs){
+    function _get_child_mock( **kwargs){
         return MagicMock(**kwargs);
 
     }
-    def __get__(self, obj, obj_type){
-        return self();
-    } def __set__(self, obj, val){
-        self(val);
+    function __get__( obj, obj_type){
+        return this();
+    } function __set__( obj, val){
+        this(val);
 
 }
 }

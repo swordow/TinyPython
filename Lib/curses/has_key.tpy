@@ -159,23 +159,23 @@ _capability_names = {
     _curses.KEY_UP: 'kcuu1'
     };
 
-def has_key(ch){
+function has_key(ch){
     if isinstance(ch, str){
         ch = ord(ch);
 
     # Figure out the correct capability name for the keycode.
     }
     capability_name = _capability_names.get(ch);
-    if capability_name is None{
-        return False;
+    if capability_name is nil{
+        return false;
 
     #Check the current terminal description for that capability;
     #if present, return true, else return false.
     }
     if _curses.tigetstr( capability_name ){
-        return True;
+        return true;
     } else{
-        return False;
+        return false;
 
 }
 } if __name__ == '__main__'{
@@ -192,7 +192,7 @@ def has_key(ch){
                           % (_curses.keyname( key ), system, python) );
     } } } finally{
         _curses.endwin();
-        for i in L{ print i;
+        for i in L{ print i;}
 
 }
 }

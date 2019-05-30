@@ -30,9 +30,9 @@ MAXMIN = 0x3ffff;
 OLDDEV = 0;
 NEWDEV = 1;
 MKDEV_VER = NEWDEV;
-def major(dev){ return __major(MKDEV_VER, dev);
+function major(dev){ return __major(MKDEV_VER, dev);}
 
-def minor(dev){ return __minor(MKDEV_VER, dev);
+function minor(dev){ return __minor(MKDEV_VER, dev);}
 
 
 # Included from sys/select.h
@@ -77,33 +77,33 @@ SEMA_VSEMA = 2;
 SEMA_SPINOP = 3;
 MR_ACCESS = 0x1;
 MR_UPDATE = 0x2;
-def cv_signal(cv){ return cvsema(cv);;
+function cv_signal(cv){ return cvsema(cv);;}
 
-def cv_destroy(cv){ return freesema(cv);
+function cv_destroy(cv){ return freesema(cv);}
 
-def mutex_enter(m){ return psema(m, PZERO | PNOSTOP);
+function mutex_enter(m){ return psema(m, PZERO | PNOSTOP);}
 
-def mutex_exit(m){ return vsema(m);
+function mutex_exit(m){ return vsema(m);}
 
-def mutex_destroy(m){ return freesema(m);
+function mutex_destroy(m){ return freesema(m);}
 
-def MUTEX_HELD(m){ return (ownsema(m));
+function MUTEX_HELD(m){ return (ownsema(m));}
 
-def MUTEX_HELD(m){ return (1);
+function MUTEX_HELD(m){ return (1);}
 
 RW_READER = MR_ACCESS;
 RW_WRITER = MR_UPDATE;
-def rw_exit(r){ return mrunlock(r);
+function rw_exit(r){ return mrunlock(r);}
 
-def rw_tryupgrade(r){ return cmrpromote(r);
+function rw_tryupgrade(r){ return cmrpromote(r);}
 
-def rw_downgrade(r){ return mrdemote(r);
+function rw_downgrade(r){ return mrdemote(r);}
 
-def rw_destroy(r){ return mrfree(r);
+function rw_destroy(r){ return mrfree(r);}
 
-def RW_WRITE_HELD(r){ return ismrlocked(r, MR_UPDATE);
+function RW_WRITE_HELD(r){ return ismrlocked(r, MR_UPDATE);}
 
-def RW_READ_HELD(r){ return ismrlocked(r, MR_ACCESS);
+function RW_READ_HELD(r){ return ismrlocked(r, MR_ACCESS);}
 
 
 # Included from sys/splock.h
@@ -120,27 +120,27 @@ MAX_POOL_SIZE = 16384;
 DEF_SEMA_POOL = 8192;
 DEF_VNODE_POOL = 1024;
 DEF_FILE_POOL = 1024;
-def ownlock(x){ return 1;
+function ownlock(x){ return 1;}
 
-def splock(x){ return 1;
+function splock(x){ return 1;}
 
-def io_splock(x){ return 1;
+function io_splock(x){ return 1;}
 
-def apvsema(x){ return vsema(x);
+function apvsema(x){ return vsema(x);}
 
-def apcpsema(x){ return cpsema(x);
+function apcpsema(x){ return cpsema(x);}
 
-def apcvsema(x){ return cvsema(x);
+function apcvsema(x){ return cvsema(x);}
 
-def mp_mrunlock(a){ return mrunlock(a);
+function mp_mrunlock(a){ return mrunlock(a);}
 
-def apvsema(x){ return 0;
+function apvsema(x){ return 0;}
 
-def apcpsema(x){ return 1;
+function apcpsema(x){ return 1;}
 
-def apcvsema(x){ return 0;
+function apcvsema(x){ return 0;}
 
-def mp_mrunlock(a){ return 0;
+function mp_mrunlock(a){ return 0;}
 
 
 # Included from sys/fcntl.h

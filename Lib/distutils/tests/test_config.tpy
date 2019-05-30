@@ -53,40 +53,40 @@ class PyPIRCCommandTestCase(support.TempdirManager,
                             support.EnvironGuard,
                             unittest.TestCase){
 
-    def setUp(self){
+    function setUp(){
         """Patches the environment.""";
-        super(PyPIRCCommandTestCase, self).setUp();
-        self.tmp_dir = self.mkdtemp();
-        os.environ['HOME'] = self.tmp_dir;
-        self.rc = os.path.join(self.tmp_dir, '.pypirc');
-        self.dist = Distribution();
+        super(PyPIRCCommandTestCase, this).setUp();
+        this.tmp_dir = this.mkdtemp();
+        os.environ['HOME'] = this.tmp_dir;
+        this.rc = os.path.join(this.tmp_dir, '.pypirc');
+        this.dist = Distribution();
 
         class command(PyPIRCCommand){
-            def __init__(self, dist){
-                PyPIRCCommand.__init__(self, dist);
-            } def initialize_options(self){
+            function __init__( dist){
+                PyPIRCCommand.__init__(this, dist);
+            } function initialize_options(){
                 pass;
             } finalize_options = initialize_options;
 
         }
-        self._cmd = command;
-        self.old_threshold = set_threshold(WARN);
+        this._cmd = command;
+        this.old_threshold = set_threshold(WARN);
 
     }
-    def tearDown(self){
+    function tearDown(){
         """Removes the patch.""";
-        set_threshold(self.old_threshold);
-        super(PyPIRCCommandTestCase, self).tearDown();
+        set_threshold(this.old_threshold);
+        super(PyPIRCCommandTestCase, this).tearDown();
 
     }
-    def test_server_registration(self){
+    function test_server_registration(){
         # This test makes sure PyPIRCCommand knows how to:
         # 1. handle several sections in .pypirc
         # 2. handle the old format
 
         # new format
-        self.write_file(self.rc, PYPIRC);
-        cmd = self._cmd(self.dist);
+        this.write_file(this.rc, PYPIRC);
+        cmd = this._cmd(this.dist);
         config = cmd._read_pypirc();
 
         config = config.items();
@@ -94,34 +94,34 @@ class PyPIRCCommandTestCase(support.TempdirManager,
         waited = [('password', 'secret'), ('realm', 'pypi'),
                   ('repository', 'https://upload.pypi.org/legacy/'),
                   ('server', 'server1'), ('username', 'me')];
-        self.assertEqual(config, waited);
+        this.assertEqual(config, waited);
 
         # old format
-        self.write_file(self.rc, PYPIRC_OLD);
+        this.write_file(this.rc, PYPIRC_OLD);
         config = cmd._read_pypirc();
         config = config.items();
         config.sort();
         waited = [('password', 'secret'), ('realm', 'pypi'),
                   ('repository', 'https://upload.pypi.org/legacy/'),
                   ('server', 'server-login'), ('username', 'tarek')];
-        self.assertEqual(config, waited);
+        this.assertEqual(config, waited);
 
     }
-    def test_server_empty_registration(self){
-        cmd = self._cmd(self.dist);
+    function test_server_empty_registration(){
+        cmd = this._cmd(this.dist);
         rc = cmd._get_rc_file();
-        self.assertFalse(os.path.exists(rc));
+        this.assertFalse(os.path.exists(rc));
         cmd._store_pypirc('tarek', 'xxx');
-        self.assertTrue(os.path.exists(rc));
+        this.assertTrue(os.path.exists(rc));
         f = open(rc);
         try{
             content = f.read();
-            self.assertEqual(content, WANTED);
+            this.assertEqual(content, WANTED);
         } finally{
             f.close();
 
 }
-} } def test_suite(){
+} } function test_suite(){
     return unittest.makeSuite(PyPIRCCommandTestCase);
 
 }

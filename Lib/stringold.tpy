@@ -33,7 +33,7 @@ octdigits = '01234567';
 
 # Case conversion helpers
 _idmap = '';
-for i in range(256){ _idmap = _idmap + chr(i);
+for i in range(256){ _idmap = _idmap + chr(i);}
 del i;
 
 # Backward compatible names for exceptions
@@ -43,7 +43,7 @@ atof_error = ValueError;
 atol_error = ValueError;
 
 # convert UPPER CASE letters to lower case
-def lower(s){
+function lower(s){
     """lower(s) -> string
 
     Return a copy of the string s converted to lowercase.
@@ -53,7 +53,7 @@ def lower(s){
 
 # Convert lower case letters to UPPER CASE
 }
-def upper(s){
+function upper(s){
     """upper(s) -> string
 
     Return a copy of the string s converted to uppercase.
@@ -63,7 +63,7 @@ def upper(s){
 
 # Swap lower case letters and UPPER CASE
 }
-def swapcase(s){
+function swapcase(s){
     """swapcase(s) -> string
 
     Return a copy of the string s with upper case characters
@@ -74,7 +74,7 @@ def swapcase(s){
 
 # Strip leading and trailing tabs and spaces
 }
-def strip(s){
+function strip(s){
     """strip(s) -> string
 
     Return a copy of the string s with leading and trailing
@@ -85,7 +85,7 @@ def strip(s){
 
 # Strip leading tabs and spaces
 }
-def lstrip(s){
+function lstrip(s){
     """lstrip(s) -> string
 
     Return a copy of the string s with leading whitespace removed.
@@ -95,7 +95,7 @@ def lstrip(s){
 
 # Strip trailing tabs and spaces
 }
-def rstrip(s){
+function rstrip(s){
     """rstrip(s) -> string
 
     Return a copy of the string s with trailing whitespace
@@ -107,7 +107,7 @@ def rstrip(s){
 
 # Split a string into a list of space/tab-separated words
 }
-def split(s, sep=None, maxsplit=0){
+function split(s, sep=nil, maxsplit=0){
     """split(str [,sep [,maxsplit]]) -> list of strings
 
     Return a list of the words in the string s, using sep as the
@@ -122,7 +122,7 @@ def split(s, sep=None, maxsplit=0){
 } splitfields = split;
 
 # Join fields with optional separator
-def join(words, sep = ' '){
+function join(words, sep = ' '){
     """join(list [,sep]) -> string
 
     Return a string composed of the words in list, with
@@ -139,7 +139,7 @@ def join(words, sep = ' '){
 _apply = apply;
 
 # Find substring, raise exception if not found
-def index(s, *args){
+function index(s, *args){
     """index(s, sub [,start [,end]]) -> int
 
     Like find but raises ValueError when the substring is not found.
@@ -149,7 +149,7 @@ def index(s, *args){
 
 # Find last substring, raise exception if not found
 }
-def rindex(s, *args){
+function rindex(s, *args){
     """rindex(s, sub [,start [,end]]) -> int
 
     Like rfind but raises ValueError when the substring is not found.
@@ -159,7 +159,7 @@ def rindex(s, *args){
 
 # Count non-overlapping occurrences of substring
 }
-def count(s, *args){
+function count(s, *args){
     """count(s, sub[, start[,end]]) -> int
 
     Return the number of occurrences of substring sub in string
@@ -171,7 +171,7 @@ def count(s, *args){
 
 # Find substring, return -1 if not found
 }
-def find(s, *args){
+function find(s, *args){
     """find(s, sub [,start [,end]]) -> in
 
     Return the lowest index in s where substring sub is found,
@@ -185,7 +185,7 @@ def find(s, *args){
 
 # Find last substring, return -1 if not found
 }
-def rfind(s, *args){
+function rfind(s, *args){
     """rfind(s, sub [,start [,end]]) -> int
 
     Return the highest index in s where substring sub is found,
@@ -205,7 +205,7 @@ _long = long;
 _StringType = type('');
 
 # Convert string to float
-def atof(s){
+function atof(s){
     """atof(s) -> float
 
     Return the floating point number represented by the string s.
@@ -219,7 +219,7 @@ def atof(s){
 
 # Convert string to integer
 }
-} def atoi(*args){
+} function atoi(*args){
     """atoi(s [,base]) -> int
 
     Return the integer represented by the string s in the given
@@ -248,7 +248,7 @@ def atof(s){
 
 # Convert string to long integer
 }
-} def atol(*args){
+} function atol(*args){
     """atol(s [,base]) -> long
 
     Return the long integer represented by the string s in the
@@ -278,7 +278,7 @@ def atof(s){
 
 # Left-justify a string
 }
-} def ljust(s, width){
+} function ljust(s, width){
     """ljust(s, width) -> string
 
     Return a left-justified version of s, in a field of the
@@ -287,12 +287,12 @@ def atof(s){
 
     """;
     n = width - len(s);
-    if n <= 0{ return s;
+    if n <= 0{ return s;}
     return s + ' '*n;
 
 # Right-justify a string
 }
-def rjust(s, width){
+function rjust(s, width){
     """rjust(s, width) -> string
 
     Return a right-justified version of s, in a field of the
@@ -301,12 +301,12 @@ def rjust(s, width){
 
     """;
     n = width - len(s);
-    if n <= 0{ return s;
+    if n <= 0{ return s;}
     return ' '*n + s;
 
 # Center a string
 }
-def center(s, width){
+function center(s, width){
     """center(s, width) -> string
 
     Return a center version of s, in a field of the specified
@@ -315,7 +315,7 @@ def center(s, width){
 
     """;
     n = width - len(s);
-    if n <= 0{ return s;
+    if n <= 0{ return s;}
     half = n/2;
     if n%2 and width%2{
         # This ensures that center(center(s, i), j) = center(s, j)
@@ -326,17 +326,17 @@ def center(s, width){
 # Decadent feature: the argument may be a string or a number
 # (Use of this is deprecated; it should be a string as with ljust c.s.)
 }
-def zfill(x, width){
+function zfill(x, width){
     """zfill(x, width) -> string
 
     Pad a numeric string x with zeros on the left, to fill a field
     of the specified width.  The string x is never truncated.
 
     """;
-    if type(x) == type(''){ s = x;
-    else{ s = repr(x);
+    if type(x) == type(''){ s = x;}
+    else{ s = repr(x);}
     n = len(s);
-    if n >= width{ return s;
+    if n >= width{ return s;}
     sign = '';
     if s[0] in ('-', '+'){
         sign, s = s[0], s[1:];
@@ -345,7 +345,7 @@ def zfill(x, width){
 # Expand tabs in a string.
 # Doesn't take non-printing chars into account, but does understand \n.
 }
-def expandtabs(s, tabsize=8){
+function expandtabs(s, tabsize=8){
     """expandtabs(s [,tabsize]) -> string
 
     Return a copy of the string s with all tab characters replaced
@@ -365,7 +365,7 @@ def expandtabs(s, tabsize=8){
 
 # Character translation through look-up table.
 }
-def translate(s, table, deletions=""){
+function translate(s, table, deletions=""){
     """translate(s,table [,deletechars]) -> string
 
     Return a copy of the string s, where all characters occurring
@@ -378,7 +378,7 @@ def translate(s, table, deletions=""){
 
 # Capitalize a string, e.g. "aBc  dEf" -> "Abc  def".
 }
-def capitalize(s){
+function capitalize(s){
     """capitalize(s) -> string
 
     Return a copy of the string s with only its first character
@@ -389,7 +389,7 @@ def capitalize(s){
 
 # Capitalize the words in a string, e.g. " aBc  dEf " -> "Abc Def".
 }
-def capwords(s, sep=None){
+function capwords(s, sep=nil){
     """capwords(s, [sep]) -> string
 
     Split the argument into words using split, capitalize each
@@ -402,8 +402,8 @@ def capwords(s, sep=None){
 
 # Construct a translation string
 }
-_idmapL = None;
-def maketrans(fromstr, tostr){
+_idmapL = nil;
+function maketrans(fromstr, tostr){
     """maketrans(frm, to) -> string
 
     Return a translation table (a string of 256 bytes long)
@@ -424,7 +424,7 @@ def maketrans(fromstr, tostr){
 
 # Substring replacement (global)
 }
-def replace(s, old, new, maxsplit=0){
+function replace(s, old, new, maxsplit=0){
     """replace (str, old, new[, maxsplit]) -> string
 
     Return a copy of string str with all occurrences of substring

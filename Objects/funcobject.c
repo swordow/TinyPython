@@ -29,10 +29,10 @@ PyFunction_New(PyObject *code, PyObject *globals)
         if (PyTuple_Size(consts) >= 1) {
             doc = PyTuple_GetItem(consts, 0);
             if (!PyString_Check(doc) && !PyUnicode_Check(doc))
-                doc = Py_None;
+                doc = Py_Nil;
         }
         else
-            doc = Py_None;
+            doc = Py_Nil;
         Py_INCREF(doc);
         op->func_doc = doc;
         op->func_dict = NULL;
@@ -107,7 +107,7 @@ PyFunction_SetDefaults(PyObject *op, PyObject *defaults)
         PyErr_BadInternalCall();
         return -1;
     }
-    if (defaults == Py_None)
+    if (defaults == Py_Nil)
         defaults = NULL;
     else if (defaults && PyTuple_Check(defaults)) {
         Py_INCREF(defaults);
@@ -137,7 +137,7 @@ PyFunction_SetClosure(PyObject *op, PyObject *closure)
         PyErr_BadInternalCall();
         return -1;
     }
-    if (closure == Py_None)
+    if (closure == Py_Nil)
         closure = NULL;
     else if (PyTuple_Check(closure)) {
         Py_INCREF(closure);
@@ -297,8 +297,8 @@ func_get_defaults(PyFunctionObject *op)
     if (restricted())
         return NULL;
     if (op->func_defaults == NULL) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     Py_INCREF(op->func_defaults);
     return op->func_defaults;
@@ -313,7 +313,7 @@ func_set_defaults(PyFunctionObject *op, PyObject *value)
         return -1;
     /* Legal to del f.func_defaults.
      * Can only set func_defaults to NULL or a tuple. */
-    if (value == Py_None)
+    if (value == Py_Nil)
         value = NULL;
     if (value != NULL && !PyTuple_Check(value)) {
         PyErr_SetString(PyExc_TypeError,
@@ -364,9 +364,9 @@ func_new(PyTypeObject* type, PyObject* args, PyObject* kw)
 {
     PyCodeObject *code;
     PyObject *globals;
-    PyObject *name = Py_None;
-    PyObject *defaults = Py_None;
-    PyObject *closure = Py_None;
+    PyObject *name = Py_Nil;
+    PyObject *defaults = Py_Nil;
+    PyObject *closure = Py_Nil;
     PyFunctionObject *newfunc;
     Py_ssize_t nfree, nclosure;
     static char *kwlist[] = {"code", "globals", "name",
@@ -378,24 +378,24 @@ func_new(PyTypeObject* type, PyObject* args, PyObject* kw)
                           &PyDict_Type, &globals,
                           &name, &defaults, &closure))
         return NULL;
-    if (name != Py_None && !PyString_Check(name)) {
+    if (name != Py_Nil && !PyString_Check(name)) {
         PyErr_SetString(PyExc_TypeError,
                         "arg 3 (name) must be None or string");
         return NULL;
     }
-    if (defaults != Py_None && !PyTuple_Check(defaults)) {
+    if (defaults != Py_Nil && !PyTuple_Check(defaults)) {
         PyErr_SetString(PyExc_TypeError,
                         "arg 4 (defaults) must be None or tuple");
         return NULL;
     }
     nfree = PyTuple_GET_SIZE(code->co_freevars);
     if (!PyTuple_Check(closure)) {
-        if (nfree && closure == Py_None) {
+        if (nfree && closure == Py_Nil) {
             PyErr_SetString(PyExc_TypeError,
                             "arg 5 (closure) must be tuple");
             return NULL;
         }
-        else if (closure != Py_None) {
+        else if (closure != Py_Nil) {
             PyErr_SetString(PyExc_TypeError,
                 "arg 5 (closure) must be None or tuple");
             return NULL;
@@ -403,7 +403,7 @@ func_new(PyTypeObject* type, PyObject* args, PyObject* kw)
     }
 
     /* check that the closure is well-formed */
-    nclosure = closure == Py_None ? 0 : PyTuple_GET_SIZE(closure);
+    nclosure = closure == Py_Nil ? 0 : PyTuple_GET_SIZE(closure);
     if (nfree != nclosure)
         return PyErr_Format(PyExc_ValueError,
                             "%s requires closure of length %zd, not %zd",
@@ -426,15 +426,15 @@ func_new(PyTypeObject* type, PyObject* args, PyObject* kw)
     if (newfunc == NULL)
         return NULL;
 
-    if (name != Py_None) {
+    if (name != Py_Nil) {
         Py_INCREF(name);
         Py_SETREF(newfunc->func_name, name);
     }
-    if (defaults != Py_None) {
+    if (defaults != Py_Nil) {
         Py_INCREF(defaults);
         newfunc->func_defaults  = defaults;
     }
-    if (closure != Py_None) {
+    if (closure != Py_Nil) {
         Py_INCREF(closure);
         newfunc->func_closure = closure;
     }
@@ -536,7 +536,7 @@ function_call(PyObject *func, PyObject *arg, PyObject *kw)
 static PyObject *
 func_descr_get(PyObject *func, PyObject *obj, PyObject *type)
 {
-    if (obj == Py_None)
+    if (obj == Py_Nil)
         obj = NULL;
     return PyMethod_New(func, obj, type);
 }

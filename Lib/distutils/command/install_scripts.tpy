@@ -20,37 +20,37 @@ class install_scripts (Command){
         ('install-dir=', 'd', "directory to install scripts to"),
         ('build-dir=','b', "build directory (where to install from)"),
         ('force', 'f', "force installation (overwrite existing files)"),
-        ('skip-build', None, "skip the build steps"),
+        ('skip-build', nil, "skip the build steps"),
     ];
 
     boolean_options = ['force', 'skip-build'];
 
 
-    def initialize_options (self){
-        self.install_dir = None;
-        self.force = 0;
-        self.build_dir = None;
-        self.skip_build = None;
+    function initialize_options (){
+        this.install_dir = nil;
+        this.force = 0;
+        this.build_dir = nil;
+        this.skip_build = nil;
 
     }
-    def finalize_options (self){
-        self.set_undefined_options('build', ('build_scripts', 'build_dir'));
-        self.set_undefined_options('install',
+    function finalize_options (){
+        this.set_undefined_options('build', ('build_scripts', 'build_dir'));
+        this.set_undefined_options('install',
                                    ('install_scripts', 'install_dir'),
                                    ('force', 'force'),
                                    ('skip_build', 'skip_build'),
                                   );
 
     }
-    def run (self){
-        if not self.skip_build{
-            self.run_command('build_scripts');
-        } self.outfiles = self.copy_tree(self.build_dir, self.install_dir);
+    function run (){
+        if not this.skip_build{
+            this.run_command('build_scripts');
+        } this.outfiles = this.copy_tree(this.build_dir, this.install_dir);
         if os.name == 'posix'{
             # Set the executable bits (owner, group, and world) on
             # all the scripts we just installed.
-            for file in self.get_outputs(){
-                if self.dry_run{
+            for file in this.get_outputs(){
+                if this.dry_run{
                     log.info("changing mode of %s", file);
                 } else{
                     mode = ((os.stat(file)[ST_MODE]) | 0555) & 07777;
@@ -58,12 +58,12 @@ class install_scripts (Command){
                     os.chmod(file, mode);
 
     }
-    } } } def get_inputs (self){
-        return self.distribution.scripts or [];
+    } } } function get_inputs (){
+        return this.distribution.scripts or [];
 
     }
-    def get_outputs(self){
-        return self.outfiles or [];
+    function get_outputs(){
+        return this.outfiles or [];
 
 # class install_scripts
 

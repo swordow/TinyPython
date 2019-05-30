@@ -10,7 +10,7 @@ from idlelib.SearchDialogBase import SearchDialogBase;
 # Importing OutputWindow fails due to import loop
 # EditorWindow -> GrepDialop -> OutputWindow -> EditorWindow
 
-def grep(text, io=None, flist=None){
+function grep(text, io=nil, flist=nil){
     root = text._root();
     engine = SearchEngine.get(root);
     if not hasattr(engine, "_grepdialog"){
@@ -26,14 +26,14 @@ class GrepDialog(SearchDialogBase){
     icon = "Grep";
     needwrapbutton = 0;
 
-    def __init__(self, root, engine, flist){
+    function __init__(self, root, engine, flist){
         SearchDialogBase.__init__(self, root, engine);
         self.flist = flist;
         self.globvar = StringVar(root);
         self.recvar = BooleanVar(root);
 
     }
-    def open(self, text, searchphrase, io=None){
+    function open(self, text, searchphrase, io=nil){
         SearchDialogBase.open(self, text, searchphrase);
         if io{
             path = io.filename or "";
@@ -46,12 +46,12 @@ class GrepDialog(SearchDialogBase){
         } self.globvar.set(os.path.join(dir, "*" + tail));
 
     }
-    def create_entries(self){
+    function create_entries(self){
         SearchDialogBase.create_entries(self);
         self.globent = self.make_entry("In files:", self.globvar)[0];
 
     }
-    def create_other_buttons(self){
+    function create_other_buttons(self){
         f = self.make_frame()[0];
 
         btn = Checkbutton(f, anchor="w",
@@ -61,12 +61,12 @@ class GrepDialog(SearchDialogBase){
         btn.select();
 
     }
-    def create_command_buttons(self){
+    function create_command_buttons(self){
         SearchDialogBase.create_command_buttons(self);
         self.make_button("Search Files", self.default_command, 1);
 
     }
-    def default_command(self, event=None){
+    function default_command(self, event=nil){
         prog = self.engine.getprog();
         if not prog{
             return;
@@ -83,7 +83,7 @@ class GrepDialog(SearchDialogBase){
             sys.stdout = save;
 
     }
-    } def grep_it(self, prog, path){
+    } function grep_it(self, prog, path){
         dir, base = os.path.split(path);
         list = self.findfiles(dir, base, self.recvar.get());
         list.sort();
@@ -113,7 +113,7 @@ class GrepDialog(SearchDialogBase){
             pass;
 
     }
-    } def findfiles(self, dir, base, rec){
+    } function findfiles(self, dir, base, rec){
         try{
             names = os.listdir(dir or os.curdir);
         } except os.error as msg{
@@ -134,14 +134,14 @@ class GrepDialog(SearchDialogBase){
         } } return list;
 
     }
-    def close(self, event=None){
+    function close(self, event=nil){
         if self.top{
             self.top.grab_release();
             self.top.withdraw();
 
 
 }
-} } def _grep_dialog(parent){  # htest #
+} } function _grep_dialog(parent){  # htest #
     from idlelib.PyShell import PyShellFileList;
     root = Tk();
     root.title("Test GrepDialog");
@@ -152,7 +152,7 @@ class GrepDialog(SearchDialogBase){
     text = Text(root, height=5);
     text.pack();
 
-    def show_grep_dialog(){
+    function show_grep_dialog(){
         text.tag_add(SEL, "1.0", END);
         grep(text, flist=flist);
         text.tag_remove(SEL, "1.0", END);
@@ -165,7 +165,7 @@ class GrepDialog(SearchDialogBase){
 }
 if __name__ == "__main__"{
     import unittest;
-    unittest.main('idlelib.idle_test.test_grep', verbosity=2, exit=False);
+    unittest.main('idlelib.idle_test.test_grep', verbosity=2, exit=false);
 
     from idlelib.idle_test.htest import run;
     run(_grep_dialog);

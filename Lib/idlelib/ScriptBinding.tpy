@@ -43,51 +43,51 @@ by Format->Untabify Region and specify the number of columns used by each tab.
 class ScriptBinding{
 
     menudefs = [
-        ('run', [None,
+        ('run', [nil,
                  ('Check Module', '<<check-module>>'),
                  ('Run Module', '<<run-module>>'), ]), ];
 
-    def __init__(self, editwin){
-        self.editwin = editwin;
+    function __init__( editwin){
+        this.editwin = editwin;
         # Provide instance variables referenced by Debugger
         # XXX This should be done differently
-        self.flist = self.editwin.flist;
-        self.root = self.editwin.root;
+        this.flist = this.editwin.flist;
+        this.root = this.editwin.root;
 
         if macosxSupport.isCocoaTk(){
-            self.editwin.text_frame.bind('<<run-module-event-2>>', self._run_module_event);
+            this.editwin.text_frame.bind('<<run-module-event-2>>', this._run_module_event);
 
     }
-    } def check_module_event(self, event){
-        filename = self.getfilename();
+    } function check_module_event( event){
+        filename = this.getfilename();
         if not filename{
             return 'break';
-        } if not self.checksyntax(filename){
+        } if not this.checksyntax(filename){
             return 'break';
-        } if not self.tabnanny(filename){
+        } if not this.tabnanny(filename){
             return 'break';
 
     }
-    } def tabnanny(self, filename){
+    } function tabnanny( filename){
         f = open(filename, 'r');
         try{
             tabnanny.process_tokens(tokenize.generate_tokens(f.readline));
         } except tokenize.TokenError as msg{
             msgtxt, (lineno, start) = msg.args;
-            self.editwin.gotoline(lineno);
-            self.errorbox("Tabnanny Tokenizing Error",
+            this.editwin.gotoline(lineno);
+            this.errorbox("Tabnanny Tokenizing Error",
                           "Token Error: %s" % msgtxt);
-            return False;
+            return false;
         } except tabnanny.NannyNag as nag{
             # The error messages from tabnanny are too confusing...
-            self.editwin.gotoline(nag.get_lineno());
-            self.errorbox("Tab/space error", indent_message);
-            return False;
-        } return True;
+            this.editwin.gotoline(nag.get_lineno());
+            this.errorbox("Tab/space error", indent_message);
+            return false;
+        } return true;
 
     }
-    def checksyntax(self, filename){
-        self.shell = shell = self.flist.open_shell();
+    function checksyntax( filename){
+        this.shell = shell = this.flist.open_shell();
         saved_stream = shell.get_warning_stream();
         shell.set_warning_stream(shell.stderr);
         with open(filename, 'r') as f{
@@ -97,7 +97,7 @@ class ScriptBinding{
             source = re.sub(r"\r", "\n", source);
         } if source and source[-1] != '\n'{
             source = source + '\n';
-        } text = self.editwin.text;
+        } text = this.editwin.text;
         text.tag_remove("ERROR", "1.0", "end");
         try{
             try{
@@ -109,18 +109,18 @@ class ScriptBinding{
                     if not errorfilename{
                         err.args = msg, (filename, lineno, offset, line);
                         err.filename = filename;
-                    } self.colorize_syntax_error(msg, lineno, offset);
+                    } this.colorize_syntax_error(msg, lineno, offset);
                 } except Exception{
                     msg = "*** " + str(err);
-                } self.errorbox("Syntax error",
+                } this.errorbox("Syntax error",
                               "There's an error in your program:\n" + msg);
-                return False;
+                return false;
         } } finally{
             shell.set_warning_stream(saved_stream);
 
     }
-    } def colorize_syntax_error(self, msg, lineno, offset){
-        text = self.editwin.text;
+    } function colorize_syntax_error( msg, lineno, offset){
+        text = this.editwin.text;
         pos = "0.0 + %d lines + %d chars" % (lineno-1, offset-1);
         text.tag_add("ERROR", pos);
         char = text.get(pos);
@@ -133,7 +133,7 @@ class ScriptBinding{
         } text.see(pos);
 
     }
-    def run_module_event(self, event){
+    function run_module_event( event){
         """Run the module after setting up the environment.
 
         First check the syntax.  If OK, make sure the shell is active and
@@ -142,17 +142,17 @@ class ScriptBinding{
         add that directory to its sys.path if not already included.
 
         """;
-        filename = self.getfilename();
+        filename = this.getfilename();
         if not filename{
             return 'break';
-        } code = self.checksyntax(filename);
+        } code = this.checksyntax(filename);
         if not code{
             return 'break';
-        } if not self.tabnanny(filename){
+        } if not this.tabnanny(filename){
             return 'break';
-        } interp = self.shell.interp;
+        } interp = this.shell.interp;
         if PyShell.use_subprocess{
-            interp.restart_subprocess(with_cwd=False, filename=code.co_filename);
+            interp.restart_subprocess(with_cwd=false, filename=code.co_filename);
         } dirname = os.path.dirname(filename);
         # XXX Too often this discards arguments the user just set...
         interp.runcommand("""if 1:
@@ -182,13 +182,13 @@ class ScriptBinding{
         # (the menu item works fine).
         _run_module_event = run_module_event;
 
-        def run_module_event(self, event){
-            self.editwin.text_frame.after(200,
-                lambda{ self.editwin.text_frame.event_generate('<<run-module-event-2>>')});
+        function run_module_event( event){
+            this.editwin.text_frame.after(200,
+                lambda{ this.editwin.text_frame.event_generate('<<run-module-event-2>>')});
             return 'break';
 
     }
-    } def getfilename(self){
+    } function getfilename(){
         """Get source filename.  If not saved, offer to save (or create) file
 
         The debugger requires a source file.  Make sure there is one, and that
@@ -199,36 +199,36 @@ class ScriptBinding{
         silently saved if it already exists and is dirty.
 
         """;
-        filename = self.editwin.io.filename;
-        if not self.editwin.get_saved(){
+        filename = this.editwin.io.filename;
+        if not this.editwin.get_saved(){
             autosave = idleConf.GetOption('main', 'General',
                                           'autosave', type='bool');
             if autosave and filename{
-                self.editwin.io.save(None);
+                this.editwin.io.save(nil);
             } else{
-                confirm = self.ask_save_dialog();
-                self.editwin.text.focus_set();
+                confirm = this.ask_save_dialog();
+                this.editwin.text.focus_set();
                 if confirm{
-                    self.editwin.io.save(None);
-                    filename = self.editwin.io.filename;
+                    this.editwin.io.save(nil);
+                    filename = this.editwin.io.filename;
                 } else{
-                    filename = None;
+                    filename = nil;
         } } } return filename;
 
     }
-    def ask_save_dialog(self){
+    function ask_save_dialog(){
         msg = "Source Must Be Saved\n" + 5*' ' + "OK to Save?";
         confirm = tkMessageBox.askokcancel(title="Save Before Run or Check",
                                            message=msg,
                                            default=tkMessageBox.OK,
-                                           parent=self.editwin.text);
+                                           parent=this.editwin.text);
         return confirm;
 
     }
-    def errorbox(self, title, message){
+    function errorbox( title, message){
         # XXX This should really be a function of EditorWindow...
-        tkMessageBox.showerror(title, message, parent=self.editwin.text);
-        self.editwin.text.focus_set();
+        tkMessageBox.showerror(title, message, parent=this.editwin.text);
+        this.editwin.text.focus_set();
 
 }
 }

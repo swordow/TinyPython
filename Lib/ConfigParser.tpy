@@ -113,16 +113,16 @@ MAX_INTERPOLATION_DEPTH = 10;
 class Error(Exception){
     """Base class for ConfigParser exceptions.""";
 
-    def _get_message(self){
+    function _get_message(){
         """Getter for 'message'; needed only to override deprecation in
         BaseException.""";
-        return self.__message;
+        return this.__message;
 
     }
-    def _set_message(self, value){
+    function _set_message( value){
         """Setter for 'message'; needed only to override deprecation in
         BaseException.""";
-        self.__message = value;
+        this.__message = value;
 
     # BaseException.message has been deprecated since Python 2.6.  To prevent
     # DeprecationWarning from popping up over this pre-existing attribute, use
@@ -130,13 +130,13 @@ class Error(Exception){
     }
     message = property(_get_message, _set_message);
 
-    def __init__(self, msg=''){
-        self.message = msg;
-        Exception.__init__(self, msg);
+    function __init__( msg=''){
+        this.message = msg;
+        Exception.__init__(this, msg);
 
     }
-    def __repr__(self){
-        return self.message;
+    function __repr__(){
+        return this.message;
 
     }
     __str__ = __repr__;
@@ -145,55 +145,55 @@ class Error(Exception){
 class NoSectionError(Error){
     """Raised when no section matches a requested option.""";
 
-    def __init__(self, section){
-        Error.__init__(self, 'No section: %r' % (section,));
-        self.section = section;
-        self.args = (section, );
+    function __init__( section){
+        Error.__init__(this, 'No section: %r' % (section,));
+        this.section = section;
+        this.args = (section, );
 
 }
 } class DuplicateSectionError(Error){
     """Raised when a section is multiply-created.""";
 
-    def __init__(self, section){
-        Error.__init__(self, "Section %r already exists" % section);
-        self.section = section;
-        self.args = (section, );
+    function __init__( section){
+        Error.__init__(this, "Section %r already exists" % section);
+        this.section = section;
+        this.args = (section, );
 
 }
 } class NoOptionError(Error){
     """A requested option was not found.""";
 
-    def __init__(self, option, section){
-        Error.__init__(self, "No option %r in section: %r" %
+    function __init__( option, section){
+        Error.__init__(this, "No option %r in section: %r" %
                        (option, section));
-        self.option = option;
-        self.section = section;
-        self.args = (option, section);
+        this.option = option;
+        this.section = section;
+        this.args = (option, section);
 
 }
 } class InterpolationError(Error){
     """Base class for interpolation-related exceptions.""";
 
-    def __init__(self, option, section, msg){
-        Error.__init__(self, msg);
-        self.option = option;
-        self.section = section;
-        self.args = (option, section, msg);
+    function __init__( option, section, msg){
+        Error.__init__(this, msg);
+        this.option = option;
+        this.section = section;
+        this.args = (option, section, msg);
 
 }
 } class InterpolationMissingOptionError(InterpolationError){
     """A string substitution required a setting which was not available.""";
 
-    def __init__(self, option, section, rawval, reference){
+    function __init__( option, section, rawval, reference){
         msg = ("Bad value substitution:\n"
                "\tsection: [%s]\n"
                "\toption : %s\n"
                "\tkey    : %s\n"
                "\trawval : %s\n"
                % (section, option, reference, rawval));
-        InterpolationError.__init__(self, option, section, msg);
-        self.reference = reference;
-        self.args = (option, section, rawval, reference);
+        InterpolationError.__init__(this, option, section, msg);
+        this.reference = reference;
+        this.args = (option, section, rawval, reference);
 
 }
 } class InterpolationSyntaxError(InterpolationError){
@@ -204,72 +204,72 @@ class NoSectionError(Error){
 class InterpolationDepthError(InterpolationError){
     """Raised when substitutions are nested too deeply.""";
 
-    def __init__(self, option, section, rawval){
+    function __init__( option, section, rawval){
         msg = ("Value interpolation too deeply recursive:\n"
                "\tsection: [%s]\n"
                "\toption : %s\n"
                "\trawval : %s\n"
                % (section, option, rawval));
-        InterpolationError.__init__(self, option, section, msg);
-        self.args = (option, section, rawval);
+        InterpolationError.__init__(this, option, section, msg);
+        this.args = (option, section, rawval);
 
 }
 } class ParsingError(Error){
     """Raised when a configuration file does not follow legal syntax.""";
 
-    def __init__(self, filename){
-        Error.__init__(self, 'File contains parsing errors: %s' % filename);
-        self.filename = filename;
-        self.errors = [];
-        self.args = (filename, );
+    function __init__( filename){
+        Error.__init__(this, 'File contains parsing errors: %s' % filename);
+        this.filename = filename;
+        this.errors = [];
+        this.args = (filename, );
 
     }
-    def append(self, lineno, line){
-        self.errors.append((lineno, line));
-        self.message += '\n\t[line %2d]: %s' % (lineno, line);
+    function append( lineno, line){
+        this.errors.append((lineno, line));
+        this.message += '\n\t[line %2d]: %s' % (lineno, line);
 
 }
 } class MissingSectionHeaderError(ParsingError){
     """Raised when a key-value pair is found before any section header.""";
 
-    def __init__(self, filename, lineno, line){
+    function __init__( filename, lineno, line){
         Error.__init__(
-            self,
+            this,
             'File contains no section headers.\nfile: %s, line: %d\n%r' %
             (filename, lineno, line));
-        self.filename = filename;
-        self.lineno = lineno;
-        self.line = line;
-        self.args = (filename, lineno, line);
+        this.filename = filename;
+        this.lineno = lineno;
+        this.line = line;
+        this.args = (filename, lineno, line);
 
 
 }
 } class RawConfigParser{
-    def __init__(self, defaults=None, dict_type=_default_dict,
-                 allow_no_value=False){
-        self._dict = dict_type;
-        self._sections = self._dict();
-        self._defaults = self._dict();
+    function __init__( defaults=nil, dict_type=_default_dict,
+                 allow_no_value=false){
+        this._dict = dict_type;
+        this._sections = this._dict();
+        this._defaults = this._dict();
         if allow_no_value{
-            self._optcre = self.OPTCRE_NV;
+            this._optcre = this.OPTCRE_NV;
         } else{
-            self._optcre = self.OPTCRE;
+            this._optcre = this.OPTCRE;
         } if defaults{
             for key, value in defaults.items(){
-                self._defaults[self.optionxform(key)] = value;
+                this._defaults[this.optionxform(key)] = value;
 
     }
-    } } def defaults(self){
-        return self._defaults;
+    } } function defaults(){
+        return this._defaults;
 
     }
-    def sections(self){
+    function sections(){
         """Return a list of section names, excluding [DEFAULT]""";
         # self._sections will never have [DEFAULT] in it
-        return self._sections.keys();
+        return this._sections.keys();
 
     }
-    def add_section(self, section){
+    function add_section( section){
         """Create a new section in the configuration.
 
         Raise DuplicateSectionError if a section by the specified name
@@ -280,32 +280,32 @@ class InterpolationDepthError(InterpolationError){
             raise ValueError, 'Invalid section name: %s' % section;
 
         }
-        if section in self._sections{
+        if section in this._sections{
             raise DuplicateSectionError(section);
-        } self._sections[section] = self._dict();
+        } this._sections[section] = this._dict();
 
     }
-    def has_section(self, section){
+    function has_section( section){
         """Indicate whether the named section is present in the configuration.
 
         The DEFAULT section is not acknowledged.
         """;
-        return section in self._sections;
+        return section in this._sections;
 
     }
-    def options(self, section){
+    function options( section){
         """Return a list of option names for the given section name.""";
         try{
-            opts = self._sections[section].copy();
+            opts = this._sections[section].copy();
         } except KeyError{
             raise NoSectionError(section);
-        } opts.update(self._defaults);
+        } opts.update(this._defaults);
         if '__name__' in opts{
             del opts['__name__'];
         } return opts.keys();
 
     }
-    def read(self, filenames){
+    function read( filenames){
         """Read and parse a filename or a list of filenames.
 
         Files that cannot be opened are silently ignored; this is
@@ -325,13 +325,13 @@ class InterpolationDepthError(InterpolationError){
                 fp = open(filename);
             } except IOError{
                 continue;
-            } self._read(fp, filename);
+            } this._read(fp, filename);
             fp.close();
             read_ok.append(filename);
         } return read_ok;
 
     }
-    def readfp(self, fp, filename=None){
+    function readfp( fp, filename=nil){
         """Like read() but the argument must be a file-like object.
 
         The `fp' argument must have a `readline' method.  Optional
@@ -340,135 +340,135 @@ class InterpolationDepthError(InterpolationError){
         used.
 
         """;
-        if filename is None{
+        if filename is nil{
             try{
                 filename = fp.name;
             } except AttributeError{
                 filename = '<???>';
-        } } self._read(fp, filename);
+        } } this._read(fp, filename);
 
     }
-    def get(self, section, option){
-        opt = self.optionxform(option);
-        if section not in self._sections{
+    function get( section, option){
+        opt = this.optionxform(option);
+        if section not in this._sections{
             if section != DEFAULTSECT{
                 raise NoSectionError(section);
-            } if opt in self._defaults{
-                return self._defaults[opt];
+            } if opt in this._defaults{
+                return this._defaults[opt];
             } else{
                 raise NoOptionError(option, section);
-        } } elif opt in self._sections[section]{
-            return self._sections[section][opt];
-        } elif opt in self._defaults{
-            return self._defaults[opt];
+        } } elif opt in this._sections[section]{
+            return this._sections[section][opt];
+        } elif opt in this._defaults{
+            return this._defaults[opt];
         } else{
             raise NoOptionError(option, section);
 
     }
-    } def items(self, section){
+    } function items( section){
         try{
-            d2 = self._sections[section];
+            d2 = this._sections[section];
         } except KeyError{
             if section != DEFAULTSECT{
                 raise NoSectionError(section);
-            } d2 = self._dict();
-        } d = self._defaults.copy();
+            } d2 = this._dict();
+        } d = this._defaults.copy();
         d.update(d2);
         if "__name__" in d{
             del d["__name__"];
         } return d.items();
 
     }
-    def _get(self, section, conv, option){
-        return conv(self.get(section, option));
+    function _get( section, conv, option){
+        return conv(this.get(section, option));
 
     }
-    def getint(self, section, option){
-        return self._get(section, int, option);
+    function getint( section, option){
+        return this._get(section, int, option);
 
     }
-    def getfloat(self, section, option){
-        return self._get(section, float, option);
+    function getfloat( section, option){
+        return this._get(section, float, option);
 
     }
-    _boolean_states = {'1': True, 'yes': True, 'true': True, 'on': True,
-                       '0': False, 'no': False, 'false': False, 'off': False};
+    _boolean_states = {'1': true, 'yes': true, 'true': true, 'on': true,
+                       '0': false, 'no': false, 'false': false, 'off': false};
 
-    def getboolean(self, section, option){
-        v = self.get(section, option);
-        if v.lower() not in self._boolean_states{
+    function getboolean( section, option){
+        v = this.get(section, option);
+        if v.lower() not in this._boolean_states{
             raise ValueError, 'Not a boolean: %s' % v;
-        } return self._boolean_states[v.lower()];
+        } return this._boolean_states[v.lower()];
 
     }
-    def optionxform(self, optionstr){
+    function optionxform( optionstr){
         return optionstr.lower();
 
     }
-    def has_option(self, section, option){
+    function has_option( section, option){
         """Check for the existence of a given option in a given section.""";
         if not section or section == DEFAULTSECT{
-            option = self.optionxform(option);
-            return option in self._defaults;
-        } elif section not in self._sections{
-            return False;
+            option = this.optionxform(option);
+            return option in this._defaults;
+        } elif section not in this._sections{
+            return false;
         } else{
-            option = self.optionxform(option);
-            return (option in self._sections[section]
-                    or option in self._defaults);
+            option = this.optionxform(option);
+            return (option in this._sections[section]
+                    or option in this._defaults);
 
     }
-    } def set(self, section, option, value=None){
+    } function set( section, option, value=nil){
         """Set an option.""";
         if not section or section == DEFAULTSECT{
-            sectdict = self._defaults;
+            sectdict = this._defaults;
         } else{
             try{
-                sectdict = self._sections[section];
+                sectdict = this._sections[section];
             } except KeyError{
                 raise NoSectionError(section);
-        } } sectdict[self.optionxform(option)] = value;
+        } } sectdict[this.optionxform(option)] = value;
 
     }
-    def write(self, fp){
+    function write( fp){
         """Write an .ini-format representation of the configuration state.""";
-        if self._defaults{
+        if this._defaults{
             fp.write("[%s]\n" % DEFAULTSECT);
-            for (key, value) in self._defaults.items(){
+            for (key, value) in this._defaults.items(){
                 fp.write("%s = %s\n" % (key, str(value).replace('\n', '\n\t')));
             } fp.write("\n");
-        } for section in self._sections{
+        } for section in this._sections{
             fp.write("[%s]\n" % section);
-            for (key, value) in self._sections[section].items(){
+            for (key, value) in this._sections[section].items(){
                 if key == "__name__"{
                     continue;
-                } if (value is not None) or (self._optcre == self.OPTCRE){
+                } if (value is not nil) or (this._optcre == this.OPTCRE){
                     key = " = ".join((key, str(value).replace('\n', '\n\t')));
                 } fp.write("%s\n" % (key));
             } fp.write("\n");
 
     }
-    } def remove_option(self, section, option){
+    } function remove_option( section, option){
         """Remove an option.""";
         if not section or section == DEFAULTSECT{
-            sectdict = self._defaults;
+            sectdict = this._defaults;
         } else{
             try{
-                sectdict = self._sections[section];
+                sectdict = this._sections[section];
             } except KeyError{
                 raise NoSectionError(section);
-        } } option = self.optionxform(option);
+        } } option = this.optionxform(option);
         existed = option in sectdict;
         if existed{
             del sectdict[option];
         } return existed;
 
     }
-    def remove_section(self, section){
+    function remove_section( section){
         """Remove a file section.""";
-        existed = section in self._sections;
+        existed = section in this._sections;
         if existed{
-            del self._sections[section];
+            del this._sections[section];
         } return existed;
 
     #
@@ -498,7 +498,7 @@ class InterpolationDepthError(InterpolationError){
         r'(?P<value>.*))?$'                   # everything up to eol
         );
 
-    def _read(self, fp, fpname){
+    function _read( fp, fpname){
         """Parse a sectioned setup file.
 
         The sections in setup file contains a title line at the top,
@@ -508,11 +508,11 @@ class InterpolationDepthError(InterpolationError){
         leading whitespace.  Blank lines, lines beginning with a '#',
         and just about everything else are ignored.
         """;
-        cursect = None;                        # None, or a dictionary
-        optname = None;
+        cursect = nil;                        # None, or a dictionary
+        optname = nil;
         lineno = 0;
-        e = None;                              # None, or an exception
-        while True{
+        e = nil;                              # None, or an exception
+        while true{
             line = fp.readline();
             if not line{
                 break;
@@ -520,12 +520,12 @@ class InterpolationDepthError(InterpolationError){
             # comment or blank line?
             if line.strip() == '' or line[0] in '#;'{
                 continue;
-            } if line.split(None, 1)[0].lower() == 'rem' and line[0] in "rR"{
+            } if line.split(nil, 1)[0].lower() == 'rem' and line[0] in "rR"{
                 # no leading whitespace
                 continue;
             # continuation line?
             }
-            if line[0].isspace() and cursect is not None and optname{
+            if line[0].isspace() and cursect is not nil and optname{
                 value = line.strip();
                 if value{
                     cursect[optname].append(value);
@@ -533,34 +533,34 @@ class InterpolationDepthError(InterpolationError){
             }
             } else{
                 # is it a section header?
-                mo = self.SECTCRE.match(line);
+                mo = this.SECTCRE.match(line);
                 if mo{
                     sectname = mo.group('header');
-                    if sectname in self._sections{
-                        cursect = self._sections[sectname];
+                    if sectname in this._sections{
+                        cursect = this._sections[sectname];
                     } elif sectname == DEFAULTSECT{
-                        cursect = self._defaults;
+                        cursect = this._defaults;
                     } else{
-                        cursect = self._dict();
+                        cursect = this._dict();
                         cursect['__name__'] = sectname;
-                        self._sections[sectname] = cursect;
+                        this._sections[sectname] = cursect;
                     # So sections can't start with a continuation line
                     }
-                    optname = None;
+                    optname = nil;
                 # no section header in the file?
                 }
-                elif cursect is None{
+                elif cursect is nil{
                     raise MissingSectionHeaderError(fpname, lineno, line);
                 # an option line?
                 }
                 else{
-                    mo = self._optcre.match(line);
+                    mo = this._optcre.match(line);
                     if mo{
                         optname, vi, optval = mo.group('option', 'vi', 'value');
-                        optname = self.optionxform(optname.rstrip());
+                        optname = this.optionxform(optname.rstrip());
                         # This check is fine because the OPTCRE cannot
                         # match if it would set optval to None
-                        if optval is not None{
+                        if optval is not nil{
                             if vi in ('=', ':') and ';' in optval{
                                 # ';' is a comment delimiter only if it follows
                                 # a spacing character
@@ -590,8 +590,8 @@ class InterpolationDepthError(InterpolationError){
 
         # join the multi-line values collected while reading
         }
-        all_sections = [self._defaults];
-        all_sections.extend(self._sections.values());
+        all_sections = [this._defaults];
+        all_sections.extend(this._sections.values());
         for options in all_sections{
             for name, val in options.items(){
                 if isinstance(val, list){
@@ -609,12 +609,12 @@ class _Chainmap(_UserDict.DictMixin){
         pylookup = _Chainmap(locals(), globals(), vars(__builtin__))
     """;
 
-    def __init__(self, *maps){
-        self._maps = maps;
+    function __init__( *maps){
+        this._maps = maps;
 
     }
-    def __getitem__(self, key){
-        for mapping in self._maps{
+    function __getitem__( key){
+        for mapping in this._maps{
             try{
                 return mapping[key];
             } except KeyError{
@@ -622,10 +622,10 @@ class _Chainmap(_UserDict.DictMixin){
         } } raise KeyError(key);
 
     }
-    def keys(self){
+    function keys(){
         result = [];
         seen = set();
-        for mapping in self._maps{
+        for mapping in this._maps{
             for key in mapping{
                 if key not in seen{
                     result.append(key);
@@ -635,7 +635,7 @@ class _Chainmap(_UserDict.DictMixin){
 }
 } class ConfigParser(RawConfigParser){
 
-    def get(self, section, option, raw=False, vars=None){
+    function get( section, option, raw=false, vars=nil){
         """Get an option value for a given section.
 
         If `vars' is provided, it must be a dictionary. The option is looked up
@@ -649,7 +649,7 @@ class _Chainmap(_UserDict.DictMixin){
         """;
         sectiondict = {};
         try{
-            sectiondict = self._sections[section];
+            sectiondict = this._sections[section];
         } except KeyError{
             if section != DEFAULTSECT{
                 raise NoSectionError(section);
@@ -658,22 +658,22 @@ class _Chainmap(_UserDict.DictMixin){
         } vardict = {};
         if vars{
             for key, value in vars.items(){
-                vardict[self.optionxform(key)] = value;
-        } } d = _Chainmap(vardict, sectiondict, self._defaults);
-        option = self.optionxform(option);
+                vardict[this.optionxform(key)] = value;
+        } } d = _Chainmap(vardict, sectiondict, this._defaults);
+        option = this.optionxform(option);
         try{
             value = d[option];
         } except KeyError{
             raise NoOptionError(option, section);
 
         }
-        if raw or value is None{
+        if raw or value is nil{
             return value;
         } else{
-            return self._interpolate(section, option, value, d);
+            return this._interpolate(section, option, value, d);
 
     }
-    } def items(self, section, raw=False, vars=None){
+    } function items( section, raw=false, vars=nil){
         """Return a list of tuples with (name, value) for each option
         in the section.
 
@@ -685,9 +685,9 @@ class _Chainmap(_UserDict.DictMixin){
 
         The section DEFAULT is special.
         """;
-        d = self._defaults.copy();
+        d = this._defaults.copy();
         try{
-            d.update(self._sections[section]);
+            d.update(this._sections[section]);
         } except KeyError{
             if section != DEFAULTSECT{
                 raise NoSectionError(section);
@@ -695,7 +695,7 @@ class _Chainmap(_UserDict.DictMixin){
         }
         } if vars{
             for key, value in vars.items(){
-                d[self.optionxform(key)] = value;
+                d[this.optionxform(key)] = value;
         } } options = d.keys();
         if "__name__" in options{
             options.remove("__name__");
@@ -703,18 +703,18 @@ class _Chainmap(_UserDict.DictMixin){
             return [(option, d[option])
                     for option in options];
         } else{
-            return [(option, self._interpolate(section, option, d[option], d))
+            return [(option, this._interpolate(section, option, d[option], d))
                     for option in options];
 
     }
-    } def _interpolate(self, section, option, rawval, vars){
+    } function _interpolate( section, option, rawval, vars){
         # do the string interpolation
         value = rawval;
         depth = MAX_INTERPOLATION_DEPTH;
         while depth{                    # Loop through this until it's done
             depth -= 1;
             if value and "%(" in value{
-                value = self._KEYCRE.sub(self._interpolation_replace, value);
+                value = this._KEYCRE.sub(this._interpolation_replace, value);
                 try{
                     value = value % vars;
                 } except KeyError, e{
@@ -729,27 +729,27 @@ class _Chainmap(_UserDict.DictMixin){
     }
     _KEYCRE = re.compile(r"%\(([^)]*)\)s|.");
 
-    def _interpolation_replace(self, match){
+    function _interpolation_replace( match){
         s = match.group(1);
-        if s is None{
+        if s is nil{
             return match.group();
         } else{
-            return "%%(%s)s" % self.optionxform(s);
+            return "%%(%s)s" % this.optionxform(s);
 
 
 }
 } } class SafeConfigParser(ConfigParser){
 
-    def _interpolate(self, section, option, rawval, vars){
+    function _interpolate( section, option, rawval, vars){
         # do the string interpolation
         L = [];
-        self._interpolate_some(option, L, rawval, section, vars, 1);
+        this._interpolate_some(option, L, rawval, section, vars, 1);
         return ''.join(L);
 
     }
     _interpvar_re = re.compile(r"%\(([^)]+)\)s");
 
-    def _interpolate_some(self, option, accum, rest, section, map, depth){
+    function _interpolate_some( option, accum, rest, section, map, depth){
         if depth > MAX_INTERPOLATION_DEPTH{
             raise InterpolationDepthError(option, section, rest);
         } while rest{
@@ -767,11 +767,11 @@ class _Chainmap(_UserDict.DictMixin){
                 accum.append("%");
                 rest = rest[2:];
             } elif c == "("{
-                m = self._interpvar_re.match(rest);
-                if m is None{
+                m = this._interpvar_re.match(rest);
+                if m is nil{
                     raise InterpolationSyntaxError(option, section,
                         "bad interpolation variable reference %r" % rest);
-                } var = self.optionxform(m.group(1));
+                } var = this.optionxform(m.group(1));
                 rest = rest[m.end():];
                 try{
                     v = map[var];
@@ -779,7 +779,7 @@ class _Chainmap(_UserDict.DictMixin){
                     raise InterpolationMissingOptionError(
                         option, section, rest, var);
                 } if "%" in v{
-                    self._interpolate_some(option, accum, v,
+                    this._interpolate_some(option, accum, v,
                                            section, map, depth + 1);
                 } else{
                     accum.append(v);
@@ -789,26 +789,26 @@ class _Chainmap(_UserDict.DictMixin){
                     "'%%' must be followed by '%%' or '(', found: %r" % (rest,));
 
     }
-    } } def set(self, section, option, value=None){
+    } } function set( section, option, value=nil){
         """Set an option.  Extend ConfigParser.set: check for string values.""";
         # The only legal non-string value if we allow valueless
         # options is None, so we need to check if the value is a
         # string if:
         # - we do not allow valueless options, or
         # - we allow valueless options but the value is not None
-        if self._optcre is self.OPTCRE or value{
+        if this._optcre is this.OPTCRE or value{
             if not isinstance(value, basestring){
                 raise TypeError("option values must be strings");
-        } } if value is not None{
+        } } if value is not nil{
             # check for bad percent signs:
             # first, replace all "good" interpolations
             tmp_value = value.replace('%%', '');
-            tmp_value = self._interpvar_re.sub('', tmp_value);
+            tmp_value = this._interpvar_re.sub('', tmp_value);
             # then, check if there's a lone percent sign left
             if '%' in tmp_value{
                 raise ValueError("invalid interpolation syntax in %r at "
                                 "position %d" % (value, tmp_value.find('%')));
-        } } ConfigParser.set(self, section, option, value);
+        } } ConfigParser.set(this, section, option, value);
 
 }
 }

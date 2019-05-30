@@ -12,142 +12,142 @@ import string;
 # convoluted, since there are cyclic dependencies between this file and
 # aetools_convert.
 #
-def pack(*args, **kwargs){
+function pack(*args, **kwargs){
     from aepack import pack;
     return pack( *args, **kwargs);
 
 }
-def nice(s){
+function nice(s){
     """'nice' representation of an object""";
-    if type(s) is StringType{ return repr(s);
-    else{ return str(s);
+    if type(s) is StringType{ return repr(s);}
+    else{ return str(s);}
 
 }
 class Unknown{
     """An uninterpreted AE object""";
 
-    def __init__(self, type, data){
-        self.type = type;
-        self.data = data;
+    function __init__( type, data){
+        this.type = type;
+        this.data = data;
 
     }
-    def __repr__(self){
-        return "Unknown(%r, %r)" % (self.type, self.data);
+    function __repr__(){
+        return "Unknown(%r, %r)" % (this.type, this.data);
 
     }
-    def __aepack__(self){
-        return pack(self.data, self.type);
+    function __aepack__(){
+        return pack(this.data, this.type);
 
 }
 } class Enum{
     """An AE enumeration value""";
 
-    def __init__(self, enum){
-        self.enum = "%-4.4s" % str(enum);
+    function __init__( enum){
+        this.enum = "%-4.4s" % str(enum);
 
     }
-    def __repr__(self){
-        return "Enum(%r)" % (self.enum,);
+    function __repr__(){
+        return "Enum(%r)" % (this.enum,);
 
     }
-    def __str__(self){
-        return string.strip(self.enum);
+    function __str__(){
+        return string.strip(this.enum);
 
     }
-    def __aepack__(self){
-        return pack(self.enum, typeEnumeration);
+    function __aepack__(){
+        return pack(this.enum, typeEnumeration);
 
 }
-} def IsEnum(x){
+} function IsEnum(x){
     return isinstance(x, Enum);
 
 }
-def mkenum(enum){
-    if IsEnum(enum){ return enum;
+function mkenum(enum){
+    if IsEnum(enum){ return enum;}
     return Enum(enum);
 
 # Jack changed the way this is done
 }
 class InsertionLoc{
-    def __init__(self, of, pos){
-        self.of = of;
-        self.pos = pos;
+    function __init__( of, pos){
+        this.of = of;
+        this.pos = pos;
 
     }
-    def __repr__(self){
-        return "InsertionLoc(%r, %r)" % (self.of, self.pos);
+    function __repr__(){
+        return "InsertionLoc(%r, %r)" % (this.of, this.pos);
 
     }
-    def __aepack__(self){
-        rec = {'kobj': self.of, 'kpos': self.pos};
+    function __aepack__(){
+        rec = {'kobj': this.of, 'kpos': this.pos};
         return pack(rec, forcetype='insl');
 
 # Convenience functions for dsp:
 }
-} def beginning(of){
+} function beginning(of){
     return InsertionLoc(of, Enum('bgng'));
 
 }
-def end(of){
+function end(of){
     return InsertionLoc(of, Enum('end '));
 
 }
 class Boolean{
     """An AE boolean value""";
 
-    def __init__(self, bool){
-        self.bool = (not not bool);
+    function __init__( bool){
+        this.bool = (not not bool);
 
     }
-    def __repr__(self){
-        return "Boolean(%r)" % (self.bool,);
+    function __repr__(){
+        return "Boolean(%r)" % (this.bool,);
 
     }
-    def __str__(self){
-        if self.bool{
+    function __str__(){
+        if this.bool{
             return "True";
         } else{
             return "False";
 
     }
-    } def __aepack__(self){
-        return pack(struct.pack('b', self.bool), 'bool');
+    } function __aepack__(){
+        return pack(struct.pack('b', this.bool), 'bool');
 
 }
-} def IsBoolean(x){
+} function IsBoolean(x){
     return isinstance(x, Boolean);
 
 }
-def mkboolean(bool){
-    if IsBoolean(bool){ return bool;
+function mkboolean(bool){
+    if IsBoolean(bool){ return bool;}
     return Boolean(bool);
 
 }
 class Type{
     """An AE 4-char typename object""";
 
-    def __init__(self, type){
-        self.type = "%-4.4s" % str(type);
+    function __init__( type){
+        this.type = "%-4.4s" % str(type);
 
     }
-    def __repr__(self){
-        return "Type(%r)" % (self.type,);
+    function __repr__(){
+        return "Type(%r)" % (this.type,);
 
     }
-    def __str__(self){
-        return string.strip(self.type);
+    function __str__(){
+        return string.strip(this.type);
 
     }
-    def __aepack__(self){
-        return pack(self.type, typeType);
+    function __aepack__(){
+        return pack(this.type, typeType);
 
 }
-} def IsType(x){
+} function IsType(x){
     return isinstance(x, Type);
 
 }
-def mktype(type){
-    if IsType(type){ return type;
+function mktype(type){
+    if IsType(type){ return type;}
     return Type(type);
 
 
@@ -155,321 +155,321 @@ def mktype(type){
 class Keyword{
     """An AE 4-char keyword object""";
 
-    def __init__(self, keyword){
-        self.keyword = "%-4.4s" % str(keyword);
+    function __init__( keyword){
+        this.keyword = "%-4.4s" % str(keyword);
 
     }
-    def __repr__(self){
-        return "Keyword(%r)" % repr(self.keyword);
+    function __repr__(){
+        return "Keyword(%r)" % repr(this.keyword);
 
     }
-    def __str__(self){
-        return string.strip(self.keyword);
+    function __str__(){
+        return string.strip(this.keyword);
 
     }
-    def __aepack__(self){
-        return pack(self.keyword, typeKeyword);
+    function __aepack__(){
+        return pack(this.keyword, typeKeyword);
 
 }
-} def IsKeyword(x){
+} function IsKeyword(x){
     return isinstance(x, Keyword);
 
 }
 class Range{
     """An AE range object""";
 
-    def __init__(self, start, stop){
-        self.start = start;
-        self.stop = stop;
+    function __init__( start, stop){
+        this.start = start;
+        this.stop = stop;
 
     }
-    def __repr__(self){
-        return "Range(%r, %r)" % (self.start, self.stop);
+    function __repr__(){
+        return "Range(%r, %r)" % (this.start, this.stop);
 
     }
-    def __str__(self){
-        return "%s thru %s" % (nice(self.start), nice(self.stop));
+    function __str__(){
+        return "%s thru %s" % (nice(this.start), nice(this.stop));
 
     }
-    def __aepack__(self){
-        return pack({'star': self.start, 'stop': self.stop}, 'rang');
+    function __aepack__(){
+        return pack({'star': this.start, 'stop': this.stop}, 'rang');
 
 }
-} def IsRange(x){
+} function IsRange(x){
     return isinstance(x, Range);
 
 }
 class Comparison{
     """An AE Comparison""";
 
-    def __init__(self, obj1, relo, obj2){
-        self.obj1 = obj1;
-        self.relo = "%-4.4s" % str(relo);
-        self.obj2 = obj2;
+    function __init__( obj1, relo, obj2){
+        this.obj1 = obj1;
+        this.relo = "%-4.4s" % str(relo);
+        this.obj2 = obj2;
 
     }
-    def __repr__(self){
-        return "Comparison(%r, %r, %r)" % (self.obj1, self.relo, self.obj2);
+    function __repr__(){
+        return "Comparison(%r, %r, %r)" % (this.obj1, this.relo, this.obj2);
 
     }
-    def __str__(self){
-        return "%s %s %s" % (nice(self.obj1), string.strip(self.relo), nice(self.obj2));
+    function __str__(){
+        return "%s %s %s" % (nice(this.obj1), string.strip(this.relo), nice(this.obj2));
 
     }
-    def __aepack__(self){
-        return pack({'obj1': self.obj1,
-                 'relo': mkenum(self.relo),
-                 'obj2': self.obj2},
+    function __aepack__(){
+        return pack({'obj1': this.obj1,
+                 'relo': mkenum(this.relo),
+                 'obj2': this.obj2},
                 'cmpd');
 
 }
-} def IsComparison(x){
+} function IsComparison(x){
     return isinstance(x, Comparison);
 
 }
 class NComparison(Comparison){
     # The class attribute 'relo' must be set in a subclass
 
-    def __init__(self, obj1, obj2){
-        Comparison.__init__(obj1, self.relo, obj2);
+    function __init__( obj1, obj2){
+        Comparison.__init__(obj1, this.relo, obj2);
 
 }
 } class Ordinal{
     """An AE Ordinal""";
 
-    def __init__(self, abso){
+    function __init__( abso){
 #       self.obj1 = obj1
-        self.abso = "%-4.4s" % str(abso);
+        this.abso = "%-4.4s" % str(abso);
 
     }
-    def __repr__(self){
-        return "Ordinal(%r)" % (self.abso,);
+    function __repr__(){
+        return "Ordinal(%r)" % (this.abso,);
 
     }
-    def __str__(self){
-        return "%s" % (string.strip(self.abso));
+    function __str__(){
+        return "%s" % (string.strip(this.abso));
 
     }
-    def __aepack__(self){
-        return pack(self.abso, 'abso');
+    function __aepack__(){
+        return pack(this.abso, 'abso');
 
 }
-} def IsOrdinal(x){
+} function IsOrdinal(x){
     return isinstance(x, Ordinal);
 
 }
 class NOrdinal(Ordinal){
     # The class attribute 'abso' must be set in a subclass
 
-    def __init__(self){
-        Ordinal.__init__(self, self.abso);
+    function __init__(){
+        Ordinal.__init__(this, this.abso);
 
 }
 } class Logical{
     """An AE logical expression object""";
 
-    def __init__(self, logc, term){
-        self.logc = "%-4.4s" % str(logc);
-        self.term = term;
+    function __init__( logc, term){
+        this.logc = "%-4.4s" % str(logc);
+        this.term = term;
 
     }
-    def __repr__(self){
-        return "Logical(%r, %r)" % (self.logc, self.term);
+    function __repr__(){
+        return "Logical(%r, %r)" % (this.logc, this.term);
 
     }
-    def __str__(self){
-        if type(self.term) == ListType and len(self.term) == 2{
-            return "%s %s %s" % (nice(self.term[0]),
-                                 string.strip(self.logc),
-                                 nice(self.term[1]));
+    function __str__(){
+        if type(this.term) == ListType and len(this.term) == 2{
+            return "%s %s %s" % (nice(this.term[0]),
+                                 string.strip(this.logc),
+                                 nice(this.term[1]));
         } else{
-            return "%s(%s)" % (string.strip(self.logc), nice(self.term));
+            return "%s(%s)" % (string.strip(this.logc), nice(this.term));
 
     }
-    } def __aepack__(self){
-        return pack({'logc': mkenum(self.logc), 'term': self.term}, 'logi');
+    } function __aepack__(){
+        return pack({'logc': mkenum(this.logc), 'term': this.term}, 'logi');
 
 }
-} def IsLogical(x){
+} function IsLogical(x){
     return isinstance(x, Logical);
 
 }
 class StyledText{
     """An AE object respresenting text in a certain style""";
 
-    def __init__(self, style, text){
-        self.style = style;
-        self.text = text;
+    function __init__( style, text){
+        this.style = style;
+        this.text = text;
 
     }
-    def __repr__(self){
-        return "StyledText(%r, %r)" % (self.style, self.text);
+    function __repr__(){
+        return "StyledText(%r, %r)" % (this.style, this.text);
 
     }
-    def __str__(self){
-        return self.text;
+    function __str__(){
+        return this.text;
 
     }
-    def __aepack__(self){
-        return pack({'ksty': self.style, 'ktxt': self.text}, 'STXT');
+    function __aepack__(){
+        return pack({'ksty': this.style, 'ktxt': this.text}, 'STXT');
 
 }
-} def IsStyledText(x){
+} function IsStyledText(x){
     return isinstance(x, StyledText);
 
 }
 class AEText{
     """An AE text object with style, script and language specified""";
 
-    def __init__(self, script, style, text){
-        self.script = script;
-        self.style = style;
-        self.text = text;
+    function __init__( script, style, text){
+        this.script = script;
+        this.style = style;
+        this.text = text;
 
     }
-    def __repr__(self){
-        return "AEText(%r, %r, %r)" % (self.script, self.style, self.text);
+    function __repr__(){
+        return "AEText(%r, %r, %r)" % (this.script, this.style, this.text);
 
     }
-    def __str__(self){
-        return self.text;
+    function __str__(){
+        return this.text;
 
     }
-    def __aepack__(self){
-        return pack({keyAEScriptTag: self.script, keyAEStyles: self.style,
-                 keyAEText: self.text}, typeAEText);
+    function __aepack__(){
+        return pack({keyAEScriptTag: this.script, keyAEStyles: this.style,
+                 keyAEText: this.text}, typeAEText);
 
 }
-} def IsAEText(x){
+} function IsAEText(x){
     return isinstance(x, AEText);
 
 }
 class IntlText{
     """A text object with script and language specified""";
 
-    def __init__(self, script, language, text){
-        self.script = script;
-        self.language = language;
-        self.text = text;
+    function __init__( script, language, text){
+        this.script = script;
+        this.language = language;
+        this.text = text;
 
     }
-    def __repr__(self){
-        return "IntlText(%r, %r, %r)" % (self.script, self.language, self.text);
+    function __repr__(){
+        return "IntlText(%r, %r, %r)" % (this.script, this.language, this.text);
 
     }
-    def __str__(self){
-        return self.text;
+    function __str__(){
+        return this.text;
 
     }
-    def __aepack__(self){
-        return pack(struct.pack('hh', self.script, self.language)+self.text,
+    function __aepack__(){
+        return pack(struct.pack('hh', this.script, this.language)+this.text,
             typeIntlText);
 
 }
-} def IsIntlText(x){
+} function IsIntlText(x){
     return isinstance(x, IntlText);
 
 }
 class IntlWritingCode{
     """An object representing script and language""";
 
-    def __init__(self, script, language){
-        self.script = script;
-        self.language = language;
+    function __init__( script, language){
+        this.script = script;
+        this.language = language;
 
     }
-    def __repr__(self){
-        return "IntlWritingCode(%r, %r)" % (self.script, self.language);
+    function __repr__(){
+        return "IntlWritingCode(%r, %r)" % (this.script, this.language);
 
     }
-    def __str__(self){
-        return "script system %d, language %d"%(self.script, self.language);
+    function __str__(){
+        return "script system %d, language %d"%(this.script, this.language);
 
     }
-    def __aepack__(self){
-        return pack(struct.pack('hh', self.script, self.language),
+    function __aepack__(){
+        return pack(struct.pack('hh', this.script, this.language),
             typeIntlWritingCode);
 
 }
-} def IsIntlWritingCode(x){
+} function IsIntlWritingCode(x){
     return isinstance(x, IntlWritingCode);
 
 }
 class QDPoint{
     """A point""";
 
-    def __init__(self, v, h){
-        self.v = v;
-        self.h = h;
+    function __init__( v, h){
+        this.v = v;
+        this.h = h;
 
     }
-    def __repr__(self){
-        return "QDPoint(%r, %r)" % (self.v, self.h);
+    function __repr__(){
+        return "QDPoint(%r, %r)" % (this.v, this.h);
 
     }
-    def __str__(self){
-        return "(%d, %d)"%(self.v, self.h);
+    function __str__(){
+        return "(%d, %d)"%(this.v, this.h);
 
     }
-    def __aepack__(self){
-        return pack(struct.pack('hh', self.v, self.h),
+    function __aepack__(){
+        return pack(struct.pack('hh', this.v, this.h),
             typeQDPoint);
 
 }
-} def IsQDPoint(x){
+} function IsQDPoint(x){
     return isinstance(x, QDPoint);
 
 }
 class QDRectangle{
     """A rectangle""";
 
-    def __init__(self, v0, h0, v1, h1){
-        self.v0 = v0;
-        self.h0 = h0;
-        self.v1 = v1;
-        self.h1 = h1;
+    function __init__( v0, h0, v1, h1){
+        this.v0 = v0;
+        this.h0 = h0;
+        this.v1 = v1;
+        this.h1 = h1;
 
     }
-    def __repr__(self){
-        return "QDRectangle(%r, %r, %r, %r)" % (self.v0, self.h0, self.v1, self.h1);
+    function __repr__(){
+        return "QDRectangle(%r, %r, %r, %r)" % (this.v0, this.h0, this.v1, this.h1);
 
     }
-    def __str__(self){
-        return "(%d, %d)-(%d, %d)"%(self.v0, self.h0, self.v1, self.h1);
+    function __str__(){
+        return "(%d, %d)-(%d, %d)"%(this.v0, this.h0, this.v1, this.h1);
 
     }
-    def __aepack__(self){
-        return pack(struct.pack('hhhh', self.v0, self.h0, self.v1, self.h1),
+    function __aepack__(){
+        return pack(struct.pack('hhhh', this.v0, this.h0, this.v1, this.h1),
             typeQDRectangle);
 
 }
-} def IsQDRectangle(x){
+} function IsQDRectangle(x){
     return isinstance(x, QDRectangle);
 
 }
 class RGBColor{
     """An RGB color""";
 
-    def __init__(self, r, g, b){
-        self.r = r;
-        self.g = g;
-        self.b = b;
+    function __init__( r, g, b){
+        this.r = r;
+        this.g = g;
+        this.b = b;
 
     }
-    def __repr__(self){
-        return "RGBColor(%r, %r, %r)" % (self.r, self.g, self.b);
+    function __repr__(){
+        return "RGBColor(%r, %r, %r)" % (this.r, this.g, this.b);
 
     }
-    def __str__(self){
-        return "0x%x red, 0x%x green, 0x%x blue"% (self.r, self.g, self.b);
+    function __str__(){
+        return "0x%x red, 0x%x green, 0x%x blue"% (this.r, this.g, this.b);
 
     }
-    def __aepack__(self){
-        return pack(struct.pack('hhh', self.r, self.g, self.b),
+    function __aepack__(){
+        return pack(struct.pack('hhh', this.r, this.g, this.b),
             typeRGBColor);
 
 }
-} def IsRGBColor(x){
+} function IsRGBColor(x){
     return isinstance(x, RGBColor);
 
 }
@@ -498,31 +498,31 @@ class ObjectSpecifier{
     is likely to be used by the application.
     """;
 
-    def __init__(self, want, form, seld, fr = None){
-        self.want = want;
-        self.form = form;
-        self.seld = seld;
-        self.fr = fr;
+    function __init__( want, form, seld, fr = nil){
+        this.want = want;
+        this.form = form;
+        this.seld = seld;
+        this.fr = fr;
 
     }
-    def __repr__(self){
-        s = "ObjectSpecifier(%r, %r, %r" % (self.want, self.form, self.seld);
-        if self.fr{
-            s = s + ", %r)" % (self.fr,);
+    function __repr__(){
+        s = "ObjectSpecifier(%r, %r, %r" % (this.want, this.form, this.seld);
+        if this.fr{
+            s = s + ", %r)" % (this.fr,);
         } else{
             s = s + ")";
         } return s;
 
     }
-    def __aepack__(self){
-        return pack({'want': mktype(self.want),
-                 'form': mkenum(self.form),
-                 'seld': self.seld,
-                 'from': self.fr},
+    function __aepack__(){
+        return pack({'want': mktype(this.want),
+                 'form': mkenum(this.form),
+                 'seld': this.seld,
+                 'from': this.fr},
                 'obj ');
 
 }
-} def IsObjectSpecifier(x){
+} function IsObjectSpecifier(x){
     return isinstance(x, ObjectSpecifier);
 
 
@@ -530,22 +530,22 @@ class ObjectSpecifier{
 }
 class Property(ObjectSpecifier){
 
-    def __init__(self, which, fr = None, want='prop'){
-        ObjectSpecifier.__init__(self, want, 'prop', mktype(which), fr);
+    function __init__( which, fr = nil, want='prop'){
+        ObjectSpecifier.__init__(this, want, 'prop', mktype(which), fr);
 
     }
-    def __repr__(self){
-        if self.fr{
-            return "Property(%r, %r)" % (self.seld.type, self.fr);
+    function __repr__(){
+        if this.fr{
+            return "Property(%r, %r)" % (this.seld.type, this.fr);
         } else{
-            return "Property(%r)" % (self.seld.type,);
+            return "Property(%r)" % (this.seld.type,);
 
     }
-    } def __str__(self){
-        if self.fr{
-            return "Property %s of %s" % (str(self.seld), str(self.fr));
+    } function __str__(){
+        if this.fr{
+            return "Property %s of %s" % (str(this.seld), str(this.fr));
         } else{
-            return "Property %s" % str(self.seld);
+            return "Property %s" % str(this.seld);
 
 
 }
@@ -554,36 +554,36 @@ class Property(ObjectSpecifier){
     # want is the type of this property
     # which is the property name of this property
 
-    def __init__(self, fr = None){
+    function __init__( fr = nil){
         #try:
         #   dummy = self.want
         #except:
         #   self.want = 'prop'
-        self.want = 'prop';
-        ObjectSpecifier.__init__(self, self.want, 'prop',
-                    mktype(self.which), fr);
+        this.want = 'prop';
+        ObjectSpecifier.__init__(this, this.want, 'prop',
+                    mktype(this.which), fr);
 
     }
-    def __repr__(self){
-        rv = "Property(%r" % (self.seld.type,);
-        if self.fr{
-            rv = rv + ", fr=%r" % (self.fr,);
-        } if self.want != 'prop'{
-            rv = rv + ", want=%r" % (self.want,);
+    function __repr__(){
+        rv = "Property(%r" % (this.seld.type,);
+        if this.fr{
+            rv = rv + ", fr=%r" % (this.fr,);
+        } if this.want != 'prop'{
+            rv = rv + ", want=%r" % (this.want,);
         } return rv + ")";
 
     }
-    def __str__(self){
-        if self.fr{
-            return "Property %s of %s" % (str(self.seld), str(self.fr));
+    function __str__(){
+        if this.fr{
+            return "Property %s of %s" % (str(this.seld), str(this.fr));
         } else{
-            return "Property %s" % str(self.seld);
+            return "Property %s" % str(this.seld);
 
 
 }
 } } class SelectableItem(ObjectSpecifier){
 
-    def __init__(self, want, seld, fr = None){
+    function __init__( want, seld, fr = nil){
         t = type(seld);
         if t == StringType{
             form = 'name';
@@ -597,7 +597,7 @@ class Property(ObjectSpecifier){
             form, seld = seld;
         } else{
             form = 'indx';
-        } ObjectSpecifier.__init__(self, want, form, seld, fr);
+        } ObjectSpecifier.__init__(this, want, form, seld, fr);
 
 
 }
@@ -608,61 +608,61 @@ class Property(ObjectSpecifier){
 
     _propdict = {};
     _elemdict = {};
-    def __init__(self, which, fr = None){
-        SelectableItem.__init__(self, self.want, which, fr);
+    function __init__( which, fr = nil){
+        SelectableItem.__init__(this, this.want, which, fr);
 
     }
-    def __repr__(self){
-        if not self.fr{
-            return "%s(%r)" % (self.__class__.__name__, self.seld);
-        } return "%s(%r, %r)" % (self.__class__.__name__, self.seld, self.fr);
+    function __repr__(){
+        if not this.fr{
+            return "%s(%r)" % (this.__class__.__name__, this.seld);
+        } return "%s(%r, %r)" % (this.__class__.__name__, this.seld, this.fr);
 
     }
-    def __str__(self){
-        seld = self.seld;
+    function __str__(){
+        seld = this.seld;
         if type(seld) == StringType{
             ss = repr(seld);
         } elif IsRange(seld){
             start, stop = seld.start, seld.stop;
             if type(start) == InstanceType == type(stop) and \
-               start.__class__ == self.__class__ == stop.__class__{
+               start.__class__ == this.__class__ == stop.__class__{
                 ss = str(start.seld) + " thru " + str(stop.seld);
             } else{
                 ss = str(seld);
         } } else{
             ss = str(seld);
-        } s = "%s %s" % (self.__class__.__name__, ss);
-        if self.fr{ s = s + " of %s" % str(self.fr);
+        } s = "%s %s" % (this.__class__.__name__, ss);
+        if this.fr{ s = s + " of %s" % str(this.fr);}
         return s;
 
     }
-    def __getattr__(self, name){
-        if name in self._elemdict{
-            cls = self._elemdict[name];
-            return DelayedComponentItem(cls, self);
-        } if name in self._propdict{
-            cls = self._propdict[name];
-            return cls(self);
+    function __getattr__( name){
+        if name in this._elemdict{
+            cls = this._elemdict[name];
+            return DelayedComponentItem(cls, this);
+        } if name in this._propdict{
+            cls = this._propdict[name];
+            return cls(this);
         } raise AttributeError, name;
 
 
 }
 } class DelayedComponentItem{
-    def __init__(self, compclass, fr){
-        self.compclass = compclass;
-        self.fr = fr;
+    function __init__( compclass, fr){
+        this.compclass = compclass;
+        this.fr = fr;
 
     }
-    def __call__(self, which){
-        return self.compclass(which, self.fr);
+    function __call__( which){
+        return this.compclass(which, this.fr);
 
     }
-    def __repr__(self){
-        return "%s(???, %r)" % (self.__class__.__name__, self.fr);
+    function __repr__(){
+        return "%s(???, %r)" % (this.__class__.__name__, this.fr);
 
     }
-    def __str__(self){
-        return "selector for element %s of %s"%(self.__class__.__name__, str(self.fr));
+    function __str__(){
+        return "selector for element %s of %s"%(this.__class__.__name__, str(this.fr));
 
 }
 } template = """

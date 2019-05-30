@@ -219,8 +219,8 @@ static PyObject *OSAObj_OSADispose(OSAComponentInstanceObject *_self, PyObject *
     _err = OSADispose(_self->ob_itself,
                       scriptID);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -244,8 +244,8 @@ static PyObject *OSAObj_OSASetScriptInfo(OSAComponentInstanceObject *_self, PyOb
                             selector,
                             value);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -425,8 +425,8 @@ static PyObject *OSAObj_OSASetDefaultTarget(OSAComponentInstanceObject *_self, P
     _err = OSASetDefaultTarget(_self->ob_itself,
                                &target);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -462,8 +462,8 @@ static PyObject *OSAObj_OSAStopRecording(OSAComponentInstanceObject *_self, PyOb
     _err = OSAStopRecording(_self->ob_itself,
                             compiledScriptID);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -565,8 +565,8 @@ static PyObject *OSAObj_OSASetCurrentDialect(OSAComponentInstanceObject *_self, 
     _err = OSASetCurrentDialect(_self->ob_itself,
                                 dialectCode);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 

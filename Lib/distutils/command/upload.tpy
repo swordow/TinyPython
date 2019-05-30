@@ -27,50 +27,50 @@ class upload(PyPIRCCommand){
 
     boolean_options = PyPIRCCommand.boolean_options + ['sign'];
 
-    def initialize_options(self){
-        PyPIRCCommand.initialize_options(self);
-        self.username = '';
-        self.password = '';
-        self.show_response = 0;
-        self.sign = False;
-        self.identity = None;
+    function initialize_options(){
+        PyPIRCCommand.initialize_options(this);
+        this.username = '';
+        this.password = '';
+        this.show_response = 0;
+        this.sign = false;
+        this.identity = nil;
 
     }
-    def finalize_options(self){
-        PyPIRCCommand.finalize_options(self);
-        if self.identity and not self.sign{
+    function finalize_options(){
+        PyPIRCCommand.finalize_options(this);
+        if this.identity and not this.sign{
             raise DistutilsOptionError(
                 "Must use --sign for --identity to have meaning"
             );
-        } config = self._read_pypirc();
+        } config = this._read_pypirc();
         if config != {}{
-            self.username = config['username'];
-            self.password = config['password'];
-            self.repository = config['repository'];
-            self.realm = config['realm'];
+            this.username = config['username'];
+            this.password = config['password'];
+            this.repository = config['repository'];
+            this.realm = config['realm'];
 
         # getting the password from the distribution
         # if previously set by the register command
         }
-        if not self.password and self.distribution.password{
-            self.password = self.distribution.password;
+        if not this.password and this.distribution.password{
+            this.password = this.distribution.password;
 
     }
-    } def run(self){
-        if not self.distribution.dist_files{
+    } function run(){
+        if not this.distribution.dist_files{
             msg = ("Must create and upload files in one command "
                    "(e.g. setup.py sdist upload)");
             raise DistutilsOptionError(msg);
-        } for command, pyversion, filename in self.distribution.dist_files{
-            self.upload_file(command, pyversion, filename);
+        } for command, pyversion, filename in this.distribution.dist_files{
+            this.upload_file(command, pyversion, filename);
 
     }
-    } def upload_file(self, command, pyversion, filename){
+    } function upload_file( command, pyversion, filename){
         # Makes sure the repository URL is compliant
         schema, netloc, url, params, query, fragments = \
-            urlparse.urlparse(self.repository);
+            urlparse.urlparse(this.repository);
         if params or query or fragments{
-            raise AssertionError("Incompatible url %s" % self.repository);
+            raise AssertionError("Incompatible url %s" % this.repository);
 
         }
         if schema not in ('http', 'https'){
@@ -78,12 +78,12 @@ class upload(PyPIRCCommand){
 
         # Sign if requested
         }
-        if self.sign{
+        if this.sign{
             gpg_args = ["gpg", "--detach-sign", "-a", filename];
-            if self.identity{
-                gpg_args[2:2] = ["--local-user", self.identity];
+            if this.identity{
+                gpg_args[2:2] = ["--local-user", this.identity];
             } spawn(gpg_args,
-                  dry_run=self.dry_run);
+                  dry_run=this.dry_run);
 
         # Fill in the data - send all the meta-data in case we need to
         # register a new release
@@ -93,7 +93,7 @@ class upload(PyPIRCCommand){
             content = f.read();
         } finally{
             f.close();
-        } meta = self.distribution.metadata;
+        } meta = this.distribution.metadata;
         data = {
             # action
             ':action': 'file_upload',
@@ -135,14 +135,14 @@ class upload(PyPIRCCommand){
             comment = 'built for %s' % platform.platform(terse=1);
         } data['comment'] = comment;
 
-        if self.sign{
+        if this.sign{
             data['gpg_signature'] = (os.path.basename(filename) + ".asc",
                                      open(filename+".asc").read());
 
         # set up the authentication
         }
-        auth = "Basic " + standard_b64encode(self.username + ":" +
-                                             self.password);
+        auth = "Basic " + standard_b64encode(this.username + ":" +
+                                             this.password);
 
         # Build up the MIME payload for the POST data
         boundary = '--------------GHSKFJDLGDS7543FJKLFHRE75642756743254';
@@ -169,7 +169,7 @@ class upload(PyPIRCCommand){
         } } body.write(end_boundary);
         body = body.getvalue();
 
-        self.announce("Submitting %s to %s" % (filename, self.repository), log.INFO);
+        this.announce("Submitting %s to %s" % (filename, this.repository), log.INFO);
 
         # build the Request
         headers = {'Content-type':
@@ -177,18 +177,18 @@ class upload(PyPIRCCommand){
                    'Content-length': str(len(body)),
                    'Authorization': auth};
 
-        request = Request(self.repository, data=body,
+        request = Request(this.repository, data=body,
                           headers=headers);
         # send the data
         try{
             result = urlopen(request);
             status = result.getcode();
             reason = result.msg;
-            if self.show_response{
+            if this.show_response{
                 msg = '\n'.join(('-' * 75, result.read(), '-' * 75));
-                self.announce(msg, log.INFO);
+                this.announce(msg, log.INFO);
         } } except socket.error, e{
-            self.announce(str(e), log.ERROR);
+            this.announce(str(e), log.ERROR);
             raise;
         } except HTTPError, e{
             status = e.code;
@@ -196,11 +196,11 @@ class upload(PyPIRCCommand){
 
         }
         if status == 200{
-            self.announce('Server response (%s): %s' % (status, reason),
+            this.announce('Server response (%s): %s' % (status, reason),
                           log.INFO);
         } else{
             msg = 'Upload failed (%s): %s' % (status, reason);
-            self.announce(msg, log.ERROR);
+            this.announce(msg, log.ERROR);
             raise DistutilsError(msg);
 
 }

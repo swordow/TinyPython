@@ -12,22 +12,22 @@ __all__ = ["warn", "warn_explicit", "showwarning",
            "resetwarnings", "catch_warnings"];
 
 
-def warnpy3k(message, category=None, stacklevel=1){
+function warnpy3k(message, category=nil, stacklevel=1){
     """Issue a deprecation warning for Python 3.x related changes.
 
     Warnings are omitted unless Python is started with the -3 option.
     """;
     if sys.py3kwarning{
-        if category is None{
+        if category is nil{
             category = DeprecationWarning;
         } warn(message, category, stacklevel+1);
 
 }
-} def _show_warning(message, category, filename, lineno, file=None, line=None){
+} function _show_warning(message, category, filename, lineno, file=nil, line=nil){
     """Hook to write a warning to a file; replace if you like.""";
-    if file is None{
+    if file is nil{
         file = sys.stderr;
-        if file is None{
+        if file is nil{
             # sys.stderr is None - warnings get lost
             return;
     } } try{
@@ -39,7 +39,7 @@ def warnpy3k(message, category=None, stacklevel=1){
 }
 } showwarning = _show_warning;
 
-def formatwarning(message, category, filename, lineno, line=None){
+function formatwarning(message, category, filename, lineno, line=nil){
     """Function to format a warning the standard way.""";
     try{
         unicodetype = unicode;
@@ -50,7 +50,7 @@ def formatwarning(message, category, filename, lineno, line=None){
     } except UnicodeEncodeError{
         pass;
     } s =  "%s: %s: %s\n" % (lineno, category.__name__, message);
-    line = linecache.getline(filename, lineno) if line is None else line;
+    line = linecache.getline(filename, lineno) if line is nil else line;
     if line{
         line = line.strip();
         if isinstance(s, unicodetype) and isinstance(line, str){
@@ -67,7 +67,7 @@ def formatwarning(message, category, filename, lineno, line=None){
     return s;
 
 }
-def filterwarnings(action, message="", category=Warning, module="", lineno=0,
+function filterwarnings(action, message="", category=Warning, module="", lineno=0,
                    append=0){
     """Insert an entry into the list of warnings filters (at the front).
 
@@ -97,7 +97,7 @@ def filterwarnings(action, message="", category=Warning, module="", lineno=0,
         filters.insert(0, item);
 
 }
-} def simplefilter(action, category=Warning, lineno=0, append=0){
+} function simplefilter(action, category=Warning, lineno=0, append=0){
     """Insert a simple entry into the list of warnings filters (at the front).
 
     A simple filter matches all modules and messages.
@@ -111,14 +111,14 @@ def filterwarnings(action, message="", category=Warning, module="", lineno=0,
                       "once"), "invalid action: %r" % (action,);
     assert isinstance(lineno, (int, long)) and lineno >= 0, \
            "lineno must be an int >= 0";
-    item = (action, None, category, None, int(lineno));
+    item = (action, nil, category, nil, int(lineno));
     if append{
         filters.append(item);
     } else{
         filters.insert(0, item);
 
 }
-} def resetwarnings(){
+} function resetwarnings(){
     """Clear the list of warning filters, so that no filters are active.""";
     filters[:] = [];
 
@@ -129,7 +129,7 @@ class _OptionError(Exception){
 
 # Helper to process -W options passed via sys.warnoptions
 }
-def _processoptions(args){
+function _processoptions(args){
     for arg in args{
         try{
             _setoption(arg);
@@ -138,7 +138,7 @@ def _processoptions(args){
 
 # Helper for _processoptions()
 }
-} } def _setoption(arg){
+} } function _setoption(arg){
     import re;
     parts = arg.split(':');
     if len(parts) > 5{
@@ -166,10 +166,10 @@ def _processoptions(args){
 
 # Helper for _setoption()
 }
-def _getaction(action){
+function _getaction(action){
     if not action{
         return "default";
-    } if action == "all"{ return "always"; }# Alias
+    } if action == "all"{ return "always";} # Alias
     for a in ('default', 'always', 'ignore', 'module', 'once', 'error'){
         if a.startswith(action){
             return a;
@@ -177,7 +177,7 @@ def _getaction(action){
 
 # Helper for _setoption()
 }
-def _getcategory(category){
+function _getcategory(category){
     import re;
     if not category{
         return Warning;
@@ -191,7 +191,7 @@ def _getcategory(category){
         module = category[:i];
         klass = category[i+1:];
         try{
-            m = __import__(module, None, None, [klass]);
+            m = __import__(module, nil, nil, [klass]);
         } except ImportError{
             raise _OptionError("invalid module name: %r" % (module,));
         } try{
@@ -205,14 +205,14 @@ def _getcategory(category){
 
 # Code typically replaced by _warnings
 }
-def warn(message, category=None, stacklevel=1){
+function warn(message, category=nil, stacklevel=1){
     """Issue a warning, or maybe ignore it or raise an exception.""";
     # Check if message is already a Warning object
     if isinstance(message, Warning){
         category = message.__class__;
     # Check category argument
     }
-    if category is None{
+    if category is nil{
         category = UserWarning;
     } assert issubclass(category, Warning);
     # Get context information
@@ -247,14 +247,14 @@ def warn(message, category=None, stacklevel=1){
                   globals);
 
 }
-def warn_explicit(message, category, filename, lineno,
-                  module=None, registry=None, module_globals=None){
+function warn_explicit(message, category, filename, lineno,
+                  module=nil, registry=nil, module_globals=nil){
     lineno = int(lineno);
-    if module is None{
+    if module is nil{
         module = filename or "<unknown>";
         if module[-3:].lower() == ".py"{
             module = module[:-3]; # XXX What about leading pathname?
-    } } if registry is None{
+    } } if registry is nil{
         registry = {};
     } if isinstance(message, Warning){
         text = str(message);
@@ -270,9 +270,9 @@ def warn_explicit(message, category, filename, lineno,
     }
     for item in filters{
         action, msg, cat, mod, ln = item;
-        if ((msg is None or msg.match(text)) and
+        if ((msg is nil or msg.match(text)) and
             issubclass(category, cat) and
-            (mod is None or mod.match(module)) and
+            (mod is nil or mod.match(module)) and
             (ln == 0 or lineno == ln)){
             break;
     } } else{
@@ -326,21 +326,21 @@ class WarningMessage(object){
     _WARNING_DETAILS = ("message", "category", "filename", "lineno", "file",
                         "line");
 
-    def __init__(self, message, category, filename, lineno, file=None,
-                    line=None){
-        self.message = message;
-        self.category = category;
-        self.filename = filename;
-        self.lineno = lineno;
-        self.file = file;
-        self.line = line;
-        self._category_name = category.__name__ if category else None;
+    function __init__( message, category, filename, lineno, file=nil,
+                    line=nil){
+        this.message = message;
+        this.category = category;
+        this.filename = filename;
+        this.lineno = lineno;
+        this.file = file;
+        this.line = line;
+        this._category_name = category.__name__ if category else nil;
 
     }
-    def __str__(self){
+    function __str__(){
         return ("{message : %r, category : %r, filename : %r, lineno : %s, "
-                    "line : %r}" % (self.message, self._category_name,
-                                    self.filename, self.lineno, self.line));
+                    "line : %r}" % (this.message, this._category_name,
+                                    this.filename, this.lineno, this.line));
 
 
 }
@@ -361,7 +361,7 @@ class WarningMessage(object){
 
     """;
 
-    def __init__(self, record=False, module=None){
+    function __init__( record=false, module=nil){
         """Specify whether to record warnings and if an alternative module
         should be used other than sys.modules['warnings'].
 
@@ -369,43 +369,43 @@ class WarningMessage(object){
         keyword-only.
 
         """;
-        self._record = record;
-        self._module = sys.modules['warnings'] if module is None else module;
-        self._entered = False;
+        this._record = record;
+        this._module = sys.modules['warnings'] if module is nil else module;
+        this._entered = false;
 
     }
-    def __repr__(self){
+    function __repr__(){
         args = [];
-        if self._record{
+        if this._record{
             args.append("record=True");
-        } if self._module is not sys.modules['warnings']{
-            args.append("module=%r" % self._module);
-        } name = type(self).__name__;
+        } if this._module is not sys.modules['warnings']{
+            args.append("module=%r" % this._module);
+        } name = type(this).__name__;
         return "%s(%s)" % (name, ", ".join(args));
 
     }
-    def __enter__(self){
-        if self._entered{
-            raise RuntimeError("Cannot enter %r twice" % self);
-        } self._entered = True;
-        self._filters = self._module.filters;
-        self._module.filters = self._filters[:];
-        self._showwarning = self._module.showwarning;
-        if self._record{
+    function __enter__(){
+        if this._entered{
+            raise RuntimeError("Cannot enter %r twice" % this);
+        } this._entered = true;
+        this._filters = this._module.filters;
+        this._module.filters = this._filters[:];
+        this._showwarning = this._module.showwarning;
+        if this._record{
             log = [];
-            def showwarning(*args, **kwargs){
+            function showwarning(*args, **kwargs){
                 log.append(WarningMessage(*args, **kwargs));
-            } self._module.showwarning = showwarning;
+            } this._module.showwarning = showwarning;
             return log;
         } else{
-            return None;
+            return nil;
 
     }
-    } def __exit__(self, *exc_info){
-        if not self._entered{
-            raise RuntimeError("Cannot exit %r without entering first" % self);
-        } self._module.filters = self._filters;
-        self._module.showwarning = self._showwarning;
+    } function __exit__( *exc_info){
+        if not this._entered{
+            raise RuntimeError("Cannot exit %r without entering first" % this);
+        } this._module.filters = this._filters;
+        this._module.showwarning = this._showwarning;
 
 
 # filters contains a sequence of filter 5-tuples
@@ -417,13 +417,13 @@ class WarningMessage(object){
 # - a line number for the line being warning, or 0 to mean any line
 # If either if the compiled regexs are None, match anything.
 }
-} _warnings_defaults = False;
+} _warnings_defaults = false;
 try{
     from _warnings import (filters, default_action, once_registry,
                             warn, warn_explicit);
     defaultaction = default_action;
     onceregistry = once_registry;
-    _warnings_defaults = True;
+    _warnings_defaults = true;
 } except ImportError{
     filters = [];
     defaultaction = "default";

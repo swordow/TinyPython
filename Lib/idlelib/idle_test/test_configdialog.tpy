@@ -13,7 +13,7 @@ from idlelib.macosxSupport import _initializeTkVariantTests;
 class ConfigDialogTest(unittest.TestCase){
 
     @classmethod;
-    def setUpClass(cls){
+    function setUpClass(cls){
         requires('gui');
         cls.root = Tk();
         cls.root.withdraw();
@@ -21,13 +21,13 @@ class ConfigDialogTest(unittest.TestCase){
 
     }
     @classmethod;
-    def tearDownClass(cls){
+    function tearDownClass(cls){
         cls.root.destroy();
         del cls.root;
 
     }
-    def test_dialog(self){
-        d = ConfigDialog(self.root, 'Test', _utest=True);
+    function test_dialog(){
+        d = ConfigDialog(this.root, 'Test', _utest=true);
         d.remove_var_callbacks();
 
 

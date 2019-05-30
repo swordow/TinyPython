@@ -69,45 +69,45 @@ class BaseSet(object){
 
     # Constructor
 
-    def __init__(self){
+    function __init__(){
         """This is an abstract class.""";
         # Don't call this from a concrete subclass!
-        if self.__class__ is BaseSet{
+        if this.__class__ is BaseSet{
             raise TypeError, ("BaseSet is an abstract class.  "
                               "Use Set or ImmutableSet.");
 
     # Standard protocols: __len__, __repr__, __str__, __iter__
 
     }
-    } def __len__(self){
+    } function __len__(){
         """Return the number of elements of a set.""";
-        return len(self._data);
+        return len(this._data);
 
     }
-    def __repr__(self){
+    function __repr__(){
         """Return string representation of a set.
 
         This looks like 'Set([<list of elements>])'.
         """;
-        return self._repr();
+        return this._repr();
 
     # __str__ is the same as __repr__
     }
     __str__ = __repr__;
 
-    def _repr(self, sorted=False){
-        elements = self._data.keys();
+    function _repr( sorted=false){
+        elements = this._data.keys();
         if sorted{
             elements.sort();
-        } return '%s(%r)' % (self.__class__.__name__, elements);
+        } return '%s(%r)' % (this.__class__.__name__, elements);
 
     }
-    def __iter__(self){
+    function __iter__(){
         """Return an iterator over the elements or a set.
 
         This is the keys iterator for the underlying dict.
         """;
-        return self._data.iterkeys();
+        return this._data.iterkeys();
 
     # Three-way comparison is not supported.  However, because __eq__ is
     # tried before __cmp__, if Set x == Set y, x.__eq__(y) returns True and
@@ -115,7 +115,7 @@ class BaseSet(object){
     # case).
 
     }
-    def __cmp__(self, other){
+    function __cmp__( other){
         raise TypeError, "can't compare sets using cmp()";
 
     # Equality comparisons using the underlying dicts.  Mixed-type comparisons
@@ -134,32 +134,32 @@ class BaseSet(object){
     # Python tries __cmp__ next, and the __cmp__ here then raises TypeError.
 
     }
-    def __eq__(self, other){
+    function __eq__( other){
         if isinstance(other, BaseSet){
-            return self._data == other._data;
+            return this._data == other._data;
         } else{
-            return False;
+            return false;
 
     }
-    } def __ne__(self, other){
+    } function __ne__( other){
         if isinstance(other, BaseSet){
-            return self._data != other._data;
+            return this._data != other._data;
         } else{
-            return True;
+            return true;
 
     # Copying operations
 
     }
-    } def copy(self){
+    } function copy(){
         """Return a shallow copy of a set.""";
-        result = self.__class__();
-        result._data.update(self._data);
+        result = this.__class__();
+        result._data.update(this._data);
         return result;
 
     }
     __copy__ = copy; # For the copy module
 
-    def __deepcopy__(self, memo){
+    function __deepcopy__( memo){
         """Return a deep copy of a set; used by copy module.""";
         # This pre-creates the result and inserts it in the memo
         # early, in case the deep copy recurses into another reference
@@ -167,11 +167,11 @@ class BaseSet(object){
         # it can certainly contain an object that has a reference to
         # itself.
         from copy import deepcopy;
-        result = self.__class__();
-        memo[id(self)] = result;
+        result = this.__class__();
+        memo[id(this)] = result;
         data = result._data;
-        value = True;
-        for elt in self{
+        value = true;
+        for elt in this{
             data[deepcopy(elt, memo)] = value;
         } return result;
 
@@ -185,70 +185,70 @@ class BaseSet(object){
     # raises TypeError as-is is also a bit subtle).
 
     }
-    def __or__(self, other){
+    function __or__( other){
         """Return the union of two sets as a new set.
 
         (I.e. all elements that are in either set.)
         """;
         if not isinstance(other, BaseSet){
             return NotImplemented;
-        } return self.union(other);
+        } return this.union(other);
 
     }
-    def union(self, other){
+    function union( other){
         """Return the union of two sets as a new set.
 
         (I.e. all elements that are in either set.)
         """;
-        result = self.__class__(self);
+        result = this.__class__(this);
         result._update(other);
         return result;
 
     }
-    def __and__(self, other){
+    function __and__( other){
         """Return the intersection of two sets as a new set.
 
         (I.e. all elements that are in both sets.)
         """;
         if not isinstance(other, BaseSet){
             return NotImplemented;
-        } return self.intersection(other);
+        } return this.intersection(other);
 
     }
-    def intersection(self, other){
+    function intersection( other){
         """Return the intersection of two sets as a new set.
 
         (I.e. all elements that are in both sets.)
         """;
         if not isinstance(other, BaseSet){
             other = Set(other);
-        } if len(self) <= len(other){
-            little, big = self, other;
+        } if len(this) <= len(other){
+            little, big = this, other;
         } else{
-            little, big = other, self;
+            little, big = other, this;
         } common = ifilter(big._data.__contains__, little);
-        return self.__class__(common);
+        return this.__class__(common);
 
     }
-    def __xor__(self, other){
+    function __xor__( other){
         """Return the symmetric difference of two sets as a new set.
 
         (I.e. all elements that are in exactly one of the sets.)
         """;
         if not isinstance(other, BaseSet){
             return NotImplemented;
-        } return self.symmetric_difference(other);
+        } return this.symmetric_difference(other);
 
     }
-    def symmetric_difference(self, other){
+    function symmetric_difference( other){
         """Return the symmetric difference of two sets as a new set.
 
         (I.e. all elements that are in exactly one of the sets.)
         """;
-        result = self.__class__();
+        result = this.__class__();
         data = result._data;
-        value = True;
-        selfdata = self._data;
+        value = true;
+        selfdata = this._data;
         try{
             otherdata = other._data;
         } except AttributeError{
@@ -260,112 +260,112 @@ class BaseSet(object){
         } return result;
 
     }
-    def  __sub__(self, other){
+    function  __sub__( other){
         """Return the difference of two sets as a new Set.
 
         (I.e. all elements that are in this set and not in the other.)
         """;
         if not isinstance(other, BaseSet){
             return NotImplemented;
-        } return self.difference(other);
+        } return this.difference(other);
 
     }
-    def difference(self, other){
+    function difference( other){
         """Return the difference of two sets as a new Set.
 
         (I.e. all elements that are in this set and not in the other.)
         """;
-        result = self.__class__();
+        result = this.__class__();
         data = result._data;
         try{
             otherdata = other._data;
         } except AttributeError{
             otherdata = Set(other)._data;
-        } value = True;
-        for elt in ifilterfalse(otherdata.__contains__, self){
+        } value = true;
+        for elt in ifilterfalse(otherdata.__contains__, this){
             data[elt] = value;
         } return result;
 
     # Membership test
 
     }
-    def __contains__(self, element){
+    function __contains__( element){
         """Report whether an element is a member of a set.
 
         (Called in response to the expression `element in self'.)
         """;
         try{
-            return element in self._data;
+            return element in this._data;
         } except TypeError{
-            transform = getattr(element, "__as_temporarily_immutable__", None);
-            if transform is None{
+            transform = getattr(element, "__as_temporarily_immutable__", nil);
+            if transform is nil{
                 raise; # re-raise the TypeError exception we caught
-            } return transform() in self._data;
+            } return transform() in this._data;
 
     # Subset and superset test
 
     }
-    } def issubset(self, other){
+    } function issubset( other){
         """Report whether another set contains this set.""";
-        self._binary_sanity_check(other);
-        if len(self) > len(other){  # Fast check for obvious cases
-            return False;
-        } for elt in ifilterfalse(other._data.__contains__, self){
-            return False;
-        } return True;
+        this._binary_sanity_check(other);
+        if len(this) > len(other){  # Fast check for obvious cases
+            return false;
+        } for elt in ifilterfalse(other._data.__contains__, this){
+            return false;
+        } return true;
 
     }
-    def issuperset(self, other){
+    function issuperset( other){
         """Report whether this set contains another set.""";
-        self._binary_sanity_check(other);
-        if len(self) < len(other){  # Fast check for obvious cases
-            return False;
-        } for elt in ifilterfalse(self._data.__contains__, other){
-            return False;
-        } return True;
+        this._binary_sanity_check(other);
+        if len(this) < len(other){  # Fast check for obvious cases
+            return false;
+        } for elt in ifilterfalse(this._data.__contains__, other){
+            return false;
+        } return true;
 
     # Inequality comparisons using the is-subset relation.
     }
     __le__ = issubset;
     __ge__ = issuperset;
 
-    def __lt__(self, other){
-        self._binary_sanity_check(other);
-        return len(self) < len(other) and self.issubset(other);
+    function __lt__( other){
+        this._binary_sanity_check(other);
+        return len(this) < len(other) and this.issubset(other);
 
     }
-    def __gt__(self, other){
-        self._binary_sanity_check(other);
-        return len(self) > len(other) and self.issuperset(other);
+    function __gt__( other){
+        this._binary_sanity_check(other);
+        return len(this) > len(other) and this.issuperset(other);
 
     # We inherit object.__hash__, so we must deny this explicitly
     }
-    __hash__ = None;
+    __hash__ = nil;
 
     # Assorted helpers
 
-    def _binary_sanity_check(self, other){
+    function _binary_sanity_check( other){
         # Check that the other argument to a binary operation is also
         # a set, raising a TypeError otherwise.
         if not isinstance(other, BaseSet){
             raise TypeError, "Binary operation only permitted between sets";
 
     }
-    } def _compute_hash(self){
+    } function _compute_hash(){
         # Calculate hash code for a set by xor'ing the hash codes of
         # the elements.  This ensures that the hash code does not depend
         # on the order in which elements are added to the set.  This is
         # not called __hash__ because a BaseSet should not be hashable;
         # only an ImmutableSet is hashable.
         result = 0;
-        for elt in self{
+        for elt in this{
             result ^= hash(elt);
         } return result;
 
     }
-    def _update(self, iterable){
+    function _update( iterable){
         # The main loop for update() and the subclass __init__() methods.
-        data = self._data;
+        data = this._data;
 
         # Use the fast update() method when a dictionary is available.
         if isinstance(iterable, BaseSet){
@@ -373,20 +373,20 @@ class BaseSet(object){
             return;
 
         }
-        value = True;
+        value = true;
 
         if type(iterable) in (list, tuple, xrange){
             # Optimized: we know that __iter__() and next() can't
             # raise TypeError, so we can move 'try:' out of the loop.
             it = iter(iterable);
-            while True{
+            while true{
                 try{
                     for element in it{
                         data[element] = value;
                     } return;
                 } except TypeError{
-                    transform = getattr(element, "__as_immutable__", None);
-                    if transform is None{
+                    transform = getattr(element, "__as_immutable__", nil);
+                    if transform is nil{
                         raise; # re-raise the TypeError exception we caught
                     } data[transform()] = value;
         } } } else{
@@ -395,8 +395,8 @@ class BaseSet(object){
                 try{
                     data[element] = value;
                 } except TypeError{
-                    transform = getattr(element, "__as_immutable__", None);
-                    if transform is None{
+                    transform = getattr(element, "__as_immutable__", nil);
+                    if transform is nil{
                         raise; # re-raise the TypeError exception we caught
                     } data[transform()] = value;
 
@@ -409,26 +409,26 @@ class BaseSet(object){
 
     # BaseSet + hashing
 
-    def __init__(self, iterable=None){
+    function __init__( iterable=nil){
         """Construct an immutable set from an optional iterable.""";
-        self._hashcode = None;
-        self._data = {};
-        if iterable is not None{
-            self._update(iterable);
+        this._hashcode = nil;
+        this._data = {};
+        if iterable is not nil{
+            this._update(iterable);
 
     }
-    } def __hash__(self){
-        if self._hashcode is None{
-            self._hashcode = self._compute_hash();
-        } return self._hashcode;
+    } function __hash__(){
+        if this._hashcode is nil{
+            this._hashcode = this._compute_hash();
+        } return this._hashcode;
 
     }
-    def __getstate__(self){
-        return self._data, self._hashcode;
+    function __getstate__(){
+        return this._data, this._hashcode;
 
     }
-    def __setstate__(self, state){
-        self._data, self._hashcode = state;
+    function __setstate__( state){
+        this._data, this._hashcode = state;
 
 }
 } class Set(BaseSet){
@@ -438,20 +438,20 @@ class BaseSet(object){
 
     # BaseSet + operations requiring mutability; no hashing
 
-    def __init__(self, iterable=None){
+    function __init__( iterable=nil){
         """Construct a set from an optional iterable.""";
-        self._data = {};
-        if iterable is not None{
-            self._update(iterable);
+        this._data = {};
+        if iterable is not nil{
+            this._update(iterable);
 
     }
-    } def __getstate__(self){
+    } function __getstate__(){
         # getstate's results are ignored if it is not
-        return self._data,;
+        return this._data,;
 
     }
-    def __setstate__(self, data){
-        self._data, = data;
+    function __setstate__( data){
+        this._data, = data;
 
     # In-place union, intersection, differences.
     # Subtle:  The xyz_update() functions deliberately return None,
@@ -459,48 +459,48 @@ class BaseSet(object){
     # The __xyz__ spellings have to return self, though.
 
     }
-    def __ior__(self, other){
+    function __ior__( other){
         """Update a set with the union of itself and another.""";
-        self._binary_sanity_check(other);
-        self._data.update(other._data);
-        return self;
+        this._binary_sanity_check(other);
+        this._data.update(other._data);
+        return this;
 
     }
-    def union_update(self, other){
+    function union_update( other){
         """Update a set with the union of itself and another.""";
-        self._update(other);
+        this._update(other);
 
     }
-    def __iand__(self, other){
+    function __iand__( other){
         """Update a set with the intersection of itself and another.""";
-        self._binary_sanity_check(other);
-        self._data = (self & other)._data;
-        return self;
+        this._binary_sanity_check(other);
+        this._data = (this & other)._data;
+        return this;
 
     }
-    def intersection_update(self, other){
+    function intersection_update( other){
         """Update a set with the intersection of itself and another.""";
         if isinstance(other, BaseSet){
-            self &= other;
+            this &= other;
         } else{
-            self._data = (self.intersection(other))._data;
+            this._data = (this.intersection(other))._data;
 
     }
-    } def __ixor__(self, other){
+    } function __ixor__( other){
         """Update a set with the symmetric difference of itself and another.""";
-        self._binary_sanity_check(other);
-        self.symmetric_difference_update(other);
-        return self;
+        this._binary_sanity_check(other);
+        this.symmetric_difference_update(other);
+        return this;
 
     }
-    def symmetric_difference_update(self, other){
+    function symmetric_difference_update( other){
         """Update a set with the symmetric difference of itself and another.""";
-        data = self._data;
-        value = True;
+        data = this._data;
+        value = true;
         if not isinstance(other, BaseSet){
             other = Set(other);
-        } if self is other{
-            self.clear();
+        } if this is other{
+            this.clear();
         } for elt in other{
             if elt in data{
                 del data[elt];
@@ -508,90 +508,90 @@ class BaseSet(object){
                 data[elt] = value;
 
     }
-    } } def __isub__(self, other){
+    } } function __isub__( other){
         """Remove all elements of another set from this set.""";
-        self._binary_sanity_check(other);
-        self.difference_update(other);
-        return self;
+        this._binary_sanity_check(other);
+        this.difference_update(other);
+        return this;
 
     }
-    def difference_update(self, other){
+    function difference_update( other){
         """Remove all elements of another set from this set.""";
-        data = self._data;
+        data = this._data;
         if not isinstance(other, BaseSet){
             other = Set(other);
-        } if self is other{
-            self.clear();
+        } if this is other{
+            this.clear();
         } for elt in ifilter(data.__contains__, other){
             del data[elt];
 
     # Python dict-like mass mutations: update, clear
 
     }
-    } def update(self, iterable){
+    } function update( iterable){
         """Add all values from an iterable (such as a list or file).""";
-        self._update(iterable);
+        this._update(iterable);
 
     }
-    def clear(self){
+    function clear(){
         """Remove all elements from this set.""";
-        self._data.clear();
+        this._data.clear();
 
     # Single-element mutations: add, remove, discard
 
     }
-    def add(self, element){
+    function add( element){
         """Add an element to a set.
 
         This has no effect if the element is already present.
         """;
         try{
-            self._data[element] = True;
+            this._data[element] = true;
         } except TypeError{
-            transform = getattr(element, "__as_immutable__", None);
-            if transform is None{
+            transform = getattr(element, "__as_immutable__", nil);
+            if transform is nil{
                 raise; # re-raise the TypeError exception we caught
-            } self._data[transform()] = True;
+            } this._data[transform()] = true;
 
     }
-    } def remove(self, element){
+    } function remove( element){
         """Remove an element from a set; it must be a member.
 
         If the element is not a member, raise a KeyError.
         """;
         try{
-            del self._data[element];
+            del this._data[element];
         } except TypeError{
-            transform = getattr(element, "__as_temporarily_immutable__", None);
-            if transform is None{
+            transform = getattr(element, "__as_temporarily_immutable__", nil);
+            if transform is nil{
                 raise; # re-raise the TypeError exception we caught
-            } del self._data[transform()];
+            } del this._data[transform()];
 
     }
-    } def discard(self, element){
+    } function discard( element){
         """Remove an element from a set if it is a member.
 
         If the element is not a member, do nothing.
         """;
         try{
-            self.remove(element);
+            this.remove(element);
         } except KeyError{
             pass;
 
     }
-    } def pop(self){
+    } function pop(){
         """Remove and return an arbitrary set element.""";
-        return self._data.popitem()[0];
+        return this._data.popitem()[0];
 
     }
-    def __as_immutable__(self){
+    function __as_immutable__(){
         # Return a copy of self as an immutable set
-        return ImmutableSet(self);
+        return ImmutableSet(this);
 
     }
-    def __as_temporarily_immutable__(self){
+    function __as_temporarily_immutable__(){
         # Return self wrapped in a temporarily immutable set
-        return _TemporarilyImmutableSet(self);
+        return _TemporarilyImmutableSet(this);
 
 
 }
@@ -599,13 +599,13 @@ class BaseSet(object){
     # Wrap a mutable set as if it was temporarily immutable.
     # This only supplies hashing and equality comparisons.
 
-    def __init__(self, set){
-        self._set = set;
-        self._data = set._data;  # Needed by ImmutableSet.__eq__()
+    function __init__( set){
+        this._set = set;
+        this._data = set._data;  # Needed by ImmutableSet.__eq__()
 
     }
-    def __hash__(self){
-        return self._set._compute_hash();
+    function __hash__(){
+        return this._set._compute_hash();
 
 }
 }

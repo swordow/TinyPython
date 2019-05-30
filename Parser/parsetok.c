@@ -150,6 +150,8 @@ parsetok(struct tok_state *tok, grammar *g, int start, perrdetail *err_ret,
 
 #endif
 
+	int pre_type = 0;
+	char* pre_str = NULL;
     for (;;) {
         char *a, *b;
         int type;
@@ -177,13 +179,7 @@ parsetok(struct tok_state *tok, grammar *g, int start, perrdetail *err_ret,
         }
         else
             started = 1;
-		
-#ifndef PGEN	// PGEN needs NEWLINE in MetaGrammar...
-		if (type == NEWLINE)
-		{
-			continue;
-		}
-#endif
+
         len = (a != NULL && b != NULL) ? b - a : 0;
         str = (char *) PyObject_MALLOC(len + 1);
         if (str == NULL) {
@@ -194,6 +190,44 @@ parsetok(struct tok_state *tok, grammar *g, int start, perrdetail *err_ret,
         if (len > 0)
             strncpy(str, a, len);
         str[len] = '\0';
+
+#ifndef PGEN	// PGEN needs NEWLINE in MetaGrammar...
+		if (type == NEWLINE)
+		{
+			continue;
+			/*if (pre_str && (pre_type == NAME ||
+				pre_type == STRING ||
+				pre_type == NUMBER ||
+				pre_type == RBRACE ||
+				pre_type == RPAR ||
+				pre_type == RSQB ||
+				strcmp(pre_str, "break") == 0 ||
+				strcmp(pre_str, "continue") == 0 ||
+				strcmp(pre_str, "return") == 0))
+			{
+				str[0] = ';';
+				str[1] = 0;
+				type = SEMI;
+			}
+			else
+			{
+				continue;
+			}*/
+		}
+	/*	if (pre_str)
+		{
+			PyObject_FREE(pre_str);
+			pre_str = NULL;
+		}
+		pre_str = (char *)PyObject_MALLOC(len + 1);
+		if (pre_str == NULL) {
+			fprintf(stderr, "no mem for pre token\n");
+			err_ret->error = E_NOMEM;
+			break;
+		}
+		memcpy(pre_str, str, (len+1));
+		pre_type = type;*/
+#endif
 
 #ifdef PY_PARSER_REQUIRES_FUTURE_KEYWORD
 #endif

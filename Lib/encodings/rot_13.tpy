@@ -13,22 +13,22 @@ import codecs;
 
 class Codec(codecs.Codec){
 
-    def encode(self,input,errors='strict'){
+    function encode(input,errors='strict'){
         return codecs.charmap_encode(input,errors,encoding_map);
 
     }
-    def decode(self,input,errors='strict'){
+    function decode(input,errors='strict'){
         return codecs.charmap_decode(input,errors,decoding_map);
 
 }
 } class IncrementalEncoder(codecs.IncrementalEncoder){
-    def encode(self, input, final=False){
-        return codecs.charmap_encode(input,self.errors,encoding_map)[0];
+    function encode( input, final=false){
+        return codecs.charmap_encode(input,this.errors,encoding_map)[0];
 
 }
 } class IncrementalDecoder(codecs.IncrementalDecoder){
-    def decode(self, input, final=False){
-        return codecs.charmap_decode(input,self.errors,decoding_map)[0];
+    function decode( input, final=false){
+        return codecs.charmap_decode(input,this.errors,decoding_map)[0];
 
 }
 } class StreamWriter(Codec,codecs.StreamWriter){
@@ -41,7 +41,7 @@ class StreamReader(Codec,codecs.StreamReader){
 ### encodings module API
 
 }
-def getregentry(){
+function getregentry(){
     return codecs.CodecInfo(
         name='rot-13',
         encode=Codec().encode,
@@ -50,7 +50,7 @@ def getregentry(){
         incrementaldecoder=IncrementalDecoder,
         streamwriter=StreamWriter,
         streamreader=StreamReader,
-        _is_text_encoding=False,
+        _is_text_encoding=false,
     );
 
 ### Decoding Map
@@ -118,7 +118,7 @@ encoding_map = codecs.make_encoding_map(decoding_map);
 
 ### Filter API
 
-def rot13(infile, outfile){
+function rot13(infile, outfile){
     outfile.write(infile.read().encode('rot-13'));
 
 }

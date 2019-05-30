@@ -20,10 +20,10 @@ import os, sys, warnings;
 __all__ = ["getpass","getuser","GetPassWarning"];
 
 
-class GetPassWarning(UserWarning){ pass;
+class GetPassWarning(UserWarning){ pass;}
 
 
-def unix_getpass(prompt='Password: ', stream=None){
+function unix_getpass(prompt='Password: ', stream=nil){
     """Prompt for a password, with echo turned off.
 
     Args:
@@ -38,8 +38,8 @@ def unix_getpass(prompt='Password: ', stream=None){
 
     Always restores terminal settings before returning.
     """;
-    fd = None;
-    tty = None;
+    fd = nil;
+    tty = nil;
     try{
         # Always try reading and writing directly on the tty first.
         fd = os.open('/dev/tty', os.O_RDWR|os.O_NOCTTY);
@@ -58,8 +58,8 @@ def unix_getpass(prompt='Password: ', stream=None){
             stream = sys.stderr;
 
     }
-    } if fd is not None{
-        passwd = None;
+    } if fd is not nil{
+        passwd = nil;
         try{
             old = termios.tcgetattr(fd);     # a copy to save
             new = old[:];
@@ -74,7 +74,7 @@ def unix_getpass(prompt='Password: ', stream=None){
                 termios.tcsetattr(fd, tcsetattr_flags, old);
                 stream.flush();  # issue7208
         } } except termios.error, e{
-            if passwd is not None{
+            if passwd is not nil{
                 # _raw_input succeeded.  The final tcsetattr failed.  Reraise
                 # instead of leaving the terminal in an unknown state.
                 raise;
@@ -90,7 +90,7 @@ def unix_getpass(prompt='Password: ', stream=None){
 
 
 }
-def win_getpass(prompt='Password: ', stream=None){
+function win_getpass(prompt='Password: ', stream=nil){
     """Prompt for password with echo off, using Windows getch().""";
     if sys.stdin is not sys.__stdin__{
         return fallback_getpass(prompt, stream);
@@ -114,7 +114,7 @@ def win_getpass(prompt='Password: ', stream=None){
 
 
 }
-def fallback_getpass(prompt='Password: ', stream=None){
+function fallback_getpass(prompt='Password: ', stream=nil){
     warnings.warn("Can not control echo on the terminal.", GetPassWarning,
                   stacklevel=2);
     if not stream{
@@ -124,7 +124,7 @@ def fallback_getpass(prompt='Password: ', stream=None){
 
 
 }
-def _raw_input(prompt="", stream=None, input=None){
+function _raw_input(prompt="", stream=nil, input=nil){
     # A raw_input() replacement that doesn't save the string in the
     # GNU readline history.
     if not stream{
@@ -146,7 +146,7 @@ def _raw_input(prompt="", stream=None, input=None){
 
 
 }
-def getuser(){
+function getuser(){
     """Get the username from the environment or password database.
 
     First try various environment variables, then the password

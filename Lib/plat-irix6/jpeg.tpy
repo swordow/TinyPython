@@ -14,13 +14,13 @@ class error(Exception){
 }
 options = {'quality': 75, 'optimize': 0, 'smooth': 0, 'forcegray': 0};
 
-comp = None;
-decomp = None;
+comp = nil;
+decomp = nil;
 
-def compress(imgdata, width, height, bytesperpixel){
+function compress(imgdata, width, height, bytesperpixel){
     global comp;
     import cl;
-    if comp is None{ comp = cl.OpenCompressor(cl.JPEG);
+    if comp is nil{ comp = cl.OpenCompressor(cl.JPEG);}
     if bytesperpixel == 1{
         format = cl.GRAYSCALE;
     } elif bytesperpixel == 4{
@@ -42,10 +42,10 @@ def compress(imgdata, width, height, bytesperpixel){
     return jpegdata;
 
 }
-def decompress(jpegdata){
+function decompress(jpegdata){
     global decomp;
     import cl;
-    if decomp is None{ decomp = cl.OpenDecompressor(cl.JPEG);
+    if decomp is nil{ decomp = cl.OpenDecompressor(cl.JPEG);}
     headersize = decomp.ReadHeader(jpegdata);
     params = [cl.IMAGE_WIDTH, 0, cl.IMAGE_HEIGHT, 0, cl.INTERNAL_FORMAT, 0];
     decomp.GetParams(params);
@@ -66,7 +66,7 @@ def decompress(jpegdata){
     return imgdata, width, height, bytesperpixel;
 
 }
-def setoption(name, value){
+function setoption(name, value){
     if type(value) is not type(0){
         raise TypeError, 'jpeg.setoption: numeric options only';
     } if name == 'forcegrey'{
@@ -76,7 +76,7 @@ def setoption(name, value){
     } options[name] = int(value);
 
 }
-def test(){
+function test(){
     import sys;
     if sys.argv[1:2] == ['-g']{
         del sys.argv[1];
@@ -87,7 +87,7 @@ def test(){
         show(file);
 
 }
-} def show(file){
+} function show(file){
     import gl, GL, DEVICE;
     jpegdata = open(file, 'r').read();
     imgdata, width, height, bytesperpixel = decompress(jpegdata);

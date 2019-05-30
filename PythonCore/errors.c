@@ -159,7 +159,7 @@ PyErr_NormalizeException(PyObject **exc, PyObject **val, PyObject **tb)
        set to NULL.
     */
     if (!value) {
-        value = Py_None;
+        value = Py_Nil;
         Py_INCREF(value);
     }
 
@@ -178,7 +178,7 @@ PyErr_NormalizeException(PyObject **exc, PyObject **val, PyObject **tb)
         if (!inclass || !PyObject_IsSubclass(inclass, type)) {
             PyObject *args, *res;
 
-            if (value == Py_None)
+            if (value == Py_Nil)
                 args = PyTuple_New(0);
             else if (PyTuple_Check(value)) {
                 Py_INCREF(value);
@@ -694,7 +694,7 @@ PyErr_WriteUnraisable(PyObject *obj)
                 PyFile_WriteString("<unknown>", f);
             else
                 PyFile_WriteString(className, f);
-            if (v && v != Py_None) {
+            if (v && v != Py_Nil) {
                 PyFile_WriteString(": ", f);
                 if (PyFile_WriteObject(v, f, 0) < 0) {
                     PyErr_Clear();
@@ -758,7 +758,7 @@ PyErr_SyntaxLocation(const char *filename, int lineno)
             Py_DECREF(tmp);
         }
     }
-    if (PyObject_SetAttrString(v, "offset", Py_None)) {
+    if (PyObject_SetAttrString(v, "offset", Py_Nil)) {
         PyErr_Clear();
     }
     if (exc != PyExc_SyntaxError) {
@@ -774,7 +774,7 @@ PyErr_SyntaxLocation(const char *filename, int lineno)
         }
         if (!PyObject_HasAttrString(v, "print_file_and_line")) {
             if (PyObject_SetAttrString(v, "print_file_and_line",
-                                       Py_None))
+                                       Py_Nil))
                 PyErr_Clear();
         }
     }

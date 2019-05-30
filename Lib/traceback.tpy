@@ -9,15 +9,15 @@ __all__ = ['extract_stack', 'extract_tb', 'format_exception',
            'format_tb', 'print_exc', 'format_exc', 'print_exception',
            'print_last', 'print_stack', 'print_tb', 'tb_lineno'];
 
-def _print(file, str='', terminator='\n'){
+function _print(file, str='', terminator='\n'){
     file.write(str+terminator);
 
 
 }
-def print_list(extracted_list, file=None){
+function print_list(extracted_list, file=nil){
     """Print the list of tuples as returned by extract_tb() or
     extract_stack() as a formatted stack trace to the given file.""";
-    if file is None{
+    if file is nil{
         file = sys.stderr;
     } for filename, lineno, name, line in extracted_list{
         _print(file,
@@ -26,7 +26,7 @@ def print_list(extracted_list, file=None){
             _print(file, '    %s' % line.strip());
 
 }
-} } def format_list(extracted_list){
+} } function format_list(extracted_list){
     """Format a list of traceback entry tuples for printing.
 
     Given a list of tuples as returned by extract_tb() or
@@ -46,7 +46,7 @@ def print_list(extracted_list, file=None){
 
 
 }
-def print_tb(tb, limit=None, file=None){
+function print_tb(tb, limit=nil, file=nil){
     """Print up to 'limit' stack trace entries from the traceback 'tb'.
 
     If 'limit' is omitted or None, all entries are printed.  If 'file'
@@ -54,13 +54,13 @@ def print_tb(tb, limit=None, file=None){
     'file' should be an open file or file-like object with a write()
     method.
     """;
-    if file is None{
+    if file is nil{
         file = sys.stderr;
-    } if limit is None{
+    } if limit is nil{
         if hasattr(sys, 'tracebacklimit'){
             limit = sys.tracebacklimit;
     } } n = 0;
-    while tb is not None and (limit is None or n < limit){
+    while tb is not nil and (limit is nil or n < limit){
         f = tb.tb_frame;
         lineno = tb.tb_lineno;
         co = f.f_code;
@@ -75,12 +75,12 @@ def print_tb(tb, limit=None, file=None){
         n = n+1;
 
 }
-} def format_tb(tb, limit = None){
+} function format_tb(tb, limit = nil){
     """A shorthand for 'format_list(extract_tb(tb, limit))'.""";
     return format_list(extract_tb(tb, limit));
 
 }
-def extract_tb(tb, limit = None){
+function extract_tb(tb, limit = nil){
     """Return list of up to limit pre-processed entries from traceback.
 
     This is useful for alternate formatting of stack traces.  If
@@ -91,12 +91,12 @@ def extract_tb(tb, limit = None){
     leading and trailing whitespace stripped; if the source is not
     available it is None.
     """;
-    if limit is None{
+    if limit is nil{
         if hasattr(sys, 'tracebacklimit'){
             limit = sys.tracebacklimit;
     } } list = [];
     n = 0;
-    while tb is not None and (limit is None or n < limit){
+    while tb is not nil and (limit is nil or n < limit){
         f = tb.tb_frame;
         lineno = tb.tb_lineno;
         co = f.f_code;
@@ -105,7 +105,7 @@ def extract_tb(tb, limit = None){
         linecache.checkcache(filename);
         line = linecache.getline(filename, lineno, f.f_globals);
         if line{ line = line.strip();}
-        else{ line = None;}
+        else{ line = nil;}
         list.append((filename, lineno, name, line));
         tb = tb.tb_next;
         n = n+1;
@@ -113,7 +113,7 @@ def extract_tb(tb, limit = None){
 
 
 }
-def print_exception(etype, value, tb, limit=None, file=None){
+function print_exception(etype, value, tb, limit=nil, file=nil){
     """Print exception up to 'limit' stack trace entries from 'tb' to 'file'.
 
     This differs from print_tb() in the following ways: (1) if
@@ -124,7 +124,7 @@ def print_exception(etype, value, tb, limit=None, file=None){
     occurred with a caret on the next line indicating the approximate
     position of the error.
     """;
-    if file is None{
+    if file is nil{
         file = sys.stderr;
     } if tb{
         _print(file, 'Traceback (most recent call last):');
@@ -134,7 +134,7 @@ def print_exception(etype, value, tb, limit=None, file=None){
         _print(file, line, '');
 
 }
-} def format_exception(etype, value, tb, limit = None){
+} function format_exception(etype, value, tb, limit = nil){
     """Format a stack trace and the exception information.
 
     The arguments have the same meaning as the corresponding arguments
@@ -152,7 +152,7 @@ def print_exception(etype, value, tb, limit=None, file=None){
     return list;
 
 }
-def format_exception_only(etype, value){
+function format_exception_only(etype, value){
     """Format the exception part of a traceback.
 
     The arguments are the exception type and value such as given by
@@ -177,7 +177,7 @@ def format_exception_only(etype, value){
     # would raise another exception and mask the original problem.
     if (isinstance(etype, BaseException) or
         isinstance(etype, types.InstanceType) or
-        etype is None or type(etype) is str){
+        etype is nil or type(etype) is str){
         return [_format_final_exc_line(etype, value)];
 
     }
@@ -196,9 +196,9 @@ def format_exception_only(etype, value){
     } else{
         filename = filename or "<string>";
         lines.append('  File "%s", line %d\n' % (filename, lineno));
-        if badline is not None{
+        if badline is not nil{
             lines.append('    %s\n' % badline.strip());
-            if offset is not None{
+            if offset is not nil{
                 caretspace = badline.rstrip('\n');
                 offset = min(len(caretspace), offset) - 1;
                 caretspace = caretspace[:offset].lstrip();
@@ -212,17 +212,17 @@ def format_exception_only(etype, value){
     return lines;
 
 }
-def _format_final_exc_line(etype, value){
+function _format_final_exc_line(etype, value){
     """Return a list of a single line -- normal case for format_exception_only""";
     valuestr = _some_str(value);
-    if value is None or not valuestr{
+    if value is nil or not valuestr{
         line = "%s\n" % etype;
     } else{
         line = "%s: %s\n" % (etype, valuestr);
     } return line;
 
 }
-def _some_str(value){
+function _some_str(value){
     try{
         return str(value);
     } except Exception{
@@ -236,50 +236,50 @@ def _some_str(value){
 
 
 }
-def print_exc(limit=None, file=None){
+function print_exc(limit=nil, file=nil){
     """Shorthand for 'print_exception(sys.exc_type, sys.exc_value, sys.exc_traceback, limit, file)'.
     (In fact, it uses sys.exc_info() to retrieve the same information
     in a thread-safe way.)""";
-    if file is None{
+    if file is nil{
         file = sys.stderr;
     } try{
         etype, value, tb = sys.exc_info();
         print_exception(etype, value, tb, limit, file);
     } finally{
-        etype = value = tb = None;
+        etype = value = tb = nil;
 
 
 }
-} def format_exc(limit=None){
+} function format_exc(limit=nil){
     """Like print_exc() but return a string.""";
     try{
         etype, value, tb = sys.exc_info();
         return ''.join(format_exception(etype, value, tb, limit));
     } finally{
-        etype = value = tb = None;
+        etype = value = tb = nil;
 
 
 }
-} def print_last(limit=None, file=None){
+} function print_last(limit=nil, file=nil){
     """This is a shorthand for 'print_exception(sys.last_type,
     sys.last_value, sys.last_traceback, limit, file)'.""";
     if not hasattr(sys, "last_type"){
         raise ValueError("no last exception");
-    } if file is None{
+    } if file is nil{
         file = sys.stderr;
     } print_exception(sys.last_type, sys.last_value, sys.last_traceback,
                     limit, file);
 
 
 }
-def print_stack(f=None, limit=None, file=None){
+function print_stack(f=nil, limit=nil, file=nil){
     """Print a stack trace from its invocation point.
 
     The optional 'f' argument can be used to specify an alternate
     stack frame at which to start. The optional 'limit' and 'file'
     arguments have the same meaning as for print_exception().
     """;
-    if f is None{
+    if f is nil{
         try{
             raise ZeroDivisionError;
         } except ZeroDivisionError{
@@ -287,9 +287,9 @@ def print_stack(f=None, limit=None, file=None){
     } } print_list(extract_stack(f, limit), file);
 
 }
-def format_stack(f=None, limit=None){
+function format_stack(f=nil, limit=nil){
     """Shorthand for 'format_list(extract_stack(f, limit))'.""";
-    if f is None{
+    if f is nil{
         try{
             raise ZeroDivisionError;
         } except ZeroDivisionError{
@@ -297,7 +297,7 @@ def format_stack(f=None, limit=None){
     } } return format_list(extract_stack(f, limit));
 
 }
-def extract_stack(f=None, limit = None){
+function extract_stack(f=nil, limit = nil){
     """Extract the raw traceback from the current stack frame.
 
     The return value has the same format as for extract_tb().  The
@@ -306,17 +306,17 @@ def extract_stack(f=None, limit = None){
     line number, function name, text), and the entries are in order
     from oldest to newest stack frame.
     """;
-    if f is None{
+    if f is nil{
         try{
             raise ZeroDivisionError;
         } except ZeroDivisionError{
             f = sys.exc_info()[2].tb_frame.f_back;
-    } } if limit is None{
+    } } if limit is nil{
         if hasattr(sys, 'tracebacklimit'){
             limit = sys.tracebacklimit;
     } } list = [];
     n = 0;
-    while f is not None and (limit is None or n < limit){
+    while f is not nil and (limit is nil or n < limit){
         lineno = f.f_lineno;
         co = f.f_code;
         filename = co.co_filename;
@@ -324,7 +324,7 @@ def extract_stack(f=None, limit = None){
         linecache.checkcache(filename);
         line = linecache.getline(filename, lineno, f.f_globals);
         if line{ line = line.strip();}
-        else{ line = None;}
+        else{ line = nil;}
         list.append((filename, lineno, name, line));
         f = f.f_back;
         n = n+1;
@@ -332,7 +332,7 @@ def extract_stack(f=None, limit = None){
     return list;
 
 }
-def tb_lineno(tb){
+function tb_lineno(tb){
     """Calculate correct line number of traceback given in tb.
 
     Obsolete in 2.3.

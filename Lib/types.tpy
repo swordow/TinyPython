@@ -9,7 +9,7 @@ import sys;
 # iterator.  Don't check the type!  Use hasattr to check for both
 # "__iter__" and "next" attributes instead.
 
-NoneType = type(None);
+NoneType = type(nil);
 TypeType = type;
 ObjectType = object;
 
@@ -41,17 +41,17 @@ TupleType = tuple;
 ListType = list;
 DictType = DictionaryType = dict;
 
-def _f(){ pass;}
+function _f(){ pass;}
 FunctionType = type(_f);
-LambdaType = type(lambda{ None});         # Same as FunctionType
+LambdaType = type(lambda{ nil});         # Same as FunctionType
 CodeType = type(_f.func_code);
 
-def _g(){
+function _g(){
     yield 1;
 } GeneratorType = type(_g());
 
 class _C{
-    def _m(self){ pass; }
+    function _m(){ pass;}
 } ClassType = type(_C);
 UnboundMethodType = type(_C._m);         # Same as MethodType
 _x = _C();

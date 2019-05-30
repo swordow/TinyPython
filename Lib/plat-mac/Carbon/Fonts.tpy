@@ -1,6 +1,6 @@
 # Generated from 'Fonts.h'
 
-def FOUR_CHAR_CODE(x){ return x;
+function FOUR_CHAR_CODE(x){ return x;}
 kNilOptions = 0;
 systemFont = 0;
 applFont = 1;

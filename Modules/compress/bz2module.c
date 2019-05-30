@@ -852,8 +852,8 @@ BZ2File_write(BZ2FileObject *self, PyObject *args)
         goto cleanup;
     }
 
-    Py_INCREF(Py_None);
-    ret = Py_None;
+    Py_INCREF(Py_Nil);
+    ret = Py_Nil;
 
 cleanup:
     PyBuffer_Release(&pbuf);
@@ -984,8 +984,8 @@ BZ2File_writelines(BZ2FileObject *self, PyObject *seq)
             break;
     }
 
-    Py_INCREF(Py_None);
-    ret = Py_None;
+    Py_INCREF(Py_Nil);
+    ret = Py_Nil;
 
   error:
     RELEASE_LOCK(self);
@@ -1147,8 +1147,8 @@ BZ2File_seek(BZ2FileObject *self, PyObject *args)
     }
 
 exit:
-    Py_INCREF(Py_None);
-    ret = Py_None;
+    Py_INCREF(Py_Nil);
+    ret = Py_Nil;
 
 cleanup:
     RELEASE_LOCK(self);
@@ -1212,8 +1212,8 @@ BZ2File_close(BZ2FileObject *self)
             PyFile_DecUseCount((PyFileObject *)self->file);
         ret = PyObject_CallMethod(self->file, "close", NULL);
     } else {
-        Py_INCREF(Py_None);
-        ret = Py_None;
+        Py_INCREF(Py_Nil);
+        ret = Py_Nil;
     }
     self->fp = NULL;
     self->mode = MODE_CLOSED;
@@ -1253,7 +1253,7 @@ BZ2File_exit(BZ2FileObject *self, PyObject *args)
         /* If error occurred, pass through */
         return NULL;
     Py_DECREF(ret);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 
@@ -1284,8 +1284,8 @@ BZ2File_get_newlines(BZ2FileObject *self, void *closure)
 {
     switch (self->f_newlinetypes) {
     case NEWLINE_UNKNOWN:
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     case NEWLINE_CR:
         return PyString_FromString("\r");
     case NEWLINE_LF:

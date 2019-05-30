@@ -10,7 +10,7 @@ python_types = [int, int, int, int, int, long,
 
 class PointersTestCase(unittest.TestCase){
 
-    def test_pointer_crash(self){
+    function test_pointer_crash(){
 
         class A(POINTER(c_ulong)){
             pass;
@@ -18,10 +18,10 @@ class PointersTestCase(unittest.TestCase){
         }
         POINTER(c_ulong)(c_ulong(22));
         # Pointer can't set contents: has no _type_
-        self.assertRaises(TypeError, A, c_ulong(33));
+        this.assertRaises(TypeError, A, c_ulong(33));
 
     }
-    def test_pass_pointers(self){
+    function test_pass_pointers(){
         dll = CDLL(_ctypes_test.__file__);
         func = dll._testfunc_p_p;
         func.restype = c_long;
@@ -29,15 +29,15 @@ class PointersTestCase(unittest.TestCase){
         i = c_int(12345678);
 ##        func.argtypes = (POINTER(c_int),)
         address = func(byref(i));
-        self.assertEqual(c_int.from_address(address).value, 12345678);
+        this.assertEqual(c_int.from_address(address).value, 12345678);
 
         func.restype = POINTER(c_int);
         res = func(pointer(i));
-        self.assertEqual(res.contents.value, 12345678);
-        self.assertEqual(res[0], 12345678);
+        this.assertEqual(res.contents.value, 12345678);
+        this.assertEqual(res[0], 12345678);
 
     }
-    def test_change_pointers(self){
+    function test_change_pointers(){
         dll = CDLL(_ctypes_test.__file__);
         func = dll._testfunc_p_p;
 
@@ -46,34 +46,34 @@ class PointersTestCase(unittest.TestCase){
         func.argtypes = (POINTER(c_int),);
 
         res = func(pointer(i));
-        self.assertEqual(res[0], 87654);
-        self.assertEqual(res.contents.value, 87654);
+        this.assertEqual(res[0], 87654);
+        this.assertEqual(res.contents.value, 87654);
 
         # C code: *res = 54345
         res[0] = 54345;
-        self.assertEqual(i.value, 54345);
+        this.assertEqual(i.value, 54345);
 
         # C code:
         #   int x = 12321;
         #   res = &x
         x = c_int(12321);
         res.contents = x;
-        self.assertEqual(i.value, 54345);
+        this.assertEqual(i.value, 54345);
 
         x.value = -99;
-        self.assertEqual(res.contents.value, -99);
+        this.assertEqual(res.contents.value, -99);
 
     }
-    def test_callbacks_with_pointers(self){
+    function test_callbacks_with_pointers(){
         # a function type receiving a pointer
         PROTOTYPE = CFUNCTYPE(c_int, POINTER(c_int));
 
-        self.result = [];
+        this.result = [];
 
-        def func(arg){
+        function func(arg){
             for i in range(10){
 ##                print arg[i],
-                self.result.append(arg[i]);
+                this.result.append(arg[i]);
 ##            print
             }
             return 0;
@@ -95,22 +95,22 @@ class PointersTestCase(unittest.TestCase){
 ##        print self.result
 
     }
-    def test_basics(self){
+    function test_basics(){
         from operator import delitem;
         for ct, pt in zip(ctype_types, python_types){
             i = ct(42);
             p = pointer(i);
 ##            print type(p.contents), ct
-            self.assertIs(type(p.contents), ct);
+            this.assertIs(type(p.contents), ct);
             # p.contents is the same as p[0]
 ##            print p.contents
 ##            self.assertEqual(p.contents, 42)
 ##            self.assertEqual(p[0], 42)
 
-            self.assertRaises(TypeError, delitem, p, 0);
+            this.assertRaises(TypeError, delitem, p, 0);
 
     }
-    } def test_from_address(self){
+    } function test_from_address(){
         from array import array;
         a = array('i', [100, 200, 300, 400, 500]);
         addr = a.buffer_info()[0];
@@ -121,7 +121,7 @@ class PointersTestCase(unittest.TestCase){
 ##        print p.from_address(addr)[0][0]
 
     }
-    def test_other(self){
+    function test_other(){
         class Table(Structure){
             _fields_ = [("a", c_int),
                         ("b", c_int),
@@ -130,9 +130,9 @@ class PointersTestCase(unittest.TestCase){
         }
         pt = pointer(Table(1, 2, 3));
 
-        self.assertEqual(pt.contents.a, 1);
-        self.assertEqual(pt.contents.b, 2);
-        self.assertEqual(pt.contents.c, 3);
+        this.assertEqual(pt.contents.a, 1);
+        this.assertEqual(pt.contents.b, 2);
+        this.assertEqual(pt.contents.c, 3);
 
         pt.contents.c = 33;
 
@@ -140,16 +140,16 @@ class PointersTestCase(unittest.TestCase){
         del _pointer_type_cache[Table];
 
     }
-    def test_basic(self){
+    function test_basic(){
         p = pointer(c_int(42));
         # Although a pointer can be indexed, it has no length
-        self.assertRaises(TypeError, len, p);
-        self.assertEqual(p[0], 42);
-        self.assertEqual(p[0:1], [42]);
-        self.assertEqual(p.contents.value, 42);
+        this.assertRaises(TypeError, len, p);
+        this.assertEqual(p[0], 42);
+        this.assertEqual(p[0:1], [42]);
+        this.assertEqual(p.contents.value, 42);
 
     }
-    def test_charpp(self){
+    function test_charpp(){
         """Test that a character pointer-to-pointer is correctly passed""";
         dll = CDLL(_ctypes_test.__file__);
         func = dll._testfunc_c_p_p;
@@ -162,7 +162,7 @@ class PointersTestCase(unittest.TestCase){
         assert result == 'world', result;
 
     }
-    def test_bug_1467852(self){
+    function test_bug_1467852(){
         # http://sourceforge.net/tracker/?func=detail&atid=532154&aid=1467852&group_id=71702
         x = c_int(5);
         dummy = [];
@@ -173,64 +173,64 @@ class PointersTestCase(unittest.TestCase){
         pp = pointer(p);
         q = pointer(y);
         pp[0] = q;         # <==
-        self.assertEqual(p[0], 6);
-    } def test_c_void_p(self){
+        this.assertEqual(p[0], 6);
+    } function test_c_void_p(){
         # http://sourceforge.net/tracker/?func=detail&aid=1518190&group_id=5470&atid=105470
         if sizeof(c_void_p) == 4{
-            self.assertEqual(c_void_p(0xFFFFFFFFL).value,
+            this.assertEqual(c_void_p(0xFFFFFFFFL).value,
                                  c_void_p(-1).value);
-            self.assertEqual(c_void_p(0xFFFFFFFFFFFFFFFFL).value,
+            this.assertEqual(c_void_p(0xFFFFFFFFFFFFFFFFL).value,
                                  c_void_p(-1).value);
         } elif sizeof(c_void_p) == 8{
-            self.assertEqual(c_void_p(0xFFFFFFFFL).value,
+            this.assertEqual(c_void_p(0xFFFFFFFFL).value,
                                  0xFFFFFFFFL);
-            self.assertEqual(c_void_p(0xFFFFFFFFFFFFFFFFL).value,
+            this.assertEqual(c_void_p(0xFFFFFFFFFFFFFFFFL).value,
                                  c_void_p(-1).value);
-            self.assertEqual(c_void_p(0xFFFFFFFFFFFFFFFFFFFFFFFFL).value,
+            this.assertEqual(c_void_p(0xFFFFFFFFFFFFFFFFFFFFFFFFL).value,
                                  c_void_p(-1).value);
 
         }
-        self.assertRaises(TypeError, c_void_p, 3.14); # make sure floats are NOT accepted
-        self.assertRaises(TypeError, c_void_p, object()); # nor other objects
+        this.assertRaises(TypeError, c_void_p, 3.14); # make sure floats are NOT accepted
+        this.assertRaises(TypeError, c_void_p, object()); # nor other objects
 
     }
-    def test_pointers_bool(self){
+    function test_pointers_bool(){
         # NULL pointers have a boolean False value, non-NULL pointers True.
-        self.assertEqual(bool(POINTER(c_int)()), False);
-        self.assertEqual(bool(pointer(c_int())), True);
+        this.assertEqual(bool(POINTER(c_int)()), false);
+        this.assertEqual(bool(pointer(c_int())), true);
 
-        self.assertEqual(bool(CFUNCTYPE(None)(0)), False);
-        self.assertEqual(bool(CFUNCTYPE(None)(42)), True);
+        this.assertEqual(bool(CFUNCTYPE(nil)(0)), false);
+        this.assertEqual(bool(CFUNCTYPE(nil)(42)), true);
 
         # COM methods are boolean True:
         if sys.platform == "win32"{
-            mth = WINFUNCTYPE(None)(42, "name", (), None);
-            self.assertEqual(bool(mth), True);
+            mth = WINFUNCTYPE(nil)(42, "name", (), nil);
+            this.assertEqual(bool(mth), true);
 
     }
-    } def test_pointer_type_name(self){
+    } function test_pointer_type_name(){
         LargeNamedType = type('T' * 2 ** 25, (Structure,), {});
-        self.assertTrue(POINTER(LargeNamedType));
+        this.assertTrue(POINTER(LargeNamedType));
 
         # to not leak references, we must clean _pointer_type_cache
         from ctypes import _pointer_type_cache;
         del _pointer_type_cache[LargeNamedType];
 
     }
-    def test_pointer_type_str_name(self){
+    function test_pointer_type_str_name(){
         large_string = 'T' * 2 ** 25;
         P = POINTER(large_string);
-        self.assertTrue(P);
+        this.assertTrue(P);
 
         # to not leak references, we must clean _pointer_type_cache
         from ctypes import _pointer_type_cache;
         del _pointer_type_cache[id(P)];
 
     }
-    def test_abstract(self){
+    function test_abstract(){
         from ctypes import _Pointer;
 
-        self.assertRaises(TypeError, _Pointer.set_type, 42);
+        this.assertRaises(TypeError, _Pointer.set_type, 42);
 
 
 }

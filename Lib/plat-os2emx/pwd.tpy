@@ -69,7 +69,7 @@ if os.environ.has_key('ETC_PASSWD'){
     __passwd_path.append('%s/Etc/passwd' % os.environ['PYTHONHOME']);
 
 }
-passwd_file = None;
+passwd_file = nil;
 for __i in __passwd_path{
     try{
         __f = open(__i, 'r');
@@ -81,11 +81,11 @@ for __i in __passwd_path{
 
 # path conversion handlers
 }
-} def __nullpathconv(path){
+} function __nullpathconv(path){
     return path.replace(os.altsep, os.sep);
 
 }
-def __unixpathconv(path){
+function __unixpathconv(path){
     # two known drive letter variations: "x;" and "$x"
     if path[0] == '$'{
         conv = path[1] + ':' + path[2:];
@@ -108,8 +108,8 @@ if os.pathsep{
 
 # helper routine to identify which separator character is in use
 }
-} def __get_field_sep(record){
-    fs = None;
+} function __get_field_sep(record){
+    fs = nil;
     for c in __field_sep.keys(){
         # there should be 6 delimiter characters (for 7 fields)
         if record.count(c) == 6{
@@ -125,41 +125,41 @@ if os.pathsep{
 # with each member also accessible by a field name.
 }
 } class Passwd{
-    def __init__(self, name, passwd, uid, gid, gecos, dir, shell){
-        self.__dict__['pw_name'] = name;
-        self.__dict__['pw_passwd'] = passwd;
-        self.__dict__['pw_uid'] = uid;
-        self.__dict__['pw_gid'] = gid;
-        self.__dict__['pw_gecos'] = gecos;
-        self.__dict__['pw_dir'] = dir;
-        self.__dict__['pw_shell'] = shell;
-        self.__dict__['_record'] = (self.pw_name, self.pw_passwd,
-                                    self.pw_uid, self.pw_gid,
-                                    self.pw_gecos, self.pw_dir,
-                                    self.pw_shell);
+    function __init__( name, passwd, uid, gid, gecos, dir, shell){
+        this.__dict__['pw_name'] = name;
+        this.__dict__['pw_passwd'] = passwd;
+        this.__dict__['pw_uid'] = uid;
+        this.__dict__['pw_gid'] = gid;
+        this.__dict__['pw_gecos'] = gecos;
+        this.__dict__['pw_dir'] = dir;
+        this.__dict__['pw_shell'] = shell;
+        this.__dict__['_record'] = (this.pw_name, this.pw_passwd,
+                                    this.pw_uid, this.pw_gid,
+                                    this.pw_gecos, this.pw_dir,
+                                    this.pw_shell);
 
     }
-    def __len__(self){
+    function __len__(){
         return 7;
 
     }
-    def __getitem__(self, key){
-        return self._record[key];
+    function __getitem__( key){
+        return this._record[key];
 
     }
-    def __setattr__(self, name, value){
+    function __setattr__( name, value){
         raise AttributeError('attribute read-only: %s' % name);
 
     }
-    def __repr__(self){
-        return str(self._record);
+    function __repr__(){
+        return str(this._record);
 
     }
-    def __cmp__(self, other){
-        this = str(self._record);
-        if this == other{
+    function __cmp__( other){
+        temp_this = str(this._record);
+        if temp_this == other{
             return 0;
-        } elif this < other{
+        } elif temp_this < other{
             return -1;
         } else{
             return 1;
@@ -168,18 +168,18 @@ if os.pathsep{
 # read the whole file, parsing each entry into tuple form
 # with dictionaries to speed recall by UID or passwd name
 }
-} } def __read_passwd_file(){
+} } function __read_passwd_file(){
     if passwd_file{
         passwd = open(passwd_file, 'r');
     } else{
         raise KeyError, '>> no password database <<';
     } uidx = {};
     namx = {};
-    sep = None;
+    sep = nil;
     while 1{
         entry = passwd.readline().strip();
         if len(entry) > 6{
-            if sep is None{
+            if sep is nil{
                 sep = __get_field_sep(entry);
             } fields = entry.split(sep);
             for i in (2, 3){
@@ -202,19 +202,19 @@ if os.pathsep{
 
 # return the passwd database entry by UID
 }
-def getpwuid(uid){
+function getpwuid(uid){
     u, n = __read_passwd_file();
     return u[uid];
 
 # return the passwd database entry by passwd name
 }
-def getpwnam(name){
+function getpwnam(name){
     u, n = __read_passwd_file();
     return n[name];
 
 # return all the passwd database entries
 }
-def getpwall(){
+function getpwall(){
     u, n = __read_passwd_file();
     return n.values();
 

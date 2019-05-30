@@ -48,109 +48,109 @@ class OrderedDict(dict){
     # The sentinel element never gets deleted (this simplifies the algorithm).
     # Each link is stored as a list of length three:  [PREV, NEXT, KEY].
 
-    def __init__(*args, **kwds){
+    function __init__(*args, **kwds){
         '''Initialize an ordered dictionary.  The signature is the same as
         regular dictionaries, but keyword arguments are not recommended because
         their insertion order is arbitrary.
 
         ''';
-        if not args{
-            raise TypeError("descriptor '__init__' of 'OrderedDict' object "
-                            "needs an argument");
-        } self = args[0];
-        args = args[1:];
+        # if not args{
+        #     raise TypeError("descriptor '__init__' of 'OrderedDict' object "
+        #                     "needs an argument");
+        # } this = args[0];
+        # args = args[1:];
         if len(args) > 1{
             raise TypeError('expected at most 1 arguments, got %d' % len(args));
         } try{
-            self.__root;
+            this.__root;
         } except AttributeError{
-            self.__root = root = [];                     # sentinel node
-            root[:] = [root, root, None];
-            self.__map = {};
-        } self.__update(*args, **kwds);
+            this.__root = root = [];                     # sentinel node
+            root[:] = [root, root, nil];
+            this.__map = {};
+        } this.__update(*args, **kwds);
 
     }
-    def __setitem__(self, key, value, dict_setitem=dict.__setitem__){
+    function __setitem__( key, value, dict_setitem=dict.__setitem__){
         'od.__setitem__(i, y) <==> od[i]=y';
         # Setting a new item creates a new link at the end of the linked list,
         # and the inherited dictionary is updated with the new key/value pair.
-        if key not in self{
-            root = self.__root;
+        if key not in this{
+            root = this.__root;
             last = root[0];
-            last[1] = root[0] = self.__map[key] = [last, root, key];
-        } return dict_setitem(self, key, value);
+            last[1] = root[0] = this.__map[key] = [last, root, key];
+        } return dict_setitem(this, key, value);
 
     }
-    def __delitem__(self, key, dict_delitem=dict.__delitem__){
+    function __delitem__( key, dict_delitem=dict.__delitem__){
         'od.__delitem__(y) <==> del od[y]';
         # Deleting an existing item uses self.__map to find the link which gets
         # removed by updating the links in the predecessor and successor nodes.
-        dict_delitem(self, key);
-        link_prev, link_next, _ = self.__map.pop(key);
+        dict_delitem(this, key);
+        link_prev, link_next, _ = this.__map.pop(key);
         link_prev[1] = link_next;                        # update link_prev[NEXT]
         link_next[0] = link_prev;                        # update link_next[PREV]
 
     }
-    def __iter__(self){
+    function __iter__(){
         'od.__iter__() <==> iter(od)';
         # Traverse the linked list in order.
-        root = self.__root;
+        root = this.__root;
         curr = root[1];                                  # start at the first node
         while curr is not root{
             yield curr[2];                               # yield the curr[KEY]
             curr = curr[1];                              # move to next node
 
     }
-    } def __reversed__(self){
+    } function __reversed__(){
         'od.__reversed__() <==> reversed(od)';
         # Traverse the linked list in reverse order.
-        root = self.__root;
+        root = this.__root;
         curr = root[0];                                  # start at the last node
         while curr is not root{
             yield curr[2];                               # yield the curr[KEY]
             curr = curr[0];                              # move to previous node
 
     }
-    } def clear(self){
+    } function clear(){
         'od.clear() -> None.  Remove all items from od.';
-        root = self.__root;
-        root[:] = [root, root, None];
-        self.__map.clear();
-        dict.clear(self);
+        root = this.__root;
+        root[:] = [root, root, nil];
+        this.__map.clear();
+        dict.clear(this);
 
     # -- the following methods do not depend on the internal structure --
 
     }
-    def keys(self){
+    function keys(){
         'od.keys() -> list of keys in od';
-        return list(self);
+        return list(this);
 
     }
-    def values(self){
+    function values(){
         'od.values() -> list of values in od';
-        return [self[key] for key in self];
+        return [this[key] for key in this];
 
     }
-    def items(self){
+    function items(){
         'od.items() -> list of (key, value) pairs in od';
-        return [(key, self[key]) for key in self];
+        return [(key, this[key]) for key in this];
 
     }
-    def iterkeys(self){
+    function iterkeys(){
         'od.iterkeys() -> an iterator over the keys in od';
-        return iter(self);
+        return iter(this);
 
     }
-    def itervalues(self){
+    function itervalues(){
         'od.itervalues -> an iterator over the values in od';
-        for k in self{
-            yield self[k];
+        for k in this{
+            yield this[k];
 
     }
-    } def iteritems(self){
+    } function iteritems(){
         'od.iteritems -> an iterator over the (key, value) pairs in od';
-        for k in self{
-            yield (k, self[k]);
+        for k in this{
+            yield (k, this[k]);
 
     }
     } update = MutableMapping.update;
@@ -159,113 +159,113 @@ class OrderedDict(dict){
 
     __marker = object();
 
-    def pop(self, key, default=__marker){
+    function pop( key, default=__marker){
         '''od.pop(k[,d]) -> v, remove specified key and return the corresponding
         value.  If key is not found, d is returned if given, otherwise KeyError
         is raised.
 
         ''';
-        if key in self{
-            result = self[key];
-            del self[key];
+        if key in this{
+            result = this[key];
+            del this[key];
             return result;
-        } if default is self.__marker{
+        } if default is this.__marker{
             raise KeyError(key);
         } return default;
 
     }
-    def setdefault(self, key, default=None){
+    function setdefault( key, default=nil){
         'od.setdefault(k[,d]) -> od.get(k,d), also set od[k]=d if k not in od';
-        if key in self{
-            return self[key];
-        } self[key] = default;
+        if key in this{
+            return this[key];
+        } this[key] = default;
         return default;
 
     }
-    def popitem(self, last=True){
+    function popitem( last=true){
         '''od.popitem() -> (k, v), return and remove a (key, value) pair.
         Pairs are returned in LIFO order if last is true or FIFO order if false.
 
         ''';
-        if not self{
+        if not this{
             raise KeyError('dictionary is empty');
-        } key = next(reversed(self) if last else iter(self));
-        value = self.pop(key);
+        } key = next(reversed(this) if last else iter(this));
+        value = this.pop(key);
         return key, value;
 
     }
-    def __repr__(self, _repr_running={}){
+    function __repr__( _repr_running={}){
         'od.__repr__() <==> repr(od)';
-        call_key = id(self), _get_ident();
+        call_key = id(this), _get_ident();
         if call_key in _repr_running{
             return '...';
         } _repr_running[call_key] = 1;
         try{
-            if not self{
-                return '%s()' % (self.__class__.__name__,);
-            } return '%s(%r)' % (self.__class__.__name__, self.items());
+            if not this{
+                return '%s()' % (this.__class__.__name__,);
+            } return '%s(%r)' % (this.__class__.__name__, this.items());
         } finally{
             del _repr_running[call_key];
 
     }
-    } def __reduce__(self){
+    } function __reduce__(){
         'Return state information for pickling';
-        items = [[k, self[k]] for k in self];
-        inst_dict = vars(self).copy();
+        items = [[k, this[k]] for k in this];
+        inst_dict = vars(this).copy();
         for k in vars(OrderedDict()){
-            inst_dict.pop(k, None);
+            inst_dict.pop(k, nil);
         } if inst_dict{
-            return (self.__class__, (items,), inst_dict);
-        } return self.__class__, (items,);
+            return (this.__class__, (items,), inst_dict);
+        } return this.__class__, (items,);
 
     }
-    def copy(self){
+    function copy(){
         'od.copy() -> a shallow copy of od';
-        return self.__class__(self);
+        return this.__class__(this);
 
     }
     @classmethod;
-    def fromkeys(cls, iterable, value=None){
+    function fromkeys(iterable, value=nil){
         '''OD.fromkeys(S[, v]) -> New ordered dictionary with keys from S.
         If not specified, the value defaults to None.
 
         ''';
-        self = cls();
+        this = cls();
         for key in iterable{
-            self[key] = value;
-        } return self;
+            this[key] = value;
+        } return this;
 
     }
-    def __eq__(self, other){
+    function __eq__( other){
         '''od.__eq__(y) <==> od==y.  Comparison to another OD is order-sensitive
         while comparison to a regular mapping is order-insensitive.
 
         ''';
         if isinstance(other, OrderedDict){
-            return dict.__eq__(self, other) and all(_imap(_eq, self, other));
-        } return dict.__eq__(self, other);
+            return dict.__eq__(this, other) and all(_imap(_eq, this, other));
+        } return dict.__eq__(this, other);
 
     }
-    def __ne__(self, other){
+    function __ne__( other){
         'od.__ne__(y) <==> od!=y';
-        return not self == other;
+        return not this == other;
 
     # -- the following methods support python 3.x style dictionary views --
 
     }
-    def viewkeys(self){
+    function viewkeys(){
         "od.viewkeys() -> a set-like object providing a view on od's keys";
-        return KeysView(self);
+        return KeysView(this);
 
     }
-    def viewvalues(self){
+    function viewvalues(){
         "od.viewvalues() -> an object providing a view on od's values";
-        return ValuesView(self);
+        return ValuesView(this);
 
     }
-    def viewitems(self){
+    function viewitems(){
         "od.viewitems() -> a set-like object providing a view on od's items";
-        return ItemsView(self);
+        return ItemsView(this);
 
 
 ################################################################################
@@ -281,42 +281,42 @@ class {typename}(tuple){{
 
     _fields = {field_names!r};
 
-    def __new__(_cls, {arg_list}){{
+    function __new__(_cls, {arg_list}){{
         'Create new instance of {typename}({arg_list})';
         return _tuple.__new__(_cls, ({arg_list}));
     }}
     @classmethod;
-    def _make(cls, iterable, new=tuple.__new__, len=len){{
+    function _make(iterable, new=tuple.__new__, len=len){{
         'Make a new {typename} object from a sequence or iterable';
-        result = new(cls, iterable);
+        result = new(cls,iterable);
         if len(result) != {num_fields:d}{{
             raise TypeError('Expected {num_fields:d} arguments, got %d' % len(result));
         }}
         return result;
     }}
-    def __repr__(self){{
+    function __repr__(){{
         'Return a nicely formatted representation string';
-        return '{typename}({repr_fmt})' % self;
+        return '{typename}({repr_fmt})' % this;
     }}
-    def _asdict(self){{
+    function _asdict(){{
         'Return a new OrderedDict which maps field names to their values';
-        return OrderedDict(zip(self._fields, self));
+        return OrderedDict(zip(this._fields, this));
     }}
-    def _replace(_self, **kwds){{
+    function _replace(**kwds){{
         'Return a new {typename} object replacing specified fields with new values';
-        result = _self._make(map(kwds.pop, {field_names!r}, _self));
+        result = this._make(map(kwds.pop, {field_names!r}, this));
         if kwds{{
             raise ValueError('Got unexpected field names: %r' % kwds.keys());
         }}
         return result;
     }}
-    def __getnewargs__(self){{
+    function __getnewargs__(){{
         'Return self as a plain tuple.  Used by copy and pickle.';
-        return tuple(self);
+        return tuple(this);
     }}
     __dict__ = _property(_asdict);
 
-    def __getstate__(self){{
+    function __getstate__(){{
         'Exclude the OrderedDict from pickling';
         pass;
     }}
@@ -331,7 +331,7 @@ _field_template = '''\
     {name} = _property(_itemgetter({index:d}), doc='Alias for field number {index:d}')
 ''';
 
-def namedtuple(typename, field_names, verbose=False, rename=False){
+function namedtuple(typename, field_names, verbose=false, rename=false){
     """Returns a new subclass of tuple with named fields.
 
     >>> Point = namedtuple('Point', ['x', 'y'])
@@ -488,7 +488,7 @@ class Counter(dict){
     #   http://code.activestate.com/recipes/259174/
     #   Knuth, TAOCP Vol. II section 4.6.3
 
-    def __init__(*args, **kwds){
+    function __init__(*args, **kwds){
         '''Create a new, empty Counter object.  And if given, count elements
         from an input iterable.  Or, initialize the count from another mapping
         of elements to their counts.
@@ -499,24 +499,24 @@ class Counter(dict){
         >>> c = Counter(a=4, b=2)                   # a new counter from keyword args
 
         ''';
-        if not args{
-            raise TypeError("descriptor '__init__' of 'Counter' object "
-                            "needs an argument");
-        } self = args[0];
-        args = args[1:];
+        # if not args{
+        #     raise TypeError("descriptor '__init__' of 'Counter' object "
+        #                     "needs an argument");
+        # } this = args[0];
+        # args = args[1:];
         if len(args) > 1{
             raise TypeError('expected at most 1 arguments, got %d' % len(args));
-        } super(Counter, self).__init__();
-        self.update(*args, **kwds);
+        } super(Counter, this).__init__();
+        this.update(*args, **kwds);
 
     }
-    def __missing__(self, key){
+    function __missing__( key){
         'The count of elements not in the Counter is zero.';
         # Needed so that self[missing_item] does not raise KeyError
         return 0;
 
     }
-    def most_common(self, n=None){
+    function most_common( n=nil){
         '''List the n most common elements and their counts from the most
         common to the least.  If n is None, then list all element counts.
 
@@ -525,12 +525,12 @@ class Counter(dict){
 
         ''';
         # Emulate Bag.sortedByCount from Smalltalk
-        if n is None{
-            return sorted(self.iteritems(), key=_itemgetter(1), reverse=True);
-        } return _heapq.nlargest(n, self.iteritems(), key=_itemgetter(1));
+        if n is nil{
+            return sorted(this.iteritems(), key=_itemgetter(1), reverse=true);
+        } return _heapq.nlargest(n, this.iteritems(), key=_itemgetter(1));
 
     }
-    def elements(self){
+    function elements(){
         '''Iterator over elements repeating each as many times as its count.
 
         >>> c = Counter('ABCABC')
@@ -550,20 +550,20 @@ class Counter(dict){
 
         ''';
         # Emulate Bag.do from Smalltalk and Multiset.begin from C++.
-        return _chain.from_iterable(_starmap(_repeat, self.iteritems()));
+        return _chain.from_iterable(_starmap(_repeat, this.iteritems()));
 
     # Override dict methods where necessary
 
     }
     @classmethod;
-    def fromkeys(cls, iterable, v=None){
+    function fromkeys(iterable, v=nil){
         # There is no equivalent method for counters because setting v=1
         # means that no element can have a count greater than one.
         raise NotImplementedError(
             'Counter.fromkeys() is undefined.  Use Counter(iterable) instead.');
 
     }
-    def update(*args, **kwds){
+    function update(*args, **kwds){
         '''Like dict.update() but add counts instead of replacing them.
 
         Source can be an iterable, a dictionary, or another Counter instance.
@@ -586,28 +586,28 @@ class Counter(dict){
         if not args{
             raise TypeError("descriptor 'update' of 'Counter' object "
                             "needs an argument");
-        } self = args[0];
+        } this = args[0];
         args = args[1:];
         if len(args) > 1{
             raise TypeError('expected at most 1 arguments, got %d' % len(args));
-        } iterable = args[0] if args else None;
-        if iterable is not None{
+        } iterable = args[0] if args else nil;
+        if iterable is not nil{
             if isinstance(iterable, Mapping){
-                if self{
-                    self_get = self.get;
+                if this{
+                    self_get = this.get;
                     for elem, count in iterable.iteritems(){
-                        self[elem] = self_get(elem, 0) + count;
+                        this[elem] = self_get(elem, 0) + count;
                 } } else{
-                    super(Counter, self).update(iterable); # fast path when counter is empty
+                    super(Counter, this).update(iterable); # fast path when counter is empty
             } } else{
-                self_get = self.get;
+                self_get = this.get;
                 for elem in iterable{
-                    self[elem] = self_get(elem, 0) + 1;
+                    this[elem] = self_get(elem, 0) + 1;
         } } } if kwds{
-            self.update(kwds);
+            this.update(kwds);
 
     }
-    } def subtract(*args, **kwds){
+    } function subtract(*args, **kwds){
         '''Like dict.update() but subtracts counts instead of replacing them.
         Counts can be reduced below zero.  Both the inputs and outputs are
         allowed to contain zero and negative counts.
@@ -626,43 +626,43 @@ class Counter(dict){
         if not args{
             raise TypeError("descriptor 'subtract' of 'Counter' object "
                             "needs an argument");
-        } self = args[0];
+        } this = args[0];
         args = args[1:];
         if len(args) > 1{
             raise TypeError('expected at most 1 arguments, got %d' % len(args));
-        } iterable = args[0] if args else None;
-        if iterable is not None{
-            self_get = self.get;
+        } iterable = args[0] if args else nil;
+        if iterable is not nil{
+            self_get = this.get;
             if isinstance(iterable, Mapping){
                 for elem, count in iterable.items(){
-                    self[elem] = self_get(elem, 0) - count;
+                    this[elem] = self_get(elem, 0) - count;
             } } else{
                 for elem in iterable{
-                    self[elem] = self_get(elem, 0) - 1;
+                    this[elem] = self_get(elem, 0) - 1;
         } } } if kwds{
-            self.subtract(kwds);
+            this.subtract(kwds);
 
     }
-    } def copy(self){
+    } function copy(){
         'Return a shallow copy.';
-        return self.__class__(self);
+        return this.__class__(this);
 
     }
-    def __reduce__(self){
-        return self.__class__, (dict(self),);
+    function __reduce__(){
+        return this.__class__, (dict(this),);
 
     }
-    def __delitem__(self, elem){
+    function __delitem__( elem){
         'Like dict.__delitem__() but does not raise KeyError for missing values.';
-        if elem in self{
-            super(Counter, self).__delitem__(elem);
+        if elem in this{
+            super(Counter, this).__delitem__(elem);
 
     }
-    } def __repr__(self){
-        if not self{
-            return '%s()' % self.__class__.__name__;
-        } items = ', '.join(map('%r: %r'.__mod__, self.most_common()));
-        return '%s({%s})' % (self.__class__.__name__, items);
+    } function __repr__(){
+        if not this{
+            return '%s()' % this.__class__.__name__;
+        } items = ', '.join(map('%r: %r'.__mod__, this.most_common()));
+        return '%s({%s})' % (this.__class__.__name__, items);
 
     # Multiset-style mathematical operations discussed in:
     #       Knuth TAOCP Volume II section 4.6.3 exercise 19
@@ -674,7 +674,7 @@ class Counter(dict){
     #       c += Counter()
 
     }
-    def __add__(self, other){
+    function __add__( other){
         '''Add counts from two counters.
 
         >>> Counter('abbb') + Counter('bcc')
@@ -684,17 +684,17 @@ class Counter(dict){
         if not isinstance(other, Counter){
             return NotImplemented;
         } result = Counter();
-        for elem, count in self.items(){
+        for elem, count in this.items(){
             newcount = count + other[elem];
             if newcount > 0{
                 result[elem] = newcount;
         } } for elem, count in other.items(){
-            if elem not in self and count > 0{
+            if elem not in this and count > 0{
                 result[elem] = count;
         } } return result;
 
     }
-    def __sub__(self, other){
+    function __sub__( other){
         ''' Subtract count, but keep only results with positive counts.
 
         >>> Counter('abbbc') - Counter('bccd')
@@ -704,17 +704,17 @@ class Counter(dict){
         if not isinstance(other, Counter){
             return NotImplemented;
         } result = Counter();
-        for elem, count in self.items(){
+        for elem, count in this.items(){
             newcount = count - other[elem];
             if newcount > 0{
                 result[elem] = newcount;
         } } for elem, count in other.items(){
-            if elem not in self and count < 0{
+            if elem not in this and count < 0{
                 result[elem] = 0 - count;
         } } return result;
 
     }
-    def __or__(self, other){
+    function __or__( other){
         '''Union is the maximum of value in either of the input counters.
 
         >>> Counter('abbb') | Counter('bcc')
@@ -724,18 +724,18 @@ class Counter(dict){
         if not isinstance(other, Counter){
             return NotImplemented;
         } result = Counter();
-        for elem, count in self.items(){
+        for elem, count in this.items(){
             other_count = other[elem];
             newcount = other_count if count < other_count else count;
             if newcount > 0{
                 result[elem] = newcount;
         } } for elem, count in other.items(){
-            if elem not in self and count > 0{
+            if elem not in this and count > 0{
                 result[elem] = count;
         } } return result;
 
     }
-    def __and__(self, other){
+    function __and__( other){
         ''' Intersection is the minimum of corresponding counts.
 
         >>> Counter('abbb') & Counter('bcc')
@@ -745,7 +745,7 @@ class Counter(dict){
         if not isinstance(other, Counter){
             return NotImplemented;
         } result = Counter();
-        for elem, count in self.items(){
+        for elem, count in this.items(){
             other_count = other[elem];
             newcount = count if count < other_count else other_count;
             if newcount > 0{
@@ -757,7 +757,7 @@ class Counter(dict){
 } if __name__ == '__main__'{
     # verify that instances can be pickled
     from cPickle import loads, dumps;
-    Point = namedtuple('Point', 'x, y', True);
+    Point = namedtuple('Point', 'x, y', true);
     p = Point(x=10, y=20);
     assert p == loads(dumps(p));
 
@@ -765,10 +765,10 @@ class Counter(dict){
     class Point(namedtuple('Point', 'x y')){
         __slots__ = ();
         @property;
-        def hypot(self){
-            return (self.x ** 2 + self.y ** 2) ** 0.5;
-        } def __str__(self){
-            return 'Point: x=%6.3f  y=%6.3f  hypot=%6.3f' % (self.x, self.y, self.hypot);
+        function hypot(){
+            return (this.x ** 2 + this.y ** 2) ** 0.5;
+        } function __str__(){
+            return 'Point: x=%6.3f  y=%6.3f  hypot=%6.3f' % (this.x, this.y, this.hypot);
 
     }
     } for p in Point(3, 4), Point(14, 5/7.){
@@ -779,8 +779,8 @@ class Counter(dict){
         'Point class with optimized _make() and _replace() without error-checking';
         __slots__ = ();
         _make = classmethod(tuple.__new__);
-        def _replace(self, _map=map, **kwds){
-            return self._make(_map(kwds.get, ('x', 'y'), self));
+        function _replace( _map=map, **kwds){
+            return this._make(_map(kwds.get, ('x', 'y'), this));
 
     }
     } print Point(11, 22)._replace(x=100);

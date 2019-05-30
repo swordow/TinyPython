@@ -36,8 +36,8 @@ extern int _MenuObj_Convert(PyObject *, MenuHandle *);
 PyObject *OptMenuObj_New(MenuRef itself)
 {
     if (itself == NULL) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     return MenuObj_New(itself);
 }
@@ -45,7 +45,7 @@ PyObject *OptMenuObj_New(MenuRef itself)
 /* Alternative version of MenuObj_Convert, which returns NULL for a None argument */
 int OptMenuObj_Convert(PyObject *v, MenuRef *p_itself)
 {
-    if ( v == Py_None ) {
+    if ( v == Py_Nil ) {
         *p_itself = NULL;
         return 1;
     }
@@ -100,8 +100,8 @@ static PyObject *MenuObj_DisposeMenu(MenuObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     DisposeMenu(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -114,8 +114,8 @@ static PyObject *MenuObj_CalcMenuSize(MenuObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CalcMenuSize(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -172,8 +172,8 @@ static PyObject *MenuObj_SetMenuFont(MenuObject *_self, PyObject *_args)
                        inFontID,
                        inFontSize);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -206,8 +206,8 @@ static PyObject *MenuObj_SetMenuExcludesMarkColumn(MenuObject *_self, PyObject *
     _err = SetMenuExcludesMarkColumn(_self->ob_itself,
                                      excludesMark);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -252,8 +252,8 @@ static PyObject *MenuObj_RetainMenu(MenuObject *_self, PyObject *_args)
         return NULL;
     _err = RetainMenu(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -268,8 +268,8 @@ static PyObject *MenuObj_ReleaseMenu(MenuObject *_self, PyObject *_args)
         return NULL;
     _err = ReleaseMenu(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -323,8 +323,8 @@ static PyObject *MenuObj_SetMenuTitleWithCFString(MenuObject *_self, PyObject *_
     _err = SetMenuTitleWithCFString(_self->ob_itself,
                                     inString);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -339,8 +339,8 @@ static PyObject *MenuObj_InvalidateMenuSize(MenuObject *_self, PyObject *_args)
         return NULL;
     _err = InvalidateMenuSize(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -371,8 +371,8 @@ static PyObject *MenuObj_MacAppendMenu(MenuObject *_self, PyObject *_args)
         return NULL;
     MacAppendMenu(_self->ob_itself,
                   data);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -391,8 +391,8 @@ static PyObject *MenuObj_InsertResMenu(MenuObject *_self, PyObject *_args)
     InsertResMenu(_self->ob_itself,
                   theType,
                   afterItem);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -408,8 +408,8 @@ static PyObject *MenuObj_AppendResMenu(MenuObject *_self, PyObject *_args)
         return NULL;
     AppendResMenu(_self->ob_itself,
                   theType);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -428,8 +428,8 @@ static PyObject *MenuObj_MacInsertMenuItem(MenuObject *_self, PyObject *_args)
     MacInsertMenuItem(_self->ob_itself,
                       itemString,
                       afterItem);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -445,8 +445,8 @@ static PyObject *MenuObj_DeleteMenuItem(MenuObject *_self, PyObject *_args)
         return NULL;
     DeleteMenuItem(_self->ob_itself,
                    item);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -465,8 +465,8 @@ static PyObject *MenuObj_InsertFontResMenu(MenuObject *_self, PyObject *_args)
     InsertFontResMenu(_self->ob_itself,
                       afterItem,
                       scriptFilter);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -488,8 +488,8 @@ static PyObject *MenuObj_InsertIntlResMenu(MenuObject *_self, PyObject *_args)
                       theType,
                       afterItem,
                       scriptFilter);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -507,8 +507,8 @@ static PyObject *MenuObj_AppendMenuItemText(MenuObject *_self, PyObject *_args)
     _err = AppendMenuItemText(_self->ob_itself,
                               inString);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -529,8 +529,8 @@ static PyObject *MenuObj_InsertMenuItemText(MenuObject *_self, PyObject *_args)
                               inString,
                               afterItem);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -557,8 +557,8 @@ static PyObject *MenuObj_CopyMenuItems(MenuObject *_self, PyObject *_args)
                          inDestMenu,
                          inInsertAfter);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -579,8 +579,8 @@ static PyObject *MenuObj_DeleteMenuItems(MenuObject *_self, PyObject *_args)
                            inFirstItem,
                            inNumItems);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -634,8 +634,8 @@ static PyObject *MenuObj_InsertMenuItemTextWithCFString(MenuObject *_self, PyObj
                                           inAttributes,
                                           inCommandID);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -674,8 +674,8 @@ static PyObject *MenuObj_InvalidateMenuEnabling(MenuObject *_self, PyObject *_ar
         return NULL;
     _err = InvalidateMenuEnabling(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -706,8 +706,8 @@ static PyObject *MenuObj_MacInsertMenu(MenuObject *_self, PyObject *_args)
         return NULL;
     MacInsertMenu(_self->ob_itself,
                   beforeID);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -722,8 +722,8 @@ static PyObject *MenuObj_SetRootMenu(MenuObject *_self, PyObject *_args)
         return NULL;
     _err = SetRootMenu(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -742,8 +742,8 @@ static PyObject *MenuObj_MacCheckMenuItem(MenuObject *_self, PyObject *_args)
     MacCheckMenuItem(_self->ob_itself,
                      item,
                      checked);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -762,8 +762,8 @@ static PyObject *MenuObj_SetMenuItemText(MenuObject *_self, PyObject *_args)
     SetMenuItemText(_self->ob_itself,
                     item,
                     itemString);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -801,8 +801,8 @@ static PyObject *MenuObj_SetItemMark(MenuObject *_self, PyObject *_args)
     SetItemMark(_self->ob_itself,
                 item,
                 markChar);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -840,8 +840,8 @@ static PyObject *MenuObj_SetItemCmd(MenuObject *_self, PyObject *_args)
     SetItemCmd(_self->ob_itself,
                item,
                cmdChar);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -879,8 +879,8 @@ static PyObject *MenuObj_SetItemIcon(MenuObject *_self, PyObject *_args)
     SetItemIcon(_self->ob_itself,
                 item,
                 iconIndex);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -918,8 +918,8 @@ static PyObject *MenuObj_SetItemStyle(MenuObject *_self, PyObject *_args)
     SetItemStyle(_self->ob_itself,
                  item,
                  chStyle);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -959,8 +959,8 @@ static PyObject *MenuObj_SetMenuItemCommandID(MenuObject *_self, PyObject *_args
                                 inItem,
                                 inCommandID);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1002,8 +1002,8 @@ static PyObject *MenuObj_SetMenuItemModifiers(MenuObject *_self, PyObject *_args
                                 inItem,
                                 inModifiers);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1048,8 +1048,8 @@ static PyObject *MenuObj_SetMenuItemIconHandle(MenuObject *_self, PyObject *_arg
                                  inIconType,
                                  inIconHandle);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1094,8 +1094,8 @@ static PyObject *MenuObj_SetMenuItemTextEncoding(MenuObject *_self, PyObject *_a
                                    inItem,
                                    inScriptID);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1137,8 +1137,8 @@ static PyObject *MenuObj_SetMenuItemHierarchicalID(MenuObject *_self, PyObject *
                                      inItem,
                                      inHierID);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1180,8 +1180,8 @@ static PyObject *MenuObj_SetMenuItemFontID(MenuObject *_self, PyObject *_args)
                              inItem,
                              inFontID);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1223,8 +1223,8 @@ static PyObject *MenuObj_SetMenuItemRefCon(MenuObject *_self, PyObject *_args)
                              inItem,
                              inRefCon);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1266,8 +1266,8 @@ static PyObject *MenuObj_SetMenuItemKeyGlyph(MenuObject *_self, PyObject *_args)
                                inItem,
                                inGlyph);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1304,8 +1304,8 @@ static PyObject *MenuObj_MacEnableMenuItem(MenuObject *_self, PyObject *_args)
         return NULL;
     MacEnableMenuItem(_self->ob_itself,
                       item);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1321,8 +1321,8 @@ static PyObject *MenuObj_DisableMenuItem(MenuObject *_self, PyObject *_args)
         return NULL;
     DisableMenuItem(_self->ob_itself,
                     item);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1356,8 +1356,8 @@ static PyObject *MenuObj_EnableMenuItemIcon(MenuObject *_self, PyObject *_args)
         return NULL;
     EnableMenuItemIcon(_self->ob_itself,
                        item);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1373,8 +1373,8 @@ static PyObject *MenuObj_DisableMenuItemIcon(MenuObject *_self, PyObject *_args)
         return NULL;
     DisableMenuItemIcon(_self->ob_itself,
                         item);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1413,8 +1413,8 @@ static PyObject *MenuObj_SetMenuItemHierarchicalMenu(MenuObject *_self, PyObject
                                        inItem,
                                        inHierMenu);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1477,8 +1477,8 @@ static PyObject *MenuObj_SetMenuItemTextWithCFString(MenuObject *_self, PyObject
                                        inItem,
                                        inString);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1520,8 +1520,8 @@ static PyObject *MenuObj_SetMenuItemIndent(MenuObject *_self, PyObject *_args)
                              inItem,
                              inIndent);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1569,8 +1569,8 @@ static PyObject *MenuObj_SetMenuItemCommandKey(MenuObject *_self, PyObject *_arg
                                  inSetVirtualKey,
                                  inKey);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1627,8 +1627,8 @@ static PyObject *MenuObj_ChangeMenuItemPropertyAttributes(MenuObject *_self, PyO
                                             attributesToSet,
                                             attributesToClear);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1667,8 +1667,8 @@ static PyObject *MenuObj_ChangeMenuAttributes(MenuObject *_self, PyObject *_args
                                 setTheseAttributes,
                                 clearTheseAttributes);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1713,8 +1713,8 @@ static PyObject *MenuObj_ChangeMenuItemAttributes(MenuObject *_self, PyObject *_
                                     setTheseAttributes,
                                     clearTheseAttributes);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1727,8 +1727,8 @@ static PyObject *MenuObj_DisableAllMenuItems(MenuObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     DisableAllMenuItems(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1741,8 +1741,8 @@ static PyObject *MenuObj_EnableAllMenuItems(MenuObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     EnableAllMenuItems(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1836,8 +1836,8 @@ static PyObject *MenuObj_EnableMenuCommand(MenuObject *_self, PyObject *_args)
         return NULL;
     EnableMenuCommand(_self->ob_itself,
                       inCommandID);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1853,8 +1853,8 @@ static PyObject *MenuObj_DisableMenuCommand(MenuObject *_self, PyObject *_args)
         return NULL;
     DisableMenuCommand(_self->ob_itself,
                        inCommandID);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1893,8 +1893,8 @@ static PyObject *MenuObj_SetMenuCommandMark(MenuObject *_self, PyObject *_args)
                               inCommandID,
                               inMark);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1966,8 +1966,8 @@ static PyObject *MenuObj_RemoveMenuCommandProperty(MenuObject *_self, PyObject *
                                      inPropertyCreator,
                                      inPropertyTag);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2006,8 +2006,8 @@ static PyObject *MenuObj_InvalidateMenuItems(MenuObject *_self, PyObject *_args)
                                inFirstItem,
                                inNumItems);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2022,8 +2022,8 @@ static PyObject *MenuObj_UpdateInvalidMenuItems(MenuObject *_self, PyObject *_ar
         return NULL;
     _err = UpdateInvalidMenuItems(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2153,8 +2153,8 @@ static PyObject *MenuObj_SetMenuID(MenuObject *_self, PyObject *_args)
         return NULL;
     SetMenuID(_self->ob_itself,
               menuID);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2170,8 +2170,8 @@ static PyObject *MenuObj_SetMenuWidth(MenuObject *_self, PyObject *_args)
         return NULL;
     SetMenuWidth(_self->ob_itself,
                  width);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2187,8 +2187,8 @@ static PyObject *MenuObj_SetMenuHeight(MenuObject *_self, PyObject *_args)
         return NULL;
     SetMenuHeight(_self->ob_itself,
                   height);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2219,8 +2219,8 @@ static PyObject *MenuObj_AppendMenu(MenuObject *_self, PyObject *_args)
         return NULL;
     AppendMenu(_self->ob_itself,
                data);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2236,8 +2236,8 @@ static PyObject *MenuObj_InsertMenu(MenuObject *_self, PyObject *_args)
         return NULL;
     InsertMenu(_self->ob_itself,
                beforeID);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2256,8 +2256,8 @@ static PyObject *MenuObj_InsertMenuItem(MenuObject *_self, PyObject *_args)
     InsertMenuItem(_self->ob_itself,
                    itemString,
                    afterItem);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2273,8 +2273,8 @@ static PyObject *MenuObj_EnableMenuItem(MenuObject *_self, PyObject *_args)
         return NULL;
     EnableMenuItem(_self->ob_itself,
                    item);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2293,8 +2293,8 @@ static PyObject *MenuObj_CheckMenuItem(MenuObject *_self, PyObject *_args)
     CheckMenuItem(_self->ob_itself,
                   item,
                   checked);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2750,8 +2750,8 @@ static PyObject *Menu_MacDrawMenuBar(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     MacDrawMenuBar();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2764,8 +2764,8 @@ static PyObject *Menu_InvalMenuBar(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     InvalMenuBar();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2780,8 +2780,8 @@ static PyObject *Menu_HiliteMenu(PyObject *_self, PyObject *_args)
                           &menuID))
         return NULL;
     HiliteMenu(menuID);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2828,8 +2828,8 @@ static PyObject *Menu_SetMenuBar(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &mbar))
         return NULL;
     SetMenuBar(mbar);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2866,8 +2866,8 @@ static PyObject *Menu_DisposeMenuBar(PyObject *_self, PyObject *_args)
         return NULL;
     _err = DisposeMenuBar(inMbar);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2899,8 +2899,8 @@ static PyObject *Menu_MacDeleteMenu(PyObject *_self, PyObject *_args)
                           &menuID))
         return NULL;
     MacDeleteMenu(menuID);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2913,8 +2913,8 @@ static PyObject *Menu_ClearMenuBar(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     ClearMenuBar();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2929,8 +2929,8 @@ static PyObject *Menu_SetMenuFlashCount(PyObject *_self, PyObject *_args)
                           &count))
         return NULL;
     SetMenuFlashCount(count);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2945,8 +2945,8 @@ static PyObject *Menu_FlashMenuBar(PyObject *_self, PyObject *_args)
                           &menuID))
         return NULL;
     FlashMenuBar(menuID);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2974,8 +2974,8 @@ static PyObject *Menu_ShowMenuBar(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     ShowMenuBar();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2988,8 +2988,8 @@ static PyObject *Menu_HideMenuBar(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     HideMenuBar();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3022,8 +3022,8 @@ static PyObject *Menu_DeleteMCEntries(PyObject *_self, PyObject *_args)
         return NULL;
     DeleteMCEntries(menuID,
                     menuItem);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3038,8 +3038,8 @@ static PyObject *Menu_InitContextualMenus(PyObject *_self, PyObject *_args)
         return NULL;
     _err = InitContextualMenus();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3120,8 +3120,8 @@ static PyObject *Menu_DeleteMenu(PyObject *_self, PyObject *_args)
                           &menuID))
         return NULL;
     DeleteMenu(menuID);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3134,8 +3134,8 @@ static PyObject *Menu_DrawMenuBar(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     DrawMenuBar();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3202,8 +3202,8 @@ static PyObject *Menu_EnableMenuCommand(PyObject *_self, PyObject *_args)
         return NULL;
     EnableMenuCommand(inMenu,
                       inCommandID);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3221,8 +3221,8 @@ static PyObject *Menu_DisableMenuCommand(PyObject *_self, PyObject *_args)
         return NULL;
     DisableMenuCommand(inMenu,
                        inCommandID);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3265,8 +3265,8 @@ static PyObject *Menu_SetMenuCommandMark(PyObject *_self, PyObject *_args)
                               inCommandID,
                               inMark);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3344,8 +3344,8 @@ static PyObject *Menu_RemoveMenuCommandProperty(PyObject *_self, PyObject *_args
                                      inPropertyCreator,
                                      inPropertyTag);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 #endif /* __LP64__ */

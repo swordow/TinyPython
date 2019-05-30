@@ -872,8 +872,8 @@ posix_fildes(PyObject *fdobj, int (*func)(int))
     Py_END_ALLOW_THREADS
     if (res < 0)
         return posix_error();
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -890,8 +890,8 @@ posix_1str(PyObject *args, char *format, int (*func)(const char*))
     if (res < 0)
         return posix_error_with_allocated_filename(path1);
     PyMem_Free(path1);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -913,8 +913,8 @@ posix_2str(PyObject *args,
     if (res != 0)
         /* XXX how to report both path1 and path2??? */
         return posix_error();
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 #ifdef MS_WINDOWS
@@ -935,8 +935,8 @@ win32_1str(PyObject* args, char* func,
         Py_END_ALLOW_THREADS
         if (!result)
             return win32_error_unicode(func, PyUnicode_AsUnicode(uni));
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     if (!PyArg_ParseTuple(args, format, &ansi))
         return NULL;
@@ -945,8 +945,8 @@ win32_1str(PyObject* args, char* func,
     Py_END_ALLOW_THREADS
     if (!result)
         return win32_error(func, ansi);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 
 }
 
@@ -1416,8 +1416,8 @@ statresult_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
        st_?time might be set to None. Initialize it
        from the int slots.  */
     for (i = 7; i <= 9; i++) {
-        if (result->ob_item[i+3] == Py_None) {
-            Py_DECREF(Py_None);
+        if (result->ob_item[i+3] == Py_Nil) {
+            Py_DECREF(Py_Nil);
             Py_INCREF(result->ob_item[i]);
             result->ob_item[i+3] = result->ob_item[i];
         }
@@ -1447,8 +1447,8 @@ stat_float_times(PyObject* self, PyObject *args)
         /* Return old value */
         return PyBool_FromLong(_stat_float_times);
     _stat_float_times = newval;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static void
@@ -1876,8 +1876,8 @@ posix_chmod(PyObject *self, PyObject *args)
         Py_END_ALLOW_THREADS
         if (!res)
             return win32_error_unicode("chmod", wpath);
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     /* Drop the argument parsing error as narrow strings
        are also valid. */
@@ -1904,8 +1904,8 @@ posix_chmod(PyObject *self, PyObject *args)
         return NULL;
     }
     PyMem_Free(path);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 #else /* MS_WINDOWS */
     if (!PyArg_ParseTuple(args, "eti:chmod", Py_FileSystemDefaultEncoding,
                           &path, &i))
@@ -1916,8 +1916,8 @@ posix_chmod(PyObject *self, PyObject *args)
     if (res < 0)
         return posix_error_with_allocated_filename(path);
     PyMem_Free(path);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 #endif
 }
 
@@ -1938,7 +1938,7 @@ posix_fchmod(PyObject *self, PyObject *args)
     Py_END_ALLOW_THREADS
     if (res < 0)
         return posix_error();
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 #endif /* HAVE_FCHMOD */
 
@@ -1963,7 +1963,7 @@ posix_lchmod(PyObject *self, PyObject *args)
     if (res < 0)
         return posix_error_with_allocated_filename(path);
     PyMem_Free(path);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 #endif /* HAVE_LCHMOD */
 
@@ -1988,8 +1988,8 @@ posix_chflags(PyObject *self, PyObject *args)
     if (res < 0)
         return posix_error_with_allocated_filename(path);
     PyMem_Free(path);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif /* HAVE_CHFLAGS */
 
@@ -2014,8 +2014,8 @@ posix_lchflags(PyObject *self, PyObject *args)
     if (res < 0)
         return posix_error_with_allocated_filename(path);
     PyMem_Free(path);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif /* HAVE_LCHFLAGS */
 
@@ -2085,8 +2085,8 @@ posix_chown(PyObject *self, PyObject *args)
     if (res < 0)
         return posix_error_with_allocated_filename(path);
     PyMem_Free(path);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif /* HAVE_CHOWN */
 
@@ -2112,7 +2112,7 @@ posix_fchown(PyObject *self, PyObject *args)
     Py_END_ALLOW_THREADS
     if (res < 0)
         return posix_error();
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 #endif /* HAVE_FCHOWN */
 
@@ -2140,8 +2140,8 @@ posix_lchown(PyObject *self, PyObject *args)
     if (res < 0)
         return posix_error_with_allocated_filename(path);
     PyMem_Free(path);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif /* HAVE_LCHOWN */
 
@@ -2677,8 +2677,8 @@ posix_mkdir(PyObject *self, PyObject *args)
         Py_END_ALLOW_THREADS
         if (!res)
             return win32_error_unicode("mkdir", wpath);
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     /* Drop the argument parsing error as narrow strings
        are also valid. */
@@ -2695,8 +2695,8 @@ posix_mkdir(PyObject *self, PyObject *args)
         return NULL;
     }
     PyMem_Free(path);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 #else /* MS_WINDOWS */
 
     if (!PyArg_ParseTuple(args, "et|i:mkdir",
@@ -2712,8 +2712,8 @@ posix_mkdir(PyObject *self, PyObject *args)
     if (res < 0)
         return posix_error_with_allocated_filename(path);
     PyMem_Free(path);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 #endif /* MS_WINDOWS */
 }
 
@@ -2787,8 +2787,8 @@ posix_rename(PyObject *self, PyObject *args)
     Py_DECREF(o2);
     if (!result)
         return win32_error("rename", NULL);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 error:
     PyErr_Clear();
     if (!PyArg_ParseTuple(args, "ss:rename", &p1, &p2))
@@ -2798,8 +2798,8 @@ error:
     Py_END_ALLOW_THREADS
     if (!result)
         return win32_error("rename", NULL);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 #else
     return posix_2str(args, "etet:rename", rename);
 #endif
@@ -3003,7 +3003,7 @@ posix_utime(PyObject *self, PyObject *args)
         PyMem_Free(apath);
     }
 
-    if (arg == Py_None) {
+    if (arg == Py_Nil) {
         SYSTEMTIME now;
         GetSystemTime(&now);
         if (!SystemTimeToFileTime(&now, &mtime) ||
@@ -3035,8 +3035,8 @@ posix_utime(PyObject *self, PyObject *args)
         win32_error("utime", NULL);
         goto done;
     }
-    Py_INCREF(Py_None);
-    result = Py_None;
+    Py_INCREF(Py_Nil);
+    result = Py_Nil;
 done:
     CloseHandle(hFile);
     return result;
@@ -3069,7 +3069,7 @@ done:
     if (!PyArg_ParseTuple(args, "etO:utime",
                           Py_FileSystemDefaultEncoding, &path, &arg))
         return NULL;
-    if (arg == Py_None) {
+    if (arg == Py_Nil) {
         /* optional time values not given */
         Py_BEGIN_ALLOW_THREADS
         res = utime(path, NULL);
@@ -3110,8 +3110,8 @@ done:
         return posix_error_with_allocated_filename(path);
     }
     PyMem_Free(path);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 #undef UTIME_ARG
 #undef ATIME
 #undef MTIME
@@ -4227,8 +4227,8 @@ posix_initgroups(PyObject *self, PyObject *args)
     if (initgroups(username, gid) == -1)
         return PyErr_SetFromErrno(PyExc_OSError);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif
 
@@ -4282,8 +4282,8 @@ posix_setpgrp(PyObject *self, PyObject *noargs)
     if (setpgrp() < 0)
 #endif /* SETPGRP_HAVE_ARG */
         return posix_error();
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 #endif /* HAVE_SETPGRP */
@@ -4372,8 +4372,8 @@ posix_kill(PyObject *self, PyObject *args)
     if (kill(pid, sig) == -1)
         return posix_error();
 #endif
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif
 
@@ -4395,8 +4395,8 @@ posix_killpg(PyObject *self, PyObject *args)
         return NULL;
     if (killpg(pgid, sig) == -1)
         return posix_error();
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif
 
@@ -4423,7 +4423,7 @@ win32_kill(PyObject *self, PyObject *args)
             return PyErr_SetFromWindowsErr(err);
         }
         else
-            Py_RETURN_NONE;
+            Py_RETURN_NIL;
     }
 
     /* If the signal is outside of what GenerateConsoleCtrlEvent can use,
@@ -4438,8 +4438,8 @@ win32_kill(PyObject *self, PyObject *args)
         err = GetLastError();
         result = PyErr_SetFromWindowsErr(err);
     } else {
-        Py_INCREF(Py_None);
-        result = Py_None;
+        Py_INCREF(Py_Nil);
+        result = Py_Nil;
     }
 
     CloseHandle(handle);
@@ -4501,8 +4501,8 @@ posix_plock(PyObject *self, PyObject *args)
         return NULL;
     if (plock(op) == -1)
         return posix_error();
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif
 
@@ -5987,8 +5987,8 @@ posix_setuid(PyObject *self, PyObject *args)
         return NULL;
     if (setuid(uid) < 0)
         return posix_error();
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif /* HAVE_SETUID */
 
@@ -6007,8 +6007,8 @@ posix_seteuid (PyObject *self, PyObject *args)
     if (seteuid(euid) < 0) {
         return posix_error();
     } else {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
 }
 #endif /* HAVE_SETEUID */
@@ -6027,8 +6027,8 @@ posix_setegid (PyObject *self, PyObject *args)
     if (setegid(egid) < 0) {
         return posix_error();
     } else {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
 }
 #endif /* HAVE_SETEGID */
@@ -6049,8 +6049,8 @@ posix_setreuid (PyObject *self, PyObject *args)
     if (setreuid(ruid, euid) < 0) {
         return posix_error();
     } else {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
 }
 #endif /* HAVE_SETREUID */
@@ -6071,8 +6071,8 @@ posix_setregid (PyObject *self, PyObject *args)
     if (setregid(rgid, egid) < 0) {
         return posix_error();
     } else {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
 }
 #endif /* HAVE_SETREGID */
@@ -6090,8 +6090,8 @@ posix_setgid(PyObject *self, PyObject *args)
         return NULL;
     if (setgid(gid) < 0)
         return posix_error();
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif /* HAVE_SETGID */
 
@@ -6139,8 +6139,8 @@ posix_setgroups(PyObject *self, PyObject *groups)
 
     if (setgroups(len, grouplist) < 0)
         return posix_error();
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif /* HAVE_SETGROUPS */
 
@@ -6533,8 +6533,8 @@ posix_setsid(PyObject *self, PyObject *noargs)
 {
     if (setsid() < 0)
         return posix_error();
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif /* HAVE_SETSID */
 
@@ -6552,8 +6552,8 @@ posix_setpgid(PyObject *self, PyObject *args)
         return NULL;
     if (setpgid(pid, pgrp) < 0)
         return posix_error();
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif /* HAVE_SETPGID */
 
@@ -6592,8 +6592,8 @@ posix_tcsetpgrp(PyObject *self, PyObject *args)
         return NULL;
     if (tcsetpgrp(fd, pgid) < 0)
         return posix_error();
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif /* HAVE_TCSETPGRP */
 
@@ -6662,8 +6662,8 @@ posix_close_(PyObject *self, PyObject *args)
     Py_END_ALLOW_THREADS
     if (res < 0)
         return posix_error();
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 
@@ -6682,7 +6682,7 @@ posix_closerange(PyObject *self, PyObject *args)
         if (_PyVerify_fd(i))
             close(i);
     Py_END_ALLOW_THREADS
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 
@@ -6724,8 +6724,8 @@ posix_dup2(PyObject *self, PyObject *args)
     Py_END_ALLOW_THREADS
     if (res < 0)
         return posix_error();
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 
@@ -7053,8 +7053,8 @@ posix_mkfifo(PyObject *self, PyObject *args)
     Py_END_ALLOW_THREADS
     if (res < 0)
         return posix_error();
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif
 
@@ -7086,8 +7086,8 @@ posix_mknod(PyObject *self, PyObject *args)
     Py_END_ALLOW_THREADS
     if (res < 0)
         return posix_error();
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif
 
@@ -7163,8 +7163,8 @@ posix_ftruncate(PyObject *self, PyObject *args)
     Py_END_ALLOW_THREADS
     if (res < 0)
         return posix_error();
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif
 
@@ -7250,8 +7250,8 @@ posix_putenv(PyObject *self, PyObject *args)
 #if defined(PYOS_OS2)
     }
 #endif
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif /* putenv */
 
@@ -7290,8 +7290,8 @@ posix_unsetenv(PyObject *self, PyObject *args)
         PyErr_Clear();
     }
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif /* unsetenv */
 
@@ -8022,8 +8022,8 @@ posix_confstr(PyObject *self, PyObject *args)
         posix_error();
         }
         else {
-        result = Py_None;
-        Py_INCREF(Py_None);
+        result = Py_Nil;
+        Py_INCREF(Py_Nil);
         }
     }
     else {
@@ -8713,8 +8713,8 @@ win32_startfile(PyObject *self, PyObject *args)
         PyObject *errval = win32_error_unicode("startfile", wpath);
         return errval;
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 
 normal:
     if (!PyArg_ParseTuple(args, "et|s:startfile",
@@ -8731,8 +8731,8 @@ normal:
         return errval;
     }
     PyMem_Free(filepath);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif /* MS_WINDOWS */
 
@@ -8801,7 +8801,7 @@ posix_setresuid (PyObject *self, PyObject *args)
         return NULL;
     if (setresuid(ruid, euid, suid) < 0)
         return posix_error();
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 #endif
 
@@ -8821,7 +8821,7 @@ posix_setresgid (PyObject *self, PyObject *args)
         return NULL;
     if (setresgid(rgid, egid, sgid) < 0)
         return posix_error();
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 #endif
 

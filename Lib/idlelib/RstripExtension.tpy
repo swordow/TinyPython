@@ -3,17 +3,17 @@
 class RstripExtension{
 
     menudefs = [
-        ('format', [None, ('Strip trailing whitespace', '<<do-rstrip>>'), ] ), ];
+        ('format', [nil, ('Strip trailing whitespace', '<<do-rstrip>>'), ] ), ];
 
-    def __init__(self, editwin){
-        self.editwin = editwin;
-        self.editwin.text.bind("<<do-rstrip>>", self.do_rstrip);
+    function __init__( editwin){
+        this.editwin = editwin;
+        this.editwin.text.bind("<<do-rstrip>>", this.do_rstrip);
 
     }
-    def do_rstrip(self, event=None){
+    function do_rstrip( event=nil){
 
-        text = self.editwin.text;
-        undo = self.editwin.undo;
+        text = this.editwin.text;
+        undo = this.editwin.undo;
 
         undo.undo_block_start();
 
@@ -33,6 +33,6 @@ class RstripExtension{
 }
 } if __name__ == "__main__"{
     import unittest;
-    unittest.main('idlelib.idle_test.test_rstrip', verbosity=2, exit=False);
+    unittest.main('idlelib.idle_test.test_rstrip', verbosity=2, exit=false);
 
 }

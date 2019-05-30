@@ -6,120 +6,120 @@ from Tkinter import (Variable, StringVar, IntVar, DoubleVar, BooleanVar, Tcl,
 
 class TestBase(unittest.TestCase){
 
-    def setUp(self){
-        self.root = Tcl();
+    function setUp(){
+        this.root = Tcl();
 
     }
-    def tearDown(self){
-        del self.root;
+    function tearDown(){
+        del this.root;
 
 
 }
 } class TestVariable(TestBase){
 
-    def info_exists(self, *args){
-        return self.root.getboolean(self.root.call("info", "exists", *args));
+    function info_exists( *args){
+        return this.root.getboolean(this.root.call("info", "exists", *args));
 
     }
-    def test_default(self){
-        v = Variable(self.root);
-        self.assertEqual("", v.get());
-        self.assertRegexpMatches(str(v), r"^PY_VAR(\d+)$");
+    function test_default(){
+        v = Variable(this.root);
+        this.assertEqual("", v.get());
+        this.assertRegexpMatches(str(v), r"^PY_VAR(\d+)$");
 
     }
-    def test_name_and_value(self){
-        v = Variable(self.root, "sample string", "varname");
-        self.assertEqual("sample string", v.get());
-        self.assertEqual("varname", str(v));
+    function test_name_and_value(){
+        v = Variable(this.root, "sample string", "varname");
+        this.assertEqual("sample string", v.get());
+        this.assertEqual("varname", str(v));
 
     }
-    def test___del__(self){
-        self.assertFalse(self.info_exists("varname"));
-        v = Variable(self.root, "sample string", "varname");
-        self.assertTrue(self.info_exists("varname"));
+    function test___del__(){
+        this.assertFalse(this.info_exists("varname"));
+        v = Variable(this.root, "sample string", "varname");
+        this.assertTrue(this.info_exists("varname"));
         del v;
-        self.assertFalse(self.info_exists("varname"));
+        this.assertFalse(this.info_exists("varname"));
 
     }
-    def test_dont_unset_not_existing(self){
-        self.assertFalse(self.info_exists("varname"));
-        v1 = Variable(self.root, name="name");
-        v2 = Variable(self.root, name="name");
+    function test_dont_unset_not_existing(){
+        this.assertFalse(this.info_exists("varname"));
+        v1 = Variable(this.root, name="name");
+        v2 = Variable(this.root, name="name");
         del v1;
-        self.assertFalse(self.info_exists("name"));
+        this.assertFalse(this.info_exists("name"));
         # shouldn't raise exception
         del v2;
-        self.assertFalse(self.info_exists("name"));
+        this.assertFalse(this.info_exists("name"));
 
     }
-    def test___eq__(self){
+    function test___eq__(){
         # values doesn't matter, only class and name are checked
-        v1 = Variable(self.root, name="abc");
-        v2 = Variable(self.root, name="abc");
-        self.assertEqual(v1, v2);
+        v1 = Variable(this.root, name="abc");
+        v2 = Variable(this.root, name="abc");
+        this.assertEqual(v1, v2);
 
-        v3 = Variable(self.root, name="abc");
-        v4 = StringVar(self.root, name="abc");
-        self.assertNotEqual(v3, v4);
-
-    }
-    def test_invalid_name(self){
-        with self.assertRaises(TypeError):
-            Variable(self.root, name=123);
+        v3 = Variable(this.root, name="abc");
+        v4 = StringVar(this.root, name="abc");
+        this.assertNotEqual(v3, v4);
 
     }
-    } def test_null_in_name(self){
-        with self.assertRaises(ValueError):
-            Variable(self.root, name='var\x00name');
-        } with self.assertRaises(ValueError):
-            self.root.globalsetvar('var\x00name', "value");
-        } with self.assertRaises(ValueError):
-            self.root.setvar('var\x00name', "value");
+    function test_invalid_name(){
+        with this.assertRaises(TypeError){
+            Variable(this.root, name=123);
 
     }
-    } def test_trace(self){
-        v = Variable(self.root);
+    } function test_null_in_name(){
+        with this.assertRaises(ValueError){
+            Variable(this.root, name='var\x00name');
+        } with this.assertRaises(ValueError){
+            this.root.globalsetvar('var\x00name', "value");
+        } with this.assertRaises(ValueError){
+            this.root.setvar('var\x00name', "value");
+
+    }
+    } function test_trace(){
+        v = Variable(this.root);
         vname = str(v);
         trace = [];
-        def read_tracer(*args){
+        function read_tracer(*args){
             trace.append(('read',) + args);
-        } def write_tracer(*args){
+        } function write_tracer(*args){
             trace.append(('write',) + args);
         } cb1 = v.trace_variable('r', read_tracer);
         cb2 = v.trace_variable('wu', write_tracer);
-        self.assertEqual(sorted(v.trace_vinfo()), [('r', cb1), ('wu', cb2)]);
-        self.assertEqual(trace, []);
+        this.assertEqual(sorted(v.trace_vinfo()), [('r', cb1), ('wu', cb2)]);
+        this.assertEqual(trace, []);
 
         v.set('spam');
-        self.assertEqual(trace, [('write', vname, '', 'w')]);
+        this.assertEqual(trace, [('write', vname, '', 'w')]);
 
         trace = [];
         v.get();
-        self.assertEqual(trace, [('read', vname, '', 'r')]);
+        this.assertEqual(trace, [('read', vname, '', 'r')]);
 
         trace = [];
         info = sorted(v.trace_vinfo());
         v.trace_vdelete('w', cb1);  # Wrong mode
-        self.assertEqual(sorted(v.trace_vinfo()), info);
-        with self.assertRaises(TclError):
+        this.assertEqual(sorted(v.trace_vinfo()), info);
+        with this.assertRaises(TclError){
             v.trace_vdelete('r', 'spam');  # Wrong command name
-        } self.assertEqual(sorted(v.trace_vinfo()), info);
+        } this.assertEqual(sorted(v.trace_vinfo()), info);
         v.trace_vdelete('r', (cb1, 43)); # Wrong arguments
-        self.assertEqual(sorted(v.trace_vinfo()), info);
+        this.assertEqual(sorted(v.trace_vinfo()), info);
         v.get();
-        self.assertEqual(trace, [('read', vname, '', 'r')]);
+        this.assertEqual(trace, [('read', vname, '', 'r')]);
 
         trace = [];
         v.trace_vdelete('r', cb1);
-        self.assertEqual(v.trace_vinfo(), [('wu', cb2)]);
+        this.assertEqual(v.trace_vinfo(), [('wu', cb2)]);
         v.get();
-        self.assertEqual(trace, []);
+        this.assertEqual(trace, []);
 
         trace = [];
         del write_tracer;
         gc.collect();
         v.set('eggs');
-        self.assertEqual(trace, [('write', vname, '', 'w')]);
+        this.assertEqual(trace, [('write', vname, '', 'w')]);
 
         #trace = []
         #del v
@@ -130,145 +130,145 @@ class TestBase(unittest.TestCase){
 }
 } class TestStringVar(TestBase){
 
-    def test_default(self){
-        v = StringVar(self.root);
-        self.assertEqual("", v.get());
+    function test_default(){
+        v = StringVar(this.root);
+        this.assertEqual("", v.get());
 
     }
-    def test_get(self){
-        v = StringVar(self.root, "abc", "name");
-        self.assertEqual("abc", v.get());
-        self.root.globalsetvar("name", "value");
-        self.assertEqual("value", v.get());
+    function test_get(){
+        v = StringVar(this.root, "abc", "name");
+        this.assertEqual("abc", v.get());
+        this.root.globalsetvar("name", "value");
+        this.assertEqual("value", v.get());
 
     }
-    def test_get_null(self){
-        v = StringVar(self.root, "abc\x00def", "name");
-        self.assertEqual("abc\x00def", v.get());
-        self.root.globalsetvar("name", "val\x00ue");
-        self.assertEqual("val\x00ue", v.get());
+    function test_get_null(){
+        v = StringVar(this.root, "abc\x00def", "name");
+        this.assertEqual("abc\x00def", v.get());
+        this.root.globalsetvar("name", "val\x00ue");
+        this.assertEqual("val\x00ue", v.get());
 
 
 }
 } class TestIntVar(TestBase){
 
-    def test_default(self){
-        v = IntVar(self.root);
-        self.assertEqual(0, v.get());
+    function test_default(){
+        v = IntVar(this.root);
+        this.assertEqual(0, v.get());
 
     }
-    def test_get(self){
-        v = IntVar(self.root, 123, "name");
-        self.assertEqual(123, v.get());
-        self.root.globalsetvar("name", "345");
-        self.assertEqual(345, v.get());
+    function test_get(){
+        v = IntVar(this.root, 123, "name");
+        this.assertEqual(123, v.get());
+        this.root.globalsetvar("name", "345");
+        this.assertEqual(345, v.get());
 
     }
-    def test_invalid_value(self){
-        v = IntVar(self.root, name="name");
-        self.root.globalsetvar("name", "value");
-        with self.assertRaises(ValueError):
+    function test_invalid_value(){
+        v = IntVar(this.root, name="name");
+        this.root.globalsetvar("name", "value");
+        with this.assertRaises(ValueError){
             v.get();
-        } self.root.globalsetvar("name", "345.0");
-        with self.assertRaises(ValueError):
+        } this.root.globalsetvar("name", "345.0");
+        with this.assertRaises(ValueError){
             v.get();
 
 
 }
 } } class TestDoubleVar(TestBase){
 
-    def test_default(self){
-        v = DoubleVar(self.root);
-        self.assertEqual(0.0, v.get());
+    function test_default(){
+        v = DoubleVar(this.root);
+        this.assertEqual(0.0, v.get());
 
     }
-    def test_get(self){
-        v = DoubleVar(self.root, 1.23, "name");
-        self.assertAlmostEqual(1.23, v.get());
-        self.root.globalsetvar("name", "3.45");
-        self.assertAlmostEqual(3.45, v.get());
+    function test_get(){
+        v = DoubleVar(this.root, 1.23, "name");
+        this.assertAlmostEqual(1.23, v.get());
+        this.root.globalsetvar("name", "3.45");
+        this.assertAlmostEqual(3.45, v.get());
 
     }
-    def test_get_from_int(self){
-        v = DoubleVar(self.root, 1.23, "name");
-        self.assertAlmostEqual(1.23, v.get());
-        self.root.globalsetvar("name", "3.45");
-        self.assertAlmostEqual(3.45, v.get());
-        self.root.globalsetvar("name", "456");
-        self.assertAlmostEqual(456, v.get());
+    function test_get_from_int(){
+        v = DoubleVar(this.root, 1.23, "name");
+        this.assertAlmostEqual(1.23, v.get());
+        this.root.globalsetvar("name", "3.45");
+        this.assertAlmostEqual(3.45, v.get());
+        this.root.globalsetvar("name", "456");
+        this.assertAlmostEqual(456, v.get());
 
     }
-    def test_invalid_value(self){
-        v = DoubleVar(self.root, name="name");
-        self.root.globalsetvar("name", "value");
-        with self.assertRaises(ValueError):
+    function test_invalid_value(){
+        v = DoubleVar(this.root, name="name");
+        this.root.globalsetvar("name", "value");
+        with this.assertRaises(ValueError){
             v.get();
 
 
 }
 } } class TestBooleanVar(TestBase){
 
-    def test_default(self){
-        v = BooleanVar(self.root);
-        self.assertIs(v.get(), False);
+    function test_default(){
+        v = BooleanVar(this.root);
+        this.assertIs(v.get(), false);
 
     }
-    def test_get(self){
-        v = BooleanVar(self.root, True, "name");
-        self.assertIs(v.get(), True);
-        self.root.globalsetvar("name", "0");
-        self.assertIs(v.get(), False);
-        self.root.globalsetvar("name", 42 if self.root.wantobjects() else 1);
-        self.assertIs(v.get(), True);
-        self.root.globalsetvar("name", 0);
-        self.assertIs(v.get(), False);
-        self.root.globalsetvar("name", 42L if self.root.wantobjects() else 1L);
-        self.assertIs(v.get(), True);
-        self.root.globalsetvar("name", 0L);
-        self.assertIs(v.get(), False);
-        self.root.globalsetvar("name", "on");
-        self.assertIs(v.get(), True);
-        self.root.globalsetvar("name", u"0");
-        self.assertIs(v.get(), False);
-        self.root.globalsetvar("name", u"on");
-        self.assertIs(v.get(), True);
+    function test_get(){
+        v = BooleanVar(this.root, true, "name");
+        this.assertIs(v.get(), true);
+        this.root.globalsetvar("name", "0");
+        this.assertIs(v.get(), false);
+        this.root.globalsetvar("name", 42 if this.root.wantobjects() else 1);
+        this.assertIs(v.get(), true);
+        this.root.globalsetvar("name", 0);
+        this.assertIs(v.get(), false);
+        this.root.globalsetvar("name", 42L if this.root.wantobjects() else 1L);
+        this.assertIs(v.get(), true);
+        this.root.globalsetvar("name", 0L);
+        this.assertIs(v.get(), false);
+        this.root.globalsetvar("name", "on");
+        this.assertIs(v.get(), true);
+        this.root.globalsetvar("name", u"0");
+        this.assertIs(v.get(), false);
+        this.root.globalsetvar("name", u"on");
+        this.assertIs(v.get(), true);
 
     }
-    def test_set(self){
-        true = 1 if self.root.wantobjects() else "1";
-        false = 0 if self.root.wantobjects() else "0";
-        v = BooleanVar(self.root, name="name");
-        v.set(True);
-        self.assertEqual(self.root.globalgetvar("name"), true);
+    function test_set(){
+        true = 1 if this.root.wantobjects() else "1";
+        false = 0 if this.root.wantobjects() else "0";
+        v = BooleanVar(this.root, name="name");
+        v.set(true);
+        this.assertEqual(this.root.globalgetvar("name"), true);
         v.set("0");
-        self.assertEqual(self.root.globalgetvar("name"), false);
+        this.assertEqual(this.root.globalgetvar("name"), false);
         v.set(42);
-        self.assertEqual(self.root.globalgetvar("name"), true);
+        this.assertEqual(this.root.globalgetvar("name"), true);
         v.set(0);
-        self.assertEqual(self.root.globalgetvar("name"), false);
+        this.assertEqual(this.root.globalgetvar("name"), false);
         v.set(42L);
-        self.assertEqual(self.root.globalgetvar("name"), true);
+        this.assertEqual(this.root.globalgetvar("name"), true);
         v.set(0L);
-        self.assertEqual(self.root.globalgetvar("name"), false);
+        this.assertEqual(this.root.globalgetvar("name"), false);
         v.set("on");
-        self.assertEqual(self.root.globalgetvar("name"), true);
+        this.assertEqual(this.root.globalgetvar("name"), true);
         v.set(u"0");
-        self.assertEqual(self.root.globalgetvar("name"), false);
+        this.assertEqual(this.root.globalgetvar("name"), false);
         v.set(u"on");
-        self.assertEqual(self.root.globalgetvar("name"), true);
+        this.assertEqual(this.root.globalgetvar("name"), true);
 
     }
-    def test_invalid_value_domain(self){
-        false = 0 if self.root.wantobjects() else "0";
-        v = BooleanVar(self.root, name="name");
-        with self.assertRaises(TclError):
+    function test_invalid_value_domain(){
+        false = 0 if this.root.wantobjects() else "0";
+        v = BooleanVar(this.root, name="name");
+        with this.assertRaises(TclError){
             v.set("value");
-        } self.assertEqual(self.root.globalgetvar("name"), false);
-        self.root.globalsetvar("name", "value");
-        with self.assertRaises(TclError):
+        } this.assertEqual(this.root.globalgetvar("name"), false);
+        this.root.globalsetvar("name", "value");
+        with this.assertRaises(TclError){
             v.get();
-        } self.root.globalsetvar("name", "1.0");
-        with self.assertRaises(TclError):
+        } this.root.globalsetvar("name", "1.0");
+        with this.assertRaises(TclError){
             v.get();
 
 

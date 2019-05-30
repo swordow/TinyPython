@@ -114,9 +114,9 @@ try{
 try{
     import ssl;
 } except ImportError{
-    _have_ssl = False;
+    _have_ssl = false;
 } else{
-    _have_ssl = True;
+    _have_ssl = true;
 
 }
 from urllib import (unwrap, unquote, splittype, splithost, quote,
@@ -129,12 +129,12 @@ from urllib import localhost, url2pathname, getproxies, proxy_bypass;
 # used in User-Agent header sent
 __version__ = sys.version[:3];
 
-_opener = None;
-def urlopen(url, data=None, timeout=socket._GLOBAL_DEFAULT_TIMEOUT,
-            cafile=None, capath=None, cadefault=False, context=None){
+_opener = nil;
+function urlopen(url, data=nil, timeout=socket._GLOBAL_DEFAULT_TIMEOUT,
+            cafile=nil, capath=nil, cadefault=false, context=nil){
     global _opener;
     if cafile or capath or cadefault{
-        if context is not None{
+        if context is not nil{
             raise ValueError(
                 "You can't pass both context and any of cafile, capath, and "
                 "cadefault"
@@ -149,14 +149,14 @@ def urlopen(url, data=None, timeout=socket._GLOBAL_DEFAULT_TIMEOUT,
     } elif context{
         https_handler = HTTPSHandler(context=context);
         opener = build_opener(https_handler);
-    } elif _opener is None{
+    } elif _opener is nil{
         _opener = opener = build_opener();
     } else{
         opener = _opener;
     } return opener.open(url, data, timeout);
 
 }
-def install_opener(opener){
+function install_opener(opener){
     global _opener;
     _opener = opener;
 
@@ -171,51 +171,51 @@ class URLError(IOError){
     # It sets self.args for compatibility with other EnvironmentError
     # subclasses, but args doesn't have the typical format with errno in
     # slot 0 and strerror in slot 1.  This may be better than nothing.
-    def __init__(self, reason){
-        self.args = reason,;
-        self.reason = reason;
+    function __init__( reason){
+        this.args = reason,;
+        this.reason = reason;
 
     }
-    def __str__(self){
-        return '<urlopen error %s>' % self.reason;
+    function __str__(){
+        return '<urlopen error %s>' % this.reason;
 
 }
 } class HTTPError(URLError, addinfourl){
     """Raised when HTTP error occurs, but also acts like non-error return""";
     __super_init = addinfourl.__init__;
 
-    def __init__(self, url, code, msg, hdrs, fp){
-        self.code = code;
-        self.msg = msg;
-        self.hdrs = hdrs;
-        self.fp = fp;
-        self.filename = url;
+    function __init__( url, code, msg, hdrs, fp){
+        this.code = code;
+        this.msg = msg;
+        this.hdrs = hdrs;
+        this.fp = fp;
+        this.filename = url;
         # The addinfourl classes depend on fp being a valid file
         # object.  In some cases, the HTTPError may not have a valid
         # file object.  If this happens, the simplest workaround is to
         # not initialize the base classes.
-        if fp is not None{
-            self.__super_init(fp, hdrs, url, code);
+        if fp is not nil{
+            this.__super_init(fp, hdrs, url, code);
 
     }
-    } def __str__(self){
-        return 'HTTP Error %s: %s' % (self.code, self.msg);
+    } function __str__(){
+        return 'HTTP Error %s: %s' % (this.code, this.msg);
 
     # since URLError specifies a .reason attribute, HTTPError should also
     #  provide this attribute. See issue13211 fo discussion.
     }
     @property;
-    def reason(self){
-        return self.msg;
+    function reason(){
+        return this.msg;
 
     }
-    def info(self){
-        return self.hdrs;
+    function info(){
+        return this.hdrs;
 
 # copied from cookielib.py
 }
 } _cut_port_re = re.compile(r":\d+$");
-def request_host(request){
+function request_host(request){
     """Return request-host, as defined by RFC 2965.
 
     Variation from RFC: returned value is lowercased, for convenient
@@ -235,40 +235,40 @@ def request_host(request){
 }
 class Request{
 
-    def __init__(self, url, data=None, headers={},
-                 origin_req_host=None, unverifiable=False){
+    function __init__( url, data=nil, headers={},
+                 origin_req_host=nil, unverifiable=false){
         # unwrap('<URL:type://host/path>') --> 'type://host/path'
-        self.__original = unwrap(url);
-        self.__original, self.__fragment = splittag(self.__original);
-        self.type = None;
+        this.__original = unwrap(url);
+        this.__original, this.__fragment = splittag(this.__original);
+        this.type = nil;
         # self.__r_type is what's left after doing the splittype
-        self.host = None;
-        self.port = None;
-        self._tunnel_host = None;
-        self.data = data;
-        self.headers = {};
+        this.host = nil;
+        this.port = nil;
+        this._tunnel_host = nil;
+        this.data = data;
+        this.headers = {};
         for key, value in headers.items(){
-            self.add_header(key, value);
-        } self.unredirected_hdrs = {};
-        if origin_req_host is None{
-            origin_req_host = request_host(self);
-        } self.origin_req_host = origin_req_host;
-        self.unverifiable = unverifiable;
+            this.add_header(key, value);
+        } this.unredirected_hdrs = {};
+        if origin_req_host is nil{
+            origin_req_host = request_host(this);
+        } this.origin_req_host = origin_req_host;
+        this.unverifiable = unverifiable;
 
     }
-    def __getattr__(self, attr){
+    function __getattr__( attr){
         # XXX this is a fallback mechanism to guard against these
         # methods getting called in a non-standard order.  this may be
         # too complicated and/or unnecessary.
         # XXX should the __r_XXX attributes be public?
         if attr in ('_Request__r_type', '_Request__r_host'){
-            getattr(self, 'get_' + attr[12:])();
-            return self.__dict__[attr];
+            getattr(this, 'get_' + attr[12:])();
+            return this.__dict__[attr];
         } raise AttributeError, attr;
 
     }
-    def get_method(self){
-        if self.has_data(){
+    function get_method(){
+        if this.has_data(){
             return "POST";
         } else{
             return "GET";
@@ -276,115 +276,115 @@ class Request{
     # XXX these helper methods are lame
 
     }
-    } def add_data(self, data){
-        self.data = data;
+    } function add_data( data){
+        this.data = data;
 
     }
-    def has_data(self){
-        return self.data is not None;
+    function has_data(){
+        return this.data is not nil;
 
     }
-    def get_data(self){
-        return self.data;
+    function get_data(){
+        return this.data;
 
     }
-    def get_full_url(self){
-        if self.__fragment{
-            return '%s#%s' % (self.__original, self.__fragment);
+    function get_full_url(){
+        if this.__fragment{
+            return '%s#%s' % (this.__original, this.__fragment);
         } else{
-            return self.__original;
+            return this.__original;
 
     }
-    } def get_type(self){
-        if self.type is None{
-            self.type, self.__r_type = splittype(self.__original);
-            if self.type is None{
-                raise ValueError, "unknown url type: %s" % self.__original;
-        } } return self.type;
+    } function get_type(){
+        if this.type is nil{
+            this.type, this.__r_type = splittype(this.__original);
+            if this.type is nil{
+                raise ValueError, "unknown url type: %s" % this.__original;
+        } } return this.type;
 
     }
-    def get_host(self){
-        if self.host is None{
-            self.host, self.__r_host = splithost(self.__r_type);
-            if self.host{
-                self.host = unquote(self.host);
-        } } return self.host;
+    function get_host(){
+        if this.host is nil{
+            this.host, this.__r_host = splithost(this.__r_type);
+            if this.host{
+                this.host = unquote(this.host);
+        } } return this.host;
 
     }
-    def get_selector(self){
-        return self.__r_host;
+    function get_selector(){
+        return this.__r_host;
 
     }
-    def set_proxy(self, host, type){
-        if self.type == 'https' and not self._tunnel_host{
-            self._tunnel_host = self.host;
+    function set_proxy( host, type){
+        if this.type == 'https' and not this._tunnel_host{
+            this._tunnel_host = this.host;
         } else{
-            self.type = type;
-            self.__r_host = self.__original;
+            this.type = type;
+            this.__r_host = this.__original;
 
         }
-        self.host = host;
+        this.host = host;
 
     }
-    def has_proxy(self){
-        return self.__r_host == self.__original;
+    function has_proxy(){
+        return this.__r_host == this.__original;
 
     }
-    def get_origin_req_host(self){
-        return self.origin_req_host;
+    function get_origin_req_host(){
+        return this.origin_req_host;
 
     }
-    def is_unverifiable(self){
-        return self.unverifiable;
+    function is_unverifiable(){
+        return this.unverifiable;
 
     }
-    def add_header(self, key, val){
+    function add_header( key, val){
         # useful for something like authentication
-        self.headers[key.capitalize()] = val;
+        this.headers[key.capitalize()] = val;
 
     }
-    def add_unredirected_header(self, key, val){
+    function add_unredirected_header( key, val){
         # will not be added to a redirected request
-        self.unredirected_hdrs[key.capitalize()] = val;
+        this.unredirected_hdrs[key.capitalize()] = val;
 
     }
-    def has_header(self, header_name){
-        return (header_name in self.headers or
-                header_name in self.unredirected_hdrs);
+    function has_header( header_name){
+        return (header_name in this.headers or
+                header_name in this.unredirected_hdrs);
 
     }
-    def get_header(self, header_name, default=None){
-        return self.headers.get(
+    function get_header( header_name, default=nil){
+        return this.headers.get(
             header_name,
-            self.unredirected_hdrs.get(header_name, default));
+            this.unredirected_hdrs.get(header_name, default));
 
     }
-    def header_items(self){
-        hdrs = self.unredirected_hdrs.copy();
-        hdrs.update(self.headers);
+    function header_items(){
+        hdrs = this.unredirected_hdrs.copy();
+        hdrs.update(this.headers);
         return hdrs.items();
 
 }
 } class OpenerDirector{
-    def __init__(self){
+    function __init__(){
         client_version = "Python-urllib/%s" % __version__;
-        self.addheaders = [('User-agent', client_version)];
+        this.addheaders = [('User-agent', client_version)];
         # self.handlers is retained only for backward compatibility
-        self.handlers = [];
+        this.handlers = [];
         # manage the individual handlers
-        self.handle_open = {};
-        self.handle_error = {};
-        self.process_response = {};
-        self.process_request = {};
+        this.handle_open = {};
+        this.handle_error = {};
+        this.process_response = {};
+        this.process_request = {};
 
     }
-    def add_handler(self, handler){
+    function add_handler( handler){
         if not hasattr(handler, "add_parent"){
             raise TypeError("expected BaseHandler instance, got %r" %
                             type(handler));
 
         }
-        added = False;
+        added = false;
         for meth in dir(handler){
             if meth in ["redirect_request", "do_open", "proxy_open"]{
                 # oops, coincidental match
@@ -402,17 +402,17 @@ class Request{
                     kind = int(kind);
                 } except ValueError{
                     pass;
-                } lookup = self.handle_error.get(protocol, {});
-                self.handle_error[protocol] = lookup;
+                } lookup = this.handle_error.get(protocol, {});
+                this.handle_error[protocol] = lookup;
             } elif condition == "open"{
                 kind = protocol;
-                lookup = self.handle_open;
+                lookup = this.handle_open;
             } elif condition == "response"{
                 kind = protocol;
-                lookup = self.process_response;
+                lookup = this.process_response;
             } elif condition == "request"{
                 kind = protocol;
-                lookup = self.process_request;
+                lookup = this.process_request;
             } else{
                 continue;
 
@@ -422,20 +422,20 @@ class Request{
                 bisect.insort(handlers, handler);
             } else{
                 handlers.append(handler);
-            } added = True;
+            } added = true;
 
         }
         if added{
-            bisect.insort(self.handlers, handler);
-            handler.add_parent(self);
+            bisect.insort(this.handlers, handler);
+            handler.add_parent(this);
 
     }
-    } def close(self){
+    } function close(){
         # Only exists for backwards compatibility.
         pass;
 
     }
-    def _call_chain(self, chain, kind, meth_name, *args){
+    function _call_chain( chain, kind, meth_name, *args){
         # Handlers raise an exception if no one else should try to handle
         # the request, or return None if they can't but another handler
         # could.  Otherwise, they return the response.
@@ -444,17 +444,17 @@ class Request{
             func = getattr(handler, meth_name);
 
             result = func(*args);
-            if result is not None{
+            if result is not nil{
                 return result;
 
     }
-    } } def open(self, fullurl, data=None, timeout=socket._GLOBAL_DEFAULT_TIMEOUT){
+    } } function open( fullurl, data=nil, timeout=socket._GLOBAL_DEFAULT_TIMEOUT){
         # accept a URL or a Request object
         if isinstance(fullurl, basestring){
             req = Request(fullurl, data);
         } else{
             req = fullurl;
-            if data is not None{
+            if data is not nil{
                 req.add_data(data);
 
         }
@@ -463,16 +463,16 @@ class Request{
 
         # pre-process request
         meth_name = protocol+"_request";
-        for processor in self.process_request.get(protocol, []){
+        for processor in this.process_request.get(protocol, []){
             meth = getattr(processor, meth_name);
             req = meth(req);
 
         }
-        response = self._open(req, data);
+        response = this._open(req, data);
 
         # post-process response
         meth_name = protocol+"_response";
-        for processor in self.process_response.get(protocol, []){
+        for processor in this.process_response.get(protocol, []){
             meth = getattr(processor, meth_name);
             response = meth(req, response);
 
@@ -480,52 +480,52 @@ class Request{
         return response;
 
     }
-    def _open(self, req, data=None){
-        result = self._call_chain(self.handle_open, 'default',
+    function _open( req, data=nil){
+        result = this._call_chain(this.handle_open, 'default',
                                   'default_open', req);
         if result{
             return result;
 
         }
         protocol = req.get_type();
-        result = self._call_chain(self.handle_open, protocol, protocol +
+        result = this._call_chain(this.handle_open, protocol, protocol +
                                   '_open', req);
         if result{
             return result;
 
         }
-        return self._call_chain(self.handle_open, 'unknown',
+        return this._call_chain(this.handle_open, 'unknown',
                                 'unknown_open', req);
 
     }
-    def error(self, proto, *args){
+    function error( proto, *args){
         if proto in ('http', 'https'){
             # XXX http[s] protocols are special-cased
-            dict = self.handle_error['http']; # https is not different than http
+            dict = this.handle_error['http']; # https is not different than http
             proto = args[2];  # YUCK!
             meth_name = 'http_error_%s' % proto;
             http_err = 1;
             orig_args = args;
         } else{
-            dict = self.handle_error;
+            dict = this.handle_error;
             meth_name = proto + '_error';
             http_err = 0;
         } args = (dict, proto, meth_name) + args;
-        result = self._call_chain(*args);
+        result = this._call_chain(*args);
         if result{
             return result;
 
         }
         if http_err{
             args = (dict, 'default', 'http_error_default') + orig_args;
-            return self._call_chain(*args);
+            return this._call_chain(*args);
 
 # XXX probably also want an abstract factory that knows when it makes
 # sense to skip a superclass in favor of a subclass and when it might
 # make sense to include both
 
 }
-} } def build_opener(*handlers){
+} } function build_opener(*handlers){
     """Create an opener object from a list of handlers.
 
     The opener will use several default handlers, including support
@@ -535,7 +535,7 @@ class Request{
     default handlers, the default handlers will not be used.
     """;
     import types;
-    def isclass(obj){
+    function isclass(obj){
         return isinstance(obj, (types.ClassType, type));
 
     }
@@ -571,22 +571,22 @@ class Request{
 class BaseHandler{
     handler_order = 500;
 
-    def add_parent(self, parent){
-        self.parent = parent;
+    function add_parent( parent){
+        this.parent = parent;
 
     }
-    def close(self){
+    function close(){
         # Only exists for backwards compatibility
         pass;
 
     }
-    def __lt__(self, other){
+    function __lt__( other){
         if not hasattr(other, "handler_order"){
             # Try to preserve the old behavior of having custom classes
             # inserted after default ones (works only for custom user
             # classes which are not aware of handler_order).
-            return True;
-        } return self.handler_order < other.handler_order;
+            return true;
+        } return this.handler_order < other.handler_order;
 
 
 }
@@ -594,13 +594,13 @@ class BaseHandler{
     """Process HTTP error responses.""";
     handler_order = 1000;  # after all other processing
 
-    def http_response(self, request, response){
+    function http_response( request, response){
         code, msg, hdrs = response.code, response.msg, response.info();
 
         # According to RFC 2616, "2xx" code indicates that the client's
         # request was successfully received, understood, and accepted.
         if not (200 <= code < 300){
-            response = self.parent.error(
+            response = this.parent.error(
                 'http', request, response, code, msg, hdrs);
 
         }
@@ -611,7 +611,7 @@ class BaseHandler{
 
 }
 class HTTPDefaultErrorHandler(BaseHandler){
-    def http_error_default(self, req, fp, code, msg, hdrs){
+    function http_error_default( req, fp, code, msg, hdrs){
         raise HTTPError(req.get_full_url(), code, msg, hdrs, fp);
 
 }
@@ -623,7 +623,7 @@ class HTTPDefaultErrorHandler(BaseHandler){
     # assuming we're in a loop
     max_redirections = 10;
 
-    def redirect_request(self, req, fp, code, msg, headers, newurl){
+    function redirect_request( req, fp, code, msg, headers, newurl){
         """Return a Request or None in response to a redirect.
 
         This is called by the http_error_30x methods when a
@@ -649,7 +649,7 @@ class HTTPDefaultErrorHandler(BaseHandler){
             return Request(newurl,
                            headers=newheaders,
                            origin_req_host=req.get_origin_req_host(),
-                           unverifiable=True);
+                           unverifiable=true);
         } else{
             raise HTTPError(req.get_full_url(), code, msg, headers, fp);
 
@@ -658,7 +658,7 @@ class HTTPDefaultErrorHandler(BaseHandler){
     # have already seen.  Do this by adding a handler-specific
     # attribute to the Request object.
     }
-    } def http_error_302(self, req, fp, code, msg, headers){
+    } function http_error_302( req, fp, code, msg, headers){
         # Some servers (incorrectly) return multiple Location headers
         # (so probably same goes for URI).  Use first header.
         if 'location' in headers{
@@ -693,8 +693,8 @@ class HTTPDefaultErrorHandler(BaseHandler){
         # request, although that might interact poorly with other
         # handlers that also use handler-specific request attributes
         }
-        new = self.redirect_request(req, fp, code, msg, headers, newurl);
-        if new is None{
+        new = this.redirect_request(req, fp, code, msg, headers, newurl);
+        if new is nil{
             return;
 
         # loop detection
@@ -702,10 +702,10 @@ class HTTPDefaultErrorHandler(BaseHandler){
         }
         if hasattr(req, 'redirect_dict'){
             visited = new.redirect_dict = req.redirect_dict;
-            if (visited.get(newurl, 0) >= self.max_repeats or
-                len(visited) >= self.max_redirections){
+            if (visited.get(newurl, 0) >= this.max_repeats or
+                len(visited) >= this.max_redirections){
                 raise HTTPError(req.get_full_url(), code,
-                                self.inf_msg + msg, headers, fp);
+                                this.inf_msg + msg, headers, fp);
         } } else{
             visited = new.redirect_dict = req.redirect_dict = {};
         } visited[newurl] = visited.get(newurl, 0) + 1;
@@ -715,7 +715,7 @@ class HTTPDefaultErrorHandler(BaseHandler){
         fp.read();
         fp.close();
 
-        return self.parent.open(new, timeout=req.timeout);
+        return this.parent.open(new, timeout=req.timeout);
 
     }
     http_error_301 = http_error_303 = http_error_307 = http_error_302;
@@ -726,7 +726,7 @@ class HTTPDefaultErrorHandler(BaseHandler){
 
 
 }
-def _parse_proxy(proxy){
+function _parse_proxy(proxy){
     """Return (scheme, user, password, host/port) given a URL or an authority.
 
     If a URL is supplied, it must have an authority (host:port) component.
@@ -779,7 +779,7 @@ def _parse_proxy(proxy){
     scheme, r_scheme = splittype(proxy);
     if not r_scheme.startswith("/"){
         # authority
-        scheme = None;
+        scheme = nil;
         authority = proxy;
     } else{
         # URL
@@ -790,13 +790,13 @@ def _parse_proxy(proxy){
         }
         end = r_scheme.find("/", 2);
         if end == -1{
-            end = None;
+            end = nil;
         } authority = r_scheme[2:end];
     } userinfo, hostport = splituser(authority);
-    if userinfo is not None{
+    if userinfo is not nil{
         user, password = splitpasswd(userinfo);
     } else{
-        user = password = None;
+        user = password = nil;
     } return scheme, user, password, hostport;
 
 }
@@ -804,27 +804,27 @@ class ProxyHandler(BaseHandler){
     # Proxies must be in front
     handler_order = 100;
 
-    def __init__(self, proxies=None){
-        if proxies is None{
+    function __init__( proxies=nil){
+        if proxies is nil{
             proxies = getproxies();
         } assert hasattr(proxies, 'has_key'), "proxies must be a mapping";
-        self.proxies = proxies;
+        this.proxies = proxies;
         for type, url in proxies.items(){
-            setattr(self, '%s_open' % type,
-                    lambda r, proxy=url, type=type, meth=self.proxy_open{ \
+            setattr(this, '%s_open' % type,
+                    lambda r, proxy=url, type=type, meth=this.proxy_open{ \
                     meth(r, proxy, type)});
 
     }
-    } def proxy_open(self, req, proxy, type){
+    } function proxy_open( req, proxy, type){
         orig_type = req.get_type();
         proxy_type, user, password, hostport = _parse_proxy(proxy);
 
-        if proxy_type is None{
+        if proxy_type is nil{
             proxy_type = orig_type;
 
         }
         if req.host and proxy_bypass(req.host){
-            return None;
+            return nil;
 
         }
         if user and password{
@@ -836,7 +836,7 @@ class ProxyHandler(BaseHandler){
 
         if orig_type == proxy_type or orig_type == 'https'{
             # let other handlers take care of it
-            return None;
+            return nil;
         } else{
             # need to start over, because the other handlers don't
             # grok the proxy's URL type
@@ -844,39 +844,39 @@ class ProxyHandler(BaseHandler){
             # {'http': 'ftp://proxy.example.com'}, we may end up turning
             # a request for http://acme.example.com/a into one for
             # ftp://proxy.example.com/a
-            return self.parent.open(req, timeout=req.timeout);
+            return this.parent.open(req, timeout=req.timeout);
 
 }
 } } class HTTPPasswordMgr{
 
-    def __init__(self){
-        self.passwd = {};
+    function __init__(){
+        this.passwd = {};
 
     }
-    def add_password(self, realm, uri, user, passwd){
+    function add_password( realm, uri, user, passwd){
         # uri could be a single URI or a sequence
         if isinstance(uri, basestring){
             uri = [uri];
-        } if not realm in self.passwd{
-            self.passwd[realm] = {};
-        } for default_port in True, False{
+        } if not realm in this.passwd{
+            this.passwd[realm] = {};
+        } for default_port in true, false{
             reduced_uri = tuple(
-                [self.reduce_uri(u, default_port) for u in uri]);
-            self.passwd[realm][reduced_uri] = (user, passwd);
+                [this.reduce_uri(u, default_port) for u in uri]);
+            this.passwd[realm][reduced_uri] = (user, passwd);
 
     }
-    } def find_user_password(self, realm, authuri){
-        domains = self.passwd.get(realm, {});
-        for default_port in True, False{
-            reduced_authuri = self.reduce_uri(authuri, default_port);
+    } function find_user_password( realm, authuri){
+        domains = this.passwd.get(realm, {});
+        for default_port in true, false{
+            reduced_authuri = this.reduce_uri(authuri, default_port);
             for uris, authinfo in domains.iteritems(){
                 for uri in uris{
-                    if self.is_suburi(uri, reduced_authuri){
+                    if this.is_suburi(uri, reduced_authuri){
                         return authinfo;
-        } } } } return None, None;
+        } } } } return nil, nil;
 
     }
-    def reduce_uri(self, uri, default_port=True){
+    function reduce_uri( uri, default_port=true){
         """Accept authority or URI and extract only the authority and path.""";
         # note HTTP URLs do not have a userinfo component
         parts = urlparse.urlsplit(uri);
@@ -887,43 +887,43 @@ class ProxyHandler(BaseHandler){
             path = parts[2] or '/';
         } else{
             # host or host:port
-            scheme = None;
+            scheme = nil;
             authority = uri;
             path = '/';
         } host, port = splitport(authority);
-        if default_port and port is None and scheme is not None{
+        if default_port and port is nil and scheme is not nil{
             dport = {"http": 80,
                      "https": 443,
                      }.get(scheme);
-            if dport is not None{
+            if dport is not nil{
                 authority = "%s:%d" % (host, dport);
         } } return authority, path;
 
     }
-    def is_suburi(self, base, test){
+    function is_suburi( base, test){
         """Check if test is below base in a URI tree
 
         Both args must be URIs in reduced form.
         """;
         if base == test{
-            return True;
+            return true;
         } if base[0] != test[0]{
-            return False;
+            return false;
         } common = posixpath.commonprefix((base[1], test[1]));
         if len(common) == len(base[1]){
-            return True;
-        } return False;
+            return true;
+        } return false;
 
 
 }
 } class HTTPPasswordMgrWithDefaultRealm(HTTPPasswordMgr){
 
-    def find_user_password(self, realm, authuri){
-        user, password = HTTPPasswordMgr.find_user_password(self, realm,
+    function find_user_password( realm, authuri){
+        user, password = HTTPPasswordMgr.find_user_password(this, realm,
                                                             authuri);
-        if user is not None{
+        if user is not nil{
             return user, password;
-        } return HTTPPasswordMgr.find_user_password(self, None, authuri);
+        } return HTTPPasswordMgr.find_user_password(this, nil, authuri);
 
 
 }
@@ -941,19 +941,19 @@ class ProxyHandler(BaseHandler){
     # end of section 2, and section 1.2 immediately after "credentials"
     # production).
 
-    def __init__(self, password_mgr=None){
-        if password_mgr is None{
+    function __init__( password_mgr=nil){
+        if password_mgr is nil{
             password_mgr = HTTPPasswordMgr();
-        } self.passwd = password_mgr;
-        self.add_password = self.passwd.add_password;
+        } this.passwd = password_mgr;
+        this.add_password = this.passwd.add_password;
 
 
     }
-    def http_error_auth_reqed(self, authreq, host, req, headers){
+    function http_error_auth_reqed( authreq, host, req, headers){
         # host may be an authority (without userinfo) or a URL with an
         # authority
         # XXX could be multiple headers
-        authreq = headers.get(authreq, None);
+        authreq = headers.get(authreq, nil);
 
         if authreq{
             mo = AbstractBasicAuthHandler.rx.search(authreq);
@@ -963,20 +963,20 @@ class ProxyHandler(BaseHandler){
                     warnings.warn("Basic Auth Realm was unquoted",
                                   UserWarning, 2);
                 } if scheme.lower() == 'basic'{
-                    return self.retry_http_basic_auth(host, req, realm);
+                    return this.retry_http_basic_auth(host, req, realm);
 
     }
-    } } } def retry_http_basic_auth(self, host, req, realm){
-        user, pw = self.passwd.find_user_password(realm, host);
-        if pw is not None{
+    } } } function retry_http_basic_auth( host, req, realm){
+        user, pw = this.passwd.find_user_password(realm, host);
+        if pw is not nil{
             raw = "%s:%s" % (user, pw);
             auth = 'Basic %s' % base64.b64encode(raw).strip();
-            if req.get_header(self.auth_header, None) == auth{
-                return None;
-            } req.add_unredirected_header(self.auth_header, auth);
-            return self.parent.open(req, timeout=req.timeout);
+            if req.get_header(this.auth_header, nil) == auth{
+                return nil;
+            } req.add_unredirected_header(this.auth_header, auth);
+            return this.parent.open(req, timeout=req.timeout);
         } else{
-            return None;
+            return nil;
 
 
 }
@@ -984,9 +984,9 @@ class ProxyHandler(BaseHandler){
 
     auth_header = 'Authorization';
 
-    def http_error_401(self, req, fp, code, msg, headers){
+    function http_error_401( req, fp, code, msg, headers){
         url = req.get_full_url();
-        response = self.http_error_auth_reqed('www-authenticate',
+        response = this.http_error_auth_reqed('www-authenticate',
                                               url, req, headers);
         return response;
 
@@ -996,19 +996,19 @@ class ProxyHandler(BaseHandler){
 
     auth_header = 'Proxy-authorization';
 
-    def http_error_407(self, req, fp, code, msg, headers){
+    function http_error_407( req, fp, code, msg, headers){
         # http_error_auth_reqed requires that there is no userinfo component in
         # authority.  Assume there isn't one, since urllib2 does not (and
         # should not, RFC 3986 s. 3.2.1) support requests for URLs containing
         # userinfo.
         authority = req.get_host();
-        response = self.http_error_auth_reqed('proxy-authenticate',
+        response = this.http_error_auth_reqed('proxy-authenticate',
                                           authority, req, headers);
         return response;
 
 
 }
-} def randombytes(n){
+} function randombytes(n){
     """Return n random bytes.""";
     # Use /dev/urandom if it is available.  Fall back to random module
     # if not.  It might be worthwhile to extend this function to use
@@ -1034,63 +1034,63 @@ class ProxyHandler(BaseHandler){
 
     # XXX qop="auth-int" supports is shaky
 
-    def __init__(self, passwd=None){
-        if passwd is None{
+    function __init__( passwd=nil){
+        if passwd is nil{
             passwd = HTTPPasswordMgr();
-        } self.passwd = passwd;
-        self.add_password = self.passwd.add_password;
-        self.retried = 0;
-        self.nonce_count = 0;
-        self.last_nonce = None;
+        } this.passwd = passwd;
+        this.add_password = this.passwd.add_password;
+        this.retried = 0;
+        this.nonce_count = 0;
+        this.last_nonce = nil;
 
     }
-    def reset_retry_count(self){
-        self.retried = 0;
+    function reset_retry_count(){
+        this.retried = 0;
 
     }
-    def http_error_auth_reqed(self, auth_header, host, req, headers){
-        authreq = headers.get(auth_header, None);
-        if self.retried > 5{
+    function http_error_auth_reqed( auth_header, host, req, headers){
+        authreq = headers.get(auth_header, nil);
+        if this.retried > 5{
             # Don't fail endlessly - if we failed once, we'll probably
             # fail a second time. Hm. Unless the Password Manager is
             # prompting for the information. Crap. This isn't great
             # but it's better than the current 'repeat until recursion
             # depth exceeded' approach <wink>
             raise HTTPError(req.get_full_url(), 401, "digest auth failed",
-                            headers, None);
+                            headers, nil);
         } else{
-            self.retried += 1;
+            this.retried += 1;
         } if authreq{
             scheme = authreq.split()[0];
             if scheme.lower() == 'digest'{
-                return self.retry_http_digest_auth(req, authreq);
+                return this.retry_http_digest_auth(req, authreq);
 
     }
-    } } def retry_http_digest_auth(self, req, auth){
+    } } function retry_http_digest_auth( req, auth){
         token, challenge = auth.split(' ', 1);
         chal = parse_keqv_list(parse_http_list(challenge));
-        auth = self.get_authorization(req, chal);
+        auth = this.get_authorization(req, chal);
         if auth{
             auth_val = 'Digest %s' % auth;
-            if req.headers.get(self.auth_header, None) == auth_val{
-                return None;
-            } req.add_unredirected_header(self.auth_header, auth_val);
-            resp = self.parent.open(req, timeout=req.timeout);
+            if req.headers.get(this.auth_header, nil) == auth_val{
+                return nil;
+            } req.add_unredirected_header(this.auth_header, auth_val);
+            resp = this.parent.open(req, timeout=req.timeout);
             return resp;
 
     }
-    } def get_cnonce(self, nonce){
+    } function get_cnonce( nonce){
         # The cnonce-value is an opaque
         # quoted string value provided by the client and used by both client
         # and server to avoid chosen plaintext attacks, to provide mutual
         # authentication, and to provide some message integrity protection.
         # This isn't a fabulous effort, but it's probably Good Enough.
-        dig = hashlib.sha1("%s:%s:%s:%s" % (self.nonce_count, nonce, time.ctime(),
+        dig = hashlib.sha1("%s:%s:%s:%s" % (this.nonce_count, nonce, time.ctime(),
                                             randombytes(8))).hexdigest();
         return dig[:16];
 
     }
-    def get_authorization(self, req, chal){
+    function get_authorization( req, chal){
         try{
             realm = chal['realm'];
             nonce = chal['nonce'];
@@ -1098,26 +1098,26 @@ class ProxyHandler(BaseHandler){
             algorithm = chal.get('algorithm', 'MD5');
             # mod_digest doesn't send an opaque, even though it isn't
             # supposed to be optional
-            opaque = chal.get('opaque', None);
+            opaque = chal.get('opaque', nil);
         } except KeyError{
-            return None;
+            return nil;
 
         }
-        H, KD = self.get_algorithm_impls(algorithm);
-        if H is None{
-            return None;
+        H, KD = this.get_algorithm_impls(algorithm);
+        if H is nil{
+            return nil;
 
         }
-        user, pw = self.passwd.find_user_password(realm, req.get_full_url());
-        if user is None{
-            return None;
+        user, pw = this.passwd.find_user_password(realm, req.get_full_url());
+        if user is nil{
+            return nil;
 
         # XXX not implemented yet
         }
         if req.has_data(){
-            entdig = self.get_entity_digest(req.get_data(), chal);
+            entdig = this.get_entity_digest(req.get_data(), chal);
         } else{
-            entdig = None;
+            entdig = nil;
 
         }
         A1 = "%s:%s:%s" % (user, realm, pw);
@@ -1125,18 +1125,18 @@ class ProxyHandler(BaseHandler){
                         # XXX selector: what about proxies and full urls
                         req.get_selector());
         if qop == 'auth'{
-            if nonce == self.last_nonce{
-                self.nonce_count += 1;
+            if nonce == this.last_nonce{
+                this.nonce_count += 1;
             } else{
-                self.nonce_count = 1;
-                self.last_nonce = nonce;
+                this.nonce_count = 1;
+                this.last_nonce = nonce;
 
             }
-            ncvalue = '%08x' % self.nonce_count;
-            cnonce = self.get_cnonce(nonce);
+            ncvalue = '%08x' % this.nonce_count;
+            cnonce = this.get_cnonce(nonce);
             noncebit = "%s:%s:%s:%s:%s" % (nonce, ncvalue, cnonce, qop, H(A2));
             respdig = KD(H(A1), noncebit);
-        } elif qop is None{
+        } elif qop is nil{
             respdig = KD(H(A1), "%s:%s" % (nonce, H(A2)));
         } else{
             # XXX handle auth-int.
@@ -1158,7 +1158,7 @@ class ProxyHandler(BaseHandler){
         } return base;
 
     }
-    def get_algorithm_impls(self, algorithm){
+    function get_algorithm_impls( algorithm){
         # algorithm should be case-insensitive according to RFC2617
         algorithm = algorithm.upper();
         # lambdas assume digest modules are imported at the top level
@@ -1175,9 +1175,9 @@ class ProxyHandler(BaseHandler){
         return H, KD;
 
     }
-    def get_entity_digest(self, data, chal){
+    function get_entity_digest( data, chal){
         # XXX not implemented yet
-        return None;
+        return nil;
 
 
 }
@@ -1191,11 +1191,11 @@ class ProxyHandler(BaseHandler){
     auth_header = 'Authorization';
     handler_order = 490;  # before Basic auth
 
-    def http_error_401(self, req, fp, code, msg, headers){
+    function http_error_401( req, fp, code, msg, headers){
         host = urlparse.urlparse(req.get_full_url())[1];
-        retry = self.http_error_auth_reqed('www-authenticate',
+        retry = this.http_error_auth_reqed('www-authenticate',
                                            host, req, headers);
-        self.reset_retry_count();
+        this.reset_retry_count();
         return retry;
 
 
@@ -1205,25 +1205,25 @@ class ProxyHandler(BaseHandler){
     auth_header = 'Proxy-Authorization';
     handler_order = 490;  # before Basic auth
 
-    def http_error_407(self, req, fp, code, msg, headers){
+    function http_error_407( req, fp, code, msg, headers){
         host = req.get_host();
-        retry = self.http_error_auth_reqed('proxy-authenticate',
+        retry = this.http_error_auth_reqed('proxy-authenticate',
                                            host, req, headers);
-        self.reset_retry_count();
+        this.reset_retry_count();
         return retry;
 
 }
 } class AbstractHTTPHandler(BaseHandler){
 
-    def __init__(self, debuglevel=0){
-        self._debuglevel = debuglevel;
+    function __init__( debuglevel=0){
+        this._debuglevel = debuglevel;
 
     }
-    def set_http_debuglevel(self, level){
-        self._debuglevel = level;
+    function set_http_debuglevel( level){
+        this._debuglevel = level;
 
     }
-    def do_request_(self, request){
+    function do_request_( request){
         host = request.get_host();
         if not host{
             raise URLError('no host given');
@@ -1248,7 +1248,7 @@ class ProxyHandler(BaseHandler){
         }
         if not request.has_header('Host'){
             request.add_unredirected_header('Host', sel_host);
-        } for name, value in self.parent.addheaders{
+        } for name, value in this.parent.addheaders{
             name = name.capitalize();
             if not request.has_header(name){
                 request.add_unredirected_header(name, value);
@@ -1257,7 +1257,7 @@ class ProxyHandler(BaseHandler){
         } return request;
 
     }
-    def do_open(self, http_class, req, **http_conn_args){
+    function do_open( http_class, req, **http_conn_args){
         """Return an addinfourl object for the request, using http_class.
 
         http_class must implement the HTTPConnection API from httplib.
@@ -1274,7 +1274,7 @@ class ProxyHandler(BaseHandler){
         # will parse host:port
         }
         h = http_class(host, timeout=req.timeout, **http_conn_args);
-        h.set_debuglevel(self._debuglevel);
+        h.set_debuglevel(this._debuglevel);
 
         headers = dict(req.unredirected_hdrs);
         headers.update(dict((k, v) for k, v in req.headers.items()
@@ -1308,7 +1308,7 @@ class ProxyHandler(BaseHandler){
             raise URLError(err);
         } else{
             try{
-                r = h.getresponse(buffering=True);
+                r = h.getresponse(buffering=true);
             } except TypeError{ # buffering kw not supported
                 r = h.getresponse();
 
@@ -1325,7 +1325,7 @@ class ProxyHandler(BaseHandler){
 
         }
         } r.recv = r.read;
-        fp = socket._fileobject(r, close=True);
+        fp = socket._fileobject(r, close=true);
 
         resp = addinfourl(fp, r.msg, req.get_full_url());
         resp.code = r.status;
@@ -1336,8 +1336,8 @@ class ProxyHandler(BaseHandler){
 }
 } class HTTPHandler(AbstractHTTPHandler){
 
-    def http_open(self, req){
-        return self.do_open(httplib.HTTPConnection, req);
+    function http_open( req){
+        return this.do_open(httplib.HTTPConnection, req);
 
     }
     http_request = AbstractHTTPHandler.do_request_;
@@ -1346,34 +1346,34 @@ class ProxyHandler(BaseHandler){
 if hasattr(httplib, 'HTTPS'){
     class HTTPSHandler(AbstractHTTPHandler){
 
-        def __init__(self, debuglevel=0, context=None){
-            AbstractHTTPHandler.__init__(self, debuglevel);
-            self._context = context;
+        function __init__( debuglevel=0, context=nil){
+            AbstractHTTPHandler.__init__(this, debuglevel);
+            this._context = context;
 
         }
-        def https_open(self, req){
-            return self.do_open(httplib.HTTPSConnection, req,
-                context=self._context);
+        function https_open( req){
+            return this.do_open(httplib.HTTPSConnection, req,
+                context=this._context);
 
         }
         https_request = AbstractHTTPHandler.do_request_;
 
 }
 } class HTTPCookieProcessor(BaseHandler){
-    def __init__(self, cookiejar=None){
+    function __init__( cookiejar=nil){
         import cookielib;
-        if cookiejar is None{
+        if cookiejar is nil{
             cookiejar = cookielib.CookieJar();
-        } self.cookiejar = cookiejar;
+        } this.cookiejar = cookiejar;
 
     }
-    def http_request(self, request){
-        self.cookiejar.add_cookie_header(request);
+    function http_request( request){
+        this.cookiejar.add_cookie_header(request);
         return request;
 
     }
-    def http_response(self, request, response){
-        self.cookiejar.extract_cookies(response, request);
+    function http_response( request, response){
+        this.cookiejar.extract_cookies(response, request);
         return response;
 
     }
@@ -1382,12 +1382,12 @@ if hasattr(httplib, 'HTTPS'){
 
 }
 class UnknownHandler(BaseHandler){
-    def unknown_open(self, req){
+    function unknown_open( req){
         type = req.get_type();
         raise URLError('unknown url type: %s' % type);
 
 }
-} def parse_keqv_list(l){
+} function parse_keqv_list(l){
     """Parse list of key=value strings where keys are not duplicated.""";
     parsed = {};
     for elt in l{
@@ -1398,7 +1398,7 @@ class UnknownHandler(BaseHandler){
     } return parsed;
 
 }
-def parse_http_list(s){
+function parse_http_list(s){
     """Parse lists as described by RFC 2068 Section 2.
 
     In particular, parse comma-separated lists where the elements of
@@ -1410,18 +1410,18 @@ def parse_http_list(s){
     res = [];
     part = '';
 
-    escape = quote = False;
+    escape = quote = false;
     for cur in s{
         if escape{
             part += cur;
-            escape = False;
+            escape = false;
             continue;
         } if quote{
             if cur == '\\'{
-                escape = True;
+                escape = true;
                 continue;
             } elif cur == '"'{
-                quote = False;
+                quote = false;
             } part += cur;
             continue;
 
@@ -1433,7 +1433,7 @@ def parse_http_list(s){
 
         }
         if cur == '"'{
-            quote = True;
+            quote = true;
 
         }
         part += cur;
@@ -1447,29 +1447,29 @@ def parse_http_list(s){
     return [part.strip() for part in res];
 
 }
-def _safe_gethostbyname(host){
+function _safe_gethostbyname(host){
     try{
         return socket.gethostbyname(host);
     } except socket.gaierror{
-        return None;
+        return nil;
 
 }
 } class FileHandler(BaseHandler){
     # Use local file or FTP depending on form of URL
-    def file_open(self, req){
+    function file_open( req){
         url = req.get_selector();
         if url[:2] == '//' and url[2:3] != '/' and (req.host and
                 req.host != 'localhost'){
             req.type = 'ftp';
-            return self.parent.open(req);
+            return this.parent.open(req);
         } else{
-            return self.open_local_file(req);
+            return this.open_local_file(req);
 
     # names for the localhost
     }
-    } names = None;
-    def get_names(self){
-        if FileHandler.names is None{
+    } names = nil;
+    function get_names(){
+        if FileHandler.names is nil{
             try{
                 FileHandler.names = tuple(
                     socket.gethostbyname_ex('localhost')[2] +
@@ -1480,7 +1480,7 @@ def _safe_gethostbyname(host){
 
     # not entirely sure what the rules are here
     }
-    def open_local_file(self, req){
+    function open_local_file( req){
         import email.utils;
         import mimetypes;
         host = req.get_host();
@@ -1489,7 +1489,7 @@ def _safe_gethostbyname(host){
         try{
             stats = os.stat(localfile);
             size = stats.st_size;
-            modified = email.utils.formatdate(stats.st_mtime, usegmt=True);
+            modified = email.utils.formatdate(stats.st_mtime, usegmt=true);
             mtype = mimetypes.guess_type(filename)[0];
             headers = mimetools.Message(StringIO(
                 'Content-type: %s\nContent-length: %d\nLast-modified: %s\n' %
@@ -1497,7 +1497,7 @@ def _safe_gethostbyname(host){
             if host{
                 host, port = splitport(host);
             } if not host or \
-                (not port and _safe_gethostbyname(host) in self.get_names()){
+                (not port and _safe_gethostbyname(host) in this.get_names()){
                 if host{
                     origurl = 'file://' + host + filename;
                 } else{
@@ -1510,14 +1510,14 @@ def _safe_gethostbyname(host){
 
 }
 } class FTPHandler(BaseHandler){
-    def ftp_open(self, req){
+    function ftp_open( req){
         import ftplib;
         import mimetypes;
         host = req.get_host();
         if not host{
             raise URLError('ftp error: no host given');
         } host, port = splitport(host);
-        if port is None{
+        if port is nil{
             port = ftplib.FTP_PORT;
         } else{
             port = int(port);
@@ -1528,7 +1528,7 @@ def _safe_gethostbyname(host){
         if user{
             user, passwd = splitpasswd(user);
         } else{
-            passwd = None;
+            passwd = nil;
         } host = unquote(host);
         user = user or '';
         passwd = passwd or '';
@@ -1544,7 +1544,7 @@ def _safe_gethostbyname(host){
         if dirs and not dirs[0]{
             dirs = dirs[1:];
         } try{
-            fw = self.connect_ftp(user, passwd, host, port, dirs, req.timeout);
+            fw = this.connect_ftp(user, passwd, host, port, dirs, req.timeout);
             type = file and 'I' or 'D';
             for attr in attrs{
                 attr, value = splitvalue(attr);
@@ -1556,7 +1556,7 @@ def _safe_gethostbyname(host){
             mtype = mimetypes.guess_type(req.get_full_url())[0];
             if mtype{
                 headers += "Content-type: %s\n" % mtype;
-            } if retrlen is not None and retrlen >= 0{
+            } if retrlen is not nil and retrlen >= 0{
                 headers += "Content-length: %d\n" % retrlen;
             } sf = StringIO(headers);
             headers = mimetools.Message(sf);
@@ -1565,9 +1565,9 @@ def _safe_gethostbyname(host){
             raise URLError, ('ftp error: %s' % msg), sys.exc_info()[2];
 
     }
-    } def connect_ftp(self, user, passwd, host, port, dirs, timeout){
+    } function connect_ftp( user, passwd, host, port, dirs, timeout){
         fw = ftpwrapper(user, passwd, host, port, dirs, timeout,
-                        persistent=False);
+                        persistent=false);
 ##        fw.ftp.set_debuglevel(1)
         return fw;
 
@@ -1575,59 +1575,59 @@ def _safe_gethostbyname(host){
 } class CacheFTPHandler(FTPHandler){
     # XXX would be nice to have pluggable cache strategies
     # XXX this stuff is definitely not thread safe
-    def __init__(self){
-        self.cache = {};
-        self.timeout = {};
-        self.soonest = 0;
-        self.delay = 60;
-        self.max_conns = 16;
+    function __init__(){
+        this.cache = {};
+        this.timeout = {};
+        this.soonest = 0;
+        this.delay = 60;
+        this.max_conns = 16;
 
     }
-    def setTimeout(self, t){
-        self.delay = t;
+    function setTimeout( t){
+        this.delay = t;
 
     }
-    def setMaxConns(self, m){
-        self.max_conns = m;
+    function setMaxConns( m){
+        this.max_conns = m;
 
     }
-    def connect_ftp(self, user, passwd, host, port, dirs, timeout){
+    function connect_ftp( user, passwd, host, port, dirs, timeout){
         key = user, host, port, '/'.join(dirs), timeout;
-        if key in self.cache{
-            self.timeout[key] = time.time() + self.delay;
+        if key in this.cache{
+            this.timeout[key] = time.time() + this.delay;
         } else{
-            self.cache[key] = ftpwrapper(user, passwd, host, port, dirs, timeout);
-            self.timeout[key] = time.time() + self.delay;
-        } self.check_cache();
-        return self.cache[key];
+            this.cache[key] = ftpwrapper(user, passwd, host, port, dirs, timeout);
+            this.timeout[key] = time.time() + this.delay;
+        } this.check_cache();
+        return this.cache[key];
 
     }
-    def check_cache(self){
+    function check_cache(){
         # first check for old ones
         t = time.time();
-        if self.soonest <= t{
-            for k, v in self.timeout.items(){
+        if this.soonest <= t{
+            for k, v in this.timeout.items(){
                 if v < t{
-                    self.cache[k].close();
-                    del self.cache[k];
-                    del self.timeout[k];
-        } } } self.soonest = min(self.timeout.values());
+                    this.cache[k].close();
+                    del this.cache[k];
+                    del this.timeout[k];
+        } } } this.soonest = min(this.timeout.values());
 
         # then check the size
-        if len(self.cache) == self.max_conns{
-            for k, v in self.timeout.items(){
-                if v == self.soonest{
-                    del self.cache[k];
-                    del self.timeout[k];
+        if len(this.cache) == this.max_conns{
+            for k, v in this.timeout.items(){
+                if v == this.soonest{
+                    del this.cache[k];
+                    del this.timeout[k];
                     break;
-            } } self.soonest = min(self.timeout.values());
+            } } this.soonest = min(this.timeout.values());
 
     }
-    } def clear_cache(self){
-        for conn in self.cache.values(){
+    } function clear_cache(){
+        for conn in this.cache.values(){
             conn.close();
-        } self.cache.clear();
-        self.timeout.clear();
+        } this.cache.clear();
+        this.timeout.clear();
 
 }
 }

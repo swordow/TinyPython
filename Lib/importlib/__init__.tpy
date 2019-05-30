@@ -3,7 +3,7 @@
 # code compatible with Python 2.3.
 import sys;
 
-def _resolve_name(name, package, level){
+function _resolve_name(name, package, level){
     """Return the absolute name of the module to be imported.""";
     if not hasattr(package, 'rindex'){
         raise ValueError("'package' not set to a string");
@@ -18,7 +18,7 @@ def _resolve_name(name, package, level){
 
 
 }
-def import_module(name, package=None){
+function import_module(name, package=nil){
     """Import a module.
 
     The 'package' argument is required when performing a relative import. It

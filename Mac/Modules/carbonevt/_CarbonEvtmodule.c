@@ -88,7 +88,7 @@ myEventHandler(EventHandlerCallRef handlerRef, EventRef event, void *outPyObject
         PyErr_Print();  /* this also clears the error */
         status = noErr; /* complain? how? */
     } else {
-        if (retValue == Py_None)
+        if (retValue == Py_Nil)
             status = noErr;
         else if (PyInt_Check(retValue)) {
             status = PyInt_AsLong(retValue);
@@ -172,8 +172,8 @@ static PyObject *EventRef_ReleaseEvent(EventRefObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     ReleaseEvent(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -197,8 +197,8 @@ static PyObject *EventRef_SetEventParameter(EventRefObject *_self, PyObject *_ar
                              inType,
                              inDataPtr__len__, inDataPtr__in__);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -249,8 +249,8 @@ static PyObject *EventRef_SetEventTime(EventRefObject *_self, PyObject *_args)
     _err = SetEventTime(_self->ob_itself,
                         inTime);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -307,8 +307,8 @@ static PyObject *EventRef_SendEventToEventTarget(EventRefObject *_self, PyObject
     _err = SendEventToEventTarget(_self->ob_itself,
                                   inTarget);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -501,8 +501,8 @@ static PyObject *EventQueueRef_PostEventToQueue(EventQueueRefObject *_self, PyOb
                             inEvent,
                             inPriority);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -520,8 +520,8 @@ static PyObject *EventQueueRef_FlushEventsMatchingListFromQueue(EventQueueRefObj
                                             inNumTypes,
                                             &inList);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -533,8 +533,8 @@ static PyObject *EventQueueRef_FlushEventQueue(EventQueueRefObject *_self, PyObj
         return NULL;
     _err = FlushEventQueue(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -561,8 +561,8 @@ static PyObject *EventQueueRef_RemoveEventFromQueue(EventQueueRefObject *_self, 
     _err = RemoveEventFromQueue(_self->ob_itself,
                                 inEvent);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -716,8 +716,8 @@ static PyObject *EventLoopRef_QuitEventLoop(EventLoopRefObject *_self, PyObject 
         return NULL;
     _err = QuitEventLoop(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -846,8 +846,8 @@ static PyObject *EventLoopTimerRef_RemoveEventLoopTimer(EventLoopTimerRefObject 
         return NULL;
     _err = RemoveEventLoopTimer(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -862,8 +862,8 @@ static PyObject *EventLoopTimerRef_SetEventLoopTimerNextFireTime(EventLoopTimerR
     _err = SetEventLoopTimerNextFireTime(_self->ob_itself,
                                          inNextFire);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1009,8 +1009,8 @@ static PyObject *EventHandlerRef_AddEventTypesToHandler(EventHandlerRefObject *_
                                   inNumTypes,
                                   &inList);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1032,8 +1032,8 @@ static PyObject *EventHandlerRef_RemoveEventTypesFromHandler(EventHandlerRefObje
                                        inNumTypes,
                                        &inList);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1052,8 +1052,8 @@ static PyObject *EventHandlerRef_RemoveEventHandler(EventHandlerRefObject *_self
     if (_err != noErr) return PyMac_Error(_err);
     _self->ob_itself = NULL;
     Py_CLEAR(_self->ob_callback);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1189,8 +1189,8 @@ static PyObject *EventHandlerCallRef_CallNextEventHandler(EventHandlerCallRefObj
     _err = CallNextEventHandler(_self->ob_itself,
                                 inEvent);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1319,8 +1319,8 @@ static PyObject *EventTargetRef_InstallStandardEventHandler(EventTargetRefObject
         return NULL;
     _err = InstallStandardEventHandler(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1474,8 +1474,8 @@ static PyObject *EventHotKeyRef_UnregisterEventHotKey(EventHotKeyRefObject *_sel
         return NULL;
     _err = UnregisterEventHotKey(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1593,8 +1593,8 @@ static PyObject *CarbonEvents_RunCurrentEventLoop(PyObject *_self, PyObject *_ar
         return NULL;
     _err = RunCurrentEventLoop(inTimeout);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1858,8 +1858,8 @@ static PyObject *CarbonEvents_RunApplicationEventLoop(PyObject *_self, PyObject 
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     RunApplicationEventLoop();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1869,8 +1869,8 @@ static PyObject *CarbonEvents_QuitApplicationEventLoop(PyObject *_self, PyObject
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     QuitApplicationEventLoop();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1884,8 +1884,8 @@ static PyObject *CarbonEvents_RunAppModalLoopForWindow(PyObject *_self, PyObject
         return NULL;
     _err = RunAppModalLoopForWindow(inWindow);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1899,8 +1899,8 @@ static PyObject *CarbonEvents_QuitAppModalLoopForWindow(PyObject *_self, PyObjec
         return NULL;
     _err = QuitAppModalLoopForWindow(inWindow);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1914,8 +1914,8 @@ static PyObject *CarbonEvents_BeginAppModalStateForWindow(PyObject *_self, PyObj
         return NULL;
     _err = BeginAppModalStateForWindow(inWindow);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1929,8 +1929,8 @@ static PyObject *CarbonEvents_EndAppModalStateForWindow(PyObject *_self, PyObjec
         return NULL;
     _err = EndAppModalStateForWindow(inWindow);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1944,8 +1944,8 @@ static PyObject *CarbonEvents_SetUserFocusWindow(PyObject *_self, PyObject *_arg
         return NULL;
     _err = SetUserFocusWindow(inWindow);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1974,8 +1974,8 @@ static PyObject *CarbonEvents_SetWindowDefaultButton(PyObject *_self, PyObject *
     _err = SetWindowDefaultButton(inWindow,
                                   inControl);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1992,8 +1992,8 @@ static PyObject *CarbonEvents_SetWindowCancelButton(PyObject *_self, PyObject *_
     _err = SetWindowCancelButton(inWindow,
                                  inControl);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 

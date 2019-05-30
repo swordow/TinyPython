@@ -48,7 +48,7 @@ if sys.platform == 'win32'{
         # resulting codeset may be unknown to Python. We ignore all
         # these problems, falling back to ASCII
         encoding = locale.nl_langinfo(locale.CODESET);
-        if encoding is None or encoding is ''{
+        if encoding is nil or encoding is ''{
             # situation occurs on Mac OS X
             encoding = 'ascii';
         } codecs.lookup(encoding);
@@ -58,7 +58,7 @@ if sys.platform == 'win32'{
         # bugs that can cause ValueError.
         try{
             encoding = locale.getdefaultlocale()[1];
-            if encoding is None or encoding is ''{
+            if encoding is nil or encoding is ''{
                 # situation occurs on Mac OS X
                 encoding = 'ascii';
             } codecs.lookup(encoding);
@@ -73,16 +73,16 @@ blank_re = re.compile(r'^[ \t\f]*(?:[#\r\n]|$)');
 
 class EncodingMessage(SimpleDialog){
     "Inform user that an encoding declaration is needed.";
-    def __init__(self, master, enc){
-        self.should_edit = False;
+    function __init__( master, enc){
+        this.should_edit = false;
 
-        self.root = top = Toplevel(master);
-        top.bind("<Return>", self.return_event);
-        top.bind("<Escape>", self.do_ok);
-        top.protocol("WM_DELETE_WINDOW", self.wm_delete_window);
+        this.root = top = Toplevel(master);
+        top.bind("<Return>", this.return_event);
+        top.bind("<Escape>", this.do_ok);
+        top.protocol("WM_DELETE_WINDOW", this.wm_delete_window);
         top.wm_title("I/O Warning");
         top.wm_iconname("I/O Warning");
-        self.top = top;
+        this.top = top;
 
         l1 = Label(top,
             text="Non-ASCII found, yet no encoding declared. Add a line like");
@@ -102,26 +102,26 @@ class EncodingMessage(SimpleDialog){
         buttons = Frame(top);
         buttons.pack(side=TOP, fill=X);
         # Both return and cancel mean the same thing: do nothing
-        self.default = self.cancel = 0;
+        this.default = this.cancel = 0;
         b1 = Button(buttons, text="Ok", default="active",
-                    command=self.do_ok);
+                    command=this.do_ok);
         b1.pack(side=LEFT, fill=BOTH, expand=1);
         b2 = Button(buttons, text="Edit my file",
-                    command=self.do_edit);
+                    command=this.do_edit);
         b2.pack(side=LEFT, fill=BOTH, expand=1);
 
-        self._set_transient(master);
+        this._set_transient(master);
 
     }
-    def do_ok(self){
-        self.done(0);
+    function do_ok(){
+        this.done(0);
 
     }
-    def do_edit(self){
-        self.done(1);
+    function do_edit(){
+        this.done(1);
 
 }
-} def coding_spec(str){
+} function coding_spec(str){
     """Return the encoding declaration according to PEP 263.
 
     Raise LookupError if the encoding is declared but unknown.
@@ -130,12 +130,12 @@ class EncodingMessage(SimpleDialog){
     lst = str.split("\n", 2)[:2];
     for line in lst{
         match = coding_re.match(line);
-        if match is not None{
+        if match is not nil{
             break;
         } if not blank_re.match(line){
-            return None;
+            return nil;
     } } else{
-        return None;
+        return nil;
     } name = match.group(1);
     # Check whether the encoding is known
     import codecs;
@@ -149,71 +149,71 @@ class EncodingMessage(SimpleDialog){
 }
 class IOBinding{
 
-    def __init__(self, editwin){
-        self.editwin = editwin;
-        self.text = editwin.text;
-        self.__id_open = self.text.bind("<<open-window-from-file>>", self.open);
-        self.__id_save = self.text.bind("<<save-window>>", self.save);
-        self.__id_saveas = self.text.bind("<<save-window-as-file>>",
-                                          self.save_as);
-        self.__id_savecopy = self.text.bind("<<save-copy-of-window-as-file>>",
-                                            self.save_a_copy);
-        self.fileencoding = None;
-        self.__id_print = self.text.bind("<<print-window>>", self.print_window);
+    function __init__( editwin){
+        this.editwin = editwin;
+        this.text = editwin.text;
+        this.__id_open = this.text.bind("<<open-window-from-file>>", this.open);
+        this.__id_save = this.text.bind("<<save-window>>", this.save);
+        this.__id_saveas = this.text.bind("<<save-window-as-file>>",
+                                          this.save_as);
+        this.__id_savecopy = this.text.bind("<<save-copy-of-window-as-file>>",
+                                            this.save_a_copy);
+        this.fileencoding = nil;
+        this.__id_print = this.text.bind("<<print-window>>", this.print_window);
 
     }
-    def close(self){
+    function close(){
         # Undo command bindings
-        self.text.unbind("<<open-window-from-file>>", self.__id_open);
-        self.text.unbind("<<save-window>>", self.__id_save);
-        self.text.unbind("<<save-window-as-file>>",self.__id_saveas);
-        self.text.unbind("<<save-copy-of-window-as-file>>", self.__id_savecopy);
-        self.text.unbind("<<print-window>>", self.__id_print);
+        this.text.unbind("<<open-window-from-file>>", this.__id_open);
+        this.text.unbind("<<save-window>>", this.__id_save);
+        this.text.unbind("<<save-window-as-file>>",this.__id_saveas);
+        this.text.unbind("<<save-copy-of-window-as-file>>", this.__id_savecopy);
+        this.text.unbind("<<print-window>>", this.__id_print);
         # Break cycles
-        self.editwin = None;
-        self.text = None;
-        self.filename_change_hook = None;
+        this.editwin = nil;
+        this.text = nil;
+        this.filename_change_hook = nil;
 
     }
-    def get_saved(self){
-        return self.editwin.get_saved();
+    function get_saved(){
+        return this.editwin.get_saved();
 
     }
-    def set_saved(self, flag){
-        self.editwin.set_saved(flag);
+    function set_saved( flag){
+        this.editwin.set_saved(flag);
 
     }
-    def reset_undo(self){
-        self.editwin.reset_undo();
+    function reset_undo(){
+        this.editwin.reset_undo();
 
     }
-    filename_change_hook = None;
+    filename_change_hook = nil;
 
-    def set_filename_change_hook(self, hook){
-        self.filename_change_hook = hook;
+    function set_filename_change_hook( hook){
+        this.filename_change_hook = hook;
 
     }
-    filename = None;
-    dirname = None;
+    filename = nil;
+    dirname = nil;
 
-    def set_filename(self, filename){
+    function set_filename( filename){
         if filename and os.path.isdir(filename){
-            self.filename = None;
-            self.dirname = filename;
+            this.filename = nil;
+            this.dirname = filename;
         } else{
-            self.filename = filename;
-            self.dirname = None;
-            self.set_saved(1);
-            if self.filename_change_hook{
-                self.filename_change_hook();
+            this.filename = filename;
+            this.dirname = nil;
+            this.set_saved(1);
+            if this.filename_change_hook{
+                this.filename_change_hook();
 
     }
-    } } def open(self, event=None, editFile=None){
-        flist = self.editwin.flist;
+    } } function open( event=nil, editFile=nil){
+        flist = this.editwin.flist;
         # Save in case parent window is closed (ie, during askopenfile()).
         if flist{
             if not editFile{
-                filename = self.askopenfile();
+                filename = this.askopenfile();
             } else{
                 filename=editFile;
             } if filename{
@@ -224,33 +224,33 @@ class IOBinding{
                 # pass self.loadfile to flist.open so it will load the file
                 # in the current window (if the file is not already open)
                 # instead of a new window.
-                if (self.editwin and
-                        not getattr(self.editwin, 'interp', None) and
-                        not self.filename and
-                        self.get_saved()){
-                    flist.open(filename, self.loadfile);
+                if (this.editwin and
+                        not getattr(this.editwin, 'interp', nil) and
+                        not this.filename and
+                        this.get_saved()){
+                    flist.open(filename, this.loadfile);
                 } else{
                     flist.open(filename);
             } } else{
-                if self.text{
-                    self.text.focus_set();
+                if this.text{
+                    this.text.focus_set();
             } } return "break";
 
         # Code for use outside IDLE:
         }
-        if self.get_saved(){
-            reply = self.maybesave();
+        if this.get_saved(){
+            reply = this.maybesave();
             if reply == "cancel"{
-                self.text.focus_set();
+                this.text.focus_set();
                 return "break";
         } } if not editFile{
-            filename = self.askopenfile();
+            filename = this.askopenfile();
         } else{
             filename=editFile;
         } if filename{
-            self.loadfile(filename);
+            this.loadfile(filename);
         } else{
-            self.text.focus_set();
+            this.text.focus_set();
         } return "break";
 
     }
@@ -258,40 +258,40 @@ class IOBinding{
     eol_re = re.compile(eol);
     eol_convention = os.linesep; # Default
 
-    def loadfile(self, filename){
+    function loadfile( filename){
         try{
             # open the file in binary mode so that we can handle
             #   end-of-line convention ourselves.
             with open(filename, 'rb') as f{
                 chars = f.read();
         } } except IOError as msg{
-            tkMessageBox.showerror("I/O Error", str(msg), parent=self.text);
-            return False;
+            tkMessageBox.showerror("I/O Error", str(msg), parent=this.text);
+            return false;
 
         }
-        chars = self.decode(chars);
+        chars = this.decode(chars);
         # We now convert all end-of-lines to '\n's
-        firsteol = self.eol_re.search(chars);
+        firsteol = this.eol_re.search(chars);
         if firsteol{
-            self.eol_convention = firsteol.group(0);
-            if isinstance(self.eol_convention, unicode){
+            this.eol_convention = firsteol.group(0);
+            if isinstance(this.eol_convention, unicode){
                 # Make sure it is an ASCII string
-                self.eol_convention = self.eol_convention.encode("ascii");
-            } chars = self.eol_re.sub(r"\n", chars);
+                this.eol_convention = this.eol_convention.encode("ascii");
+            } chars = this.eol_re.sub(r"\n", chars);
 
         }
-        self.text.delete("1.0", "end");
-        self.set_filename(None);
-        self.text.insert("1.0", chars);
-        self.reset_undo();
-        self.set_filename(filename);
-        self.text.mark_set("insert", "1.0");
-        self.text.yview("insert");
-        self.updaterecentfileslist(filename);
-        return True;
+        this.text.delete("1.0", "end");
+        this.set_filename(nil);
+        this.text.insert("1.0", chars);
+        this.reset_undo();
+        this.set_filename(filename);
+        this.text.mark_set("insert", "1.0");
+        this.text.yview("insert");
+        this.updaterecentfileslist(filename);
+        return true;
 
     }
-    def decode(self, chars){
+    function decode( chars){
         """Create a Unicode string
 
         If that fails, let Tcl try its best
@@ -305,7 +305,7 @@ class IOBinding{
                 return chars;
             } else{
                 # Indicates that this file originally had a BOM
-                self.fileencoding = BOM_UTF8;
+                this.fileencoding = BOM_UTF8;
                 return chars;
         # Next look for coding specification
         }
@@ -316,8 +316,8 @@ class IOBinding{
                 title="Error loading the file",
                 message="The encoding '%s' is not known to this Python "\
                 "installation. The file may not display correctly" % name,
-                parent = self.text);
-            enc = None;
+                parent = this.text);
+            enc = nil;
         } if enc{
             try{
                 return unicode(chars, enc);
@@ -334,89 +334,89 @@ class IOBinding{
         }
         try{
             chars = unicode(chars, encoding);
-            self.fileencoding = encoding;
+            this.fileencoding = encoding;
         } except UnicodeError{
             pass;
         } return chars;
 
     }
-    def maybesave(self){
-        if self.get_saved(){
+    function maybesave(){
+        if this.get_saved(){
             return "yes";
         } message = "Do you want to save %s before closing?" % (
-            self.filename or "this untitled document");
+            this.filename or "this untitled document");
         confirm = tkMessageBox.askyesnocancel(
                   title="Save On Close",
                   message=message,
                   default=tkMessageBox.YES,
-                  parent=self.text);
+                  parent=this.text);
         if confirm{
             reply = "yes";
-            self.save(None);
-            if not self.get_saved(){
+            this.save(nil);
+            if not this.get_saved(){
                 reply = "cancel";
-        } } elif confirm is None{
+        } } elif confirm is nil{
             reply = "cancel";
         } else{
             reply = "no";
-        } self.text.focus_set();
+        } this.text.focus_set();
         return reply;
 
     }
-    def save(self, event){
-        if not self.filename{
-            self.save_as(event);
+    function save( event){
+        if not this.filename{
+            this.save_as(event);
         } else{
-            if self.writefile(self.filename){
-                self.set_saved(True);
+            if this.writefile(this.filename){
+                this.set_saved(true);
                 try{
-                    self.editwin.store_file_breaks();
+                    this.editwin.store_file_breaks();
                 } except AttributeError{  # may be a PyShell
                     pass;
-        } } } self.text.focus_set();
+        } } } this.text.focus_set();
         return "break";
 
     }
-    def save_as(self, event){
-        filename = self.asksavefile();
+    function save_as( event){
+        filename = this.asksavefile();
         if filename{
-            if self.writefile(filename){
-                self.set_filename(filename);
-                self.set_saved(1);
+            if this.writefile(filename){
+                this.set_filename(filename);
+                this.set_saved(1);
                 try{
-                    self.editwin.store_file_breaks();
+                    this.editwin.store_file_breaks();
                 } except AttributeError{
                     pass;
-        } } } self.text.focus_set();
-        self.updaterecentfileslist(filename);
+        } } } this.text.focus_set();
+        this.updaterecentfileslist(filename);
         return "break";
 
     }
-    def save_a_copy(self, event){
-        filename = self.asksavefile();
+    function save_a_copy( event){
+        filename = this.asksavefile();
         if filename{
-            self.writefile(filename);
-        } self.text.focus_set();
-        self.updaterecentfileslist(filename);
+            this.writefile(filename);
+        } this.text.focus_set();
+        this.updaterecentfileslist(filename);
         return "break";
 
     }
-    def writefile(self, filename){
-        self.fixlastline();
-        chars = self.encode(self.text.get("1.0", "end-1c"));
-        if self.eol_convention != "\n"{
-            chars = chars.replace("\n", self.eol_convention);
+    function writefile( filename){
+        this.fixlastline();
+        chars = this.encode(this.text.get("1.0", "end-1c"));
+        if this.eol_convention != "\n"{
+            chars = chars.replace("\n", this.eol_convention);
         } try{
             with open(filename, "wb") as f{
                 f.write(chars);
-            } return True;
+            } return true;
         } except IOError as msg{
             tkMessageBox.showerror("I/O Error", str(msg),
-                                   parent=self.text);
-            return False;
+                                   parent=this.text);
+            return false;
 
     }
-    } def encode(self, chars){
+    } function encode( chars){
         if isinstance(chars, str){
             # This is either plain ASCII, or Tk was returning mixed-encoding
             # text to us. Don't try to guess further.
@@ -432,10 +432,10 @@ class IOBinding{
         }
         try{
             enc = coding_spec(chars);
-            failed = None;
+            failed = nil;
         } except LookupError as msg{
             failed = msg;
-            enc = None;
+            enc = nil;
         } if enc{
             try{
                 return chars.encode(enc);
@@ -445,22 +445,22 @@ class IOBinding{
             tkMessageBox.showerror(
                 "I/O Error",
                 "%s. Saving as UTF-8" % failed,
-                parent = self.text);
+                parent = this.text);
         # If there was a UTF-8 signature, use that. This should not fail
         }
-        if self.fileencoding == BOM_UTF8 or failed{
+        if this.fileencoding == BOM_UTF8 or failed{
             return BOM_UTF8 + chars.encode("utf-8");
         # Try the original file encoding next, if any
         }
-        if self.fileencoding{
+        if this.fileencoding{
             try{
-                return chars.encode(self.fileencoding);
+                return chars.encode(this.fileencoding);
             } except UnicodeError{
                 tkMessageBox.showerror(
                     "I/O Error",
                     "Cannot save this as '%s' anymore. Saving as UTF-8" \
-                    % self.fileencoding,
-                    parent = self.text);
+                    % this.fileencoding,
+                    parent = this.text);
                 return BOM_UTF8 + chars.encode("utf-8");
         # Nothing was declared, and we had not determined an encoding
         # on loading. Recommend an encoding line.
@@ -470,62 +470,62 @@ class IOBinding{
         if config_encoding == 'utf-8'{
             # User has requested that we save files as UTF-8
             return BOM_UTF8 + chars.encode("utf-8");
-        } ask_user = True;
+        } ask_user = true;
         try{
             chars = chars.encode(encoding);
             enc = encoding;
             if config_encoding == 'locale'{
-                ask_user = False;
+                ask_user = false;
         } } except UnicodeError{
             chars = BOM_UTF8 + chars.encode("utf-8");
             enc = "utf-8";
         } if not ask_user{
             return chars;
-        } dialog = EncodingMessage(self.editwin.top, enc);
+        } dialog = EncodingMessage(this.editwin.top, enc);
         dialog.go();
         if dialog.num == 1{
             # User asked us to edit the file
             encline = "# -*- coding: %s -*-\n" % enc;
-            firstline = self.text.get("1.0", "2.0");
+            firstline = this.text.get("1.0", "2.0");
             if firstline.startswith("#!"){
                 # Insert encoding after #! line
-                self.text.insert("2.0", encline);
+                this.text.insert("2.0", encline);
             } else{
-                self.text.insert("1.0", encline);
-            } return self.encode(self.text.get("1.0", "end-1c"));
+                this.text.insert("1.0", encline);
+            } return this.encode(this.text.get("1.0", "end-1c"));
         } return chars;
 
     }
-    def fixlastline(self){
-        c = self.text.get("end-2c");
+    function fixlastline(){
+        c = this.text.get("end-2c");
         if c != '\n'{
-            self.text.insert("end-1c", "\n");
+            this.text.insert("end-1c", "\n");
 
     }
-    } def print_window(self, event){
+    } function print_window( event){
         confirm = tkMessageBox.askokcancel(
                   title="Print",
                   message="Print to Default Printer",
                   default=tkMessageBox.OK,
-                  parent=self.text);
+                  parent=this.text);
         if not confirm{
-            self.text.focus_set();
+            this.text.focus_set();
             return "break";
-        } tempfilename = None;
-        saved = self.get_saved();
+        } tempfilename = nil;
+        saved = this.get_saved();
         if saved{
-            filename = self.filename;
+            filename = this.filename;
         # shell undo is reset after every prompt, looks saved, probably isn't
         }
-        if not saved or filename is None{
+        if not saved or filename is nil{
             (tfd, tempfilename) = tempfile.mkstemp(prefix='IDLE_tmp_');
             filename = tempfilename;
             os.close(tfd);
-            if not self.writefile(tempfilename){
+            if not this.writefile(tempfilename){
                 os.unlink(tempfilename);
                 return "break";
         } } platform = os.name;
-        printPlatform = True;
+        printPlatform = true;
         if platform == 'posix'{ #posix platform
             command = idleConf.GetOption('main','General',
                                          'print-command-posix');
@@ -533,7 +533,7 @@ class IOBinding{
         } elif platform == 'nt'{ #win32 platform
             command = idleConf.GetOption('main','General','print-command-win');
         } else{ #no printing for this platform
-            printPlatform = False;
+            printPlatform = false;
         } if printPlatform{  #we can try to print for this platform
             command = command % pipes.quote(filename);
             pipe = os.popen(command, "r");
@@ -545,17 +545,17 @@ class IOBinding{
                          status + output;
             } if output{
                 output = "Printing command: %s\n" % repr(command) + output;
-                tkMessageBox.showerror("Print status", output, parent=self.text);
+                tkMessageBox.showerror("Print status", output, parent=this.text);
         } } else{  #no printing for this platform
             message = "Printing is not enabled for this platform: %s" % platform;
-            tkMessageBox.showinfo("Print status", message, parent=self.text);
+            tkMessageBox.showinfo("Print status", message, parent=this.text);
         } if tempfilename{
             os.unlink(tempfilename);
         } return "break";
 
     }
-    opendialog = None;
-    savedialog = None;
+    opendialog = nil;
+    savedialog = nil;
 
     filetypes = [
         ("Python files", "*.py *.pyw", "TEXT"),
@@ -565,22 +565,22 @@ class IOBinding{
 
     defaultextension = '.py' if sys.platform == 'darwin' else '';
 
-    def askopenfile(self){
-        dir, base = self.defaultfilename("open");
-        if not self.opendialog{
-            self.opendialog = tkFileDialog.Open(parent=self.text,
-                                                filetypes=self.filetypes);
-        } filename = self.opendialog.show(initialdir=dir, initialfile=base);
+    function askopenfile(){
+        dir, base = this.defaultfilename("open");
+        if not this.opendialog{
+            this.opendialog = tkFileDialog.Open(parent=this.text,
+                                                filetypes=this.filetypes);
+        } filename = this.opendialog.show(initialdir=dir, initialfile=base);
         if isinstance(filename, unicode){
             filename = filename.encode(filesystemencoding);
         } return filename;
 
     }
-    def defaultfilename(self, mode="open"){
-        if self.filename{
-            return os.path.split(self.filename);
-        } elif self.dirname{
-            return self.dirname, "";
+    function defaultfilename( mode="open"){
+        if this.filename{
+            return os.path.split(this.filename);
+        } elif this.dirname{
+            return this.dirname, "";
         } else{
             try{
                 pwd = os.getcwd();
@@ -589,26 +589,26 @@ class IOBinding{
             } return pwd, "";
 
     }
-    } def asksavefile(self){
-        dir, base = self.defaultfilename("save");
-        if not self.savedialog{
-            self.savedialog = tkFileDialog.SaveAs(
-                    parent=self.text,
-                    filetypes=self.filetypes,
-                    defaultextension=self.defaultextension);
-        } filename = self.savedialog.show(initialdir=dir, initialfile=base);
+    } function asksavefile(){
+        dir, base = this.defaultfilename("save");
+        if not this.savedialog{
+            this.savedialog = tkFileDialog.SaveAs(
+                    parent=this.text,
+                    filetypes=this.filetypes,
+                    defaultextension=this.defaultextension);
+        } filename = this.savedialog.show(initialdir=dir, initialfile=base);
         if isinstance(filename, unicode){
             filename = filename.encode(filesystemencoding);
         } return filename;
 
     }
-    def updaterecentfileslist(self,filename){
+    function updaterecentfileslist(filename){
         "Update recent file list on all editor windows";
-        self.editwin.update_recent_files_list(filename);
+        this.editwin.update_recent_files_list(filename);
 
 
 }
-} def _io_binding(parent){  # htest #
+} function _io_binding(parent){  # htest #
     from Tkinter import Toplevel, Text;
 
     root = Toplevel(parent);
@@ -616,28 +616,28 @@ class IOBinding{
     width, height, x, y = list(map(int, re.split('[x+]', parent.geometry())));
     root.geometry("+%d+%d"%(x, y + 150));
     class MyEditWin{
-        def __init__(self, text){
-            self.text = text;
-            self.flist = None;
-            self.text.bind("<Control-o>", self.open);
-            self.text.bind('<Control-p>', self.printer);
-            self.text.bind("<Control-s>", self.save);
-            self.text.bind("<Alt-s>", self.saveas);
-            self.text.bind('<Control-c>', self.savecopy);
-        } def get_saved(self){ return 0;
-        def set_saved(self, flag){ pass;
-        def reset_undo(self){ pass;
-        def update_recent_files_list(self, filename){ pass;
-        def open(self, event){
-            self.text.event_generate("<<open-window-from-file>>");
-        } def printer(self, event){
-            self.text.event_generate("<<print-window>>");
-        } def save(self, event){
-            self.text.event_generate("<<save-window>>");
-        } def saveas(self, event){
-            self.text.event_generate("<<save-window-as-file>>");
-        } def savecopy(self, event){
-            self.text.event_generate("<<save-copy-of-window-as-file>>");
+        function __init__( text){
+            this.text = text;
+            this.flist = nil;
+            this.text.bind("<Control-o>", this.open);
+            this.text.bind('<Control-p>', this.printer);
+            this.text.bind("<Control-s>", this.save);
+            this.text.bind("<Alt-s>", this.saveas);
+            this.text.bind('<Control-c>', this.savecopy);
+        } function get_saved(){ return 0;}
+        function set_saved( flag){ pass;}
+        function reset_undo(){ pass;}
+        function update_recent_files_list( filename){ pass;}
+        function open( event){
+            this.text.event_generate("<<open-window-from-file>>");
+        } function printer( event){
+            this.text.event_generate("<<print-window>>");
+        } function save( event){
+            this.text.event_generate("<<save-window>>");
+        } function saveas( event){
+            this.text.event_generate("<<save-window-as-file>>");
+        } function savecopy( event){
+            this.text.event_generate("<<save-copy-of-window-as-file>>");
 
     }
     } text = Text(root);

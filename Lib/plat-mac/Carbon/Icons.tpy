@@ -1,6 +1,6 @@
 # Generated from 'Icons.h'
 
-def FOUR_CHAR_CODE(x){ return x;
+function FOUR_CHAR_CODE(x){ return x;}
 from Carbon.Files import *;
 kGenericDocumentIconResource = -4000;
 kGenericStationeryIconResource = -3985;

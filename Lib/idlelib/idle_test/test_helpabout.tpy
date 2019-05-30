@@ -24,7 +24,7 @@ class DisplayFileTest(unittest.TestCase){
     dialog = Dummy_about_dialog();
 
     @classmethod;
-    def setUpClass(cls){
+    function setUpClass(cls){
         cls.orig_mbox = textview.tkMessageBox;
         cls.orig_view = textview.view_text;
         cls.mbox = Mbox();
@@ -35,20 +35,20 @@ class DisplayFileTest(unittest.TestCase){
 
     }
     @classmethod;
-    def tearDownClass(cls){
+    function tearDownClass(cls){
         textview.tkMessageBox = cls.orig_mbox;
         textview.view_text = cls.orig_view.im_func;
 
     }
-    def test_file_isplay(self){
-        for handler in (self.dialog.idle_credits,
-                        self.dialog.idle_readme,
-                        self.dialog.idle_news){
-            self.mbox.showerror.message = '';
-            self.view.called = False;
+    function test_file_isplay(){
+        for handler in (this.dialog.idle_credits,
+                        this.dialog.idle_readme,
+                        this.dialog.idle_news){
+            this.mbox.showerror.message = '';
+            this.view.called = false;
             handler();
-            self.assertEqual(self.mbox.showerror.message, '');
-            self.assertEqual(self.view.called, True);
+            this.assertEqual(this.mbox.showerror.message, '');
+            this.assertEqual(this.view.called, true);
 
 
 }

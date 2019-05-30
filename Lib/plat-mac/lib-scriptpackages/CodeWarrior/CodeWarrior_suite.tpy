@@ -19,7 +19,7 @@ class CodeWarrior_suite_Events{
         'to_group' : 'TGRP',
     };
 
-    def add(self, _object, _attributes={}, **_arguments){
+    function add( _object, _attributes={}, **_arguments){
         """add: add elements to a project or target
         Required argument: an AE object reference
         Keyword argument new: the class of the new element or elements to add
@@ -31,11 +31,11 @@ class CodeWarrior_suite_Events{
         _code = 'CWIE';
         _subcode = 'ADDF';
 
-        aetools.keysubst(_arguments, self._argmap_add);
+        aetools.keysubst(_arguments, this._argmap_add);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -45,18 +45,18 @@ class CodeWarrior_suite_Events{
             return _arguments['----'];
 
     }
-    } def build(self, _no_object=None, _attributes={}, **_arguments){
+    } function build( _no_object=nil, _attributes={}, **_arguments){
         """build: build a project or target (equivalent of the Make menu command)
         Keyword argument _attributes: AppleEvent attribute dictionary
         """;
         _code = 'CWIE';
         _subcode = 'MAKE';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -66,7 +66,7 @@ class CodeWarrior_suite_Events{
             return _arguments['----'];
 
     }
-    } def check(self, _object=None, _attributes={}, **_arguments){
+    } function check( _object=nil, _attributes={}, **_arguments){
         """check: check the syntax of a file in a project or target
         Required argument: the file or files to be checked
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -74,11 +74,11 @@ class CodeWarrior_suite_Events{
         _code = 'CWIE';
         _subcode = 'CHEK';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -88,7 +88,7 @@ class CodeWarrior_suite_Events{
             return _arguments['----'];
 
     }
-    } def compile_file(self, _object=None, _attributes={}, **_arguments){
+    } function compile_file( _object=nil, _attributes={}, **_arguments){
         """compile file: compile a file in a project or target
         Required argument: the file or files to be compiled
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -96,11 +96,11 @@ class CodeWarrior_suite_Events{
         _code = 'CWIE';
         _subcode = 'COMP';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -110,7 +110,7 @@ class CodeWarrior_suite_Events{
             return _arguments['----'];
 
     }
-    } def disassemble_file(self, _object=None, _attributes={}, **_arguments){
+    } function disassemble_file( _object=nil, _attributes={}, **_arguments){
         """disassemble file: disassemble a file in a project or target
         Required argument: the file or files to be disassembled
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -118,11 +118,11 @@ class CodeWarrior_suite_Events{
         _code = 'CWIE';
         _subcode = 'DASM';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -136,7 +136,7 @@ class CodeWarrior_suite_Events{
         'in_' : 'kfil',
     };
 
-    def export(self, _no_object=None, _attributes={}, **_arguments){
+    function export( _no_object=nil, _attributes={}, **_arguments){
         """export: Export the project file as an XML file
         Keyword argument in_: the XML file in which to export the project
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -144,11 +144,11 @@ class CodeWarrior_suite_Events{
         _code = 'CWIE';
         _subcode = 'EXPT';
 
-        aetools.keysubst(_arguments, self._argmap_export);
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        aetools.keysubst(_arguments, this._argmap_export);
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -158,18 +158,18 @@ class CodeWarrior_suite_Events{
             return _arguments['----'];
 
     }
-    } def remove_object_code(self, _no_object=None, _attributes={}, **_arguments){
+    } function remove_object_code( _no_object=nil, _attributes={}, **_arguments){
         """remove object code: remove object code from a project or target
         Keyword argument _attributes: AppleEvent attribute dictionary
         """;
         _code = 'CWIE';
         _subcode = 'RMOB';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -179,7 +179,7 @@ class CodeWarrior_suite_Events{
             return _arguments['----'];
 
     }
-    } def remove_target_files(self, _object, _attributes={}, **_arguments){
+    } function remove_target_files( _object, _attributes={}, **_arguments){
         """remove target files: remove files from a target
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -187,11 +187,11 @@ class CodeWarrior_suite_Events{
         _code = 'CWIE';
         _subcode = 'RMFL';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -201,18 +201,18 @@ class CodeWarrior_suite_Events{
             return _arguments['----'];
 
     }
-    } def run_target(self, _no_object=None, _attributes={}, **_arguments){
+    } function run_target( _no_object=nil, _attributes={}, **_arguments){
         """run target: run a project or target
         Keyword argument _attributes: AppleEvent attribute dictionary
         """;
         _code = 'CWIE';
         _subcode = 'RUN ';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -222,7 +222,7 @@ class CodeWarrior_suite_Events{
             return _arguments['----'];
 
     }
-    } def touch_file(self, _object=None, _attributes={}, **_arguments){
+    } function touch_file( _object=nil, _attributes={}, **_arguments){
         """touch file: touch a file in a project or target for compilation
         Required argument: the file or files to be touched
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -230,11 +230,11 @@ class CodeWarrior_suite_Events{
         _code = 'CWIE';
         _subcode = 'TOCH';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -244,18 +244,18 @@ class CodeWarrior_suite_Events{
             return _arguments['----'];
 
     }
-    } def update(self, _no_object=None, _attributes={}, **_arguments){
+    } function update( _no_object=nil, _attributes={}, **_arguments){
         """update: bring a project or target up to date
         Keyword argument _attributes: AppleEvent attribute dictionary
         """;
         _code = 'CWIE';
         _subcode = 'UP2D';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);

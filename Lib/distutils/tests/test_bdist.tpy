@@ -11,25 +11,25 @@ from distutils.tests import support;
 class BuildTestCase(support.TempdirManager,
                     unittest.TestCase){
 
-    def test_formats(self){
+    function test_formats(){
         # let's create a command and make sure
         # we can set the format
-        dist = self.create_dist()[1];
+        dist = this.create_dist()[1];
         cmd = bdist(dist);
         cmd.formats = ['msi'];
         cmd.ensure_finalized();
-        self.assertEqual(cmd.formats, ['msi']);
+        this.assertEqual(cmd.formats, ['msi']);
 
         # what formats does bdist offer?
         formats = ['bztar', 'gztar', 'msi', 'rpm', 'tar',
                    'wininst', 'zip', 'ztar'];
         found = sorted(cmd.format_command);
-        self.assertEqual(found, formats);
+        this.assertEqual(found, formats);
 
     }
-    def test_skip_build(self){
+    function test_skip_build(){
         # bug #10946: bdist --skip-build should trickle down to subcommands
-        dist = self.create_dist()[1];
+        dist = this.create_dist()[1];
         cmd = bdist(dist);
         cmd.skip_build = 1;
         cmd.ensure_finalized();
@@ -43,12 +43,12 @@ class BuildTestCase(support.TempdirManager,
         }
         for name in names{
             subcmd = cmd.get_finalized_command(name);
-            self.assertTrue(subcmd.skip_build,
+            this.assertTrue(subcmd.skip_build,
                             '%s should take --skip-build from bdist' % name);
 
 
 }
-} } def test_suite(){
+} } function test_suite(){
     return unittest.makeSuite(BuildTestCase);
 
 }

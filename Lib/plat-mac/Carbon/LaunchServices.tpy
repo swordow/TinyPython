@@ -1,6 +1,6 @@
 # Generated from 'LaunchServices.h'
 
-def FOUR_CHAR_CODE(x){ return x;
+function FOUR_CHAR_CODE(x){ return x;}
 from Carbon.Files import *;
 kLSRequestAllInfo = -1;
 kLSRolesAll = -1;

@@ -136,8 +136,8 @@ syslog_openlog(PyObject * self, PyObject * args, PyObject *kwds)
     openlog(S_ident_o ? PyString_AsString(S_ident_o) : NULL, logopt, facility);
     S_log_open = 1;
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 
@@ -173,8 +173,8 @@ syslog_syslog(PyObject * self, PyObject * args)
     Py_BEGIN_ALLOW_THREADS;
     syslog(priority, "%s", message);
     Py_END_ALLOW_THREADS;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -186,8 +186,8 @@ syslog_closelog(PyObject *self, PyObject *unused)
         S_ident_o = NULL;
         S_log_open = 0;
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *

@@ -21,7 +21,7 @@ __all__ = ["Hashable", "Iterable", "Iterator",
 
 ### ONE-TRICK PONIES ###
 
-def _hasattr(C, attr){
+function _hasattr(C, attr){
     try{
         return any(attr in B.__dict__ for B in C.__mro__);
     } except AttributeError{
@@ -34,23 +34,23 @@ def _hasattr(C, attr){
     __metaclass__ = ABCMeta;
 
     @abstractmethod;
-    def __hash__(self){
+    function __hash__(){
         return 0;
 
     }
     @classmethod;
-    def __subclasshook__(cls, C){
+    function __subclasshook__(C){
         if cls is Hashable{
             try{
                 for B in C.__mro__{
                     if "__hash__" in B.__dict__{
                         if B.__dict__["__hash__"]{
-                            return True;
+                            return true;
                         } break;
             } } } except AttributeError{
                 # Old-style class
-                if getattr(C, "__hash__", None){
-                    return True;
+                if getattr(C, "__hash__", nil){
+                    return true;
         } } } return NotImplemented;
 
 
@@ -59,16 +59,16 @@ def _hasattr(C, attr){
     __metaclass__ = ABCMeta;
 
     @abstractmethod;
-    def __iter__(self){
-        while False{
-            yield None;
+    function __iter__(){
+        while false{
+            yield nil;
 
     }
     } @classmethod;
-    def __subclasshook__(cls, C){
+    function __subclasshook__(C){
         if cls is Iterable{
             if _hasattr(C, "__iter__"){
-                return True;
+                return true;
         } } return NotImplemented;
 
 }
@@ -78,20 +78,20 @@ def _hasattr(C, attr){
 class Iterator(Iterable){
 
     @abstractmethod;
-    def next(self){
+    function next(){
         'Return the next item from the iterator. When exhausted, raise StopIteration';
         raise StopIteration;
 
     }
-    def __iter__(self){
-        return self;
+    function __iter__(){
+        return this;
 
     }
     @classmethod;
-    def __subclasshook__(cls, C){
+    function __subclasshook__(C){
         if cls is Iterator{
             if _hasattr(C, "next") and _hasattr(C, "__iter__"){
-                return True;
+                return true;
         } } return NotImplemented;
 
 
@@ -100,15 +100,15 @@ class Iterator(Iterable){
     __metaclass__ = ABCMeta;
 
     @abstractmethod;
-    def __len__(self){
+    function __len__(){
         return 0;
 
     }
     @classmethod;
-    def __subclasshook__(cls, C){
+    function __subclasshook__(C){
         if cls is Sized{
             if _hasattr(C, "__len__"){
-                return True;
+                return true;
         } } return NotImplemented;
 
 
@@ -117,15 +117,15 @@ class Iterator(Iterable){
     __metaclass__ = ABCMeta;
 
     @abstractmethod;
-    def __contains__(self, x){
-        return False;
+    function __contains__( x){
+        return false;
 
     }
     @classmethod;
-    def __subclasshook__(cls, C){
+    function __subclasshook__(C){
         if cls is Container{
             if _hasattr(C, "__contains__"){
-                return True;
+                return true;
         } } return NotImplemented;
 
 
@@ -134,15 +134,15 @@ class Iterator(Iterable){
     __metaclass__ = ABCMeta;
 
     @abstractmethod;
-    def __call__(self, *args, **kwds){
-        return False;
+    function __call__( *args, **kwds){
+        return false;
 
     }
     @classmethod;
-    def __subclasshook__(cls, C){
+    function __subclasshook__(C){
         if cls is Callable{
             if _hasattr(C, "__call__"){
-                return True;
+                return true;
         } } return NotImplemented;
 
 
@@ -161,52 +161,52 @@ class Iterator(Iterable){
     then the other operations will automatically follow suit.
     """;
 
-    def __le__(self, other){
+    function __le__( other){
         if not isinstance(other, Set){
             return NotImplemented;
-        } if len(self) > len(other){
-            return False;
-        } for elem in self{
+        } if len(this) > len(other){
+            return false;
+        } for elem in this{
             if elem not in other{
-                return False;
-        } } return True;
+                return false;
+        } } return true;
 
     }
-    def __lt__(self, other){
+    function __lt__( other){
         if not isinstance(other, Set){
             return NotImplemented;
-        } return len(self) < len(other) and self.__le__(other);
+        } return len(this) < len(other) and this.__le__(other);
 
     }
-    def __gt__(self, other){
+    function __gt__( other){
         if not isinstance(other, Set){
             return NotImplemented;
-        } return len(self) > len(other) and self.__ge__(other);
+        } return len(this) > len(other) and this.__ge__(other);
 
     }
-    def __ge__(self, other){
+    function __ge__( other){
         if not isinstance(other, Set){
             return NotImplemented;
-        } if len(self) < len(other){
-            return False;
+        } if len(this) < len(other){
+            return false;
         } for elem in other{
-            if elem not in self{
-                return False;
-        } } return True;
+            if elem not in this{
+                return false;
+        } } return true;
 
     }
-    def __eq__(self, other){
+    function __eq__( other){
         if not isinstance(other, Set){
             return NotImplemented;
-        } return len(self) == len(other) and self.__le__(other);
+        } return len(this) == len(other) and this.__le__(other);
 
     }
-    def __ne__(self, other){
-        return not (self == other);
+    function __ne__( other){
+        return not (this == other);
 
     }
     @classmethod;
-    def _from_iterable(cls, it){
+    function _from_iterable(it){
         '''Construct an instance of the class from any iterable input.
 
         Must override this method if the class constructor signature
@@ -215,63 +215,63 @@ class Iterator(Iterable){
         return cls(it);
 
     }
-    def __and__(self, other){
+    function __and__( other){
         if not isinstance(other, Iterable){
             return NotImplemented;
-        } return self._from_iterable(value for value in other if value in self);
+        } return this._from_iterable(value for value in other if value in this);
 
     }
     __rand__ = __and__;
 
-    def isdisjoint(self, other){
+    function isdisjoint( other){
         'Return True if two sets have a null intersection.';
         for value in other{
-            if value in self{
-                return False;
-        } } return True;
+            if value in this{
+                return false;
+        } } return true;
 
     }
-    def __or__(self, other){
+    function __or__( other){
         if not isinstance(other, Iterable){
             return NotImplemented;
-        } chain = (e for s in (self, other) for e in s);
-        return self._from_iterable(chain);
+        } chain = (e for s in (this, other) for e in s);
+        return this._from_iterable(chain);
 
     }
     __ror__ = __or__;
 
-    def __sub__(self, other){
+    function __sub__( other){
         if not isinstance(other, Set){
             if not isinstance(other, Iterable){
                 return NotImplemented;
-            } other = self._from_iterable(other);
-        } return self._from_iterable(value for value in self
+            } other = this._from_iterable(other);
+        } return this._from_iterable(value for value in this
                                    if value not in other);
 
     }
-    def __rsub__(self, other){
+    function __rsub__( other){
         if not isinstance(other, Set){
             if not isinstance(other, Iterable){
                 return NotImplemented;
-            } other = self._from_iterable(other);
-        } return self._from_iterable(value for value in other
-                                   if value not in self);
+            } other = this._from_iterable(other);
+        } return this._from_iterable(value for value in other
+                                   if value not in this);
 
     }
-    def __xor__(self, other){
+    function __xor__( other){
         if not isinstance(other, Set){
             if not isinstance(other, Iterable){
                 return NotImplemented;
-            } other = self._from_iterable(other);
-        } return (self - other) | (other - self);
+            } other = this._from_iterable(other);
+        } return (this - other) | (other - this);
 
     }
     __rxor__ = __xor__;
 
     # Sets are not hashable by default, but subclasses can change this
-    __hash__ = None;
+    __hash__ = nil;
 
-    def _hash(self){
+    function _hash(){
         """Compute the hash value of a set.
 
         Note that we don't define __hash__: not all sets are hashable.
@@ -288,10 +288,10 @@ class Iterator(Iterable){
         """;
         MAX = sys.maxint;
         MASK = 2 * MAX + 1;
-        n = len(self);
+        n = len(this);
         h = 1927868237 * (n + 1);
         h &= MASK;
-        for x in self{
+        for x in this{
             hx = hash(x);
             h ^= (hx ^ (hx << 16) ^ 89869747)  * 3644798167;
             h &= MASK;
@@ -320,77 +320,77 @@ class MutableSet(Set){
     """;
 
     @abstractmethod;
-    def add(self, value){
+    function add( value){
         """Add an element.""";
         raise NotImplementedError;
 
     }
     @abstractmethod;
-    def discard(self, value){
+    function discard( value){
         """Remove an element.  Do not raise an exception if absent.""";
         raise NotImplementedError;
 
     }
-    def remove(self, value){
+    function remove( value){
         """Remove an element. If not a member, raise a KeyError.""";
-        if value not in self{
+        if value not in this{
             raise KeyError(value);
-        } self.discard(value);
+        } this.discard(value);
 
     }
-    def pop(self){
+    function pop(){
         """Return the popped value.  Raise KeyError if empty.""";
-        it = iter(self);
+        it = iter(this);
         try{
             value = next(it);
         } except StopIteration{
             raise KeyError;
-        } self.discard(value);
+        } this.discard(value);
         return value;
 
     }
-    def clear(self){
+    function clear(){
         """This is slow (creates N new iterators!) but effective.""";
         try{
-            while True{
-                self.pop();
+            while true{
+                this.pop();
         } } except KeyError{
             pass;
 
     }
-    } def __ior__(self, it){
+    } function __ior__( it){
         for value in it{
-            self.add(value);
-        } return self;
+            this.add(value);
+        } return this;
 
     }
-    def __iand__(self, it){
-        for value in (self - it){
-            self.discard(value);
-        } return self;
+    function __iand__( it){
+        for value in (this - it){
+            this.discard(value);
+        } return this;
 
     }
-    def __ixor__(self, it){
-        if it is self{
-            self.clear();
+    function __ixor__( it){
+        if it is this{
+            this.clear();
         } else{
             if not isinstance(it, Set){
-                it = self._from_iterable(it);
+                it = this._from_iterable(it);
             } for value in it{
-                if value in self{
-                    self.discard(value);
+                if value in this{
+                    this.discard(value);
                 } else{
-                    self.add(value);
-        } } } return self;
+                    this.add(value);
+        } } } return this;
 
     }
-    def __isub__(self, it){
-        if it is self{
-            self.clear();
+    function __isub__( it){
+        if it is this{
+            this.clear();
         } else{
             for value in it{
-                self.discard(value);
-        } } return self;
+                this.discard(value);
+        } } return this;
 
 }
 } MutableSet.register(set);
@@ -410,100 +410,100 @@ class Mapping(Sized, Iterable, Container){
     """;
 
     @abstractmethod;
-    def __getitem__(self, key){
+    function __getitem__( key){
         raise KeyError;
 
     }
-    def get(self, key, default=None){
+    function get( key, default=nil){
         'D.get(k[,d]) -> D[k] if k in D, else d.  d defaults to None.';
         try{
-            return self[key];
+            return this[key];
         } except KeyError{
             return default;
 
     }
-    } def __contains__(self, key){
+    } function __contains__( key){
         try{
-            self[key];
+            this[key];
         } except KeyError{
-            return False;
+            return false;
         } else{
-            return True;
+            return true;
 
     }
-    } def iterkeys(self){
+    } function iterkeys(){
         'D.iterkeys() -> an iterator over the keys of D';
-        return iter(self);
+        return iter(this);
 
     }
-    def itervalues(self){
+    function itervalues(){
         'D.itervalues() -> an iterator over the values of D';
-        for key in self{
-            yield self[key];
+        for key in this{
+            yield this[key];
 
     }
-    } def iteritems(self){
+    } function iteritems(){
         'D.iteritems() -> an iterator over the (key, value) items of D';
-        for key in self{
-            yield (key, self[key]);
+        for key in this{
+            yield (key, this[key]);
 
     }
-    } def keys(self){
+    } function keys(){
         "D.keys() -> list of D's keys";
-        return list(self);
+        return list(this);
 
     }
-    def items(self){
+    function items(){
         "D.items() -> list of D's (key, value) pairs, as 2-tuples";
-        return [(key, self[key]) for key in self];
+        return [(key, this[key]) for key in this];
 
     }
-    def values(self){
+    function values(){
         "D.values() -> list of D's values";
-        return [self[key] for key in self];
+        return [this[key] for key in this];
 
     # Mappings are not hashable by default, but subclasses can change this
     }
-    __hash__ = None;
+    __hash__ = nil;
 
-    def __eq__(self, other){
+    function __eq__( other){
         if not isinstance(other, Mapping){
             return NotImplemented;
-        } return dict(self.items()) == dict(other.items());
+        } return dict(this.items()) == dict(other.items());
 
     }
-    def __ne__(self, other){
-        return not (self == other);
+    function __ne__( other){
+        return not (this == other);
 
 }
 } class MappingView(Sized){
 
-    def __init__(self, mapping){
-        self._mapping = mapping;
+    function __init__( mapping){
+        this._mapping = mapping;
 
     }
-    def __len__(self){
-        return len(self._mapping);
+    function __len__(){
+        return len(this._mapping);
 
     }
-    def __repr__(self){
-        return '{0.__class__.__name__}({0._mapping!r})'.format(self);
+    function __repr__(){
+        return '{0.__class__.__name__}({0._mapping!r})'.format(this);
 
 
 }
 } class KeysView(MappingView, Set){
 
     @classmethod;
-    def _from_iterable(self, it){
+    function _from_iterable( it){
         return set(it);
 
     }
-    def __contains__(self, key){
-        return key in self._mapping;
+    function __contains__( key){
+        return key in this._mapping;
 
     }
-    def __iter__(self){
-        for key in self._mapping{
+    function __iter__(){
+        for key in this._mapping{
             yield key;
 
 }
@@ -512,39 +512,39 @@ class Mapping(Sized, Iterable, Container){
 class ItemsView(MappingView, Set){
 
     @classmethod;
-    def _from_iterable(self, it){
+    function _from_iterable( it){
         return set(it);
 
     }
-    def __contains__(self, item){
+    function __contains__( item){
         key, value = item;
         try{
-            v = self._mapping[key];
+            v = this._mapping[key];
         } except KeyError{
-            return False;
+            return false;
         } else{
             return v == value;
 
     }
-    } def __iter__(self){
-        for key in self._mapping{
-            yield (key, self._mapping[key]);
+    } function __iter__(){
+        for key in this._mapping{
+            yield (key, this._mapping[key]);
 
 }
 } } ItemsView.register(type({}.viewitems()));
 
 class ValuesView(MappingView){
 
-    def __contains__(self, value){
-        for key in self._mapping{
-            if value == self._mapping[key]{
-                return True;
-        } } return False;
+    function __contains__( value){
+        for key in this._mapping{
+            if value == this._mapping[key]{
+                return true;
+        } } return false;
 
     }
-    def __iter__(self){
-        for key in self._mapping{
-            yield self._mapping[key];
+    function __iter__(){
+        for key in this._mapping{
+            yield this._mapping[key];
 
 }
 } } ValuesView.register(type({}.viewvalues()));
@@ -561,65 +561,65 @@ class MutableMapping(Mapping){
     """;
 
     @abstractmethod;
-    def __setitem__(self, key, value){
+    function __setitem__( key, value){
         raise KeyError;
 
     }
     @abstractmethod;
-    def __delitem__(self, key){
+    function __delitem__( key){
         raise KeyError;
 
     }
     __marker = object();
 
-    def pop(self, key, default=__marker){
+    function pop( key, default=__marker){
         '''D.pop(k[,d]) -> v, remove specified key and return the corresponding value.
           If key is not found, d is returned if given, otherwise KeyError is raised.
         ''';
         try{
-            value = self[key];
+            value = this[key];
         } except KeyError{
-            if default is self.__marker{
+            if default is this.__marker{
                 raise;
             } return default;
         } else{
-            del self[key];
+            del this[key];
             return value;
 
     }
-    } def popitem(self){
+    } function popitem(){
         '''D.popitem() -> (k, v), remove and return some (key, value) pair
            as a 2-tuple; but raise KeyError if D is empty.
         ''';
         try{
-            key = next(iter(self));
+            key = next(iter(this));
         } except StopIteration{
             raise KeyError;
-        } value = self[key];
-        del self[key];
+        } value = this[key];
+        del this[key];
         return key, value;
 
     }
-    def clear(self){
+    function clear(){
         'D.clear() -> None.  Remove all items from D.';
         try{
-            while True{
-                self.popitem();
+            while true{
+                this.popitem();
         } } except KeyError{
             pass;
 
     }
-    } def update(*args, **kwds){
-        ''' D.update([E, ]**F) -> None.  Update D from mapping/iterable E and F.
-            If E present and has a .keys() method, does:     for k in E: D[k] = E[k]
-            If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v
-            In either case, this is followed by: for k, v in F.items(): D[k] = v
-        ''';
-        if not args{
-            raise TypeError("descriptor 'update' of 'MutableMapping' object "
-                            "needs an argument");
-        } self = args[0];
-        args = args[1:];
+    } function update(*args, **kwds){
+        # ''' D.update([E, ]**F) -> None.  Update D from mapping/iterable E and F.
+        #     If E present and has a .keys() method, does:     for k in E: D[k] = E[k]
+        #     If E present and lacks .keys() method, does:     for (k, v) in E: D[k] = v
+        #     In either case, this is followed by: for k, v in F.items(): D[k] = v
+        # ''';
+        # if not args{
+        #     raise TypeError("descriptor 'update' of 'MutableMapping' object "
+        #                     "needs an argument");
+        # } this = args[0];
+        # args = args[1:];
         if len(args) > 1{
             raise TypeError('update expected at most 1 arguments, got %d' %
                             len(args));
@@ -627,23 +627,23 @@ class MutableMapping(Mapping){
             other = args[0];
             if isinstance(other, Mapping){
                 for key in other{
-                    self[key] = other[key];
+                    this[key] = other[key];
             } } elif hasattr(other, "keys"){
                 for key in other.keys(){
-                    self[key] = other[key];
+                    this[key] = other[key];
             } } else{
                 for key, value in other{
-                    self[key] = value;
+                    this[key] = value;
         } } } for key, value in kwds.items(){
-            self[key] = value;
+            this[key] = value;
 
     }
-    } def setdefault(self, key, default=None){
+    } function setdefault( key, default=nil){
         'D.setdefault(k[,d]) -> D.get(k,d), also set D[k]=d if k not in D';
         try{
-            return self[key];
+            return this[key];
         } except KeyError{
-            self[key] = default;
+            this[key] = default;
         } return default;
 
 }
@@ -661,46 +661,46 @@ class Sequence(Sized, Iterable, Container){
     """;
 
     @abstractmethod;
-    def __getitem__(self, index){
+    function __getitem__( index){
         raise IndexError;
 
     }
-    def __iter__(self){
+    function __iter__(){
         i = 0;
         try{
-            while True{
-                v = self[i];
+            while true{
+                v = this[i];
                 yield v;
                 i += 1;
         } } except IndexError{
             return;
 
     }
-    } def __contains__(self, value){
-        for v in self{
+    } function __contains__( value){
+        for v in this{
             if v == value{
-                return True;
-        } } return False;
+                return true;
+        } } return false;
 
     }
-    def __reversed__(self){
-        for i in reversed(range(len(self))){
-            yield self[i];
+    function __reversed__(){
+        for i in reversed(range(len(this))){
+            yield this[i];
 
     }
-    } def index(self, value){
+    } function index( value){
         '''S.index(value) -> integer -- return first index of value.
            Raises ValueError if the value is not present.
         ''';
-        for i, v in enumerate(self){
+        for i, v in enumerate(this){
             if v == value{
                 return i;
         } } raise ValueError;
 
     }
-    def count(self, value){
+    function count( value){
         'S.count(value) -> integer -- return number of occurrences of value';
-        return sum(1 for v in self if v == value);
+        return sum(1 for v in this if v == value);
 
 }
 } Sequence.register(tuple);
@@ -719,58 +719,58 @@ class MutableSequence(Sequence){
     """;
 
     @abstractmethod;
-    def __setitem__(self, index, value){
+    function __setitem__( index, value){
         raise IndexError;
 
     }
     @abstractmethod;
-    def __delitem__(self, index){
+    function __delitem__( index){
         raise IndexError;
 
     }
     @abstractmethod;
-    def insert(self, index, value){
+    function insert( index, value){
         'S.insert(index, object) -- insert object before index';
         raise IndexError;
 
     }
-    def append(self, value){
+    function append( value){
         'S.append(object) -- append object to the end of the sequence';
-        self.insert(len(self), value);
+        this.insert(len(this), value);
 
     }
-    def reverse(self){
+    function reverse(){
         'S.reverse() -- reverse *IN PLACE*';
-        n = len(self);
+        n = len(this);
         for i in range(n//2){
-            self[i], self[n-i-1] = self[n-i-1], self[i];
+            this[i], this[n-i-1] = this[n-i-1], this[i];
 
     }
-    } def extend(self, values){
+    } function extend( values){
         'S.extend(iterable) -- extend sequence by appending elements from the iterable';
         for v in values{
-            self.append(v);
+            this.append(v);
 
     }
-    } def pop(self, index=-1){
+    } function pop( index=-1){
         '''S.pop([index]) -> item -- remove and return item at index (default last).
            Raise IndexError if list is empty or index is out of range.
         ''';
-        v = self[index];
-        del self[index];
+        v = this[index];
+        del this[index];
         return v;
 
     }
-    def remove(self, value){
+    function remove( value){
         '''S.remove(value) -- remove first occurrence of value.
            Raise ValueError if the value is not present.
         ''';
-        del self[self.index(value)];
+        del this[this.index(value)];
 
     }
-    def __iadd__(self, values){
-        self.extend(values);
-        return self;
+    function __iadd__( values){
+        this.extend(values);
+        return this;
 
 }
 } MutableSequence.register(list);

@@ -222,8 +222,8 @@ PyEval_GetCallStats(PyObject *self)
 PyObject *
 PyEval_GetCallStats(PyObject *self)
 {
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif
 
@@ -1004,7 +1004,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
                whenever an exception is detected. */
             if (call_trace_protected(tstate->c_tracefunc,
                                      tstate->c_traceobj,
-                                     f, PyTrace_CALL, Py_None)) {
+                                     f, PyTrace_CALL, Py_Nil)) {
                 /* Trace function raised an error */
                 goto exit_eval_frame;
             }
@@ -1014,7 +1014,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
                return itself and isn't called for "line" events */
             if (call_trace_protected(tstate->c_profilefunc,
                                      tstate->c_profileobj,
-                                     f, PyTrace_CALL, Py_None)) {
+                                     f, PyTrace_CALL, Py_Nil)) {
                 /* Profile function raised an error */
                 goto exit_eval_frame;
             }
@@ -1058,7 +1058,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
 
     why = WHY_NOT;
     err = 0;
-    x = Py_None;        /* Not a reference, just anything non-NULL */
+    x = Py_Nil;        /* Not a reference, just anything non-NULL */
     w = NULL;
 
     if (throwflag) { /* support for generator.throw() */
@@ -1396,7 +1396,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
         {
             w = POP();
             v = TOP();
-            x = PyNumber_Power(v, w, Py_None);
+            x = PyNumber_Power(v, w, Py_Nil);
             Py_DECREF(v);
             Py_DECREF(w);
             SET_TOP(x);
@@ -1650,7 +1650,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
         {
             w = POP();
             v = TOP();
-            x = PyNumber_InPlacePower(v, w, Py_None);
+            x = PyNumber_InPlacePower(v, w, Py_Nil);
             Py_DECREF(v);
             Py_DECREF(w);
             SET_TOP(x);
@@ -1978,7 +1978,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
         TARGET_NOARG(PRINT_ITEM)
         {
             v = POP();
-            if (stream == NULL || stream == Py_None) {
+            if (stream == NULL || stream == Py_Nil) {
                 w = PySys_GetObject("stdout");
                 if (w == NULL) {
                     PyErr_SetString(PyExc_RuntimeError,
@@ -2034,7 +2034,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
 
         TARGET_NOARG(PRINT_NEWLINE)
         {
-            if (stream == NULL || stream == Py_None)
+            if (stream == NULL || stream == Py_Nil)
             {
                 w = PySys_GetObject("stdout");
                 if (w == NULL) {
@@ -2158,7 +2158,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
                 why = WHY_RERAISE;
                 break;
             }
-            else if (v != Py_None) {
+            else if (v != Py_Nil) {
                 PyErr_SetString(PyExc_SystemError,
                     "'finally' pops bad exception");
                 why = WHY_EXCEPTION;
@@ -2623,7 +2623,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
                             w,
                             f->f_globals,
                             f->f_locals == NULL ?
-                                  Py_None : f->f_locals,
+                                  Py_Nil : f->f_locals,
                             v,
                             u);
             }
@@ -2632,7 +2632,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
                             w,
                             f->f_globals,
                             f->f_locals == NULL ?
-                                  Py_None : f->f_locals,
+                                  Py_Nil : f->f_locals,
                             v);
             Py_DECREF(v);
             Py_DECREF(u);
@@ -2941,10 +2941,10 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
             PyObject *exit_func;
 
             u = POP();
-            if (u == Py_None) {
+            if (u == Py_Nil) {
                 exit_func = TOP();
                 SET_TOP(u);
-                v = w = Py_None;
+                v = w = Py_Nil;
             }
             else if (PyInt_Check(u)) {
                 switch(PyInt_AS_LONG(u)) {
@@ -2960,7 +2960,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
                     SET_TOP(u);
                     break;
                 }
-                u = v = w = Py_None;
+                u = v = w = Py_Nil;
             }
             else {
                 v = TOP();
@@ -2977,7 +2977,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
             if (x == NULL)
                 break; /* Go to error exit */
 
-            if (u != Py_None)
+            if (u != Py_Nil)
                 err = PyObject_IsTrue(x);
             else
                 err = 0;
@@ -2989,8 +2989,8 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
                 err = 0;
                 /* There was an exception and a true return */
                 STACKADJ(-2);
-                Py_INCREF(Py_None);
-                SET_TOP(Py_None);
+                Py_INCREF(Py_Nil);
+                SET_TOP(Py_Nil);
                 Py_DECREF(u);
                 Py_DECREF(v);
                 Py_DECREF(w);
@@ -3187,7 +3187,7 @@ PyEval_EvalFrameEx(PyFrameObject *f, int throwflag)
 #endif
             }
             why = WHY_EXCEPTION;
-            x = Py_None;
+            x = Py_Nil;
             err = 0;
         }
 
@@ -3262,7 +3262,7 @@ fast_block_end:
                     PyObject *exc, *val, *tb;
                     PyErr_Fetch(&exc, &val, &tb);
                     if (val == NULL) {
-                        val = Py_None;
+                        val = Py_Nil;
                         Py_INCREF(val);
                     }
                     /* Make the raw exception data
@@ -3278,8 +3278,8 @@ fast_block_end:
                                      exc, val, tb);
                     }
                     if (tb == NULL) {
-                        Py_INCREF(Py_None);
-                        PUSH(Py_None);
+                        Py_INCREF(Py_Nil);
+                        PUSH(Py_Nil);
                     } else
                         PUSH(tb);
                     PUSH(val);
@@ -3734,9 +3734,9 @@ set_exc_info(PyThreadState *tstate,
         /* This frame didn't catch an exception before. */
         /* Save previous exception of this thread in this frame. */
         if (tstate->exc_type == NULL) {
-            /* XXX Why is this set to Py_None? */
-            Py_INCREF(Py_None);
-            tstate->exc_type = Py_None;
+            /* XXX Why is this set to Py_Nil? */
+            Py_INCREF(Py_Nil);
+            tstate->exc_type = Py_Nil;
         }
         Py_INCREF(tstate->exc_type);
         Py_XINCREF(tstate->exc_value);
@@ -3817,7 +3817,7 @@ do_raise(PyObject *type, PyObject *value, PyObject *tb)
     if (type == NULL) {
         /* Reraise */
         PyThreadState *tstate = PyThreadState_GET();
-        type = tstate->exc_type == NULL ? Py_None : tstate->exc_type;
+        type = tstate->exc_type == NULL ? Py_Nil : tstate->exc_type;
         value = tstate->exc_value;
         tb = tstate->exc_traceback;
         Py_XINCREF(type);
@@ -3846,7 +3846,7 @@ do_raise(PyObject *type, PyObject *value, PyObject *tb)
 
     /* First, check the traceback argument, replacing None with
        NULL. */
-    if (tb == Py_None) {
+    if (tb == Py_Nil) {
         Py_DECREF(tb);
         tb = NULL;
     }
@@ -3858,7 +3858,7 @@ do_raise(PyObject *type, PyObject *value, PyObject *tb)
 
     /* Next, replace a missing value with None */
     if (value == NULL) {
-        value = Py_None;
+        value = Py_Nil;
         Py_INCREF(value);
     }
 
@@ -3883,7 +3883,7 @@ do_raise(PyObject *type, PyObject *value, PyObject *tb)
     }
     else if (PyExceptionInstance_Check(type)) {
         /* Raising an instance.  The value should be a dummy. */
-        if (value != Py_None) {
+        if (value != Py_Nil) {
             PyErr_SetString(PyExc_TypeError,
               "instance exception may not have a separate value");
             goto raise_error;
@@ -3994,7 +3994,7 @@ call_exc_trace(Py_tracefunc func, PyObject *self, PyFrameObject *f)
     int err;
     PyErr_Fetch(&type, &value, &traceback);
     if (value == NULL) {
-        value = Py_None;
+        value = Py_Nil;
         Py_INCREF(value);
     }
     arg = PyTuple_Pack(3, type, value, traceback);
@@ -4093,7 +4093,7 @@ maybe_call_line_trace(Py_tracefunc func, PyObject *obj,
        number and call the trace function. */
     if (frame->f_lasti == *instr_lb || frame->f_lasti < *instr_prev) {
         frame->f_lineno = line;
-        result = call_trace(func, obj, frame, PyTrace_LINE, Py_None);
+        result = call_trace(func, obj, frame, PyTrace_LINE, Py_Nil);
     }
     *instr_prev = frame->f_lasti;
     return result;
@@ -4708,7 +4708,7 @@ ext_call_fail:
 int
 _PyEval_SliceIndex(PyObject *v, Py_ssize_t *pi)
 {
-    if (v != NULL && v != Py_None) {
+    if (v != NULL && v != Py_Nil) {
         Py_ssize_t x;
         if (PyInt_Check(v)) {
             /* XXX(nnorwitz): I think PyInt_AS_LONG is correct,
@@ -5040,7 +5040,7 @@ exec_statement(PyFrameObject *f, PyObject *prog, PyObject *globals,
     PyObject *v;
     int plain = 0;
 
-    if (PyTuple_Check(prog) && globals == Py_None && locals == Py_None &&
+    if (PyTuple_Check(prog) && globals == Py_Nil && locals == Py_Nil &&
         ((n = PyTuple_Size(prog)) == 2 || n == 3)) {
         /* Backward compatibility hack */
         globals = PyTuple_GetItem(prog, 1);
@@ -5048,9 +5048,9 @@ exec_statement(PyFrameObject *f, PyObject *prog, PyObject *globals,
             locals = PyTuple_GetItem(prog, 2);
         prog = PyTuple_GetItem(prog, 0);
     }
-    if (globals == Py_None) {
+    if (globals == Py_Nil) {
         globals = PyEval_GetGlobals();
-        if (locals == Py_None) {
+        if (locals == Py_Nil) {
             locals = PyEval_GetLocals();
             plain = 1;
         }
@@ -5060,7 +5060,7 @@ exec_statement(PyFrameObject *f, PyObject *prog, PyObject *globals,
             return -1;
         }
     }
-    else if (locals == Py_None)
+    else if (locals == Py_Nil)
         locals = globals;
     if (!PyString_Check(prog) &&
 #ifdef Py_USING_UNICODE

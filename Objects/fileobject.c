@@ -168,10 +168,10 @@ fill_file_fields(PyFileObject *f, FILE *fp, PyObject *name, char *mode,
     f->f_univ_newline = (strchr(mode, 'U') != NULL);
     f->f_newlinetypes = NEWLINE_UNKNOWN;
     f->f_skipnextlf = 0;
-    Py_INCREF(Py_None);
-    f->f_encoding = Py_None;
-    Py_INCREF(Py_None);
-    f->f_errors = Py_None;
+    Py_INCREF(Py_Nil);
+    f->f_encoding = Py_Nil;
+    Py_INCREF(Py_Nil);
+    f->f_errors = Py_Nil;
     f->readable = f->writable = 0;
     if (strchr(mode, 'r') != NULL || f->f_univ_newline)
         f->readable = 1;
@@ -467,7 +467,7 @@ close_the_file(PyFileObject *f)
                 return PyInt_FromLong((long)sts);
         }
     }
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyObject *
@@ -576,8 +576,8 @@ PyFile_SetEncodingAndErrors(PyObject *f, const char *enc, char* errors)
             return 0;
         }
     } else {
-        oerrors = Py_None;
-        Py_INCREF(Py_None);
+        oerrors = Py_Nil;
+        Py_INCREF(Py_Nil);
     }
     Py_SETREF(file->f_encoding, str);
     Py_SETREF(file->f_errors, oerrors);
@@ -810,8 +810,8 @@ file_seek(PyFileObject *f, PyObject *args)
         return NULL;
     }
     f->f_skipnextlf = 0;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 
@@ -918,8 +918,8 @@ file_truncate(PyFileObject *f, PyObject *args)
     if (ret)
         goto onioerror;
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 
 onioerror:
     PyErr_SetFromErrno(PyExc_IOError);
@@ -985,8 +985,8 @@ file_flush(PyFileObject *f)
         clearerr(f->f_fp);
         return NULL;
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -1846,11 +1846,11 @@ file_write(PyFileObject *f, PyObject *args)
 #ifdef Py_USING_UNICODE
         } else if (PyUnicode_Check(text)) {
             const char *encoding, *errors;
-            if (f->f_encoding != Py_None)
+            if (f->f_encoding != Py_Nil)
                 encoding = PyString_AS_STRING(f->f_encoding);
             else
                 encoding = PyUnicode_GetDefaultEncoding();
-            if (f->f_errors != Py_None)
+            if (f->f_errors != Py_Nil)
                 errors = PyString_AS_STRING(f->f_errors);
             else
                 errors = "strict";
@@ -1883,8 +1883,8 @@ file_write(PyFileObject *f, PyObject *args)
         clearerr(f->f_fp);
         return NULL;
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -2003,8 +2003,8 @@ file_writelines(PyFileObject *f, PyObject *seq)
             break;
     }
 
-    Py_INCREF(Py_None);
-    result = Py_None;
+    Py_INCREF(Py_Nil);
+    result = Py_Nil;
   error:
     Py_XDECREF(list);
     Py_XDECREF(it);
@@ -2041,7 +2041,7 @@ file_exit(PyObject *f, PyObject *args)
     /* We cannot return the result of close since a true
      * value will be interpreted as "yes, swallow the
      * exception if one was raised inside the with block". */
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(readline_doc,
@@ -2181,8 +2181,8 @@ get_newlines(PyFileObject *f, void *closure)
 {
     switch (f->f_newlinetypes) {
     case NEWLINE_UNKNOWN:
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     case NEWLINE_CR:
         return PyString_FromString("\r");
     case NEWLINE_LF:
@@ -2404,10 +2404,10 @@ file_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
         ((PyFileObject *)self)->f_name = not_yet_string;
         Py_INCREF(not_yet_string);
         ((PyFileObject *)self)->f_mode = not_yet_string;
-        Py_INCREF(Py_None);
-        ((PyFileObject *)self)->f_encoding = Py_None;
-        Py_INCREF(Py_None);
-        ((PyFileObject *)self)->f_errors = Py_None;
+        Py_INCREF(Py_Nil);
+        ((PyFileObject *)self)->f_encoding = Py_Nil;
+        Py_INCREF(Py_Nil);
+        ((PyFileObject *)self)->f_errors = Py_Nil;
         ((PyFileObject *)self)->weakreflist = NULL;
         ((PyFileObject *)self)->unlocked_count = 0;
     }
@@ -2609,9 +2609,9 @@ PyFile_WriteObject(PyObject *v, PyObject *f, int flags)
         }
 #ifdef Py_USING_UNICODE
         if ((flags & Py_PRINT_RAW) &&
-            PyUnicode_Check(v) && enc != Py_None) {
+            PyUnicode_Check(v) && enc != Py_Nil) {
             char *cenc = PyString_AS_STRING(enc);
-            char *errors = fobj->f_errors == Py_None ?
+            char *errors = fobj->f_errors == Py_Nil ?
               "strict" : PyString_AS_STRING(fobj->f_errors);
             value = PyUnicode_AsEncodedString(v, cenc, errors);
             if (value == NULL)

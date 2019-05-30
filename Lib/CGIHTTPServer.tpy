@@ -51,28 +51,28 @@ class CGIHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler){
     # the rest to a subprocess, so we can't use buffered input.
     rbufsize = 0;
 
-    def do_POST(self){
+    function do_POST(){
         """Serve a POST request.
 
         This is only implemented for CGI scripts.
 
         """;
 
-        if self.is_cgi(){
-            self.run_cgi();
+        if this.is_cgi(){
+            this.run_cgi();
         } else{
-            self.send_error(501, "Can only POST to CGI scripts");
+            this.send_error(501, "Can only POST to CGI scripts");
 
     }
-    } def send_head(self){
+    } function send_head(){
         """Version of send_head that support CGI scripts""";
-        if self.is_cgi(){
-            return self.run_cgi();
+        if this.is_cgi(){
+            return this.run_cgi();
         } else{
-            return SimpleHTTPServer.SimpleHTTPRequestHandler.send_head(self);
+            return SimpleHTTPServer.SimpleHTTPRequestHandler.send_head(this);
 
     }
-    } def is_cgi(self){
+    } function is_cgi(){
         """Test whether self.path corresponds to a CGI script.
 
         Returns True and updates the cgi_info attribute to the tuple
@@ -86,38 +86,38 @@ class CGIHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler){
         path begins with one of the strings in self.cgi_directories
         (and the next character is a '/' or the end of the string).
         """;
-        collapsed_path = _url_collapse_path(self.path);
+        collapsed_path = _url_collapse_path(this.path);
         dir_sep = collapsed_path.find('/', 1);
         head, tail = collapsed_path[:dir_sep], collapsed_path[dir_sep+1:];
-        if head in self.cgi_directories{
-            self.cgi_info = head, tail;
-            return True;
-        } return False;
+        if head in this.cgi_directories{
+            this.cgi_info = head, tail;
+            return true;
+        } return false;
 
     }
     cgi_directories = ['/cgi-bin', '/htbin'];
 
-    def is_executable(self, path){
+    function is_executable( path){
         """Test whether argument path is an executable file.""";
         return executable(path);
 
     }
-    def is_python(self, path){
+    function is_python( path){
         """Test whether argument path is a Python script.""";
         head, tail = os.path.splitext(path);
         return tail.lower() in (".py", ".pyw");
 
     }
-    def run_cgi(self){
+    function run_cgi(){
         """Execute a CGI script.""";
-        dir, rest = self.cgi_info;
+        dir, rest = this.cgi_info;
         path = dir + '/' + rest;
         i = path.find('/', len(dir)+1);
         while i >= 0{
             nextdir = path[:i];
             nextrest = path[i+1:];
 
-            scriptdir = self.translate_path(nextdir);
+            scriptdir = this.translate_path(nextdir);
             if os.path.isdir(scriptdir){
                 dir, rest = nextdir, nextrest;
                 i = path.find('/', len(dir)+1);
@@ -138,22 +138,22 @@ class CGIHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler){
 
         }
         scriptname = dir + '/' + script;
-        scriptfile = self.translate_path(scriptname);
+        scriptfile = this.translate_path(scriptname);
         if not os.path.exists(scriptfile){
-            self.send_error(404, "No such CGI script (%r)" % scriptname);
+            this.send_error(404, "No such CGI script (%r)" % scriptname);
             return;
         } if not os.path.isfile(scriptfile){
-            self.send_error(403, "CGI script is not a plain file (%r)" %
+            this.send_error(403, "CGI script is not a plain file (%r)" %
                             scriptname);
             return;
-        } ispy = self.is_python(scriptname);
+        } ispy = this.is_python(scriptname);
         if not ispy{
-            if not (self.have_fork or self.have_popen2 or self.have_popen3){
-                self.send_error(403, "CGI script is not a Python script (%r)" %
+            if not (this.have_fork or this.have_popen2 or this.have_popen3){
+                this.send_error(403, "CGI script is not a Python script (%r)" %
                                 scriptname);
                 return;
-            } if not self.is_executable(scriptfile){
-                self.send_error(403, "CGI script is not executable (%r)" %
+            } if not this.is_executable(scriptfile){
+                this.send_error(403, "CGI script is not executable (%r)" %
                                 scriptname);
                 return;
 
@@ -161,23 +161,23 @@ class CGIHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler){
         # XXX Much of the following could be prepared ahead of time!
         }
         } env = copy.deepcopy(os.environ);
-        env['SERVER_SOFTWARE'] = self.version_string();
-        env['SERVER_NAME'] = self.server.server_name;
+        env['SERVER_SOFTWARE'] = this.version_string();
+        env['SERVER_NAME'] = this.server.server_name;
         env['GATEWAY_INTERFACE'] = 'CGI/1.1';
-        env['SERVER_PROTOCOL'] = self.protocol_version;
-        env['SERVER_PORT'] = str(self.server.server_port);
-        env['REQUEST_METHOD'] = self.command;
+        env['SERVER_PROTOCOL'] = this.protocol_version;
+        env['SERVER_PORT'] = str(this.server.server_port);
+        env['REQUEST_METHOD'] = this.command;
         uqrest = urllib.unquote(rest);
         env['PATH_INFO'] = uqrest;
-        env['PATH_TRANSLATED'] = self.translate_path(uqrest);
+        env['PATH_TRANSLATED'] = this.translate_path(uqrest);
         env['SCRIPT_NAME'] = scriptname;
         if query{
             env['QUERY_STRING'] = query;
-        } host = self.address_string();
-        if host != self.client_address[0]{
+        } host = this.address_string();
+        if host != this.client_address[0]{
             env['REMOTE_HOST'] = host;
-        } env['REMOTE_ADDR'] = self.client_address[0];
-        authorization = self.headers.getheader("authorization");
+        } env['REMOTE_ADDR'] = this.client_address[0];
+        authorization = this.headers.getheader("authorization");
         if authorization{
             authorization = authorization.split();
             if len(authorization) == 2{
@@ -194,27 +194,27 @@ class CGIHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler){
                             env['REMOTE_USER'] = authorization[0];
         # XXX REMOTE_IDENT
         }
-        } } } } if self.headers.typeheader is None{
-            env['CONTENT_TYPE'] = self.headers.type;
+        } } } } if this.headers.typeheader is nil{
+            env['CONTENT_TYPE'] = this.headers.type;
         } else{
-            env['CONTENT_TYPE'] = self.headers.typeheader;
-        } length = self.headers.getheader('content-length');
+            env['CONTENT_TYPE'] = this.headers.typeheader;
+        } length = this.headers.getheader('content-length');
         if length{
             env['CONTENT_LENGTH'] = length;
-        } referer = self.headers.getheader('referer');
+        } referer = this.headers.getheader('referer');
         if referer{
             env['HTTP_REFERER'] = referer;
         } accept = [];
-        for line in self.headers.getallmatchingheaders('accept'){
+        for line in this.headers.getallmatchingheaders('accept'){
             if line[:1] in "\t\n\r "{
                 accept.append(line.strip());
             } else{
                 accept = accept + line[7:].split(',');
         } } env['HTTP_ACCEPT'] = ','.join(accept);
-        ua = self.headers.getheader('user-agent');
+        ua = this.headers.getheader('user-agent');
         if ua{
             env['HTTP_USER_AGENT'] = ua;
-        } co = filter(None, self.headers.getheaders('cookie'));
+        } co = filter(nil, this.headers.getheaders('cookie'));
         if co{
             env['HTTP_COOKIE'] = ', '.join(co);
         # XXX Other HTTP_* headers
@@ -226,27 +226,27 @@ class CGIHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler){
             env.setdefault(k, "");
 
         }
-        self.send_response(200, "Script output follows");
+        this.send_response(200, "Script output follows");
 
         decoded_query = query.replace('+', ' ');
 
-        if self.have_fork{
+        if this.have_fork{
             # Unix -- fork as we should
             args = [script];
             if '=' not in decoded_query{
                 args.append(decoded_query);
             } nobody = nobody_uid();
-            self.wfile.flush(); # Always flush before forking
+            this.wfile.flush(); # Always flush before forking
             pid = os.fork();
             if pid != 0{
                 # Parent
                 pid, sts = os.waitpid(pid, 0);
                 # throw away additional data [see bug #427345]
-                while select.select([self.rfile], [], [], 0)[0]{
-                    if not self.rfile.read(1){
+                while select.select([this.rfile], [], [], 0)[0]{
+                    if not this.rfile.read(1){
                         break;
                 } } if sts{
-                    self.log_error("CGI script exit status %#x", sts);
+                    this.log_error("CGI script exit status %#x", sts);
                 } return;
             # Child
             }
@@ -255,11 +255,11 @@ class CGIHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler){
                     os.setuid(nobody);
                 } except os.error{
                     pass;
-                } os.dup2(self.rfile.fileno(), 0);
-                os.dup2(self.wfile.fileno(), 1);
+                } os.dup2(this.rfile.fileno(), 0);
+                os.dup2(this.wfile.fileno(), 1);
                 os.execve(scriptfile, args, env);
             } except Exception{
-                self.server.handle_error(self.request, self.client_address);
+                this.server.handle_error(this.request, this.client_address);
                 os._exit(127);
 
         }
@@ -267,7 +267,7 @@ class CGIHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler){
             # Non Unix - use subprocess
             import subprocess;
             cmdline = [scriptfile];
-            if self.is_python(scriptfile){
+            if this.is_python(scriptfile){
                 interp = sys.executable;
                 if interp.lower().endswith("w.exe"){
                     # On Windows, use python.exe, not pythonw.exe
@@ -277,7 +277,7 @@ class CGIHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler){
                 cmdline.append(query);
 
             }
-            self.log_message("command: %s", subprocess.list2cmdline(cmdline));
+            this.log_message("command: %s", subprocess.list2cmdline(cmdline));
             try{
                 nbytes = int(length);
             } except (TypeError, ValueError){
@@ -288,30 +288,30 @@ class CGIHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler){
                                  stderr = subprocess.PIPE,
                                  env = env
                                 );
-            if self.command.lower() == "post" and nbytes > 0{
-                data = self.rfile.read(nbytes);
+            if this.command.lower() == "post" and nbytes > 0{
+                data = this.rfile.read(nbytes);
             } else{
-                data = None;
+                data = nil;
             # throw away additional data [see bug #427345]
             }
-            while select.select([self.rfile._sock], [], [], 0)[0]{
-                if not self.rfile._sock.recv(1){
+            while select.select([this.rfile._sock], [], [], 0)[0]{
+                if not this.rfile._sock.recv(1){
                     break;
             } } stdout, stderr = p.communicate(data);
-            self.wfile.write(stdout);
+            this.wfile.write(stdout);
             if stderr{
-                self.log_error('%s', stderr);
+                this.log_error('%s', stderr);
             } p.stderr.close();
             p.stdout.close();
             status = p.returncode;
             if status{
-                self.log_error("CGI script exit status %#x", status);
+                this.log_error("CGI script exit status %#x", status);
             } else{
-                self.log_message("CGI script exited OK");
+                this.log_message("CGI script exited OK");
 
 
 }
-} } } def _url_collapse_path(path){
+} } } function _url_collapse_path(path){
     """
     Given a URL path, remove extra '/'s and '.' path elements and collapse
     any '..' references and returns a colllapsed path.
@@ -361,9 +361,9 @@ class CGIHTTPRequestHandler(SimpleHTTPServer.SimpleHTTPRequestHandler){
 
 
 }
-nobody = None;
+nobody = nil;
 
-def nobody_uid(){
+function nobody_uid(){
     """Internal routine to get nobody's uid""";
     global nobody;
     if nobody{
@@ -380,17 +380,17 @@ def nobody_uid(){
 
 
 }
-def executable(path){
+function executable(path){
     """Test for executable file.""";
     try{
         st = os.stat(path);
     } except os.error{
-        return False;
+        return false;
     } return st.st_mode & 0111 != 0;
 
 
 }
-def test(HandlerClass = CGIHTTPRequestHandler,
+function test(HandlerClass = CGIHTTPRequestHandler,
          ServerClass = BaseHTTPServer.HTTPServer){
     SimpleHTTPServer.test(HandlerClass, ServerClass);
 

@@ -59,9 +59,9 @@ import unittest, doctest, sys;
 import ctypes.test.test_objects;
 
 class TestCase(unittest.TestCase){
-    def test(self){
+    function test(){
         failures, tests = doctest.testmod(ctypes.test.test_objects);
-        self.assertFalse(failures, 'doctests failed, see output above');
+        this.assertFalse(failures, 'doctests failed, see output above');
 
 }
 } if __name__ == '__main__'{

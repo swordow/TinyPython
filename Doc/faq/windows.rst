@@ -234,12 +234,12 @@ Embedding the Python interpreter in a Windows app can be summarized as follows:
 
    .. code-block:: c
 
-      Py_INCREF(Py_None);
-      _resultobj = Py_None;
+      Py_INCREF(Py_Nil);
+      _resultobj = Py_Nil;
       return _resultobj;
 
-   Alas, Py_None is a macro that expands to a reference to a complex data
-   structure called _Py_NoneStruct inside pythonNN.dll.  Again, this code will
+   Alas, Py_Nil is a macro that expands to a reference to a complex data
+   structure called _Py_NilStruct inside pythonNN.dll.  Again, this code will
    fail in a mult-compiler environment.  Replace such code by:
 
    .. code-block:: c

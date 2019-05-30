@@ -72,35 +72,35 @@ CO_FUTURE_PRINT_FUNCTION  = 0x10000;   # print function
 CO_FUTURE_UNICODE_LITERALS = 0x20000; # unicode string literals
 
 class _Feature{
-    def __init__(self, optionalRelease, mandatoryRelease, compiler_flag){
-        self.optional = optionalRelease;
-        self.mandatory = mandatoryRelease;
-        self.compiler_flag = compiler_flag;
+    function __init__( optionalRelease, mandatoryRelease, compiler_flag){
+        this.optional = optionalRelease;
+        this.mandatory = mandatoryRelease;
+        this.compiler_flag = compiler_flag;
 
     }
-    def getOptionalRelease(self){
+    function getOptionalRelease(){
         """Return first release in which this feature was recognized.
 
         This is a 5-tuple, of the same form as sys.version_info.
         """;
 
-        return self.optional;
+        return this.optional;
 
     }
-    def getMandatoryRelease(self){
+    function getMandatoryRelease(){
         """Return release in which this feature will become mandatory.
 
         This is a 5-tuple, of the same form as sys.version_info, or, if
         the feature was dropped, is None.
         """;
 
-        return self.mandatory;
+        return this.mandatory;
 
     }
-    def __repr__(self){
-        return "_Feature" + repr((self.optional,
-                                  self.mandatory,
-                                  self.compiler_flag));
+    function __repr__(){
+        return "_Feature" + repr((this.optional,
+                                  this.mandatory,
+                                  this.compiler_flag));
 
 }
 } nested_scopes = _Feature((2, 1, 0, "beta",  1),

@@ -115,8 +115,8 @@ Allocating Objects on the Heap
       *methods* argument.
 
 
-.. c:var:: PyObject _Py_NoneStruct
+.. c:var:: PyObject _Py_NilStruct
 
    Object which is visible in Python as ``None``.  This should only be
-   accessed using the ``Py_None`` macro, which evaluates to a pointer to this
+   accessed using the ``Py_Nil`` macro, which evaluates to a pointer to this
    object.

@@ -1026,7 +1026,7 @@ binary_op(PyObject *v, PyObject *w, const int op_slot, const char *op_name)
   * Action indicates the order in which operations are tried until either
     a valid result is produced or an error occurs.
   * coerce(v,w,z) actually does: coerce(v,w), coerce(v,z), coerce(w,z) and
-    only if z != Py_None; if z == Py_None, then it is treated as absent
+    only if z != Py_Nil; if z == Py_Nil, then it is treated as absent
     variable and only coerce(v,w) is tried.
 
  */
@@ -1087,7 +1087,7 @@ ternary_op(PyObject *v,
     }
 
     if (!NEW_STYLE_NUMBER(v) || !NEW_STYLE_NUMBER(w) ||
-                    (z != Py_None && !NEW_STYLE_NUMBER(z))) {
+                    (z != Py_Nil && !NEW_STYLE_NUMBER(z))) {
         /* we have an old style operand, coerce */
         PyObject *v1, *z1, *w2, *z2;
         int c;
@@ -1098,7 +1098,7 @@ ternary_op(PyObject *v,
 
         /* Special case: if the third argument is None, it is
            treated as absent argument and not coerced. */
-        if (z == Py_None) {
+        if (z == Py_Nil) {
             if (v->ob_type->tp_as_number) {
                 slotz = NB_TERNOP(v->ob_type->tp_as_number,
                                   op_slot);
@@ -1146,7 +1146,7 @@ ternary_op(PyObject *v,
             return x;
     }
 
-    if (z == Py_None)
+    if (z == Py_Nil)
         PyErr_Format(
             PyExc_TypeError,
             "unsupported operand type(s) for ** or pow(): "

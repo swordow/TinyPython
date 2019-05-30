@@ -29,16 +29,16 @@ _saferepr = _repr.repr;
 __all__ = ["run", "pm", "Pdb", "runeval", "runctx", "runcall", "set_trace",
            "post_mortem", "help"];
 
-def find_function(funcname, filename){
+function find_function(funcname, filename){
     cre = re.compile(r'def\s+%s\s*[(]' % re.escape(funcname));
     try{
         fp = open(filename);
     } except IOError{
-        return None;
+        return nil;
     # consumer of this info expects the first line to be 1
     }
     lineno = 1;
-    answer = None;
+    answer = nil;
     while 1{
         line = fp.readline();
         if line == ''{
@@ -61,15 +61,15 @@ line_prefix = '\n-> ';   # Probably a better default
 
 class Pdb(bdb.Bdb, cmd.Cmd){
 
-    def __init__(self, completekey='tab', stdin=None, stdout=None, skip=None){
-        bdb.Bdb.__init__(self, skip=skip);
-        cmd.Cmd.__init__(self, completekey, stdin, stdout);
+    function __init__( completekey='tab', stdin=nil, stdout=nil, skip=nil){
+        bdb.Bdb.__init__(this, skip=skip);
+        cmd.Cmd.__init__(this, completekey, stdin, stdout);
         if stdout{
-            self.use_rawinput = 0;
-        } self.prompt = '(Pdb) ';
-        self.aliases = {};
-        self.mainpyfile = '';
-        self._wait_for_mainpyfile = 0;
+            this.use_rawinput = 0;
+        } this.prompt = '(Pdb) ';
+        this.aliases = {};
+        this.mainpyfile = '';
+        this._wait_for_mainpyfile = 0;
         # Try to load readline if it exists
         try{
             import readline;
@@ -78,7 +78,7 @@ class Pdb(bdb.Bdb, cmd.Cmd){
 
         # Read $HOME/.pdbrc and ./.pdbrc
         }
-        self.rcLines = [];
+        this.rcLines = [];
         if 'HOME' in os.environ{
             envHome = os.environ['HOME'];
             try{
@@ -87,7 +87,7 @@ class Pdb(bdb.Bdb, cmd.Cmd){
                 pass;
             } else{
                 for line in rcFile.readlines(){
-                    self.rcLines.append(line);
+                    this.rcLines.append(line);
                 } rcFile.close();
         } } try{
             rcFile = open(".pdbrc");
@@ -95,159 +95,159 @@ class Pdb(bdb.Bdb, cmd.Cmd){
             pass;
         } else{
             for line in rcFile.readlines(){
-                self.rcLines.append(line);
+                this.rcLines.append(line);
             } rcFile.close();
 
         }
-        self.commands = {}; # associates a command list to breakpoint numbers
-        self.commands_doprompt = {}; # for each bp num, tells if the prompt
+        this.commands = {}; # associates a command list to breakpoint numbers
+        this.commands_doprompt = {}; # for each bp num, tells if the prompt
                                     # must be disp. after execing the cmd list
-        self.commands_silent = {}; # for each bp num, tells if the stack trace
+        this.commands_silent = {}; # for each bp num, tells if the stack trace
                                   # must be disp. after execing the cmd list
-        self.commands_defining = False; # True while in the process of defining
+        this.commands_defining = false; # True while in the process of defining
                                        # a command list
-        self.commands_bnum = None; # The breakpoint number for which we are
+        this.commands_bnum = nil; # The breakpoint number for which we are
                                   # defining a list
 
     }
-    def reset(self){
-        bdb.Bdb.reset(self);
-        self.forget();
+    function reset(){
+        bdb.Bdb.reset(this);
+        this.forget();
 
     }
-    def forget(self){
-        self.lineno = None;
-        self.stack = [];
-        self.curindex = 0;
-        self.curframe = None;
+    function forget(){
+        this.lineno = nil;
+        this.stack = [];
+        this.curindex = 0;
+        this.curframe = nil;
 
     }
-    def setup(self, f, t){
-        self.forget();
-        self.stack, self.curindex = self.get_stack(f, t);
-        self.curframe = self.stack[self.curindex][0];
+    function setup( f, t){
+        this.forget();
+        this.stack, this.curindex = this.get_stack(f, t);
+        this.curframe = this.stack[this.curindex][0];
         # The f_locals dictionary is updated from the actual frame
         # locals whenever the .f_locals accessor is called, so we
         # cache it here to ensure that modifications are not overwritten.
-        self.curframe_locals = self.curframe.f_locals;
-        self.execRcLines();
+        this.curframe_locals = this.curframe.f_locals;
+        this.execRcLines();
 
     # Can be executed earlier than 'setup' if desired
     }
-    def execRcLines(self){
-        if self.rcLines{
+    function execRcLines(){
+        if this.rcLines{
             # Make local copy because of recursion
-            rcLines = self.rcLines;
+            rcLines = this.rcLines;
             # executed only once
-            self.rcLines = [];
+            this.rcLines = [];
             for line in rcLines{
                 line = line[:-1];
                 if len(line) > 0 and line[0] != '#'{
-                    self.onecmd(line);
+                    this.onecmd(line);
 
     # Override Bdb methods
 
     }
-    } } } def user_call(self, frame, argument_list){
+    } } } function user_call( frame, argument_list){
         """This method is called when there is the remote possibility
         that we ever need to stop in this function.""";
-        if self._wait_for_mainpyfile{
+        if this._wait_for_mainpyfile{
             return;
-        } if self.stop_here(frame){
-            print >>self.stdout, '--Call--';
-            self.interaction(frame, None);
+        } if this.stop_here(frame){
+            print >>this.stdout, '--Call--';
+            this.interaction(frame, nil);
 
     }
-    } def user_line(self, frame){
+    } function user_line( frame){
         """This function is called when we stop or break at this line.""";
-        if self._wait_for_mainpyfile{
-            if (self.mainpyfile != self.canonic(frame.f_code.co_filename)
+        if this._wait_for_mainpyfile{
+            if (this.mainpyfile != this.canonic(frame.f_code.co_filename)
                 or frame.f_lineno<= 0){
                 return;
-            } self._wait_for_mainpyfile = 0;
-        } if self.bp_commands(frame){
-            self.interaction(frame, None);
+            } this._wait_for_mainpyfile = 0;
+        } if this.bp_commands(frame){
+            this.interaction(frame, nil);
 
     }
-    } def bp_commands(self,frame){
+    } function bp_commands(frame){
         """Call every command that was set for the current active breakpoint
         (if there is one).
 
         Returns True if the normal interaction function must be called,
         False otherwise.""";
         # self.currentbp is set in bdb in Bdb.break_here if a breakpoint was hit
-        if getattr(self, "currentbp", False) and \
-               self.currentbp in self.commands{
-            currentbp = self.currentbp;
-            self.currentbp = 0;
-            lastcmd_back = self.lastcmd;
-            self.setup(frame, None);
-            for line in self.commands[currentbp]{
-                self.onecmd(line);
-            } self.lastcmd = lastcmd_back;
-            if not self.commands_silent[currentbp]{
-                self.print_stack_entry(self.stack[self.curindex]);
-            } if self.commands_doprompt[currentbp]{
-                self.cmdloop();
-            } self.forget();
+        if getattr(this, "currentbp", false) and \
+               this.currentbp in this.commands{
+            currentbp = this.currentbp;
+            this.currentbp = 0;
+            lastcmd_back = this.lastcmd;
+            this.setup(frame, nil);
+            for line in this.commands[currentbp]{
+                this.onecmd(line);
+            } this.lastcmd = lastcmd_back;
+            if not this.commands_silent[currentbp]{
+                this.print_stack_entry(this.stack[this.curindex]);
+            } if this.commands_doprompt[currentbp]{
+                this.cmdloop();
+            } this.forget();
             return;
         } return 1;
 
     }
-    def user_return(self, frame, return_value){
+    function user_return( frame, return_value){
         """This function is called when a return trap is set here.""";
-        if self._wait_for_mainpyfile{
+        if this._wait_for_mainpyfile{
             return;
         } frame.f_locals['__return__'] = return_value;
-        print >>self.stdout, '--Return--';
-        self.interaction(frame, None);
+        print >>this.stdout, '--Return--';
+        this.interaction(frame, nil);
 
     }
-    def user_exception(self, frame, exc_info){
+    function user_exception( frame, exc_info){
         """This function is called if an exception occurs,
         but only if we are to stop at or just below this level.""";
-        if self._wait_for_mainpyfile{
+        if this._wait_for_mainpyfile{
             return;
         } exc_type, exc_value, exc_traceback = exc_info;
         frame.f_locals['__exception__'] = exc_type, exc_value;
         if type(exc_type) == type(''){
             exc_type_name = exc_type;
-        } else{ exc_type_name = exc_type.__name__;
-        print >>self.stdout, exc_type_name + ':', _saferepr(exc_value);
-        self.interaction(frame, exc_traceback);
+        } else{ exc_type_name = exc_type.__name__;}
+        print >>this.stdout, exc_type_name + ':', _saferepr(exc_value);
+        this.interaction(frame, exc_traceback);
 
     # General interaction function
 
     }
-    def interaction(self, frame, traceback){
-        self.setup(frame, traceback);
-        self.print_stack_entry(self.stack[self.curindex]);
-        self.cmdloop();
-        self.forget();
+    function interaction( frame, traceback){
+        this.setup(frame, traceback);
+        this.print_stack_entry(this.stack[this.curindex]);
+        this.cmdloop();
+        this.forget();
 
     }
-    def displayhook(self, obj){
+    function displayhook( obj){
         """Custom displayhook for the exec in default(), which prevents
         assignment of the _ variable in the builtins.
         """;
         # reproduce the behavior of the standard displayhook, not printing None
-        if obj is not None{
+        if obj is not nil{
             print repr(obj);
 
     }
-    } def default(self, line){
-        if line[:1] == '!'{ line = line[1:];
-        locals = self.curframe_locals;
-        globals = self.curframe.f_globals;
+    } function default( line){
+        if line[:1] == '!'{ line = line[1:];}
+        locals = this.curframe_locals;
+        globals = this.curframe.f_globals;
         try{
             code = compile(line + '\n', '<stdin>', 'single');
             save_stdout = sys.stdout;
             save_stdin = sys.stdin;
             save_displayhook = sys.displayhook;
             try{
-                sys.stdin = self.stdin;
-                sys.stdout = self.stdout;
-                sys.displayhook = self.displayhook;
+                sys.stdin = this.stdin;
+                sys.stdout = this.stdout;
+                sys.displayhook = this.displayhook;
                 exec code in globals, locals;
             } finally{
                 sys.stdout = save_stdout;
@@ -257,17 +257,17 @@ class Pdb(bdb.Bdb, cmd.Cmd){
             t, v = sys.exc_info()[:2];
             if type(t) == type(''){
                 exc_type_name = t;
-            } else{ exc_type_name = t.__name__;
-            print >>self.stdout, '***', exc_type_name + ':', v;
+            } else{ exc_type_name = t.__name__;}
+            print >>this.stdout, '***', exc_type_name + ':', v;
 
     }
-    } def precmd(self, line){
+    } function precmd( line){
         """Handle alias expansion and ';;' separator.""";
         if not line.strip(){
             return line;
         } args = line.split();
-        while args[0] in self.aliases{
-            line = self.aliases[args[0]];
+        while args[0] in this.aliases{
+            line = this.aliases[args[0]];
             ii = 1;
             for tmpArg in args[1:]{
                 line = line.replace("%" + str(ii),
@@ -283,36 +283,36 @@ class Pdb(bdb.Bdb, cmd.Cmd){
             if marker >= 0{
                 # queue up everything after marker
                 next = line[marker+2:].lstrip();
-                self.cmdqueue.append(next);
+                this.cmdqueue.append(next);
                 line = line[:marker].rstrip();
         } } return line;
 
     }
-    def onecmd(self, line){
+    function onecmd( line){
         """Interpret the argument as though it had been typed in response
         to the prompt.
 
         Checks whether this line is typed at the normal prompt or in
         a breakpoint command list definition.
         """;
-        if not self.commands_defining{
-            return cmd.Cmd.onecmd(self, line);
+        if not this.commands_defining{
+            return cmd.Cmd.onecmd(this, line);
         } else{
-            return self.handle_command_def(line);
+            return this.handle_command_def(line);
 
     }
-    } def handle_command_def(self,line){
+    } function handle_command_def(line){
         """Handles one command line during command list definition.""";
-        cmd, arg, line = self.parseline(line);
+        cmd, arg, line = this.parseline(line);
         if not cmd{
             return;
         } if cmd == 'silent'{
-            self.commands_silent[self.commands_bnum] = True;
+            this.commands_silent[this.commands_bnum] = true;
             return; # continue to handle other cmd def in the cmd list
         } elif cmd == 'end'{
-            self.cmdqueue = [];
+            this.cmdqueue = [];
             return 1; # end of cmd list
-        } cmdlist = self.commands[self.commands_bnum];
+        } cmdlist = this.commands[this.commands_bnum];
         if arg{
             cmdlist.append(cmd+' '+arg);
         } else{
@@ -320,14 +320,14 @@ class Pdb(bdb.Bdb, cmd.Cmd){
         # Determine if we must stop
         }
         try{
-            func = getattr(self, 'do_' + cmd);
+            func = getattr(this, 'do_' + cmd);
         } except AttributeError{
-            func = self.default;
+            func = this.default;
         # one of the resuming commands
         }
-        if func.func_name in self.commands_resuming{
-            self.commands_doprompt[self.commands_bnum] = False;
-            self.cmdqueue = [];
+        if func.func_name in this.commands_resuming{
+            this.commands_doprompt[this.commands_bnum] = false;
+            this.cmdqueue = [];
             return 1;
         } return;
 
@@ -338,7 +338,7 @@ class Pdb(bdb.Bdb, cmd.Cmd){
     }
     do_h = cmd.Cmd.do_help;
 
-    def do_commands(self, arg){
+    function do_commands( arg){
         """Defines a list of commands associated to a breakpoint.
 
         Those commands will be executed whenever the breakpoint causes
@@ -349,38 +349,38 @@ class Pdb(bdb.Bdb, cmd.Cmd){
             try{
                 bnum = int(arg);
             } except Exception{
-                print >>self.stdout, "Usage : commands [bnum]\n        ..." \
+                print >>this.stdout, "Usage : commands [bnum]\n        ..." \
                                      "\n        end";
                 return;
-        } } self.commands_bnum = bnum;
-        self.commands[bnum] = [];
-        self.commands_doprompt[bnum] = True;
-        self.commands_silent[bnum] = False;
-        prompt_back = self.prompt;
-        self.prompt = '(com) ';
-        self.commands_defining = True;
+        } } this.commands_bnum = bnum;
+        this.commands[bnum] = [];
+        this.commands_doprompt[bnum] = true;
+        this.commands_silent[bnum] = false;
+        prompt_back = this.prompt;
+        this.prompt = '(com) ';
+        this.commands_defining = true;
         try{
-            self.cmdloop();
+            this.cmdloop();
         } finally{
-            self.commands_defining = False;
-            self.prompt = prompt_back;
+            this.commands_defining = false;
+            this.prompt = prompt_back;
 
     }
-    } def do_break(self, arg, temporary = 0){
+    } function do_break( arg, temporary = 0){
         # break [ ([filename:]lineno | function) [, "condition"] ]
         if not arg{
-            if self.breaks{  # There's at least one
-                print >>self.stdout, "Num Type         Disp Enb   Where";
+            if this.breaks{  # There's at least one
+                print >>this.stdout, "Num Type         Disp Enb   Where";
                 for bp in bdb.Breakpoint.bpbynumber{
                     if bp{
-                        bp.bpprint(self.stdout);
+                        bp.bpprint(this.stdout);
             } } } return;
         # parse arguments; comma has lowest precedence
         # and cannot occur in filename
         }
-        filename = None;
-        lineno = None;
-        cond = None;
+        filename = nil;
+        lineno = nil;
+        cond = nil;
         comma = arg.find(',');
         if comma > 0{
             # parse stuff after comma: "condition"
@@ -389,13 +389,13 @@ class Pdb(bdb.Bdb, cmd.Cmd){
         # parse stuff before comma: [filename:]lineno | function
         }
         colon = arg.rfind(':');
-        funcname = None;
+        funcname = nil;
         if colon >= 0{
             filename = arg[:colon].rstrip();
-            f = self.lookupmodule(filename);
+            f = this.lookupmodule(filename);
             if not f{
-                print >>self.stdout, '*** ', repr(filename),;
-                print >>self.stdout, 'not found from sys.path';
+                print >>this.stdout, '*** ', repr(filename),;
+                print >>this.stdout, 'not found from sys.path';
                 return;
             } else{
                 filename = f;
@@ -403,7 +403,7 @@ class Pdb(bdb.Bdb, cmd.Cmd){
             try{
                 lineno = int(arg);
             } except ValueError, msg{
-                print >>self.stdout, '*** Bad lineno:', arg;
+                print >>this.stdout, '*** Bad lineno:', arg;
                 return;
         } } else{
             # no colon; can be lineno or function
@@ -412,8 +412,8 @@ class Pdb(bdb.Bdb, cmd.Cmd){
             } except ValueError{
                 try{
                     func = eval(arg,
-                                self.curframe.f_globals,
-                                self.curframe_locals);
+                                this.curframe.f_globals,
+                                this.curframe_locals);
                 } except Exception{
                     func = arg;
                 } try{
@@ -427,48 +427,48 @@ class Pdb(bdb.Bdb, cmd.Cmd){
                     filename = code.co_filename;
                 } except Exception{
                     # last thing to try
-                    (ok, filename, ln) = self.lineinfo(arg);
+                    (ok, filename, ln) = this.lineinfo(arg);
                     if not ok{
-                        print >>self.stdout, '*** The specified object',;
-                        print >>self.stdout, repr(arg),;
-                        print >>self.stdout, 'is not a function';
-                        print >>self.stdout, 'or was not found along sys.path.';
+                        print >>this.stdout, '*** The specified object',;
+                        print >>this.stdout, repr(arg),;
+                        print >>this.stdout, 'is not a function';
+                        print >>this.stdout, 'or was not found along sys.path.';
                         return;
                     } funcname = ok; # ok contains a function name
                     lineno = int(ln);
         } } } if not filename{
-            filename = self.defaultFile();
+            filename = this.defaultFile();
         # Check for reasonable breakpoint
         }
-        line = self.checkline(filename, lineno);
+        line = this.checkline(filename, lineno);
         if line{
             # now set the break point
-            err = self.set_break(filename, line, temporary, cond, funcname);
-            if err{ print >>self.stdout, '***', err;
+            err = this.set_break(filename, line, temporary, cond, funcname);
+            if err{ print >>this.stdout, '***', err;}
             else{
-                bp = self.get_breaks(filename, line)[-1];
-                print >>self.stdout, "Breakpoint %d at %s:%d" % (bp.number,
+                bp = this.get_breaks(filename, line)[-1];
+                print >>this.stdout, "Breakpoint %d at %s:%d" % (bp.number,
                                                                  bp.file,
                                                                  bp.line);
 
     # To be overridden in derived debuggers
     }
-    } } def defaultFile(self){
+    } } function defaultFile(){
         """Produce a reasonable default.""";
-        filename = self.curframe.f_code.co_filename;
-        if filename == '<string>' and self.mainpyfile{
-            filename = self.mainpyfile;
+        filename = this.curframe.f_code.co_filename;
+        if filename == '<string>' and this.mainpyfile{
+            filename = this.mainpyfile;
         } return filename;
 
     }
     do_b = do_break;
 
-    def do_tbreak(self, arg){
-        self.do_break(arg, 1);
+    function do_tbreak( arg){
+        this.do_break(arg, 1);
 
     }
-    def lineinfo(self, identifier){
-        failed = (None, None, None);
+    function lineinfo( identifier){
+        failed = (nil, nil, nil);
         # Input is identifier, may be in single quotes
         idstring = identifier.split("'");
         if len(idstring) == 1{
@@ -479,7 +479,7 @@ class Pdb(bdb.Bdb, cmd.Cmd){
             id = idstring[1].strip();
         } else{
             return failed;
-        } if id == ''{ return failed;
+        } if id == ''{ return failed;}
         parts = id.split('.');
         # Protection for derived debuggers
         if parts[0] == 'self'{
@@ -488,13 +488,13 @@ class Pdb(bdb.Bdb, cmd.Cmd){
                 return failed;
         # Best first guess at file to look at
         }
-        } fname = self.defaultFile();
+        } fname = this.defaultFile();
         if len(parts) == 1{
             item = parts[0];
         } else{
             # More than one part.
             # First is module, second is method/class
-            f = self.lookupmodule(parts[0]);
+            f = this.lookupmodule(parts[0]);
             if f{
                 fname = f;
             } item = parts[1];
@@ -502,7 +502,7 @@ class Pdb(bdb.Bdb, cmd.Cmd){
         return answer or failed;
 
     }
-    def checkline(self, filename, lineno){
+    function checkline( filename, lineno){
         """Check whether specified line seems to be executable.
 
         Return `lineno` if it is, 0 if not (e.g. a docstring, comment, blank
@@ -510,32 +510,32 @@ class Pdb(bdb.Bdb, cmd.Cmd){
         """;
         # this method should be callable before starting debugging, so default
         # to "no globals" if there is no current frame
-        globs = self.curframe.f_globals if hasattr(self, 'curframe') else None;
+        globs = this.curframe.f_globals if hasattr(this, 'curframe') else nil;
         line = linecache.getline(filename, lineno, globs);
         if not line{
-            print >>self.stdout, 'End of file';
+            print >>this.stdout, 'End of file';
             return 0;
         } line = line.strip();
         # Don't allow setting breakpoint at a blank line
         if (not line or (line[0] == '#') or
              (line[:3] == '"""') or line[:3] == "'''"){
-            print >>self.stdout, '*** Blank or comment';
+            print >>this.stdout, '*** Blank or comment';
             return 0;
         } return lineno;
 
     }
-    def do_enable(self, arg){
+    function do_enable( arg){
         args = arg.split();
         for i in args{
             try{
                 i = int(i);
             } except ValueError{
-                print >>self.stdout, 'Breakpoint index %r is not a number' % i;
+                print >>this.stdout, 'Breakpoint index %r is not a number' % i;
                 continue;
 
             }
             if not (0 <= i < len(bdb.Breakpoint.bpbynumber)){
-                print >>self.stdout, 'No breakpoint numbered', i;
+                print >>this.stdout, 'No breakpoint numbered', i;
                 continue;
 
             }
@@ -544,18 +544,18 @@ class Pdb(bdb.Bdb, cmd.Cmd){
                 bp.enable();
 
     }
-    } } def do_disable(self, arg){
+    } } function do_disable( arg){
         args = arg.split();
         for i in args{
             try{
                 i = int(i);
             } except ValueError{
-                print >>self.stdout, 'Breakpoint index %r is not a number' % i;
+                print >>this.stdout, 'Breakpoint index %r is not a number' % i;
                 continue;
 
             }
             if not (0 <= i < len(bdb.Breakpoint.bpbynumber)){
-                print >>self.stdout, 'No breakpoint numbered', i;
+                print >>this.stdout, 'No breakpoint numbered', i;
                 continue;
 
             }
@@ -564,40 +564,40 @@ class Pdb(bdb.Bdb, cmd.Cmd){
                 bp.disable();
 
     }
-    } } def do_condition(self, arg){
+    } } function do_condition( arg){
         # arg is breakpoint number and condition
         args = arg.split(' ', 1);
         try{
             bpnum = int(args[0].strip());
         } except ValueError{
             # something went wrong
-            print >>self.stdout, \
+            print >>this.stdout, \
                 'Breakpoint index %r is not a number' % args[0];
             return;
         } try{
             cond = args[1];
         } except Exception{
-            cond = None;
+            cond = nil;
         } try{
             bp = bdb.Breakpoint.bpbynumber[bpnum];
         } except IndexError{
-            print >>self.stdout, 'Breakpoint index %r is not valid' % args[0];
+            print >>this.stdout, 'Breakpoint index %r is not valid' % args[0];
             return;
         } if bp{
             bp.cond = cond;
             if not cond{
-                print >>self.stdout, 'Breakpoint', bpnum,;
-                print >>self.stdout, 'is now unconditional.';
+                print >>this.stdout, 'Breakpoint', bpnum,;
+                print >>this.stdout, 'is now unconditional.';
 
     }
-    } } def do_ignore(self,arg){
+    } } function do_ignore(arg){
         """arg is bp number followed by ignore count.""";
         args = arg.split();
         try{
             bpnum = int(args[0].strip());
         } except ValueError{
             # something went wrong
-            print >>self.stdout, \
+            print >>this.stdout, \
                 'Breakpoint index %r is not a number' % args[0];
             return;
         } try{
@@ -607,7 +607,7 @@ class Pdb(bdb.Bdb, cmd.Cmd){
         } try{
             bp = bdb.Breakpoint.bpbynumber[bpnum];
         } except IndexError{
-            print >>self.stdout, 'Breakpoint index %r is not valid' % args[0];
+            print >>this.stdout, 'Breakpoint index %r is not valid' % args[0];
             return;
         } if bp{
             bp.ignore = count;
@@ -617,13 +617,13 @@ class Pdb(bdb.Bdb, cmd.Cmd){
                     reply = reply + '%d crossings' % count;
                 } else{
                     reply = reply + '1 crossing';
-                } print >>self.stdout, reply + ' of breakpoint %d.' % bpnum;
+                } print >>this.stdout, reply + ' of breakpoint %d.' % bpnum;
             } else{
-                print >>self.stdout, 'Will stop next time breakpoint',;
-                print >>self.stdout, bpnum, 'is reached.';
+                print >>this.stdout, 'Will stop next time breakpoint',;
+                print >>this.stdout, bpnum, 'is reached.';
 
     }
-    } } def do_clear(self, arg){
+    } } function do_clear( arg){
         """Three possibilities, tried in this order:
         clear -> clear all breaks, ask for confirmation
         clear file:lineno -> clear all breaks at file:lineno
@@ -635,7 +635,7 @@ class Pdb(bdb.Bdb, cmd.Cmd){
                 reply = 'no';
             } reply = reply.strip().lower();
             if reply in ('y', 'yes'){
-                self.clear_all_breaks();
+                this.clear_all_breaks();
             } return;
         } if ':' in arg{
             # Make sure it works for "clear C:\foo\bar.py:12"
@@ -647,71 +647,71 @@ class Pdb(bdb.Bdb, cmd.Cmd){
             } except ValueError{
                 err = "Invalid line number (%s)" % arg;
             } else{
-                err = self.clear_break(filename, lineno);
-            } if err{ print >>self.stdout, '***', err;
+                err = this.clear_break(filename, lineno);
+            } if err{ print >>this.stdout, '***', err;}
             return;
         } numberlist = arg.split();
         for i in numberlist{
             try{
                 i = int(i);
             } except ValueError{
-                print >>self.stdout, 'Breakpoint index %r is not a number' % i;
+                print >>this.stdout, 'Breakpoint index %r is not a number' % i;
                 continue;
 
             }
             if not (0 <= i < len(bdb.Breakpoint.bpbynumber)){
-                print >>self.stdout, 'No breakpoint numbered', i;
+                print >>this.stdout, 'No breakpoint numbered', i;
                 continue;
-            } err = self.clear_bpbynumber(i);
+            } err = this.clear_bpbynumber(i);
             if err{
-                print >>self.stdout, '***', err;
+                print >>this.stdout, '***', err;
             } else{
-                print >>self.stdout, 'Deleted breakpoint', i;
+                print >>this.stdout, 'Deleted breakpoint', i;
     } } } do_cl = do_clear; # 'c' is already an abbreviation for 'continue'
 
-    def do_where(self, arg){
-        self.print_stack_trace();
+    function do_where( arg){
+        this.print_stack_trace();
     } do_w = do_where;
     do_bt = do_where;
 
-    def do_up(self, arg){
-        if self.curindex == 0{
-            print >>self.stdout, '*** Oldest frame';
+    function do_up( arg){
+        if this.curindex == 0{
+            print >>this.stdout, '*** Oldest frame';
         } else{
-            self.curindex = self.curindex - 1;
-            self.curframe = self.stack[self.curindex][0];
-            self.curframe_locals = self.curframe.f_locals;
-            self.print_stack_entry(self.stack[self.curindex]);
-            self.lineno = None;
+            this.curindex = this.curindex - 1;
+            this.curframe = this.stack[this.curindex][0];
+            this.curframe_locals = this.curframe.f_locals;
+            this.print_stack_entry(this.stack[this.curindex]);
+            this.lineno = nil;
     } } do_u = do_up;
 
-    def do_down(self, arg){
-        if self.curindex + 1 == len(self.stack){
-            print >>self.stdout, '*** Newest frame';
+    function do_down( arg){
+        if this.curindex + 1 == len(this.stack){
+            print >>this.stdout, '*** Newest frame';
         } else{
-            self.curindex = self.curindex + 1;
-            self.curframe = self.stack[self.curindex][0];
-            self.curframe_locals = self.curframe.f_locals;
-            self.print_stack_entry(self.stack[self.curindex]);
-            self.lineno = None;
+            this.curindex = this.curindex + 1;
+            this.curframe = this.stack[this.curindex][0];
+            this.curframe_locals = this.curframe.f_locals;
+            this.print_stack_entry(this.stack[this.curindex]);
+            this.lineno = nil;
     } } do_d = do_down;
 
-    def do_until(self, arg){
-        self.set_until(self.curframe);
+    function do_until( arg){
+        this.set_until(this.curframe);
         return 1;
     } do_unt = do_until;
 
-    def do_step(self, arg){
-        self.set_step();
+    function do_step( arg){
+        this.set_step();
         return 1;
     } do_s = do_step;
 
-    def do_next(self, arg){
-        self.set_next(self.curframe);
+    function do_next( arg){
+        this.set_next(this.curframe);
         return 1;
     } do_n = do_next;
 
-    def do_run(self, arg){
+    function do_run( arg){
         """Restart program by raising an exception to be caught in the main
         debugger loop.  If arguments were given, set them in sys.argv.""";
         if arg{
@@ -724,114 +724,114 @@ class Pdb(bdb.Bdb, cmd.Cmd){
     }
     do_restart = do_run;
 
-    def do_return(self, arg){
-        self.set_return(self.curframe);
+    function do_return( arg){
+        this.set_return(this.curframe);
         return 1;
     } do_r = do_return;
 
-    def do_continue(self, arg){
-        self.set_continue();
+    function do_continue( arg){
+        this.set_continue();
         return 1;
     } do_c = do_cont = do_continue;
 
-    def do_jump(self, arg){
-        if self.curindex + 1 != len(self.stack){
-            print >>self.stdout, "*** You can only jump within the bottom frame";
+    function do_jump( arg){
+        if this.curindex + 1 != len(this.stack){
+            print >>this.stdout, "*** You can only jump within the bottom frame";
             return;
         } try{
             arg = int(arg);
         } except ValueError{
-            print >>self.stdout, "*** The 'jump' command requires a line number.";
+            print >>this.stdout, "*** The 'jump' command requires a line number.";
         } else{
             try{
                 # Do the jump, fix up our copy of the stack, and display the
                 # new position
-                self.curframe.f_lineno = arg;
-                self.stack[self.curindex] = self.stack[self.curindex][0], arg;
-                self.print_stack_entry(self.stack[self.curindex]);
+                this.curframe.f_lineno = arg;
+                this.stack[this.curindex] = this.stack[this.curindex][0], arg;
+                this.print_stack_entry(this.stack[this.curindex]);
             } except ValueError, e{
-                print >>self.stdout, '*** Jump failed:', e;
+                print >>this.stdout, '*** Jump failed:', e;
     } } } do_j = do_jump;
 
-    def do_debug(self, arg){
-        sys.settrace(None);
-        globals = self.curframe.f_globals;
-        locals = self.curframe_locals;
-        p = Pdb(self.completekey, self.stdin, self.stdout);
-        p.prompt = "(%s) " % self.prompt.strip();
-        print >>self.stdout, "ENTERING RECURSIVE DEBUGGER";
+    function do_debug( arg){
+        sys.settrace(nil);
+        globals = this.curframe.f_globals;
+        locals = this.curframe_locals;
+        p = Pdb(this.completekey, this.stdin, this.stdout);
+        p.prompt = "(%s) " % this.prompt.strip();
+        print >>this.stdout, "ENTERING RECURSIVE DEBUGGER";
         sys.call_tracing(p.run, (arg, globals, locals));
-        print >>self.stdout, "LEAVING RECURSIVE DEBUGGER";
-        sys.settrace(self.trace_dispatch);
-        self.lastcmd = p.lastcmd;
+        print >>this.stdout, "LEAVING RECURSIVE DEBUGGER";
+        sys.settrace(this.trace_dispatch);
+        this.lastcmd = p.lastcmd;
 
     }
-    def do_quit(self, arg){
-        self._user_requested_quit = 1;
-        self.set_quit();
+    function do_quit( arg){
+        this._user_requested_quit = 1;
+        this.set_quit();
         return 1;
 
     }
     do_q = do_quit;
     do_exit = do_quit;
 
-    def do_EOF(self, arg){
-        print >>self.stdout;
-        self._user_requested_quit = 1;
-        self.set_quit();
+    function do_EOF( arg){
+        print >>this.stdout;
+        this._user_requested_quit = 1;
+        this.set_quit();
         return 1;
 
     }
-    def do_args(self, arg){
-        co = self.curframe.f_code;
-        dict = self.curframe_locals;
+    function do_args( arg){
+        co = this.curframe.f_code;
+        dict = this.curframe_locals;
         n = co.co_argcount;
-        if co.co_flags & 4{ n = n+1;
-        if co.co_flags & 8{ n = n+1;
+        if co.co_flags & 4{ n = n+1;}
+        if co.co_flags & 8{ n = n+1;}
         for i in range(n){
             name = co.co_varnames[i];
-            print >>self.stdout, name, '=',;
-            if name in dict{ print >>self.stdout, dict[name];
-            else{ print >>self.stdout, "*** undefined ***";
+            print >>this.stdout, name, '=',;
+            if name in dict{ print >>this.stdout, dict[name];}
+            else{ print >>this.stdout, "*** undefined ***";}
     } } do_a = do_args;
 
-    def do_retval(self, arg){
-        if '__return__' in self.curframe_locals{
-            print >>self.stdout, self.curframe_locals['__return__'];
+    function do_retval( arg){
+        if '__return__' in this.curframe_locals{
+            print >>this.stdout, this.curframe_locals['__return__'];
         } else{
-            print >>self.stdout, '*** Not yet returned!';
+            print >>this.stdout, '*** Not yet returned!';
     } } do_rv = do_retval;
 
-    def _getval(self, arg){
+    function _getval( arg){
         try{
-            return eval(arg, self.curframe.f_globals,
-                        self.curframe_locals);
+            return eval(arg, this.curframe.f_globals,
+                        this.curframe_locals);
         } except Exception{
             t, v = sys.exc_info()[:2];
             if isinstance(t, str){
                 exc_type_name = t;
-            } else{ exc_type_name = t.__name__;
-            print >>self.stdout, '***', exc_type_name + ':', repr(v);
+            } else{ exc_type_name = t.__name__;}
+            print >>this.stdout, '***', exc_type_name + ':', repr(v);
             raise;
 
     }
-    } def do_p(self, arg){
+    } function do_p( arg){
         try{
-            print >>self.stdout, repr(self._getval(arg));
+            print >>this.stdout, repr(this._getval(arg));
         } except Exception{
             pass;
 
     }
-    } def do_pp(self, arg){
+    } function do_pp( arg){
         try{
-            pprint.pprint(self._getval(arg), self.stdout);
+            pprint.pprint(this._getval(arg), this.stdout);
         } except Exception{
             pass;
 
     }
-    } def do_list(self, arg){
-        self.lastcmd = 'list';
-        last = None;
+    } function do_list( arg){
+        this.lastcmd = 'list';
+        last = nil;
         if arg{
             try{
                 x = eval(arg, {}, {});
@@ -845,85 +845,85 @@ class Pdb(bdb.Bdb, cmd.Cmd){
                 } } else{
                     first = max(1, int(x) - 5);
             } } except Exception{
-                print >>self.stdout, '*** Error in argument:', repr(arg);
+                print >>this.stdout, '*** Error in argument:', repr(arg);
                 return;
-        } } elif self.lineno is None{
-            first = max(1, self.curframe.f_lineno - 5);
+        } } elif this.lineno is nil{
+            first = max(1, this.curframe.f_lineno - 5);
         } else{
-            first = self.lineno + 1;
-        } if last is None{
+            first = this.lineno + 1;
+        } if last is nil{
             last = first + 10;
-        } filename = self.curframe.f_code.co_filename;
-        breaklist = self.get_file_breaks(filename);
+        } filename = this.curframe.f_code.co_filename;
+        breaklist = this.get_file_breaks(filename);
         try{
             for lineno in range(first, last+1){
                 line = linecache.getline(filename, lineno,
-                                         self.curframe.f_globals);
+                                         this.curframe.f_globals);
                 if not line{
-                    print >>self.stdout, '[EOF]';
+                    print >>this.stdout, '[EOF]';
                     break;
                 } else{
                     s = repr(lineno).rjust(3);
-                    if len(s) < 4{ s = s + ' ';
-                    if lineno in breaklist{ s = s + 'B';
-                    else{ s = s + ' ';
-                    if lineno == self.curframe.f_lineno{
+                    if len(s) < 4{ s = s + ' ';}
+                    if lineno in breaklist{ s = s + 'B';}
+                    else{ s = s + ' ';}
+                    if lineno == this.curframe.f_lineno{
                         s = s + '->';
-                    } print >>self.stdout, s + '\t' + line,;
-                    self.lineno = lineno;
+                    } print >>this.stdout, s + '\t' + line,;
+                    this.lineno = lineno;
         } } } except KeyboardInterrupt{
             pass;
     } } do_l = do_list;
 
-    def do_whatis(self, arg){
+    function do_whatis( arg){
         try{
-            value = eval(arg, self.curframe.f_globals,
-                            self.curframe_locals);
+            value = eval(arg, this.curframe.f_globals,
+                            this.curframe_locals);
         } except Exception{
             t, v = sys.exc_info()[:2];
             if type(t) == type(''){
                 exc_type_name = t;
-            } else{ exc_type_name = t.__name__;
-            print >>self.stdout, '***', exc_type_name + ':', repr(v);
+            } else{ exc_type_name = t.__name__;}
+            print >>this.stdout, '***', exc_type_name + ':', repr(v);
             return;
-        } code = None;
+        } code = nil;
         # Is it a function?
-        try{ code = value.func_code;
-        except Exception{ pass;
+        try{ code = value.func_code;}
+        except Exception{ pass;}
         if code{
-            print >>self.stdout, 'Function', code.co_name;
+            print >>this.stdout, 'Function', code.co_name;
             return;
         # Is it an instance method?
         }
-        try{ code = value.im_func.func_code;
-        except Exception{ pass;
+        try{ code = value.im_func.func_code;}
+        except Exception{ pass;}
         if code{
-            print >>self.stdout, 'Method', code.co_name;
+            print >>this.stdout, 'Method', code.co_name;
             return;
         # None of the above...
         }
-        print >>self.stdout, type(value);
+        print >>this.stdout, type(value);
 
     }
-    def do_alias(self, arg){
+    function do_alias( arg){
         args = arg.split();
         if len(args) == 0{
-            keys = self.aliases.keys();
+            keys = this.aliases.keys();
             keys.sort();
             for alias in keys{
-                print >>self.stdout, "%s = %s" % (alias, self.aliases[alias]);
+                print >>this.stdout, "%s = %s" % (alias, this.aliases[alias]);
             } return;
-        } if args[0] in self.aliases and len(args) == 1{
-            print >>self.stdout, "%s = %s" % (args[0], self.aliases[args[0]]);
+        } if args[0] in this.aliases and len(args) == 1{
+            print >>this.stdout, "%s = %s" % (args[0], this.aliases[args[0]]);
         } else{
-            self.aliases[args[0]] = ' '.join(args[1:]);
+            this.aliases[args[0]] = ' '.join(args[1:]);
 
     }
-    } def do_unalias(self, arg){
+    } function do_unalias( arg){
         args = arg.split();
-        if len(args) == 0{ return;
-        if args[0] in self.aliases{
-            del self.aliases[args[0]];
+        if len(args) == 0{ return;}
+        if args[0] in this.aliases{
+            del this.aliases[args[0]];
 
     #list of all the commands making the program resume execution.
     }
@@ -938,45 +938,45 @@ class Pdb(bdb.Bdb, cmd.Cmd){
     # compatible with dbx and gdb: up moves towards 'main()'
     # and down moves towards the most recent stack frame).
 
-    def print_stack_trace(self){
+    function print_stack_trace(){
         try{
-            for frame_lineno in self.stack{
-                self.print_stack_entry(frame_lineno);
+            for frame_lineno in this.stack{
+                this.print_stack_entry(frame_lineno);
         } } except KeyboardInterrupt{
             pass;
 
     }
-    } def print_stack_entry(self, frame_lineno, prompt_prefix=line_prefix){
+    } function print_stack_entry( frame_lineno, prompt_prefix=line_prefix){
         frame, lineno = frame_lineno;
-        if frame is self.curframe{
-            print >>self.stdout, '>',;
+        if frame is this.curframe{
+            print >>this.stdout, '>',;
         } else{
-            print >>self.stdout, ' ',;
-        } print >>self.stdout, self.format_stack_entry(frame_lineno,
+            print >>this.stdout, ' ',;
+        } print >>this.stdout, this.format_stack_entry(frame_lineno,
                                                      prompt_prefix);
 
 
     # Help methods (derived from pdb.doc)
 
     }
-    def help_help(self){
-        self.help_h();
+    function help_help(){
+        this.help_h();
 
     }
-    def help_h(self){
-        print >>self.stdout, """h(elp)
+    function help_h(){
+        print >>this.stdout, """h(elp)
 Without argument, print the list of available commands.
 With a command name as argument, print help about that command
 "help pdb" pipes the full documentation file to the $PAGER
 "help exec" gives help on the ! command""";
 
     }
-    def help_where(self){
-        self.help_w();
+    function help_where(){
+        this.help_w();
 
     }
-    def help_w(self){
-        print >>self.stdout, """w(here)
+    function help_w(){
+        print >>this.stdout, """w(here)
 Print a stack trace, with the most recent frame at the bottom.
 An arrow indicates the "current frame", which determines the
 context of most commands.  'bt' is an alias for this command.""";
@@ -984,32 +984,32 @@ context of most commands.  'bt' is an alias for this command.""";
     }
     help_bt = help_w;
 
-    def help_down(self){
-        self.help_d();
+    function help_down(){
+        this.help_d();
 
     }
-    def help_d(self){
-        print >>self.stdout, """d(own)
+    function help_d(){
+        print >>this.stdout, """d(own)
 Move the current frame one level down in the stack trace
 (to a newer frame).""";
 
     }
-    def help_up(self){
-        self.help_u();
+    function help_up(){
+        this.help_u();
 
     }
-    def help_u(self){
-        print >>self.stdout, """u(p)
+    function help_u(){
+        print >>this.stdout, """u(p)
 Move the current frame one level up in the stack trace
 (to an older frame).""";
 
     }
-    def help_break(self){
-        self.help_b();
+    function help_break(){
+        this.help_b();
 
     }
-    def help_b(self){
-        print >>self.stdout, """b(reak) ([file:]lineno | function) [, condition]
+    function help_b(){
+        print >>this.stdout, """b(reak) ([file:]lineno | function) [, condition]
 With a line number argument, set a break there in the current
 file.  With a function name, set a break at first executable line
 of that function.  Without argument, list all breaks.  If a second
@@ -1022,13 +1022,13 @@ hasn't been loaded yet).  The file is searched for on sys.path;
 the .py suffix may be omitted.""";
 
     }
-    def help_clear(self){
-        self.help_cl();
+    function help_clear(){
+        this.help_cl();
 
     }
-    def help_cl(self){
-        print >>self.stdout, "cl(ear) filename:lineno";
-        print >>self.stdout, """cl(ear) [bpnumber [bpnumber...]]
+    function help_cl(){
+        print >>this.stdout, "cl(ear) filename:lineno";
+        print >>this.stdout, """cl(ear) [bpnumber [bpnumber...]]
 With a space separated list of breakpoint numbers, clear
 those breakpoints.  Without argument, clear all breaks (but
 first ask confirmation).  With a filename:lineno argument,
@@ -1040,25 +1040,25 @@ a linenumber was used instead of either filename:lineno or
 breakpoint numbers.""";
 
     }
-    def help_tbreak(self){
-        print >>self.stdout, """tbreak  same arguments as break, but breakpoint
+    function help_tbreak(){
+        print >>this.stdout, """tbreak  same arguments as break, but breakpoint
 is removed when first hit.""";
 
     }
-    def help_enable(self){
-        print >>self.stdout, """enable bpnumber [bpnumber ...]
+    function help_enable(){
+        print >>this.stdout, """enable bpnumber [bpnumber ...]
 Enables the breakpoints given as a space separated list of
 bp numbers.""";
 
     }
-    def help_disable(self){
-        print >>self.stdout, """disable bpnumber [bpnumber ...]
+    function help_disable(){
+        print >>this.stdout, """disable bpnumber [bpnumber ...]
 Disables the breakpoints given as a space separated list of
 bp numbers.""";
 
     }
-    def help_ignore(self){
-        print >>self.stdout, """ignore bpnumber count
+    function help_ignore(){
+        print >>this.stdout, """ignore bpnumber count
 Sets the ignore count for the given breakpoint number.  A breakpoint
 becomes active when the ignore count is zero.  When non-zero, the
 count is decremented each time the breakpoint is reached and the
@@ -1066,88 +1066,88 @@ breakpoint is not disabled and any associated condition evaluates
 to true.""";
 
     }
-    def help_condition(self){
-        print >>self.stdout, """condition bpnumber str_condition
+    function help_condition(){
+        print >>this.stdout, """condition bpnumber str_condition
 str_condition is a string specifying an expression which
 must evaluate to true before the breakpoint is honored.
 If str_condition is absent, any existing condition is removed;
 i.e., the breakpoint is made unconditional.""";
 
     }
-    def help_step(self){
-        self.help_s();
+    function help_step(){
+        this.help_s();
 
     }
-    def help_s(self){
-        print >>self.stdout, """s(tep)
+    function help_s(){
+        print >>this.stdout, """s(tep)
 Execute the current line, stop at the first possible occasion
 (either in a function that is called or in the current function).""";
 
     }
-    def help_until(self){
-        self.help_unt();
+    function help_until(){
+        this.help_unt();
 
     }
-    def help_unt(self){
+    function help_unt(){
         print """unt(il)
 Continue execution until the line with a number greater than the current
 one is reached or until the current frame returns""";
 
     }
-    def help_next(self){
-        self.help_n();
+    function help_next(){
+        this.help_n();
 
     }
-    def help_n(self){
-        print >>self.stdout, """n(ext)
+    function help_n(){
+        print >>this.stdout, """n(ext)
 Continue execution until the next line in the current function
 is reached or it returns.""";
 
     }
-    def help_return(self){
-        self.help_r();
+    function help_return(){
+        this.help_r();
 
     }
-    def help_r(self){
-        print >>self.stdout, """r(eturn)
+    function help_r(){
+        print >>this.stdout, """r(eturn)
 Continue execution until the current function returns.""";
 
     }
-    def help_continue(self){
-        self.help_c();
+    function help_continue(){
+        this.help_c();
 
     }
-    def help_cont(self){
-        self.help_c();
+    function help_cont(){
+        this.help_c();
 
     }
-    def help_c(self){
-        print >>self.stdout, """c(ont(inue))
+    function help_c(){
+        print >>this.stdout, """c(ont(inue))
 Continue execution, only stop when a breakpoint is encountered.""";
 
     }
-    def help_jump(self){
-        self.help_j();
+    function help_jump(){
+        this.help_j();
 
     }
-    def help_j(self){
-        print >>self.stdout, """j(ump) lineno
+    function help_j(){
+        print >>this.stdout, """j(ump) lineno
 Set the next line that will be executed.""";
 
     }
-    def help_debug(self){
-        print >>self.stdout, """debug code
+    function help_debug(){
+        print >>this.stdout, """debug code
 Enter a recursive debugger that steps through the code argument
 (which is an arbitrary expression or statement to be executed
 in the current environment).""";
 
     }
-    def help_list(self){
-        self.help_l();
+    function help_list(){
+        this.help_l();
 
     }
-    def help_l(self){
-        print >>self.stdout, """l(ist) [first [,last]]
+    function help_l(){
+        print >>this.stdout, """l(ist) [first [,last]]
 List source code for the current file.
 Without arguments, list 11 lines around the current line
 or continue the previous listing.
@@ -1156,27 +1156,27 @@ With two arguments, list the given range;
 if the second argument is less than the first, it is a count.""";
 
     }
-    def help_args(self){
-        self.help_a();
+    function help_args(){
+        this.help_a();
 
     }
-    def help_a(self){
-        print >>self.stdout, """a(rgs)
+    function help_a(){
+        print >>this.stdout, """a(rgs)
 Print the arguments of the current function.""";
 
     }
-    def help_p(self){
-        print >>self.stdout, """p expression
+    function help_p(){
+        print >>this.stdout, """p expression
 Print the value of the expression.""";
 
     }
-    def help_pp(self){
-        print >>self.stdout, """pp expression
+    function help_pp(){
+        print >>this.stdout, """pp expression
 Pretty-print the value of the expression.""";
 
     }
-    def help_exec(self){
-        print >>self.stdout, """(!) statement
+    function help_exec(){
+        print >>this.stdout, """(!) statement
 Execute the (one-line) statement in the context of
 the current stack frame.
 The exclamation point can be omitted unless the first word
@@ -1187,7 +1187,7 @@ command with a 'global' command, e.g.:
 (Pdb)""";
 
     }
-    def help_run(self){
+    function help_run(){
         print """run [args...]
 Restart the debugged python program. If a string is supplied, it is
 split with "shlex" and the result is used as the new sys.argv.
@@ -1197,29 +1197,29 @@ History, breakpoints, actions and debugger options are preserved.
     }
     help_restart = help_run;
 
-    def help_quit(self){
-        self.help_q();
+    function help_quit(){
+        this.help_q();
 
     }
-    def help_q(self){
-        print >>self.stdout, """q(uit) or exit - Quit from the debugger.
+    function help_q(){
+        print >>this.stdout, """q(uit) or exit - Quit from the debugger.
 The program being executed is aborted.""";
 
     }
     help_exit = help_q;
 
-    def help_whatis(self){
-        print >>self.stdout, """whatis arg
+    function help_whatis(){
+        print >>this.stdout, """whatis arg
 Prints the type of the argument.""";
 
     }
-    def help_EOF(self){
-        print >>self.stdout, """EOF
+    function help_EOF(){
+        print >>this.stdout, """EOF
 Handles the receipt of EOF as a command.""";
 
     }
-    def help_alias(self){
-        print >>self.stdout, """alias [name [command [parameter parameter ...]]]
+    function help_alias(){
+        print >>this.stdout, """alias [name [command [parameter parameter ...]]]
 Creates an alias called 'name' the executes 'command'.  The command
 must *not* be enclosed in quotes.  Replaceable parameters are
 indicated by %1, %2, and so on, while %* is replaced by all the
@@ -1243,13 +1243,13 @@ alias ps pi self
 """;
 
     }
-    def help_unalias(self){
-        print >>self.stdout, """unalias name
+    function help_unalias(){
+        print >>this.stdout, """unalias name
 Deletes the specified alias.""";
 
     }
-    def help_commands(self){
-        print >>self.stdout, """commands [bpnumber]
+    function help_commands(){
+        print >>this.stdout, """commands [bpnumber]
 (com) ...
 (com) end
 (Pdb)
@@ -1284,11 +1284,11 @@ see no sign that the breakpoint was reached.
 """;
 
     }
-    def help_pdb(self){
+    function help_pdb(){
         help();
 
     }
-    def lookupmodule(self, filename){
+    function lookupmodule( filename){
         """Helper function for break/clear parsing -- may be overridden.
 
         lookupmodule() translates (possibly incomplete) file or module name
@@ -1297,7 +1297,7 @@ see no sign that the breakpoint was reached.
         if os.path.isabs(filename) and  os.path.exists(filename){
             return filename;
         } f = os.path.join(sys.path[0], filename);
-        if  os.path.exists(f) and self.canonic(f) == self.mainpyfile{
+        if  os.path.exists(f) and this.canonic(f) == this.mainpyfile{
             return f;
         } root, ext = os.path.splitext(filename);
         if ext == ''{
@@ -1310,10 +1310,10 @@ see no sign that the breakpoint was reached.
             } fullname = os.path.join(dirname, filename);
             if os.path.exists(fullname){
                 return fullname;
-        } } return None;
+        } } return nil;
 
     }
-    def _runscript(self, filename){
+    function _runscript( filename){
         # The script has to run in __main__ namespace (or imports from
         # __main__ will break).
         #
@@ -1331,55 +1331,55 @@ see no sign that the breakpoint was reached.
         # events depends on python version). So we take special measures to
         # avoid stopping before we reach the main script (see user_line and
         # user_call for details).
-        self._wait_for_mainpyfile = 1;
-        self.mainpyfile = self.canonic(filename);
-        self._user_requested_quit = 0;
+        this._wait_for_mainpyfile = 1;
+        this.mainpyfile = this.canonic(filename);
+        this._user_requested_quit = 0;
         statement = 'execfile(%r)' % filename;
-        self.run(statement);
+        this.run(statement);
 
 # Simplified interface
 
 }
-} def run(statement, globals=None, locals=None){
+} function run(statement, globals=nil, locals=nil){
     Pdb().run(statement, globals, locals);
 
 }
-def runeval(expression, globals=None, locals=None){
+function runeval(expression, globals=nil, locals=nil){
     return Pdb().runeval(expression, globals, locals);
 
 }
-def runctx(statement, globals, locals){
+function runctx(statement, globals, locals){
     # B/W compatibility
     run(statement, globals, locals);
 
 }
-def runcall(*args, **kwds){
+function runcall(*args, **kwds){
     return Pdb().runcall(*args, **kwds);
 
 }
-def set_trace(){
+function set_trace(){
     Pdb().set_trace(sys._getframe().f_back);
 
 # Post-Mortem interface
 
 }
-def post_mortem(t=None){
+function post_mortem(t=nil){
     # handling the default
-    if t is None{
+    if t is nil{
         # sys.exc_info() returns (type, value, traceback) if an exception is
         # being handled, otherwise it returns None
         t = sys.exc_info()[2];
-        if t is None{
+        if t is nil{
             raise ValueError("A valid traceback must be passed if no "
                                                "exception is being handled");
 
     }
     } p = Pdb();
     p.reset();
-    p.interaction(None, t);
+    p.interaction(nil, t);
 
 }
-def pm(){
+function pm(){
     post_mortem(sys.last_traceback);
 
 
@@ -1388,24 +1388,24 @@ def pm(){
 }
 TESTCMD = 'import x; x.main()';
 
-def test(){
+function test(){
     run(TESTCMD);
 
 # print help
 }
-def help(){
+function help(){
     for dirname in sys.path{
         fullname = os.path.join(dirname, 'pdb.doc');
         if os.path.exists(fullname){
             sts = os.system('${PAGER-more} '+fullname);
-            if sts{ print '*** Pager exit status:', sts;
+            if sts{ print '*** Pager exit status:', sts;}
             break;
     } } else{
         print 'Sorry, can\'t find the help file "pdb.doc"',;
         print 'along the Python search path';
 
 }
-} def main(){
+} function main(){
     if not sys.argv[1:] or sys.argv[1] in ("--help", "-h"){
         print "usage: pdb.py scriptfile [arg] ...";
         sys.exit(2);
@@ -1427,7 +1427,7 @@ def help(){
     # changed by the user from the command line. There is a "restart" command
     # which allows explicit specification of command line arguments.
     pdb = Pdb();
-    while True{
+    while true{
         try{
             pdb._runscript(mainpyfile);
             if pdb._user_requested_quit{
@@ -1448,7 +1448,7 @@ def help(){
             print "Uncaught exception. Entering post mortem debugging";
             print "Running 'cont' or 'step' will restart the program";
             t = sys.exc_info()[2];
-            pdb.interaction(None, t);
+            pdb.interaction(nil, t);
             print "Post mortem debugger finished. The " + mainpyfile + \
                   " will be restarted";
 

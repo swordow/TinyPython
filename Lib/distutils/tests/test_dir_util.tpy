@@ -14,86 +14,86 @@ from test.test_support import run_unittest;
 
 class DirUtilTestCase(support.TempdirManager, unittest.TestCase){
 
-    def _log(self, msg, *args){
+    function _log( msg, *args){
         if len(args) > 0{
-            self._logs.append(msg % args);
+            this._logs.append(msg % args);
         } else{
-            self._logs.append(msg);
+            this._logs.append(msg);
 
     }
-    } def setUp(self){
-        super(DirUtilTestCase, self).setUp();
-        self._logs = [];
-        tmp_dir = self.mkdtemp();
-        self.root_target = os.path.join(tmp_dir, 'deep');
-        self.target = os.path.join(self.root_target, 'here');
-        self.target2 = os.path.join(tmp_dir, 'deep2');
-        self.old_log = log.info;
-        log.info = self._log;
+    } function setUp(){
+        super(DirUtilTestCase, this).setUp();
+        this._logs = [];
+        tmp_dir = this.mkdtemp();
+        this.root_target = os.path.join(tmp_dir, 'deep');
+        this.target = os.path.join(this.root_target, 'here');
+        this.target2 = os.path.join(tmp_dir, 'deep2');
+        this.old_log = log.info;
+        log.info = this._log;
 
     }
-    def tearDown(self){
-        log.info = self.old_log;
-        super(DirUtilTestCase, self).tearDown();
+    function tearDown(){
+        log.info = this.old_log;
+        super(DirUtilTestCase, this).tearDown();
 
     }
-    def test_mkpath_remove_tree_verbosity(self){
+    function test_mkpath_remove_tree_verbosity(){
 
-        mkpath(self.target, verbose=0);
+        mkpath(this.target, verbose=0);
         wanted = [];
-        self.assertEqual(self._logs, wanted);
-        remove_tree(self.root_target, verbose=0);
+        this.assertEqual(this._logs, wanted);
+        remove_tree(this.root_target, verbose=0);
 
-        mkpath(self.target, verbose=1);
-        wanted = ['creating %s' % self.root_target,
-                  'creating %s' % self.target];
-        self.assertEqual(self._logs, wanted);
-        self._logs = [];
+        mkpath(this.target, verbose=1);
+        wanted = ['creating %s' % this.root_target,
+                  'creating %s' % this.target];
+        this.assertEqual(this._logs, wanted);
+        this._logs = [];
 
-        remove_tree(self.root_target, verbose=1);
-        wanted = ["removing '%s' (and everything under it)" % self.root_target];
-        self.assertEqual(self._logs, wanted);
+        remove_tree(this.root_target, verbose=1);
+        wanted = ["removing '%s' (and everything under it)" % this.root_target];
+        this.assertEqual(this._logs, wanted);
 
     }
     @unittest.skipIf(sys.platform.startswith('win'),
                         "This test is only appropriate for POSIX-like systems.");
-    def test_mkpath_with_custom_mode(self){
+    function test_mkpath_with_custom_mode(){
         # Get and set the current umask value for testing mode bits.
         umask = os.umask(0o002);
         os.umask(umask);
-        mkpath(self.target, 0o700);
-        self.assertEqual(
-            stat.S_IMODE(os.stat(self.target).st_mode), 0o700 & ~umask);
-        mkpath(self.target2, 0o555);
-        self.assertEqual(
-            stat.S_IMODE(os.stat(self.target2).st_mode), 0o555 & ~umask);
+        mkpath(this.target, 0o700);
+        this.assertEqual(
+            stat.S_IMODE(os.stat(this.target).st_mode), 0o700 & ~umask);
+        mkpath(this.target2, 0o555);
+        this.assertEqual(
+            stat.S_IMODE(os.stat(this.target2).st_mode), 0o555 & ~umask);
 
     }
-    def test_create_tree_verbosity(self){
+    function test_create_tree_verbosity(){
 
-        create_tree(self.root_target, ['one', 'two', 'three'], verbose=0);
-        self.assertEqual(self._logs, []);
-        remove_tree(self.root_target, verbose=0);
+        create_tree(this.root_target, ['one', 'two', 'three'], verbose=0);
+        this.assertEqual(this._logs, []);
+        remove_tree(this.root_target, verbose=0);
 
-        wanted = ['creating %s' % self.root_target];
-        create_tree(self.root_target, ['one', 'two', 'three'], verbose=1);
-        self.assertEqual(self._logs, wanted);
+        wanted = ['creating %s' % this.root_target];
+        create_tree(this.root_target, ['one', 'two', 'three'], verbose=1);
+        this.assertEqual(this._logs, wanted);
 
-        remove_tree(self.root_target, verbose=0);
+        remove_tree(this.root_target, verbose=0);
 
 
     }
-    def test_copy_tree_verbosity(self){
+    function test_copy_tree_verbosity(){
 
-        mkpath(self.target, verbose=0);
+        mkpath(this.target, verbose=0);
 
-        copy_tree(self.target, self.target2, verbose=0);
-        self.assertEqual(self._logs, []);
+        copy_tree(this.target, this.target2, verbose=0);
+        this.assertEqual(this._logs, []);
 
-        remove_tree(self.root_target, verbose=0);
+        remove_tree(this.root_target, verbose=0);
 
-        mkpath(self.target, verbose=0);
-        a_file = os.path.join(self.target, 'ok.txt');
+        mkpath(this.target, verbose=0);
+        a_file = os.path.join(this.target, 'ok.txt');
         f = open(a_file, 'w');
         try{
             f.write('some content');
@@ -101,19 +101,19 @@ class DirUtilTestCase(support.TempdirManager, unittest.TestCase){
             f.close();
 
         }
-        wanted = ['copying %s -> %s' % (a_file, self.target2)];
-        copy_tree(self.target, self.target2, verbose=1);
-        self.assertEqual(self._logs, wanted);
+        wanted = ['copying %s -> %s' % (a_file, this.target2)];
+        copy_tree(this.target, this.target2, verbose=1);
+        this.assertEqual(this._logs, wanted);
 
-        remove_tree(self.root_target, verbose=0);
-        remove_tree(self.target2, verbose=0);
+        remove_tree(this.root_target, verbose=0);
+        remove_tree(this.target2, verbose=0);
 
     }
-    def test_copy_tree_skips_nfs_temp_files(self){
-        mkpath(self.target, verbose=0);
+    function test_copy_tree_skips_nfs_temp_files(){
+        mkpath(this.target, verbose=0);
 
-        a_file = os.path.join(self.target, 'ok.txt');
-        nfs_file = os.path.join(self.target, '.nfs123abc');
+        a_file = os.path.join(this.target, 'ok.txt');
+        nfs_file = os.path.join(this.target, '.nfs123abc');
         for f in a_file, nfs_file{
             fh = open(f, 'w');
             try{
@@ -122,23 +122,23 @@ class DirUtilTestCase(support.TempdirManager, unittest.TestCase){
                 fh.close();
 
         }
-        } copy_tree(self.target, self.target2);
-        self.assertEqual(os.listdir(self.target2), ['ok.txt']);
+        } copy_tree(this.target, this.target2);
+        this.assertEqual(os.listdir(this.target2), ['ok.txt']);
 
-        remove_tree(self.root_target, verbose=0);
-        remove_tree(self.target2, verbose=0);
+        remove_tree(this.root_target, verbose=0);
+        remove_tree(this.target2, verbose=0);
 
     }
-    def test_ensure_relative(self){
+    function test_ensure_relative(){
         if os.sep == '/'{
-            self.assertEqual(ensure_relative('/home/foo'), 'home/foo');
-            self.assertEqual(ensure_relative('some/path'), 'some/path');
+            this.assertEqual(ensure_relative('/home/foo'), 'home/foo');
+            this.assertEqual(ensure_relative('some/path'), 'some/path');
         } else{   # \\
-            self.assertEqual(ensure_relative('c:\\home\\foo'), 'c:home\\foo');
-            self.assertEqual(ensure_relative('home\\foo'), 'home\\foo');
+            this.assertEqual(ensure_relative('c:\\home\\foo'), 'c:home\\foo');
+            this.assertEqual(ensure_relative('home\\foo'), 'home\\foo');
 
 }
-} } def test_suite(){
+} } function test_suite(){
     return unittest.makeSuite(DirUtilTestCase);
 
 }

@@ -21,25 +21,25 @@ hasfree = [];
 
 opmap = {};
 opname = [''] * 256;
-for op in range(256){ opname[op] = '<%r>' % (op,);
+for op in range(256){ opname[op] = '<%r>' % (op,);}
 del op;
 
-def def_op(name, op){
+function def_op(name, op){
     opname[op] = name;
     opmap[name] = op;
 
 }
-def name_op(name, op){
+function name_op(name, op){
     def_op(name, op);
     hasname.append(op);
 
 }
-def jrel_op(name, op){
+function jrel_op(name, op){
     def_op(name, op);
     hasjrel.append(op);
 
 }
-def jabs_op(name, op){
+function jabs_op(name, op){
     def_op(name, op);
     hasjabs.append(op);
 

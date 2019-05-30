@@ -65,7 +65,7 @@ __all__ = ["compile_command", "Compile", "CommandCompiler"];
 
 PyCF_DONT_IMPLY_DEDENT = 0x200;          # Matches pythonrun.h
 
-def _maybe_compile(compiler, source, filename, symbol){
+function _maybe_compile(compiler, source, filename, symbol){
     # Check for source consisting of only blank lines and comments
     for line in source.split("\n"){
         line = line.strip();
@@ -76,8 +76,8 @@ def _maybe_compile(compiler, source, filename, symbol){
             source = "pass";     # Replace it with a 'pass' statement
 
     }
-    } err = err1 = err2 = None;
-    code = code1 = code2 = None;
+    } err = err1 = err2 = nil;
+    code = code1 = code2 = nil;
 
     try{
         code = compiler(source, filename, symbol);
@@ -103,11 +103,11 @@ def _maybe_compile(compiler, source, filename, symbol){
         raise SyntaxError, err1;
 
 }
-} def _compile(source, filename, symbol){
+} function _compile(source, filename, symbol){
     return compile(source, filename, symbol, PyCF_DONT_IMPLY_DEDENT);
 
 }
-def compile_command(source, filename="<input>", symbol="single"){
+function compile_command(source, filename="<input>", symbol="single"){
     r"""Compile a command and determine whether it is incomplete.
 
     Arguments:
@@ -133,15 +133,15 @@ class Compile{
     function, but if one is used to compile text containing a future
     statement, it "remembers" and compiles all subsequent program texts
     with the statement in force.""";
-    def __init__(self){
-        self.flags = PyCF_DONT_IMPLY_DEDENT;
+    function __init__(){
+        this.flags = PyCF_DONT_IMPLY_DEDENT;
 
     }
-    def __call__(self, source, filename, symbol){
-        codeob = compile(source, filename, symbol, self.flags, 1);
+    function __call__( source, filename, symbol){
+        codeob = compile(source, filename, symbol, this.flags, 1);
         for feature in _features{
             if codeob.co_flags & feature.compiler_flag{
-                self.flags |= feature.compiler_flag;
+                this.flags |= feature.compiler_flag;
         } } return codeob;
 
 }
@@ -152,11 +152,11 @@ class Compile{
     the instance 'remembers' and compiles all subsequent program texts
     with the statement in force.""";
 
-    def __init__(self,){
-        self.compiler = Compile();
+    function __init__(){
+        this.compiler = Compile();
 
     }
-    def __call__(self, source, filename="<input>", symbol="single"){
+    function __call__( source, filename="<input>", symbol="single"){
         r"""Compile a command and determine whether it is incomplete.
 
         Arguments:
@@ -175,7 +175,7 @@ class Compile{
           syntax error (OverflowError and ValueError can be produced by
           malformed literals).
         """;
-        return _maybe_compile(self.compiler, source, filename, symbol);
+        return _maybe_compile(this.compiler, source, filename, symbol);
 
 }
 }

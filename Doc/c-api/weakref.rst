@@ -63,7 +63,7 @@ as much as it can.
 .. c:function:: PyObject* PyWeakref_GetObject(PyObject *ref)
 
    Return the referenced object from a weak reference, *ref*.  If the referent is
-   no longer live, returns :const:`Py_None`.
+   no longer live, returns :const:`Py_Nil`.
 
    .. versionadded:: 2.2
 

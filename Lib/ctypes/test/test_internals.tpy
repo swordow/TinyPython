@@ -18,27 +18,27 @@ What about pointers?
 """;
 
 class ObjectsTestCase(unittest.TestCase){
-    def assertSame(self, a, b){
-        self.assertEqual(id(a), id(b));
+    function assertSame( a, b){
+        this.assertEqual(id(a), id(b));
 
     }
-    def test_ints(self){
+    function test_ints(){
         i = 42000123;
         refcnt = grc(i);
         ci = c_int(i);
-        self.assertEqual(refcnt, grc(i));
-        self.assertEqual(ci._objects, None);
+        this.assertEqual(refcnt, grc(i));
+        this.assertEqual(ci._objects, nil);
 
     }
-    def test_c_char_p(self){
+    function test_c_char_p(){
         s = "Hello, World";
         refcnt = grc(s);
         cs = c_char_p(s);
-        self.assertEqual(refcnt + 1, grc(s));
-        self.assertSame(cs._objects, s);
+        this.assertEqual(refcnt + 1, grc(s));
+        this.assertSame(cs._objects, s);
 
     }
-    def test_simple_struct(self){
+    function test_simple_struct(){
         class X(Structure){
             _fields_ = [("a", c_int), ("b", c_int)];
 
@@ -46,13 +46,13 @@ class ObjectsTestCase(unittest.TestCase){
         a = 421234;
         b = 421235;
         x = X();
-        self.assertEqual(x._objects, None);
+        this.assertEqual(x._objects, nil);
         x.a = a;
         x.b = b;
-        self.assertEqual(x._objects, None);
+        this.assertEqual(x._objects, nil);
 
     }
-    def test_embedded_structs(self){
+    function test_embedded_structs(){
         class X(Structure){
             _fields_ = [("a", c_int), ("b", c_int)];
 
@@ -62,16 +62,16 @@ class ObjectsTestCase(unittest.TestCase){
 
         }
         y = Y();
-        self.assertEqual(y._objects, None);
+        this.assertEqual(y._objects, nil);
 
         x1, x2 = X(), X();
         y.x, y.y = x1, x2;
-        self.assertEqual(y._objects, {"0": {}, "1": {}});
+        this.assertEqual(y._objects, {"0": {}, "1": {}});
         x1.a, x2.b = 42, 93;
-        self.assertEqual(y._objects, {"0": {}, "1": {}});
+        this.assertEqual(y._objects, {"0": {}, "1": {}});
 
     }
-    def test_xxx(self){
+    function test_xxx(){
         class X(Structure){
             _fields_ = [("a", c_char_p), ("b", c_char_p)];
 
@@ -86,24 +86,24 @@ class ObjectsTestCase(unittest.TestCase){
         x = X();
         x.a = s1;
         x.b = s2;
-        self.assertEqual(x._objects, {"0": s1, "1": s2});
+        this.assertEqual(x._objects, {"0": s1, "1": s2});
 
         y = Y();
         y.x = x;
-        self.assertEqual(y._objects, {"0": {"0": s1, "1": s2}});
+        this.assertEqual(y._objects, {"0": {"0": s1, "1": s2}});
 ##        x = y.x
 ##        del y
 ##        print x._b_base_._objects
 
     }
-    def test_ptr_struct(self){
+    function test_ptr_struct(){
         class X(Structure){
             _fields_ = [("data", POINTER(c_int))];
 
         }
         A = c_int*4;
         a = A(11, 22, 33, 44);
-        self.assertEqual(a._objects, None);
+        this.assertEqual(a._objects, nil);
 
         x = X();
         x.data = a;

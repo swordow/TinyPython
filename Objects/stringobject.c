@@ -1467,13 +1467,13 @@ string_split(PyStringObject *self, PyObject *args)
     Py_ssize_t len = PyString_GET_SIZE(self), n;
     Py_ssize_t maxsplit = -1;
     const char *s = PyString_AS_STRING(self), *sub;
-    PyObject *subobj = Py_None;
+    PyObject *subobj = Py_Nil;
 
     if (!PyArg_ParseTuple(args, "|On:split", &subobj, &maxsplit))
         return NULL;
     if (maxsplit < 0)
         maxsplit = PY_SSIZE_T_MAX;
-    if (subobj == Py_None)
+    if (subobj == Py_Nil)
         return stringlib_split_whitespace((PyObject*) self, s, len, maxsplit);
     if (PyString_Check(subobj)) {
         sub = PyString_AS_STRING(subobj);
@@ -1566,13 +1566,13 @@ string_rsplit(PyStringObject *self, PyObject *args)
     Py_ssize_t len = PyString_GET_SIZE(self), n;
     Py_ssize_t maxsplit = -1;
     const char *s = PyString_AS_STRING(self), *sub;
-    PyObject *subobj = Py_None;
+    PyObject *subobj = Py_Nil;
 
     if (!PyArg_ParseTuple(args, "|On:rsplit", &subobj, &maxsplit))
         return NULL;
     if (maxsplit < 0)
         maxsplit = PY_SSIZE_T_MAX;
-    if (subobj == Py_None)
+    if (subobj == Py_Nil)
         return stringlib_rsplit_whitespace((PyObject*) self, s, len, maxsplit);
     if (PyString_Check(subobj)) {
         sub = PyString_AS_STRING(subobj);
@@ -1901,7 +1901,7 @@ do_argstrip(PyStringObject *self, int striptype, PyObject *args)
     if (!PyArg_ParseTuple(args, (char *)stripformat[striptype], &sep))
         return NULL;
 
-    if (sep != NULL && sep != Py_None) {
+    if (sep != NULL && sep != Py_Nil) {
         if (PyString_Check(sep))
             return do_xstrip(self, striptype, sep);
 #ifdef Py_USING_UNICODE
@@ -2227,7 +2227,7 @@ string_translate(PyStringObject *self, PyObject *args)
         table = PyString_AS_STRING(tableobj);
         tablen = PyString_GET_SIZE(tableobj);
     }
-    else if (tableobj == Py_None) {
+    else if (tableobj == Py_Nil) {
         table = NULL;
         tablen = 256;
     }

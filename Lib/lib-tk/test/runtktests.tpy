@@ -14,14 +14,14 @@ import test.test_support;
 
 this_dir_path = os.path.abspath(os.path.dirname(__file__));
 
-def is_package(path){
+function is_package(path){
     for name in os.listdir(path){
         if name in ('__init__.py', '__init__.pyc', '__init.pyo'){
-            return True;
-    } } return False;
+            return true;
+    } } return false;
 
 }
-def get_tests_modules(basepath=this_dir_path, gui=True, packages=None){
+function get_tests_modules(basepath=this_dir_path, gui=true, packages=nil){
     """This will import and yield modules whose names start with test_
     and are inside packages found in the path starting at basepath.
 
@@ -55,7 +55,7 @@ def get_tests_modules(basepath=this_dir_path, gui=True, packages=None){
                         raise;
 
 }
-} } } } } def get_tests(text=True, gui=True, packages=None){
+} } } } } function get_tests(text=true, gui=true, packages=nil){
     """Yield all the tests in the modules found by get_tests_modules.
 
     If nogui is True, only tests that do not require a GUI will be

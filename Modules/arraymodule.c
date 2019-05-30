@@ -920,8 +920,8 @@ ins(arrayobject *self, Py_ssize_t where, PyObject *v)
 {
     if (ins1(self, where, v) != 0)
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -998,8 +998,8 @@ array_remove(arrayobject *self, PyObject *v)
             if (array_ass_slice(self, i, i+1,
                                (PyObject *)NULL) != 0)
                 return NULL;
-            Py_INCREF(Py_None);
-            return Py_None;
+            Py_INCREF(Py_Nil);
+            return Py_Nil;
         }
         else if (cmp < 0)
             return NULL;
@@ -1049,8 +1049,8 @@ array_extend(arrayobject *self, PyObject *bb)
 {
     if (array_do_extend(self, bb) == -1)
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(extend_doc,
@@ -1168,8 +1168,8 @@ array_byteswap(arrayobject *self, PyObject *unused)
                    "don't know how to byteswap this array type");
         return NULL;
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(byteswap_doc,
@@ -1201,8 +1201,8 @@ array_reverse(arrayobject *self, PyObject *unused)
         }
     }
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(reverse_doc,
@@ -1261,8 +1261,8 @@ array_fromfile(arrayobject *self, PyObject *args)
             return NULL;
         }
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(fromfile_doc,
@@ -1300,8 +1300,8 @@ array_tofile(arrayobject *self, PyObject *f)
             return NULL;
         }
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(tofile_doc,
@@ -1372,8 +1372,8 @@ array_fromlist(arrayobject *self, PyObject *list)
             }
         }
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(fromlist_doc,
@@ -1443,8 +1443,8 @@ array_fromstring(arrayobject *self, PyObject *args)
         memcpy(item + (Py_SIZE(self) - n) * itemsize,
                str, itemsize*n);
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(fromstring_doc,
@@ -1505,8 +1505,8 @@ array_fromunicode(arrayobject *self, PyObject *args)
                ustr, n * sizeof(Py_UNICODE));
     }
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(fromunicode_doc,
@@ -1549,7 +1549,7 @@ array_reduce(arrayobject *array)
         if (!PyErr_ExceptionMatches(PyExc_AttributeError))
             return NULL;
         PyErr_Clear();
-        dict = Py_None;
+        dict = Py_Nil;
         Py_INCREF(dict);
     }
     /* Unlike in Python 3.x, we never use the more efficient memory

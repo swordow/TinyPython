@@ -62,8 +62,8 @@ autoGIL_installAutoGIL(PyObject *self)
     v = PyDict_GetItemString(tstate_dict, "autoGIL.InstalledAutoGIL");
     if (v != NULL) {
         /* we've already installed a callback for this thread */
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
 
     rl = CFRunLoopGetCurrent();
@@ -98,11 +98,11 @@ autoGIL_installAutoGIL(PyObject *self)
 
     /* register that we have installed a callback for this thread */
     if (PyDict_SetItemString(tstate_dict, "autoGIL.InstalledAutoGIL",
-                             Py_None) < 0)
+                             Py_Nil) < 0)
         return NULL;
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(autoGIL_installAutoGIL_doc,

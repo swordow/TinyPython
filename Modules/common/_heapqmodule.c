@@ -135,8 +135,8 @@ heappush(PyObject *self, PyObject *args)
 
     if (_siftdown((PyListObject *)heap, 0, PyList_GET_SIZE(heap)-1) == -1)
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(heappush_doc,
@@ -285,8 +285,8 @@ heapify(PyObject *self, PyObject *heap)
     for (i=n/2-1 ; i>=0 ; i--)
         if(_siftup((PyListObject *)heap, i) == -1)
             return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(heapify_doc,

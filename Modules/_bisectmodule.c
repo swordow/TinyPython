@@ -97,7 +97,7 @@ insort_right(PyObject *self, PyObject *args, PyObject *kw)
         Py_DECREF(result);
     }
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(insort_right_doc,
@@ -202,7 +202,7 @@ insort_left(PyObject *self, PyObject *args, PyObject *kw)
         Py_DECREF(result);
     }
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(insort_left_doc,

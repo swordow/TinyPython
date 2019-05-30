@@ -450,7 +450,7 @@ SHA_update(SHAobject *self, PyObject *args)
     }
 
     PyBuffer_Release(&view);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyMethodDef SHA_methods[] = {

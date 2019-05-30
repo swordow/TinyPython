@@ -23,26 +23,26 @@ class PyPIRCCommand(Command){
     """;
     DEFAULT_REPOSITORY = 'https://upload.pypi.org/legacy/';
     DEFAULT_REALM = 'pypi';
-    repository = None;
-    realm = None;
+    repository = nil;
+    realm = nil;
 
     user_options = [
         ('repository=', 'r',
          "url of repository [default: %s]" % \
             DEFAULT_REPOSITORY),
-        ('show-response', None,
+        ('show-response', nil,
          'display full response text from server')];
 
     boolean_options = ['show-response'];
 
-    def _get_rc_file(self){
+    function _get_rc_file(){
         """Returns rc file path.""";
         return os.path.join(os.path.expanduser('~'), '.pypirc');
 
     }
-    def _store_pypirc(self, username, password){
+    function _store_pypirc( username, password){
         """Creates a default .pypirc file.""";
-        rc = self._get_rc_file();
+        rc = this._get_rc_file();
         f = os.fdopen(os.open(rc, os.O_CREAT | os.O_WRONLY, 0600), 'w');
         try{
             f.write(DEFAULT_PYPIRC % (username, password));
@@ -50,12 +50,12 @@ class PyPIRCCommand(Command){
             f.close();
 
     }
-    } def _read_pypirc(self){
+    } function _read_pypirc(){
         """Reads the .pypirc file.""";
-        rc = self._get_rc_file();
+        rc = this._get_rc_file();
         if os.path.exists(rc){
-            self.announce('Using PyPI login from %s' % rc);
-            repository = self.repository or self.DEFAULT_REPOSITORY;
+            this.announce('Using PyPI login from %s' % rc);
+            repository = this.repository or this.DEFAULT_REPOSITORY;
             config = ConfigParser();
             config.read(rc);
             sections = config.sections();
@@ -79,9 +79,9 @@ class PyPIRCCommand(Command){
 
                     # optional params
                     for key, default in (('repository',
-                                          self.DEFAULT_REPOSITORY),
-                                         ('realm', self.DEFAULT_REALM),
-                                         ('password', None)){
+                                          this.DEFAULT_REPOSITORY),
+                                         ('realm', this.DEFAULT_REALM),
+                                         ('password', nil)){
                         if config.has_option(server, key){
                             current[key] = config.get(server, key);
                         } else{
@@ -95,30 +95,30 @@ class PyPIRCCommand(Command){
                 if config.has_option(server, 'repository'){
                     repository = config.get(server, 'repository');
                 } else{
-                    repository = self.DEFAULT_REPOSITORY;
+                    repository = this.DEFAULT_REPOSITORY;
                 } return {'username': config.get(server, 'username'),
                         'password': config.get(server, 'password'),
                         'repository': repository,
                         'server': server,
-                        'realm': self.DEFAULT_REALM};
+                        'realm': this.DEFAULT_REALM};
 
         }
         } return {};
 
     }
-    def initialize_options(self){
+    function initialize_options(){
         """Initialize options.""";
-        self.repository = None;
-        self.realm = None;
-        self.show_response = 0;
+        this.repository = nil;
+        this.realm = nil;
+        this.show_response = 0;
 
     }
-    def finalize_options(self){
+    function finalize_options(){
         """Finalizes options.""";
-        if self.repository is None{
-            self.repository = self.DEFAULT_REPOSITORY;
-        } if self.realm is None{
-            self.realm = self.DEFAULT_REALM;
+        if this.repository is nil{
+            this.repository = this.DEFAULT_REPOSITORY;
+        } if this.realm is nil{
+            this.realm = this.DEFAULT_REALM;
 
 }
 } }

@@ -89,8 +89,8 @@ static PyObject *DragObj_DisposeDrag(DragObjObject *_self, PyObject *_args)
         return NULL;
     _err = DisposeDrag(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -120,8 +120,8 @@ static PyObject *DragObj_AddDragItemFlavor(DragObjObject *_self, PyObject *_args
                              dataPtr__in__, dataPtr__len__,
                              theFlags);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -151,8 +151,8 @@ static PyObject *DragObj_SetDragItemFlavorData(DragObjObject *_self, PyObject *_
                                  dataPtr__in__, dataPtr__len__,
                                  dataOffset);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -179,8 +179,8 @@ static PyObject *DragObj_SetDragImage(DragObjObject *_self, PyObject *_args)
                         imageOffsetPt,
                         theImageFlags);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -201,8 +201,8 @@ static PyObject *DragObj_ChangeDragBehaviors(DragObjObject *_self, PyObject *_ar
                                inBehaviorsToSet,
                                inBehaviorsToClear);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -223,8 +223,8 @@ static PyObject *DragObj_TrackDrag(DragObjObject *_self, PyObject *_args)
                      &theEvent,
                      theRegion);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -436,8 +436,8 @@ static PyObject *DragObj_SetDragItemBounds(DragObjObject *_self, PyObject *_args
                              theItemRef,
                              &itemBounds);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -473,8 +473,8 @@ static PyObject *DragObj_SetDropLocation(DragObjObject *_self, PyObject *_args)
     _err = SetDropLocation(_self->ob_itself,
                            &dropLocation);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -531,8 +531,8 @@ static PyObject *DragObj_SetDragMouse(DragObjObject *_self, PyObject *_args)
     _err = SetDragMouse(_self->ob_itself,
                         globalPinnedMouse);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -595,8 +595,8 @@ static PyObject *DragObj_ShowDragHilite(DragObjObject *_self, PyObject *_args)
                           hiliteFrame,
                           inside);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -611,8 +611,8 @@ static PyObject *DragObj_HideDragHilite(DragObjObject *_self, PyObject *_args)
         return NULL;
     _err = HideDragHilite(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -633,8 +633,8 @@ static PyObject *DragObj_DragPreScroll(DragObjObject *_self, PyObject *_args)
                          dH,
                          dV);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -649,8 +649,8 @@ static PyObject *DragObj_DragPostScroll(DragObjObject *_self, PyObject *_args)
         return NULL;
     _err = DragPostScroll(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -668,8 +668,8 @@ static PyObject *DragObj_UpdateDragHilite(DragObjObject *_self, PyObject *_args)
     _err = UpdateDragHilite(_self->ob_itself,
                             updateRgn);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -881,8 +881,8 @@ static PyObject *Drag_ZoomRects(PyObject *_self, PyObject *_args)
                      zoomSteps,
                      acceleration);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -908,8 +908,8 @@ static PyObject *Drag_ZoomRegion(PyObject *_self, PyObject *_args)
                       zoomSteps,
                       acceleration);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -926,8 +926,8 @@ static PyObject *Drag_InstallTrackingHandler(PyObject *_self, PyObject *_args)
         Py_INCREF(callback);        /* Cannot decref later, too bad */
         _err = InstallTrackingHandler(dragglue_TrackingHandlerUPP, theWindow, (void *)callback);
         if (_err != noErr) return PyMac_Error(_err);
-        Py_INCREF(Py_None);
-        _res = Py_None;
+        Py_INCREF(Py_Nil);
+        _res = Py_Nil;
         return _res;
 
 }
@@ -945,8 +945,8 @@ static PyObject *Drag_InstallReceiveHandler(PyObject *_self, PyObject *_args)
         Py_INCREF(callback);        /* Cannot decref later, too bad */
         _err = InstallReceiveHandler(dragglue_ReceiveHandlerUPP, theWindow, (void *)callback);
         if (_err != noErr) return PyMac_Error(_err);
-        Py_INCREF(Py_None);
-        _res = Py_None;
+        Py_INCREF(Py_Nil);
+        _res = Py_Nil;
         return _res;
 
 }
@@ -962,8 +962,8 @@ static PyObject *Drag_RemoveTrackingHandler(PyObject *_self, PyObject *_args)
         return NULL;
         _err = RemoveTrackingHandler(dragglue_TrackingHandlerUPP, theWindow);
         if (_err != noErr) return PyMac_Error(_err);
-        Py_INCREF(Py_None);
-        _res = Py_None;
+        Py_INCREF(Py_Nil);
+        _res = Py_Nil;
         return _res;
 
 }
@@ -979,8 +979,8 @@ static PyObject *Drag_RemoveReceiveHandler(PyObject *_self, PyObject *_args)
         return NULL;
         _err = RemoveReceiveHandler(dragglue_ReceiveHandlerUPP, theWindow);
         if (_err != noErr) return PyMac_Error(_err);
-        Py_INCREF(Py_None);
-        _res = Py_None;
+        Py_INCREF(Py_Nil);
+        _res = Py_Nil;
         return _res;
 
 }
@@ -1027,7 +1027,7 @@ dragglue_TrackingHandler(DragTrackingMessage theMessage, WindowPtr theWindow,
         return -1;
     }
     i = -1;
-    if ( rv == Py_None )
+    if ( rv == Py_Nil )
         i = 0;
     else
         PyArg_Parse(rv, "l", &i);
@@ -1053,7 +1053,7 @@ dragglue_ReceiveHandler(WindowPtr theWindow, void *handlerRefCon,
         return -1;
     }
     i = -1;
-    if ( rv == Py_None )
+    if ( rv == Py_Nil )
         i = 0;
     else
         PyArg_Parse(rv, "l", &i);
@@ -1082,7 +1082,7 @@ dragglue_SendData(FlavorType theType, void *dragSendRefCon,
         return -1;
     }
     i = -1;
-    if ( rv == Py_None )
+    if ( rv == Py_Nil )
         i = 0;
     else
         PyArg_Parse(rv, "l", &i);

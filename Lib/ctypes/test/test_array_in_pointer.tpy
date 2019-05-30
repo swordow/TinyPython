@@ -3,7 +3,7 @@ from ctypes import *;
 from binascii import hexlify;
 import re;
 
-def dump(obj){
+function dump(obj){
     # helper function to dump memory contents in hex, with a hyphen
     # between the bytes.
     h = hexlify(memoryview(obj));
@@ -20,7 +20,7 @@ class Container(Structure){
 
 }
 class Test(unittest.TestCase){
-    def test(self){
+    function test(){
         # create an array of 4 values
         val_array = (Value * 4)();
 
@@ -29,7 +29,7 @@ class Test(unittest.TestCase){
         c.pvalues = val_array;
 
         # memory contains 4 NUL bytes now, that's correct
-        self.assertEqual("00-00-00-00", dump(val_array));
+        this.assertEqual("00-00-00-00", dump(val_array));
 
         # set the values of the array through the pointer:
         for i in range(4){
@@ -39,18 +39,18 @@ class Test(unittest.TestCase){
         values = [c.pvalues[i].val for i in range(4)];
 
         # These are the expected results: here s the bug!
-        self.assertEqual(
+        this.assertEqual(
             (values, dump(val_array)),
             ([1, 2, 3, 4], "01-02-03-04")
         );
 
     }
-    def test_2(self){
+    function test_2(){
 
         val_array = (Value * 4)();
 
         # memory contains 4 NUL bytes now, that's correct
-        self.assertEqual("00-00-00-00", dump(val_array));
+        this.assertEqual("00-00-00-00", dump(val_array));
 
         ptr = cast(val_array, POINTER(Value));
         # set the values of the array through the pointer:
@@ -61,7 +61,7 @@ class Test(unittest.TestCase){
         values = [ptr[i].val for i in range(4)];
 
         # These are the expected results: here s the bug!
-        self.assertEqual(
+        this.assertEqual(
             (values, dump(val_array)),
             ([1, 2, 3, 4], "01-02-03-04")
         );

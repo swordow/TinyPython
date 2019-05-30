@@ -36,15 +36,15 @@ __all__ = ["scheduler"];
 Event = namedtuple('Event', 'time, priority, action, argument');
 
 class scheduler{
-    def __init__(self, timefunc, delayfunc){
+    function __init__( timefunc, delayfunc){
         """Initialize a new instance, passing the time and delay
         functions""";
-        self._queue = [];
-        self.timefunc = timefunc;
-        self.delayfunc = delayfunc;
+        this._queue = [];
+        this.timefunc = timefunc;
+        this.delayfunc = delayfunc;
 
     }
-    def enterabs(self, time, priority, action, argument){
+    function enterabs( time, priority, action, argument){
         """Enter a new event in the queue at an absolute time.
 
         Returns an ID for the event which can be used to remove it,
@@ -52,37 +52,37 @@ class scheduler{
 
         """;
         event = Event(time, priority, action, argument);
-        heapq.heappush(self._queue, event);
+        heapq.heappush(this._queue, event);
         return event; # The ID
 
     }
-    def enter(self, delay, priority, action, argument){
+    function enter( delay, priority, action, argument){
         """A variant that specifies the time as a relative time.
 
         This is actually the more commonly used interface.
 
         """;
-        time = self.timefunc() + delay;
-        return self.enterabs(time, priority, action, argument);
+        time = this.timefunc() + delay;
+        return this.enterabs(time, priority, action, argument);
 
     }
-    def cancel(self, event){
+    function cancel( event){
         """Remove an event from the queue.
 
         This must be presented the ID as returned by enter().
         If the event is not in the queue, this raises ValueError.
 
         """;
-        self._queue.remove(event);
-        heapq.heapify(self._queue);
+        this._queue.remove(event);
+        heapq.heapify(this._queue);
 
     }
-    def empty(self){
+    function empty(){
         """Check whether the queue is empty.""";
-        return not self._queue;
+        return not this._queue;
 
     }
-    def run(self){
+    function run(){
         """Execute events until the queue is empty.
 
         When there is a positive delay until the first event, the
@@ -105,9 +105,9 @@ class scheduler{
         """;
         # localize variable access to minimize overhead
         # and to improve thread safety
-        q = self._queue;
-        delayfunc = self.delayfunc;
-        timefunc = self.timefunc;
+        q = this._queue;
+        delayfunc = this.delayfunc;
+        timefunc = this.timefunc;
         pop = heapq.heappop;
         while q{
             time, priority, action, argument = checked_event = q[0];
@@ -126,7 +126,7 @@ class scheduler{
 
     }
     } } } @property;
-    def queue(self){
+    function queue(){
         """An ordered list of upcoming events.
 
         Events are named tuples with fields for:
@@ -136,7 +136,7 @@ class scheduler{
         # Use heapq to sort the queue rather than using 'sorted(self._queue)'.
         # With heapq, two events scheduled at the same time will show in
         # the actual order they would be retrieved.
-        events = self._queue[:];
+        events = this._queue[:];
         return map(heapq.heappop, [events]*len(events));
 
 }

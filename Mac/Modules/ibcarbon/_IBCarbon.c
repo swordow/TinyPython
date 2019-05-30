@@ -118,8 +118,8 @@ static PyObject *IBNibRefObj_SetMenuBarFromNib(IBNibRefObject *_self, PyObject *
     _err = SetMenuBarFromNib(_self->ob_itself,
                              inName);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 

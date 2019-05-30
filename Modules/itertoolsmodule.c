@@ -26,7 +26,7 @@ groupby_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 {
     static char *kwargs[] = {"iterable", "key", NULL};
     groupbyobject *gbo;
-    PyObject *it, *keyfunc = Py_None;
+    PyObject *it, *keyfunc = Py_Nil;
 
     if (!PyArg_ParseTupleAndKeywords(args, kwds, "O|O:groupby", kwargs,
                                      &it, &keyfunc))
@@ -80,7 +80,7 @@ groupby_step(groupbyobject *gbo)
     if (newvalue == NULL)
         return -1;
 
-    if (gbo->keyfunc == Py_None) {
+    if (gbo->keyfunc == Py_Nil) {
         newkey = newvalue;
         Py_INCREF(newvalue);
     } else {
@@ -1136,7 +1136,7 @@ islice_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
 
     numargs = PyTuple_Size(args);
     if (numargs == 2) {
-        if (a1 != Py_None) {
+        if (a1 != Py_Nil) {
             stop = PyInt_AsSsize_t(a1);
             if (stop == -1) {
                 if (PyErr_Occurred())
@@ -1147,11 +1147,11 @@ islice_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
             }
         }
     } else {
-        if (a1 != Py_None)
+        if (a1 != Py_Nil)
             start = PyInt_AsSsize_t(a1);
         if (start == -1 && PyErr_Occurred())
             PyErr_Clear();
-        if (a2 != Py_None) {
+        if (a2 != Py_Nil) {
             stop = PyInt_AsSsize_t(a2);
             if (stop == -1) {
                 if (PyErr_Occurred())
@@ -1169,7 +1169,7 @@ islice_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     }
 
     if (a3 != NULL) {
-        if (a3 != Py_None)
+        if (a3 != Py_Nil)
             step = PyInt_AsSsize_t(a3);
         if (step == -1 && PyErr_Occurred())
             PyErr_Clear();
@@ -1558,7 +1558,7 @@ imap_next(imapobject *lz)
         }
         PyTuple_SET_ITEM(argtuple, i, val);
     }
-    if (lz->func == Py_None)
+    if (lz->func == Py_Nil)
         return argtuple;
     result = PyObject_Call(lz->func, argtuple, NULL);
     Py_DECREF(argtuple);
@@ -2562,7 +2562,7 @@ permutations_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     permutationsobject *po;
     Py_ssize_t n;
     Py_ssize_t r;
-    PyObject *robj = Py_None;
+    PyObject *robj = Py_Nil;
     PyObject *pool = NULL;
     PyObject *iterable = NULL;
     Py_ssize_t *indices = NULL;
@@ -2580,7 +2580,7 @@ permutations_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     n = PyTuple_GET_SIZE(pool);
 
     r = n;
-    if (robj != Py_None) {
+    if (robj != Py_Nil) {
         r = PyInt_AsSsize_t(robj);
         if (r == -1 && PyErr_Occurred())
             goto error;
@@ -3012,7 +3012,7 @@ ifilter_next(ifilterobject *lz)
         if (item == NULL)
             return NULL;
 
-        if (lz->func == Py_None || lz->func == (PyObject *)&PyBool_Type) {
+        if (lz->func == Py_Nil || lz->func == (PyObject *)&PyBool_Type) {
             ok = PyObject_IsTrue(item);
         } else {
             PyObject *good;
@@ -3157,7 +3157,7 @@ ifilterfalse_next(ifilterfalseobject *lz)
         if (item == NULL)
             return NULL;
 
-        if (lz->func == Py_None || lz->func == (PyObject *)&PyBool_Type) {
+        if (lz->func == Py_Nil || lz->func == (PyObject *)&PyBool_Type) {
             ok = PyObject_IsTrue(item);
         } else {
             PyObject *good;
@@ -3531,8 +3531,8 @@ izip_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
         return NULL;
     }
     for (i=0 ; i < tuplesize ; i++) {
-        Py_INCREF(Py_None);
-        PyTuple_SET_ITEM(result, i, Py_None);
+        Py_INCREF(Py_Nil);
+        PyTuple_SET_ITEM(result, i, Py_Nil);
     }
 
     /* create izipobject structure */
@@ -3833,7 +3833,7 @@ izip_longest_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     Py_ssize_t i;
     PyObject *ittuple;  /* tuple of iterators */
     PyObject *result;
-    PyObject *fillvalue = Py_None;
+    PyObject *fillvalue = Py_Nil;
     Py_ssize_t tuplesize = PySequence_Length(args);
 
     if (kwds != NULL && PyDict_CheckExact(kwds) && PyDict_Size(kwds) > 0) {
@@ -3873,8 +3873,8 @@ izip_longest_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
         return NULL;
     }
     for (i=0 ; i < tuplesize ; i++) {
-        Py_INCREF(Py_None);
-        PyTuple_SET_ITEM(result, i, Py_None);
+        Py_INCREF(Py_Nil);
+        PyTuple_SET_ITEM(result, i, Py_Nil);
     }
 
     /* create iziplongestobject structure */

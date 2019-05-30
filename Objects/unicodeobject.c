@@ -4209,7 +4209,7 @@ PyObject *PyUnicode_DecodeCharmap(const char *s,
             }
 
             /* Apply mapping */
-            if (x == Py_None)
+            if (x == Py_Nil)
                 goto Undefined;
             if (PyInt_Check(x)) {
                 long value = PyInt_AS_LONG(x);
@@ -4535,7 +4535,7 @@ encoding_map_lookup(Py_UNICODE c, PyObject *mapping)
 }
 
 /* Lookup the character ch in the mapping. If the character
-   can't be found, Py_None is returned (or NULL, if another
+   can't be found, Py_Nil is returned (or NULL, if another
    error occurred). */
 static PyObject *charmapencode_lookup(Py_UNICODE c, PyObject *mapping)
 {
@@ -4550,13 +4550,13 @@ static PyObject *charmapencode_lookup(Py_UNICODE c, PyObject *mapping)
         if (PyErr_ExceptionMatches(PyExc_LookupError)) {
             /* No mapping found means: mapping is undefined. */
             PyErr_Clear();
-            x = Py_None;
+            x = Py_Nil;
             Py_INCREF(x);
             return x;
         } else
             return NULL;
     }
-    else if (x == Py_None)
+    else if (x == Py_Nil)
         return x;
     else if (PyInt_Check(x)) {
         long value = PyInt_AS_LONG(x);
@@ -4598,7 +4598,7 @@ typedef enum charmapencode_result {
 /* lookup the character, put the result in the output string and adjust
    various state variables. Reallocate the output string if not enough
    space is available. Return a new reference to the object that
-   was put in the output buffer, or Py_None, if the mapping was undefined
+   was put in the output buffer, or Py_Nil, if the mapping was undefined
    (in which case no character was written) or NULL, if a
    reallocation error occurred. The caller must decref the result */
 static
@@ -4625,7 +4625,7 @@ charmapencode_result charmapencode_output(Py_UNICODE c, PyObject *mapping,
     rep = charmapencode_lookup(c, mapping);
     if (rep==NULL)
         return enc_EXCEPTION;
-    else if (rep==Py_None) {
+    else if (rep==Py_Nil) {
         Py_DECREF(rep);
         return enc_FAILED;
     } else {
@@ -4692,7 +4692,7 @@ int charmap_encoding_error(
         rep = charmapencode_lookup(p[collendpos], mapping);
         if (rep==NULL)
             return -1;
-        else if (rep!=Py_None) {
+        else if (rep!=Py_Nil) {
             Py_DECREF(rep);
             break;
         }
@@ -4974,7 +4974,7 @@ int charmaptranslate_lookup(Py_UNICODE c, PyObject *mapping, PyObject **result)
         } else
             return -1;
     }
-    else if (x == Py_None) {
+    else if (x == Py_Nil) {
         *result = x;
         return 0;
     }
@@ -5024,7 +5024,7 @@ int charmaptranslate_makespace(PyObject **outobj, Py_UNICODE **outp,
 }
 /* lookup the character, put the result in the output string and adjust
    various state variables. Return a new reference to the object that
-   was put in the output buffer in *result, or Py_None, if the mapping was
+   was put in the output buffer in *result, or Py_Nil, if the mapping was
    undefined (in which case no character was written).
    The called must decref result.
    Return 0 on success, -1 on error. */
@@ -5039,7 +5039,7 @@ int charmaptranslate_output(const Py_UNICODE *startinp, const Py_UNICODE *curinp
         /* not found => default to 1:1 mapping */
         *(*outp)++ = *curinp;
     }
-    else if (*res==Py_None)
+    else if (*res==Py_Nil)
         ;
     else if (PyInt_Check(*res)) {
         /* no overflow check, because we know that the space is enough */
@@ -5111,7 +5111,7 @@ PyObject *PyUnicode_TranslateCharmap(const Py_UNICODE *p,
             goto onError;
         }
         Py_XDECREF(x);
-        if (x!=Py_None) /* it worked => adjust input pointer */
+        if (x!=Py_Nil) /* it worked => adjust input pointer */
             ++p;
         else { /* untranslatable character */
             PyObject *repunicode = NULL; /* initialize to prevent gcc warning */
@@ -5128,7 +5128,7 @@ PyObject *PyUnicode_TranslateCharmap(const Py_UNICODE *p,
                 if (charmaptranslate_lookup(*collend, mapping, &x))
                     goto onError;
                 Py_XDECREF(x);
-                if (x!=Py_None)
+                if (x!=Py_Nil)
                     break;
                 ++collend;
             }
@@ -7148,7 +7148,7 @@ do_argstrip(PyUnicodeObject *self, int striptype, PyObject *args)
     if (!PyArg_ParseTuple(args, (char *)stripformat[striptype], &sep))
         return NULL;
 
-    if (sep != NULL && sep != Py_None) {
+    if (sep != NULL && sep != Py_Nil) {
         if (PyUnicode_Check(sep))
             return _PyUnicode_XStrip(self, striptype, sep);
         else if (PyString_Check(sep)) {
@@ -7500,13 +7500,13 @@ removed from the result.");
 static PyObject*
 unicode_split(PyUnicodeObject *self, PyObject *args)
 {
-    PyObject *substring = Py_None;
+    PyObject *substring = Py_Nil;
     Py_ssize_t maxcount = -1;
 
     if (!PyArg_ParseTuple(args, "|On:split", &substring, &maxcount))
         return NULL;
 
-    if (substring == Py_None)
+    if (substring == Py_Nil)
         return split(self, NULL, maxcount);
     else if (PyUnicode_Check(substring))
         return split(self, (PyUnicodeObject *)substring, maxcount);
@@ -7631,13 +7631,13 @@ is a separator.");
 static PyObject*
 unicode_rsplit(PyUnicodeObject *self, PyObject *args)
 {
-    PyObject *substring = Py_None;
+    PyObject *substring = Py_Nil;
     Py_ssize_t maxcount = -1;
 
     if (!PyArg_ParseTuple(args, "|On:rsplit", &substring, &maxcount))
         return NULL;
 
-    if (substring == Py_None)
+    if (substring == Py_Nil)
         return rsplit(self, NULL, maxcount);
     else if (PyUnicode_Check(substring))
         return rsplit(self, (PyUnicodeObject *)substring, maxcount);

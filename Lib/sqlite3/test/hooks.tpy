@@ -25,42 +25,42 @@ import os, unittest;
 import sqlite3 as sqlite;
 
 class CollationTests(unittest.TestCase){
-    def setUp(self){
+    function setUp(){
         pass;
 
     }
-    def tearDown(self){
+    function tearDown(){
         pass;
 
     }
-    def CheckCreateCollationNotString(self){
+    function CheckCreateCollationNotString(){
         con = sqlite.connect(":memory:");
-        with self.assertRaises(TypeError){
-            con.create_collation(None, lambda x, y{ (x > y) - (x < y)});
+        with this.assertRaises(TypeError){
+            con.create_collation(nil, lambda x, y{ (x > y) - (x < y)});
 
     }
-    } def CheckCreateCollationNotCallable(self){
+    } function CheckCreateCollationNotCallable(){
         con = sqlite.connect(":memory:");
         try{
             con.create_collation("X", 42);
-            self.fail("should have raised a TypeError");
+            this.fail("should have raised a TypeError");
         } except TypeError, e{
-            self.assertEqual(e.args[0], "parameter must be callable");
+            this.assertEqual(e.args[0], "parameter must be callable");
 
     }
-    } def CheckCreateCollationNotAscii(self){
+    } function CheckCreateCollationNotAscii(){
         con = sqlite.connect(":memory:");
         try{
             con.create_collation("collä", cmp);
-            self.fail("should have raised a ProgrammingError");
+            this.fail("should have raised a ProgrammingError");
         } except sqlite.ProgrammingError, e{
             pass;
 
     }
-    } def CheckCreateCollationBadUpper(self){
+    } function CheckCreateCollationBadUpper(){
         class BadUpperStr(str){
-            def upper(self){
-                return None;
+            function upper(){
+                return nil;
         } } con = sqlite.connect(":memory:");
         mycoll = lambda x, y{ -((x > y) - (x < y))};
         con.create_collation(BadUpperStr("mycoll"), mycoll);
@@ -71,14 +71,14 @@ class CollationTests(unittest.TestCase){
             select 'b' as x
             ) order by x collate mycoll
             """).fetchall();
-        self.assertEqual(result[0][0], 'b');
-        self.assertEqual(result[1][0], 'a');
+        this.assertEqual(result[0][0], 'b');
+        this.assertEqual(result[1][0], 'a');
 
     }
-    def CheckCollationIsUsed(self){
+    function CheckCollationIsUsed(){
         if sqlite.version_info < (3, 2, 1){  # old SQLite versions crash on this test
             return;
-        } def mycoll(x, y){
+        } function mycoll(x, y){
             # reverse order
             return -cmp(x, y);
 
@@ -96,19 +96,19 @@ class CollationTests(unittest.TestCase){
             """;
         result = con.execute(sql).fetchall();
         if result[0][0] != "c" or result[1][0] != "b" or result[2][0] != "a"{
-            self.fail("the expected order was not returned");
+            this.fail("the expected order was not returned");
 
         }
-        con.create_collation("mycoll", None);
+        con.create_collation("mycoll", nil);
         try{
             result = con.execute(sql).fetchall();
-            self.fail("should have raised an OperationalError");
+            this.fail("should have raised an OperationalError");
         } except sqlite.OperationalError, e{
-            self.assertEqual(e.args[0].lower(), "no such collation sequence: mycoll");
+            this.assertEqual(e.args[0].lower(), "no such collation sequence: mycoll");
 
     }
-    } def CheckCollationReturnsLargeInteger(self){
-        def mycoll(x, y){
+    } function CheckCollationReturnsLargeInteger(){
+        function mycoll(x, y){
             # reverse order
             return -((x > y) - (x < y)) * 2**32;
         } con = sqlite.connect(":memory:");
@@ -123,11 +123,11 @@ class CollationTests(unittest.TestCase){
             ) order by x collate mycoll
             """;
         result = con.execute(sql).fetchall();
-        self.assertEqual(result, [('c',), ('b',), ('a',)],
+        this.assertEqual(result, [('c',), ('b',), ('a',)],
                          msg="the expected order was not returned");
 
     }
-    def CheckCollationRegisterTwice(self){
+    function CheckCollationRegisterTwice(){
         """
         Register two different collation functions under the same name.
         Verify that the last one is actually used.
@@ -139,51 +139,51 @@ class CollationTests(unittest.TestCase){
             select x from (select 'a' as x union select 'b' as x) order by x collate mycoll
             """).fetchall();
         if result[0][0] != 'b' or result[1][0] != 'a'{
-            self.fail("wrong collation function is used");
+            this.fail("wrong collation function is used");
 
     }
-    } def CheckDeregisterCollation(self){
+    } function CheckDeregisterCollation(){
         """
         Register a collation, then deregister it. Make sure an error is raised if we try
         to use it.
         """;
         con = sqlite.connect(":memory:");
         con.create_collation("mycoll", cmp);
-        con.create_collation("mycoll", None);
+        con.create_collation("mycoll", nil);
         try{
             con.execute("select 'a' as x union select 'b' as x order by x collate mycoll");
-            self.fail("should have raised an OperationalError");
+            this.fail("should have raised an OperationalError");
         } except sqlite.OperationalError, e{
             if not e.args[0].startswith("no such collation sequence"){
-                self.fail("wrong OperationalError raised");
+                this.fail("wrong OperationalError raised");
 
 }
 } } } class ProgressTests(unittest.TestCase){
-    def CheckProgressHandlerUsed(self){
+    function CheckProgressHandlerUsed(){
         """
         Test that the progress handler is invoked once it is set.
         """;
         con = sqlite.connect(":memory:");
         progress_calls = [];
-        def progress(){
-            progress_calls.append(None);
+        function progress(){
+            progress_calls.append(nil);
             return 0;
         } con.set_progress_handler(progress, 1);
         con.execute("""
             create table foo(a, b)
             """);
-        self.assertTrue(progress_calls);
+        this.assertTrue(progress_calls);
 
 
     }
-    def CheckOpcodeCount(self){
+    function CheckOpcodeCount(){
         """
         Test that the opcode argument is respected.
         """;
         con = sqlite.connect(":memory:");
         progress_calls = [];
-        def progress(){
-            progress_calls.append(None);
+        function progress(){
+            progress_calls.append(nil);
             return 0;
         } con.set_progress_handler(progress, 1);
         curs = con.cursor();
@@ -197,48 +197,48 @@ class CollationTests(unittest.TestCase){
             create table bar (a, b)
             """);
         second_count = len(progress_calls);
-        self.assertGreaterEqual(first_count, second_count);
+        this.assertGreaterEqual(first_count, second_count);
 
     }
-    def CheckCancelOperation(self){
+    function CheckCancelOperation(){
         """
         Test that returning a non-zero value stops the operation in progress.
         """;
         con = sqlite.connect(":memory:");
         progress_calls = [];
-        def progress(){
-            progress_calls.append(None);
+        function progress(){
+            progress_calls.append(nil);
             return 1;
         } con.set_progress_handler(progress, 1);
         curs = con.cursor();
-        self.assertRaises(
+        this.assertRaises(
             sqlite.OperationalError,
             curs.execute,
             "create table bar (a, b)");
 
     }
-    def CheckClearHandler(self){
+    function CheckClearHandler(){
         """
         Test that setting the progress handler to None clears the previously set handler.
         """;
         con = sqlite.connect(":memory:");
         action = [];
-        def progress(){
+        function progress(){
             action.append(1);
             return 0;
         } con.set_progress_handler(progress, 1);
-        con.set_progress_handler(None, 1);
+        con.set_progress_handler(nil, 1);
         con.execute("select 1 union select 2 union select 3").fetchall();
-        self.assertEqual(len(action), 0, "progress handler was not cleared");
+        this.assertEqual(len(action), 0, "progress handler was not cleared");
 
 }
-} def suite(){
+} function suite(){
     collation_suite = unittest.makeSuite(CollationTests, "Check");
     progress_suite = unittest.makeSuite(ProgressTests, "Check");
     return unittest.TestSuite((collation_suite, progress_suite));
 
 }
-def test(){
+function test(){
     runner = unittest.TextTestRunner();
     runner.run(suite());
 

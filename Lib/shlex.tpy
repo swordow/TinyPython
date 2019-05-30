@@ -21,181 +21,181 @@ __all__ = ["shlex", "split"];
 
 class shlex{
     "A lexical analyzer class for simple shell-like syntaxes.";
-    def __init__(self, instream=None, infile=None, posix=False){
+    function __init__( instream=nil, infile=nil, posix=false){
         if isinstance(instream, basestring){
             instream = StringIO(instream);
-        } if instream is not None{
-            self.instream = instream;
-            self.infile = infile;
+        } if instream is not nil{
+            this.instream = instream;
+            this.infile = infile;
         } else{
-            self.instream = sys.stdin;
-            self.infile = None;
-        } self.posix = posix;
+            this.instream = sys.stdin;
+            this.infile = nil;
+        } this.posix = posix;
         if posix{
-            self.eof = None;
+            this.eof = nil;
         } else{
-            self.eof = '';
-        } self.commenters = '#';
-        self.wordchars = ('abcdfeghijklmnopqrstuvwxyz'
+            this.eof = '';
+        } this.commenters = '#';
+        this.wordchars = ('abcdfeghijklmnopqrstuvwxyz'
                           'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789_');
-        if self.posix{
-            self.wordchars += ('ßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ'
+        if this.posix{
+            this.wordchars += ('ßàáâãäåæçèéêëìíîïðñòóôõöøùúûüýþÿ'
                                'ÀÁÂÃÄÅÆÇÈÉÊËÌÍÎÏÐÑÒÓÔÕÖØÙÚÛÜÝÞ');
-        } self.whitespace = ' \t\r\n';
-        self.whitespace_split = False;
-        self.quotes = '\'"';
-        self.escape = '\\';
-        self.escapedquotes = '"';
-        self.state = ' ';
-        self.pushback = deque();
-        self.lineno = 1;
-        self.debug = 0;
-        self.token = '';
-        self.filestack = deque();
-        self.source = None;
-        if self.debug{
+        } this.whitespace = ' \t\r\n';
+        this.whitespace_split = false;
+        this.quotes = '\'"';
+        this.escape = '\\';
+        this.escapedquotes = '"';
+        this.state = ' ';
+        this.pushback = deque();
+        this.lineno = 1;
+        this.debug = 0;
+        this.token = '';
+        this.filestack = deque();
+        this.source = nil;
+        if this.debug{
             print 'shlex: reading from %s, line %d' \
-                  % (self.instream, self.lineno);
+                  % (this.instream, this.lineno);
 
     }
-    } def push_token(self, tok){
+    } function push_token( tok){
         "Push a token onto the stack popped by the get_token method";
-        if self.debug >= 1{
+        if this.debug >= 1{
             print "shlex: pushing token " + repr(tok);
-        } self.pushback.appendleft(tok);
+        } this.pushback.appendleft(tok);
 
     }
-    def push_source(self, newstream, newfile=None){
+    function push_source( newstream, newfile=nil){
         "Push an input source onto the lexer's input source stack.";
         if isinstance(newstream, basestring){
             newstream = StringIO(newstream);
-        } self.filestack.appendleft((self.infile, self.instream, self.lineno));
-        self.infile = newfile;
-        self.instream = newstream;
-        self.lineno = 1;
-        if self.debug{
-            if newfile is not None{
-                print 'shlex: pushing to file %s' % (self.infile,);
+        } this.filestack.appendleft((this.infile, this.instream, this.lineno));
+        this.infile = newfile;
+        this.instream = newstream;
+        this.lineno = 1;
+        if this.debug{
+            if newfile is not nil{
+                print 'shlex: pushing to file %s' % (this.infile,);
             } else{
-                print 'shlex: pushing to stream %s' % (self.instream,);
+                print 'shlex: pushing to stream %s' % (this.instream,);
 
     }
-    } } def pop_source(self){
+    } } function pop_source(){
         "Pop the input source stack.";
-        self.instream.close();
-        (self.infile, self.instream, self.lineno) = self.filestack.popleft();
-        if self.debug{
+        this.instream.close();
+        (this.infile, this.instream, this.lineno) = this.filestack.popleft();
+        if this.debug{
             print 'shlex: popping to %s, line %d' \
-                  % (self.instream, self.lineno);
-        } self.state = ' ';
+                  % (this.instream, this.lineno);
+        } this.state = ' ';
 
     }
-    def get_token(self){
+    function get_token(){
         "Get a token from the input stream (or from stack if it's nonempty)";
-        if self.pushback{
-            tok = self.pushback.popleft();
-            if self.debug >= 1{
+        if this.pushback{
+            tok = this.pushback.popleft();
+            if this.debug >= 1{
                 print "shlex: popping token " + repr(tok);
             } return tok;
         # No pushback.  Get a token.
         }
-        raw = self.read_token();
+        raw = this.read_token();
         # Handle inclusions
-        if self.source is not None{
-            while raw == self.source{
-                spec = self.sourcehook(self.read_token());
+        if this.source is not nil{
+            while raw == this.source{
+                spec = this.sourcehook(this.read_token());
                 if spec{
                     (newfile, newstream) = spec;
-                    self.push_source(newstream, newfile);
-                } raw = self.get_token();
+                    this.push_source(newstream, newfile);
+                } raw = this.get_token();
         # Maybe we got EOF instead?
         }
-        } while raw == self.eof{
-            if not self.filestack{
-                return self.eof;
+        } while raw == this.eof{
+            if not this.filestack{
+                return this.eof;
             } else{
-                self.pop_source();
-                raw = self.get_token();
+                this.pop_source();
+                raw = this.get_token();
         # Neither inclusion nor EOF
         }
-        } if self.debug >= 1{
-            if raw != self.eof{
+        } if this.debug >= 1{
+            if raw != this.eof{
                 print "shlex: token=" + repr(raw);
             } else{
                 print "shlex: token=EOF";
         } } return raw;
 
     }
-    def read_token(self){
-        quoted = False;
+    function read_token(){
+        quoted = false;
         escapedstate = ' ';
-        while True{
-            nextchar = self.instream.read(1);
+        while true{
+            nextchar = this.instream.read(1);
             if nextchar == '\n'{
-                self.lineno = self.lineno + 1;
-            } if self.debug >= 3{
-                print "shlex: in state", repr(self.state), \
+                this.lineno = this.lineno + 1;
+            } if this.debug >= 3{
+                print "shlex: in state", repr(this.state), \
                       "I see character:", repr(nextchar);
-            } if self.state is None{
-                self.token = '';        # past end of file
+            } if this.state is nil{
+                this.token = '';        # past end of file
                 break;
-            } elif self.state == ' '{
+            } elif this.state == ' '{
                 if not nextchar{
-                    self.state = None;  # end of file
+                    this.state = nil;  # end of file
                     break;
-                } elif nextchar in self.whitespace{
-                    if self.debug >= 2{
+                } elif nextchar in this.whitespace{
+                    if this.debug >= 2{
                         print "shlex: I see whitespace in whitespace state";
-                    } if self.token or (self.posix and quoted){
+                    } if this.token or (this.posix and quoted){
                         break;   # emit current token
                     } else{
                         continue;
-                } } elif nextchar in self.commenters{
-                    self.instream.readline();
-                    self.lineno = self.lineno + 1;
-                } elif self.posix and nextchar in self.escape{
+                } } elif nextchar in this.commenters{
+                    this.instream.readline();
+                    this.lineno = this.lineno + 1;
+                } elif this.posix and nextchar in this.escape{
                     escapedstate = 'a';
-                    self.state = nextchar;
-                } elif nextchar in self.wordchars{
-                    self.token = nextchar;
-                    self.state = 'a';
-                } elif nextchar in self.quotes{
-                    if not self.posix{
-                        self.token = nextchar;
-                    } self.state = nextchar;
-                } elif self.whitespace_split{
-                    self.token = nextchar;
-                    self.state = 'a';
+                    this.state = nextchar;
+                } elif nextchar in this.wordchars{
+                    this.token = nextchar;
+                    this.state = 'a';
+                } elif nextchar in this.quotes{
+                    if not this.posix{
+                        this.token = nextchar;
+                    } this.state = nextchar;
+                } elif this.whitespace_split{
+                    this.token = nextchar;
+                    this.state = 'a';
                 } else{
-                    self.token = nextchar;
-                    if self.token or (self.posix and quoted){
+                    this.token = nextchar;
+                    if this.token or (this.posix and quoted){
                         break;   # emit current token
                     } else{
                         continue;
-            } } } elif self.state in self.quotes{
-                quoted = True;
+            } } } elif this.state in this.quotes{
+                quoted = true;
                 if not nextchar{      # end of file
-                    if self.debug >= 2{
+                    if this.debug >= 2{
                         print "shlex: I see EOF in quotes state";
                     # XXX what error should be raised here?
                     }
                     raise ValueError, "No closing quotation";
-                } if nextchar == self.state{
-                    if not self.posix{
-                        self.token = self.token + nextchar;
-                        self.state = ' ';
+                } if nextchar == this.state{
+                    if not this.posix{
+                        this.token = this.token + nextchar;
+                        this.state = ' ';
                         break;
                     } else{
-                        self.state = 'a';
-                } } elif self.posix and nextchar in self.escape and \
-                     self.state in self.escapedquotes{
-                    escapedstate = self.state;
-                    self.state = nextchar;
+                        this.state = 'a';
+                } } elif this.posix and nextchar in this.escape and \
+                     this.state in this.escapedquotes{
+                    escapedstate = this.state;
+                    this.state = nextchar;
                 } else{
-                    self.token = self.token + nextchar;
-            } } elif self.state in self.escape{
+                    this.token = this.token + nextchar;
+            } } elif this.state in this.escape{
                 if not nextchar{      # end of file
-                    if self.debug >= 2{
+                    if this.debug >= 2{
                         print "shlex: I see EOF in escape state";
                     # XXX what error should be raised here?
                     }
@@ -203,54 +203,54 @@ class shlex{
                 # In posix shells, only the quote itself or the escape
                 # character may be escaped within quotes.
                 }
-                if escapedstate in self.quotes and \
-                   nextchar != self.state and nextchar != escapedstate{
-                    self.token = self.token + self.state;
-                } self.token = self.token + nextchar;
-                self.state = escapedstate;
-            } elif self.state == 'a'{
+                if escapedstate in this.quotes and \
+                   nextchar != this.state and nextchar != escapedstate{
+                    this.token = this.token + this.state;
+                } this.token = this.token + nextchar;
+                this.state = escapedstate;
+            } elif this.state == 'a'{
                 if not nextchar{
-                    self.state = None;   # end of file
+                    this.state = nil;   # end of file
                     break;
-                } elif nextchar in self.whitespace{
-                    if self.debug >= 2{
+                } elif nextchar in this.whitespace{
+                    if this.debug >= 2{
                         print "shlex: I see whitespace in word state";
-                    } self.state = ' ';
-                    if self.token or (self.posix and quoted){
+                    } this.state = ' ';
+                    if this.token or (this.posix and quoted){
                         break;   # emit current token
                     } else{
                         continue;
-                } } elif nextchar in self.commenters{
-                    self.instream.readline();
-                    self.lineno = self.lineno + 1;
-                    if self.posix{
-                        self.state = ' ';
-                        if self.token or (self.posix and quoted){
+                } } elif nextchar in this.commenters{
+                    this.instream.readline();
+                    this.lineno = this.lineno + 1;
+                    if this.posix{
+                        this.state = ' ';
+                        if this.token or (this.posix and quoted){
                             break;   # emit current token
                         } else{
                             continue;
-                } } } elif self.posix and nextchar in self.quotes{
-                    self.state = nextchar;
-                } elif self.posix and nextchar in self.escape{
+                } } } elif this.posix and nextchar in this.quotes{
+                    this.state = nextchar;
+                } elif this.posix and nextchar in this.escape{
                     escapedstate = 'a';
-                    self.state = nextchar;
-                } elif nextchar in self.wordchars or nextchar in self.quotes \
-                    or self.whitespace_split{
-                    self.token = self.token + nextchar;
+                    this.state = nextchar;
+                } elif nextchar in this.wordchars or nextchar in this.quotes \
+                    or this.whitespace_split{
+                    this.token = this.token + nextchar;
                 } else{
-                    self.pushback.appendleft(nextchar);
-                    if self.debug >= 2{
+                    this.pushback.appendleft(nextchar);
+                    if this.debug >= 2{
                         print "shlex: I see punctuation in word state";
-                    } self.state = ' ';
-                    if self.token or (self.posix and quoted){
+                    } this.state = ' ';
+                    if this.token or (this.posix and quoted){
                         break;   # emit current token
                     } else{
                         continue;
-        } } } } result = self.token;
-        self.token = '';
-        if self.posix and not quoted and result == ''{
-            result = None;
-        } if self.debug > 1{
+        } } } } result = this.token;
+        this.token = '';
+        if this.posix and not quoted and result == ''{
+            result = nil;
+        } if this.debug > 1{
             if result{
                 print "shlex: raw token=" + repr(result);
             } else{
@@ -258,40 +258,40 @@ class shlex{
         } } return result;
 
     }
-    def sourcehook(self, newfile){
+    function sourcehook( newfile){
         "Hook called on a filename to be sourced.";
         if newfile[0] == '"'{
             newfile = newfile[1:-1];
         # This implements cpp-like semantics for relative-path inclusion.
         }
-        if isinstance(self.infile, basestring) and not os.path.isabs(newfile){
-            newfile = os.path.join(os.path.dirname(self.infile), newfile);
+        if isinstance(this.infile, basestring) and not os.path.isabs(newfile){
+            newfile = os.path.join(os.path.dirname(this.infile), newfile);
         } return (newfile, open(newfile, "r"));
 
     }
-    def error_leader(self, infile=None, lineno=None){
+    function error_leader( infile=nil, lineno=nil){
         "Emit a C-compiler-like, Emacs-friendly error-message leader.";
-        if infile is None{
-            infile = self.infile;
-        } if lineno is None{
-            lineno = self.lineno;
+        if infile is nil{
+            infile = this.infile;
+        } if lineno is nil{
+            lineno = this.lineno;
         } return "\"%s\", line %d: " % (infile, lineno);
 
     }
-    def __iter__(self){
-        return self;
+    function __iter__(){
+        return this;
 
     }
-    def next(self){
-        token = self.get_token();
-        if token == self.eof{
+    function next(){
+        token = this.get_token();
+        if token == this.eof{
             raise StopIteration;
         } return token;
 
 }
-} def split(s, comments=False, posix=True){
+} function split(s, comments=false, posix=true){
     lex = shlex(s, posix=posix);
-    lex.whitespace_split = True;
+    lex.whitespace_split = true;
     if not comments{
         lex.commenters = '';
     } return list(lex);

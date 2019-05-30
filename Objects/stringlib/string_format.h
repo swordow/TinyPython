@@ -78,8 +78,8 @@ Py_LOCAL_INLINE(PyObject *)
 SubString_new_object(SubString *str)
 {
     if (str->ptr == NULL) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     return STRINGLIB_NEW(str->ptr, str->end - str->ptr);
 }
@@ -1121,7 +1121,7 @@ formatteriter_next(formatteriterobject *it)
            otherwise create a one length string with the conversion
            character */
         if (conversion == '\0') {
-            conversion_str = Py_None;
+            conversion_str = Py_Nil;
             Py_INCREF(conversion_str);
         }
         else

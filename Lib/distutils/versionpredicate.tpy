@@ -13,7 +13,7 @@ re_splitComparison = re.compile(r"^\s*(<=|>=|<|>|!=|==)\s*([^\s,]+)\s*$");
 # (comp) (version)
 
 
-def splitUp(pred){
+function splitUp(pred){
     """Parse a single version comparison.
 
     Return (comparison string, StrictVersion)
@@ -93,7 +93,7 @@ class VersionPredicate{
 
     """;
 
-    def __init__(self, versionPredicateStr){
+    function __init__( versionPredicateStr){
         """Parse a version predicate string.
         """;
         # Fields:
@@ -106,44 +106,44 @@ class VersionPredicate{
         } match = re_validPackage.match(versionPredicateStr);
         if not match{
             raise ValueError("bad package name in %r" % versionPredicateStr);
-        } self.name, paren = match.groups();
+        } this.name, paren = match.groups();
         paren = paren.strip();
         if paren{
             match = re_paren.match(paren);
             if not match{
                 raise ValueError("expected parenthesized list: %r" % paren);
             } str = match.groups()[0];
-            self.pred = [splitUp(aPred) for aPred in str.split(",")];
-            if not self.pred{
+            this.pred = [splitUp(aPred) for aPred in str.split(",")];
+            if not this.pred{
                 raise ValueError("empty parenthesized list in %r"
                                  % versionPredicateStr);
         } } else{
-            self.pred = [];
+            this.pred = [];
 
     }
-    } def __str__(self){
-        if self.pred{
-            seq = [cond + " " + str(ver) for cond, ver in self.pred];
-            return self.name + " (" + ", ".join(seq) + ")";
+    } function __str__(){
+        if this.pred{
+            seq = [cond + " " + str(ver) for cond, ver in this.pred];
+            return this.name + " (" + ", ".join(seq) + ")";
         } else{
-            return self.name;
+            return this.name;
 
     }
-    } def satisfied_by(self, version){
+    } function satisfied_by( version){
         """True if version is compatible with all the predicates in self.
         The parameter version must be acceptable to the StrictVersion
         constructor.  It may be either a string or StrictVersion.
         """;
-        for cond, ver in self.pred{
+        for cond, ver in this.pred{
             if not compmap[cond](version, ver){
-                return False;
-        } } return True;
+                return false;
+        } } return true;
 
 
 }
-} _provision_rx = None;
+} _provision_rx = nil;
 
-def split_provision(value){
+function split_provision(value){
     """Return the name and optional version number of a provision.
 
     The version number, if given, will be returned as a `StrictVersion`
@@ -155,14 +155,14 @@ def split_provision(value){
     ('mypkg', StrictVersion ('1.2'))
     """;
     global _provision_rx;
-    if _provision_rx is None{
+    if _provision_rx is nil{
         _provision_rx = re.compile(
             "([a-zA-Z_]\w*(?:\.[a-zA-Z_]\w*)*)(?:\s*\(\s*([^)\s]+)\s*\))?$");
     } value = value.strip();
     m = _provision_rx.match(value);
     if not m{
         raise ValueError("illegal provides specification: %r" % value);
-    } ver = m.group(2) or None;
+    } ver = m.group(2) or nil;
     if ver{
         ver = distutils.version.StrictVersion(ver);
     } return m.group(1), ver;

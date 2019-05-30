@@ -138,8 +138,8 @@ static PyObject *ScrapObj_PutScrapFlavor(ScrapObject *_self, PyObject *_args)
                           (Size)flavorData__in_len__,
                           flavorData__in__);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -259,8 +259,8 @@ static PyObject *Scrap_LoadScrap(PyObject *_self, PyObject *_args)
         return NULL;
     _err = LoadScrap();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -272,8 +272,8 @@ static PyObject *Scrap_UnloadScrap(PyObject *_self, PyObject *_args)
         return NULL;
     _err = UnloadScrap();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -299,8 +299,8 @@ static PyObject *Scrap_ClearCurrentScrap(PyObject *_self, PyObject *_args)
         return NULL;
     _err = ClearCurrentScrap();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -312,8 +312,8 @@ static PyObject *Scrap_CallInScrapPromises(PyObject *_self, PyObject *_args)
         return NULL;
     _err = CallInScrapPromises();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 #endif /* __LP64__ */

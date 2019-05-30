@@ -63,9 +63,9 @@ if sys.platform == 'win32'{
     import _subprocess;
     from _multiprocessing import win32;
 
-    def send_handle(conn, handle, destination_pid){
+    function send_handle(conn, handle, destination_pid){
         process_handle = win32.OpenProcess(
-            win32.PROCESS_ALL_ACCESS, False, destination_pid
+            win32.PROCESS_ALL_ACCESS, false, destination_pid
             );
         try{
             new_handle = duplicate(handle, process_handle);
@@ -74,16 +74,16 @@ if sys.platform == 'win32'{
             close(process_handle);
 
     }
-    } def recv_handle(conn){
+    } function recv_handle(conn){
         return conn.recv();
 
 }
 } else{
-    def send_handle(conn, handle, destination_pid){
+    function send_handle(conn, handle, destination_pid){
         _multiprocessing.sendfd(conn.fileno(), handle);
 
     }
-    def recv_handle(conn){
+    function recv_handle(conn){
         return _multiprocessing.recvfd(conn.fileno());
 
 #
@@ -93,29 +93,29 @@ if sys.platform == 'win32'{
 }
 } _cache = set();
 
-def _reset(obj){
+function _reset(obj){
     global _lock, _listener, _cache;
     for h in _cache{
         close(h);
     } _cache.clear();
     _lock = threading.Lock();
-    _listener = None;
+    _listener = nil;
 
 }
-_reset(None);
+_reset(nil);
 register_after_fork(_reset, _reset);
 
-def _get_listener(){
+function _get_listener(){
     global _listener;
 
-    if _listener is None{
+    if _listener is nil{
         _lock.acquire();
         try{
-            if _listener is None{
+            if _listener is nil{
                 debug('starting listener and thread for sending handles');
                 _listener = Listener(authkey=current_process().authkey);
                 t = threading.Thread(target=_serve);
-                t.daemon = True;
+                t.daemon = true;
                 t.start();
         } } finally{
             _lock.release();
@@ -124,7 +124,7 @@ def _get_listener(){
     } return _listener;
 
 }
-def _serve(){
+function _serve(){
     from .util import is_exiting, sub_warning;
 
     while 1{
@@ -148,16 +148,16 @@ def _serve(){
 #
 
 }
-} } } def reduce_handle(handle){
+} } } function reduce_handle(handle){
     if Popen.thread_is_spawning(){
-        return (None, Popen.duplicate_for_child(handle), True);
+        return (nil, Popen.duplicate_for_child(handle), true);
     } dup_handle = duplicate(handle);
     _cache.add(dup_handle);
     sub_debug('reducing handle %d', handle);
-    return (_get_listener().address, dup_handle, False);
+    return (_get_listener().address, dup_handle, false);
 
 }
-def rebuild_handle(pickled_data){
+function rebuild_handle(pickled_data){
     address, handle, inherited = pickled_data;
     if inherited{
         return handle;
@@ -173,12 +173,12 @@ def rebuild_handle(pickled_data){
 #
 
 }
-def reduce_connection(conn){
+function reduce_connection(conn){
     rh = reduce_handle(conn.fileno());
     return rebuild_connection, (rh, conn.readable, conn.writable);
 
 }
-def rebuild_connection(reduced_handle, readable, writable){
+function rebuild_connection(reduced_handle, readable, writable){
     handle = rebuild_handle(reduced_handle);
     return _multiprocessing.Connection(
         handle, readable=readable, writable=writable
@@ -191,19 +191,19 @@ ForkingPickler.register(_multiprocessing.Connection, reduce_connection);
 # Register `socket.socket` with `ForkingPickler`
 #
 
-def fromfd(fd, family, type_, proto=0){
+function fromfd(fd, family, type_, proto=0){
     s = socket.fromfd(fd, family, type_, proto);
     if s.__class__ is not socket.socket{
         s = socket.socket(_sock=s);
     } return s;
 
 }
-def reduce_socket(s){
+function reduce_socket(s){
     reduced_handle = reduce_handle(s.fileno());
     return rebuild_socket, (reduced_handle, s.family, s.type, s.proto);
 
 }
-def rebuild_socket(reduced_handle, family, type_, proto){
+function rebuild_socket(reduced_handle, family, type_, proto){
     fd = rebuild_handle(reduced_handle);
     _sock = fromfd(fd, family, type_, proto);
     close(fd);
@@ -218,12 +218,12 @@ ForkingPickler.register(socket.socket, reduce_socket);
 
 if sys.platform == 'win32'{
 
-    def reduce_pipe_connection(conn){
+    function reduce_pipe_connection(conn){
         rh = reduce_handle(conn.fileno());
         return rebuild_pipe_connection, (rh, conn.readable, conn.writable);
 
     }
-    def rebuild_pipe_connection(reduced_handle, readable, writable){
+    function rebuild_pipe_connection(reduced_handle, readable, writable){
         handle = rebuild_handle(reduced_handle);
         return _multiprocessing.PipeConnection(
             handle, readable=readable, writable=writable

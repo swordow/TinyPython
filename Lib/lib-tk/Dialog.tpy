@@ -11,23 +11,23 @@ if TkVersion <= 3.6{
 
 }
 class Dialog(Widget){
-    def __init__(self, master=None, cnf={}, **kw){
+    function __init__( master=nil, cnf={}, **kw){
         cnf = _cnfmerge((cnf, kw));
-        self.widgetName = '__dialog__';
-        Widget._setup(self, master, cnf);
-        self.num = self.tk.getint(
-                self.tk.call(
-                      'tk_dialog', self._w,
+        this.widgetName = '__dialog__';
+        Widget._setup(this, master, cnf);
+        this.num = this.tk.getint(
+                this.tk.call(
+                      'tk_dialog', this._w,
                       cnf['title'], cnf['text'],
                       cnf['bitmap'], cnf['default'],
                       *cnf['strings']));
-        try{ Widget.destroy(self);
-        except TclError{ pass;
-    } def destroy(self){ pass;
+        try{ Widget.destroy(this);}
+        except TclError{ pass;}
+    } function destroy(){ pass;}
 
 }
-def _test(){
-    d = Dialog(None, {'title': 'File Modified',
+function _test(){
+    d = Dialog(nil, {'title': 'File Modified',
                       'text':
                       'File "Python.h" has been modified'
                       ' since the last time it was saved.'
@@ -43,10 +43,10 @@ def _test(){
 
 }
 if __name__ == '__main__'{
-    t = Button(None, {'text': 'Test',
+    t = Button(nil, {'text': 'Test',
                       'command': _test,
                       Pack: {}});
-    q = Button(None, {'text': 'Quit',
+    q = Button(nil, {'text': 'Quit',
                       'command': t.quit,
                       Pack: {}});
     t.mainloop();

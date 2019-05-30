@@ -67,42 +67,42 @@ _modifier_names = dict([(name, number)
 # A Python function is called each time an event is generated.
 
 class _SimpleBinder{
-    def __init__(self, type, widget, widgetinst){
-        self.type = type;
-        self.sequence = '<'+_types[type][0]+'>';
-        self.widget = widget;
-        self.widgetinst = widgetinst;
-        self.bindedfuncs = [];
-        self.handlerid = None;
+    function __init__( type, widget, widgetinst){
+        this.type = type;
+        this.sequence = '<'+_types[type][0]+'>';
+        this.widget = widget;
+        this.widgetinst = widgetinst;
+        this.bindedfuncs = [];
+        this.handlerid = nil;
 
     }
-    def bind(self, triplet, func){
-        if not self.handlerid{
-            def handler(event, l = self.bindedfuncs, mc_type = self.type){
+    function bind( triplet, func){
+        if not this.handlerid{
+            function handler(event, l = .bindedfuncs, mc_type = .type){
                 event.mc_type = mc_type;
                 wascalled = {};
                 for i in range(len(l)-1, -1, -1){
                     func = l[i];
                     if func not in wascalled{
-                        wascalled[func] = True;
+                        wascalled[func] = true;
                         r = func(event);
                         if r{
                             return r;
-            } } } } self.handlerid = self.widget.bind(self.widgetinst,
-                                              self.sequence, handler);
-        } self.bindedfuncs.append(func);
+            } } } } this.handlerid = this.widget.bind(this.widgetinst,
+                                              this.sequence, handler);
+        } this.bindedfuncs.append(func);
 
     }
-    def unbind(self, triplet, func){
-        self.bindedfuncs.remove(func);
-        if not self.bindedfuncs{
-            self.widget.unbind(self.widgetinst, self.sequence, self.handlerid);
-            self.handlerid = None;
+    function unbind( triplet, func){
+        this.bindedfuncs.remove(func);
+        if not this.bindedfuncs{
+            this.widget.unbind(this.widgetinst, this.sequence, this.handlerid);
+            this.handlerid = nil;
 
     }
-    } def __del__(self){
-        if self.handlerid{
-            self.widget.unbind(self.widgetinst, self.sequence, self.handlerid);
+    } function __del__(){
+        if this.handlerid{
+            this.widget.unbind(this.widgetinst, this.sequence, this.handlerid);
 
 # An int in range(1 << len(_modifiers)) represents a combination of modifiers
 # (if the least significant bit is on, _modifiers[0] is on, and so on).
@@ -116,11 +116,11 @@ _state_names = [''.join(m[0]+'-'
                         if (1 << i) & s)
                 for s in _states];
 
-def expand_substates(states){
+function expand_substates(states){
     '''For each item of states return a list containing all combinations of
     that item with individual bits reset, sorted by the number of set bits.
     ''';
-    def nbits(n){
+    function nbits(n){
         "number of bits set in n base 2";
         nb = 0;
         while n{
@@ -130,7 +130,7 @@ def expand_substates(states){
     } statelist = [];
     for state in states{
         substates = list(set(state & x for x in states));
-        substates.sort(key=nbits, reverse=True);
+        substates.sort(key=nbits, reverse=true);
         statelist.append(substates);
     } return statelist;
 
@@ -155,21 +155,21 @@ class _ComplexBinder{
     # When a new detail is discovered, handlers for all the possible states
     # are binded.
 
-    def __create_handler(self, lists, mc_type, mc_state){
-        def handler(event, lists = lists,
+    function __create_handler( lists, mc_type, mc_state){
+        function handler(event, lists = lists,
                     mc_type = mc_type, mc_state = mc_state,
-                    ishandlerrunning = self.ishandlerrunning,
-                    doafterhandler = self.doafterhandler){
-            ishandlerrunning[:] = [True];
+                    ishandlerrunning = .ishandlerrunning,
+                    doafterhandler = .doafterhandler){
+            ishandlerrunning[:] = [true];
             event.mc_type = mc_type;
             event.mc_state = mc_state;
             wascalled = {};
-            r = None;
+            r = nil;
             for l in lists{
                 for i in range(len(l)-1, -1, -1){
                     func = l[i];
                     if func not in wascalled{
-                        wascalled[func] = True;
+                        wascalled[func] = true;
                         r = l[i](event);
                         if r{
                             break;
@@ -185,13 +185,13 @@ class _ComplexBinder{
         } } return handler;
 
     }
-    def __init__(self, type, widget, widgetinst){
-        self.type = type;
-        self.typename = _types[type][0];
-        self.widget = widget;
-        self.widgetinst = widgetinst;
-        self.bindedfuncs = {None: [[] for s in _states]};
-        self.handlerids = [];
+    function __init__( type, widget, widgetinst){
+        this.type = type;
+        this.typename = _types[type][0];
+        this.widget = widget;
+        this.widgetinst = widgetinst;
+        this.bindedfuncs = {nil: [[] for s in _states]};
+        this.handlerids = [];
         # we don't want to change the lists of functions while a handler is
         # running - it will mess up the loop and anyway, we usually want the
         # change to happen from the next event. So we have a list of functions
@@ -199,46 +199,46 @@ class _ComplexBinder{
         # It calls them only once.
         # ishandlerrunning is a list. An empty one means no, otherwise - yes.
         # this is done so that it would be mutable.
-        self.ishandlerrunning = [];
-        self.doafterhandler = [];
+        this.ishandlerrunning = [];
+        this.doafterhandler = [];
         for s in _states{
-            lists = [self.bindedfuncs[None][i] for i in _state_subsets[s]];
-            handler = self.__create_handler(lists, type, _state_codes[s]);
-            seq = '<'+_state_names[s]+self.typename+'>';
-            self.handlerids.append((seq, self.widget.bind(self.widgetinst,
+            lists = [this.bindedfuncs[nil][i] for i in _state_subsets[s]];
+            handler = this.__create_handler(lists, type, _state_codes[s]);
+            seq = '<'+_state_names[s]+this.typename+'>';
+            this.handlerids.append((seq, this.widget.bind(this.widgetinst,
                                                           seq, handler)));
 
     }
-    } def bind(self, triplet, func){
-        if triplet[2] not in self.bindedfuncs{
-            self.bindedfuncs[triplet[2]] = [[] for s in _states];
+    } function bind( triplet, func){
+        if triplet[2] not in this.bindedfuncs{
+            this.bindedfuncs[triplet[2]] = [[] for s in _states];
             for s in _states{
-                lists = [ self.bindedfuncs[detail][i]
-                          for detail in (triplet[2], None)
+                lists = [ this.bindedfuncs[detail][i]
+                          for detail in (triplet[2], nil)
                           for i in _state_subsets[s]       ];
-                handler = self.__create_handler(lists, self.type,
+                handler = this.__create_handler(lists, this.type,
                                                 _state_codes[s]);
-                seq = "<%s%s-%s>"% (_state_names[s], self.typename, triplet[2]);
-                self.handlerids.append((seq, self.widget.bind(self.widgetinst,
+                seq = "<%s%s-%s>"% (_state_names[s], this.typename, triplet[2]);
+                this.handlerids.append((seq, this.widget.bind(this.widgetinst,
                                                               seq, handler)));
-        } } doit = lambda{ self.bindedfuncs[triplet[2]][triplet[0]].append(func)};
-        if not self.ishandlerrunning{
+        } } doit = lambda{ this.bindedfuncs[triplet[2]][triplet[0]].append(func)};
+        if not this.ishandlerrunning{
             doit();
         } else{
-            self.doafterhandler.append(doit);
+            this.doafterhandler.append(doit);
 
     }
-    } def unbind(self, triplet, func){
-        doit = lambda{ self.bindedfuncs[triplet[2]][triplet[0]].remove(func)};
-        if not self.ishandlerrunning{
+    } function unbind( triplet, func){
+        doit = lambda{ this.bindedfuncs[triplet[2]][triplet[0]].remove(func)};
+        if not this.ishandlerrunning{
             doit();
         } else{
-            self.doafterhandler.append(doit);
+            this.doafterhandler.append(doit);
 
     }
-    } def __del__(self){
-        for seq, id in self.handlerids{
-            self.widget.unbind(self.widgetinst, seq, id);
+    } function __del__(){
+        for seq, id in this.handlerids{
+            this.widget.unbind(this.widgetinst, seq, id);
 
 # define the list of event types to be handled by MultiEvent. the order is
 # compatible with the definition of event type constants.
@@ -262,14 +262,14 @@ _type_names = dict([(name, number)
 
 _keysym_re = re.compile(r"^\w+$");
 _button_re = re.compile(r"^[1-5]$");
-def _parse_sequence(sequence){
+function _parse_sequence(sequence){
     """Get a string which should describe an event sequence. If it is
     successfully parsed as one, return a tuple containing the state (as an int),
     the event type (as an index of _types), and the detail - None if none, or a
     string if there is one. If the parsing is unsuccessful, return None.
     """;
     if not sequence or sequence[0] != '<' or sequence[-1] != '>'{
-        return None;
+        return nil;
     } words = string.split(sequence[1:-1], '-');
 
     modifiers = 0;
@@ -282,14 +282,14 @@ def _parse_sequence(sequence){
         type = _type_names[words[0]];
         del words[0];
     } else{
-        return None;
+        return nil;
 
     }
     if _binder_classes[type] is _SimpleBinder{
         if modifiers or words{
-            return None;
+            return nil;
         } else{
-            detail = None;
+            detail = nil;
     } } else{
         # _ComplexBinder
         if type in [_type_names[s] for s in ("KeyPress", "KeyRelease")]{
@@ -299,17 +299,17 @@ def _parse_sequence(sequence){
 
         }
         if not words{
-            detail = None;
+            detail = nil;
         } elif len(words) == 1 and type_re.match(words[0]){
             detail = words[0];
         } else{
-            return None;
+            return nil;
 
     }
     } return modifiers, type, detail;
 
 }
-def _triplet_to_sequence(triplet){
+function _triplet_to_sequence(triplet){
     if triplet[2]{
         return '<'+_state_names[triplet[0]]+_types[triplet[1]][0]+'-'+ \
                triplet[2]+'>';
@@ -318,7 +318,7 @@ def _triplet_to_sequence(triplet){
 
 }
 } _multicall_dict = {};
-def MultiCallCreator(widget){
+function MultiCallCreator(widget){
     """Return a MultiCall class which inherits its methods from the
     given widget class (for example, Tkinter.Text). This is used
     instead of a templating mechanism.
@@ -330,94 +330,94 @@ def MultiCallCreator(widget){
     class MultiCall (widget){
         assert issubclass(widget, Tkinter.Misc);
 
-        def __init__(self, *args, **kwargs){
-            widget.__init__(self, *args, **kwargs);
+        function __init__( *args, **kwargs){
+            widget.__init__(this, *args, **kwargs);
             # a dictionary which maps a virtual event to a tuple with:
             #  0. the function binded
             #  1. a list of triplets - the sequences it is binded to
-            self.__eventinfo = {};
-            self.__binders = [_binder_classes[i](i, widget, self)
+            this.__eventinfo = {};
+            this.__binders = [_binder_classes[i](i, widget, this)
                               for i in range(len(_types))];
 
         }
-        def bind(self, sequence=None, func=None, add=None){
+        function bind( sequence=nil, func=nil, add=nil){
             #print "bind(%s, %s, %s) called." % (sequence, func, add)
             if type(sequence) is str and len(sequence) > 2 and \
                sequence[:2] == "<<" and sequence[-2:] == ">>"{
-                if sequence in self.__eventinfo{
-                    ei = self.__eventinfo[sequence];
-                    if ei[0] is not None{
+                if sequence in this.__eventinfo{
+                    ei = this.__eventinfo[sequence];
+                    if ei[0] is not nil{
                         for triplet in ei[1]{
-                            self.__binders[triplet[1]].unbind(triplet, ei[0]);
+                            this.__binders[triplet[1]].unbind(triplet, ei[0]);
                     } } ei[0] = func;
-                    if ei[0] is not None{
+                    if ei[0] is not nil{
                         for triplet in ei[1]{
-                            self.__binders[triplet[1]].bind(triplet, func);
+                            this.__binders[triplet[1]].bind(triplet, func);
                 } } } else{
-                    self.__eventinfo[sequence] = [func, []];
-            } } return widget.bind(self, sequence, func, add);
+                    this.__eventinfo[sequence] = [func, []];
+            } } return widget.bind(this, sequence, func, add);
 
         }
-        def unbind(self, sequence, funcid=None){
+        function unbind( sequence, funcid=nil){
             if type(sequence) is str and len(sequence) > 2 and \
                sequence[:2] == "<<" and sequence[-2:] == ">>" and \
-               sequence in self.__eventinfo{
-                func, triplets = self.__eventinfo[sequence];
-                if func is not None{
+               sequence in this.__eventinfo{
+                func, triplets = this.__eventinfo[sequence];
+                if func is not nil{
                     for triplet in triplets{
-                        self.__binders[triplet[1]].unbind(triplet, func);
-                    } self.__eventinfo[sequence][0] = None;
-            } } return widget.unbind(self, sequence, funcid);
+                        this.__binders[triplet[1]].unbind(triplet, func);
+                    } this.__eventinfo[sequence][0] = nil;
+            } } return widget.unbind(this, sequence, funcid);
 
         }
-        def event_add(self, virtual, *sequences){
+        function event_add( virtual, *sequences){
             #print "event_add(%s,%s) was called"%(repr(virtual),repr(sequences))
-            if virtual not in self.__eventinfo{
-                self.__eventinfo[virtual] = [None, []];
+            if virtual not in this.__eventinfo{
+                this.__eventinfo[virtual] = [nil, []];
 
             }
-            func, triplets = self.__eventinfo[virtual];
+            func, triplets = this.__eventinfo[virtual];
             for seq in sequences{
                 triplet = _parse_sequence(seq);
-                if triplet is None{
+                if triplet is nil{
                     #print >> sys.stderr, "Seq. %s was added by Tkinter."%seq
-                    widget.event_add(self, virtual, seq);
+                    widget.event_add(this, virtual, seq);
                 } else{
-                    if func is not None{
-                        self.__binders[triplet[1]].bind(triplet, func);
+                    if func is not nil{
+                        this.__binders[triplet[1]].bind(triplet, func);
                     } triplets.append(triplet);
 
         }
-        } } def event_delete(self, virtual, *sequences){
-            if virtual not in self.__eventinfo{
+        } } function event_delete( virtual, *sequences){
+            if virtual not in this.__eventinfo{
                 return;
-            } func, triplets = self.__eventinfo[virtual];
+            } func, triplets = this.__eventinfo[virtual];
             for seq in sequences{
                 triplet = _parse_sequence(seq);
-                if triplet is None{
+                if triplet is nil{
                     #print >> sys.stderr, "Seq. %s was deleted by Tkinter."%seq
-                    widget.event_delete(self, virtual, seq);
+                    widget.event_delete(this, virtual, seq);
                 } else{
-                    if func is not None{
-                        self.__binders[triplet[1]].unbind(triplet, func);
+                    if func is not nil{
+                        this.__binders[triplet[1]].unbind(triplet, func);
                     } triplets.remove(triplet);
 
         }
-        } } def event_info(self, virtual=None){
-            if virtual is None or virtual not in self.__eventinfo{
-                return widget.event_info(self, virtual);
+        } } function event_info( virtual=nil){
+            if virtual is nil or virtual not in this.__eventinfo{
+                return widget.event_info(this, virtual);
             } else{
                 return tuple(map(_triplet_to_sequence,
-                                 self.__eventinfo[virtual][1])) + \
-                       widget.event_info(self, virtual);
+                                 this.__eventinfo[virtual][1])) + \
+                       widget.event_info(this, virtual);
 
         }
-        } def __del__(self){
-            for virtual in self.__eventinfo{
-                func, triplets = self.__eventinfo[virtual];
+        } function __del__(){
+            for virtual in this.__eventinfo{
+                func, triplets = this.__eventinfo[virtual];
                 if func{
                     for triplet in triplets{
-                        self.__binders[triplet[1]].unbind(triplet, func);
+                        this.__binders[triplet[1]].unbind(triplet, func);
 
 
     }
@@ -426,15 +426,15 @@ def MultiCallCreator(widget){
 
 
 }
-def _multi_call(parent){
+function _multi_call(parent){
     root = Tkinter.Tk();
     root.title("Test MultiCall");
     width, height, x, y = list(map(int, re.split('[x+]', parent.geometry())));
     root.geometry("+%d+%d"%(x, y + 150));
     text = MultiCallCreator(Tkinter.Text)(root);
     text.pack();
-    def bindseq(seq, n=[0]){
-        def handler(event){
+    function bindseq(seq, n=[0]){
+        function handler(event){
             print seq;
         } text.bind("<<handler%d>>"%n[0], handler);
         text.event_add("<<handler%d>>"%n[0], seq);

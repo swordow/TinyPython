@@ -56,14 +56,14 @@ class UnixCCompiler(CCompiler){
     # are pretty generic; they will probably have to be set by an outsider
     # (eg. using information discovered by the sysconfig about building
     # Python extensions).
-    executables = {'preprocessor' : None,
+    executables = {'preprocessor' : nil,
                    'compiler'     : ["cc"],
                    'compiler_so'  : ["cc"],
                    'compiler_cxx' : ["cc"],
                    'linker_so'    : ["cc", "-shared"],
                    'linker_exe'   : ["cc"],
                    'archiver'     : ["ar", "-cr"],
-                   'ranlib'       : None,
+                   'ranlib'       : nil,
                   };
 
     if sys.platform[:6] == "darwin"{
@@ -88,13 +88,13 @@ class UnixCCompiler(CCompiler){
         exe_extension = ".exe";
 
     }
-    def preprocess(self, source,
-                   output_file=None, macros=None, include_dirs=None,
-                   extra_preargs=None, extra_postargs=None){
+    function preprocess( source,
+                   output_file=nil, macros=nil, include_dirs=nil,
+                   extra_preargs=nil, extra_postargs=nil){
         ignore, macros, include_dirs = \
-            self._fix_compile_args(None, macros, include_dirs);
+            this._fix_compile_args(nil, macros, include_dirs);
         pp_opts = gen_preprocess_options(macros, include_dirs);
-        pp_args = self.preprocessor + pp_opts;
+        pp_args = this.preprocessor + pp_opts;
         if output_file{
             pp_args.extend(['-o', output_file]);
         } if extra_preargs{
@@ -107,73 +107,73 @@ class UnixCCompiler(CCompiler){
         # generating output to stdout, or there's a target output file and
         # the source file is newer than the target (or the target doesn't
         # exist).
-        if self.force or output_file is None or newer(source, output_file){
+        if this.force or output_file is nil or newer(source, output_file){
             if output_file{
-                self.mkpath(os.path.dirname(output_file));
+                this.mkpath(os.path.dirname(output_file));
             } try{
-                self.spawn(pp_args);
+                this.spawn(pp_args);
             } except DistutilsExecError, msg{
                 raise CompileError, msg;
 
     }
-    } } def _compile(self, obj, src, ext, cc_args, extra_postargs, pp_opts){
-        compiler_so = self.compiler_so;
+    } } function _compile( obj, src, ext, cc_args, extra_postargs, pp_opts){
+        compiler_so = this.compiler_so;
         if sys.platform == 'darwin'{
             compiler_so = _osx_support.compiler_fixup(compiler_so,
                                                     cc_args + extra_postargs);
         } try{
-            self.spawn(compiler_so + cc_args + [src, '-o', obj] +
+            this.spawn(compiler_so + cc_args + [src, '-o', obj] +
                        extra_postargs);
         } except DistutilsExecError, msg{
             raise CompileError, msg;
 
     }
-    } def create_static_lib(self, objects, output_libname,
-                          output_dir=None, debug=0, target_lang=None){
-        objects, output_dir = self._fix_object_args(objects, output_dir);
+    } function create_static_lib( objects, output_libname,
+                          output_dir=nil, debug=0, target_lang=nil){
+        objects, output_dir = this._fix_object_args(objects, output_dir);
 
         output_filename = \
-            self.library_filename(output_libname, output_dir=output_dir);
+            this.library_filename(output_libname, output_dir=output_dir);
 
-        if self._need_link(objects, output_filename){
-            self.mkpath(os.path.dirname(output_filename));
-            self.spawn(self.archiver +
+        if this._need_link(objects, output_filename){
+            this.mkpath(os.path.dirname(output_filename));
+            this.spawn(this.archiver +
                        [output_filename] +
-                       objects + self.objects);
+                       objects + this.objects);
 
             # Not many Unices required ranlib anymore -- SunOS 4.x is, I
             # think the only major Unix that does.  Maybe we need some
             # platform intelligence here to skip ranlib if it's not
             # needed -- or maybe Python's configure script took care of
             # it for us, hence the check for leading colon.
-            if self.ranlib{
+            if this.ranlib{
                 try{
-                    self.spawn(self.ranlib + [output_filename]);
+                    this.spawn(this.ranlib + [output_filename]);
                 } except DistutilsExecError, msg{
                     raise LibError, msg;
         } } } else{
             log.debug("skipping %s (up-to-date)", output_filename);
 
     }
-    } def link(self, target_desc, objects,
-             output_filename, output_dir=None, libraries=None,
-             library_dirs=None, runtime_library_dirs=None,
-             export_symbols=None, debug=0, extra_preargs=None,
-             extra_postargs=None, build_temp=None, target_lang=None){
-        objects, output_dir = self._fix_object_args(objects, output_dir);
+    } function link( target_desc, objects,
+             output_filename, output_dir=nil, libraries=nil,
+             library_dirs=nil, runtime_library_dirs=nil,
+             export_symbols=nil, debug=0, extra_preargs=nil,
+             extra_postargs=nil, build_temp=nil, target_lang=nil){
+        objects, output_dir = this._fix_object_args(objects, output_dir);
         libraries, library_dirs, runtime_library_dirs = \
-            self._fix_lib_args(libraries, library_dirs, runtime_library_dirs);
+            this._fix_lib_args(libraries, library_dirs, runtime_library_dirs);
 
-        lib_opts = gen_lib_options(self, library_dirs, runtime_library_dirs,
+        lib_opts = gen_lib_options(this, library_dirs, runtime_library_dirs,
                                    libraries);
         if type(output_dir) not in (StringType, NoneType){
             raise TypeError, "'output_dir' must be a string or None";
-        } if output_dir is not None{
+        } if output_dir is not nil{
             output_filename = os.path.join(output_dir, output_filename);
 
         }
-        if self._need_link(objects, output_filename){
-            ld_args = (objects + self.objects +
+        if this._need_link(objects, output_filename){
+            ld_args = (objects + this.objects +
                        lib_opts + ['-o', output_filename]);
             if debug{
                 ld_args[:0] = ['-g'];
@@ -181,13 +181,13 @@ class UnixCCompiler(CCompiler){
                 ld_args[:0] = extra_preargs;
             } if extra_postargs{
                 ld_args.extend(extra_postargs);
-            } self.mkpath(os.path.dirname(output_filename));
+            } this.mkpath(os.path.dirname(output_filename));
             try{
                 if target_desc == CCompiler.EXECUTABLE{
-                    linker = self.linker_exe[:];
+                    linker = this.linker_exe[:];
                 } else{
-                    linker = self.linker_so[:];
-                } if target_lang == "c++" and self.compiler_cxx{
+                    linker = this.linker_so[:];
+                } if target_lang == "c++" and this.compiler_cxx{
                     # skip over environment variable settings if /usr/bin/env
                     # is used to set up the linker's environment.
                     # This is needed on OSX. Note: this assumes that the
@@ -200,14 +200,14 @@ class UnixCCompiler(CCompiler){
                             i = i + 1;
 
                     }
-                    } linker[i] = self.compiler_cxx[i];
+                    } linker[i] = this.compiler_cxx[i];
 
                 }
                 if sys.platform == 'darwin'{
                     linker = _osx_support.compiler_fixup(linker, ld_args);
 
                 }
-                self.spawn(linker + ld_args);
+                this.spawn(linker + ld_args);
             } except DistutilsExecError, msg{
                 raise LinkError, msg;
         } } else{
@@ -218,15 +218,15 @@ class UnixCCompiler(CCompiler){
     # ccompiler.py.
 
     }
-    } def library_dir_option(self, dir){
+    } function library_dir_option( dir){
         return "-L" + dir;
 
     }
-    def _is_gcc(self, compiler_name){
+    function _is_gcc( compiler_name){
         return "gcc" in compiler_name or "g++" in compiler_name;
 
     }
-    def runtime_library_dir_option(self, dir){
+    function runtime_library_dir_option( dir){
         # XXX Hackish, at the very least.  See Python bug #445902:
         # http://sourceforge.net/tracker/index.php
         #   ?func=detail&aid=445902&group_id=5470&atid=105470
@@ -246,26 +246,26 @@ class UnixCCompiler(CCompiler){
         } elif sys.platform[:7] == "freebsd"{
             return "-Wl,-rpath=" + dir;
         } elif sys.platform[:5] == "hp-ux"{
-            if self._is_gcc(compiler){
+            if this._is_gcc(compiler){
                 return ["-Wl,+s", "-L" + dir];
             } return ["+s", "-L" + dir];
         } elif sys.platform[:7] == "irix646" or sys.platform[:6] == "osf1V5"{
             return ["-rpath", dir];
-        } elif self._is_gcc(compiler){
+        } elif this._is_gcc(compiler){
             return "-Wl,-R" + dir;
         } else{
             return "-R" + dir;
 
     }
-    } def library_option(self, lib){
+    } function library_option( lib){
         return "-l" + lib;
 
     }
-    def find_library_file(self, dirs, lib, debug=0){
-        shared_f = self.library_filename(lib, lib_type='shared');
-        dylib_f = self.library_filename(lib, lib_type='dylib');
-        xcode_stub_f = self.library_filename(lib, lib_type='xcode_stub');
-        static_f = self.library_filename(lib, lib_type='static');
+    function find_library_file( dirs, lib, debug=0){
+        shared_f = this.library_filename(lib, lib_type='shared');
+        dylib_f = this.library_filename(lib, lib_type='dylib');
+        xcode_stub_f = this.library_filename(lib, lib_type='xcode_stub');
+        static_f = this.library_filename(lib, lib_type='static');
 
         if sys.platform == 'darwin'{
             # On OSX users can specify an alternate SDK using
@@ -288,7 +288,7 @@ class UnixCCompiler(CCompiler){
             #   /usr/lib/libedit.dylib
             cflags = sysconfig.get_config_var('CFLAGS');
             m = re.search(r'-isysroot\s+(\S+)', cflags);
-            if m is None{
+            if m is nil{
                 sysroot = '/';
             } else{
                 sysroot = m.group(1);
@@ -327,7 +327,7 @@ class UnixCCompiler(CCompiler){
 
         # Oops, didn't find it in *any* of 'dirs'
         }
-        } return None;
+        } return nil;
 
 }
 }

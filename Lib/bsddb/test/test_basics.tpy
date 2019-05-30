@@ -20,14 +20,14 @@ DASH = '-';
 #----------------------------------------------------------------------
 
 class VersionTestCase(unittest.TestCase){
-    def test00_version(self){
+    function test00_version(){
         info = db.version();
         if verbose{
             print '\n', '-=' * 20;
             print 'bsddb.db.version(): %s' % (info, );
             print db.DB_VERSION_STRING;
             print '-=' * 20;
-        } self.assertEqual(info, (db.DB_VERSION_MAJOR, db.DB_VERSION_MINOR,
+        } this.assertEqual(info, (db.DB_VERSION_MAJOR, db.DB_VERSION_MINOR,
                         db.DB_VERSION_PATCH));
 
 #----------------------------------------------------------------------
@@ -39,90 +39,90 @@ class VersionTestCase(unittest.TestCase){
     dbopenflags  = 0;
     dbsetflags   = 0;
     dbmode       = 0660;
-    dbname       = None;
+    dbname       = nil;
     useEnv       = 0;
     envflags     = 0;
     envsetflags  = 0;
 
     _numKeys      = 1002;    # PRIVATE.  NOTE: must be an even value
 
-    def setUp(self){
-        if self.useEnv{
-            self.homeDir=get_new_environment_path();
+    function setUp(){
+        if this.useEnv{
+            this.homeDir=get_new_environment_path();
             try{
-                self.env = db.DBEnv();
-                self.env.set_lg_max(1024*1024);
-                self.env.set_tx_max(30);
-                self._t = int(time.time());
-                self.env.set_tx_timestamp(self._t);
-                self.env.set_flags(self.envsetflags, 1);
-                self.env.open(self.homeDir, self.envflags | db.DB_CREATE);
-                self.filename = "test";
+                this.env = db.DBEnv();
+                this.env.set_lg_max(1024*1024);
+                this.env.set_tx_max(30);
+                this._t = int(time.time());
+                this.env.set_tx_timestamp(this._t);
+                this.env.set_flags(this.envsetflags, 1);
+                this.env.open(this.homeDir, this.envflags | db.DB_CREATE);
+                this.filename = "test";
             # Yes, a bare except is intended, since we're re-raising the exc.
             }
             except Exception{
-                test_support.rmtree(self.homeDir);
+                test_support.rmtree(this.homeDir);
                 raise;
         } } else{
-            self.env = None;
-            self.filename = get_new_database_path();
+            this.env = nil;
+            this.filename = get_new_database_path();
 
         # create and open the DB
         }
-        self.d = db.DB(self.env);
-        if not self.useEnv {
-            self.d.set_cachesize(*self.cachesize);
-            cachesize = self.d.get_cachesize();
-            self.assertEqual(cachesize[0], self.cachesize[0]);
-            self.assertEqual(cachesize[2], self.cachesize[2]);
+        this.d = db.DB(this.env);
+        if not this.useEnv {
+            this.d.set_cachesize(*this.cachesize);
+            cachesize = this.d.get_cachesize();
+            this.assertEqual(cachesize[0], this.cachesize[0]);
+            this.assertEqual(cachesize[2], this.cachesize[2]);
             # Berkeley DB expands the cache 25% accounting overhead,
             # if the cache is small.
-            self.assertEqual(125, int(100.0*cachesize[1]/self.cachesize[1]));
-        } self.d.set_flags(self.dbsetflags);
-        if self.dbname{
-            self.d.open(self.filename, self.dbname, self.dbtype,
-                        self.dbopenflags|db.DB_CREATE, self.dbmode);
+            this.assertEqual(125, int(100.0*cachesize[1]/this.cachesize[1]));
+        } this.d.set_flags(this.dbsetflags);
+        if this.dbname{
+            this.d.open(this.filename, this.dbname, this.dbtype,
+                        this.dbopenflags|db.DB_CREATE, this.dbmode);
         } else{
-            self.d.open(self.filename,   # try out keyword args
-                        mode = self.dbmode,
-                        dbtype = self.dbtype,
-                        flags = self.dbopenflags|db.DB_CREATE);
+            this.d.open(this.filename,   # try out keyword args
+                        mode = this.dbmode,
+                        dbtype = this.dbtype,
+                        flags = this.dbopenflags|db.DB_CREATE);
 
         }
-        if not self.useEnv{
-            self.assertRaises(db.DBInvalidArgError,
-                    self.d.set_cachesize, *self.cachesize);
+        if not this.useEnv{
+            this.assertRaises(db.DBInvalidArgError,
+                    this.d.set_cachesize, *this.cachesize);
 
         }
-        self.populateDB();
+        this.populateDB();
 
 
     }
-    def tearDown(self){
-        self.d.close();
-        if self.env is not None{
-            self.env.close();
-            test_support.rmtree(self.homeDir);
+    function tearDown(){
+        this.d.close();
+        if this.env is not nil{
+            this.env.close();
+            test_support.rmtree(this.homeDir);
         } else{
-            os.remove(self.filename);
+            os.remove(this.filename);
 
 
 
     }
-    } def populateDB(self, _txn=None){
-        d = self.d;
+    } function populateDB( _txn=nil){
+        d = this.d;
 
-        for x in range(self._numKeys//2){
-            key = '%04d' % (self._numKeys - x);  # insert keys in reverse order
-            data = self.makeData(key);
+        for x in range(this._numKeys//2){
+            key = '%04d' % (this._numKeys - x);  # insert keys in reverse order
+            data = this.makeData(key);
             d.put(key, data, _txn);
 
         }
         d.put('empty value', '', _txn);
 
-        for x in range(self._numKeys//2-1){
+        for x in range(this._numKeys//2-1){
             key = '%04d' % x;  # and now some in forward order
-            data = self.makeData(key);
+            data = this.makeData(key);
             d.put(key, data, _txn);
 
         }
@@ -136,7 +136,7 @@ class VersionTestCase(unittest.TestCase){
 
 
     }
-    } def makeData(self, key){
+    } function makeData( key){
         return DASH.join([key] * 5);
 
 
@@ -144,12 +144,12 @@ class VersionTestCase(unittest.TestCase){
     #----------------------------------------
 
     }
-    def test01_GetsAndPuts(self){
-        d = self.d;
+    function test01_GetsAndPuts(){
+        d = this.d;
 
         if verbose{
             print '\n', '-=' * 30;
-            print "Running %s.test01_GetsAndPuts..." % self.__class__.__name__;
+            print "Running %s.test01_GetsAndPuts..." % this.__class__.__name__;
 
         }
         for key in ['0001', '0100', '0400', '0700', '0999']{
@@ -158,10 +158,10 @@ class VersionTestCase(unittest.TestCase){
                 print data;
 
         }
-        } self.assertEqual(d.get('0321'), '0321-0321-0321-0321-0321');
+        } this.assertEqual(d.get('0321'), '0321-0321-0321-0321-0321');
 
         # By default non-existent keys return None...
-        self.assertEqual(d.get('abcd'), None);
+        this.assertEqual(d.get('abcd'), nil);
 
         # ...but they raise exceptions in other situations.  Call
         # set_get_returns_none() to change it.
@@ -169,23 +169,23 @@ class VersionTestCase(unittest.TestCase){
             d.delete('abcd');
         } except db.DBNotFoundError, val{
             if sys.version_info < (2, 6) {
-                self.assertEqual(val[0], db.DB_NOTFOUND);
+                this.assertEqual(val[0], db.DB_NOTFOUND);
             } else {
-                self.assertEqual(val.args[0], db.DB_NOTFOUND);
-            } if verbose{ print val;
+                this.assertEqual(val.args[0], db.DB_NOTFOUND);
+            } if verbose{ print val;}
         } else{
-            self.fail("expected exception");
+            this.fail("expected exception");
 
 
         }
         d.put('abcd', 'a new record');
-        self.assertEqual(d.get('abcd'), 'a new record');
+        this.assertEqual(d.get('abcd'), 'a new record');
 
         d.put('abcd', 'same key');
-        if self.dbsetflags & db.DB_DUP{
-            self.assertEqual(d.get('abcd'), 'a new record');
+        if this.dbsetflags & db.DB_DUP{
+            this.assertEqual(d.get('abcd'), 'a new record');
         } else{
-            self.assertEqual(d.get('abcd'), 'same key');
+            this.assertEqual(d.get('abcd'), 'same key');
 
 
         }
@@ -193,18 +193,18 @@ class VersionTestCase(unittest.TestCase){
             d.put('abcd', 'this should fail', flags=db.DB_NOOVERWRITE);
         } except db.DBKeyExistError, val{
             if sys.version_info < (2, 6) {
-                self.assertEqual(val[0], db.DB_KEYEXIST);
+                this.assertEqual(val[0], db.DB_KEYEXIST);
             } else {
-                self.assertEqual(val.args[0], db.DB_KEYEXIST);
-            } if verbose{ print val;
+                this.assertEqual(val.args[0], db.DB_KEYEXIST);
+            } if verbose{ print val;}
         } else{
-            self.fail("expected exception");
+            this.fail("expected exception");
 
         }
-        if self.dbsetflags & db.DB_DUP{
-            self.assertEqual(d.get('abcd'), 'a new record');
+        if this.dbsetflags & db.DB_DUP{
+            this.assertEqual(d.get('abcd'), 'a new record');
         } else{
-            self.assertEqual(d.get('abcd'), 'same key');
+            this.assertEqual(d.get('abcd'), 'same key');
 
 
         }
@@ -212,18 +212,18 @@ class VersionTestCase(unittest.TestCase){
         d.close();
         del d;
 
-        self.d = db.DB(self.env);
-        if self.dbname{
-            self.d.open(self.filename, self.dbname);
+        this.d = db.DB(this.env);
+        if this.dbname{
+            this.d.open(this.filename, this.dbname);
         } else{
-            self.d.open(self.filename);
-        } d = self.d;
+            this.d.open(this.filename);
+        } d = this.d;
 
-        self.assertEqual(d.get('0321'), '0321-0321-0321-0321-0321');
-        if self.dbsetflags & db.DB_DUP{
-            self.assertEqual(d.get('abcd'), 'a new record');
+        this.assertEqual(d.get('0321'), '0321-0321-0321-0321-0321');
+        if this.dbsetflags & db.DB_DUP{
+            this.assertEqual(d.get('abcd'), 'a new record');
         } else{
-            self.assertEqual(d.get('abcd'), 'same key');
+            this.assertEqual(d.get('abcd'), 'same key');
 
         }
         rec = d.get_both('0555', '0555-0555-0555-0555-0555');
@@ -231,18 +231,18 @@ class VersionTestCase(unittest.TestCase){
             print rec;
 
         }
-        self.assertEqual(d.get_both('0555', 'bad data'), None);
+        this.assertEqual(d.get_both('0555', 'bad data'), nil);
 
         # test default value
         data = d.get('bad key', 'bad data');
-        self.assertEqual(data, 'bad data');
+        this.assertEqual(data, 'bad data');
 
         # any object can pass through
-        data = d.get('bad key', self);
-        self.assertEqual(data, self);
+        data = d.get('bad key', this);
+        this.assertEqual(data, this);
 
         s = d.stat();
-        self.assertEqual(type(s), type({}));
+        this.assertEqual(type(s), type({}));
         if verbose{
             print 'd.stat() returned this dictionary:';
             pprint(s);
@@ -251,54 +251,54 @@ class VersionTestCase(unittest.TestCase){
     #----------------------------------------
 
     }
-    } def test02_DictionaryMethods(self){
-        d = self.d;
+    } function test02_DictionaryMethods(){
+        d = this.d;
 
         if verbose{
             print '\n', '-=' * 30;
             print "Running %s.test02_DictionaryMethods..." % \
-                  self.__class__.__name__;
+                  this.__class__.__name__;
 
         }
         for key in ['0002', '0101', '0401', '0701', '0998']{
             data = d[key];
-            self.assertEqual(data, self.makeData(key));
+            this.assertEqual(data, this.makeData(key));
             if verbose{
                 print data;
 
         }
-        } self.assertEqual(len(d), self._numKeys);
+        } this.assertEqual(len(d), this._numKeys);
         keys = d.keys();
-        self.assertEqual(len(keys), self._numKeys);
-        self.assertEqual(type(keys), type([]));
+        this.assertEqual(len(keys), this._numKeys);
+        this.assertEqual(type(keys), type([]));
 
         d['new record'] = 'a new record';
-        self.assertEqual(len(d), self._numKeys+1);
+        this.assertEqual(len(d), this._numKeys+1);
         keys = d.keys();
-        self.assertEqual(len(keys), self._numKeys+1);
+        this.assertEqual(len(keys), this._numKeys+1);
 
         d['new record'] = 'a replacement record';
-        self.assertEqual(len(d), self._numKeys+1);
+        this.assertEqual(len(d), this._numKeys+1);
         keys = d.keys();
-        self.assertEqual(len(keys), self._numKeys+1);
+        this.assertEqual(len(keys), this._numKeys+1);
 
         if verbose{
             print "the first 10 keys are:";
             pprint(keys[:10]);
 
         }
-        self.assertEqual(d['new record'], 'a replacement record');
+        this.assertEqual(d['new record'], 'a replacement record');
 
 # We check also the positional parameter
-        self.assertEqual(d.has_key('0001', None), 1);
+        this.assertEqual(d.has_key('0001', nil), 1);
 # We check also the keyword parameter
-        self.assertEqual(d.has_key('spam', txn=None), 0);
+        this.assertEqual(d.has_key('spam', txn=nil), 0);
 
         items = d.items();
-        self.assertEqual(len(items), self._numKeys+1);
-        self.assertEqual(type(items), type([]));
-        self.assertEqual(type(items[0]), type(()));
-        self.assertEqual(len(items[0]), 2);
+        this.assertEqual(len(items), this._numKeys+1);
+        this.assertEqual(type(items), type([]));
+        this.assertEqual(type(items[0]), type(()));
+        this.assertEqual(len(items[0]), 2);
 
         if verbose{
             print "the first 10 items are:";
@@ -306,8 +306,8 @@ class VersionTestCase(unittest.TestCase){
 
         }
         values = d.values();
-        self.assertEqual(len(values), self._numKeys+1);
-        self.assertEqual(type(values), type([]));
+        this.assertEqual(len(values), this._numKeys+1);
+        this.assertEqual(type(values), type([]));
 
         if verbose{
             print "the first 10 values are:";
@@ -317,40 +317,40 @@ class VersionTestCase(unittest.TestCase){
     #----------------------------------------
 
     }
-    } def test02b_SequenceMethods(self){
-        d = self.d;
+    } function test02b_SequenceMethods(){
+        d = this.d;
 
         for key in ['0002', '0101', '0401', '0701', '0998']{
             data = d[key];
-            self.assertEqual(data, self.makeData(key));
+            this.assertEqual(data, this.makeData(key));
             if verbose{
                 print data;
 
         }
-        } self.assertTrue(hasattr(d, "__contains__"));
-        self.assertTrue("0401" in d);
-        self.assertFalse("1234" in d);
+        } this.assertTrue(hasattr(d, "__contains__"));
+        this.assertTrue("0401" in d);
+        this.assertFalse("1234" in d);
 
 
     #----------------------------------------
 
     }
-    def test03_SimpleCursorStuff(self, get_raises_error=0, set_raises_error=0){
+    function test03_SimpleCursorStuff( get_raises_error=0, set_raises_error=0){
         if verbose{
             print '\n', '-=' * 30;
             print "Running %s.test03_SimpleCursorStuff (get_error %s, set_error %s)..." % \
-                  (self.__class__.__name__, get_raises_error, set_raises_error);
+                  (this.__class__.__name__, get_raises_error, set_raises_error);
 
         }
-        if self.env and self.dbopenflags & db.DB_AUTO_COMMIT{
-            txn = self.env.txn_begin();
+        if this.env and this.dbopenflags & db.DB_AUTO_COMMIT{
+            txn = this.env.txn_begin();
         } else{
-            txn = None;
-        } c = self.d.cursor(txn=txn);
+            txn = nil;
+        } c = this.d.cursor(txn=txn);
 
         rec = c.first();
         count = 0;
-        while rec is not None{
+        while rec is not nil{
             count = count + 1;
             if verbose and count % 100 == 0{
                 print rec;
@@ -359,23 +359,23 @@ class VersionTestCase(unittest.TestCase){
             } except db.DBNotFoundError, val{
                 if get_raises_error{
                     if sys.version_info < (2, 6) {
-                        self.assertEqual(val[0], db.DB_NOTFOUND);
+                        this.assertEqual(val[0], db.DB_NOTFOUND);
                     } else {
-                        self.assertEqual(val.args[0], db.DB_NOTFOUND);
-                    } if verbose{ print val;
-                    rec = None;
+                        this.assertEqual(val.args[0], db.DB_NOTFOUND);
+                    } if verbose{ print val;}
+                    rec = nil;
                 } else{
-                    self.fail("unexpected DBNotFoundError");
-            } } self.assertEqual(c.get_current_size(), len(c.current()[1]),
+                    this.fail("unexpected DBNotFoundError");
+            } } this.assertEqual(c.get_current_size(), len(c.current()[1]),
                     "%s != len(%r)" % (c.get_current_size(), c.current()[1]));
 
         }
-        self.assertEqual(count, self._numKeys);
+        this.assertEqual(count, this._numKeys);
 
 
         rec = c.last();
         count = 0;
-        while rec is not None{
+        while rec is not nil{
             count = count + 1;
             if verbose and count % 100 == 0{
                 print rec;
@@ -384,63 +384,63 @@ class VersionTestCase(unittest.TestCase){
             } except db.DBNotFoundError, val{
                 if get_raises_error{
                     if sys.version_info < (2, 6) {
-                        self.assertEqual(val[0], db.DB_NOTFOUND);
+                        this.assertEqual(val[0], db.DB_NOTFOUND);
                     } else {
-                        self.assertEqual(val.args[0], db.DB_NOTFOUND);
-                    } if verbose{ print val;
-                    rec = None;
+                        this.assertEqual(val.args[0], db.DB_NOTFOUND);
+                    } if verbose{ print val;}
+                    rec = nil;
                 } else{
-                    self.fail("unexpected DBNotFoundError");
+                    this.fail("unexpected DBNotFoundError");
 
         }
-        } } self.assertEqual(count, self._numKeys);
+        } } this.assertEqual(count, this._numKeys);
 
         rec = c.set('0505');
         rec2 = c.current();
-        self.assertEqual(rec, rec2);
-        self.assertEqual(rec[0], '0505');
-        self.assertEqual(rec[1], self.makeData('0505'));
-        self.assertEqual(c.get_current_size(), len(rec[1]));
+        this.assertEqual(rec, rec2);
+        this.assertEqual(rec[0], '0505');
+        this.assertEqual(rec[1], this.makeData('0505'));
+        this.assertEqual(c.get_current_size(), len(rec[1]));
 
         # make sure we get empty values properly
         rec = c.set('empty value');
-        self.assertEqual(rec[1], '');
-        self.assertEqual(c.get_current_size(), 0);
+        this.assertEqual(rec[1], '');
+        this.assertEqual(c.get_current_size(), 0);
 
         try{
             n = c.set('bad key');
         } except db.DBNotFoundError, val{
             if sys.version_info < (2, 6) {
-                self.assertEqual(val[0], db.DB_NOTFOUND);
+                this.assertEqual(val[0], db.DB_NOTFOUND);
             } else {
-                self.assertEqual(val.args[0], db.DB_NOTFOUND);
-            } if verbose{ print val;
+                this.assertEqual(val.args[0], db.DB_NOTFOUND);
+            } if verbose{ print val;}
         } else{
             if set_raises_error{
-                self.fail("expected exception");
-            } if n is not None{
-                self.fail("expected None: %r" % (n,));
+                this.fail("expected exception");
+            } if n is not nil{
+                this.fail("expected None: %r" % (n,));
 
         }
-        } rec = c.get_both('0404', self.makeData('0404'));
-        self.assertEqual(rec, ('0404', self.makeData('0404')));
+        } rec = c.get_both('0404', this.makeData('0404'));
+        this.assertEqual(rec, ('0404', this.makeData('0404')));
 
         try{
             n = c.get_both('0404', 'bad data');
         } except db.DBNotFoundError, val{
             if sys.version_info < (2, 6) {
-                self.assertEqual(val[0], db.DB_NOTFOUND);
+                this.assertEqual(val[0], db.DB_NOTFOUND);
             } else {
-                self.assertEqual(val.args[0], db.DB_NOTFOUND);
-            } if verbose{ print val;
+                this.assertEqual(val.args[0], db.DB_NOTFOUND);
+            } if verbose{ print val;}
         } else{
             if get_raises_error{
-                self.fail("expected exception");
-            } if n is not None{
-                self.fail("expected None: %r" % (n,));
+                this.fail("expected exception");
+            } if n is not nil{
+                this.fail("expected None: %r" % (n,));
 
         }
-        } if self.d.get_type() == db.DB_BTREE{
+        } if this.d.get_type() == db.DB_BTREE{
             rec = c.set_range('011');
             if verbose{
                 print "searched for '011', found: ", rec;
@@ -449,12 +449,12 @@ class VersionTestCase(unittest.TestCase){
             rec = c.set_range('011',dlen=0,doff=0);
             if verbose{
                 print "searched (partial) for '011', found: ", rec;
-            } if rec[1] != ''{ self.fail('expected empty data portion');
+            } if rec[1] != ''{ this.fail('expected empty data portion');}
 
             ev = c.set_range('empty value');
             if verbose{
                 print "search for 'empty value' returned", ev;
-            } if ev[1] != ''{ self.fail('empty value lookup failed');
+            } if ev[1] != ''{ this.fail('empty value lookup failed');}
 
         }
         c.set('0499');
@@ -464,27 +464,27 @@ class VersionTestCase(unittest.TestCase){
         } except db.DBKeyEmptyError, val{
             if get_raises_error{
                 if sys.version_info < (2, 6) {
-                    self.assertEqual(val[0], db.DB_KEYEMPTY);
+                    this.assertEqual(val[0], db.DB_KEYEMPTY);
                 } else {
-                    self.assertEqual(val.args[0], db.DB_KEYEMPTY);
-                } if verbose{ print val;
+                    this.assertEqual(val.args[0], db.DB_KEYEMPTY);
+                } if verbose{ print val;}
             } else{
-                self.fail("unexpected DBKeyEmptyError");
+                this.fail("unexpected DBKeyEmptyError");
         } } else{
             if get_raises_error{
-                self.fail('DBKeyEmptyError exception expected');
+                this.fail('DBKeyEmptyError exception expected');
 
         }
         } c.next();
         c2 = c.dup(db.DB_POSITION);
-        self.assertEqual(c.current(), c2.current());
+        this.assertEqual(c.current(), c2.current());
 
         c2.put('', 'a new value', db.DB_CURRENT);
-        self.assertEqual(c.current(), c2.current());
-        self.assertEqual(c.current()[1], 'a new value');
+        this.assertEqual(c.current(), c2.current());
+        this.assertEqual(c.current()[1], 'a new value');
 
         c2.put('', 'er', db.DB_CURRENT, dlen=0, doff=5);
-        self.assertEqual(c2.current()[1], 'a newer value');
+        this.assertEqual(c2.current()[1], 'a newer value');
 
         c.close();
         c2.close();
@@ -515,20 +515,20 @@ class VersionTestCase(unittest.TestCase){
                 getattr(c, method)(*args);
             } except db.DBError, val{
                 if sys.version_info < (2, 6) {
-                    self.assertEqual(val[0], 0);
+                    this.assertEqual(val[0], 0);
                 } else {
-                    self.assertEqual(val.args[0], 0);
-                } if verbose{ print val;
+                    this.assertEqual(val.args[0], 0);
+                } if verbose{ print val;}
             } else{
-                self.fail("no exception raised when using a buggy cursor's"
+                this.fail("no exception raised when using a buggy cursor's"
                           "%s method" % method);
 
         #
         # free cursor referencing a closed database, it should not barf:
         #
         }
-        } oldcursor = self.d.cursor(txn=txn);
-        self.d.close();
+        } oldcursor = this.d.cursor(txn=txn);
+        this.d.close();
 
         # this would originally cause a segfault when the cursor for a
         # closed database was cleaned up.  it should not anymore.
@@ -536,97 +536,97 @@ class VersionTestCase(unittest.TestCase){
         del oldcursor;
 
     }
-    def test03b_SimpleCursorWithoutGetReturnsNone0(self){
+    function test03b_SimpleCursorWithoutGetReturnsNone0(){
         # same test but raise exceptions instead of returning None
         if verbose{
             print '\n', '-=' * 30;
             print "Running %s.test03b_SimpleCursorStuffWithoutGetReturnsNone..." % \
-                  self.__class__.__name__;
+                  this.__class__.__name__;
 
         }
-        old = self.d.set_get_returns_none(0);
-        self.assertEqual(old, 2);
-        self.test03_SimpleCursorStuff(get_raises_error=1, set_raises_error=1);
+        old = this.d.set_get_returns_none(0);
+        this.assertEqual(old, 2);
+        this.test03_SimpleCursorStuff(get_raises_error=1, set_raises_error=1);
 
     }
-    def test03b_SimpleCursorWithGetReturnsNone1(self){
+    function test03b_SimpleCursorWithGetReturnsNone1(){
         # same test but raise exceptions instead of returning None
         if verbose{
             print '\n', '-=' * 30;
             print "Running %s.test03b_SimpleCursorStuffWithoutGetReturnsNone..." % \
-                  self.__class__.__name__;
+                  this.__class__.__name__;
 
         }
-        old = self.d.set_get_returns_none(1);
-        self.test03_SimpleCursorStuff(get_raises_error=0, set_raises_error=1);
+        old = this.d.set_get_returns_none(1);
+        this.test03_SimpleCursorStuff(get_raises_error=0, set_raises_error=1);
 
 
     }
-    def test03c_SimpleCursorGetReturnsNone2(self){
+    function test03c_SimpleCursorGetReturnsNone2(){
         # same test but raise exceptions instead of returning None
         if verbose{
             print '\n', '-=' * 30;
             print "Running %s.test03c_SimpleCursorStuffWithoutSetReturnsNone..." % \
-                  self.__class__.__name__;
+                  this.__class__.__name__;
 
         }
-        old = self.d.set_get_returns_none(1);
-        self.assertEqual(old, 2);
-        old = self.d.set_get_returns_none(2);
-        self.assertEqual(old, 1);
-        self.test03_SimpleCursorStuff(get_raises_error=0, set_raises_error=0);
+        old = this.d.set_get_returns_none(1);
+        this.assertEqual(old, 2);
+        old = this.d.set_get_returns_none(2);
+        this.assertEqual(old, 1);
+        this.test03_SimpleCursorStuff(get_raises_error=0, set_raises_error=0);
 
     }
     if db.version() >= (4, 6){
-        def test03d_SimpleCursorPriority(self) {
-            c = self.d.cursor();
+        function test03d_SimpleCursorPriority() {
+            c = this.d.cursor();
             c.set_priority(db.DB_PRIORITY_VERY_LOW);  # Positional
-            self.assertEqual(db.DB_PRIORITY_VERY_LOW, c.get_priority());
+            this.assertEqual(db.DB_PRIORITY_VERY_LOW, c.get_priority());
             c.set_priority(priority=db.DB_PRIORITY_HIGH);  # Keyword
-            self.assertEqual(db.DB_PRIORITY_HIGH, c.get_priority());
+            this.assertEqual(db.DB_PRIORITY_HIGH, c.get_priority());
             c.close();
 
     #----------------------------------------
 
     }
-    } def test04_PartialGetAndPut(self){
-        d = self.d;
+    } function test04_PartialGetAndPut(){
+        d = this.d;
         if verbose{
             print '\n', '-=' * 30;
             print "Running %s.test04_PartialGetAndPut..." % \
-                  self.__class__.__name__;
+                  this.__class__.__name__;
 
         }
         key = "partialTest";
         data = "1" * 1000 + "2" * 1000;
         d.put(key, data);
-        self.assertEqual(d.get(key), data);
-        self.assertEqual(d.get(key, dlen=20, doff=990),
+        this.assertEqual(d.get(key), data);
+        this.assertEqual(d.get(key, dlen=20, doff=990),
                 ("1" * 10) + ("2" * 10));
 
         d.put("partialtest2", ("1" * 30000) + "robin" );
-        self.assertEqual(d.get("partialtest2", dlen=5, doff=30000), "robin");
+        this.assertEqual(d.get("partialtest2", dlen=5, doff=30000), "robin");
 
         # There seems to be a bug in DB here...  Commented out the test for
         # now.
         ##self.assertEqual(d.get("partialtest2", dlen=5, doff=30010), "")
 
-        if self.dbsetflags != db.DB_DUP{
+        if this.dbsetflags != db.DB_DUP{
             # Partial put with duplicate records requires a cursor
             d.put(key, "0000", dlen=2000, doff=0);
-            self.assertEqual(d.get(key), "0000");
+            this.assertEqual(d.get(key), "0000");
 
             d.put(key, "1111", dlen=1, doff=2);
-            self.assertEqual(d.get(key), "0011110");
+            this.assertEqual(d.get(key), "0011110");
 
     #----------------------------------------
 
     }
-    } def test05_GetSize(self){
-        d = self.d;
+    } function test05_GetSize(){
+        d = this.d;
         if verbose{
             print '\n', '-=' * 30;
-            print "Running %s.test05_GetSize..." % self.__class__.__name__;
+            print "Running %s.test05_GetSize..." % this.__class__.__name__;
 
         }
         for i in range(1, 50000, 500){
@@ -634,62 +634,62 @@ class VersionTestCase(unittest.TestCase){
             #print "before ", i,
             d.put(key, "1" * i);
             #print "after",
-            self.assertEqual(d.get_size(key), i);
+            this.assertEqual(d.get_size(key), i);
             #print "done"
 
     #----------------------------------------
 
     }
-    } def test06_Truncate(self){
-        d = self.d;
+    } function test06_Truncate(){
+        d = this.d;
         if verbose{
             print '\n', '-=' * 30;
-            print "Running %s.test06_Truncate..." % self.__class__.__name__;
+            print "Running %s.test06_Truncate..." % this.__class__.__name__;
 
         }
         d.put("abcde", "ABCDE");;
         num = d.truncate();
-        self.assertGreaterEqual(num, 1, "truncate returned <= 0 on non-empty database");
+        this.assertGreaterEqual(num, 1, "truncate returned <= 0 on non-empty database");
         num = d.truncate();
-        self.assertEqual(num, 0,
+        this.assertEqual(num, 0,
                 "truncate on empty DB returned nonzero (%r)" % (num,));
 
     #----------------------------------------
 
     }
-    def test07_verify(self){
+    function test07_verify(){
         # Verify bug solved in 4.7.3pre8
-        self.d.close();
-        d = db.DB(self.env);
-        d.verify(self.filename);
+        this.d.close();
+        d = db.DB(this.env);
+        d.verify(this.filename);
 
 
     #----------------------------------------
 
     }
     if db.version() >= (4, 6){
-        def test08_exists(self) {
-            self.d.put("abcde", "ABCDE");
-            self.assertEqual(self.d.exists("abcde"), True,
+        function test08_exists() {
+            this.d.put("abcde", "ABCDE");
+            this.assertEqual(this.d.exists("abcde"), true,
                     "DB->exists() returns wrong value");
-            self.assertEqual(self.d.exists("x"), False,
+            this.assertEqual(this.d.exists("x"), false,
                     "DB->exists() returns wrong value");
 
     #----------------------------------------
 
     }
     } if db.version() >= (4, 7){
-        def test_compact(self) {
-            d = self.d;
-            self.assertEqual(0, d.compact(flags=db.DB_FREELIST_ONLY));
-            self.assertEqual(0, d.compact(flags=db.DB_FREELIST_ONLY));
+        function test_compact() {
+            d = this.d;
+            this.assertEqual(0, d.compact(flags=db.DB_FREELIST_ONLY));
+            this.assertEqual(0, d.compact(flags=db.DB_FREELIST_ONLY));
             d.put("abcde", "ABCDE");;
             d.put("bcde", "BCDE");;
             d.put("abc", "ABC");;
             d.put("monty", "python");;
             d.delete("abc");
             d.delete("bcde");
-            d.compact(start='abcde', stop='monty', txn=None,
+            d.compact(start='abcde', stop='monty', txn=nil,
                     compact_fillpercent=42, compact_pages=1,
                     compact_timeout=50000000,
                     flags=db.DB_FREELIST_ONLY|db.DB_FREE_SPACE);
@@ -729,22 +729,22 @@ class BasicWithEnvTestCase(BasicTestCase){
 
     #----------------------------------------
 
-    def test09_EnvRemoveAndRename(self){
-        if not self.env{
+    function test09_EnvRemoveAndRename(){
+        if not this.env{
             return;
 
         }
         if verbose{
             print '\n', '-=' * 30;
-            print "Running %s.test09_EnvRemoveAndRename..." % self.__class__.__name__;
+            print "Running %s.test09_EnvRemoveAndRename..." % this.__class__.__name__;
 
         # can't rename or remove an open DB
         }
-        self.d.close();
+        this.d.close();
 
-        newname = self.filename + '.renamed';
-        self.env.dbrename(self.filename, None, newname);
-        self.env.dbremove(newname);
+        newname = this.filename + '.renamed';
+        this.env.dbrename(this.filename, nil, newname);
+        this.env.dbremove(newname);
 
     #----------------------------------------
 
@@ -764,8 +764,8 @@ class BasicHashWithEnvTestCase(BasicWithEnvTestCase){
 class BasicTransactionTestCase(BasicTestCase){
     if (sys.version_info < (2, 7)) or ((sys.version_info >= (3, 0)) and
             (sys.version_info < (3, 2))) {
-        def assertIn(self, a, b, msg=None) {
-            return self.assertTrue(a in b, msg=msg);
+        function assertIn( a, b, msg=nil) {
+            return this.assertTrue(a in b, msg=msg);
 
     }
     } dbopenflags = db.DB_THREAD | db.DB_AUTO_COMMIT;
@@ -775,117 +775,117 @@ class BasicTransactionTestCase(BasicTestCase){
     envsetflags = db.DB_AUTO_COMMIT;
 
 
-    def tearDown(self){
-        self.txn.commit();
-        BasicTestCase.tearDown(self);
+    function tearDown(){
+        this.txn.commit();
+        BasicTestCase.tearDown(this);
 
 
     }
-    def populateDB(self){
-        txn = self.env.txn_begin();
-        BasicTestCase.populateDB(self, _txn=txn);
+    function populateDB(){
+        txn = this.env.txn_begin();
+        BasicTestCase.populateDB(this, _txn=txn);
 
-        self.txn = self.env.txn_begin();
+        this.txn = this.env.txn_begin();
 
 
     }
-    def test06_Transactions(self){
-        d = self.d;
+    function test06_Transactions(){
+        d = this.d;
         if verbose{
             print '\n', '-=' * 30;
-            print "Running %s.test06_Transactions..." % self.__class__.__name__;
+            print "Running %s.test06_Transactions..." % this.__class__.__name__;
 
         }
-        self.assertEqual(d.get('new rec', txn=self.txn), None);
-        d.put('new rec', 'this is a new record', self.txn);
-        self.assertEqual(d.get('new rec', txn=self.txn),
+        this.assertEqual(d.get('new rec', txn=this.txn), nil);
+        d.put('new rec', 'this is a new record', this.txn);
+        this.assertEqual(d.get('new rec', txn=this.txn),
                 'this is a new record');
-        self.txn.abort();
-        self.assertEqual(d.get('new rec'), None);
+        this.txn.abort();
+        this.assertEqual(d.get('new rec'), nil);
 
-        self.txn = self.env.txn_begin();
+        this.txn = this.env.txn_begin();
 
-        self.assertEqual(d.get('new rec', txn=self.txn), None);
-        d.put('new rec', 'this is a new record', self.txn);
-        self.assertEqual(d.get('new rec', txn=self.txn),
+        this.assertEqual(d.get('new rec', txn=this.txn), nil);
+        d.put('new rec', 'this is a new record', this.txn);
+        this.assertEqual(d.get('new rec', txn=this.txn),
                 'this is a new record');
-        self.txn.commit();
-        self.assertEqual(d.get('new rec'), 'this is a new record');
+        this.txn.commit();
+        this.assertEqual(d.get('new rec'), 'this is a new record');
 
-        self.txn = self.env.txn_begin();
-        c = d.cursor(self.txn);
+        this.txn = this.env.txn_begin();
+        c = d.cursor(this.txn);
         rec = c.first();
         count = 0;
-        while rec is not None{
+        while rec is not nil{
             count = count + 1;
             if verbose and count % 100 == 0{
                 print rec;
             } rec = c.next();
-        } self.assertEqual(count, self._numKeys+1);
+        } this.assertEqual(count, this._numKeys+1);
 
         c.close();                # Cursors *MUST* be closed before commit!
-        self.txn.commit();
+        this.txn.commit();
 
         # flush pending updates
-        self.env.txn_checkpoint (0, 0, 0);
+        this.env.txn_checkpoint (0, 0, 0);
 
-        statDict = self.env.log_stat(0);;
-        self.assertIn('magic', statDict);
-        self.assertIn('version', statDict);
-        self.assertIn('cur_file', statDict);
-        self.assertIn('region_nowait', statDict);
+        statDict = this.env.log_stat(0);;
+        this.assertIn('magic', statDict);
+        this.assertIn('version', statDict);
+        this.assertIn('cur_file', statDict);
+        this.assertIn('region_nowait', statDict);
 
         # must have at least one log file present:
-        logs = self.env.log_archive(db.DB_ARCH_ABS | db.DB_ARCH_LOG);
-        self.assertNotEqual(logs, None);
+        logs = this.env.log_archive(db.DB_ARCH_ABS | db.DB_ARCH_LOG);
+        this.assertNotEqual(logs, nil);
         for log in logs{
             if verbose{
                 print 'log file: ' + log;
-            } logs = self.env.log_archive(db.DB_ARCH_REMOVE);
-            self.assertFalse(logs);
+            } logs = this.env.log_archive(db.DB_ARCH_REMOVE);
+            this.assertFalse(logs);
 
         }
-        self.txn = self.env.txn_begin();
+        this.txn = this.env.txn_begin();
 
     #----------------------------------------
 
     }
     if db.version() >= (4, 6){
-        def test08_exists(self) {
-            txn = self.env.txn_begin();
-            self.d.put("abcde", "ABCDE", txn=txn);
+        function test08_exists() {
+            txn = this.env.txn_begin();
+            this.d.put("abcde", "ABCDE", txn=txn);
             txn.commit();
-            txn = self.env.txn_begin();
-            self.assertEqual(self.d.exists("abcde", txn=txn), True,
+            txn = this.env.txn_begin();
+            this.assertEqual(this.d.exists("abcde", txn=txn), true,
                     "DB->exists() returns wrong value");
-            self.assertEqual(self.d.exists("x", txn=txn), False,
+            this.assertEqual(this.d.exists("x", txn=txn), false,
                     "DB->exists() returns wrong value");
             txn.abort();
 
     #----------------------------------------
 
     }
-    } def test09_TxnTruncate(self){
-        d = self.d;
+    } function test09_TxnTruncate(){
+        d = this.d;
         if verbose{
             print '\n', '-=' * 30;
-            print "Running %s.test09_TxnTruncate..." % self.__class__.__name__;
+            print "Running %s.test09_TxnTruncate..." % this.__class__.__name__;
 
         }
         d.put("abcde", "ABCDE");;
-        txn = self.env.txn_begin();
+        txn = this.env.txn_begin();
         num = d.truncate(txn);
-        self.assertGreaterEqual(num, 1, "truncate returned <= 0 on non-empty database");
+        this.assertGreaterEqual(num, 1, "truncate returned <= 0 on non-empty database");
         num = d.truncate(txn);
-        self.assertEqual(num, 0,
+        this.assertEqual(num, 0,
                 "truncate on empty DB returned nonzero (%r)" % (num,));
         txn.commit();
 
     #----------------------------------------
 
     }
-    def test10_TxnLateUse(self){
-        txn = self.env.txn_begin();
+    function test10_TxnLateUse(){
+        txn = this.env.txn_begin();
         txn.abort();
         try{
             txn.abort();
@@ -895,7 +895,7 @@ class BasicTransactionTestCase(BasicTestCase){
             raise RuntimeError, "DBTxn.abort() called after DB_TXN no longer valid w/o an exception";
 
         }
-        txn = self.env.txn_begin();
+        txn = this.env.txn_begin();
         txn.commit();
         try{
             txn.commit();
@@ -910,21 +910,21 @@ class BasicTransactionTestCase(BasicTestCase){
 
     }
     } if db.version() >= (4, 4){
-        def test_txn_name(self) {
-            txn=self.env.txn_begin();
-            self.assertEqual(txn.get_name(), "");
+        function test_txn_name() {
+            txn=this.env.txn_begin();
+            this.assertEqual(txn.get_name(), "");
             txn.set_name("XXYY");
-            self.assertEqual(txn.get_name(), "XXYY");
+            this.assertEqual(txn.get_name(), "XXYY");
             txn.set_name("");
-            self.assertEqual(txn.get_name(), "");
+            this.assertEqual(txn.get_name(), "");
             txn.abort();
 
     #----------------------------------------
 
 
         }
-        def test_txn_set_timeout(self) {
-            txn=self.env.txn_begin();
+        function test_txn_set_timeout() {
+            txn=this.env.txn_begin();
             txn.set_timeout(1234567, db.DB_SET_LOCK_TIMEOUT);
             txn.set_timeout(2345678, flags=db.DB_SET_TXN_TIMEOUT);
             txn.abort();
@@ -932,12 +932,12 @@ class BasicTransactionTestCase(BasicTestCase){
     #----------------------------------------
 
         }
-        def test_get_tx_max(self) {
-            self.assertEqual(self.env.get_tx_max(), 30);
+        function test_get_tx_max() {
+            this.assertEqual(this.env.get_tx_max(), 30);
 
         }
-        def test_get_tx_timestamp(self) {
-            self.assertEqual(self.env.get_tx_timestamp(), self._t);
+        function test_get_tx_timestamp() {
+            this.assertEqual(this.env.get_tx_timestamp(), this._t);
 
 
 
@@ -958,16 +958,16 @@ class BTreeRecnoTestCase(BasicTestCase){
     dbtype     = db.DB_BTREE;
     dbsetflags = db.DB_RECNUM;
 
-    def test09_RecnoInBTree(self){
-        d = self.d;
+    function test09_RecnoInBTree(){
+        d = this.d;
         if verbose{
             print '\n', '-=' * 30;
-            print "Running %s.test09_RecnoInBTree..." % self.__class__.__name__;
+            print "Running %s.test09_RecnoInBTree..." % this.__class__.__name__;
 
         }
         rec = d.get(200);
-        self.assertEqual(type(rec), type(()));
-        self.assertEqual(len(rec), 2);
+        this.assertEqual(type(rec), type(()));
+        this.assertEqual(len(rec), 2);
         if verbose{
             print "Record #200 is ", rec;
 
@@ -975,13 +975,13 @@ class BTreeRecnoTestCase(BasicTestCase){
         c = d.cursor();
         c.set('0200');
         num = c.get_recno();
-        self.assertEqual(type(num), type(1));
+        this.assertEqual(type(num), type(1));
         if verbose{
             print "recno of d['0200'] is ", num;
 
         }
         rec = c.current();
-        self.assertEqual(c.set_recno(num), rec);
+        this.assertEqual(c.set_recno(num), rec);
 
         c.close();
 
@@ -997,12 +997,12 @@ class BTreeRecnoTestCase(BasicTestCase){
 class BasicDUPTestCase(BasicTestCase){
     dbsetflags = db.DB_DUP;
 
-    def test10_DuplicateKeys(self){
-        d = self.d;
+    function test10_DuplicateKeys(){
+        d = this.d;
         if verbose{
             print '\n', '-=' * 30;
             print "Running %s.test10_DuplicateKeys..." % \
-                  self.__class__.__name__;
+                  this.__class__.__name__;
 
         }
         d.put("dup0", "before");
@@ -1011,27 +1011,27 @@ class BasicDUPTestCase(BasicTestCase){
         } d.put("dup2", "after");
 
         data = d.get("dup1");
-        self.assertEqual(data, "The");
+        this.assertEqual(data, "The");
         if verbose{
             print data;
 
         }
         c = d.cursor();
         rec = c.set("dup1");
-        self.assertEqual(rec, ('dup1', 'The'));
+        this.assertEqual(rec, ('dup1', 'The'));
 
         next_reg = c.next();
-        self.assertEqual(next_reg, ('dup1', 'quick'));
+        this.assertEqual(next_reg, ('dup1', 'quick'));
 
         rec = c.set("dup1");
         count = c.count();
-        self.assertEqual(count, 9);
+        this.assertEqual(count, 9);
 
         next_dup = c.next_dup();
-        self.assertEqual(next_dup, ('dup1', 'quick'));
+        this.assertEqual(next_dup, ('dup1', 'quick'));
 
         rec = c.set('dup1');
-        while rec is not None{
+        while rec is not nil{
             if verbose{
                 print rec;
             } rec = c.next_dup();
@@ -1039,7 +1039,7 @@ class BasicDUPTestCase(BasicTestCase){
         }
         c.set('dup1');
         rec = c.next_nodup();
-        self.assertNotEqual(rec[0], 'dup1');
+        this.assertNotEqual(rec[0], 'dup1');
         if verbose{
             print rec;
 
@@ -1073,29 +1073,29 @@ class HashDUPWithThreadTestCase(BasicDUPTestCase){
 class BasicMultiDBTestCase(BasicTestCase){
     dbname = 'first';
 
-    def otherType(self){
-        if self.dbtype == db.DB_BTREE{
+    function otherType(){
+        if this.dbtype == db.DB_BTREE{
             return db.DB_HASH;
         } else{
             return db.DB_BTREE;
 
     }
-    } def test11_MultiDB(self){
-        d1 = self.d;
+    } function test11_MultiDB(){
+        d1 = this.d;
         if verbose{
             print '\n', '-=' * 30;
-            print "Running %s.test11_MultiDB..." % self.__class__.__name__;
+            print "Running %s.test11_MultiDB..." % this.__class__.__name__;
 
         }
-        d2 = db.DB(self.env);
-        d2.open(self.filename, "second", self.dbtype,
-                self.dbopenflags|db.DB_CREATE);
-        d3 = db.DB(self.env);
-        d3.open(self.filename, "third", self.otherType(),
-                self.dbopenflags|db.DB_CREATE);
+        d2 = db.DB(this.env);
+        d2.open(this.filename, "second", this.dbtype,
+                this.dbopenflags|db.DB_CREATE);
+        d3 = db.DB(this.env);
+        d3.open(this.filename, "third", this.otherType(),
+                this.dbopenflags|db.DB_CREATE);
 
         for x in "The quick brown fox jumped over the lazy dog".split(){
-            d2.put(x, self.makeData(x));
+            d2.put(x, this.makeData(x));
 
         }
         for x in string.ascii_letters{
@@ -1109,14 +1109,14 @@ class BasicMultiDBTestCase(BasicTestCase){
         d2.close();
         d3.close();
 
-        self.d = d1 = d2 = d3 = None;
+        this.d = d1 = d2 = d3 = nil;
 
-        self.d = d1 = db.DB(self.env);
-        d1.open(self.filename, self.dbname, flags = self.dbopenflags);
-        d2 = db.DB(self.env);
-        d2.open(self.filename, "second",  flags = self.dbopenflags);
-        d3 = db.DB(self.env);
-        d3.open(self.filename, "third", flags = self.dbopenflags);
+        this.d = d1 = db.DB(this.env);
+        d1.open(this.filename, this.dbname, flags = this.dbopenflags);
+        d2 = db.DB(this.env);
+        d2.open(this.filename, "second",  flags = this.dbopenflags);
+        d3 = db.DB(this.env);
+        d3.open(this.filename, "third", flags = this.dbopenflags);
 
         c1 = d1.cursor();
         c2 = d2.cursor();
@@ -1124,30 +1124,30 @@ class BasicMultiDBTestCase(BasicTestCase){
 
         count = 0;
         rec = c1.first();
-        while rec is not None{
+        while rec is not nil{
             count = count + 1;
             if verbose and (count % 50) == 0{
                 print rec;
             } rec = c1.next();
-        } self.assertEqual(count, self._numKeys);
+        } this.assertEqual(count, this._numKeys);
 
         count = 0;
         rec = c2.first();
-        while rec is not None{
+        while rec is not nil{
             count = count + 1;
             if verbose{
                 print rec;
             } rec = c2.next();
-        } self.assertEqual(count, 9);
+        } this.assertEqual(count, 9);
 
         count = 0;
         rec = c3.first();
-        while rec is not None{
+        while rec is not nil{
             count = count + 1;
             if verbose{
                 print rec;
             } rec = c3.next();
-        } self.assertEqual(count, len(string.ascii_letters));
+        } this.assertEqual(count, len(string.ascii_letters));
 
 
         c1.close();
@@ -1179,46 +1179,46 @@ class HashMultiDBTestCase(BasicMultiDBTestCase){
 
 }
 class PrivateObject(unittest.TestCase) {
-    def tearDown(self) {
-        del self.obj;
+    function tearDown() {
+        del this.obj;
 
     }
-    def test01_DefaultIsNone(self) {
-        self.assertEqual(self.obj.get_private(), None);
+    function test01_DefaultIsNone() {
+        this.assertEqual(this.obj.get_private(), nil);
 
     }
-    def test02_assignment(self) {
+    function test02_assignment() {
         a = "example of private object";
-        self.obj.set_private(a);
-        b = self.obj.get_private();
-        self.assertIs(a, b);  # Object identity
+        this.obj.set_private(a);
+        b = this.obj.get_private();
+        this.assertIs(a, b);  # Object identity
 
     }
-    def test03_leak_assignment(self) {
-        a = "example of private object";
-        refcount = sys.getrefcount(a);
-        self.obj.set_private(a);
-        self.assertEqual(refcount+1, sys.getrefcount(a));
-        self.obj.set_private(None);
-        self.assertEqual(refcount, sys.getrefcount(a));
-
-    }
-    def test04_leak_GC(self) {
+    function test03_leak_assignment() {
         a = "example of private object";
         refcount = sys.getrefcount(a);
-        self.obj.set_private(a);
-        self.obj = None;
-        self.assertEqual(refcount, sys.getrefcount(a));
+        this.obj.set_private(a);
+        this.assertEqual(refcount+1, sys.getrefcount(a));
+        this.obj.set_private(nil);
+        this.assertEqual(refcount, sys.getrefcount(a));
+
+    }
+    function test04_leak_GC() {
+        a = "example of private object";
+        refcount = sys.getrefcount(a);
+        this.obj.set_private(a);
+        this.obj = nil;
+        this.assertEqual(refcount, sys.getrefcount(a));
 
 }
 } class DBEnvPrivateObject(PrivateObject) {
-    def setUp(self) {
-        self.obj = db.DBEnv();
+    function setUp() {
+        this.obj = db.DBEnv();
 
 }
 } class DBPrivateObject(PrivateObject) {
-    def setUp(self) {
-        self.obj = db.DB();
+    function setUp() {
+        this.obj = db.DB();
 
 }
 } class CrashAndBurn(unittest.TestCase) {
@@ -1227,10 +1227,10 @@ class PrivateObject(unittest.TestCase) {
     #    self.assertRaises(db.DBInvalidArgError, db.DB, None, 65535)
 
     if db.version() < (4, 8) {
-        def test02_DBEnv_dealloc(self){
+        function test02_DBEnv_dealloc(){
             # http://bugs.python.org/issue3885
             import gc;
-            self.assertRaises(db.DBInvalidArgError, db.DBEnv, ~db.DB_RPCCLIENT);
+            this.assertRaises(db.DBInvalidArgError, db.DBEnv, ~db.DB_RPCCLIENT);
             gc.collect();
 
 
@@ -1238,7 +1238,7 @@ class PrivateObject(unittest.TestCase) {
 #----------------------------------------------------------------------
 
 }
-} } def test_suite(){
+} } function test_suite(){
     suite = unittest.TestSuite();
 
     suite.addTest(unittest.makeSuite(VersionTestCase));

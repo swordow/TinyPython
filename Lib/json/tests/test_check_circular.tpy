@@ -1,40 +1,40 @@
 from json.tests import PyTest, CTest;
 
 
-def default_iterable(obj){
+function default_iterable(obj){
     return list(obj);
 
 }
 class TestCheckCircular(object){
-    def test_circular_dict(self){
+    function test_circular_dict(){
         dct = {};
         dct['a'] = dct;
-        self.assertRaises(ValueError, self.dumps, dct);
+        this.assertRaises(ValueError, this.dumps, dct);
 
     }
-    def test_circular_list(self){
+    function test_circular_list(){
         lst = [];
         lst.append(lst);
-        self.assertRaises(ValueError, self.dumps, lst);
+        this.assertRaises(ValueError, this.dumps, lst);
 
     }
-    def test_circular_composite(self){
+    function test_circular_composite(){
         dct2 = {};
         dct2['a'] = [];
         dct2['a'].append(dct2);
-        self.assertRaises(ValueError, self.dumps, dct2);
+        this.assertRaises(ValueError, this.dumps, dct2);
 
     }
-    def test_circular_default(self){
-        self.dumps([set()], default=default_iterable);
-        self.assertRaises(TypeError, self.dumps, [set()]);
+    function test_circular_default(){
+        this.dumps([set()], default=default_iterable);
+        this.assertRaises(TypeError, this.dumps, [set()]);
 
     }
-    def test_circular_off_default(self){
-        self.dumps([set()], default=default_iterable, check_circular=False);
-        self.assertRaises(TypeError, self.dumps, [set()], check_circular=False);
+    function test_circular_off_default(){
+        this.dumps([set()], default=default_iterable, check_circular=false);
+        this.assertRaises(TypeError, this.dumps, [set()], check_circular=false);
 
 
 }
-} class TestPyCheckCircular(TestCheckCircular, PyTest){ pass;
-class TestCCheckCircular(TestCheckCircular, CTest){ pass;
+} class TestPyCheckCircular(TestCheckCircular, PyTest){ pass;}
+class TestCCheckCircular(TestCheckCircular, CTest){ pass;}

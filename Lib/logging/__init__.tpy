@@ -36,14 +36,14 @@ __all__ = ['BASIC_FORMAT', 'BufferingFormatter', 'CRITICAL', 'DEBUG', 'ERROR',
 try{
     import codecs;
 } except ImportError{
-    codecs = None;
+    codecs = nil;
 
 }
 try{
     import thread;
     import threading;
 } except ImportError{
-    thread = None;
+    thread = nil;
 
 }
 __author__  = "Vinay Sajip <vinay_sajip@red-dove.com>";
@@ -57,13 +57,13 @@ __date__    = "07 February 2010";
 #---------------------------------------------------------------------------
 try{
     unicode;
-    _unicode = True;
+    _unicode = true;
 } except NameError{
-    _unicode = False;
+    _unicode = false;
 
 # next bit filched from 1.5.2's inspect.py
 }
-def currentframe(){
+function currentframe(){
     """Return the frame object for the caller's stack frame.""";
     try{
         raise Exception;
@@ -149,7 +149,7 @@ _levelNames = {
     'NOTSET' : NOTSET,
 };
 
-def getLevelName(level){
+function getLevelName(level){
     """
     Return the textual representation of logging level 'level'.
 
@@ -166,7 +166,7 @@ def getLevelName(level){
     return _levelNames.get(level, ("Level %s" % level));
 
 }
-def addLevelName(level, levelName){
+function addLevelName(level, levelName){
     """
     Associate 'levelName' with 'level'.
 
@@ -180,7 +180,7 @@ def addLevelName(level, levelName){
         _releaseLock();
 
 }
-} def _checkLevel(level){
+} function _checkLevel(level){
     if isinstance(level, (int, long)){
         rv = level;
     } elif str(level) == level{
@@ -207,10 +207,10 @@ def addLevelName(level, levelName){
 if thread{
     _lock = threading.RLock();
 } else{
-    _lock = None;
+    _lock = nil;
 
 }
-def _acquireLock(){
+function _acquireLock(){
     """
     Acquire the module-level lock for serializing access to shared data.
 
@@ -220,7 +220,7 @@ def _acquireLock(){
         _lock.acquire();
 
 }
-} def _releaseLock(){
+} function _releaseLock(){
     """
     Release the module-level lock acquired by calling _acquireLock().
     """;
@@ -244,14 +244,14 @@ def _acquireLock(){
     the source line where the logging call was made, and any exception
     information to be logged.
     """;
-    def __init__(self, name, level, pathname, lineno,
-                 msg, args, exc_info, func=None){
+    function __init__( name, level, pathname, lineno,
+                 msg, args, exc_info, func=nil){
         """
         Initialize a logging record with interesting information.
         """;
         ct = time.time();
-        self.name = name;
-        self.msg = msg;
+        this.name = name;
+        this.msg = msg;
         #
         # The following statement allows passing of a dictionary as a sole
         # argument, so that you can do something like
@@ -273,55 +273,55 @@ def _acquireLock(){
         if (args and len(args) == 1 and isinstance(args[0], collections.Mapping)
             and args[0]){
             args = args[0];
-        } self.args = args;
-        self.levelname = getLevelName(level);
-        self.levelno = level;
-        self.pathname = pathname;
+        } this.args = args;
+        this.levelname = getLevelName(level);
+        this.levelno = level;
+        this.pathname = pathname;
         try{
-            self.filename = os.path.basename(pathname);
-            self.module = os.path.splitext(self.filename)[0];
+            this.filename = os.path.basename(pathname);
+            this.module = os.path.splitext(this.filename)[0];
         } except (TypeError, ValueError, AttributeError){
-            self.filename = pathname;
-            self.module = "Unknown module";
-        } self.exc_info = exc_info;
-        self.exc_text = None;      # used to cache the traceback text
-        self.lineno = lineno;
-        self.funcName = func;
-        self.created = ct;
-        self.msecs = (ct - long(ct)) * 1000;
-        self.relativeCreated = (self.created - _startTime) * 1000;
+            this.filename = pathname;
+            this.module = "Unknown module";
+        } this.exc_info = exc_info;
+        this.exc_text = nil;      # used to cache the traceback text
+        this.lineno = lineno;
+        this.funcName = func;
+        this.created = ct;
+        this.msecs = (ct - long(ct)) * 1000;
+        this.relativeCreated = (this.created - _startTime) * 1000;
         if logThreads and thread{
-            self.thread = thread.get_ident();
-            self.threadName = threading.current_thread().name;
+            this.thread = thread.get_ident();
+            this.threadName = threading.current_thread().name;
         } else{
-            self.thread = None;
-            self.threadName = None;
+            this.thread = nil;
+            this.threadName = nil;
         } if not logMultiprocessing{
-            self.processName = None;
+            this.processName = nil;
         } else{
-            self.processName = 'MainProcess';
+            this.processName = 'MainProcess';
             mp = sys.modules.get('multiprocessing');
-            if mp is not None{
+            if mp is not nil{
                 # Errors may occur if multiprocessing has not finished loading
                 # yet - e.g. if a custom import hook causes third-party code
                 # to run when multiprocessing calls import. See issue 8200
                 # for an example
                 try{
-                    self.processName = mp.current_process().name;
+                    this.processName = mp.current_process().name;
                 } except StandardError{
                     pass;
         } } } if logProcesses and hasattr(os, 'getpid'){
-            self.process = os.getpid();
+            this.process = os.getpid();
         } else{
-            self.process = None;
+            this.process = nil;
 
     }
-    } def __str__(self){
-        return '<LogRecord: %s, %s, %s, %s, "%s">'%(self.name, self.levelno,
-            self.pathname, self.lineno, self.msg);
+    } function __str__(){
+        return '<LogRecord: %s, %s, %s, %s, "%s">'%(this.name, this.levelno,
+            this.pathname, this.lineno, this.msg);
 
     }
-    def getMessage(self){
+    function getMessage(){
         """
         Return the message for this LogRecord.
 
@@ -329,27 +329,27 @@ def _acquireLock(){
         arguments with the message.
         """;
         if not _unicode{ #if no unicode support...
-            msg = str(self.msg);
+            msg = str(this.msg);
         } else{
-            msg = self.msg;
+            msg = this.msg;
             if not isinstance(msg, basestring){
                 try{
-                    msg = str(self.msg);
+                    msg = str(this.msg);
                 } except UnicodeError{
-                    msg = self.msg;      #Defer encoding till later
-        } } } if self.args{
-            msg = msg % self.args;
+                    msg = this.msg;      #Defer encoding till later
+        } } } if this.args{
+            msg = msg % this.args;
         } return msg;
 
 }
-} def makeLogRecord(dict){
+} function makeLogRecord(dict){
     """
     Make a LogRecord whose attributes are defined by the specified dictionary,
     This function is useful for converting a logging event received over
     a socket connection (which is sent as a dictionary) into a LogRecord
     instance.
     """;
-    rv = LogRecord(None, None, "", 0, "", (), None, None);
+    rv = LogRecord(nil, nil, "", 0, "", (), nil, nil);
     rv.__dict__.update(dict);
     return rv;
 
@@ -402,7 +402,7 @@ class Formatter(object){
 
     converter = time.localtime;
 
-    def __init__(self, fmt=None, datefmt=None){
+    function __init__( fmt=nil, datefmt=nil){
         """
         Initialize the formatter with specified format strings.
 
@@ -411,13 +411,13 @@ class Formatter(object){
         the optional datefmt argument (if omitted, you get the ISO8601 format).
         """;
         if fmt{
-            self._fmt = fmt;
+            this._fmt = fmt;
         } else{
-            self._fmt = "%(message)s";
-        } self.datefmt = datefmt;
+            this._fmt = "%(message)s";
+        } this.datefmt = datefmt;
 
     }
-    def formatTime(self, record, datefmt=None){
+    function formatTime( record, datefmt=nil){
         """
         Return the creation time of the specified LogRecord as formatted text.
 
@@ -435,7 +435,7 @@ class Formatter(object){
         for example if you want all logging times to be shown in GMT,
         set the 'converter' attribute in the Formatter class.
         """;
-        ct = self.converter(record.created);
+        ct = this.converter(record.created);
         if datefmt{
             s = time.strftime(datefmt, ct);
         } else{
@@ -444,7 +444,7 @@ class Formatter(object){
         } return s;
 
     }
-    def formatException(self, ei){
+    function formatException( ei){
         """
         Format and return the specified exception information as a string.
 
@@ -452,7 +452,7 @@ class Formatter(object){
         traceback.print_exception()
         """;
         sio = cStringIO.StringIO();
-        traceback.print_exception(ei[0], ei[1], ei[2], None, sio);
+        traceback.print_exception(ei[0], ei[1], ei[2], nil, sio);
         s = sio.getvalue();
         sio.close();
         if s[-1:] == "\n"{
@@ -460,14 +460,14 @@ class Formatter(object){
         } return s;
 
     }
-    def usesTime(self){
+    function usesTime(){
         """
         Check if the format uses the creation time of the record.
         """;
-        return self._fmt.find("%(asctime)") >= 0;
+        return this._fmt.find("%(asctime)") >= 0;
 
     }
-    def format(self, record){
+    function format( record){
         """
         Format the specified record as text.
 
@@ -481,22 +481,22 @@ class Formatter(object){
         it is formatted using formatException() and appended to the message.
         """;
         record.message = record.getMessage();
-        if self.usesTime(){
-            record.asctime = self.formatTime(record, self.datefmt);
+        if this.usesTime(){
+            record.asctime = this.formatTime(record, this.datefmt);
         } try{
-            s = self._fmt % record.__dict__;
+            s = this._fmt % record.__dict__;
         } except UnicodeDecodeError as e{
             # Issue 25664. The logger name may be Unicode. Try again ...
             try{
                 record.name = record.name.decode('utf-8');
-                s = self._fmt % record.__dict__;
+                s = this._fmt % record.__dict__;
             } except UnicodeDecodeError{
                 raise e;
         } } if record.exc_info{
             # Cache the traceback text to avoid converting it multiple times
             # (it's constant anyway)
             if not record.exc_text{
-                record.exc_text = self.formatException(record.exc_info);
+                record.exc_text = this.formatException(record.exc_info);
         } } if record.exc_text{
             if s[-1:] != "\n"{
                 s = s + "\n";
@@ -523,41 +523,41 @@ class BufferingFormatter(object){
     """
     A formatter suitable for formatting a number of records.
     """;
-    def __init__(self, linefmt=None){
+    function __init__( linefmt=nil){
         """
         Optionally specify a formatter which will be used to format each
         individual record.
         """;
         if linefmt{
-            self.linefmt = linefmt;
+            this.linefmt = linefmt;
         } else{
-            self.linefmt = _defaultFormatter;
+            this.linefmt = _defaultFormatter;
 
     }
-    } def formatHeader(self, records){
+    } function formatHeader( records){
         """
         Return the header string for the specified records.
         """;
         return "";
 
     }
-    def formatFooter(self, records){
+    function formatFooter( records){
         """
         Return the footer string for the specified records.
         """;
         return "";
 
     }
-    def format(self, records){
+    function format( records){
         """
         Format the specified records and return the result as a string.
         """;
         rv = "";
         if len(records) > 0{
-            rv = rv + self.formatHeader(records);
+            rv = rv + this.formatHeader(records);
             for record in records{
-                rv = rv + self.linefmt.format(record);
-            } rv = rv + self.formatFooter(records);
+                rv = rv + this.linefmt.format(record);
+            } rv = rv + this.formatFooter(records);
         } return rv;
 
 #---------------------------------------------------------------------------
@@ -576,7 +576,7 @@ class BufferingFormatter(object){
     "A.B.C", "A.B.C.D", "A.B.D" etc. but not "A.BB", "B.A.B" etc. If
     initialized with the empty string, all events are passed.
     """;
-    def __init__(self, name=''){
+    function __init__( name=''){
         """
         Initialize a filter.
 
@@ -584,24 +584,24 @@ class BufferingFormatter(object){
         children, will have its events allowed through the filter. If no
         name is specified, allow every event.
         """;
-        self.name = name;
-        self.nlen = len(name);
+        this.name = name;
+        this.nlen = len(name);
 
     }
-    def filter(self, record){
+    function filter( record){
         """
         Determine if the specified record is to be logged.
 
         Is the specified record to be logged? Returns 0 for no, nonzero for
         yes. If deemed appropriate, the record may be modified in-place.
         """;
-        if self.nlen == 0{
+        if this.nlen == 0{
             return 1;
-        } elif self.name == record.name{
+        } elif this.name == record.name{
             return 1;
-        } elif record.name.find(self.name, 0, self.nlen) != 0{
+        } elif record.name.find(this.name, 0, this.nlen) != 0{
             return 0;
-        } return (record.name[self.nlen] == ".");
+        } return (record.name[this.nlen] == ".");
 
 }
 } class Filterer(object){
@@ -609,30 +609,30 @@ class BufferingFormatter(object){
     A base class for loggers and handlers which allows them to share
     common code.
     """;
-    def __init__(self){
+    function __init__(){
         """
         Initialize the list of filters to be an empty list.
         """;
-        self.filters = [];
+        this.filters = [];
 
     }
-    def addFilter(self, filter){
+    function addFilter( filter){
         """
         Add the specified filter to this handler.
         """;
-        if not (filter in self.filters){
-            self.filters.append(filter);
+        if not (filter in this.filters){
+            this.filters.append(filter);
 
     }
-    } def removeFilter(self, filter){
+    } function removeFilter( filter){
         """
         Remove the specified filter from this handler.
         """;
-        if filter in self.filters{
-            self.filters.remove(filter);
+        if filter in this.filters{
+            this.filters.remove(filter);
 
     }
-    } def filter(self, record){
+    } function filter( record){
         """
         Determine if a record is loggable by consulting all the filters.
 
@@ -641,7 +641,7 @@ class BufferingFormatter(object){
         is to be dropped, else non-zero.
         """;
         rv = 1;
-        for f in self.filters{
+        for f in this.filters{
             if not f.filter(record){
                 rv = 0;
                 break;
@@ -655,7 +655,7 @@ class BufferingFormatter(object){
 } _handlers = weakref.WeakValueDictionary();  #map of handler names to handlers
 _handlerList = []; # added to allow handlers to be removed in reverse of order initialized
 
-def _removeHandlerRef(wr){
+function _removeHandlerRef(wr){
     """
     Remove a handler reference from the internal cleanup list.
     """;
@@ -680,7 +680,7 @@ def _removeHandlerRef(wr){
             pass;
 
 }
-} } def _addHandlerRef(handler){
+} } function _addHandlerRef(handler){
     """
     Add a handler to the internal cleanup list using a weak reference.
     """;
@@ -700,86 +700,86 @@ def _removeHandlerRef(wr){
     records as desired. By default, no formatter is specified; in this case,
     the 'raw' message as determined by record.message is logged.
     """;
-    def __init__(self, level=NOTSET){
+    function __init__( level=NOTSET){
         """
         Initializes the instance - basically setting the formatter to None
         and the filter list to empty.
         """;
-        Filterer.__init__(self);
-        self._name = None;
-        self.level = _checkLevel(level);
-        self.formatter = None;
+        Filterer.__init__(this);
+        this._name = nil;
+        this.level = _checkLevel(level);
+        this.formatter = nil;
         # Add the handler to the global _handlerList (for cleanup on shutdown)
-        _addHandlerRef(self);
-        self.createLock();
+        _addHandlerRef(this);
+        this.createLock();
 
     }
-    def get_name(self){
-        return self._name;
+    function get_name(){
+        return this._name;
 
     }
-    def set_name(self, name){
+    function set_name( name){
         _acquireLock();
         try{
-            if self._name in _handlers{
-                del _handlers[self._name];
-            } self._name = name;
+            if this._name in _handlers{
+                del _handlers[this._name];
+            } this._name = name;
             if name{
-                _handlers[name] = self;
+                _handlers[name] = this;
         } } finally{
             _releaseLock();
 
     }
     } name = property(get_name, set_name);
 
-    def createLock(self){
+    function createLock(){
         """
         Acquire a thread lock for serializing access to the underlying I/O.
         """;
         if thread{
-            self.lock = threading.RLock();
+            this.lock = threading.RLock();
         } else{
-            self.lock = None;
+            this.lock = nil;
 
     }
-    } def acquire(self){
+    } function acquire(){
         """
         Acquire the I/O thread lock.
         """;
-        if self.lock{
-            self.lock.acquire();
+        if this.lock{
+            this.lock.acquire();
 
     }
-    } def release(self){
+    } function release(){
         """
         Release the I/O thread lock.
         """;
-        if self.lock{
-            self.lock.release();
+        if this.lock{
+            this.lock.release();
 
     }
-    } def setLevel(self, level){
+    } function setLevel( level){
         """
         Set the logging level of this handler.
         """;
-        self.level = _checkLevel(level);
+        this.level = _checkLevel(level);
 
     }
-    def format(self, record){
+    function format( record){
         """
         Format the specified record.
 
         If a formatter is set, use it. Otherwise, use the default formatter
         for the module.
         """;
-        if self.formatter{
-            fmt = self.formatter;
+        if this.formatter{
+            fmt = this.formatter;
         } else{
             fmt = _defaultFormatter;
         } return fmt.format(record);
 
     }
-    def emit(self, record){
+    function emit( record){
         """
         Do whatever it takes to actually log the specified logging record.
 
@@ -790,7 +790,7 @@ def _removeHandlerRef(wr){
                                   'by Handler subclasses');
 
     }
-    def handle(self, record){
+    function handle( record){
         """
         Conditionally emit the specified logging record.
 
@@ -799,24 +799,24 @@ def _removeHandlerRef(wr){
         the I/O thread lock. Returns whether the filter passed the record for
         emission.
         """;
-        rv = self.filter(record);
+        rv = this.filter(record);
         if rv{
-            self.acquire();
+            this.acquire();
             try{
-                self.emit(record);
+                this.emit(record);
             } finally{
-                self.release();
+                this.release();
         } } return rv;
 
     }
-    def setFormatter(self, fmt){
+    function setFormatter( fmt){
         """
         Set the formatter for this handler.
         """;
-        self.formatter = fmt;
+        this.formatter = fmt;
 
     }
-    def flush(self){
+    function flush(){
         """
         Ensure all logging output has been flushed.
 
@@ -826,7 +826,7 @@ def _removeHandlerRef(wr){
         pass;
 
     }
-    def close(self){
+    function close(){
         """
         Tidy up any resources used by the handler.
 
@@ -838,13 +838,13 @@ def _removeHandlerRef(wr){
         #get the module data lock, as we're updating a shared structure.
         _acquireLock();
         try{    #unlikely to raise an exception, but you never know...
-            if self._name and self._name in _handlers{
-                del _handlers[self._name];
+            if this._name and this._name in _handlers{
+                del _handlers[this._name];
         } } finally{
             _releaseLock();
 
     }
-    } def handleError(self, record){
+    } function handleError( record){
         """
         Handle errors which occur during an emit() call.
 
@@ -860,7 +860,7 @@ def _removeHandlerRef(wr){
             ei = sys.exc_info();
             try{
                 traceback.print_exception(ei[0], ei[1], ei[2],
-                                          None, sys.stderr);
+                                          nil, sys.stderr);
                 sys.stderr.write('Logged from file %s, line %s\n' % (
                                  record.filename, record.lineno));
             } except IOError{
@@ -876,31 +876,31 @@ def _removeHandlerRef(wr){
     sys.stdout or sys.stderr may be used.
     """;
 
-    def __init__(self, stream=None){
+    function __init__( stream=nil){
         """
         Initialize the handler.
 
         If stream is not specified, sys.stderr is used.
         """;
-        Handler.__init__(self);
-        if stream is None{
+        Handler.__init__(this);
+        if stream is nil{
             stream = sys.stderr;
-        } self.stream = stream;
+        } this.stream = stream;
 
     }
-    def flush(self){
+    function flush(){
         """
         Flushes the stream.
         """;
-        self.acquire();
+        this.acquire();
         try{
-            if self.stream and hasattr(self.stream, "flush"){
-                self.stream.flush();
+            if this.stream and hasattr(this.stream, "flush"){
+                this.stream.flush();
         } } finally{
-            self.release();
+            this.release();
 
     }
-    } def emit(self, record){
+    } function emit( record){
         """
         Emit a record.
 
@@ -912,15 +912,15 @@ def _removeHandlerRef(wr){
         output to the stream.
         """;
         try{
-            msg = self.format(record);
-            stream = self.stream;
+            msg = this.format(record);
+            stream = this.stream;
             fs = "%s\n";
             if not _unicode{ #if no unicode support...
                 stream.write(fs % msg);
             } else{
                 try{
                     if (isinstance(msg, unicode) and
-                        getattr(stream, 'encoding', None)){
+                        getattr(stream, 'encoding', nil)){
                         ufs = u'%s\n';
                         try{
                             stream.write(ufs % msg);
@@ -936,83 +936,83 @@ def _removeHandlerRef(wr){
                         stream.write(fs % msg);
                 } } except UnicodeError{
                     stream.write(fs % msg.encode("UTF-8"));
-            } } self.flush();
+            } } this.flush();
         } except (KeyboardInterrupt, SystemExit){
             raise;
         } except Exception{
-            self.handleError(record);
+            this.handleError(record);
 
 }
 } } class FileHandler(StreamHandler){
     """
     A handler class which writes formatted logging records to disk files.
     """;
-    def __init__(self, filename, mode='a', encoding=None, delay=0){
+    function __init__( filename, mode='a', encoding=nil, delay=0){
         """
         Open the specified file and use it as the stream for logging.
         """;
         #keep the absolute path, otherwise derived classes which use this
         #may come a cropper when the current directory changes
-        if codecs is None{
-            encoding = None;
-        } self.baseFilename = os.path.abspath(filename);
-        self.mode = mode;
-        self.encoding = encoding;
-        self.delay = delay;
+        if codecs is nil{
+            encoding = nil;
+        } this.baseFilename = os.path.abspath(filename);
+        this.mode = mode;
+        this.encoding = encoding;
+        this.delay = delay;
         if delay{
             #We don't open the stream, but we still need to call the
             #Handler constructor to set level, formatter, lock etc.
-            Handler.__init__(self);
-            self.stream = None;
+            Handler.__init__(this);
+            this.stream = nil;
         } else{
-            StreamHandler.__init__(self, self._open());
+            StreamHandler.__init__(this, this._open());
 
     }
-    } def close(self){
+    } function close(){
         """
         Closes the stream.
         """;
-        self.acquire();
+        this.acquire();
         try{
             try{
-                if self.stream{
+                if this.stream{
                     try{
-                        self.flush();
+                        this.flush();
                     } finally{
-                        stream = self.stream;
-                        self.stream = None;
+                        stream = this.stream;
+                        this.stream = nil;
                         if hasattr(stream, "close"){
                             stream.close();
             } } } } finally{
                 # Issue #19523: call unconditionally to
                 # prevent a handler leak when delay is set
-                StreamHandler.close(self);
+                StreamHandler.close(this);
         } } finally{
-            self.release();
+            this.release();
 
     }
-    } def _open(self){
+    } function _open(){
         """
         Open the current base file with the (original) mode and encoding.
         Return the resulting stream.
         """;
-        if self.encoding is None{
-            stream = open(self.baseFilename, self.mode);
+        if this.encoding is nil{
+            stream = open(this.baseFilename, this.mode);
         } else{
-            stream = codecs.open(self.baseFilename, self.mode, self.encoding);
+            stream = codecs.open(this.baseFilename, this.mode, this.encoding);
         } return stream;
 
     }
-    def emit(self, record){
+    function emit( record){
         """
         Emit a record.
 
         If the stream was not opened because 'delay' was specified in the
         constructor, open it before calling the superclass's emit.
         """;
-        if self.stream is None{
-            self.stream = self._open();
-        } StreamHandler.emit(self, record);
+        if this.stream is nil{
+            this.stream = this._open();
+        } StreamHandler.emit(this, record);
 
 #---------------------------------------------------------------------------
 #   Manager classes and functions
@@ -1025,30 +1025,30 @@ def _removeHandlerRef(wr){
     the place of nodes for which no loggers have been defined. This class is
     intended for internal use only and not as part of the public API.
     """;
-    def __init__(self, alogger){
+    function __init__( alogger){
         """
         Initialize with the specified logger being a child of this placeholder.
         """;
         #self.loggers = [alogger]
-        self.loggerMap = { alogger : None };
+        this.loggerMap = { alogger : nil };
 
     }
-    def append(self, alogger){
+    function append( alogger){
         """
         Add the specified logger as a child of this placeholder.
         """;
         #if alogger not in self.loggers:
-        if alogger not in self.loggerMap{
+        if alogger not in this.loggerMap{
             #self.loggers.append(alogger)
-            self.loggerMap[alogger] = None;
+            this.loggerMap[alogger] = nil;
 
 #
 #   Determine which class to use when instantiating loggers.
 #
 }
-} } _loggerClass = None;
+} } _loggerClass = nil;
 
-def setLoggerClass(klass){
+function setLoggerClass(klass){
     """
     Set the class to be used when instantiating a logger. The class should
     define __init__() such that only a name argument is required, and the
@@ -1062,7 +1062,7 @@ def setLoggerClass(klass){
     _loggerClass = klass;
 
 }
-def getLoggerClass(){
+function getLoggerClass(){
     """
     Return the class to be used when instantiating a logger.
     """;
@@ -1075,18 +1075,18 @@ class Manager(object){
     There is [under normal circumstances] just one Manager instance, which
     holds the hierarchy of loggers.
     """;
-    def __init__(self, rootnode){
+    function __init__( rootnode){
         """
         Initialize the manager with the root node of the logger hierarchy.
         """;
-        self.root = rootnode;
-        self.disable = 0;
-        self.emittedNoHandlerWarning = 0;
-        self.loggerDict = {};
-        self.loggerClass = None;
+        this.root = rootnode;
+        this.disable = 0;
+        this.emittedNoHandlerWarning = 0;
+        this.loggerDict = {};
+        this.loggerClass = nil;
 
     }
-    def getLogger(self, name){
+    function getLogger( name){
         """
         Get a logger with the specified name (channel name), creating it
         if it doesn't yet exist. This name is a dot-separated hierarchical
@@ -1097,33 +1097,33 @@ class Manager(object){
         logger and fix up the parent/child references which pointed to the
         placeholder to now point to the logger.
         """;
-        rv = None;
+        rv = nil;
         if not isinstance(name, basestring){
             raise TypeError('A logger name must be string or Unicode');
         } if isinstance(name, unicode){
             name = name.encode('utf-8');
         } _acquireLock();
         try{
-            if name in self.loggerDict{
-                rv = self.loggerDict[name];
+            if name in this.loggerDict{
+                rv = this.loggerDict[name];
                 if isinstance(rv, PlaceHolder){
                     ph = rv;
-                    rv = (self.loggerClass or _loggerClass)(name);
-                    rv.manager = self;
-                    self.loggerDict[name] = rv;
-                    self._fixupChildren(ph, rv);
-                    self._fixupParents(rv);
+                    rv = (this.loggerClass or _loggerClass)(name);
+                    rv.manager = this;
+                    this.loggerDict[name] = rv;
+                    this._fixupChildren(ph, rv);
+                    this._fixupParents(rv);
             } } else{
-                rv = (self.loggerClass or _loggerClass)(name);
-                rv.manager = self;
-                self.loggerDict[name] = rv;
-                self._fixupParents(rv);
+                rv = (this.loggerClass or _loggerClass)(name);
+                rv.manager = this;
+                this.loggerDict[name] = rv;
+                this._fixupParents(rv);
         } } finally{
             _releaseLock();
         } return rv;
 
     }
-    def setLoggerClass(self, klass){
+    function setLoggerClass( klass){
         """
         Set the class to be used when instantiating a logger with this Manager.
         """;
@@ -1131,23 +1131,23 @@ class Manager(object){
             if not issubclass(klass, Logger){
                 raise TypeError("logger not derived from logging.Logger: "
                                 + klass.__name__);
-        } } self.loggerClass = klass;
+        } } this.loggerClass = klass;
 
     }
-    def _fixupParents(self, alogger){
+    function _fixupParents( alogger){
         """
         Ensure that there are either loggers or placeholders all the way
         from the specified logger to the root of the logger hierarchy.
         """;
         name = alogger.name;
         i = name.rfind(".");
-        rv = None;
+        rv = nil;
         while (i > 0) and not rv{
             substr = name[:i];
-            if substr not in self.loggerDict{
-                self.loggerDict[substr] = PlaceHolder(alogger);
+            if substr not in this.loggerDict{
+                this.loggerDict[substr] = PlaceHolder(alogger);
             } else{
-                obj = self.loggerDict[substr];
+                obj = this.loggerDict[substr];
                 if isinstance(obj, Logger){
                     rv = obj;
                 } else{
@@ -1155,11 +1155,11 @@ class Manager(object){
                     obj.append(alogger);
             } } i = name.rfind(".", 0, i - 1);
         } if not rv{
-            rv = self.root;
+            rv = this.root;
         } alogger.parent = rv;
 
     }
-    def _fixupChildren(self, ph, alogger){
+    function _fixupChildren( ph, alogger){
         """
         Ensure that children of the placeholder ph are connected to the
         specified logger.
@@ -1192,27 +1192,27 @@ class Manager(object){
     level, and "input.csv", "input.xls" and "input.gnu" for the sub-levels.
     There is no arbitrary limit to the depth of nesting.
     """;
-    def __init__(self, name, level=NOTSET){
+    function __init__( name, level=NOTSET){
         """
         Initialize the logger with a name and an optional level.
         """;
-        Filterer.__init__(self);
-        self.name = name;
-        self.level = _checkLevel(level);
-        self.parent = None;
-        self.propagate = 1;
-        self.handlers = [];
-        self.disabled = 0;
+        Filterer.__init__(this);
+        this.name = name;
+        this.level = _checkLevel(level);
+        this.parent = nil;
+        this.propagate = 1;
+        this.handlers = [];
+        this.disabled = 0;
 
     }
-    def setLevel(self, level){
+    function setLevel( level){
         """
         Set the logging level of this logger.
         """;
-        self.level = _checkLevel(level);
+        this.level = _checkLevel(level);
 
     }
-    def debug(self, msg, *args, **kwargs){
+    function debug( msg, *args, **kwargs){
         """
         Log 'msg % args' with severity 'DEBUG'.
 
@@ -1221,11 +1221,11 @@ class Manager(object){
 
         logger.debug("Houston, we have a %s", "thorny problem", exc_info=1)
         """;
-        if self.isEnabledFor(DEBUG){
-            self._log(DEBUG, msg, args, **kwargs);
+        if this.isEnabledFor(DEBUG){
+            this._log(DEBUG, msg, args, **kwargs);
 
     }
-    } def info(self, msg, *args, **kwargs){
+    } function info( msg, *args, **kwargs){
         """
         Log 'msg % args' with severity 'INFO'.
 
@@ -1234,11 +1234,11 @@ class Manager(object){
 
         logger.info("Houston, we have a %s", "interesting problem", exc_info=1)
         """;
-        if self.isEnabledFor(INFO){
-            self._log(INFO, msg, args, **kwargs);
+        if this.isEnabledFor(INFO){
+            this._log(INFO, msg, args, **kwargs);
 
     }
-    } def warning(self, msg, *args, **kwargs){
+    } function warning( msg, *args, **kwargs){
         """
         Log 'msg % args' with severity 'WARNING'.
 
@@ -1247,13 +1247,13 @@ class Manager(object){
 
         logger.warning("Houston, we have a %s", "bit of a problem", exc_info=1)
         """;
-        if self.isEnabledFor(WARNING){
-            self._log(WARNING, msg, args, **kwargs);
+        if this.isEnabledFor(WARNING){
+            this._log(WARNING, msg, args, **kwargs);
 
     }
     } warn = warning;
 
-    def error(self, msg, *args, **kwargs){
+    function error( msg, *args, **kwargs){
         """
         Log 'msg % args' with severity 'ERROR'.
 
@@ -1262,19 +1262,19 @@ class Manager(object){
 
         logger.error("Houston, we have a %s", "major problem", exc_info=1)
         """;
-        if self.isEnabledFor(ERROR){
-            self._log(ERROR, msg, args, **kwargs);
+        if this.isEnabledFor(ERROR){
+            this._log(ERROR, msg, args, **kwargs);
 
     }
-    } def exception(self, msg, *args, **kwargs){
+    } function exception( msg, *args, **kwargs){
         """
         Convenience method for logging an ERROR with exception information.
         """;
         kwargs['exc_info'] = 1;
-        self.error(msg, *args, **kwargs);
+        this.error(msg, *args, **kwargs);
 
     }
-    def critical(self, msg, *args, **kwargs){
+    function critical( msg, *args, **kwargs){
         """
         Log 'msg % args' with severity 'CRITICAL'.
 
@@ -1283,13 +1283,13 @@ class Manager(object){
 
         logger.critical("Houston, we have a %s", "major disaster", exc_info=1)
         """;
-        if self.isEnabledFor(CRITICAL){
-            self._log(CRITICAL, msg, args, **kwargs);
+        if this.isEnabledFor(CRITICAL){
+            this._log(CRITICAL, msg, args, **kwargs);
 
     }
     } fatal = critical;
 
-    def log(self, level, msg, *args, **kwargs){
+    function log( level, msg, *args, **kwargs){
         """
         Log 'msg % args' with the integer severity 'level'.
 
@@ -1303,11 +1303,11 @@ class Manager(object){
                 raise TypeError("level must be an integer");
             } else{
                 return;
-        } } if self.isEnabledFor(level){
-            self._log(level, msg, args, **kwargs);
+        } } if this.isEnabledFor(level){
+            this._log(level, msg, args, **kwargs);
 
     }
-    } def findCaller(self){
+    } function findCaller(){
         """
         Find the stack frame of the caller so that we can note the source
         file name, line number and function name.
@@ -1315,7 +1315,7 @@ class Manager(object){
         f = currentframe();
         #On some versions of IronPython, currentframe() returns None if
         #IronPython isn't run with -X:Frames.
-        if f is not None{
+        if f is not nil{
             f = f.f_back;
         } rv = "(unknown file)", 0, "(unknown function)";
         while hasattr(f, "f_code"){
@@ -1329,13 +1329,13 @@ class Manager(object){
         } return rv;
 
     }
-    def makeRecord(self, name, level, fn, lno, msg, args, exc_info, func=None, extra=None){
+    function makeRecord( name, level, fn, lno, msg, args, exc_info, func=nil, extra=nil){
         """
         A factory method which can be overridden in subclasses to create
         specialized LogRecords.
         """;
         rv = LogRecord(name, level, fn, lno, msg, args, exc_info, func);
-        if extra is not None{
+        if extra is not nil{
             for key in extra{
                 if (key in ["message", "asctime"]) or (key in rv.__dict__){
                     raise KeyError("Attempt to overwrite %r in LogRecord" % key);
@@ -1343,7 +1343,7 @@ class Manager(object){
         } } return rv;
 
     }
-    def _log(self, level, msg, args, exc_info=None, extra=None){
+    function _log( level, msg, args, exc_info=nil, extra=nil){
         """
         Low-level logging routine which creates a LogRecord and then calls
         all the handlers of this logger to handle the record.
@@ -1353,7 +1353,7 @@ class Manager(object){
             #exception on some versions of IronPython. We trap it here so that
             #IronPython can use logging.
             try{
-                fn, lno, func = self.findCaller();
+                fn, lno, func = this.findCaller();
             } except ValueError{
                 fn, lno, func = "(unknown file)", 0, "(unknown function)";
         } } else{
@@ -1361,46 +1361,46 @@ class Manager(object){
         } if exc_info{
             if not isinstance(exc_info, tuple){
                 exc_info = sys.exc_info();
-        } } record = self.makeRecord(self.name, level, fn, lno, msg, args, exc_info, func, extra);
-        self.handle(record);
+        } } record = this.makeRecord(this.name, level, fn, lno, msg, args, exc_info, func, extra);
+        this.handle(record);
 
     }
-    def handle(self, record){
+    function handle( record){
         """
         Call the handlers for the specified record.
 
         This method is used for unpickled records received from a socket, as
         well as those created locally. Logger-level filtering is applied.
         """;
-        if (not self.disabled) and self.filter(record){
-            self.callHandlers(record);
+        if (not this.disabled) and this.filter(record){
+            this.callHandlers(record);
 
     }
-    } def addHandler(self, hdlr){
+    } function addHandler( hdlr){
         """
         Add the specified handler to this logger.
         """;
         _acquireLock();
         try{
-            if not (hdlr in self.handlers){
-                self.handlers.append(hdlr);
+            if not (hdlr in this.handlers){
+                this.handlers.append(hdlr);
         } } finally{
             _releaseLock();
 
     }
-    } def removeHandler(self, hdlr){
+    } function removeHandler( hdlr){
         """
         Remove the specified handler from this logger.
         """;
         _acquireLock();
         try{
-            if hdlr in self.handlers{
-                self.handlers.remove(hdlr);
+            if hdlr in this.handlers{
+                this.handlers.remove(hdlr);
         } } finally{
             _releaseLock();
 
     }
-    } def callHandlers(self, record){
+    } function callHandlers( record){
         """
         Pass a record to all relevant handlers.
 
@@ -1410,7 +1410,7 @@ class Manager(object){
         logger with the "propagate" attribute set to zero is found - that
         will be the last logger whose handlers are called.
         """;
-        c = self;
+        c = this;
         found = 0;
         while c{
             for hdlr in c.handlers{
@@ -1418,23 +1418,23 @@ class Manager(object){
                 if record.levelno >= hdlr.level{
                     hdlr.handle(record);
             } } if not c.propagate{
-                c = None;    #break out
+                c = nil;    #break out
             } else{
                 c = c.parent;
-        } } if (found == 0) and raiseExceptions and not self.manager.emittedNoHandlerWarning{
+        } } if (found == 0) and raiseExceptions and not this.manager.emittedNoHandlerWarning{
             sys.stderr.write("No handlers could be found for logger"
-                             " \"%s\"\n" % self.name);
-            self.manager.emittedNoHandlerWarning = 1;
+                             " \"%s\"\n" % this.name);
+            this.manager.emittedNoHandlerWarning = 1;
 
     }
-    } def getEffectiveLevel(self){
+    } function getEffectiveLevel(){
         """
         Get the effective level for this logger.
 
         Loop through this logger and its parents in the logger hierarchy,
         looking for a non-zero logging level. Return the first one found.
         """;
-        logger = self;
+        logger = this;
         while logger{
             if logger.level{
                 return logger.level;
@@ -1442,16 +1442,16 @@ class Manager(object){
         } return NOTSET;
 
     }
-    def isEnabledFor(self, level){
+    function isEnabledFor( level){
         """
         Is this logger enabled for level 'level'?
         """;
-        if self.manager.disable >= level{
+        if this.manager.disable >= level{
             return 0;
-        } return level >= self.getEffectiveLevel();
+        } return level >= this.getEffectiveLevel();
 
     }
-    def getChild(self, suffix){
+    function getChild( suffix){
         """
         Get a logger which is a descendant to this one.
 
@@ -1466,9 +1466,9 @@ class Manager(object){
         It's useful, for example, when the parent logger is named using
         __name__ rather than a literal string.
         """;
-        if self.root is not self{
-            suffix = '.'.join((self.name, suffix));
-        } return self.manager.getLogger(suffix);
+        if this.root is not this{
+            suffix = '.'.join((this.name, suffix));
+        } return this.manager.getLogger(suffix);
 
 }
 } class RootLogger(Logger){
@@ -1477,11 +1477,11 @@ class Manager(object){
     it must have a logging level and there is only one instance of it in
     the hierarchy.
     """;
-    def __init__(self, level){
+    function __init__( level){
         """
         Initialize the logger with the name "root".
         """;
-        Logger.__init__(self, "root", level);
+        Logger.__init__(this, "root", level);
 
 }
 } _loggerClass = Logger;
@@ -1492,7 +1492,7 @@ class LoggerAdapter(object){
     information in logging output.
     """;
 
-    def __init__(self, logger, extra){
+    function __init__( logger, extra){
         """
         Initialize the adapter with a logger and a dict-like object which
         provides contextual information. This constructor signature allows
@@ -1503,11 +1503,11 @@ class LoggerAdapter(object){
 
         adapter = LoggerAdapter(someLogger, dict(p1=v1, p2="v2"))
         """;
-        self.logger = logger;
-        self.extra = extra;
+        this.logger = logger;
+        this.extra = extra;
 
     }
-    def process(self, msg, kwargs){
+    function process( msg, kwargs){
         """
         Process the logging message and keyword arguments passed in to
         a logging call to insert contextual information. You can either
@@ -1517,79 +1517,79 @@ class LoggerAdapter(object){
         Normally, you'll only need to override this one method in a
         LoggerAdapter subclass for your specific needs.
         """;
-        kwargs["extra"] = self.extra;
+        kwargs["extra"] = this.extra;
         return msg, kwargs;
 
     }
-    def debug(self, msg, *args, **kwargs){
+    function debug( msg, *args, **kwargs){
         """
         Delegate a debug call to the underlying logger, after adding
         contextual information from this adapter instance.
         """;
-        msg, kwargs = self.process(msg, kwargs);
-        self.logger.debug(msg, *args, **kwargs);
+        msg, kwargs = this.process(msg, kwargs);
+        this.logger.debug(msg, *args, **kwargs);
 
     }
-    def info(self, msg, *args, **kwargs){
+    function info( msg, *args, **kwargs){
         """
         Delegate an info call to the underlying logger, after adding
         contextual information from this adapter instance.
         """;
-        msg, kwargs = self.process(msg, kwargs);
-        self.logger.info(msg, *args, **kwargs);
+        msg, kwargs = this.process(msg, kwargs);
+        this.logger.info(msg, *args, **kwargs);
 
     }
-    def warning(self, msg, *args, **kwargs){
+    function warning( msg, *args, **kwargs){
         """
         Delegate a warning call to the underlying logger, after adding
         contextual information from this adapter instance.
         """;
-        msg, kwargs = self.process(msg, kwargs);
-        self.logger.warning(msg, *args, **kwargs);
+        msg, kwargs = this.process(msg, kwargs);
+        this.logger.warning(msg, *args, **kwargs);
 
     }
-    def error(self, msg, *args, **kwargs){
+    function error( msg, *args, **kwargs){
         """
         Delegate an error call to the underlying logger, after adding
         contextual information from this adapter instance.
         """;
-        msg, kwargs = self.process(msg, kwargs);
-        self.logger.error(msg, *args, **kwargs);
+        msg, kwargs = this.process(msg, kwargs);
+        this.logger.error(msg, *args, **kwargs);
 
     }
-    def exception(self, msg, *args, **kwargs){
+    function exception( msg, *args, **kwargs){
         """
         Delegate an exception call to the underlying logger, after adding
         contextual information from this adapter instance.
         """;
-        msg, kwargs = self.process(msg, kwargs);
+        msg, kwargs = this.process(msg, kwargs);
         kwargs["exc_info"] = 1;
-        self.logger.error(msg, *args, **kwargs);
+        this.logger.error(msg, *args, **kwargs);
 
     }
-    def critical(self, msg, *args, **kwargs){
+    function critical( msg, *args, **kwargs){
         """
         Delegate a critical call to the underlying logger, after adding
         contextual information from this adapter instance.
         """;
-        msg, kwargs = self.process(msg, kwargs);
-        self.logger.critical(msg, *args, **kwargs);
+        msg, kwargs = this.process(msg, kwargs);
+        this.logger.critical(msg, *args, **kwargs);
 
     }
-    def log(self, level, msg, *args, **kwargs){
+    function log( level, msg, *args, **kwargs){
         """
         Delegate a log call to the underlying logger, after adding
         contextual information from this adapter instance.
         """;
-        msg, kwargs = self.process(msg, kwargs);
-        self.logger.log(level, msg, *args, **kwargs);
+        msg, kwargs = this.process(msg, kwargs);
+        this.logger.log(level, msg, *args, **kwargs);
 
     }
-    def isEnabledFor(self, level){
+    function isEnabledFor( level){
         """
         See if the underlying logger is enabled for the specified level.
         """;
-        return self.logger.isEnabledFor(level);
+        return this.logger.isEnabledFor(level);
 
 }
 } root = RootLogger(WARNING);
@@ -1602,7 +1602,7 @@ Logger.manager = Manager(Logger.root);
 
 BASIC_FORMAT = "%(levelname)s:%(name)s:%(message)s";
 
-def basicConfig(**kwargs){
+function basicConfig(**kwargs){
     """
     Do basic configuration for the logging system.
 
@@ -1647,12 +1647,12 @@ def basicConfig(**kwargs){
                 stream = kwargs.get("stream");
                 hdlr = StreamHandler(stream);
             } fs = kwargs.get("format", BASIC_FORMAT);
-            dfs = kwargs.get("datefmt", None);
+            dfs = kwargs.get("datefmt", nil);
             fmt = Formatter(fs, dfs);
             hdlr.setFormatter(fmt);
             root.addHandler(hdlr);
             level = kwargs.get("level");
-            if level is not None{
+            if level is not nil{
                 root.setLevel(level);
     } } } finally{
         _releaseLock();
@@ -1663,7 +1663,7 @@ def basicConfig(**kwargs){
 #---------------------------------------------------------------------------
 
 }
-} def getLogger(name=None){
+} function getLogger(name=nil){
     """
     Return a logger with the specified name, creating it if necessary.
 
@@ -1684,7 +1684,7 @@ def basicConfig(**kwargs){
 #    return root
 
 }
-} def critical(msg, *args, **kwargs){
+} function critical(msg, *args, **kwargs){
     """
     Log a message with severity 'CRITICAL' on the root logger.
     """;
@@ -1695,7 +1695,7 @@ def basicConfig(**kwargs){
 }
 fatal = critical;
 
-def error(msg, *args, **kwargs){
+function error(msg, *args, **kwargs){
     """
     Log a message with severity 'ERROR' on the root logger.
     """;
@@ -1704,7 +1704,7 @@ def error(msg, *args, **kwargs){
     } root.error(msg, *args, **kwargs);
 
 }
-def exception(msg, *args, **kwargs){
+function exception(msg, *args, **kwargs){
     """
     Log a message with severity 'ERROR' on the root logger,
     with exception information.
@@ -1713,7 +1713,7 @@ def exception(msg, *args, **kwargs){
     error(msg, *args, **kwargs);
 
 }
-def warning(msg, *args, **kwargs){
+function warning(msg, *args, **kwargs){
     """
     Log a message with severity 'WARNING' on the root logger.
     """;
@@ -1724,7 +1724,7 @@ def warning(msg, *args, **kwargs){
 }
 warn = warning;
 
-def info(msg, *args, **kwargs){
+function info(msg, *args, **kwargs){
     """
     Log a message with severity 'INFO' on the root logger.
     """;
@@ -1733,7 +1733,7 @@ def info(msg, *args, **kwargs){
     } root.info(msg, *args, **kwargs);
 
 }
-def debug(msg, *args, **kwargs){
+function debug(msg, *args, **kwargs){
     """
     Log a message with severity 'DEBUG' on the root logger.
     """;
@@ -1742,7 +1742,7 @@ def debug(msg, *args, **kwargs){
     } root.debug(msg, *args, **kwargs);
 
 }
-def log(level, msg, *args, **kwargs){
+function log(level, msg, *args, **kwargs){
     """
     Log 'msg % args' with the integer severity 'level' on the root logger.
     """;
@@ -1751,14 +1751,14 @@ def log(level, msg, *args, **kwargs){
     } root.log(level, msg, *args, **kwargs);
 
 }
-def disable(level){
+function disable(level){
     """
     Disable all logging calls of severity 'level' and below.
     """;
     root.manager.disable = level;
 
 }
-def shutdown(handlerList=_handlerList){
+function shutdown(handlerList=_handlerList){
     """
     Perform any cleanup actions in the logging system (e.g. flushing
     buffers).
@@ -1805,23 +1805,23 @@ class NullHandler(Handler){
     a NullHandler and add it to the top-level logger of the library module or
     package.
     """;
-    def handle(self, record){
+    function handle( record){
         pass;
 
     }
-    def emit(self, record){
+    function emit( record){
         pass;
 
     }
-    def createLock(self){
-        self.lock = None;
+    function createLock(){
+        this.lock = nil;
 
 # Warnings integration
 
 }
-} _warnings_showwarning = None;
+} _warnings_showwarning = nil;
 
-def _showwarning(message, category, filename, lineno, file=None, line=None){
+function _showwarning(message, category, filename, lineno, file=nil, line=nil){
     """
     Implementation of showwarnings which redirects to logging, which will first
     check to see if the file parameter is None. If a file is specified, it will
@@ -1829,8 +1829,8 @@ def _showwarning(message, category, filename, lineno, file=None, line=None){
     it will call warnings.formatwarning and will log the resulting string to a
     warnings logger named "py.warnings" with level logging.WARNING.
     """;
-    if file is not None{
-        if _warnings_showwarning is not None{
+    if file is not nil{
+        if _warnings_showwarning is not nil{
             _warnings_showwarning(message, category, filename, lineno, file, line);
     } } else{
         s = warnings.formatwarning(message, category, filename, lineno, line);
@@ -1840,7 +1840,7 @@ def _showwarning(message, category, filename, lineno, file=None, line=None){
         } logger.warning("%s", s);
 
 }
-} def captureWarnings(capture){
+} function captureWarnings(capture){
     """
     If capture is true, redirect all warnings to the logging package.
     If capture is False, ensure that warnings are not redirected to logging
@@ -1848,13 +1848,13 @@ def _showwarning(message, category, filename, lineno, file=None, line=None){
     """;
     global _warnings_showwarning;
     if capture{
-        if _warnings_showwarning is None{
+        if _warnings_showwarning is nil{
             _warnings_showwarning = warnings.showwarning;
             warnings.showwarning = _showwarning;
     } } else{
-        if _warnings_showwarning is not None{
+        if _warnings_showwarning is not nil{
             warnings.showwarning = _warnings_showwarning;
-            _warnings_showwarning = None;
+            _warnings_showwarning = nil;
 
 }
 } }

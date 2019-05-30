@@ -17,7 +17,7 @@ class Standard_Suite_Events{
         'saving' : 'savo',
     };
 
-    def close(self, _object, _attributes={}, **_arguments){
+    function close( _object, _attributes={}, **_arguments){
         """close: Close an object.
         Required argument: the object for the command
         Keyword argument saving_in: The file in which to save the object.
@@ -27,12 +27,12 @@ class Standard_Suite_Events{
         _code = 'core';
         _subcode = 'clos';
 
-        aetools.keysubst(_arguments, self._argmap_close);
+        aetools.keysubst(_arguments, this._argmap_close);
         _arguments['----'] = _object;
 
         aetools.enumsubst(_arguments, 'savo', _Enum_savo);
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -46,7 +46,7 @@ class Standard_Suite_Events{
         'each' : 'kocl',
     };
 
-    def count(self, _object, _attributes={}, **_arguments){
+    function count( _object, _attributes={}, **_arguments){
         """count: Return the number of elements of a particular class within an object.
         Required argument: the object for the command
         Keyword argument each: The class of objects to be counted.
@@ -56,11 +56,11 @@ class Standard_Suite_Events{
         _code = 'core';
         _subcode = 'cnte';
 
-        aetools.keysubst(_arguments, self._argmap_count);
+        aetools.keysubst(_arguments, this._argmap_count);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -70,7 +70,7 @@ class Standard_Suite_Events{
             return _arguments['----'];
 
     }
-    } def delete(self, _object, _attributes={}, **_arguments){
+    } function delete( _object, _attributes={}, **_arguments){
         """delete: Delete an object.
         Required argument: the object for the command
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -78,11 +78,11 @@ class Standard_Suite_Events{
         _code = 'core';
         _subcode = 'delo';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -97,7 +97,7 @@ class Standard_Suite_Events{
         'with_properties' : 'prdt',
     };
 
-    def duplicate(self, _object, _attributes={}, **_arguments){
+    function duplicate( _object, _attributes={}, **_arguments){
         """duplicate: Copy object(s) and put the copies at a new location.
         Required argument: the object for the command
         Keyword argument to: The location for the new object(s).
@@ -107,11 +107,11 @@ class Standard_Suite_Events{
         _code = 'core';
         _subcode = 'clon';
 
-        aetools.keysubst(_arguments, self._argmap_duplicate);
+        aetools.keysubst(_arguments, this._argmap_duplicate);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -121,7 +121,7 @@ class Standard_Suite_Events{
             return _arguments['----'];
 
     }
-    } def exists(self, _object, _attributes={}, **_arguments){
+    } function exists( _object, _attributes={}, **_arguments){
         """exists: Verify if an object exists.
         Required argument: the object for the command
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -130,11 +130,11 @@ class Standard_Suite_Events{
         _code = 'core';
         _subcode = 'doex';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -144,7 +144,7 @@ class Standard_Suite_Events{
             return _arguments['----'];
 
     }
-    } def get(self, _object, _attributes={}, **_arguments){
+    } function get( _object, _attributes={}, **_arguments){
         """get: Get the data for an object.
         Required argument: the object for the command
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -153,11 +153,11 @@ class Standard_Suite_Events{
         _code = 'core';
         _subcode = 'getd';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -174,7 +174,7 @@ class Standard_Suite_Events{
         'with_properties' : 'prdt',
     };
 
-    def make(self, _no_object=None, _attributes={}, **_arguments){
+    function make( _no_object=nil, _attributes={}, **_arguments){
         """make: Make a new object.
         Keyword argument at: The location at which to insert the object.
         Keyword argument new: The class of the new object.
@@ -186,11 +186,11 @@ class Standard_Suite_Events{
         _code = 'core';
         _subcode = 'crel';
 
-        aetools.keysubst(_arguments, self._argmap_make);
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        aetools.keysubst(_arguments, this._argmap_make);
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -204,7 +204,7 @@ class Standard_Suite_Events{
         'to' : 'insh',
     };
 
-    def move(self, _object, _attributes={}, **_arguments){
+    function move( _object, _attributes={}, **_arguments){
         """move: Move object(s) to a new location.
         Required argument: the object for the command
         Keyword argument to: The new location for the object(s).
@@ -213,11 +213,11 @@ class Standard_Suite_Events{
         _code = 'core';
         _subcode = 'move';
 
-        aetools.keysubst(_arguments, self._argmap_move);
+        aetools.keysubst(_arguments, this._argmap_move);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -227,7 +227,7 @@ class Standard_Suite_Events{
             return _arguments['----'];
 
     }
-    } def open(self, _object=None, _attributes={}, **_arguments){
+    } function open( _object=nil, _attributes={}, **_arguments){
         """open: Open an object.
         Required argument: list of objects
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -235,11 +235,11 @@ class Standard_Suite_Events{
         _code = 'aevt';
         _subcode = 'odoc';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -249,7 +249,7 @@ class Standard_Suite_Events{
             return _arguments['----'];
 
     }
-    } def print_(self, _object=None, _attributes={}, **_arguments){
+    } function print_( _object=nil, _attributes={}, **_arguments){
         """print: Print an object.
         Required argument: list of objects
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -257,11 +257,11 @@ class Standard_Suite_Events{
         _code = 'aevt';
         _subcode = 'pdoc';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -275,7 +275,7 @@ class Standard_Suite_Events{
         'saving' : 'savo',
     };
 
-    def quit(self, _object, _attributes={}, **_arguments){
+    function quit( _object, _attributes={}, **_arguments){
         """quit: Quit an application.
         Required argument: the object for the command
         Keyword argument saving: Specifies whether changes should be saved before quitting.
@@ -284,12 +284,12 @@ class Standard_Suite_Events{
         _code = 'aevt';
         _subcode = 'quit';
 
-        aetools.keysubst(_arguments, self._argmap_quit);
+        aetools.keysubst(_arguments, this._argmap_quit);
         _arguments['----'] = _object;
 
         aetools.enumsubst(_arguments, 'savo', _Enum_savo);
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -304,7 +304,7 @@ class Standard_Suite_Events{
         'as' : 'fltp',
     };
 
-    def save(self, _object, _attributes={}, **_arguments){
+    function save( _object, _attributes={}, **_arguments){
         """save: Save an object.
         Required argument: the object for the command
         Keyword argument in_: The file in which to save the object.
@@ -314,11 +314,11 @@ class Standard_Suite_Events{
         _code = 'core';
         _subcode = 'save';
 
-        aetools.keysubst(_arguments, self._argmap_save);
+        aetools.keysubst(_arguments, this._argmap_save);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -332,7 +332,7 @@ class Standard_Suite_Events{
         'to' : 'data',
     };
 
-    def set(self, _object, _attributes={}, **_arguments){
+    function set( _object, _attributes={}, **_arguments){
         """set: Set an object's data.
         Required argument: the object for the command
         Keyword argument to: The new value.
@@ -341,11 +341,11 @@ class Standard_Suite_Events{
         _code = 'core';
         _subcode = 'setd';
 
-        aetools.keysubst(_arguments, self._argmap_set);
+        aetools.keysubst(_arguments, this._argmap_set);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);

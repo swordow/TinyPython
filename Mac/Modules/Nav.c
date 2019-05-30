@@ -56,7 +56,7 @@ my_eventProc(NavEventCallbackMessage callBackSelector,
         PyErr_Print();
         return;
     }
-    if ( pyfunc == Py_None ) {
+    if ( pyfunc == Py_Nil ) {
         return;
     }
     rv = PyObject_CallFunction(pyfunc, "ls#", (long)callBackSelector,
@@ -244,8 +244,8 @@ nav_NavTranslateFile(navrrobject *self, PyObject *args)
         PyErr_Mac(ErrorObject, err);
         return NULL;
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static char nav_NavCompleteSave__doc__[] =
@@ -265,8 +265,8 @@ nav_NavCompleteSave(navrrobject *self, PyObject *args)
         PyErr_Mac(ErrorObject, err);
         return NULL;
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 
@@ -776,8 +776,8 @@ nav_NavCustomControl(PyObject *self, PyObject *args)
 
     if (!PyArg_ParseTuple(args, ""))
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif
 
@@ -821,8 +821,8 @@ nav_NavLoad(PyObject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, ""))
         return NULL;
     NavLoad();
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static char nav_NavUnload__doc__[] =
@@ -836,8 +836,8 @@ nav_NavUnload(PyObject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, ""))
         return NULL;
     NavUnload();
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static char nav_NavLibraryVersion__doc__[] =

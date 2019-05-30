@@ -16,7 +16,7 @@ _PR2_COMPATIBLE_ = 0;
 _PR3_COMPATIBLE_ = 0;
 _R4_COMPATIBLE_ = 1;
 _R4_5_COMPATIBLE_ = 1;
-def _UNUSED(x){ return x;
+function _UNUSED(x){ return x;}
 
 
 # Included from sys/types.h
@@ -24,7 +24,7 @@ def _UNUSED(x){ return x;
 # Included from time.h
 
 # Included from be_setup.h
-def __std(ref){ return ref;
+function __std(ref){ return ref;}
 
 __be_os = 2;
 __dest_os = __be_os;
@@ -203,105 +203,105 @@ TRUE = 1;
 # Included from TypeConstants.h
 B_HOST_IS_LENDIAN = 1;
 B_HOST_IS_BENDIAN = 0;
-def B_HOST_TO_LENDIAN_DOUBLE(arg){ return (double)(arg);
+function B_HOST_TO_LENDIAN_DOUBLE(arg){ return (double)(arg);}
 
-def B_HOST_TO_LENDIAN_FLOAT(arg){ return (float)(arg);
+function B_HOST_TO_LENDIAN_FLOAT(arg){ return (float)(arg);}
 
-def B_HOST_TO_LENDIAN_INT64(arg){ return (uint64)(arg);
+function B_HOST_TO_LENDIAN_INT64(arg){ return (uint64)(arg);}
 
-def B_HOST_TO_LENDIAN_INT32(arg){ return (uint32)(arg);
+function B_HOST_TO_LENDIAN_INT32(arg){ return (uint32)(arg);}
 
-def B_HOST_TO_LENDIAN_INT16(arg){ return (uint16)(arg);
+function B_HOST_TO_LENDIAN_INT16(arg){ return (uint16)(arg);}
 
-def B_HOST_TO_BENDIAN_DOUBLE(arg){ return __swap_double(arg);
+function B_HOST_TO_BENDIAN_DOUBLE(arg){ return __swap_double(arg);}
 
-def B_HOST_TO_BENDIAN_FLOAT(arg){ return __swap_float(arg);
+function B_HOST_TO_BENDIAN_FLOAT(arg){ return __swap_float(arg);}
 
-def B_HOST_TO_BENDIAN_INT64(arg){ return __swap_int64(arg);
+function B_HOST_TO_BENDIAN_INT64(arg){ return __swap_int64(arg);}
 
-def B_HOST_TO_BENDIAN_INT32(arg){ return __swap_int32(arg);
+function B_HOST_TO_BENDIAN_INT32(arg){ return __swap_int32(arg);}
 
-def B_HOST_TO_BENDIAN_INT16(arg){ return __swap_int16(arg);
+function B_HOST_TO_BENDIAN_INT16(arg){ return __swap_int16(arg);}
 
-def B_LENDIAN_TO_HOST_DOUBLE(arg){ return (double)(arg);
+function B_LENDIAN_TO_HOST_DOUBLE(arg){ return (double)(arg);}
 
-def B_LENDIAN_TO_HOST_FLOAT(arg){ return (float)(arg);
+function B_LENDIAN_TO_HOST_FLOAT(arg){ return (float)(arg);}
 
-def B_LENDIAN_TO_HOST_INT64(arg){ return (uint64)(arg);
+function B_LENDIAN_TO_HOST_INT64(arg){ return (uint64)(arg);}
 
-def B_LENDIAN_TO_HOST_INT32(arg){ return (uint32)(arg);
+function B_LENDIAN_TO_HOST_INT32(arg){ return (uint32)(arg);}
 
-def B_LENDIAN_TO_HOST_INT16(arg){ return (uint16)(arg);
+function B_LENDIAN_TO_HOST_INT16(arg){ return (uint16)(arg);}
 
-def B_BENDIAN_TO_HOST_DOUBLE(arg){ return __swap_double(arg);
+function B_BENDIAN_TO_HOST_DOUBLE(arg){ return __swap_double(arg);}
 
-def B_BENDIAN_TO_HOST_FLOAT(arg){ return __swap_float(arg);
+function B_BENDIAN_TO_HOST_FLOAT(arg){ return __swap_float(arg);}
 
-def B_BENDIAN_TO_HOST_INT64(arg){ return __swap_int64(arg);
+function B_BENDIAN_TO_HOST_INT64(arg){ return __swap_int64(arg);}
 
-def B_BENDIAN_TO_HOST_INT32(arg){ return __swap_int32(arg);
+function B_BENDIAN_TO_HOST_INT32(arg){ return __swap_int32(arg);}
 
-def B_BENDIAN_TO_HOST_INT16(arg){ return __swap_int16(arg);
+function B_BENDIAN_TO_HOST_INT16(arg){ return __swap_int16(arg);}
 
 B_HOST_IS_LENDIAN = 0;
 B_HOST_IS_BENDIAN = 1;
-def B_HOST_TO_LENDIAN_DOUBLE(arg){ return __swap_double(arg);
+function B_HOST_TO_LENDIAN_DOUBLE(arg){ return __swap_double(arg);}
 
-def B_HOST_TO_LENDIAN_FLOAT(arg){ return __swap_float(arg);
+function B_HOST_TO_LENDIAN_FLOAT(arg){ return __swap_float(arg);}
 
-def B_HOST_TO_LENDIAN_INT64(arg){ return __swap_int64(arg);
+function B_HOST_TO_LENDIAN_INT64(arg){ return __swap_int64(arg);}
 
-def B_HOST_TO_LENDIAN_INT32(arg){ return __swap_int32(arg);
+function B_HOST_TO_LENDIAN_INT32(arg){ return __swap_int32(arg);}
 
-def B_HOST_TO_LENDIAN_INT16(arg){ return __swap_int16(arg);
+function B_HOST_TO_LENDIAN_INT16(arg){ return __swap_int16(arg);}
 
-def B_HOST_TO_BENDIAN_DOUBLE(arg){ return (double)(arg);
+function B_HOST_TO_BENDIAN_DOUBLE(arg){ return (double)(arg);}
 
-def B_HOST_TO_BENDIAN_FLOAT(arg){ return (float)(arg);
+function B_HOST_TO_BENDIAN_FLOAT(arg){ return (float)(arg);}
 
-def B_HOST_TO_BENDIAN_INT64(arg){ return (uint64)(arg);
+function B_HOST_TO_BENDIAN_INT64(arg){ return (uint64)(arg);}
 
-def B_HOST_TO_BENDIAN_INT32(arg){ return (uint32)(arg);
+function B_HOST_TO_BENDIAN_INT32(arg){ return (uint32)(arg);}
 
-def B_HOST_TO_BENDIAN_INT16(arg){ return (uint16)(arg);
+function B_HOST_TO_BENDIAN_INT16(arg){ return (uint16)(arg);}
 
-def B_LENDIAN_TO_HOST_DOUBLE(arg){ return __swap_double(arg);
+function B_LENDIAN_TO_HOST_DOUBLE(arg){ return __swap_double(arg);}
 
-def B_LENDIAN_TO_HOST_FLOAT(arg){ return __swap_float(arg);
+function B_LENDIAN_TO_HOST_FLOAT(arg){ return __swap_float(arg);}
 
-def B_LENDIAN_TO_HOST_INT64(arg){ return __swap_int64(arg);
+function B_LENDIAN_TO_HOST_INT64(arg){ return __swap_int64(arg);}
 
-def B_LENDIAN_TO_HOST_INT32(arg){ return __swap_int32(arg);
+function B_LENDIAN_TO_HOST_INT32(arg){ return __swap_int32(arg);}
 
-def B_LENDIAN_TO_HOST_INT16(arg){ return __swap_int16(arg);
+function B_LENDIAN_TO_HOST_INT16(arg){ return __swap_int16(arg);}
 
-def B_BENDIAN_TO_HOST_DOUBLE(arg){ return (double)(arg);
+function B_BENDIAN_TO_HOST_DOUBLE(arg){ return (double)(arg);}
 
-def B_BENDIAN_TO_HOST_FLOAT(arg){ return (float)(arg);
+function B_BENDIAN_TO_HOST_FLOAT(arg){ return (float)(arg);}
 
-def B_BENDIAN_TO_HOST_INT64(arg){ return (uint64)(arg);
+function B_BENDIAN_TO_HOST_INT64(arg){ return (uint64)(arg);}
 
-def B_BENDIAN_TO_HOST_INT32(arg){ return (uint32)(arg);
+function B_BENDIAN_TO_HOST_INT32(arg){ return (uint32)(arg);}
 
-def B_BENDIAN_TO_HOST_INT16(arg){ return (uint16)(arg);
+function B_BENDIAN_TO_HOST_INT16(arg){ return (uint16)(arg);}
 
-def B_SWAP_DOUBLE(arg){ return __swap_double(arg);
+function B_SWAP_DOUBLE(arg){ return __swap_double(arg);}
 
-def B_SWAP_FLOAT(arg){ return __swap_float(arg);
+function B_SWAP_FLOAT(arg){ return __swap_float(arg);}
 
-def B_SWAP_INT64(arg){ return __swap_int64(arg);
+function B_SWAP_INT64(arg){ return __swap_int64(arg);}
 
-def B_SWAP_INT32(arg){ return __swap_int32(arg);
+function B_SWAP_INT32(arg){ return __swap_int32(arg);}
 
-def B_SWAP_INT16(arg){ return __swap_int16(arg);
+function B_SWAP_INT16(arg){ return __swap_int16(arg);}
 
-def htonl(x){ return B_HOST_TO_BENDIAN_INT32(x);
+function htonl(x){ return B_HOST_TO_BENDIAN_INT32(x);}
 
-def ntohl(x){ return B_BENDIAN_TO_HOST_INT32(x);
+function ntohl(x){ return B_BENDIAN_TO_HOST_INT32(x);}
 
-def htons(x){ return B_HOST_TO_BENDIAN_INT16(x);
+function htons(x){ return B_HOST_TO_BENDIAN_INT16(x);}
 
-def ntohs(x){ return B_BENDIAN_TO_HOST_INT16(x);
+function ntohs(x){ return B_BENDIAN_TO_HOST_INT16(x);}
 
 AF_INET = 1;
 INADDR_ANY = 0x00000000;
@@ -322,6 +322,6 @@ B_UDP_MAX_SIZE = (65536 - 1024);
 FD_SETSIZE = 256;
 FDSETSIZE = FD_SETSIZE;
 NFDBITS = 32;
-def _FDMSKNO(fd){ return ((fd) / NFDBITS);
+function _FDMSKNO(fd){ return ((fd) / NFDBITS);}
 
-def _FDBITNO(fd){ return ((fd) % NFDBITS);
+function _FDBITNO(fd){ return ((fd) % NFDBITS);}

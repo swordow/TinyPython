@@ -59,7 +59,7 @@ try{
     import itertools;
 } except ImportError{
     # Must be an older Python version (see timeit() below)
-    itertools = None;
+    itertools = nil;
 
 }
 __all__ = ["Timer"];
@@ -89,14 +89,14 @@ def inner(_it, _timer%(init)s):
     return _t1 - _t0
 """;
 
-def reindent(src, indent){
+function reindent(src, indent){
     """Helper to reindent a multi-line statement.""";
     return src.replace("\n", "\n" + " "*indent);
 
 }
-def _template_func(setup, func){
+function _template_func(setup, func){
     """Create a timer function. Used if the "statement" is a callable.""";
-    def inner(_it, _timer, _func=func){
+    function inner(_it, _timer, _func=func){
         setup();
         _t0 = _timer();
         for _i in _it{
@@ -122,9 +122,9 @@ class Timer{
     multi-line string literals.
     """;
 
-    def __init__(self, stmt="pass", setup="pass", timer=default_timer){
+    function __init__( stmt="pass", setup="pass", timer=default_timer){
         """Constructor.  See class doc string.""";
-        self.timer = timer;
+        this.timer = timer;
         ns = {};
         if isinstance(stmt, basestring){
             # Check that the code can be compiled outside a function
@@ -143,24 +143,24 @@ class Timer{
                 ns['_setup'] = setup;
             } else{
                 raise ValueError("setup is neither a string nor callable");
-            } self.src = src; # Save for traceback display
+            } this.src = src; # Save for traceback display
             code = compile(src, dummy_src_name, "exec");
             exec code in globals(), ns;
-            self.inner = ns["inner"];
+            this.inner = ns["inner"];
         } elif hasattr(stmt, '__call__'){
-            self.src = None;
+            this.src = nil;
             if isinstance(setup, basestring){
                 _setup = setup;
-                def setup(){
+                function setup(){
                     exec _setup in globals(), ns;
             } } elif not hasattr(setup, '__call__'){
                 raise ValueError("setup is neither a string nor callable");
-            } self.inner = _template_func(setup, stmt);
+            } this.inner = _template_func(setup, stmt);
         } else{
             raise ValueError("stmt is neither a string nor callable");
 
     }
-    } def print_exc(self, file=None){
+    } function print_exc( file=nil){
         """Helper to print a traceback from the timed code.
 
         Typical use:
@@ -178,10 +178,10 @@ class Timer{
         sent; it defaults to sys.stderr.
         """;
         import linecache, traceback;
-        if self.src is not None{
-            linecache.cache[dummy_src_name] = (len(self.src),
-                                               None,
-                                               self.src.split("\n"),
+        if this.src is not nil{
+            linecache.cache[dummy_src_name] = (len(this.src),
+                                               nil,
+                                               this.src.split("\n"),
                                                dummy_src_name);
         # else the source is already stored somewhere else
 
@@ -189,7 +189,7 @@ class Timer{
         traceback.print_exc(file=file);
 
     }
-    def timeit(self, number=default_number){
+    function timeit( number=default_number){
         """Time 'number' executions of the main statement.
 
         To be precise, this executes the setup statement once, and
@@ -200,20 +200,20 @@ class Timer{
         the timer function to be used are passed to the constructor.
         """;
         if itertools{
-            it = itertools.repeat(None, number);
+            it = itertools.repeat(nil, number);
         } else{
-            it = [None] * number;
+            it = [nil] * number;
         } gcold = gc.isenabled();
         gc.disable();
         try{
-            timing = self.inner(it, self.timer);
+            timing = this.inner(it, this.timer);
         } finally{
             if gcold{
                 gc.enable();
         } } return timing;
 
     }
-    def repeat(self, repeat=default_repeat, number=default_number){
+    function repeat( repeat=default_repeat, number=default_number){
         """Call timeit() a few times.
 
         This is a convenience function that calls the timeit()
@@ -235,24 +235,24 @@ class Timer{
         """;
         r = [];
         for i in range(repeat){
-            t = self.timeit(number);
+            t = this.timeit(number);
             r.append(t);
         } return r;
 
 }
-} def timeit(stmt="pass", setup="pass", timer=default_timer,
+} function timeit(stmt="pass", setup="pass", timer=default_timer,
            number=default_number){
     """Convenience function to create Timer object and call timeit method.""";
     return Timer(stmt, setup, timer).timeit(number);
 
 }
-def repeat(stmt="pass", setup="pass", timer=default_timer,
+function repeat(stmt="pass", setup="pass", timer=default_timer,
            repeat=default_repeat, number=default_number){
     """Convenience function to create Timer object and call repeat method.""";
     return Timer(stmt, setup, timer).repeat(repeat, number);
 
 }
-def main(args=None, _wrap_timer=None){
+function main(args=nil, _wrap_timer=nil){
     """Main program, used when run as a script.
 
     The optional 'args' argument specifies the command line to be parsed,
@@ -269,7 +269,7 @@ def main(args=None, _wrap_timer=None){
     is not None, it must be a callable that accepts a timer function
     and returns another timer function (used for unit testing).
     """;
-    if args is None{
+    if args is nil{
         args = sys.argv[1:];
     } import getopt;
     try{
@@ -313,7 +313,7 @@ def main(args=None, _wrap_timer=None){
     # directory)
     import os;
     sys.path.insert(0, os.curdir);
-    if _wrap_timer is not None{
+    if _wrap_timer is not nil{
         timer = _wrap_timer(timer);
     } t = Timer(stmt, setup, timer);
     if number == 0{
@@ -348,7 +348,7 @@ def main(args=None, _wrap_timer=None){
         } else{
             sec = msec / 1000;
             print "best of %d: %.*g sec per loop" % (repeat, precision, sec);
-    } } return None;
+    } } return nil;
 
 }
 if __name__ == "__main__"{

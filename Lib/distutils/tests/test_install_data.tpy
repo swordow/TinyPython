@@ -13,8 +13,8 @@ class InstallDataTestCase(support.TempdirManager,
                           support.EnvironGuard,
                           unittest.TestCase){
 
-    def test_simple_run(self){
-        pkg_dir, dist = self.create_dist();
+    function test_simple_run(){
+        pkg_dir, dist = this.create_dist();
         cmd = install_data(dist);
         cmd.install_dir = inst = os.path.join(pkg_dir, 'inst');
 
@@ -22,24 +22,24 @@ class InstallDataTestCase(support.TempdirManager,
         #  - simple files
         #  - a tuple with a path, and a list of file
         one = os.path.join(pkg_dir, 'one');
-        self.write_file(one, 'xxx');
+        this.write_file(one, 'xxx');
         inst2 = os.path.join(pkg_dir, 'inst2');
         two = os.path.join(pkg_dir, 'two');
-        self.write_file(two, 'xxx');
+        this.write_file(two, 'xxx');
 
         cmd.data_files = [one, (inst2, [two])];
-        self.assertEqual(cmd.get_inputs(), [one, (inst2, [two])]);
+        this.assertEqual(cmd.get_inputs(), [one, (inst2, [two])]);
 
         # let's run the command
         cmd.ensure_finalized();
         cmd.run();
 
         # let's check the result
-        self.assertEqual(len(cmd.get_outputs()), 2);
+        this.assertEqual(len(cmd.get_outputs()), 2);
         rtwo = os.path.split(two)[-1];
-        self.assertTrue(os.path.exists(os.path.join(inst2, rtwo)));
+        this.assertTrue(os.path.exists(os.path.join(inst2, rtwo)));
         rone = os.path.split(one)[-1];
-        self.assertTrue(os.path.exists(os.path.join(inst, rone)));
+        this.assertTrue(os.path.exists(os.path.join(inst, rone)));
         cmd.outfiles = [];
 
         # let's try with warn_dir one
@@ -48,9 +48,9 @@ class InstallDataTestCase(support.TempdirManager,
         cmd.run();
 
         # let's check the result
-        self.assertEqual(len(cmd.get_outputs()), 2);
-        self.assertTrue(os.path.exists(os.path.join(inst2, rtwo)));
-        self.assertTrue(os.path.exists(os.path.join(inst, rone)));
+        this.assertEqual(len(cmd.get_outputs()), 2);
+        this.assertTrue(os.path.exists(os.path.join(inst2, rtwo)));
+        this.assertTrue(os.path.exists(os.path.join(inst, rone)));
         cmd.outfiles = [];
 
         # now using root and empty dir
@@ -58,7 +58,7 @@ class InstallDataTestCase(support.TempdirManager,
         inst3 = os.path.join(cmd.install_dir, 'inst3');
         inst4 = os.path.join(pkg_dir, 'inst4');
         three = os.path.join(cmd.install_dir, 'three');
-        self.write_file(three, 'xx');
+        this.write_file(three, 'xx');
         cmd.data_files = [one, (inst2, [two]),
                           ('inst3', [three]),
                           (inst4, [])];
@@ -66,12 +66,12 @@ class InstallDataTestCase(support.TempdirManager,
         cmd.run();
 
         # let's check the result
-        self.assertEqual(len(cmd.get_outputs()), 4);
-        self.assertTrue(os.path.exists(os.path.join(inst2, rtwo)));
-        self.assertTrue(os.path.exists(os.path.join(inst, rone)));
+        this.assertEqual(len(cmd.get_outputs()), 4);
+        this.assertTrue(os.path.exists(os.path.join(inst2, rtwo)));
+        this.assertTrue(os.path.exists(os.path.join(inst, rone)));
 
 }
-} def test_suite(){
+} function test_suite(){
     return unittest.makeSuite(InstallDataTestCase);
 
 }

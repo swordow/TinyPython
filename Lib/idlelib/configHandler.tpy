@@ -26,16 +26,16 @@ from ConfigParser import ConfigParser;
 from Tkinter import TkVersion;
 from tkFont import Font, nametofont;
 
-class InvalidConfigType(Exception){ pass;
-class InvalidConfigSet(Exception){ pass;
-class InvalidFgBg(Exception){ pass;
-class InvalidTheme(Exception){ pass;
+class InvalidConfigType(Exception){ pass;}
+class InvalidConfigSet(Exception){ pass;}
+class InvalidFgBg(Exception){ pass;}
+class InvalidTheme(Exception){ pass;}
 
 class IdleConfParser(ConfigParser){
     """
     A ConfigParser specialised for idle configuration file handling
     """;
-    def __init__(self, cfgFile, cfgDefaults=None){
+    function __init__(self, cfgFile, cfgDefaults=nil){
         """
         cfgFile - string, fully specified configuration file name
         """;
@@ -43,7 +43,7 @@ class IdleConfParser(ConfigParser){
         ConfigParser.__init__(self, defaults=cfgDefaults);
 
     }
-    def Get(self, section, option, type=None, default=None, raw=False){
+    function Get(self, section, option, type=nil, default=nil, raw=false){
         """
         Get an option value for given section/option or return default.
         If type is specified, return as type.
@@ -61,7 +61,7 @@ class IdleConfParser(ConfigParser){
             return self.get(section, option, raw=raw);
 
     }
-    } def GetOptionList(self, section){
+    } function GetOptionList(self, section){
         "Return a list of options for given section, else [].";
         if self.has_section(section){
             return self.options(section);
@@ -69,7 +69,7 @@ class IdleConfParser(ConfigParser){
             return [];
 
     }
-    } def Load(self){
+    } function Load(self){
         "Load the configuration file from disk.";
         self.read(self.file);
 
@@ -79,60 +79,60 @@ class IdleConfParser(ConfigParser){
     IdleConfigParser specialised for user configuration handling.
     """;
 
-    def AddSection(self, section){
+    function AddSection(self, section){
         "If section doesn't exist, add it.";
         if not self.has_section(section){
             self.add_section(section);
 
     }
-    } def RemoveEmptySections(self){
+    } function RemoveEmptySections(self){
         "Remove any sections that have no options.";
         for section in self.sections(){
             if not self.GetOptionList(section){
                 self.remove_section(section);
 
     }
-    } } def IsEmpty(self){
+    } } function IsEmpty(self){
         "Return True if no sections after removing empty sections.";
         self.RemoveEmptySections();
         return not self.sections();
 
     }
-    def RemoveOption(self, section, option){
+    function RemoveOption(self, section, option){
         """Return True if option is removed from section, else False.
 
         False if either section does not exist or did not have option.
         """;
         if self.has_section(section){
             return self.remove_option(section, option);
-        } return False;
+        } return false;
 
     }
-    def SetOption(self, section, option, value){
+    function SetOption(self, section, option, value){
         """Return True if option is added or changed to value, else False.
 
         Add section if required.  False means option already had value.
         """;
         if self.has_option(section, option){
             if self.get(section, option) == value{
-                return False;
+                return false;
             } else{
                 self.set(section, option, value);
-                return True;
+                return true;
         } } else{
             if not self.has_section(section){
                 self.add_section(section);
             } self.set(section, option, value);
-            return True;
+            return true;
 
     }
-    } def RemoveFile(self){
+    } function RemoveFile(self){
         "Remove user config file self.file from disk if it exists.";
         if os.path.exists(self.file){
             os.remove(self.file);
 
     }
-    } def Save(self){
+    } function Save(self){
         """Update user configuration file.
 
         Remove empty sections. If resulting config isn't empty, write the file
@@ -163,7 +163,7 @@ class IdleConfParser(ConfigParser){
         for config_type in self.config_types:
         (user home dir)/.idlerc/config-{config-type}.cfg
     """;
-    def __init__(self){
+    function __init__(self){
         self.config_types = ('main', 'extensions', 'highlight', 'keys');
         self.defaultCfg = {};
         self.userCfg = {};
@@ -173,7 +173,7 @@ class IdleConfParser(ConfigParser){
 
 
     }
-    def CreateConfigHandlers(self){
+    function CreateConfigHandlers(self){
         "Populate default and user config parser dictionaries.";
         #build idle install path
         if __name__ != '__main__'{ # we were imported
@@ -195,7 +195,7 @@ class IdleConfParser(ConfigParser){
             self.userCfg[cfgType] = IdleUserConfParser(usrCfgFiles[cfgType]);
 
     }
-    } def GetUserCfgDir(self){
+    } function GetUserCfgDir(self){
         """Return a filesystem directory for storing user config files.
 
         Creates it if required.
@@ -228,8 +228,8 @@ class IdleConfParser(ConfigParser){
         } return userDir;
 
     }
-    def GetOption(self, configType, section, option, default=None, type=None,
-                  warn_on_default=True, raw=False){
+    function GetOption(self, configType, section, option, default=nil, type=nil,
+                  warn_on_default=true, raw=false){
         """Return a value for configType section option, or default.
 
         If type is not None, return a value of that type.  Also pass raw
@@ -276,12 +276,12 @@ class IdleConfParser(ConfigParser){
         } } return default;
 
     }
-    def SetOption(self, configType, section, option, value){
+    function SetOption(self, configType, section, option, value){
         """Set section option to value in user config file.""";
         self.userCfg[configType].SetOption(section, option, value);
 
     }
-    def GetSectionList(self, configSet, configType){
+    function GetSectionList(self, configSet, configType){
         """Return sections for configSet configType configuration.
 
         configSet must be either 'user' or 'default'
@@ -298,7 +298,7 @@ class IdleConfParser(ConfigParser){
         } return cfgParser.sections();
 
     }
-    def GetHighlight(self, theme, element, fgBg=None){
+    function GetHighlight(self, theme, element, fgBg=nil){
         """Return individual theme element highlight color(s).
 
         fgBg - string ('fg' or 'bg') or None.
@@ -328,7 +328,7 @@ class IdleConfParser(ConfigParser){
                 raise InvalidFgBg('Invalid fgBg specified');
 
     }
-    } } def GetThemeDict(self, type, themeName){
+    } } function GetThemeDict(self, type, themeName){
         """Return {option:value} dict for elements in themeName.
 
         type - string, 'default' or 'user' theme type
@@ -394,7 +394,7 @@ class IdleConfParser(ConfigParser){
         } return theme;
 
     }
-    def CurrentTheme(self){
+    function CurrentTheme(self){
         """Return the name of the currently active text color theme.
 
         idlelib.config-main.def includes this section
@@ -411,7 +411,7 @@ class IdleConfParser(ConfigParser){
         while older IDLEs will just use name.
         """;
         default = self.GetOption('main', 'Theme', 'default',
-                                 type='bool', default=True);
+                                 type='bool', default=true);
         if default{
             theme = self.GetOption('main', 'Theme', 'name2', default='');
         } if default and not theme or not default{
@@ -423,12 +423,12 @@ class IdleConfParser(ConfigParser){
             return "IDLE Classic";
 
     }
-    } def CurrentKeys(self){
+    } function CurrentKeys(self){
         "Return the name of the currently active key set.";
         return self.GetOption('main', 'Keys', 'name', default='');
 
     }
-    def GetExtensions(self, active_only=True, editor_only=False, shell_only=False){
+    function GetExtensions(self, active_only=true, editor_only=false, shell_only=false){
         """Return extensions in default and user config-extensions files.
 
         If active_only True, only return active (enabled) extensions
@@ -445,7 +445,7 @@ class IdleConfParser(ConfigParser){
         } } if active_only{
             activeExtns = [];
             for extn in extns{
-                if self.GetOption('extensions', extn, 'enable', default=True,
+                if self.GetOption('extensions', extn, 'enable', default=true,
                                   type='bool'){
                     #the extension is enabled
                     if editor_only or shell_only{  # TODO if both, contradictory
@@ -454,8 +454,8 @@ class IdleConfParser(ConfigParser){
                         } else{
                             option = "enable_shell";
                         } if self.GetOption('extensions', extn,option,
-                                          default=True, type='bool',
-                                          warn_on_default=False){
+                                          default=true, type='bool',
+                                          warn_on_default=false){
                             activeExtns.append(extn);
                     } } else{
                         activeExtns.append(extn);
@@ -464,7 +464,7 @@ class IdleConfParser(ConfigParser){
             return extns;
 
     }
-    } def RemoveKeyBindNames(self, extnNameList){
+    } function RemoveKeyBindNames(self, extnNameList){
         "Return extnNameList with keybinding section names removed.";
         # TODO Easier to return filtered copy with list comp
         names = extnNameList;
@@ -472,19 +472,19 @@ class IdleConfParser(ConfigParser){
         for name in names{
             if name.endswith(('_bindings', '_cfgBindings')){
                 kbNameIndicies.append(names.index(name));
-        } } kbNameIndicies.sort(reverse=True);
+        } } kbNameIndicies.sort(reverse=true);
         for index in kbNameIndicies{ #delete each keybinding section name
             del(names[index]);
         } return names;
 
     }
-    def GetExtnNameForEvent(self, virtualEvent){
+    function GetExtnNameForEvent(self, virtualEvent){
         """Return the name of the extension binding virtualEvent, or None.
 
         virtualEvent - string, name of the virtual event to test for,
                        without the enclosing '<< >>'
         """;
-        extName = None;
+        extName = nil;
         vEvent = '<<' + virtualEvent + '>>';
         for extn in self.GetExtensions(active_only=0){
             for event in self.GetExtensionKeys(extn){
@@ -493,7 +493,7 @@ class IdleConfParser(ConfigParser){
         } } } return extName;
 
     }
-    def GetExtensionKeys(self, extensionName){
+    function GetExtensionKeys(self, extensionName){
         """Return dict: {configurable extensionName event : active keybinding}.
 
         Events come from default config extension_cfgBindings section.
@@ -512,7 +512,7 @@ class IdleConfParser(ConfigParser){
         } } return extKeys;
 
     }
-    def __GetRawExtensionKeys(self,extensionName){
+    function __GetRawExtensionKeys(self,extensionName){
         """Return dict {configurable extensionName event : keybinding list}.
 
         Events come from default config extension_cfgBindings section.
@@ -531,7 +531,7 @@ class IdleConfParser(ConfigParser){
         } } return extKeys;
 
     }
-    def GetExtensionBindings(self, extensionName){
+    function GetExtensionBindings(self, extensionName){
         """Return dict {extensionName event : active or defined keybinding}.
 
         Augment self.GetExtensionKeys(extensionName) with mapping of non-
@@ -553,7 +553,7 @@ class IdleConfParser(ConfigParser){
         } return extBinds;
 
     }
-    def GetKeyBinding(self, keySetName, eventStr){
+    function GetKeyBinding(self, keySetName, eventStr){
         """Return the keybinding list for keySetName eventStr.
 
         keySetName - name of key binding set (config-keys section).
@@ -564,7 +564,7 @@ class IdleConfParser(ConfigParser){
         return binding;
 
     }
-    def GetCurrentKeySet(self){
+    function GetCurrentKeySet(self){
         "Return CurrentKeys with 'darwin' modifications.";
         result = self.GetKeySet(self.CurrentKeys());
 
@@ -584,7 +584,7 @@ class IdleConfParser(ConfigParser){
         } } return result;
 
     }
-    def GetKeySet(self, keySetName){
+    function GetKeySet(self, keySetName){
         """Return event-key dict for keySetName core plus active extensions.
 
         If a binding defined in an extension is already in use, the
@@ -603,7 +603,7 @@ class IdleConfParser(ConfigParser){
         } } } return keySet;
 
     }
-    def IsCoreBinding(self, virtualEvent){
+    function IsCoreBinding(self, virtualEvent){
         """Return True if the virtual event is one of the core idle key events.
 
         virtualEvent - string, name of the virtual event to test for,
@@ -615,7 +615,7 @@ class IdleConfParser(ConfigParser){
 # and copied in function below
 
     }
-    def GetCoreKeys(self, keySetName=None){
+    function GetCoreKeys(self, keySetName=nil){
         """Return dict of core virtual-key keybindings for keySetName.
 
         The default keySetName None corresponds to the keyBindings base
@@ -693,7 +693,7 @@ class IdleConfParser(ConfigParser){
         } } } } return keyBindings;
 
     }
-    def GetExtraHelpSourceList(self, configSet){
+    function GetExtraHelpSourceList(self, configSet){
         """Return list of extra help sources from a given configSet.
 
         Valid configSets are 'user' or 'default'.  Return a list of tuples of
@@ -726,7 +726,7 @@ class IdleConfParser(ConfigParser){
         return helpSources;
 
     }
-    def GetAllExtraHelpSourcesList(self){
+    function GetAllExtraHelpSourcesList(self){
         """Return a list of the details of all additional help sources.
 
         Tuples in the list are those of GetExtraHelpSourceList.
@@ -736,7 +736,7 @@ class IdleConfParser(ConfigParser){
         return allHelpSources;
 
     }
-    def GetFont(self, root, configType, section){
+    function GetFont(self, root, configType, section){
         """Retrieve a font from configuration (font, font-size, font-bold)
         Intercept the special value 'TkFixedFont' and substitute
         the actual font, factoring in some tweaks if needed for
@@ -756,7 +756,7 @@ class IdleConfParser(ConfigParser){
             if TkVersion < 8.5{
                 family = 'Courier';
             } else{
-                f = Font(name='TkFixedFont', exists=True, root=root);
+                f = Font(name='TkFixedFont', exists=true, root=root);
                 actualFont = Font.actual(f);
                 family = actualFont['family'];
                 size = actualFont['size'];
@@ -766,14 +766,14 @@ class IdleConfParser(ConfigParser){
         } } return (family, size, 'bold' if bold else 'normal');
 
     }
-    def LoadCfgFiles(self){
+    function LoadCfgFiles(self){
         "Load all configuration files.";
         for key in self.defaultCfg{
             self.defaultCfg[key].Load();
             self.userCfg[key].Load(); #same keys
 
     }
-    } def SaveUserCfgFiles(self){
+    } function SaveUserCfgFiles(self){
         "Write all loaded user configuration files to disk.";
         for key in self.userCfg{
             self.userCfg[key].Save();
@@ -788,7 +788,7 @@ if __name__ == '__main__'{
     from zlib import crc32;
     line, crc = 0, 0;
 
-    def sprint(obj){
+    function sprint(obj){
         global line, crc;
         txt = str(obj);
         line += 1;
@@ -797,7 +797,7 @@ if __name__ == '__main__'{
         #print('***', line, crc, '***')  # uncomment for diagnosis
 
     }
-    def dumpCfg(cfg){
+    function dumpCfg(cfg){
         print('\n', cfg, '\n');  # has variable '0xnnnnnnnn' addresses
         for key in sorted(cfg.keys()){
             sections = cfg[key].sections();

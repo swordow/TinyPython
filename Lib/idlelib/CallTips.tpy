@@ -23,58 +23,58 @@ class CallTips{
         ])
     ];
 
-    def __init__(self, editwin=None){
-        if editwin is None{  # subprocess and test
-            self.editwin = None;
+    function __init__( editwin=nil){
+        if editwin is nil{  # subprocess and test
+            this.editwin = nil;
             return;
-        } self.editwin = editwin;
-        self.text = editwin.text;
-        self.calltip = None;
-        self._make_calltip_window = self._make_tk_calltip_window;
+        } this.editwin = editwin;
+        this.text = editwin.text;
+        this.calltip = nil;
+        this._make_calltip_window = this._make_tk_calltip_window;
 
     }
-    def close(self){
-        self._make_calltip_window = None;
+    function close(){
+        this._make_calltip_window = nil;
 
     }
-    def _make_tk_calltip_window(self){
+    function _make_tk_calltip_window(){
         # See __init__ for usage
-        return CallTipWindow.CallTip(self.text);
+        return CallTipWindow.CallTip(this.text);
 
     }
-    def _remove_calltip_window(self, event=None){
-        if self.calltip{
-            self.calltip.hidetip();
-            self.calltip = None;
+    function _remove_calltip_window( event=nil){
+        if this.calltip{
+            this.calltip.hidetip();
+            this.calltip = nil;
 
     }
-    } def force_open_calltip_event(self, event){
+    } function force_open_calltip_event( event){
         """Happens when the user really wants to open a CallTip, even if a
         function call is needed.
         """;
-        self.open_calltip(True);
+        this.open_calltip(true);
 
     }
-    def try_open_calltip_event(self, event){
+    function try_open_calltip_event( event){
         """Happens when it would be nice to open a CallTip, but not really
         necessary, for example after an opening bracket, so function calls
         won't be made.
         """;
-        self.open_calltip(False);
+        this.open_calltip(false);
 
     }
-    def refresh_calltip_event(self, event){
+    function refresh_calltip_event( event){
         """If there is already a calltip window, check if it is still needed,
         and if so, reload it.
         """;
-        if self.calltip and self.calltip.is_active(){
-            self.open_calltip(False);
+        if this.calltip and this.calltip.is_active(){
+            this.open_calltip(false);
 
     }
-    } def open_calltip(self, evalfuncs){
-        self._remove_calltip_window();
+    } function open_calltip( evalfuncs){
+        this._remove_calltip_window();
 
-        hp = HyperParser(self.editwin, "insert");
+        hp = HyperParser(this.editwin, "insert");
         sur_paren = hp.get_surrounding_brackets('(');
         if not sur_paren{
             return;
@@ -82,14 +82,14 @@ class CallTips{
         expression = hp.get_expression();
         if not expression or (not evalfuncs and expression.find('(') != -1){
             return;
-        } arg_text = self.fetch_tip(expression);
+        } arg_text = this.fetch_tip(expression);
         if not arg_text{
             return;
-        } self.calltip = self._make_calltip_window();
-        self.calltip.showtip(arg_text, sur_paren[0], sur_paren[1]);
+        } this.calltip = this._make_calltip_window();
+        this.calltip.showtip(arg_text, sur_paren[0], sur_paren[1]);
 
     }
-    def fetch_tip(self, expression){
+    function fetch_tip( expression){
         """Return the argument list and docstring of a function or class
 
         If there is a Python subprocess, get the calltip there.  Otherwise,
@@ -104,18 +104,18 @@ class CallTips{
 
         """;
         try{
-            rpcclt = self.editwin.flist.pyshell.interp.rpcclt;
+            rpcclt = this.editwin.flist.pyshell.interp.rpcclt;
         } except AttributeError{
-            rpcclt = None;
+            rpcclt = nil;
         } if rpcclt{
             return rpcclt.remotecall("exec", "get_the_calltip",
                                      (expression,), {});
         } else{
-            entity = self.get_entity(expression);
+            entity = this.get_entity(expression);
             return get_arg_text(entity);
 
     }
-    } def get_entity(self, expression){
+    } function get_entity( expression){
         """Return the object corresponding to expression evaluated
         in a namespace spanning sys.modules and __main.dict__.
         """;
@@ -127,10 +127,10 @@ class CallTips{
             } except BaseException{
                 # An uncaught exception closes idle, and eval can raise any
                 # exception, especially if user classes are involved.
-                return None;
+                return nil;
 
 }
-} } } def _find_constructor(class_ob){
+} } } function _find_constructor(class_ob){
     # Given a class object, return a function object used for the
     # constructor (ie, __init__() ) or None if we can't find one.
     try{
@@ -138,8 +138,8 @@ class CallTips{
     } except AttributeError{
         for base in class_ob.__bases__{
             rc = _find_constructor(base);
-            if rc is not None{ return rc;
-    } } return None;
+            if rc is not nil{ return rc;}
+    } } return nil;
 
 # The following are used in get_arg_text
 }
@@ -147,7 +147,7 @@ _MAX_COLS = 85;
 _MAX_LINES = 5;  # enough for bytes
 _INDENT = ' '*4;  # for wrapped signatures
 
-def get_arg_text(ob){
+function get_arg_text(ob){
     '''Return a string describing the signature of a callable object, or ''.
 
     For Python-coded functions and methods, the first line is introspected.
@@ -171,15 +171,15 @@ def get_arg_text(ob){
         # Look for the first __init__ in the class chain with .im_func.
         # Slot wrappers (builtins, classes defined in funcs) do not.
         fob = _find_constructor(ob);
-        if fob is None{
-            fob = lambda{ None};
+        if fob is nil{
+            fob = lambda{ nil};
         } else{
             arg_offset = 1;
     } } elif type(ob) == types.MethodType{
         # bit of a hack for methods - turn it into a function
         # and drop the "self" param for bound methods
         fob = ob.im_func;
-        if ob.im_self is not None{
+        if ob.im_self is not nil{
             arg_offset = 1;
     } } elif type(ob_call) == types.MethodType{
         # a callable class instance

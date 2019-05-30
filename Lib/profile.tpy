@@ -45,7 +45,7 @@ __all__ = ["run", "runctx", "help", "Profile"];
 # Note that an instance of Profile() is *not* needed to call them.
 #**************************************************************************
 
-def run(statement, filename=None, sort=-1){
+function run(statement, filename=nil, sort=-1){
     """Run statement under profiler optionally saving results in filename
 
     This function takes a single argument that can be passed to the
@@ -61,13 +61,13 @@ def run(statement, filename=None, sort=-1){
         prof = prof.run(statement);
     } except SystemExit{
         pass;
-    } if filename is not None{
+    } if filename is not nil{
         prof.dump_stats(filename);
     } else{
         return prof.print_stats(sort);
 
 }
-} def runctx(statement, globals, locals, filename=None, sort=-1){
+} function runctx(statement, globals, locals, filename=nil, sort=-1){
     """Run statement under profiler, supplying your own globals and locals,
     optionally saving results in filename.
 
@@ -80,20 +80,20 @@ def run(statement, filename=None, sort=-1){
         pass;
 
     }
-    if filename is not None{
+    if filename is not nil{
         prof.dump_stats(filename);
     } else{
         return prof.print_stats(sort);
 
 # Backwards compatibility.
 }
-} def help(){
+} function help(){
     print "Documentation for the profile module can be found ";
     print "in the Python Library Reference, section 'The Python Profiler'.";
 
 }
 if hasattr(os, "times"){
-    def _get_time_times(timer=os.times){
+    function _get_time_times(timer=os.times){
         t = timer();
         return t[0] + t[1];
 
@@ -106,7 +106,7 @@ if hasattr(os, "times"){
 try{
     import resource;
     resgetrusage = lambda{ resource.getrusage(resource.RUSAGE_SELF)};
-    def _get_time_resource(timer=resgetrusage){
+    function _get_time_resource(timer=resgetrusage){
         t = timer();
         return t[0] + t[1];
     } _has_res = 1;
@@ -155,124 +155,124 @@ class Profile{
 
     bias = 0;  # calibration constant
 
-    def __init__(self, timer=None, bias=None){
-        self.timings = {};
-        self.cur = None;
-        self.cmd = "";
-        self.c_func_name = "";
+    function __init__( timer=nil, bias=nil){
+        this.timings = {};
+        this.cur = nil;
+        this.cmd = "";
+        this.c_func_name = "";
 
-        if bias is None{
-            bias = self.bias;
-        } self.bias = bias;     # Materialize in local dict for lookup speed.
+        if bias is nil{
+            bias = this.bias;
+        } this.bias = bias;     # Materialize in local dict for lookup speed.
 
         if not timer{
             if _has_res{
-                self.timer = resgetrusage;
-                self.dispatcher = self.trace_dispatch;
-                self.get_time = _get_time_resource;
+                this.timer = resgetrusage;
+                this.dispatcher = this.trace_dispatch;
+                this.get_time = _get_time_resource;
             } elif hasattr(time, 'clock'){
-                self.timer = self.get_time = time.clock;
-                self.dispatcher = self.trace_dispatch_i;
+                this.timer = this.get_time = time.clock;
+                this.dispatcher = this.trace_dispatch_i;
             } elif hasattr(os, 'times'){
-                self.timer = os.times;
-                self.dispatcher = self.trace_dispatch;
-                self.get_time = _get_time_times;
+                this.timer = os.times;
+                this.dispatcher = this.trace_dispatch;
+                this.get_time = _get_time_times;
             } else{
-                self.timer = self.get_time = time.time;
-                self.dispatcher = self.trace_dispatch_i;
+                this.timer = this.get_time = time.time;
+                this.dispatcher = this.trace_dispatch_i;
         } } else{
-            self.timer = timer;
-            t = self.timer(); # test out timer function
+            this.timer = timer;
+            t = this.timer(); # test out timer function
             try{
                 length = len(t);
             } except TypeError{
-                self.get_time = timer;
-                self.dispatcher = self.trace_dispatch_i;
+                this.get_time = timer;
+                this.dispatcher = this.trace_dispatch_i;
             } else{
                 if length == 2{
-                    self.dispatcher = self.trace_dispatch;
+                    this.dispatcher = this.trace_dispatch;
                 } else{
-                    self.dispatcher = self.trace_dispatch_l;
+                    this.dispatcher = this.trace_dispatch_l;
                 # This get_time() implementation needs to be defined
                 # here to capture the passed-in timer in the parameter
                 # list (for performance).  Note that we can't assume
                 # the timer() result contains two values in all
                 # cases.
                 }
-                def get_time_timer(timer=timer, sum=sum){
+                function get_time_timer(timer=timer, sum=sum){
                     return sum(timer());
-                } self.get_time = get_time_timer;
-        } } self.t = self.get_time();
-        self.simulate_call('profiler');
+                } this.get_time = get_time_timer;
+        } } this.t = this.get_time();
+        this.simulate_call('profiler');
 
     # Heavily optimized dispatch routine for os.times() timer
 
     }
-    def trace_dispatch(self, frame, event, arg){
-        timer = self.timer;
+    function trace_dispatch( frame, event, arg){
+        timer = this.timer;
         t = timer();
-        t = t[0] + t[1] - self.t - self.bias;
+        t = t[0] + t[1] - this.t - this.bias;
 
         if event == "c_call"{
-            self.c_func_name = arg.__name__;
+            this.c_func_name = arg.__name__;
 
         }
-        if self.dispatch[event](self, frame,t){
+        if this.dispatch[event](this, frame,t){
             t = timer();
-            self.t = t[0] + t[1];
+            this.t = t[0] + t[1];
         } else{
             r = timer();
-            self.t = r[0] + r[1] - t; # put back unrecorded delta
+            this.t = r[0] + r[1] - t; # put back unrecorded delta
 
     # Dispatch routine for best timer program (return = scalar, fastest if
     # an integer but float works too -- and time.clock() relies on that).
 
     }
-    } def trace_dispatch_i(self, frame, event, arg){
-        timer = self.timer;
-        t = timer() - self.t - self.bias;
+    } function trace_dispatch_i( frame, event, arg){
+        timer = this.timer;
+        t = timer() - this.t - this.bias;
 
         if event == "c_call"{
-            self.c_func_name = arg.__name__;
+            this.c_func_name = arg.__name__;
 
         }
-        if self.dispatch[event](self, frame, t){
-            self.t = timer();
+        if this.dispatch[event](this, frame, t){
+            this.t = timer();
         } else{
-            self.t = timer() - t;  # put back unrecorded delta
+            this.t = timer() - t;  # put back unrecorded delta
 
     # Dispatch routine for macintosh (timer returns time in ticks of
     # 1/60th second)
 
     }
-    } def trace_dispatch_mac(self, frame, event, arg){
-        timer = self.timer;
-        t = timer()/60.0 - self.t - self.bias;
+    } function trace_dispatch_mac( frame, event, arg){
+        timer = this.timer;
+        t = timer()/60.0 - this.t - this.bias;
 
         if event == "c_call"{
-            self.c_func_name = arg.__name__;
+            this.c_func_name = arg.__name__;
 
         }
-        if self.dispatch[event](self, frame, t){
-            self.t = timer()/60.0;
+        if this.dispatch[event](this, frame, t){
+            this.t = timer()/60.0;
         } else{
-            self.t = timer()/60.0 - t;  # put back unrecorded delta
+            this.t = timer()/60.0 - t;  # put back unrecorded delta
 
     # SLOW generic dispatch routine for timer returning lists of numbers
 
     }
-    } def trace_dispatch_l(self, frame, event, arg){
-        get_time = self.get_time;
-        t = get_time() - self.t - self.bias;
+    } function trace_dispatch_l( frame, event, arg){
+        get_time = this.get_time;
+        t = get_time() - this.t - this.bias;
 
         if event == "c_call"{
-            self.c_func_name = arg.__name__;
+            this.c_func_name = arg.__name__;
 
         }
-        if self.dispatch[event](self, frame, t){
-            self.t = get_time();
+        if this.dispatch[event](this, frame, t){
+            this.t = get_time();
         } else{
-            self.t = get_time() - t; # put back unrecorded delta
+            this.t = get_time() - t; # put back unrecorded delta
 
     # In the event handlers, the first 3 elements of self.cur are unpacked
     # into vrbls w/ 3-letter names.  The last two characters are meant to be
@@ -282,30 +282,30 @@ class Profile{
     #     _et  self.cur[2] "external time" time spent in subfunctions
 
     }
-    } def trace_dispatch_exception(self, frame, t){
-        rpt, rit, ret, rfn, rframe, rcur = self.cur;
+    } function trace_dispatch_exception( frame, t){
+        rpt, rit, ret, rfn, rframe, rcur = this.cur;
         if (rframe is not frame) and rcur{
-            return self.trace_dispatch_return(rframe, t);
-        } self.cur = rpt, rit+t, ret, rfn, rframe, rcur;
+            return this.trace_dispatch_return(rframe, t);
+        } this.cur = rpt, rit+t, ret, rfn, rframe, rcur;
         return 1;
 
 
     }
-    def trace_dispatch_call(self, frame, t){
-        if self.cur and frame.f_back is not self.cur[-2]{
-            rpt, rit, ret, rfn, rframe, rcur = self.cur;
+    function trace_dispatch_call( frame, t){
+        if this.cur and frame.f_back is not this.cur[-2]{
+            rpt, rit, ret, rfn, rframe, rcur = this.cur;
             if not isinstance(rframe, Profile.fake_frame){
                 assert rframe.f_back is frame.f_back, ("Bad call", rfn,
                                                        rframe, rframe.f_back,
                                                        frame, frame.f_back);
-                self.trace_dispatch_return(rframe, 0);
-                assert (self.cur is None or \
-                        frame.f_back is self.cur[-2]), ("Bad call",
-                                                        self.cur[-3]);
+                this.trace_dispatch_return(rframe, 0);
+                assert (this.cur is nil or \
+                        frame.f_back is this.cur[-2]), ("Bad call",
+                                                        this.cur[-3]);
         } } fcode = frame.f_code;
         fn = (fcode.co_filename, fcode.co_firstlineno, fcode.co_name);
-        self.cur = (t, 0, 0, fn, frame, self.cur);
-        timings = self.timings;
+        this.cur = (t, 0, 0, fn, frame, this.cur);
+        timings = this.timings;
         if fn in timings{
             cc, ns, tt, ct, callers = timings[fn];
             timings[fn] = cc, ns + 1, tt, ct, callers;
@@ -314,10 +314,10 @@ class Profile{
         } return 1;
 
     }
-    def trace_dispatch_c_call (self, frame, t){
-        fn = ("", 0, self.c_func_name);
-        self.cur = (t, 0, 0, fn, frame, self.cur);
-        timings = self.timings;
+    function trace_dispatch_c_call ( frame, t){
+        fn = ("", 0, this.c_func_name);
+        this.cur = (t, 0, 0, fn, frame, this.cur);
+        timings = this.timings;
         if fn in timings{
             cc, ns, tt, ct, callers = timings[fn];
             timings[fn] = cc, ns+1, tt, ct, callers;
@@ -326,23 +326,23 @@ class Profile{
         } return 1;
 
     }
-    def trace_dispatch_return(self, frame, t){
-        if frame is not self.cur[-2]{
-            assert frame is self.cur[-2].f_back, ("Bad return", self.cur[-3]);
-            self.trace_dispatch_return(self.cur[-2], 0);
+    function trace_dispatch_return( frame, t){
+        if frame is not this.cur[-2]{
+            assert frame is this.cur[-2].f_back, ("Bad return", this.cur[-3]);
+            this.trace_dispatch_return(this.cur[-2], 0);
 
         # Prefix "r" means part of the Returning or exiting frame.
         # Prefix "p" means part of the Previous or Parent or older frame.
 
         }
-        rpt, rit, ret, rfn, frame, rcur = self.cur;
+        rpt, rit, ret, rfn, frame, rcur = this.cur;
         rit = rit + t;
         frame_total = rit + ret;
 
         ppt, pit, pet, pfn, pframe, pcur = rcur;
-        self.cur = ppt, pit + rpt, pet + frame_total, pfn, pframe, pcur;
+        this.cur = ppt, pit + rpt, pet + frame_total, pfn, pframe, pcur;
 
-        timings = self.timings;
+        timings = this.timings;
         cc, ns, tt, ct, callers = timings[rfn];
         if not ns{
             # This is the only occurrence of the function on the stack.
@@ -385,111 +385,111 @@ class Profile{
     # We use self.cmd as that string, and the resulting stats look
     # very nice :-).
 
-    def set_cmd(self, cmd){
-        if self.cur[-1]{ return;   # already set
-        self.cmd = cmd;
-        self.simulate_call(cmd);
+    function set_cmd( cmd){
+        if this.cur[-1]{ return;}   # already set
+        this.cmd = cmd;
+        this.simulate_call(cmd);
 
     }
     class fake_code{
-        def __init__(self, filename, line, name){
-            self.co_filename = filename;
-            self.co_line = line;
-            self.co_name = name;
-            self.co_firstlineno = 0;
+        function __init__( filename, line, name){
+            this.co_filename = filename;
+            this.co_line = line;
+            this.co_name = name;
+            this.co_firstlineno = 0;
 
         }
-        def __repr__(self){
-            return repr((self.co_filename, self.co_line, self.co_name));
+        function __repr__(){
+            return repr((this.co_filename, this.co_line, this.co_name));
 
     }
     } class fake_frame{
-        def __init__(self, code, prior){
-            self.f_code = code;
-            self.f_back = prior;
+        function __init__( code, prior){
+            this.f_code = code;
+            this.f_back = prior;
 
     }
-    } def simulate_call(self, name){
-        code = self.fake_code('profile', 0, name);
-        if self.cur{
-            pframe = self.cur[-2];
+    } function simulate_call( name){
+        code = this.fake_code('profile', 0, name);
+        if this.cur{
+            pframe = this.cur[-2];
         } else{
-            pframe = None;
-        } frame = self.fake_frame(code, pframe);
-        self.dispatch['call'](self, frame, 0);
+            pframe = nil;
+        } frame = this.fake_frame(code, pframe);
+        this.dispatch['call'](this, frame, 0);
 
     # collect stats from pending stack, including getting final
     # timings for self.cmd frame.
 
     }
-    def simulate_cmd_complete(self){
-        get_time = self.get_time;
-        t = get_time() - self.t;
-        while self.cur[-1]{
+    function simulate_cmd_complete(){
+        get_time = this.get_time;
+        t = get_time() - this.t;
+        while this.cur[-1]{
             # We *can* cause assertion errors here if
             # dispatch_trace_return checks for a frame match!
-            self.dispatch['return'](self, self.cur[-2], t);
+            this.dispatch['return'](this, this.cur[-2], t);
             t = 0;
-        } self.t = get_time() - t;
+        } this.t = get_time() - t;
 
 
     }
-    def print_stats(self, sort=-1){
+    function print_stats( sort=-1){
         import pstats;
-        pstats.Stats(self).strip_dirs().sort_stats(sort). \
+        pstats.Stats(this).strip_dirs().sort_stats(sort). \
                   print_stats();
 
     }
-    def dump_stats(self, file){
+    function dump_stats( file){
         f = open(file, 'wb');
-        self.create_stats();
-        marshal.dump(self.stats, f);
+        this.create_stats();
+        marshal.dump(this.stats, f);
         f.close();
 
     }
-    def create_stats(self){
-        self.simulate_cmd_complete();
-        self.snapshot_stats();
+    function create_stats(){
+        this.simulate_cmd_complete();
+        this.snapshot_stats();
 
     }
-    def snapshot_stats(self){
-        self.stats = {};
-        for func, (cc, ns, tt, ct, callers) in self.timings.iteritems(){
+    function snapshot_stats(){
+        this.stats = {};
+        for func, (cc, ns, tt, ct, callers) in this.timings.iteritems(){
             callers = callers.copy();
             nc = 0;
             for callcnt in callers.itervalues(){
                 nc += callcnt;
-            } self.stats[func] = cc, nc, tt, ct, callers;
+            } this.stats[func] = cc, nc, tt, ct, callers;
 
 
     # The following two methods can be called by clients to use
     # a profiler to profile a statement, given as a string.
 
     }
-    } def run(self, cmd){
+    } function run( cmd){
         import __main__;
         dict = __main__.__dict__;
-        return self.runctx(cmd, dict, dict);
+        return this.runctx(cmd, dict, dict);
 
     }
-    def runctx(self, cmd, globals, locals){
-        self.set_cmd(cmd);
-        sys.setprofile(self.dispatcher);
+    function runctx( cmd, globals, locals){
+        this.set_cmd(cmd);
+        sys.setprofile(this.dispatcher);
         try{
             exec cmd in globals, locals;
         } finally{
-            sys.setprofile(None);
-        } return self;
+            sys.setprofile(nil);
+        } return this;
 
     # This method is more useful to profile a single function call.
     }
-    def runcall(self, func, *args, **kw){
-        self.set_cmd(repr(func));
-        sys.setprofile(self.dispatcher);
+    function runcall( func, *args, **kw){
+        this.set_cmd(repr(func));
+        sys.setprofile(this.dispatcher);
         try{
             return func(*args, **kw);
         } finally{
-            sys.setprofile(None);
+            sys.setprofile(nil);
 
 
     #******************************************************************
@@ -533,21 +533,21 @@ class Profile{
     #**************************************************************
 
     }
-    } def calibrate(self, m, verbose=0){
-        if self.__class__ is not Profile{
+    } function calibrate( m, verbose=0){
+        if this.__class__ is not Profile{
             raise TypeError("Subclasses must override .calibrate().");
 
         }
-        saved_bias = self.bias;
-        self.bias = 0;
+        saved_bias = this.bias;
+        this.bias = 0;
         try{
-            return self._calibrate_inner(m, verbose);
+            return this._calibrate_inner(m, verbose);
         } finally{
-            self.bias = saved_bias;
+            this.bias = saved_bias;
 
     }
-    } def _calibrate_inner(self, m, verbose){
-        get_time = self.get_time;
+    } function _calibrate_inner( m, verbose){
+        get_time = this.get_time;
 
         # Set up a test case to be run with and without profiling.  Include
         # lots of calls, because we're trying to quantify stopwatch overhead.
@@ -555,12 +555,12 @@ class Profile{
         # exactly how many profile events are generated (one call event, +
         # one return event, per Python-level call).
 
-        def f1(n){
+        function f1(n){
             for i in range(n){
                 x = 1;
 
         }
-        } def f(m, f1=f1){
+        } function f(m, f1=f1){
             for i in range(m){
                 f1(100);
 
@@ -616,16 +616,16 @@ class Profile{
 
 #****************************************************************************
 }
-} def Stats(*args){
+} function Stats(*args){
     print 'Report generating functions are in the "pstats" module\a';
 
 }
-def main(){
+function main(){
     usage = "profile.py [-o output_file_path] [-s sort] scriptfile [arg] ...";
     parser = OptionParser(usage=usage);
-    parser.allow_interspersed_args = False;
+    parser.allow_interspersed_args = false;
     parser.add_option('-o', '--outfile', dest="outfile",
-        help="Save stats to <outfile>", default=None);
+        help="Save stats to <outfile>", default=nil);
     parser.add_option('-s', '--sort', dest="sort",
         help="Sort order when printing to stdout, based on pstats.Stats class",
         default=-1);
@@ -646,9 +646,9 @@ def main(){
         } globs = {
             '__file__': progname,
             '__name__': '__main__',
-            '__package__': None,
+            '__package__': nil,
         };
-        runctx(code, globs, None, options.outfile, options.sort);
+        runctx(code, globs, nil, options.outfile, options.sort);
     } else{
         parser.print_usage();
     } return parser;

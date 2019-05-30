@@ -6,7 +6,7 @@ import sys;
  C_STRING_NEXT_LINES, C_BRACKET) = range(5);
 
 if 0{   # for throwaway debugging output
-    def dump(*stuff){
+    function dump(*stuff){
         sys.__stdout__.write(" ".join(map(str, stuff)) + "\n");
 
 # Find what looks like the start of a popular stmt.
@@ -108,17 +108,17 @@ del ch;
 try{
     UnicodeType = type(unicode(""));
 } except NameError{
-    UnicodeType = None;
+    UnicodeType = nil;
 
 }
 class Parser{
 
-    def __init__(self, indentwidth, tabwidth){
-        self.indentwidth = indentwidth;
-        self.tabwidth = tabwidth;
+    function __init__( indentwidth, tabwidth){
+        this.indentwidth = indentwidth;
+        this.tabwidth = tabwidth;
 
     }
-    def set_str(self, str){
+    function set_str( str){
         assert len(str) == 0 or str[-1] == '\n';
         if type(str) is UnicodeType{
             # The parse functions have no idea what to do with Unicode, so
@@ -133,8 +133,8 @@ class Parser{
             for raw in map(ord, uniphooey){
                 push(raw < 127 and chr(raw) or "x");
             } str = "".join(str);
-        } self.str = str;
-        self.study_level = 0;
+        } this.str = str;
+        this.study_level = 0;
 
     # Return index of a good place to begin parsing, as close to the
     # end of the string as possible.  This will be the start of some
@@ -148,13 +148,13 @@ class Parser{
     # guaranteed that the char is not in a string.
 
     }
-    def find_good_parse_start(self, is_char_in_string=None,
+    function find_good_parse_start( is_char_in_string=nil,
                               _synchre=_synchre){
-        str, pos = self.str, None;
+        str, pos = this.str, nil;
 
         if not is_char_in_string{
             # no clue -- make the caller pass everything
-            return None;
+            return nil;
 
         # Peek back from the end for a good place to start,
         # but don't try too often; pos will be left None, or
@@ -171,7 +171,7 @@ class Parser{
                 pos = m.start();
                 break;
             } limit = i;
-        } if pos is None{
+        } if pos is nil{
             # Nothing looks like a block-opener, or stuff does
             # but is_char_in_string keeps returning true; most likely
             # we're in or near a giant string, the colorizer hasn't
@@ -203,26 +203,26 @@ class Parser{
     # find_good_parse_start's result.
 
     }
-    def set_lo(self, lo){
-        assert lo == 0 or self.str[lo-1] == '\n';
+    function set_lo( lo){
+        assert lo == 0 or this.str[lo-1] == '\n';
         if lo > 0{
-            self.str = self.str[lo:];
+            this.str = this.str[lo:];
 
     # As quickly as humanly possible <wink>, find the line numbers (0-
     # based) of the non-continuation lines.
     # Creates self.{goodlines, continuation}.
 
     }
-    } def _study1(self){
-        if self.study_level >= 1{
+    } function _study1(){
+        if this.study_level >= 1{
             return;
-        } self.study_level = 1;
+        } this.study_level = 1;
 
         # Map all uninteresting characters to "x", all open brackets
         # to "(", all close brackets to ")", then collapse runs of
         # uninteresting characters.  This can cut the number of chars
         # by a factor of 10-40, and so greatly speed the following loop.
-        str = self.str;
+        str = this.str;
         str = str.translate(_tran);
         str = str.replace('xxxxxxxx', 'x');
         str = str.replace('xxxx', 'x');
@@ -237,7 +237,7 @@ class Parser{
         # whether & why the last stmt is a continuation.
         continuation = C_NONE;
         level = lno = 0;     # level is nesting level; lno is line number
-        self.goodlines = goodlines = [0];
+        this.goodlines = goodlines = [0];
         push_good = goodlines.append;
         i, n = 0, len(str);
         while i < n{
@@ -346,7 +346,7 @@ class Parser{
         if (continuation != C_STRING_FIRST_LINE
             and continuation != C_STRING_NEXT_LINES and level > 0){
             continuation = C_BRACKET;
-        } self.continuation = continuation;
+        } this.continuation = continuation;
 
         # Push the final line number as a sentinel value, regardless of
         # whether it's continued.
@@ -355,9 +355,9 @@ class Parser{
             push_good(lno);
 
     }
-    } def get_continuation_type(self){
-        self._study1();
-        return self.continuation;
+    } function get_continuation_type(){
+        this._study1();
+        return this.continuation;
 
     # study1 was sufficient to determine the continuation status,
     # but doing more requires looking at every character.  study2
@@ -377,14 +377,14 @@ class Parser{
     #         if continuation is C_BRACKET, index of last open bracket
 
     }
-    def _study2(self){
-        if self.study_level >= 2{
+    function _study2(){
+        if this.study_level >= 2{
             return;
-        } self._study1();
-        self.study_level = 2;
+        } this._study1();
+        this.study_level = 2;
 
         # Set p and q to slice indices of last interesting stmt.
-        str, goodlines = self.str, self.goodlines;
+        str, goodlines = this.str, this.goodlines;
         i = len(goodlines) - 1;
         p = len(str);    # index of newest line
         while i{
@@ -406,7 +406,7 @@ class Parser{
             # nothing but junk!
             assert p == 0;
             q = p;
-        } self.stmt_start, self.stmt_end = p, q;
+        } this.stmt_start, this.stmt_end = p, q;
 
         # Analyze this stmt, to find the last open bracket (if any)
         # and last interesting character (if any).
@@ -485,20 +485,20 @@ class Parser{
         # end while p < q:
 
         }
-        self.lastch = lastch;
+        this.lastch = lastch;
         if stack{
-            self.lastopenbracketpos = stack[-1];
-        } self.stmt_bracketing = tuple(bracketing);
+            this.lastopenbracketpos = stack[-1];
+        } this.stmt_bracketing = tuple(bracketing);
 
     # Assuming continuation is C_BRACKET, return the number
     # of spaces the next line should be indented.
 
     }
-    def compute_bracket_indent(self){
-        self._study2();
-        assert self.continuation == C_BRACKET;
-        j = self.lastopenbracketpos;
-        str = self.str;
+    function compute_bracket_indent(){
+        this._study2();
+        assert this.continuation == C_BRACKET;
+        j = this.lastopenbracketpos;
+        str = this.str;
         n = len(str);
         origi = i = str.rfind('\n', 0, j) + 1;
         j = j+1;     # one beyond open bracket
@@ -518,17 +518,17 @@ class Parser{
             j = i = origi;
             while str[j] in " \t"{
                 j = j+1;
-            } extra = self.indentwidth;
-        } return len(str[i:j].expandtabs(self.tabwidth)) + extra;
+            } extra = this.indentwidth;
+        } return len(str[i:j].expandtabs(this.tabwidth)) + extra;
 
     # Return number of physical lines in last stmt (whether or not
     # it's an interesting stmt!  this is intended to be called when
     # continuation is C_BACKSLASH).
 
     }
-    def get_num_lines_in_stmt(self){
-        self._study1();
-        goodlines = self.goodlines;
+    function get_num_lines_in_stmt(){
+        this._study1();
+        goodlines = this.goodlines;
         return goodlines[-1] - goodlines[-2];
 
     # Assuming continuation is C_BACKSLASH, return the number of spaces
@@ -536,11 +536,11 @@ class Parser{
     # the first one following the initial line of the stmt.
 
     }
-    def compute_backslash_indent(self){
-        self._study2();
-        assert self.continuation == C_BACKSLASH;
-        str = self.str;
-        i = self.stmt_start;
+    function compute_backslash_indent(){
+        this._study2();
+        assert this.continuation == C_BACKSLASH;
+        str = this.str;
+        i = this.stmt_start;
         while str[i] in " \t"{
             i = i+1;
         } startpos = i;
@@ -575,7 +575,7 @@ class Parser{
             # found a legit =, but it may be the last interesting
             # thing on the line
             i = i+1;     # move beyond the =
-            found = re.match(r"\s*\\", str[i:endpos]) is None;
+            found = re.match(r"\s*\\", str[i:endpos]) is nil;
 
         }
         if not found{
@@ -586,18 +586,18 @@ class Parser{
                 i = i+1;
 
         }
-        } return len(str[self.stmt_start:i].expandtabs(\
-                                     self.tabwidth)) + 1;
+        } return len(str[this.stmt_start:i].expandtabs(\
+                                     this.tabwidth)) + 1;
 
     # Return the leading whitespace on the initial line of the last
     # interesting stmt.
 
     }
-    def get_base_indent_string(self){
-        self._study2();
-        i, n = self.stmt_start, self.stmt_end;
+    function get_base_indent_string(){
+        this._study2();
+        i, n = this.stmt_start, this.stmt_end;
         j = i;
-        str = self.str;
+        str = this.str;
         while j < n and str[j] in " \t"{
             j = j + 1;
         } return str[i:j];
@@ -605,34 +605,34 @@ class Parser{
     # Did the last interesting stmt open a block?
 
     }
-    def is_block_opener(self){
-        self._study2();
-        return self.lastch == ':';
+    function is_block_opener(){
+        this._study2();
+        return this.lastch == ':';
 
     # Did the last interesting stmt close a block?
 
     }
-    def is_block_closer(self){
-        self._study2();
-        return _closere(self.str, self.stmt_start) is not None;
+    function is_block_closer(){
+        this._study2();
+        return _closere(this.str, this.stmt_start) is not nil;
 
     # index of last open bracket ({[, or None if none
     }
-    lastopenbracketpos = None;
+    lastopenbracketpos = nil;
 
-    def get_last_open_bracket_pos(self){
-        self._study2();
-        return self.lastopenbracketpos;
+    function get_last_open_bracket_pos(){
+        this._study2();
+        return this.lastopenbracketpos;
 
     # the structure of the bracketing of the last interesting statement,
     # in the format defined in _study2, or None if the text didn't contain
     # anything
     }
-    stmt_bracketing = None;
+    stmt_bracketing = nil;
 
-    def get_last_stmt_bracketing(self){
-        self._study2();
-        return self.stmt_bracketing;
+    function get_last_stmt_bracketing(){
+        this._study2();
+        return this.stmt_bracketing;
 
 }
 }

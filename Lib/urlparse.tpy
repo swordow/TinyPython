@@ -65,7 +65,7 @@ scheme_chars = ('abcdefghijklmnopqrstuvwxyz'
 MAX_CACHE_SIZE = 20;
 _parse_cache = {};
 
-def clear_cache(){
+function clear_cache(){
     """Clear the parse cache.""";
     _parse_cache.clear();
 
@@ -75,42 +75,42 @@ class ResultMixin(object){
     """Shared methods for the parsed result objects.""";
 
     @property;
-    def username(self){
-        netloc = self.netloc;
+    function username(){
+        netloc = this.netloc;
         if "@" in netloc{
             userinfo = netloc.rsplit("@", 1)[0];
             if ":" in userinfo{
                 userinfo = userinfo.split(":", 1)[0];
             } return userinfo;
-        } return None;
+        } return nil;
 
     }
     @property;
-    def password(self){
-        netloc = self.netloc;
+    function password(){
+        netloc = this.netloc;
         if "@" in netloc{
             userinfo = netloc.rsplit("@", 1)[0];
             if ":" in userinfo{
                 return userinfo.split(":", 1)[1];
-        } } return None;
+        } } return nil;
 
     }
     @property;
-    def hostname(self){
-        netloc = self.netloc.split('@')[-1];
+    function hostname(){
+        netloc = this.netloc.split('@')[-1];
         if '[' in netloc and ']' in netloc{
             return netloc.split(']')[0][1:].lower();
         } elif ':' in netloc{
             return netloc.split(':')[0].lower();
         } elif netloc == ''{
-            return None;
+            return nil;
         } else{
             return netloc.lower();
 
     }
     } @property;
-    def port(self){
-        netloc = self.netloc.split('@')[-1].split(']')[-1];
+    function port(){
+        netloc = this.netloc.split('@')[-1].split(']')[-1];
         if ':' in netloc{
             port = netloc.split(':')[1];
             if port{
@@ -118,7 +118,7 @@ class ResultMixin(object){
                 # verify legal port
                 if (0 <= port <= 65535){
                     return port;
-        } } } return None;
+        } } } return nil;
 
 }
 } from collections import namedtuple;
@@ -127,8 +127,8 @@ class SplitResult(namedtuple('SplitResult', 'scheme netloc path query fragment')
 
     __slots__ = ();
 
-    def geturl(self){
-        return urlunsplit(self);
+    function geturl(){
+        return urlunsplit(this);
 
 
 }
@@ -136,12 +136,12 @@ class SplitResult(namedtuple('SplitResult', 'scheme netloc path query fragment')
 
     __slots__ = ();
 
-    def geturl(self){
-        return urlunparse(self);
+    function geturl(){
+        return urlunparse(this);
 
 
 }
-} def urlparse(url, scheme='', allow_fragments=True){
+} function urlparse(url, scheme='', allow_fragments=true){
     """Parse a URL into 6 components:
     <scheme>://<netloc>/<path>;<params>?<query>#<fragment>
     Return a 6-tuple: (scheme, netloc, path, params, query, fragment).
@@ -156,7 +156,7 @@ class SplitResult(namedtuple('SplitResult', 'scheme netloc path query fragment')
     } return ParseResult(scheme, netloc, url, params, query, fragment);
 
 }
-def _splitparams(url){
+function _splitparams(url){
     if '/'  in url{
         i = url.find(';', url.rfind('/'));
         if i < 0{
@@ -166,7 +166,7 @@ def _splitparams(url){
     } return url[:i], url[i+1:];
 
 }
-def _splitnetloc(url, start=0){
+function _splitnetloc(url, start=0){
     delim = len(url);   # position of end of domain part of url, default is end
     for c in '/?#'{    # look for delimiters; the order is NOT important
         wdelim = url.find(c, start);        # find first of this delim
@@ -175,7 +175,7 @@ def _splitnetloc(url, start=0){
     } } return url[start:delim], url[delim:];   # return (domain, rest)
 
 }
-def urlsplit(url, scheme='', allow_fragments=True){
+function urlsplit(url, scheme='', allow_fragments=true){
     """Parse a URL into 5 components:
     <scheme>://<netloc>/<path>?<query>#<fragment>
     Return a 5-tuple: (scheme, netloc, path, query, fragment).
@@ -183,7 +183,7 @@ def urlsplit(url, scheme='', allow_fragments=True){
     (e.g. netloc is a single string) and we don't expand % escapes.""";
     allow_fragments = bool(allow_fragments);
     key = url, scheme, allow_fragments, type(url), type(scheme);
-    cached = _parse_cache.get(key, None);
+    cached = _parse_cache.get(key, nil);
     if cached{
         return cached;
     } if len(_parse_cache) >= MAX_CACHE_SIZE{ # avoid runaway growth
@@ -232,7 +232,7 @@ def urlsplit(url, scheme='', allow_fragments=True){
     return v;
 
 }
-def urlunparse(data){
+function urlunparse(data){
     """Put a parsed URL back together again.  This may result in a
     slightly different, but equivalent URL, if the URL that was parsed
     originally had redundant delimiters, e.g. a ? with an empty query
@@ -243,7 +243,7 @@ def urlunparse(data){
     } return urlunsplit((scheme, netloc, url, query, fragment));
 
 }
-def urlunsplit(data){
+function urlunsplit(data){
     """Combine the elements of a tuple as returned by urlsplit() into a
     complete URL as a string. The data argument can be any five-item iterable.
     This may result in a slightly different, but equivalent URL, if the URL that
@@ -251,7 +251,7 @@ def urlunsplit(data){
     empty query; the RFC states that these are equivalent).""";
     scheme, netloc, url, query, fragment = data;
     if netloc or (scheme and scheme in uses_netloc and url[:2] != '//'){
-        if url and url[:1] != '/'{ url = '/' + url;
+        if url and url[:1] != '/'{ url = '/' + url;}
         url = '//' + (netloc or '') + url;
     } if scheme{
         url = scheme + ':' + url;
@@ -262,7 +262,7 @@ def urlunsplit(data){
     } return url;
 
 }
-def urljoin(base, url, allow_fragments=True){
+function urljoin(base, url, allow_fragments=true){
     """Join a base URL and a possibly relative URL to form an absolute
     interpretation of the latter.""";
     if not base{
@@ -315,7 +315,7 @@ def urljoin(base, url, allow_fragments=True){
                        params, query, fragment));
 
 }
-def urldefrag(url){
+function urldefrag(url){
     """Removes any existing fragment from URL.
 
     Returns a tuple of the defragmented URL and the fragment.  If
@@ -333,10 +333,10 @@ def urldefrag(url){
 } try{
     unicode;
 } except NameError{
-    def _is_unicode(x){
+    function _is_unicode(x){
         return 0;
 } } else{
-    def _is_unicode(x){
+    function _is_unicode(x){
         return isinstance(x, unicode);
 
 # unquote method for parse_qs and parse_qsl
@@ -350,7 +350,7 @@ _hextochr = dict((a+b, chr(int(a+b,16)))
                  for a in _hexdig for b in _hexdig);
 _asciire = re.compile('([\x00-\x7f]+)');
 
-def unquote(s){
+function unquote(s){
     """unquote('abc%20def') -> 'abc def'.""";
     if _is_unicode(s){
         if '%' not in s{
@@ -380,7 +380,7 @@ def unquote(s){
     } } return ''.join(res);
 
 }
-def parse_qs(qs, keep_blank_values=0, strict_parsing=0, max_num_fields=None){
+function parse_qs(qs, keep_blank_values=0, strict_parsing=0, max_num_fields=nil){
     """Parse a query given as a string argument.
 
         Arguments:
@@ -411,7 +411,7 @@ def parse_qs(qs, keep_blank_values=0, strict_parsing=0, max_num_fields=None){
     } } return dict;
 
 }
-def parse_qsl(qs, keep_blank_values=0, strict_parsing=0, max_num_fields=None){
+function parse_qsl(qs, keep_blank_values=0, strict_parsing=0, max_num_fields=nil){
     """Parse a query given as a string argument.
 
     Arguments:
@@ -436,7 +436,7 @@ def parse_qsl(qs, keep_blank_values=0, strict_parsing=0, max_num_fields=None){
     # If max_num_fields is defined then check that the number of fields
     # is less than max_num_fields. This prevents a memory exhaustion DOS
     # attack via post bodies with many fields.
-    if max_num_fields is not None{
+    if max_num_fields is not nil{
         num_fields = 1 + qs.count('&') + qs.count(';');
         if max_num_fields < num_fields{
             raise ValueError('Max number of fields exceeded');

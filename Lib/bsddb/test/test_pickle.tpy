@@ -7,9 +7,9 @@ if sys.version_info[0] < 3 {
     try{
         import cPickle;
     } except ImportError{
-        cPickle = None;
+        cPickle = nil;
 } } else {
-    cPickle = None;
+    cPickle = nil;
 
 }
 import unittest;
@@ -22,27 +22,27 @@ class pickleTestCase(unittest.TestCase){
     """Verify that DBError can be pickled and unpickled""";
     db_name = 'test-dbobj.db';
 
-    def setUp(self){
-        self.homeDir = get_new_environment_path();
+    function setUp(){
+        this.homeDir = get_new_environment_path();
 
     }
-    def tearDown(self){
-        if hasattr(self, 'db'){
-            del self.db;
-        } if hasattr(self, 'env'){
-            del self.env;
-        } test_support.rmtree(self.homeDir);
+    function tearDown(){
+        if hasattr(this, 'db'){
+            del this.db;
+        } if hasattr(this, 'env'){
+            del this.env;
+        } test_support.rmtree(this.homeDir);
 
     }
-    def _base_test_pickle_DBError(self, pickle){
-        self.env = db.DBEnv();
-        self.env.open(self.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL);
-        self.db = db.DB(self.env);
-        self.db.open(self.db_name, db.DB_HASH, db.DB_CREATE);
-        self.db.put('spam', 'eggs');
-        self.assertEqual(self.db['spam'], 'eggs');
+    function _base_test_pickle_DBError( pickle){
+        this.env = db.DBEnv();
+        this.env.open(this.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL);
+        this.db = db.DB(this.env);
+        this.db.open(this.db_name, db.DB_HASH, db.DB_CREATE);
+        this.db.put('spam', 'eggs');
+        this.assertEqual(this.db['spam'], 'eggs');
         try{
-            self.db.put('spam', 'ham', flags=db.DB_NOOVERWRITE);
+            this.db.put('spam', 'ham', flags=db.DB_NOOVERWRITE);
         } except db.DBError, egg{
             pickledEgg = pickle.dumps(egg);
             #print repr(pickledEgg)
@@ -53,22 +53,22 @@ class pickleTestCase(unittest.TestCase){
             raise Exception, "where's my DBError exception?!?";
 
         }
-        self.db.close();
-        self.env.close();
+        this.db.close();
+        this.env.close();
 
     }
-    def test01_pickle_DBError(self){
-        self._base_test_pickle_DBError(pickle=pickle);
+    function test01_pickle_DBError(){
+        this._base_test_pickle_DBError(pickle=pickle);
 
     }
     if cPickle{
-        def test02_cPickle_DBError(self){
-            self._base_test_pickle_DBError(pickle=cPickle);
+        function test02_cPickle_DBError(){
+            this._base_test_pickle_DBError(pickle=cPickle);
 
 #----------------------------------------------------------------------
 
 }
-} } def test_suite(){
+} } function test_suite(){
     return unittest.makeSuite(pickleTestCase);
 
 }

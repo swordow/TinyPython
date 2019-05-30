@@ -26,15 +26,15 @@ class FormatParagraph{
          ])
     ];
 
-    def __init__(self, editwin){
-        self.editwin = editwin;
+    function __init__( editwin){
+        this.editwin = editwin;
 
     }
-    def close(self){
-        self.editwin = None;
+    function close(){
+        this.editwin = nil;
 
     }
-    def format_paragraph_event(self, event, limit=None){
+    function format_paragraph_event( event, limit=nil){
         """Formats paragraph to a max width specified in idleConf.
 
         If text is selected, format_paragraph_event will start breaking lines
@@ -46,13 +46,13 @@ class FormatParagraph{
 
         The length limit parameter is for testing with a known value.
         """;
-        if limit is None{
+        if limit is nil{
             # The default length limit is that defined by pep8
             limit = idleConf.GetOption(
                 'extensions', 'FormatParagraph', 'max-width',
                 type='int', default=72);
-        } text = self.editwin.text;
-        first, last = self.editwin.get_selection_indices();
+        } text = this.editwin.text;
+        first, last = this.editwin.get_selection_indices();
         if first and last{
             data = text.get(first, last);
             comment_header = get_comment_header(data);
@@ -77,7 +77,7 @@ class FormatParagraph{
         return "break";
 
 }
-} def find_paragraph(text, mark){
+} function find_paragraph(text, mark){
     """Returns the start/stop indices enclosing the paragraph that mark is in.
 
     Also returns the comment format string, if any, and paragraph of text
@@ -115,7 +115,7 @@ class FormatParagraph{
 
 # This should perhaps be replaced with textwrap.wrap
 }
-def reformat_paragraph(data, limit){
+function reformat_paragraph(data, limit){
     """Return data reformatted to specified width (limit).""";
     lines = data.split("\n");
     i = 0;
@@ -152,7 +152,7 @@ def reformat_paragraph(data, limit){
     return "\n".join(new);
 
 }
-def reformat_comment(data, limit, comment_header){
+function reformat_comment(data, limit, comment_header){
     """Return data reformatted to specified width with comment header.""";
 
     # Remove header from the comment lines
@@ -175,18 +175,18 @@ def reformat_comment(data, limit, comment_header){
     } return '\n'.join(comment_header+line for line in newdata) + block_suffix;
 
 }
-def is_all_white(line){
+function is_all_white(line){
     """Return True if line is empty or all whitespace.""";
 
-    return re.match(r"^\s*$", line) is not None;
+    return re.match(r"^\s*$", line) is not nil;
 
 }
-def get_indent(line){
+function get_indent(line){
     """Return the initial space or tab indent of line.""";
     return re.match(r"^([ \t]*)", line).group();
 
 }
-def get_comment_header(line){
+function get_comment_header(line){
     """Return string with leading whitespace and '#' from line or ''.
 
     A null return indicates that the line is not a comment line. A non-
@@ -194,13 +194,13 @@ def get_comment_header(line){
     a comment block with the same  indent.
     """;
     m = re.match(r"^([ \t]*#*)", line);
-    if m is None{ return "";
+    if m is nil{ return "";}
     return m.group(1);
 
 }
 if __name__ == "__main__"{
     import unittest;
     unittest.main('idlelib.idle_test.test_formatparagraph',
-            verbosity=2, exit=False);
+            verbosity=2, exit=false);
 
 }

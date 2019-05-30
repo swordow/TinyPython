@@ -26,283 +26,283 @@ import unittest;
 import sqlite3 as sqlite;
 from test import test_support;
 
-def func_returntext(){
+function func_returntext(){
     return "foo";
-} def func_returnunicode(){
+} function func_returnunicode(){
     return u"bar";
-} def func_returnint(){
+} function func_returnint(){
     return 42;
-} def func_returnfloat(){
+} function func_returnfloat(){
     return 3.14;
-} def func_returnnull(){
-    return None;
-} def func_returnblob(){
+} function func_returnnull(){
+    return nil;
+} function func_returnblob(){
     with test_support.check_py3k_warnings(){
         return buffer("blob");
-} } def func_returnlonglong(){
+} } function func_returnlonglong(){
     return 1<<31;
-} def func_raiseexception(){
+} function func_raiseexception(){
     5 // 0;
 
 }
-def func_isstring(v){
+function func_isstring(v){
     return type(v) is unicode;
-} def func_isint(v){
+} function func_isint(v){
     return type(v) is int;
-} def func_isfloat(v){
+} function func_isfloat(v){
     return type(v) is float;
-} def func_isnone(v){
-    return type(v) is type(None);
-} def func_isblob(v){
+} function func_isnone(v){
+    return type(v) is type(nil);
+} function func_isblob(v){
     return type(v) is buffer;
-} def func_islonglong(v){
+} function func_islonglong(v){
     return isinstance(v, (int, long)) and v >= 1<<31;
 
 }
 class AggrNoStep{
-    def __init__(self){
+    function __init__(){
         pass;
 
     }
-    def finalize(self){
+    function finalize(){
         return 1;
 
 }
 } class AggrNoFinalize{
-    def __init__(self){
+    function __init__(){
         pass;
 
     }
-    def step(self, x){
+    function step( x){
         pass;
 
 }
 } class AggrExceptionInInit{
-    def __init__(self){
+    function __init__(){
         5 // 0;
 
     }
-    def step(self, x){
+    function step( x){
         pass;
 
     }
-    def finalize(self){
+    function finalize(){
         pass;
 
 }
 } class AggrExceptionInStep{
-    def __init__(self){
+    function __init__(){
         pass;
 
     }
-    def step(self, x){
+    function step( x){
         5 // 0;
 
     }
-    def finalize(self){
+    function finalize(){
         return 42;
 
 }
 } class AggrExceptionInFinalize{
-    def __init__(self){
+    function __init__(){
         pass;
 
     }
-    def step(self, x){
+    function step( x){
         pass;
 
     }
-    def finalize(self){
+    function finalize(){
         5 // 0;
 
 }
 } class AggrCheckType{
-    def __init__(self){
-        self.val = None;
+    function __init__(){
+        this.val = nil;
 
     }
-    def step(self, whichType, val){
-        theType = {"str": unicode, "int": int, "float": float, "None": type(None), "blob": buffer};
-        self.val = int(theType[whichType] is type(val));
+    function step( whichType, val){
+        theType = {"str": unicode, "int": int, "float": float, "None": type(nil), "blob": buffer};
+        this.val = int(theType[whichType] is type(val));
 
     }
-    def finalize(self){
-        return self.val;
+    function finalize(){
+        return this.val;
 
 }
 } class AggrSum{
-    def __init__(self){
-        self.val = 0.0;
+    function __init__(){
+        this.val = 0.0;
 
     }
-    def step(self, val){
-        self.val += val;
+    function step( val){
+        this.val += val;
 
     }
-    def finalize(self){
-        return self.val;
+    function finalize(){
+        return this.val;
 
 }
 } class FunctionTests(unittest.TestCase){
-    def setUp(self){
-        self.con = sqlite.connect(":memory:");
+    function setUp(){
+        this.con = sqlite.connect(":memory:");
 
-        self.con.create_function("returntext", 0, func_returntext);
-        self.con.create_function("returnunicode", 0, func_returnunicode);
-        self.con.create_function("returnint", 0, func_returnint);
-        self.con.create_function("returnfloat", 0, func_returnfloat);
-        self.con.create_function("returnnull", 0, func_returnnull);
-        self.con.create_function("returnblob", 0, func_returnblob);
-        self.con.create_function("returnlonglong", 0, func_returnlonglong);
-        self.con.create_function("raiseexception", 0, func_raiseexception);
+        this.con.create_function("returntext", 0, func_returntext);
+        this.con.create_function("returnunicode", 0, func_returnunicode);
+        this.con.create_function("returnint", 0, func_returnint);
+        this.con.create_function("returnfloat", 0, func_returnfloat);
+        this.con.create_function("returnnull", 0, func_returnnull);
+        this.con.create_function("returnblob", 0, func_returnblob);
+        this.con.create_function("returnlonglong", 0, func_returnlonglong);
+        this.con.create_function("raiseexception", 0, func_raiseexception);
 
-        self.con.create_function("isstring", 1, func_isstring);
-        self.con.create_function("isint", 1, func_isint);
-        self.con.create_function("isfloat", 1, func_isfloat);
-        self.con.create_function("isnone", 1, func_isnone);
-        self.con.create_function("isblob", 1, func_isblob);
-        self.con.create_function("islonglong", 1, func_islonglong);
-
-    }
-    def tearDown(self){
-        self.con.close();
+        this.con.create_function("isstring", 1, func_isstring);
+        this.con.create_function("isint", 1, func_isint);
+        this.con.create_function("isfloat", 1, func_isfloat);
+        this.con.create_function("isnone", 1, func_isnone);
+        this.con.create_function("isblob", 1, func_isblob);
+        this.con.create_function("islonglong", 1, func_islonglong);
 
     }
-    def CheckFuncErrorOnCreate(self){
+    function tearDown(){
+        this.con.close();
+
+    }
+    function CheckFuncErrorOnCreate(){
         try{
-            self.con.create_function("bla", -100, lambda x{ 2*x});
-            self.fail("should have raised an OperationalError");
+            this.con.create_function("bla", -100, lambda x{ 2*x});
+            this.fail("should have raised an OperationalError");
         } except sqlite.OperationalError{
             pass;
 
     }
-    } def CheckFuncRefCount(self){
-        def getfunc(){
-            def f(){
+    } function CheckFuncRefCount(){
+        function getfunc(){
+            function f(){
                 return 1;
             } return f;
         } f = getfunc();
         globals()["foo"] = f;
         # self.con.create_function("reftest", 0, getfunc())
-        self.con.create_function("reftest", 0, f);
-        cur = self.con.cursor();
+        this.con.create_function("reftest", 0, f);
+        cur = this.con.cursor();
         cur.execute("select reftest()");
 
     }
-    def CheckFuncReturnText(self){
-        cur = self.con.cursor();
+    function CheckFuncReturnText(){
+        cur = this.con.cursor();
         cur.execute("select returntext()");
         val = cur.fetchone()[0];
-        self.assertEqual(type(val), unicode);
-        self.assertEqual(val, "foo");
+        this.assertEqual(type(val), unicode);
+        this.assertEqual(val, "foo");
 
     }
-    def CheckFuncReturnUnicode(self){
-        cur = self.con.cursor();
+    function CheckFuncReturnUnicode(){
+        cur = this.con.cursor();
         cur.execute("select returnunicode()");
         val = cur.fetchone()[0];
-        self.assertEqual(type(val), unicode);
-        self.assertEqual(val, u"bar");
+        this.assertEqual(type(val), unicode);
+        this.assertEqual(val, u"bar");
 
     }
-    def CheckFuncReturnInt(self){
-        cur = self.con.cursor();
+    function CheckFuncReturnInt(){
+        cur = this.con.cursor();
         cur.execute("select returnint()");
         val = cur.fetchone()[0];
-        self.assertEqual(type(val), int);
-        self.assertEqual(val, 42);
+        this.assertEqual(type(val), int);
+        this.assertEqual(val, 42);
 
     }
-    def CheckFuncReturnFloat(self){
-        cur = self.con.cursor();
+    function CheckFuncReturnFloat(){
+        cur = this.con.cursor();
         cur.execute("select returnfloat()");
         val = cur.fetchone()[0];
-        self.assertEqual(type(val), float);
+        this.assertEqual(type(val), float);
         if val < 3.139 or val > 3.141{
-            self.fail("wrong value");
+            this.fail("wrong value");
 
     }
-    } def CheckFuncReturnNull(self){
-        cur = self.con.cursor();
+    } function CheckFuncReturnNull(){
+        cur = this.con.cursor();
         cur.execute("select returnnull()");
         val = cur.fetchone()[0];
-        self.assertEqual(type(val), type(None));
-        self.assertEqual(val, None);
+        this.assertEqual(type(val), type(nil));
+        this.assertEqual(val, nil);
 
     }
-    def CheckFuncReturnBlob(self){
-        cur = self.con.cursor();
+    function CheckFuncReturnBlob(){
+        cur = this.con.cursor();
         cur.execute("select returnblob()");
         val = cur.fetchone()[0];
         with test_support.check_py3k_warnings(){
-            self.assertEqual(type(val), buffer);
-            self.assertEqual(val, buffer("blob"));
+            this.assertEqual(type(val), buffer);
+            this.assertEqual(val, buffer("blob"));
 
     }
-    } def CheckFuncReturnLongLong(self){
-        cur = self.con.cursor();
+    } function CheckFuncReturnLongLong(){
+        cur = this.con.cursor();
         cur.execute("select returnlonglong()");
         val = cur.fetchone()[0];
-        self.assertEqual(val, 1<<31);
+        this.assertEqual(val, 1<<31);
 
     }
-    def CheckFuncException(self){
-        cur = self.con.cursor();
+    function CheckFuncException(){
+        cur = this.con.cursor();
         try{
             cur.execute("select raiseexception()");
             cur.fetchone();
-            self.fail("should have raised OperationalError");
+            this.fail("should have raised OperationalError");
         } except sqlite.OperationalError, e{
-            self.assertEqual(e.args[0], 'user-defined function raised exception');
+            this.assertEqual(e.args[0], 'user-defined function raised exception');
 
     }
-    } def CheckParamString(self){
-        cur = self.con.cursor();
+    } function CheckParamString(){
+        cur = this.con.cursor();
         cur.execute("select isstring(?)", ("foo",));
         val = cur.fetchone()[0];
-        self.assertEqual(val, 1);
+        this.assertEqual(val, 1);
 
     }
-    def CheckParamInt(self){
-        cur = self.con.cursor();
+    function CheckParamInt(){
+        cur = this.con.cursor();
         cur.execute("select isint(?)", (42,));
         val = cur.fetchone()[0];
-        self.assertEqual(val, 1);
+        this.assertEqual(val, 1);
 
     }
-    def CheckParamFloat(self){
-        cur = self.con.cursor();
+    function CheckParamFloat(){
+        cur = this.con.cursor();
         cur.execute("select isfloat(?)", (3.14,));
         val = cur.fetchone()[0];
-        self.assertEqual(val, 1);
+        this.assertEqual(val, 1);
 
     }
-    def CheckParamNone(self){
-        cur = self.con.cursor();
-        cur.execute("select isnone(?)", (None,));
+    function CheckParamNone(){
+        cur = this.con.cursor();
+        cur.execute("select isnone(?)", (nil,));
         val = cur.fetchone()[0];
-        self.assertEqual(val, 1);
+        this.assertEqual(val, 1);
 
     }
-    def CheckParamBlob(self){
-        cur = self.con.cursor();
+    function CheckParamBlob(){
+        cur = this.con.cursor();
         with test_support.check_py3k_warnings(){
             cur.execute("select isblob(?)", (buffer("blob"),));
         } val = cur.fetchone()[0];
-        self.assertEqual(val, 1);
+        this.assertEqual(val, 1);
 
     }
-    def CheckParamLongLong(self){
-        cur = self.con.cursor();
+    function CheckParamLongLong(){
+        cur = this.con.cursor();
         cur.execute("select islonglong(?)", (1<<42,));
         val = cur.fetchone()[0];
-        self.assertEqual(val, 1);
+        this.assertEqual(val, 1);
 
 }
 } class AggregateTests(unittest.TestCase){
-    def setUp(self){
-        self.con = sqlite.connect(":memory:");
-        cur = self.con.cursor();
+    function setUp(){
+        this.con = sqlite.connect(":memory:");
+        cur = this.con.cursor();
         cur.execute("""
             create table test(
                 t text,
@@ -314,129 +314,129 @@ class AggrNoStep{
             """);
         with test_support.check_py3k_warnings(){
             cur.execute("insert into test(t, i, f, n, b) values (?, ?, ?, ?, ?)",
-                ("foo", 5, 3.14, None, buffer("blob"),));
+                ("foo", 5, 3.14, nil, buffer("blob"),));
 
         }
-        self.con.create_aggregate("nostep", 1, AggrNoStep);
-        self.con.create_aggregate("nofinalize", 1, AggrNoFinalize);
-        self.con.create_aggregate("excInit", 1, AggrExceptionInInit);
-        self.con.create_aggregate("excStep", 1, AggrExceptionInStep);
-        self.con.create_aggregate("excFinalize", 1, AggrExceptionInFinalize);
-        self.con.create_aggregate("checkType", 2, AggrCheckType);
-        self.con.create_aggregate("mysum", 1, AggrSum);
+        this.con.create_aggregate("nostep", 1, AggrNoStep);
+        this.con.create_aggregate("nofinalize", 1, AggrNoFinalize);
+        this.con.create_aggregate("excInit", 1, AggrExceptionInInit);
+        this.con.create_aggregate("excStep", 1, AggrExceptionInStep);
+        this.con.create_aggregate("excFinalize", 1, AggrExceptionInFinalize);
+        this.con.create_aggregate("checkType", 2, AggrCheckType);
+        this.con.create_aggregate("mysum", 1, AggrSum);
 
     }
-    def tearDown(self){
+    function tearDown(){
         #self.cur.close()
         #self.con.close()
         pass;
 
     }
-    def CheckAggrErrorOnCreate(self){
+    function CheckAggrErrorOnCreate(){
         try{
-            self.con.create_function("bla", -100, AggrSum);
-            self.fail("should have raised an OperationalError");
+            this.con.create_function("bla", -100, AggrSum);
+            this.fail("should have raised an OperationalError");
         } except sqlite.OperationalError{
             pass;
 
     }
-    } def CheckAggrNoStep(self){
-        cur = self.con.cursor();
+    } function CheckAggrNoStep(){
+        cur = this.con.cursor();
         try{
             cur.execute("select nostep(t) from test");
-            self.fail("should have raised an AttributeError");
+            this.fail("should have raised an AttributeError");
         } except AttributeError, e{
-            self.assertEqual(e.args[0], "AggrNoStep instance has no attribute 'step'");
+            this.assertEqual(e.args[0], "AggrNoStep instance has no attribute 'step'");
 
     }
-    } def CheckAggrNoFinalize(self){
-        cur = self.con.cursor();
+    } function CheckAggrNoFinalize(){
+        cur = this.con.cursor();
         try{
             cur.execute("select nofinalize(t) from test");
             val = cur.fetchone()[0];
-            self.fail("should have raised an OperationalError");
+            this.fail("should have raised an OperationalError");
         } except sqlite.OperationalError, e{
-            self.assertEqual(e.args[0], "user-defined aggregate's 'finalize' method raised error");
+            this.assertEqual(e.args[0], "user-defined aggregate's 'finalize' method raised error");
 
     }
-    } def CheckAggrExceptionInInit(self){
-        cur = self.con.cursor();
+    } function CheckAggrExceptionInInit(){
+        cur = this.con.cursor();
         try{
             cur.execute("select excInit(t) from test");
             val = cur.fetchone()[0];
-            self.fail("should have raised an OperationalError");
+            this.fail("should have raised an OperationalError");
         } except sqlite.OperationalError, e{
-            self.assertEqual(e.args[0], "user-defined aggregate's '__init__' method raised error");
+            this.assertEqual(e.args[0], "user-defined aggregate's '__init__' method raised error");
 
     }
-    } def CheckAggrExceptionInStep(self){
-        cur = self.con.cursor();
+    } function CheckAggrExceptionInStep(){
+        cur = this.con.cursor();
         try{
             cur.execute("select excStep(t) from test");
             val = cur.fetchone()[0];
-            self.fail("should have raised an OperationalError");
+            this.fail("should have raised an OperationalError");
         } except sqlite.OperationalError, e{
-            self.assertEqual(e.args[0], "user-defined aggregate's 'step' method raised error");
+            this.assertEqual(e.args[0], "user-defined aggregate's 'step' method raised error");
 
     }
-    } def CheckAggrExceptionInFinalize(self){
-        cur = self.con.cursor();
+    } function CheckAggrExceptionInFinalize(){
+        cur = this.con.cursor();
         try{
             cur.execute("select excFinalize(t) from test");
             val = cur.fetchone()[0];
-            self.fail("should have raised an OperationalError");
+            this.fail("should have raised an OperationalError");
         } except sqlite.OperationalError, e{
-            self.assertEqual(e.args[0], "user-defined aggregate's 'finalize' method raised error");
+            this.assertEqual(e.args[0], "user-defined aggregate's 'finalize' method raised error");
 
     }
-    } def CheckAggrCheckParamStr(self){
-        cur = self.con.cursor();
+    } function CheckAggrCheckParamStr(){
+        cur = this.con.cursor();
         cur.execute("select checkType('str', ?)", ("foo",));
         val = cur.fetchone()[0];
-        self.assertEqual(val, 1);
+        this.assertEqual(val, 1);
 
     }
-    def CheckAggrCheckParamInt(self){
-        cur = self.con.cursor();
+    function CheckAggrCheckParamInt(){
+        cur = this.con.cursor();
         cur.execute("select checkType('int', ?)", (42,));
         val = cur.fetchone()[0];
-        self.assertEqual(val, 1);
+        this.assertEqual(val, 1);
 
     }
-    def CheckAggrCheckParamFloat(self){
-        cur = self.con.cursor();
+    function CheckAggrCheckParamFloat(){
+        cur = this.con.cursor();
         cur.execute("select checkType('float', ?)", (3.14,));
         val = cur.fetchone()[0];
-        self.assertEqual(val, 1);
+        this.assertEqual(val, 1);
 
     }
-    def CheckAggrCheckParamNone(self){
-        cur = self.con.cursor();
-        cur.execute("select checkType('None', ?)", (None,));
+    function CheckAggrCheckParamNone(){
+        cur = this.con.cursor();
+        cur.execute("select checkType('None', ?)", (nil,));
         val = cur.fetchone()[0];
-        self.assertEqual(val, 1);
+        this.assertEqual(val, 1);
 
     }
-    def CheckAggrCheckParamBlob(self){
-        cur = self.con.cursor();
+    function CheckAggrCheckParamBlob(){
+        cur = this.con.cursor();
         with test_support.check_py3k_warnings(){
             cur.execute("select checkType('blob', ?)", (buffer("blob"),));
         } val = cur.fetchone()[0];
-        self.assertEqual(val, 1);
+        this.assertEqual(val, 1);
 
     }
-    def CheckAggrCheckAggrSum(self){
-        cur = self.con.cursor();
+    function CheckAggrCheckAggrSum(){
+        cur = this.con.cursor();
         cur.execute("delete from test");
         cur.executemany("insert into test(i) values (?)", [(10,), (20,), (30,)]);
         cur.execute("select mysum(i) from test");
         val = cur.fetchone()[0];
-        self.assertEqual(val, 60);
+        this.assertEqual(val, 60);
 
 }
 } class AuthorizerTests(unittest.TestCase){
     @staticmethod;
-    def authorizer_cb(action, arg1, arg2, dbname, source){
+    function authorizer_cb(action, arg1, arg2, dbname, source){
         if action != sqlite.SQLITE_SELECT{
             return sqlite.SQLITE_DENY;
         } if arg2 == 'c2' or arg1 == 't2'{
@@ -444,9 +444,9 @@ class AggrNoStep{
         } return sqlite.SQLITE_OK;
 
     }
-    def setUp(self){
-        self.con = sqlite.connect(":memory:");
-        self.con.executescript("""
+    function setUp(){
+        this.con = sqlite.connect(":memory:");
+        this.con.executescript("""
             create table t1 (c1, c2);
             create table t2 (c1, c2);
             insert into t1 (c1, c2) values (1, 2);
@@ -454,38 +454,38 @@ class AggrNoStep{
             """);
 
         # For our security test:
-        self.con.execute("select c2 from t2");
+        this.con.execute("select c2 from t2");
 
-        self.con.set_authorizer(self.authorizer_cb);
+        this.con.set_authorizer(this.authorizer_cb);
 
     }
-    def tearDown(self){
+    function tearDown(){
         pass;
 
     }
-    def test_table_access(self){
+    function test_table_access(){
         try{
-            self.con.execute("select * from t2");
+            this.con.execute("select * from t2");
         } except sqlite.DatabaseError, e{
             if not e.args[0].endswith("prohibited"){
-                self.fail("wrong exception text: %s" % e.args[0]);
+                this.fail("wrong exception text: %s" % e.args[0]);
             } return;
-        } self.fail("should have raised an exception due to missing privileges");
+        } this.fail("should have raised an exception due to missing privileges");
 
     }
-    def test_column_access(self){
+    function test_column_access(){
         try{
-            self.con.execute("select c2 from t1");
+            this.con.execute("select c2 from t1");
         } except sqlite.DatabaseError, e{
             if not e.args[0].endswith("prohibited"){
-                self.fail("wrong exception text: %s" % e.args[0]);
+                this.fail("wrong exception text: %s" % e.args[0]);
             } return;
-        } self.fail("should have raised an exception due to missing privileges");
+        } this.fail("should have raised an exception due to missing privileges");
 
 }
 } class AuthorizerRaiseExceptionTests(AuthorizerTests){
     @staticmethod;
-    def authorizer_cb(action, arg1, arg2, dbname, source){
+    function authorizer_cb(action, arg1, arg2, dbname, source){
         if action != sqlite.SQLITE_SELECT{
             raise ValueError;
         } if arg2 == 'c2' or arg1 == 't2'{
@@ -495,7 +495,7 @@ class AggrNoStep{
 }
 } class AuthorizerIllegalTypeTests(AuthorizerTests){
     @staticmethod;
-    def authorizer_cb(action, arg1, arg2, dbname, source){
+    function authorizer_cb(action, arg1, arg2, dbname, source){
         if action != sqlite.SQLITE_SELECT{
             return 0.0;
         } if arg2 == 'c2' or arg1 == 't2'{
@@ -505,7 +505,7 @@ class AggrNoStep{
 }
 } class AuthorizerLargeIntegerTests(AuthorizerTests){
     @staticmethod;
-    def authorizer_cb(action, arg1, arg2, dbname, source){
+    function authorizer_cb(action, arg1, arg2, dbname, source){
         if action != sqlite.SQLITE_SELECT{
             return 2**32;
         } if arg2 == 'c2' or arg1 == 't2'{
@@ -514,7 +514,7 @@ class AggrNoStep{
 
 
 }
-} def suite(){
+} function suite(){
     function_suite = unittest.makeSuite(FunctionTests, "Check");
     aggregate_suite = unittest.makeSuite(AggregateTests, "Check");
     authorizer_suite = unittest.makeSuite(AuthorizerTests);
@@ -528,7 +528,7 @@ class AggrNoStep{
         ));
 
 }
-def test(){
+function test(){
     runner = unittest.TextTestRunner();
     runner.run(suite());
 

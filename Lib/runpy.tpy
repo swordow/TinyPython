@@ -24,53 +24,53 @@ __all__ = [
 
 class _TempModule(object){
     """Temporarily replace a module in sys.modules with an empty namespace""";
-    def __init__(self, mod_name){
-        self.mod_name = mod_name;
-        self.module = imp.new_module(mod_name);
-        self._saved_module = [];
+    function __init__( mod_name){
+        this.mod_name = mod_name;
+        this.module = imp.new_module(mod_name);
+        this._saved_module = [];
 
     }
-    def __enter__(self){
-        mod_name = self.mod_name;
+    function __enter__(){
+        mod_name = this.mod_name;
         try{
-            self._saved_module.append(sys.modules[mod_name]);
+            this._saved_module.append(sys.modules[mod_name]);
         } except KeyError{
             pass;
-        } sys.modules[mod_name] = self.module;
-        return self;
+        } sys.modules[mod_name] = this.module;
+        return this;
 
     }
-    def __exit__(self, *args){
-        if self._saved_module{
-            sys.modules[self.mod_name] = self._saved_module[0];
+    function __exit__( *args){
+        if this._saved_module{
+            sys.modules[this.mod_name] = this._saved_module[0];
         } else{
-            del sys.modules[self.mod_name];
-        } self._saved_module = [];
+            del sys.modules[this.mod_name];
+        } this._saved_module = [];
 
 }
 } class _ModifiedArgv0(object){
-    def __init__(self, value){
-        self.value = value;
-        self._saved_value = self._sentinel = object();
+    function __init__( value){
+        this.value = value;
+        this._saved_value = this._sentinel = object();
 
     }
-    def __enter__(self){
-        if self._saved_value is not self._sentinel{
+    function __enter__(){
+        if this._saved_value is not this._sentinel{
             raise RuntimeError("Already preserving saved value");
-        } self._saved_value = sys.argv[0];
-        sys.argv[0] = self.value;
+        } this._saved_value = sys.argv[0];
+        sys.argv[0] = this.value;
 
     }
-    def __exit__(self, *args){
-        self.value = self._sentinel;
-        sys.argv[0] = self._saved_value;
+    function __exit__( *args){
+        this.value = this._sentinel;
+        sys.argv[0] = this._saved_value;
 
 }
-} def _run_code(code, run_globals, init_globals=None,
-              mod_name=None, mod_fname=None,
-              mod_loader=None, pkg_name=None){
+} function _run_code(code, run_globals, init_globals=nil,
+              mod_name=nil, mod_fname=nil,
+              mod_loader=nil, pkg_name=nil){
     """Helper to run code in nominated namespace""";
-    if init_globals is not None{
+    if init_globals is not nil{
         run_globals.update(init_globals);
     } run_globals.update(__name__ = mod_name,
                        __file__ = mod_fname,
@@ -80,9 +80,9 @@ class _TempModule(object){
     return run_globals;
 
 }
-def _run_module_code(code, init_globals=None,
-                    mod_name=None, mod_fname=None,
-                    mod_loader=None, pkg_name=None){
+function _run_module_code(code, init_globals=nil,
+                    mod_name=nil, mod_fname=nil,
+                    mod_loader=nil, pkg_name=nil){
     """Helper to run code in new namespace with sys modified""";
     with _TempModule(mod_name) as temp_module, _ModifiedArgv0(mod_fname){
         mod_globals = temp_module.module.__dict__;
@@ -99,19 +99,19 @@ def _run_module_code(code, init_globals=None,
 # Since we can't introduce new features in maintenance releases,
 # support was added to zipimporter under the name '_get_filename'
 }
-def _get_filename(loader, mod_name){
+function _get_filename(loader, mod_name){
     for attr in ("get_filename", "_get_filename"){
-        meth = getattr(loader, attr, None);
-        if meth is not None{
+        meth = getattr(loader, attr, nil);
+        if meth is not nil{
             return meth(mod_name);
-    } } return None;
+    } } return nil;
 
 # Helper to get the loader, code and filename for a module
 }
-def _get_module_details(mod_name, error=ImportError){
+function _get_module_details(mod_name, error=ImportError){
     try{
         loader = get_loader(mod_name);
-        if loader is None{
+        if loader is nil{
             raise error("No module named %s" % mod_name);
         } ispkg = loader.is_package(mod_name);
     } except ImportError as e{
@@ -130,14 +130,14 @@ def _get_module_details(mod_name, error=ImportError){
         code = loader.get_code(mod_name);
     } except ImportError as e{
         raise error(format(e));
-    } if code is None{
+    } if code is nil{
         raise error("No code object available for %s" % mod_name);
     } filename = _get_filename(loader, mod_name);
     return mod_name, loader, code, filename;
 
 
 }
-def _get_main_module_details(error=ImportError){
+function _get_main_module_details(error=ImportError){
     # Helper that gives a nicer error message when attempting to
     # execute a zipfile or directory by invoking __main__.py
     main_name = "__main__";
@@ -158,7 +158,7 @@ def _get_main_module_details(error=ImportError){
 # This avoids a repeat of the situation where run_module() no longer met the
 # needs of mainmodule.c, but couldn't be changed because it was public
 }
-def _run_module_as_main(mod_name, alter_argv=True){
+function _run_module_as_main(mod_name, alter_argv=true){
     """Runs the designated module in the __main__ namespace
 
        Note that the executed module will have full access to the
@@ -184,18 +184,18 @@ def _run_module_as_main(mod_name, alter_argv=True){
     main_globals = sys.modules["__main__"].__dict__;
     if alter_argv{
         sys.argv[0] = fname;
-    } return _run_code(code, main_globals, None,
+    } return _run_code(code, main_globals, nil,
                      "__main__", fname, loader, pkg_name);
 
 }
-def run_module(mod_name, init_globals=None,
-               run_name=None, alter_sys=False){
+function run_module(mod_name, init_globals=nil,
+               run_name=nil, alter_sys=false){
     """Execute a module's code without importing it
 
        Returns the resulting top level namespace dictionary
     """;
     mod_name, loader, code, fname = _get_module_details(mod_name);
-    if run_name is None{
+    if run_name is nil{
         run_name = mod_name;
     } pkg_name = mod_name.rpartition('.')[0];
     if alter_sys{
@@ -210,7 +210,7 @@ def run_module(mod_name, init_globals=None,
 # XXX (ncoghlan): Perhaps expose the C API function
 # as imp.get_importer instead of reimplementing it in Python?
 }
-} def _get_importer(path_name){
+} function _get_importer(path_name){
     """Python version of PyImport_GetImporter C API function""";
     cache = sys.path_importer_cache;
     try{
@@ -219,7 +219,7 @@ def run_module(mod_name, init_globals=None,
         # Not yet cached. Flag as using the
         # standard machinery until we finish
         # checking the hooks
-        cache[path_name] = None;
+        cache[path_name] = nil;
         for hook in sys.path_hooks{
             try{
                 importer = hook(path_name);
@@ -234,23 +234,23 @@ def run_module(mod_name, init_globals=None,
             try{
                 importer = imp.NullImporter(path_name);
             } except ImportError{
-                return None;
+                return nil;
         } } cache[path_name] = importer;
     } return importer;
 
 }
-def _get_code_from_file(fname){
+function _get_code_from_file(fname){
     # Check for a compiled file first
     with open(fname, "rb") as f{
         code = read_code(f);
-    } if code is None{
+    } if code is nil{
         # That didn't work, so try it as normal source code
         with open(fname, "rU") as f{
             code = compile(f.read(), fname, 'exec');
     } } return code;
 
 }
-def run_path(path_name, init_globals=None, run_name=None){
+function run_path(path_name, init_globals=nil, run_name=nil){
     """Execute code located at the specified filesystem location
 
        Returns the resulting top level namespace dictionary
@@ -260,7 +260,7 @@ def run_path(path_name, init_globals=None, run_name=None){
        it may refer to a zipfile or directory containing a top
        level __main__.py script.
     """;
-    if run_name is None{
+    if run_name is nil{
         run_name = "<run_path>";
     } importer = _get_importer(path_name);
     if isinstance(importer, imp.NullImporter){

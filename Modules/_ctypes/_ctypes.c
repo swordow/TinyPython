@@ -200,12 +200,12 @@ _DictRemover_call(PyObject *_self, PyObject *args, PyObject *kw)
     if (self->key && self->dict) {
         if (-1 == PyDict_DelItem(self->dict, self->key))
             /* XXX Error context */
-            PyErr_WriteUnraisable(Py_None);
+            PyErr_WriteUnraisable(Py_Nil);
         Py_CLEAR(self->key);
         Py_CLEAR(self->dict);
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyTypeObject DictRemover_Type = {
@@ -292,7 +292,7 @@ PyDict_GetItemProxy(PyObject *dict, PyObject *key)
     if (!PyWeakref_CheckProxy(item))
         return item;
     result = PyWeakref_GET_OBJECT(item);
-    if (result == Py_None)
+    if (result == Py_Nil)
         return NULL;
     return result;
 }
@@ -1095,8 +1095,8 @@ PyCPointerType_set_type(PyTypeObject *self, PyObject *type)
     if (-1 == PyDict_SetItemString((PyObject *)dict, "_type_", type))
         return NULL;
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 staticforward PyObject *_byref(PyObject *);
@@ -1106,7 +1106,7 @@ PyCPointerType_from_param(PyObject *type, PyObject *value)
 {
     StgDictObject *typedict;
 
-    if (value == Py_None) {
+    if (value == Py_Nil) {
         /* ConvParam will convert to a NULL pointer later */
         Py_INCREF(value);
         return value;
@@ -1650,9 +1650,9 @@ c_wchar_p_from_param(PyObject *type, PyObject *value)
 #if (PYTHON_API_VERSION < 1012)
 # error not supported
 #endif
-    if (value == Py_None) {
-        Py_INCREF(Py_None);
-        return Py_None;
+    if (value == Py_Nil) {
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     if (PyUnicode_Check(value) || PyString_Check(value)) {
         PyCArgObject *parg;
@@ -1718,9 +1718,9 @@ c_char_p_from_param(PyObject *type, PyObject *value)
 #if (PYTHON_API_VERSION < 1012)
 # error not supported
 #endif
-    if (value == Py_None) {
-        Py_INCREF(Py_None);
-        return Py_None;
+    if (value == Py_Nil) {
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     if (PyString_Check(value) || PyUnicode_Check(value)) {
         PyCArgObject *parg;
@@ -1789,9 +1789,9 @@ c_void_p_from_param(PyObject *type, PyObject *value)
 #endif
 
 /* None */
-    if (value == Py_None) {
-        Py_INCREF(Py_None);
-        return Py_None;
+    if (value == Py_Nil) {
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     /* Should probably allow buffer interface as well */
 /* int, long */
@@ -2431,7 +2431,7 @@ make_funcptrtype_dict(StgDictObject *stgdict)
 
     ob = PyDict_GetItemString((PyObject *)stgdict, "_restype_");
     if (ob) {
-        if (ob != Py_None && !PyType_stgdict(ob) && !PyCallable_Check(ob)) {
+        if (ob != Py_Nil && !PyType_stgdict(ob) && !PyCallable_Check(ob)) {
             PyErr_SetString(PyExc_TypeError,
                 "_restype_ must be a type, a callable, or None");
             return -1;
@@ -2580,8 +2580,8 @@ PyCData_GetContainer(CDataObject *self)
         if (self->b_length) {
             self->b_objects = PyDict_New();
         } else {
-            Py_INCREF(Py_None);
-            self->b_objects = Py_None;
+            Py_INCREF(Py_Nil);
+            self->b_objects = Py_Nil;
         }
     }
     return self;
@@ -2650,8 +2650,8 @@ KeepRef(CDataObject *target, Py_ssize_t index, PyObject *keep)
     PyObject *key;
 
 /* Optimization: no need to store None */
-    if (keep == Py_None) {
-        Py_DECREF(Py_None);
+    if (keep == Py_Nil) {
+        Py_DECREF(Py_Nil);
         return 0;
     }
     ob = PyCData_GetContainer(target);
@@ -2829,8 +2829,8 @@ PyCData_setstate(PyObject *_self, PyObject *args)
     Py_DECREF(mydict);
     if (res == -1)
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 /*
@@ -3050,10 +3050,10 @@ _PyCData_set(CDataObject *dst, PyObject *type, SETFUNC setfunc, PyObject *value,
                                 size, ptr);
             Py_DECREF(ob);
             return result;
-        } else if (value == Py_None && PyCPointerTypeObject_Check(type)) {
+        } else if (value == Py_Nil && PyCPointerTypeObject_Check(type)) {
             *(void **)ptr = NULL;
-            Py_INCREF(Py_None);
-            return Py_None;
+            Py_INCREF(Py_Nil);
+            return Py_Nil;
         } else {
             PyErr_Format(PyExc_TypeError,
                          "expected %s instance, got %s",
@@ -3200,8 +3200,8 @@ PyCFuncPtr_get_errcheck(PyCFuncPtrObject *self)
         Py_INCREF(self->errcheck);
         return self->errcheck;
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static int
@@ -3212,7 +3212,7 @@ PyCFuncPtr_set_restype(PyCFuncPtrObject *self, PyObject *ob)
         Py_CLEAR(self->checker);
         return 0;
     }
-    if (ob != Py_None && !PyType_stgdict(ob) && !PyCallable_Check(ob)) {
+    if (ob != Py_Nil && !PyType_stgdict(ob) && !PyCallable_Check(ob)) {
         PyErr_SetString(PyExc_TypeError,
                         "restype must be a type, a callable, or None");
         return -1;
@@ -3239,8 +3239,8 @@ PyCFuncPtr_get_restype(PyCFuncPtrObject *self)
         Py_INCREF(dict->restype);
         return dict->restype;
     } else {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
 }
 
@@ -3249,7 +3249,7 @@ PyCFuncPtr_set_argtypes(PyCFuncPtrObject *self, PyObject *ob)
 {
     PyObject *converters;
 
-    if (ob == NULL || ob == Py_None) {
+    if (ob == NULL || ob == Py_Nil) {
         Py_CLEAR(self->converters);
         Py_CLEAR(self->argtypes);
     } else {
@@ -3277,8 +3277,8 @@ PyCFuncPtr_get_argtypes(PyCFuncPtrObject *self)
         Py_INCREF(dict->argtypes);
         return dict->argtypes;
     } else {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
 }
 
@@ -3467,7 +3467,7 @@ PyCFuncPtr_FromDll(PyTypeObject *type, PyObject *args, PyObject *kwds)
 
     if (!PyArg_ParseTuple(args, "O|O", &ftuple, &paramflags))
         return NULL;
-    if (paramflags == Py_None)
+    if (paramflags == Py_Nil)
         paramflags = NULL;
 
     ftuple = PySequence_Tuple(ftuple);
@@ -3570,7 +3570,7 @@ PyCFuncPtr_FromVtblIndex(PyTypeObject *type, PyObject *args, PyObject *kwds)
 
     if (!PyArg_ParseTuple(args, "is|Oz#", &index, &name, &paramflags, &iid, &iid_len))
         return NULL;
-    if (paramflags == Py_None)
+    if (paramflags == Py_Nil)
         paramflags = NULL;
 
     if (!_validate_paramflags(type, paramflags))
@@ -5298,7 +5298,7 @@ Pointer_subscript(PyObject *_self, PyObject *item)
         /* Since pointers have no length, and we want to apply
            different semantics to negative indices than normal
            slicing, we have to dissect the slice object ourselves.*/
-        if (slice->step == Py_None) {
+        if (slice->step == Py_Nil) {
             step = 1;
         }
         else {
@@ -5312,7 +5312,7 @@ Pointer_subscript(PyObject *_self, PyObject *item)
                 return NULL;
             }
         }
-        if (slice->start == Py_None) {
+        if (slice->start == Py_Nil) {
             if (step < 0) {
                 PyErr_SetString(PyExc_ValueError,
                                 "slice start is required "
@@ -5327,7 +5327,7 @@ Pointer_subscript(PyObject *_self, PyObject *item)
             if (start == -1 && PyErr_Occurred())
                 return NULL;
         }
-        if (slice->stop == Py_None) {
+        if (slice->stop == Py_Nil) {
             PyErr_SetString(PyExc_ValueError,
                             "slice stop is required");
             return NULL;
@@ -5531,8 +5531,8 @@ comerror_init(PyObject *self, PyObject *args)
     if (PyObject_SetAttrString(self, "details", details) < 0)
         return NULL;
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyMethodDef comerror_methods[] = {
@@ -5643,8 +5643,8 @@ cast(void *ptr, PyObject *src, PyObject *ctype)
            this so it can be shared */
         PyCData_GetContainer(obj);
         /* But we need a dictionary! */
-        if (obj->b_objects == Py_None) {
-            Py_DECREF(Py_None);
+        if (obj->b_objects == Py_Nil) {
+            Py_DECREF(Py_Nil);
             obj->b_objects = PyDict_New();
             if (obj->b_objects == NULL)
                 goto failed;

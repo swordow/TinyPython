@@ -9,7 +9,7 @@ for this file.
 
 /*
 Py_Ellipsis encodes the '...' rubber index token. It is similar to
-the Py_NoneStruct in that there is no way to create other objects of
+the Py_NilStruct in that there is no way to create other objects of
 this type and there is exactly one in existence.
 */
 
@@ -65,11 +65,11 @@ PySlice_New(PyObject *start, PyObject *stop, PyObject *step)
     if (obj == NULL)
         return NULL;
 
-    if (step == NULL) step = Py_None;
+    if (step == NULL) step = Py_Nil;
     Py_INCREF(step);
-    if (start == NULL) start = Py_None;
+    if (start == NULL) start = Py_Nil;
     Py_INCREF(start);
-    if (stop == NULL) stop = Py_None;
+    if (stop == NULL) stop = Py_Nil;
     Py_INCREF(stop);
 
     obj->step = step;
@@ -104,20 +104,20 @@ PySlice_GetIndices(PySliceObject *r, Py_ssize_t length,
                    Py_ssize_t *start, Py_ssize_t *stop, Py_ssize_t *step)
 {
     /* XXX support long ints */
-    if (r->step == Py_None) {
+    if (r->step == Py_Nil) {
         *step = 1;
     } else {
         if (!_PyAnyInt_Check(r->step)) return -1;
         *step = PyInt_AsSsize_t(r->step);
     }
-    if (r->start == Py_None) {
+    if (r->start == Py_Nil) {
         *start = *step < 0 ? length-1 : 0;
     } else {
         if (!_PyAnyInt_Check(r->start)) return -1;
         *start = PyInt_AsSsize_t(r->start);
         if (*start < 0) *start += length;
     }
-    if (r->stop == Py_None) {
+    if (r->stop == Py_Nil) {
         *stop = *step < 0 ? -1 : length;
     } else {
         if (!_PyAnyInt_Check(r->stop)) return -1;
@@ -139,7 +139,7 @@ _PySlice_Unpack(PyObject *_r,
 
     assert(PY_SSIZE_T_MIN + 1 <= -PY_SSIZE_T_MAX);
 
-    if (r->step == Py_None) {
+    if (r->step == Py_Nil) {
         *step = 1;
     }
     else {
@@ -158,14 +158,14 @@ _PySlice_Unpack(PyObject *_r,
             *step = -PY_SSIZE_T_MAX;
     }
 
-    if (r->start == Py_None) {
+    if (r->start == Py_Nil) {
         *start = *step < 0 ? PY_SSIZE_T_MAX : 0;
     }
     else {
         if (!_PyEval_SliceIndex(r->start, start)) return -1;
     }
 
-    if (r->stop == Py_None) {
+    if (r->stop == Py_Nil) {
         *stop = *step < 0 ? PY_SSIZE_T_MIN : PY_SSIZE_T_MAX;
     }
     else {

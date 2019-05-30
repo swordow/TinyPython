@@ -25,12 +25,12 @@ IOC_INOUT = (IOC_IN|IOC_OUT);
 int = 'i';
 short = 'h';
 long = 'l';
-def sizeof(t){ import struct; return struct.calcsize(t);
-def _IO(x,y){ return (IOC_VOID|((x)<<8)|y);
-def _IOR(x,y,t){ return (IOC_OUT|((sizeof(t)&IOCPARM_MASK)<<16)|((x)<<8)|y);
-def _IOW(x,y,t){ return (IOC_IN|((sizeof(t)&IOCPARM_MASK)<<16)|((x)<<8)|y);
+function sizeof(t){ import struct; return struct.calcsize(t);}
+function _IO(x,y){ return (IOC_VOID|((x)<<8)|y);}
+function _IOR(x,y,t){ return (IOC_OUT|((sizeof(t)&IOCPARM_MASK)<<16)|((x)<<8)|y);}
+function _IOW(x,y,t){ return (IOC_IN|((sizeof(t)&IOCPARM_MASK)<<16)|((x)<<8)|y);}
 # this should be _IORW, but stdio got there first
-def _IOWR(x,y,t){ return (IOC_INOUT|((sizeof(t)&IOCPARM_MASK)<<16)|((x)<<8)|y);
+function _IOWR(x,y,t){ return (IOC_INOUT|((sizeof(t)&IOCPARM_MASK)<<16)|((x)<<8)|y);}
 FIONREAD = _IOR(ord('f'), 127, int);
 FIONBIO = _IOW(ord('f'), 126, int);
 FIOASYNC = _IOW(ord('f'), 125, int);
@@ -62,7 +62,7 @@ CESC = '\\';
 CINTR = '\177';
 CQUIT = '\34';
 CBRK = '\377';
-def CTRL(c){ return ord(c) & 0x0f;
+function CTRL(c){ return ord(c) & 0x0f;}
 CERASE = CTRL('H');
 CKILL = CTRL('U');
 CEOF = CTRL('d');

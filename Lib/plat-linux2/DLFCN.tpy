@@ -47,25 +47,25 @@ __GLIBC_MINOR__ = 2;
 
 # Included from sys/cdefs.h
 _SYS_CDEFS_H = 1;
-def __PMT(args){ return args;
+function __PMT(args){ return args;}
 
-def __P(args){ return args;
+function __P(args){ return args;}
 
-def __PMT(args){ return args;
+function __PMT(args){ return args;}
 
-def __STRING(x){ return; #x
+function __STRING(x){ return;} #x
 
 __flexarr = [];
 __flexarr = [0];
 __flexarr = [];
 __flexarr = [1];
-def __ASMNAME(cname){ return __ASMNAME2 (__USER_LABEL_PREFIX__, cname);
+function __ASMNAME(cname){ return __ASMNAME2 (__USER_LABEL_PREFIX__, cname);}
 
-def __attribute__(xyz){ return;
+function __attribute__(xyz){ return;}
 
-def __attribute_format_arg__(x){ return __attribute__ ((__format_arg__ (x)));
+function __attribute_format_arg__(x){ return __attribute__ ((__format_arg__ (x)));}
 
-def __attribute_format_arg__(x){ return;
+function __attribute_format_arg__(x){ return;}
 
 __USE_LARGEFILE = 1;
 __USE_LARGEFILE64 = 1;

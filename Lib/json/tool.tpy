@@ -13,7 +13,7 @@ Usage::
 import sys;
 import json;
 
-def main(){
+function main(){
     if len(sys.argv) == 1{
         infile = sys.stdin;
         outfile = sys.stdout;
@@ -25,13 +25,13 @@ def main(){
         outfile = open(sys.argv[2], 'wb');
     } else{
         raise SystemExit(sys.argv[0] + " [infile [outfile]]");
-    } with infile:
+    } with infile{
         try{
             obj = json.load(infile);
         } except ValueError, e{
             raise SystemExit(e);
-    } } with outfile:
-        json.dump(obj, outfile, sort_keys=True,
+    } } with outfile{
+        json.dump(obj, outfile, sort_keys=true,
                   indent=4, separators=(',', ': '));
         outfile.write('\n');
 

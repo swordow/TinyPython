@@ -15,7 +15,7 @@ from email.message import Message;
 
 
 class Parser{
-    def __init__(self, *args, **kws){
+    function __init__( *args, **kws){
         """Parser of RFC 2822 and MIME email messages.
 
         Creates an in-memory object tree representing the email message, which
@@ -42,10 +42,10 @@ class Parser{
         } if len(args) > 2{
             raise TypeError('Too many arguments');
         } if '_class' in kws{
-            self._class = kws['_class'];
+            this._class = kws['_class'];
             del kws['_class'];
         } else{
-            self._class = Message;
+            this._class = Message;
         } if 'strict' in kws{
             warnings.warn("'strict' argument is deprecated (and ignored)",
                           DeprecationWarning, 2);
@@ -54,7 +54,7 @@ class Parser{
             raise TypeError('Unexpected keyword arguments');
 
     }
-    } def parse(self, fp, headersonly=False){
+    } function parse( fp, headersonly=false){
         """Create a message structure from the data in a file.
 
         Reads all the data from the file and returns the root of the message
@@ -62,10 +62,10 @@ class Parser{
         parsing after reading the headers or not.  The default is False,
         meaning it parses the entire contents of the file.
         """;
-        feedparser = FeedParser(self._class);
+        feedparser = FeedParser(this._class);
         if headersonly{
             feedparser._set_headersonly();
-        } while True{
+        } while true{
             data = fp.read(8192);
             if not data{
                 break;
@@ -73,7 +73,7 @@ class Parser{
         } return feedparser.close();
 
     }
-    def parsestr(self, text, headersonly=False){
+    function parsestr( text, headersonly=false){
         """Create a message structure from a string.
 
         Returns the root of the message structure.  Optional headersonly is a
@@ -81,18 +81,18 @@ class Parser{
         not.  The default is False, meaning it parses the entire contents of
         the file.
         """;
-        return self.parse(StringIO(text), headersonly=headersonly);
+        return this.parse(StringIO(text), headersonly=headersonly);
 
 
 
 }
 } class HeaderParser(Parser){
-    def parse(self, fp, headersonly=True){
-        return Parser.parse(self, fp, True);
+    function parse( fp, headersonly=true){
+        return Parser.parse(this, fp, true);
 
     }
-    def parsestr(self, text, headersonly=True){
-        return Parser.parsestr(self, text, True);
+    function parsestr( text, headersonly=true){
+        return Parser.parsestr(this, text, true);
 
 }
 }

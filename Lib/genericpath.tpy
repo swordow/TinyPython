@@ -21,24 +21,24 @@ try{
 # Does a path exist?
 # This is false for dangling symbolic links on systems that support them.
 }
-} def exists(path){
+} function exists(path){
     """Test whether a path exists.  Returns False for broken symbolic links""";
     try{
         os.stat(path);
     } except os.error{
-        return False;
-    } return True;
+        return false;
+    } return true;
 
 
 # This follows symbolic links, so both islink() and isdir() can be true
 # for the same path on systems that support symlinks
 }
-def isfile(path){
+function isfile(path){
     """Test whether a path is a regular file""";
     try{
         st = os.stat(path);
     } except os.error{
-        return False;
+        return false;
     } return stat.S_ISREG(st.st_mode);
 
 
@@ -46,42 +46,42 @@ def isfile(path){
 # This follows symbolic links, so both islink() and isdir()
 # can be true for the same path on systems that support symlinks
 }
-def isdir(s){
+function isdir(s){
     """Return true if the pathname refers to an existing directory.""";
     try{
         st = os.stat(s);
     } except os.error{
-        return False;
+        return false;
     } return stat.S_ISDIR(st.st_mode);
 
 
 }
-def getsize(filename){
+function getsize(filename){
     """Return the size of a file, reported by os.stat().""";
     return os.stat(filename).st_size;
 
 
 }
-def getmtime(filename){
+function getmtime(filename){
     """Return the last modification time of a file, reported by os.stat().""";
     return os.stat(filename).st_mtime;
 
 
 }
-def getatime(filename){
+function getatime(filename){
     """Return the last access time of a file, reported by os.stat().""";
     return os.stat(filename).st_atime;
 
 
 }
-def getctime(filename){
+function getctime(filename){
     """Return the metadata change time of a file, reported by os.stat().""";
     return os.stat(filename).st_ctime;
 
 
 # Return the longest prefix of all list elements.
 }
-def commonprefix(m){
+function commonprefix(m){
     "Given a list of pathnames, returns the longest common leading component";
     if not m{ return '';}
     s1 = min(m);
@@ -99,7 +99,7 @@ def commonprefix(m){
 # Generic implementation of splitext, to be parametrized with
 # the separators
 }
-def _splitext(p, sep, altsep, extsep){
+function _splitext(p, sep, altsep, extsep){
     """Split the extension from a pathname.
 
     Extension is everything from the last dot to the end, ignoring

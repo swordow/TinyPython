@@ -389,7 +389,7 @@ analyze_name(PySTEntryObject *ste, PyObject *dict, PyObject *name, long flags,
             return 0;
         }
         SET_SCOPE(dict, name, GLOBAL_EXPLICIT);
-        if (PyDict_SetItem(global, name, Py_None) < 0)
+        if (PyDict_SetItem(global, name, Py_Nil) < 0)
             return 0;
         if (bound && PyDict_GetItem(bound, name)) {
             if (PyDict_DelItem(bound, name) < 0)
@@ -399,7 +399,7 @@ analyze_name(PySTEntryObject *ste, PyObject *dict, PyObject *name, long flags,
     }
     if (flags & DEF_BOUND) {
         SET_SCOPE(dict, name, LOCAL);
-        if (PyDict_SetItem(local, name, Py_None) < 0)
+        if (PyDict_SetItem(local, name, Py_Nil) < 0)
             return 0;
         if (PyDict_GetItem(global, name)) {
             if (PyDict_DelItem(global, name) < 0)
@@ -415,7 +415,7 @@ analyze_name(PySTEntryObject *ste, PyObject *dict, PyObject *name, long flags,
     if (bound && PyDict_GetItem(bound, name)) {
         SET_SCOPE(dict, name, FREE);
         ste->ste_free = 1;
-        if (PyDict_SetItem(free, name, Py_None) < 0)
+        if (PyDict_SetItem(free, name, Py_Nil) < 0)
             return 0;
         return 1;
     }

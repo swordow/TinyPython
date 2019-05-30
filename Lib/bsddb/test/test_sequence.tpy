@@ -5,142 +5,142 @@ from test_all import db, test_support, get_new_environment_path, get_new_databas
 
 
 class DBSequenceTest(unittest.TestCase){
-    def setUp(self){
-        self.int_32_max = 0x100000000;
-        self.homeDir = get_new_environment_path();
-        self.filename = "test";
+    function setUp(){
+        this.int_32_max = 0x100000000;
+        this.homeDir = get_new_environment_path();
+        this.filename = "test";
 
-        self.dbenv = db.DBEnv();
-        self.dbenv.open(self.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL, 0666);
-        self.d = db.DB(self.dbenv);
-        self.d.open(self.filename, db.DB_BTREE, db.DB_CREATE, 0666);
+        this.dbenv = db.DBEnv();
+        this.dbenv.open(this.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL, 0666);
+        this.d = db.DB(this.dbenv);
+        this.d.open(this.filename, db.DB_BTREE, db.DB_CREATE, 0666);
 
     }
-    def tearDown(self){
-        if hasattr(self, 'seq'){
-            self.seq.close();
-            del self.seq;
-        } if hasattr(self, 'd'){
-            self.d.close();
-            del self.d;
-        } if hasattr(self, 'dbenv'){
-            self.dbenv.close();
-            del self.dbenv;
+    function tearDown(){
+        if hasattr(this, 'seq'){
+            this.seq.close();
+            del this.seq;
+        } if hasattr(this, 'd'){
+            this.d.close();
+            del this.d;
+        } if hasattr(this, 'dbenv'){
+            this.dbenv.close();
+            del this.dbenv;
 
         }
-        test_support.rmtree(self.homeDir);
+        test_support.rmtree(this.homeDir);
 
     }
-    def test_get(self){
-        self.seq = db.DBSequence(self.d, flags=0);
-        start_value = 10 * self.int_32_max;
-        self.assertEqual(0xA00000000, start_value);
-        self.assertEqual(None, self.seq.initial_value(start_value));
-        self.assertEqual(None, self.seq.open(key='id', txn=None, flags=db.DB_CREATE));
-        self.assertEqual(start_value, self.seq.get(5));
-        self.assertEqual(start_value + 5, self.seq.get());
+    function test_get(){
+        this.seq = db.DBSequence(this.d, flags=0);
+        start_value = 10 * this.int_32_max;
+        this.assertEqual(0xA00000000, start_value);
+        this.assertEqual(nil, this.seq.initial_value(start_value));
+        this.assertEqual(nil, this.seq.open(key='id', txn=nil, flags=db.DB_CREATE));
+        this.assertEqual(start_value, this.seq.get(5));
+        this.assertEqual(start_value + 5, this.seq.get());
 
     }
-    def test_remove(self){
-        self.seq = db.DBSequence(self.d, flags=0);
-        self.assertEqual(None, self.seq.open(key='foo', txn=None, flags=db.DB_CREATE));
-        self.assertEqual(None, self.seq.remove(txn=None, flags=0));
-        del self.seq;
+    function test_remove(){
+        this.seq = db.DBSequence(this.d, flags=0);
+        this.assertEqual(nil, this.seq.open(key='foo', txn=nil, flags=db.DB_CREATE));
+        this.assertEqual(nil, this.seq.remove(txn=nil, flags=0));
+        del this.seq;
 
     }
-    def test_get_key(self){
-        self.seq = db.DBSequence(self.d, flags=0);
+    function test_get_key(){
+        this.seq = db.DBSequence(this.d, flags=0);
         key = 'foo';
-        self.assertEqual(None, self.seq.open(key=key, txn=None, flags=db.DB_CREATE));
-        self.assertEqual(key, self.seq.get_key());
+        this.assertEqual(nil, this.seq.open(key=key, txn=nil, flags=db.DB_CREATE));
+        this.assertEqual(key, this.seq.get_key());
 
     }
-    def test_get_dbp(self){
-        self.seq = db.DBSequence(self.d, flags=0);
-        self.assertEqual(None, self.seq.open(key='foo', txn=None, flags=db.DB_CREATE));
-        self.assertEqual(self.d, self.seq.get_dbp());
+    function test_get_dbp(){
+        this.seq = db.DBSequence(this.d, flags=0);
+        this.assertEqual(nil, this.seq.open(key='foo', txn=nil, flags=db.DB_CREATE));
+        this.assertEqual(this.d, this.seq.get_dbp());
 
     }
-    def test_cachesize(self){
-        self.seq = db.DBSequence(self.d, flags=0);
+    function test_cachesize(){
+        this.seq = db.DBSequence(this.d, flags=0);
         cashe_size = 10;
-        self.assertEqual(None, self.seq.set_cachesize(cashe_size));
-        self.assertEqual(None, self.seq.open(key='foo', txn=None, flags=db.DB_CREATE));
-        self.assertEqual(cashe_size, self.seq.get_cachesize());
+        this.assertEqual(nil, this.seq.set_cachesize(cashe_size));
+        this.assertEqual(nil, this.seq.open(key='foo', txn=nil, flags=db.DB_CREATE));
+        this.assertEqual(cashe_size, this.seq.get_cachesize());
 
     }
-    def test_flags(self){
-        self.seq = db.DBSequence(self.d, flags=0);
+    function test_flags(){
+        this.seq = db.DBSequence(this.d, flags=0);
         flag = db.DB_SEQ_WRAP;;
-        self.assertEqual(None, self.seq.set_flags(flag));
-        self.assertEqual(None, self.seq.open(key='foo', txn=None, flags=db.DB_CREATE));
-        self.assertEqual(flag, self.seq.get_flags() & flag);
+        this.assertEqual(nil, this.seq.set_flags(flag));
+        this.assertEqual(nil, this.seq.open(key='foo', txn=nil, flags=db.DB_CREATE));
+        this.assertEqual(flag, this.seq.get_flags() & flag);
 
     }
-    def test_range(self){
-        self.seq = db.DBSequence(self.d, flags=0);
-        seq_range = (10 * self.int_32_max, 11 * self.int_32_max - 1);
-        self.assertEqual(None, self.seq.set_range(seq_range));
-        self.seq.initial_value(seq_range[0]);
-        self.assertEqual(None, self.seq.open(key='foo', txn=None, flags=db.DB_CREATE));
-        self.assertEqual(seq_range, self.seq.get_range());
+    function test_range(){
+        this.seq = db.DBSequence(this.d, flags=0);
+        seq_range = (10 * this.int_32_max, 11 * this.int_32_max - 1);
+        this.assertEqual(nil, this.seq.set_range(seq_range));
+        this.seq.initial_value(seq_range[0]);
+        this.assertEqual(nil, this.seq.open(key='foo', txn=nil, flags=db.DB_CREATE));
+        this.assertEqual(seq_range, this.seq.get_range());
 
     }
-    def test_stat(self){
-        self.seq = db.DBSequence(self.d, flags=0);
-        self.assertEqual(None, self.seq.open(key='foo', txn=None, flags=db.DB_CREATE));
-        stat = self.seq.stat();
+    function test_stat(){
+        this.seq = db.DBSequence(this.d, flags=0);
+        this.assertEqual(nil, this.seq.open(key='foo', txn=nil, flags=db.DB_CREATE));
+        stat = this.seq.stat();
         for param in ('nowait', 'min', 'max', 'value', 'current',
                       'flags', 'cache_size', 'last_value', 'wait'){
-            self.assertIn(param, stat, "parameter %s isn't in stat info" % param);
+            this.assertIn(param, stat, "parameter %s isn't in stat info" % param);
 
     }
     } if db.version() >= (4,7) {
         # This code checks a crash solved in Berkeley DB 4.7
-        def test_stat_crash(self) {
+        function test_stat_crash() {
             d=db.DB();
-            d.open(None,dbtype=db.DB_HASH,flags=db.DB_CREATE);  # In RAM
+            d.open(nil,dbtype=db.DB_HASH,flags=db.DB_CREATE);  # In RAM
             seq = db.DBSequence(d, flags=0);
 
-            self.assertRaises(db.DBNotFoundError, seq.open,
-                    key='id', txn=None, flags=0);
+            this.assertRaises(db.DBNotFoundError, seq.open,
+                    key='id', txn=nil, flags=0);
 
-            self.assertRaises(db.DBInvalidArgError, seq.stat);
+            this.assertRaises(db.DBInvalidArgError, seq.stat);
 
             d.close();
 
     }
-    } def test_64bits(self) {
+    } function test_64bits() {
         # We don't use both extremes because they are problematic
         value_plus=(1L<<63)-2;
-        self.assertEqual(9223372036854775806L,value_plus);
+        this.assertEqual(9223372036854775806L,value_plus);
         value_minus=(-1L<<63)+1;  # Two complement
-        self.assertEqual(-9223372036854775807L,value_minus);
-        self.seq = db.DBSequence(self.d, flags=0);
-        self.assertEqual(None, self.seq.initial_value(value_plus-1));
-        self.assertEqual(None, self.seq.open(key='id', txn=None,
+        this.assertEqual(-9223372036854775807L,value_minus);
+        this.seq = db.DBSequence(this.d, flags=0);
+        this.assertEqual(nil, this.seq.initial_value(value_plus-1));
+        this.assertEqual(nil, this.seq.open(key='id', txn=nil,
             flags=db.DB_CREATE));
-        self.assertEqual(value_plus-1, self.seq.get(1));
-        self.assertEqual(value_plus, self.seq.get(1));
+        this.assertEqual(value_plus-1, this.seq.get(1));
+        this.assertEqual(value_plus, this.seq.get(1));
 
-        self.seq.remove(txn=None, flags=0);
+        this.seq.remove(txn=nil, flags=0);
 
-        self.seq = db.DBSequence(self.d, flags=0);
-        self.assertEqual(None, self.seq.initial_value(value_minus));
-        self.assertEqual(None, self.seq.open(key='id', txn=None,
+        this.seq = db.DBSequence(this.d, flags=0);
+        this.assertEqual(nil, this.seq.initial_value(value_minus));
+        this.assertEqual(nil, this.seq.open(key='id', txn=nil,
             flags=db.DB_CREATE));
-        self.assertEqual(value_minus, self.seq.get(1));
-        self.assertEqual(value_minus+1, self.seq.get(1));
+        this.assertEqual(value_minus, this.seq.get(1));
+        this.assertEqual(value_minus+1, this.seq.get(1));
 
     }
-    def test_multiple_close(self){
-        self.seq = db.DBSequence(self.d);
-        self.seq.close();  # You can close a Sequence multiple times
-        self.seq.close();
-        self.seq.close();
+    function test_multiple_close(){
+        this.seq = db.DBSequence(this.d);
+        this.seq.close();  # You can close a Sequence multiple times
+        this.seq.close();
+        this.seq.close();
 
 }
-} def test_suite(){
+} function test_suite(){
     suite = unittest.TestSuite();
     suite.addTest(unittest.makeSuite(DBSequenceTest));
     return suite;

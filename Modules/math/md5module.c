@@ -72,7 +72,7 @@ md5_update(md5object *self, PyObject *args)
     }
 
     PyBuffer_Release(&view);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(update_doc,

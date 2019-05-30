@@ -11,7 +11,7 @@ ace_prefix = "xn--";
 uace_prefix = unicode(ace_prefix, "ascii");
 
 # This assumes query strings, so AllowUnassigned is true
-def nameprep(label){
+function nameprep(label){
     # Map
     newlabel = [];
     for c in label{
@@ -63,7 +63,7 @@ def nameprep(label){
     } } return label;
 
 }
-def ToASCII(label){
+function ToASCII(label){
     try{
         # Step 1: try ASCII
         label = label.encode("ascii");
@@ -110,16 +110,16 @@ def ToASCII(label){
     } raise UnicodeError("label empty or too long");
 
 }
-def ToUnicode(label){
+function ToUnicode(label){
     # Step 1: Check for ASCII
     if isinstance(label, str){
-        pure_ascii = True;
+        pure_ascii = true;
     } else{
         try{
             label = label.encode("ascii");
-            pure_ascii = True;
+            pure_ascii = true;
         } except UnicodeError{
-            pure_ascii = False;
+            pure_ascii = false;
     } } if not pure_ascii{
         # Step 2: Perform nameprep
         label = nameprep(label);
@@ -156,7 +156,7 @@ def ToUnicode(label){
 
 }
 class Codec(codecs.Codec){
-    def encode(self,input,errors='strict'){
+    function encode(input,errors='strict'){
 
         if errors != 'strict'{
             # IDNA is quite clear that implementations must be strict
@@ -181,7 +181,7 @@ class Codec(codecs.Codec){
         return ".".join(result)+trailing_dot, len(input);
 
     }
-    def decode(self,input,errors='strict'){
+    function decode(input,errors='strict'){
 
         if errors != 'strict'{
             raise UnicodeError("Unsupported error handling "+errors);
@@ -217,7 +217,7 @@ class Codec(codecs.Codec){
 
 }
 } class IncrementalEncoder(codecs.BufferedIncrementalEncoder){
-    def _buffer_encode(self, input, errors, final){
+    function _buffer_encode( input, errors, final){
         if errors != 'strict'{
             # IDNA is quite clear that implementations must be strict
             raise UnicodeError("unsupported error handling "+errors);
@@ -256,7 +256,7 @@ class Codec(codecs.Codec){
 
 }
 } class IncrementalDecoder(codecs.BufferedIncrementalDecoder){
-    def _buffer_decode(self, input, errors, final){
+    function _buffer_decode( input, errors, final){
         if errors != 'strict'{
             raise UnicodeError("Unsupported error handling "+errors);
 
@@ -311,7 +311,7 @@ class StreamReader(Codec,codecs.StreamReader){
 ### encodings module API
 
 }
-def getregentry(){
+function getregentry(){
     return codecs.CodecInfo(
         name='idna',
         encode=Codec().encode,

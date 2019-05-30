@@ -104,8 +104,8 @@ IO_flush(IOobject *self, PyObject *unused) {
 
     if (!IO__opencheck(self)) return NULL;
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(IO_getval__doc__,
@@ -124,7 +124,7 @@ IO_cgetval(PyObject *self) {
 
 static PyObject *
 IO_getval(IOobject *self, PyObject *args) {
-    PyObject *use_pos=Py_None;
+    PyObject *use_pos=Py_Nil;
     int b;
     Py_ssize_t s;
 
@@ -287,8 +287,8 @@ IO_reset(IOobject *self, PyObject *unused) {
 
     self->pos = 0;
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(IO_tell__doc__, "tell() -- get the current position.");
@@ -326,8 +326,8 @@ IO_truncate(IOobject *self, PyObject *args) {
     if (self->string_size > pos) self->string_size = pos;
     self->pos = self->string_size;
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -374,8 +374,8 @@ IO_seek(Iobject *self, PyObject *args) {
 
     self->pos=position;
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(O_write__doc__,
@@ -455,8 +455,8 @@ O_write(Oobject *self, PyObject *args) {
     PyBuffer_Release(&buf);
     if (result < 0) return NULL;
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(O_close__doc__, "close(): explicitly release resources held.");
@@ -468,8 +468,8 @@ O_close(Oobject *self, PyObject *unused) {
 
     self->pos = self->string_size = self->buf_size = 0;
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(O_writelines__doc__,
@@ -506,7 +506,7 @@ O_writelines(Oobject *self, PyObject *args) {
     if (PyErr_Occurred())
         return NULL;
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 static struct PyMethodDef O_methods[] = {
   /* Common methods: */
@@ -611,8 +611,8 @@ I_close(Iobject *self, PyObject *unused) {
 
     self->pos = self->string_size = 0;
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static struct PyMethodDef I_methods[] = {

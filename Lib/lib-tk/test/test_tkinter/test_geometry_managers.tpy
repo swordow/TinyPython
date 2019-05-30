@@ -12,10 +12,10 @@ requires('gui');
 
 class PackTest(AbstractWidgetTest, unittest.TestCase){
 
-    test_keys = None;
+    test_keys = nil;
 
-    def create2(self){
-        pack = tkinter.Toplevel(self.root, name='pack');
+    function create2(){
+        pack = tkinter.Toplevel(this.root, name='pack');
         pack.wm_geometry('300x200+0+0');
         pack.wm_minsize(1, 1);
         a = tkinter.Frame(pack, name='a', width=20, height=40, bg='red');
@@ -25,30 +25,30 @@ class PackTest(AbstractWidgetTest, unittest.TestCase){
         return pack, a, b, c, d;
 
     }
-    def test_pack_configure_after(self){
-        pack, a, b, c, d = self.create2();
-        with self.assertRaisesRegexp(TclError, 'window "%s" isn\'t packed' % b){
+    function test_pack_configure_after(){
+        pack, a, b, c, d = this.create2();
+        with this.assertRaisesRegexp(TclError, 'window "%s" isn\'t packed' % b){
             a.pack_configure(after=b);
-        } with self.assertRaisesRegexp(TclError, 'bad window path name ".foo"'){
+        } with this.assertRaisesRegexp(TclError, 'bad window path name ".foo"'){
             a.pack_configure(after='.foo');
         } a.pack_configure(side='top');
         b.pack_configure(side='top');
         c.pack_configure(side='top');
         d.pack_configure(side='top');
-        self.assertEqual(pack.pack_slaves(), [a, b, c, d]);
+        this.assertEqual(pack.pack_slaves(), [a, b, c, d]);
         a.pack_configure(after=b);
-        self.assertEqual(pack.pack_slaves(), [b, a, c, d]);
+        this.assertEqual(pack.pack_slaves(), [b, a, c, d]);
         a.pack_configure(after=a);
-        self.assertEqual(pack.pack_slaves(), [b, a, c, d]);
+        this.assertEqual(pack.pack_slaves(), [b, a, c, d]);
 
     }
-    def test_pack_configure_anchor(self){
-        pack, a, b, c, d = self.create2();
-        def check(anchor, geom){
+    function test_pack_configure_anchor(){
+        pack, a, b, c, d = this.create2();
+        function check(anchor, geom){
             a.pack_configure(side='top', ipadx=5, padx=10, ipady=15, pady=20,
-                             expand=True, anchor=anchor);
-            self.root.update();
-            self.assertEqual(a.winfo_geometry(), geom);
+                             expand=true, anchor=anchor);
+            this.root.update();
+            this.assertEqual(a.winfo_geometry(), geom);
         } check('n', '30x70+135+20');
         check('ne', '30x70+260+20');
         check('e', '30x70+260+65');
@@ -60,31 +60,31 @@ class PackTest(AbstractWidgetTest, unittest.TestCase){
         check('center', '30x70+135+65');
 
     }
-    def test_pack_configure_before(self){
-        pack, a, b, c, d = self.create2();
-        with self.assertRaisesRegexp(TclError, 'window "%s" isn\'t packed' % b){
+    function test_pack_configure_before(){
+        pack, a, b, c, d = this.create2();
+        with this.assertRaisesRegexp(TclError, 'window "%s" isn\'t packed' % b){
             a.pack_configure(before=b);
-        } with self.assertRaisesRegexp(TclError, 'bad window path name ".foo"'){
+        } with this.assertRaisesRegexp(TclError, 'bad window path name ".foo"'){
             a.pack_configure(before='.foo');
         } a.pack_configure(side='top');
         b.pack_configure(side='top');
         c.pack_configure(side='top');
         d.pack_configure(side='top');
-        self.assertEqual(pack.pack_slaves(), [a, b, c, d]);
+        this.assertEqual(pack.pack_slaves(), [a, b, c, d]);
         a.pack_configure(before=d);
-        self.assertEqual(pack.pack_slaves(), [b, c, a, d]);
+        this.assertEqual(pack.pack_slaves(), [b, c, a, d]);
         a.pack_configure(before=a);
-        self.assertEqual(pack.pack_slaves(), [b, c, a, d]);
+        this.assertEqual(pack.pack_slaves(), [b, c, a, d]);
 
     }
-    def test_pack_configure_expand(self){
-        pack, a, b, c, d = self.create2();
-        def check(*geoms){
-            self.root.update();
-            self.assertEqual(a.winfo_geometry(), geoms[0]);
-            self.assertEqual(b.winfo_geometry(), geoms[1]);
-            self.assertEqual(c.winfo_geometry(), geoms[2]);
-            self.assertEqual(d.winfo_geometry(), geoms[3]);
+    function test_pack_configure_expand(){
+        pack, a, b, c, d = this.create2();
+        function check(*geoms){
+            this.root.update();
+            this.assertEqual(a.winfo_geometry(), geoms[0]);
+            this.assertEqual(b.winfo_geometry(), geoms[1]);
+            this.assertEqual(c.winfo_geometry(), geoms[2]);
+            this.assertEqual(d.winfo_geometry(), geoms[3]);
         } a.pack_configure(side='left');
         b.pack_configure(side='top');
         c.pack_configure(side='right');
@@ -92,44 +92,44 @@ class PackTest(AbstractWidgetTest, unittest.TestCase){
         check('20x40+0+80', '50x30+135+0', '80x80+220+75', '40x30+100+170');
         a.pack_configure(side='left', expand='yes');
         b.pack_configure(side='top', expand='on');
-        c.pack_configure(side='right', expand=True);
+        c.pack_configure(side='right', expand=true);
         d.pack_configure(side='bottom', expand=1);
         check('20x40+40+80', '50x30+175+35', '80x80+180+110', '40x30+100+135');
         a.pack_configure(side='left', expand='yes', fill='both');
         b.pack_configure(side='top', expand='on', fill='both');
-        c.pack_configure(side='right', expand=True, fill='both');
+        c.pack_configure(side='right', expand=true, fill='both');
         d.pack_configure(side='bottom', expand=1, fill='both');
         check('100x200+0+0', '200x100+100+0', '160x100+140+100', '40x100+100+100');
 
     }
-    def test_pack_configure_in(self){
-        pack, a, b, c, d = self.create2();
+    function test_pack_configure_in(){
+        pack, a, b, c, d = this.create2();
         a.pack_configure(side='top');
         b.pack_configure(side='top');
         c.pack_configure(side='top');
         d.pack_configure(side='top');
         a.pack_configure(in_=pack);
-        self.assertEqual(pack.pack_slaves(), [b, c, d, a]);
+        this.assertEqual(pack.pack_slaves(), [b, c, d, a]);
         a.pack_configure(in_=c);
-        self.assertEqual(pack.pack_slaves(), [b, c, d]);
-        self.assertEqual(c.pack_slaves(), [a]);
-        with self.assertRaisesRegexp(TclError,
+        this.assertEqual(pack.pack_slaves(), [b, c, d]);
+        this.assertEqual(c.pack_slaves(), [a]);
+        with this.assertRaisesRegexp(TclError,
                                      'can\'t pack %s inside itself' % (a,)){
             a.pack_configure(in_=a);
-        } with self.assertRaisesRegexp(TclError, 'bad window path name ".foo"'){
+        } with this.assertRaisesRegexp(TclError, 'bad window path name ".foo"'){
             a.pack_configure(in_='.foo');
 
     }
-    } def test_pack_configure_padx_ipadx_fill(self){
-        pack, a, b, c, d = self.create2();
-        def check(geom1, geom2, **kwargs){
+    } function test_pack_configure_padx_ipadx_fill(){
+        pack, a, b, c, d = this.create2();
+        function check(geom1, geom2, **kwargs){
             a.pack_forget();
             b.pack_forget();
             a.pack_configure(**kwargs);
-            b.pack_configure(expand=True, fill='both');
-            self.root.update();
-            self.assertEqual(a.winfo_geometry(), geom1);
-            self.assertEqual(b.winfo_geometry(), geom2);
+            b.pack_configure(expand=true, fill='both');
+            this.root.update();
+            this.assertEqual(a.winfo_geometry(), geom1);
+            this.assertEqual(b.winfo_geometry(), geom2);
         } check('20x40+260+80', '240x200+0+0', side='right', padx=20);
         check('20x40+250+80', '240x200+0+0', side='right', padx=(10, 30));
         check('60x40+240+80', '240x200+0+0', side='right', ipadx=20);
@@ -156,23 +156,23 @@ class PackTest(AbstractWidgetTest, unittest.TestCase){
         check('280x40+5+0', '300x160+0+40',
               side='top', ipadx=5, padx=(5, 15), fill='x');
         a.pack_configure(padx='1c');
-        self.assertEqual(a.pack_info()['padx'],
-                         self._str(pack.winfo_pixels('1c')));
+        this.assertEqual(a.pack_info()['padx'],
+                         this._str(pack.winfo_pixels('1c')));
         a.pack_configure(ipadx='1c');
-        self.assertEqual(a.pack_info()['ipadx'],
-                         self._str(pack.winfo_pixels('1c')));
+        this.assertEqual(a.pack_info()['ipadx'],
+                         this._str(pack.winfo_pixels('1c')));
 
     }
-    def test_pack_configure_pady_ipady_fill(self){
-        pack, a, b, c, d = self.create2();
-        def check(geom1, geom2, **kwargs){
+    function test_pack_configure_pady_ipady_fill(){
+        pack, a, b, c, d = this.create2();
+        function check(geom1, geom2, **kwargs){
             a.pack_forget();
             b.pack_forget();
             a.pack_configure(**kwargs);
-            b.pack_configure(expand=True, fill='both');
-            self.root.update();
-            self.assertEqual(a.winfo_geometry(), geom1);
-            self.assertEqual(b.winfo_geometry(), geom2);
+            b.pack_configure(expand=true, fill='both');
+            this.root.update();
+            this.assertEqual(a.winfo_geometry(), geom1);
+            this.assertEqual(b.winfo_geometry(), geom2);
         } check('20x40+280+80', '280x200+0+0', side='right', pady=20);
         check('20x40+280+70', '280x200+0+0', side='right', pady=(10, 30));
         check('20x80+280+60', '280x200+0+0', side='right', ipady=20);
@@ -199,647 +199,647 @@ class PackTest(AbstractWidgetTest, unittest.TestCase){
         check('300x50+0+5', '300x130+0+70',
               side='top', ipady=5, pady=(5, 15), fill='x');
         a.pack_configure(pady='1c');
-        self.assertEqual(a.pack_info()['pady'],
-                         self._str(pack.winfo_pixels('1c')));
+        this.assertEqual(a.pack_info()['pady'],
+                         this._str(pack.winfo_pixels('1c')));
         a.pack_configure(ipady='1c');
-        self.assertEqual(a.pack_info()['ipady'],
-                         self._str(pack.winfo_pixels('1c')));
+        this.assertEqual(a.pack_info()['ipady'],
+                         this._str(pack.winfo_pixels('1c')));
 
     }
-    def test_pack_configure_side(self){
-        pack, a, b, c, d = self.create2();
-        def check(side, geom1, geom2){
+    function test_pack_configure_side(){
+        pack, a, b, c, d = this.create2();
+        function check(side, geom1, geom2){
             a.pack_configure(side=side);
-            self.assertEqual(a.pack_info()['side'], side);
-            b.pack_configure(expand=True, fill='both');
-            self.root.update();
-            self.assertEqual(a.winfo_geometry(), geom1);
-            self.assertEqual(b.winfo_geometry(), geom2);
+            this.assertEqual(a.pack_info()['side'], side);
+            b.pack_configure(expand=true, fill='both');
+            this.root.update();
+            this.assertEqual(a.winfo_geometry(), geom1);
+            this.assertEqual(b.winfo_geometry(), geom2);
         } check('top', '20x40+140+0', '300x160+0+40');
         check('bottom', '20x40+140+160', '300x160+0+0');
         check('left', '20x40+0+80', '280x200+20+0');
         check('right', '20x40+280+80', '280x200+0+0');
 
     }
-    def test_pack_forget(self){
-        pack, a, b, c, d = self.create2();
+    function test_pack_forget(){
+        pack, a, b, c, d = this.create2();
         a.pack_configure();
         b.pack_configure();
         c.pack_configure();
-        self.assertEqual(pack.pack_slaves(), [a, b, c]);
+        this.assertEqual(pack.pack_slaves(), [a, b, c]);
         b.pack_forget();
-        self.assertEqual(pack.pack_slaves(), [a, c]);
+        this.assertEqual(pack.pack_slaves(), [a, c]);
         b.pack_forget();
-        self.assertEqual(pack.pack_slaves(), [a, c]);
+        this.assertEqual(pack.pack_slaves(), [a, c]);
         d.pack_forget();
 
     }
-    def test_pack_info(self){
-        pack, a, b, c, d = self.create2();
-        with self.assertRaisesRegexp(TclError, 'window "%s" isn\'t packed' % a){
+    function test_pack_info(){
+        pack, a, b, c, d = this.create2();
+        with this.assertRaisesRegexp(TclError, 'window "%s" isn\'t packed' % a){
             a.pack_info();
         } a.pack_configure();
-        b.pack_configure(side='right', in_=a, anchor='s', expand=True, fill='x',
+        b.pack_configure(side='right', in_=a, anchor='s', expand=true, fill='x',
                          ipadx=5, padx=10, ipady=2, pady=(5, 15));
         info = a.pack_info();
-        self.assertIsInstance(info, dict);
-        self.assertEqual(info['anchor'], 'center');
-        self.assertEqual(info['expand'], self._str(0));
-        self.assertEqual(info['fill'], 'none');
-        self.assertEqual(info['in'], pack);
-        self.assertEqual(info['ipadx'], self._str(0));
-        self.assertEqual(info['ipady'], self._str(0));
-        self.assertEqual(info['padx'], self._str(0));
-        self.assertEqual(info['pady'], self._str(0));
-        self.assertEqual(info['side'], 'top');
+        this.assertIsInstance(info, dict);
+        this.assertEqual(info['anchor'], 'center');
+        this.assertEqual(info['expand'], this._str(0));
+        this.assertEqual(info['fill'], 'none');
+        this.assertEqual(info['in'], pack);
+        this.assertEqual(info['ipadx'], this._str(0));
+        this.assertEqual(info['ipady'], this._str(0));
+        this.assertEqual(info['padx'], this._str(0));
+        this.assertEqual(info['pady'], this._str(0));
+        this.assertEqual(info['side'], 'top');
         info = b.pack_info();
-        self.assertIsInstance(info, dict);
-        self.assertEqual(info['anchor'], 's');
-        self.assertEqual(info['expand'], self._str(1));
-        self.assertEqual(info['fill'], 'x');
-        self.assertEqual(info['in'], a);
-        self.assertEqual(info['ipadx'], self._str(5));
-        self.assertEqual(info['ipady'], self._str(2));
-        self.assertEqual(info['padx'], self._str(10));
-        self.assertEqual(info['pady'], self._str((5, 15)));
-        self.assertEqual(info['side'], 'right');
+        this.assertIsInstance(info, dict);
+        this.assertEqual(info['anchor'], 's');
+        this.assertEqual(info['expand'], this._str(1));
+        this.assertEqual(info['fill'], 'x');
+        this.assertEqual(info['in'], a);
+        this.assertEqual(info['ipadx'], this._str(5));
+        this.assertEqual(info['ipady'], this._str(2));
+        this.assertEqual(info['padx'], this._str(10));
+        this.assertEqual(info['pady'], this._str((5, 15)));
+        this.assertEqual(info['side'], 'right');
 
     }
-    def test_pack_propagate(self){
-        pack, a, b, c, d = self.create2();
+    function test_pack_propagate(){
+        pack, a, b, c, d = this.create2();
         pack.configure(width=300, height=200);
         a.pack_configure();
-        pack.pack_propagate(False);
-        self.root.update();
-        self.assertEqual(pack.winfo_reqwidth(), 300);
-        self.assertEqual(pack.winfo_reqheight(), 200);
-        pack.pack_propagate(True);
-        self.root.update();
-        self.assertEqual(pack.winfo_reqwidth(), 20);
-        self.assertEqual(pack.winfo_reqheight(), 40);
+        pack.pack_propagate(false);
+        this.root.update();
+        this.assertEqual(pack.winfo_reqwidth(), 300);
+        this.assertEqual(pack.winfo_reqheight(), 200);
+        pack.pack_propagate(true);
+        this.root.update();
+        this.assertEqual(pack.winfo_reqwidth(), 20);
+        this.assertEqual(pack.winfo_reqheight(), 40);
 
     }
-    def test_pack_slaves(self){
-        pack, a, b, c, d = self.create2();
-        self.assertEqual(pack.pack_slaves(), []);
+    function test_pack_slaves(){
+        pack, a, b, c, d = this.create2();
+        this.assertEqual(pack.pack_slaves(), []);
         a.pack_configure();
-        self.assertEqual(pack.pack_slaves(), [a]);
+        this.assertEqual(pack.pack_slaves(), [a]);
         b.pack_configure();
-        self.assertEqual(pack.pack_slaves(), [a, b]);
+        this.assertEqual(pack.pack_slaves(), [a, b]);
 
 
 }
 } class PlaceTest(AbstractWidgetTest, unittest.TestCase){
 
-    test_keys = None;
+    test_keys = nil;
 
-    def create2(self){
-        t = tkinter.Toplevel(self.root, width=300, height=200, bd=0);
+    function create2(){
+        t = tkinter.Toplevel(this.root, width=300, height=200, bd=0);
         t.wm_geometry('300x200+0+0');
         f = tkinter.Frame(t, width=154, height=84, bd=2, relief='raised');
         f.place_configure(x=48, y=38);
         f2 = tkinter.Frame(t, width=30, height=60, bd=2, relief='raised');
-        self.root.update();
+        this.root.update();
         return t, f, f2;
 
     }
-    def test_place_configure_in(self){
-        t, f, f2 = self.create2();
-        self.assertEqual(f2.winfo_manager(), '');
-        with self.assertRaisesRegexp(TclError, "can't place %s relative to "
+    function test_place_configure_in(){
+        t, f, f2 = this.create2();
+        this.assertEqual(f2.winfo_manager(), '');
+        with this.assertRaisesRegexp(TclError, "can't place %s relative to "
                                      "itself" % re.escape(str(f2))){
             f2.place_configure(in_=f2);
         } if tcl_version >= (8, 5){
-            self.assertEqual(f2.winfo_manager(), '');
-        } with self.assertRaisesRegexp(TclError, 'bad window path name'){
+            this.assertEqual(f2.winfo_manager(), '');
+        } with this.assertRaisesRegexp(TclError, 'bad window path name'){
             f2.place_configure(in_='spam');
         } f2.place_configure(in_=f);
-        self.assertEqual(f2.winfo_manager(), 'place');
+        this.assertEqual(f2.winfo_manager(), 'place');
 
     }
-    def test_place_configure_x(self){
-        t, f, f2 = self.create2();
+    function test_place_configure_x(){
+        t, f, f2 = this.create2();
         f2.place_configure(in_=f);
-        self.assertEqual(f2.place_info()['x'], '0');
-        self.root.update();
-        self.assertEqual(f2.winfo_x(), 50);
+        this.assertEqual(f2.place_info()['x'], '0');
+        this.root.update();
+        this.assertEqual(f2.winfo_x(), 50);
         f2.place_configure(x=100);
-        self.assertEqual(f2.place_info()['x'], '100');
-        self.root.update();
-        self.assertEqual(f2.winfo_x(), 150);
+        this.assertEqual(f2.place_info()['x'], '100');
+        this.root.update();
+        this.assertEqual(f2.winfo_x(), 150);
         f2.place_configure(x=-10, relx=1);
-        self.assertEqual(f2.place_info()['x'], '-10');
-        self.root.update();
-        self.assertEqual(f2.winfo_x(), 190);
-        with self.assertRaisesRegexp(TclError, 'bad screen distance "spam"'){
+        this.assertEqual(f2.place_info()['x'], '-10');
+        this.root.update();
+        this.assertEqual(f2.winfo_x(), 190);
+        with this.assertRaisesRegexp(TclError, 'bad screen distance "spam"'){
             f2.place_configure(in_=f, x='spam');
 
     }
-    } def test_place_configure_y(self){
-        t, f, f2 = self.create2();
+    } function test_place_configure_y(){
+        t, f, f2 = this.create2();
         f2.place_configure(in_=f);
-        self.assertEqual(f2.place_info()['y'], '0');
-        self.root.update();
-        self.assertEqual(f2.winfo_y(), 40);
+        this.assertEqual(f2.place_info()['y'], '0');
+        this.root.update();
+        this.assertEqual(f2.winfo_y(), 40);
         f2.place_configure(y=50);
-        self.assertEqual(f2.place_info()['y'], '50');
-        self.root.update();
-        self.assertEqual(f2.winfo_y(), 90);
+        this.assertEqual(f2.place_info()['y'], '50');
+        this.root.update();
+        this.assertEqual(f2.winfo_y(), 90);
         f2.place_configure(y=-10, rely=1);
-        self.assertEqual(f2.place_info()['y'], '-10');
-        self.root.update();
-        self.assertEqual(f2.winfo_y(), 110);
-        with self.assertRaisesRegexp(TclError, 'bad screen distance "spam"'){
+        this.assertEqual(f2.place_info()['y'], '-10');
+        this.root.update();
+        this.assertEqual(f2.winfo_y(), 110);
+        with this.assertRaisesRegexp(TclError, 'bad screen distance "spam"'){
             f2.place_configure(in_=f, y='spam');
 
     }
-    } def test_place_configure_relx(self){
-        t, f, f2 = self.create2();
+    } function test_place_configure_relx(){
+        t, f, f2 = this.create2();
         f2.place_configure(in_=f);
-        self.assertEqual(f2.place_info()['relx'], '0');
-        self.root.update();
-        self.assertEqual(f2.winfo_x(), 50);
+        this.assertEqual(f2.place_info()['relx'], '0');
+        this.root.update();
+        this.assertEqual(f2.winfo_x(), 50);
         f2.place_configure(relx=0.5);
-        self.assertEqual(f2.place_info()['relx'], '0.5');
-        self.root.update();
-        self.assertEqual(f2.winfo_x(), 125);
+        this.assertEqual(f2.place_info()['relx'], '0.5');
+        this.root.update();
+        this.assertEqual(f2.winfo_x(), 125);
         f2.place_configure(relx=1);
-        self.assertEqual(f2.place_info()['relx'], '1');
-        self.root.update();
-        self.assertEqual(f2.winfo_x(), 200);
-        with self.assertRaisesRegexp(TclError, 'expected floating-point number '
+        this.assertEqual(f2.place_info()['relx'], '1');
+        this.root.update();
+        this.assertEqual(f2.winfo_x(), 200);
+        with this.assertRaisesRegexp(TclError, 'expected floating-point number '
                                      'but got "spam"'){
             f2.place_configure(in_=f, relx='spam');
 
     }
-    } def test_place_configure_rely(self){
-        t, f, f2 = self.create2();
+    } function test_place_configure_rely(){
+        t, f, f2 = this.create2();
         f2.place_configure(in_=f);
-        self.assertEqual(f2.place_info()['rely'], '0');
-        self.root.update();
-        self.assertEqual(f2.winfo_y(), 40);
+        this.assertEqual(f2.place_info()['rely'], '0');
+        this.root.update();
+        this.assertEqual(f2.winfo_y(), 40);
         f2.place_configure(rely=0.5);
-        self.assertEqual(f2.place_info()['rely'], '0.5');
-        self.root.update();
-        self.assertEqual(f2.winfo_y(), 80);
+        this.assertEqual(f2.place_info()['rely'], '0.5');
+        this.root.update();
+        this.assertEqual(f2.winfo_y(), 80);
         f2.place_configure(rely=1);
-        self.assertEqual(f2.place_info()['rely'], '1');
-        self.root.update();
-        self.assertEqual(f2.winfo_y(), 120);
-        with self.assertRaisesRegexp(TclError, 'expected floating-point number '
+        this.assertEqual(f2.place_info()['rely'], '1');
+        this.root.update();
+        this.assertEqual(f2.winfo_y(), 120);
+        with this.assertRaisesRegexp(TclError, 'expected floating-point number '
                                      'but got "spam"'){
             f2.place_configure(in_=f, rely='spam');
 
     }
-    } def test_place_configure_anchor(self){
-        f = tkinter.Frame(self.root);
-        with self.assertRaisesRegexp(TclError, 'bad anchor "j"'){
+    } function test_place_configure_anchor(){
+        f = tkinter.Frame(this.root);
+        with this.assertRaisesRegexp(TclError, 'bad anchor "j"'){
             f.place_configure(anchor='j');
-        } with self.assertRaisesRegexp(TclError, 'ambiguous anchor ""'){
+        } with this.assertRaisesRegexp(TclError, 'ambiguous anchor ""'){
             f.place_configure(anchor='');
         } for value in 'n', 'ne', 'e', 'se', 's', 'sw', 'w', 'nw', 'center'{
             f.place_configure(anchor=value);
-            self.assertEqual(f.place_info()['anchor'], value);
+            this.assertEqual(f.place_info()['anchor'], value);
 
     }
-    } def test_place_configure_width(self){
-        t, f, f2 = self.create2();
+    } function test_place_configure_width(){
+        t, f, f2 = this.create2();
         f2.place_configure(in_=f, width=120);
-        self.root.update();
-        self.assertEqual(f2.winfo_width(), 120);
+        this.root.update();
+        this.assertEqual(f2.winfo_width(), 120);
         f2.place_configure(width='');
-        self.root.update();
-        self.assertEqual(f2.winfo_width(), 30);
-        with self.assertRaisesRegexp(TclError, 'bad screen distance "abcd"'){
+        this.root.update();
+        this.assertEqual(f2.winfo_width(), 30);
+        with this.assertRaisesRegexp(TclError, 'bad screen distance "abcd"'){
             f2.place_configure(width='abcd');
 
     }
-    } def test_place_configure_height(self){
-        t, f, f2 = self.create2();
+    } function test_place_configure_height(){
+        t, f, f2 = this.create2();
         f2.place_configure(in_=f, height=120);
-        self.root.update();
-        self.assertEqual(f2.winfo_height(), 120);
+        this.root.update();
+        this.assertEqual(f2.winfo_height(), 120);
         f2.place_configure(height='');
-        self.root.update();
-        self.assertEqual(f2.winfo_height(), 60);
-        with self.assertRaisesRegexp(TclError, 'bad screen distance "abcd"'){
+        this.root.update();
+        this.assertEqual(f2.winfo_height(), 60);
+        with this.assertRaisesRegexp(TclError, 'bad screen distance "abcd"'){
             f2.place_configure(height='abcd');
 
     }
-    } def test_place_configure_relwidth(self){
-        t, f, f2 = self.create2();
+    } function test_place_configure_relwidth(){
+        t, f, f2 = this.create2();
         f2.place_configure(in_=f, relwidth=0.5);
-        self.root.update();
-        self.assertEqual(f2.winfo_width(), 75);
+        this.root.update();
+        this.assertEqual(f2.winfo_width(), 75);
         f2.place_configure(relwidth='');
-        self.root.update();
-        self.assertEqual(f2.winfo_width(), 30);
-        with self.assertRaisesRegexp(TclError, 'expected floating-point number '
+        this.root.update();
+        this.assertEqual(f2.winfo_width(), 30);
+        with this.assertRaisesRegexp(TclError, 'expected floating-point number '
                                      'but got "abcd"'){
             f2.place_configure(relwidth='abcd');
 
     }
-    } def test_place_configure_relheight(self){
-        t, f, f2 = self.create2();
+    } function test_place_configure_relheight(){
+        t, f, f2 = this.create2();
         f2.place_configure(in_=f, relheight=0.5);
-        self.root.update();
-        self.assertEqual(f2.winfo_height(), 40);
+        this.root.update();
+        this.assertEqual(f2.winfo_height(), 40);
         f2.place_configure(relheight='');
-        self.root.update();
-        self.assertEqual(f2.winfo_height(), 60);
-        with self.assertRaisesRegexp(TclError, 'expected floating-point number '
+        this.root.update();
+        this.assertEqual(f2.winfo_height(), 60);
+        with this.assertRaisesRegexp(TclError, 'expected floating-point number '
                                      'but got "abcd"'){
             f2.place_configure(relheight='abcd');
 
     }
-    } def test_place_configure_bordermode(self){
-        f = tkinter.Frame(self.root);
-        with self.assertRaisesRegexp(TclError, 'bad bordermode "j"'){
+    } function test_place_configure_bordermode(){
+        f = tkinter.Frame(this.root);
+        with this.assertRaisesRegexp(TclError, 'bad bordermode "j"'){
             f.place_configure(bordermode='j');
-        } with self.assertRaisesRegexp(TclError, 'ambiguous bordermode ""'){
+        } with this.assertRaisesRegexp(TclError, 'ambiguous bordermode ""'){
             f.place_configure(bordermode='');
         } for value in 'inside', 'outside', 'ignore'{
             f.place_configure(bordermode=value);
-            self.assertEqual(f.place_info()['bordermode'], value);
+            this.assertEqual(f.place_info()['bordermode'], value);
 
     }
-    } def test_place_forget(self){
-        foo = tkinter.Frame(self.root);
+    } function test_place_forget(){
+        foo = tkinter.Frame(this.root);
         foo.place_configure(width=50, height=50);
-        self.root.update();
+        this.root.update();
         foo.place_forget();
-        self.root.update();
-        self.assertFalse(foo.winfo_ismapped());
-        with self.assertRaises(TypeError){
+        this.root.update();
+        this.assertFalse(foo.winfo_ismapped());
+        with this.assertRaises(TypeError){
             foo.place_forget(0);
 
     }
-    } def test_place_info(self){
-        t, f, f2 = self.create2();
+    } function test_place_info(){
+        t, f, f2 = this.create2();
         f2.place_configure(in_=f, x=1, y=2, width=3, height=4,
                            relx=0.1, rely=0.2, relwidth=0.3, relheight=0.4,
                            anchor='se', bordermode='outside');
         info = f2.place_info();
-        self.assertIsInstance(info, dict);
-        self.assertEqual(info['x'], '1');
-        self.assertEqual(info['y'], '2');
-        self.assertEqual(info['width'], '3');
-        self.assertEqual(info['height'], '4');
-        self.assertEqual(info['relx'], '0.1');
-        self.assertEqual(info['rely'], '0.2');
-        self.assertEqual(info['relwidth'], '0.3');
-        self.assertEqual(info['relheight'], '0.4');
-        self.assertEqual(info['anchor'], 'se');
-        self.assertEqual(info['bordermode'], 'outside');
-        self.assertEqual(info['x'], '1');
-        self.assertEqual(info['x'], '1');
-        with self.assertRaises(TypeError){
+        this.assertIsInstance(info, dict);
+        this.assertEqual(info['x'], '1');
+        this.assertEqual(info['y'], '2');
+        this.assertEqual(info['width'], '3');
+        this.assertEqual(info['height'], '4');
+        this.assertEqual(info['relx'], '0.1');
+        this.assertEqual(info['rely'], '0.2');
+        this.assertEqual(info['relwidth'], '0.3');
+        this.assertEqual(info['relheight'], '0.4');
+        this.assertEqual(info['anchor'], 'se');
+        this.assertEqual(info['bordermode'], 'outside');
+        this.assertEqual(info['x'], '1');
+        this.assertEqual(info['x'], '1');
+        with this.assertRaises(TypeError){
             f2.place_info(0);
 
     }
-    } def test_place_slaves(self){
-        foo = tkinter.Frame(self.root);
-        bar = tkinter.Frame(self.root);
-        self.assertEqual(foo.place_slaves(), []);
+    } function test_place_slaves(){
+        foo = tkinter.Frame(this.root);
+        bar = tkinter.Frame(this.root);
+        this.assertEqual(foo.place_slaves(), []);
         bar.place_configure(in_=foo);
-        self.assertEqual(foo.place_slaves(), [bar]);
-        with self.assertRaises(TypeError){
+        this.assertEqual(foo.place_slaves(), [bar]);
+        with this.assertRaises(TypeError){
             foo.place_slaves(0);
 
 
 }
 } } class GridTest(AbstractWidgetTest, unittest.TestCase){
 
-    test_keys = None;
+    test_keys = nil;
 
-    def tearDown(self){
-        cols, rows = self.root.grid_size();
+    function tearDown(){
+        cols, rows = this.root.grid_size();
         for i in range(cols + 1){
-            self.root.grid_columnconfigure(i, weight=0, minsize=0, pad=0, uniform='');
+            this.root.grid_columnconfigure(i, weight=0, minsize=0, pad=0, uniform='');
         } for i in range(rows + 1){
-            self.root.grid_rowconfigure(i, weight=0, minsize=0, pad=0, uniform='');
-        } self.root.grid_propagate(1);
-        super(GridTest, self).tearDown();
+            this.root.grid_rowconfigure(i, weight=0, minsize=0, pad=0, uniform='');
+        } this.root.grid_propagate(1);
+        super(GridTest, this).tearDown();
 
     }
-    def test_grid_configure(self){
-        b = tkinter.Button(self.root);
-        self.assertEqual(b.grid_info(), {});
+    function test_grid_configure(){
+        b = tkinter.Button(this.root);
+        this.assertEqual(b.grid_info(), {});
         b.grid_configure();
-        self.assertEqual(b.grid_info()['in'], self.root);
-        self.assertEqual(b.grid_info()['column'], self._str(0));
-        self.assertEqual(b.grid_info()['row'], self._str(0));
+        this.assertEqual(b.grid_info()['in'], this.root);
+        this.assertEqual(b.grid_info()['column'], this._str(0));
+        this.assertEqual(b.grid_info()['row'], this._str(0));
         b.grid_configure({'column': 1}, row=2);
-        self.assertEqual(b.grid_info()['column'], self._str(1));
-        self.assertEqual(b.grid_info()['row'], self._str(2));
+        this.assertEqual(b.grid_info()['column'], this._str(1));
+        this.assertEqual(b.grid_info()['row'], this._str(2));
 
     }
-    def test_grid_configure_column(self){
-        b = tkinter.Button(self.root);
-        with self.assertRaisesRegexp(TclError, 'bad column value "-1": '
+    function test_grid_configure_column(){
+        b = tkinter.Button(this.root);
+        with this.assertRaisesRegexp(TclError, 'bad column value "-1": '
                                      'must be a non-negative integer'){
             b.grid_configure(column=-1);
         } b.grid_configure(column=2);
-        self.assertEqual(b.grid_info()['column'], self._str(2));
+        this.assertEqual(b.grid_info()['column'], this._str(2));
 
     }
-    def test_grid_configure_columnspan(self){
-        b = tkinter.Button(self.root);
-        with self.assertRaisesRegexp(TclError, 'bad columnspan value "0": '
+    function test_grid_configure_columnspan(){
+        b = tkinter.Button(this.root);
+        with this.assertRaisesRegexp(TclError, 'bad columnspan value "0": '
                                      'must be a positive integer'){
             b.grid_configure(columnspan=0);
         } b.grid_configure(columnspan=2);
-        self.assertEqual(b.grid_info()['columnspan'], self._str(2));
+        this.assertEqual(b.grid_info()['columnspan'], this._str(2));
 
     }
-    def test_grid_configure_in(self){
-        f = tkinter.Frame(self.root);
-        b = tkinter.Button(self.root);
-        self.assertEqual(b.grid_info(), {});
+    function test_grid_configure_in(){
+        f = tkinter.Frame(this.root);
+        b = tkinter.Button(this.root);
+        this.assertEqual(b.grid_info(), {});
         b.grid_configure();
-        self.assertEqual(b.grid_info()['in'], self.root);
+        this.assertEqual(b.grid_info()['in'], this.root);
         b.grid_configure(in_=f);
-        self.assertEqual(b.grid_info()['in'], f);
-        b.grid_configure({'in': self.root});
-        self.assertEqual(b.grid_info()['in'], self.root);
+        this.assertEqual(b.grid_info()['in'], f);
+        b.grid_configure({'in': this.root});
+        this.assertEqual(b.grid_info()['in'], this.root);
 
     }
-    def test_grid_configure_ipadx(self){
-        b = tkinter.Button(self.root);
-        with self.assertRaisesRegexp(TclError, 'bad ipadx value "-1": '
+    function test_grid_configure_ipadx(){
+        b = tkinter.Button(this.root);
+        with this.assertRaisesRegexp(TclError, 'bad ipadx value "-1": '
                                      'must be positive screen distance'){
             b.grid_configure(ipadx=-1);
         } b.grid_configure(ipadx=1);
-        self.assertEqual(b.grid_info()['ipadx'], self._str(1));
+        this.assertEqual(b.grid_info()['ipadx'], this._str(1));
         b.grid_configure(ipadx='.5c');
-        self.assertEqual(b.grid_info()['ipadx'],
-                self._str(int_round(pixels_conv('.5c') * self.scaling)));
+        this.assertEqual(b.grid_info()['ipadx'],
+                this._str(int_round(pixels_conv('.5c') * this.scaling)));
 
     }
-    def test_grid_configure_ipady(self){
-        b = tkinter.Button(self.root);
-        with self.assertRaisesRegexp(TclError, 'bad ipady value "-1": '
+    function test_grid_configure_ipady(){
+        b = tkinter.Button(this.root);
+        with this.assertRaisesRegexp(TclError, 'bad ipady value "-1": '
                                      'must be positive screen distance'){
             b.grid_configure(ipady=-1);
         } b.grid_configure(ipady=1);
-        self.assertEqual(b.grid_info()['ipady'], self._str(1));
+        this.assertEqual(b.grid_info()['ipady'], this._str(1));
         b.grid_configure(ipady='.5c');
-        self.assertEqual(b.grid_info()['ipady'],
-                self._str(int_round(pixels_conv('.5c') * self.scaling)));
+        this.assertEqual(b.grid_info()['ipady'],
+                this._str(int_round(pixels_conv('.5c') * this.scaling)));
 
     }
-    def test_grid_configure_padx(self){
-        b = tkinter.Button(self.root);
-        with self.assertRaisesRegexp(TclError, 'bad pad value "-1": '
+    function test_grid_configure_padx(){
+        b = tkinter.Button(this.root);
+        with this.assertRaisesRegexp(TclError, 'bad pad value "-1": '
                                      'must be positive screen distance'){
             b.grid_configure(padx=-1);
         } b.grid_configure(padx=1);
-        self.assertEqual(b.grid_info()['padx'], self._str(1));
+        this.assertEqual(b.grid_info()['padx'], this._str(1));
         b.grid_configure(padx=(10, 5));
-        self.assertEqual(b.grid_info()['padx'], self._str((10, 5)));
+        this.assertEqual(b.grid_info()['padx'], this._str((10, 5)));
         b.grid_configure(padx='.5c');
-        self.assertEqual(b.grid_info()['padx'],
-                self._str(int_round(pixels_conv('.5c') * self.scaling)));
+        this.assertEqual(b.grid_info()['padx'],
+                this._str(int_round(pixels_conv('.5c') * this.scaling)));
 
     }
-    def test_grid_configure_pady(self){
-        b = tkinter.Button(self.root);
-        with self.assertRaisesRegexp(TclError, 'bad pad value "-1": '
+    function test_grid_configure_pady(){
+        b = tkinter.Button(this.root);
+        with this.assertRaisesRegexp(TclError, 'bad pad value "-1": '
                                      'must be positive screen distance'){
             b.grid_configure(pady=-1);
         } b.grid_configure(pady=1);
-        self.assertEqual(b.grid_info()['pady'], self._str(1));
+        this.assertEqual(b.grid_info()['pady'], this._str(1));
         b.grid_configure(pady=(10, 5));
-        self.assertEqual(b.grid_info()['pady'], self._str((10, 5)));
+        this.assertEqual(b.grid_info()['pady'], this._str((10, 5)));
         b.grid_configure(pady='.5c');
-        self.assertEqual(b.grid_info()['pady'],
-                self._str(int_round(pixels_conv('.5c') * self.scaling)));
+        this.assertEqual(b.grid_info()['pady'],
+                this._str(int_round(pixels_conv('.5c') * this.scaling)));
 
     }
-    def test_grid_configure_row(self){
-        b = tkinter.Button(self.root);
-        with self.assertRaisesRegexp(TclError, 'bad (row|grid) value "-1": '
+    function test_grid_configure_row(){
+        b = tkinter.Button(this.root);
+        with this.assertRaisesRegexp(TclError, 'bad (row|grid) value "-1": '
                                      'must be a non-negative integer'){
             b.grid_configure(row=-1);
         } b.grid_configure(row=2);
-        self.assertEqual(b.grid_info()['row'], self._str(2));
+        this.assertEqual(b.grid_info()['row'], this._str(2));
 
     }
-    def test_grid_configure_rownspan(self){
-        b = tkinter.Button(self.root);
-        with self.assertRaisesRegexp(TclError, 'bad rowspan value "0": '
+    function test_grid_configure_rownspan(){
+        b = tkinter.Button(this.root);
+        with this.assertRaisesRegexp(TclError, 'bad rowspan value "0": '
                                      'must be a positive integer'){
             b.grid_configure(rowspan=0);
         } b.grid_configure(rowspan=2);
-        self.assertEqual(b.grid_info()['rowspan'], self._str(2));
+        this.assertEqual(b.grid_info()['rowspan'], this._str(2));
 
     }
-    def test_grid_configure_sticky(self){
-        f = tkinter.Frame(self.root, bg='red');
-        with self.assertRaisesRegexp(TclError, 'bad stickyness value "glue"'){
+    function test_grid_configure_sticky(){
+        f = tkinter.Frame(this.root, bg='red');
+        with this.assertRaisesRegexp(TclError, 'bad stickyness value "glue"'){
             f.grid_configure(sticky='glue');
         } f.grid_configure(sticky='ne');
-        self.assertEqual(f.grid_info()['sticky'], 'ne');
+        this.assertEqual(f.grid_info()['sticky'], 'ne');
         f.grid_configure(sticky='n,s,e,w');
-        self.assertEqual(f.grid_info()['sticky'], 'nesw');
+        this.assertEqual(f.grid_info()['sticky'], 'nesw');
 
     }
-    def test_grid_columnconfigure(self){
-        with self.assertRaises(TypeError){
-            self.root.grid_columnconfigure();
-        } self.assertEqual(self.root.grid_columnconfigure(0),
-                         {'minsize': 0, 'pad': 0, 'uniform': None, 'weight': 0});
-        with self.assertRaisesRegexp(TclError, 'bad option "-foo"'){
-            self.root.grid_columnconfigure(0, 'foo');
-        } self.root.grid_columnconfigure((0, 3), weight=2);
-        with self.assertRaisesRegexp(TclError,
+    function test_grid_columnconfigure(){
+        with this.assertRaises(TypeError){
+            this.root.grid_columnconfigure();
+        } this.assertEqual(this.root.grid_columnconfigure(0),
+                         {'minsize': 0, 'pad': 0, 'uniform': nil, 'weight': 0});
+        with this.assertRaisesRegexp(TclError, 'bad option "-foo"'){
+            this.root.grid_columnconfigure(0, 'foo');
+        } this.root.grid_columnconfigure((0, 3), weight=2);
+        with this.assertRaisesRegexp(TclError,
                                      'must specify a single element on retrieval'){
-            self.root.grid_columnconfigure((0, 3));
-        } b = tkinter.Button(self.root);
+            this.root.grid_columnconfigure((0, 3));
+        } b = tkinter.Button(this.root);
         b.grid_configure(column=0, row=0);
         if tcl_version >= (8, 5){
-            self.root.grid_columnconfigure('all', weight=3);
-            with self.assertRaisesRegexp(TclError, 'expected integer but got "all"'){
-                self.root.grid_columnconfigure('all');
-            } self.assertEqual(self.root.grid_columnconfigure(0, 'weight'), 3);
-        } self.assertEqual(self.root.grid_columnconfigure(3, 'weight'), 2);
-        self.assertEqual(self.root.grid_columnconfigure(265, 'weight'), 0);
+            this.root.grid_columnconfigure('all', weight=3);
+            with this.assertRaisesRegexp(TclError, 'expected integer but got "all"'){
+                this.root.grid_columnconfigure('all');
+            } this.assertEqual(this.root.grid_columnconfigure(0, 'weight'), 3);
+        } this.assertEqual(this.root.grid_columnconfigure(3, 'weight'), 2);
+        this.assertEqual(this.root.grid_columnconfigure(265, 'weight'), 0);
         if tcl_version >= (8, 5){
-            self.root.grid_columnconfigure(b, weight=4);
-            self.assertEqual(self.root.grid_columnconfigure(0, 'weight'), 4);
+            this.root.grid_columnconfigure(b, weight=4);
+            this.assertEqual(this.root.grid_columnconfigure(0, 'weight'), 4);
 
     }
-    } def test_grid_columnconfigure_minsize(self){
-        with self.assertRaisesRegexp(TclError, 'bad screen distance "foo"'){
-            self.root.grid_columnconfigure(0, minsize='foo');
-        } self.root.grid_columnconfigure(0, minsize=10);
-        self.assertEqual(self.root.grid_columnconfigure(0, 'minsize'), 10);
-        self.assertEqual(self.root.grid_columnconfigure(0)['minsize'], 10);
+    } function test_grid_columnconfigure_minsize(){
+        with this.assertRaisesRegexp(TclError, 'bad screen distance "foo"'){
+            this.root.grid_columnconfigure(0, minsize='foo');
+        } this.root.grid_columnconfigure(0, minsize=10);
+        this.assertEqual(this.root.grid_columnconfigure(0, 'minsize'), 10);
+        this.assertEqual(this.root.grid_columnconfigure(0)['minsize'], 10);
 
     }
-    def test_grid_columnconfigure_weight(self){
-        with self.assertRaisesRegexp(TclError, 'expected integer but got "bad"'){
-            self.root.grid_columnconfigure(0, weight='bad');
-        } with self.assertRaisesRegexp(TclError, 'invalid arg "-weight": '
+    function test_grid_columnconfigure_weight(){
+        with this.assertRaisesRegexp(TclError, 'expected integer but got "bad"'){
+            this.root.grid_columnconfigure(0, weight='bad');
+        } with this.assertRaisesRegexp(TclError, 'invalid arg "-weight": '
                                      'should be non-negative'){
-            self.root.grid_columnconfigure(0, weight=-3);
-        } self.root.grid_columnconfigure(0, weight=3);
-        self.assertEqual(self.root.grid_columnconfigure(0, 'weight'), 3);
-        self.assertEqual(self.root.grid_columnconfigure(0)['weight'], 3);
+            this.root.grid_columnconfigure(0, weight=-3);
+        } this.root.grid_columnconfigure(0, weight=3);
+        this.assertEqual(this.root.grid_columnconfigure(0, 'weight'), 3);
+        this.assertEqual(this.root.grid_columnconfigure(0)['weight'], 3);
 
     }
-    def test_grid_columnconfigure_pad(self){
-        with self.assertRaisesRegexp(TclError, 'bad screen distance "foo"'){
-            self.root.grid_columnconfigure(0, pad='foo');
-        } with self.assertRaisesRegexp(TclError, 'invalid arg "-pad": '
+    function test_grid_columnconfigure_pad(){
+        with this.assertRaisesRegexp(TclError, 'bad screen distance "foo"'){
+            this.root.grid_columnconfigure(0, pad='foo');
+        } with this.assertRaisesRegexp(TclError, 'invalid arg "-pad": '
                                      'should be non-negative'){
-            self.root.grid_columnconfigure(0, pad=-3);
-        } self.root.grid_columnconfigure(0, pad=3);
-        self.assertEqual(self.root.grid_columnconfigure(0, 'pad'), 3);
-        self.assertEqual(self.root.grid_columnconfigure(0)['pad'], 3);
+            this.root.grid_columnconfigure(0, pad=-3);
+        } this.root.grid_columnconfigure(0, pad=3);
+        this.assertEqual(this.root.grid_columnconfigure(0, 'pad'), 3);
+        this.assertEqual(this.root.grid_columnconfigure(0)['pad'], 3);
 
     }
-    def test_grid_columnconfigure_uniform(self){
-        self.root.grid_columnconfigure(0, uniform='foo');
-        self.assertEqual(self.root.grid_columnconfigure(0, 'uniform'), 'foo');
-        self.assertEqual(self.root.grid_columnconfigure(0)['uniform'], 'foo');
+    function test_grid_columnconfigure_uniform(){
+        this.root.grid_columnconfigure(0, uniform='foo');
+        this.assertEqual(this.root.grid_columnconfigure(0, 'uniform'), 'foo');
+        this.assertEqual(this.root.grid_columnconfigure(0)['uniform'], 'foo');
 
     }
-    def test_grid_rowconfigure(self){
-        with self.assertRaises(TypeError){
-            self.root.grid_rowconfigure();
-        } self.assertEqual(self.root.grid_rowconfigure(0),
-                         {'minsize': 0, 'pad': 0, 'uniform': None, 'weight': 0});
-        with self.assertRaisesRegexp(TclError, 'bad option "-foo"'){
-            self.root.grid_rowconfigure(0, 'foo');
-        } self.root.grid_rowconfigure((0, 3), weight=2);
-        with self.assertRaisesRegexp(TclError,
+    function test_grid_rowconfigure(){
+        with this.assertRaises(TypeError){
+            this.root.grid_rowconfigure();
+        } this.assertEqual(this.root.grid_rowconfigure(0),
+                         {'minsize': 0, 'pad': 0, 'uniform': nil, 'weight': 0});
+        with this.assertRaisesRegexp(TclError, 'bad option "-foo"'){
+            this.root.grid_rowconfigure(0, 'foo');
+        } this.root.grid_rowconfigure((0, 3), weight=2);
+        with this.assertRaisesRegexp(TclError,
                                      'must specify a single element on retrieval'){
-            self.root.grid_rowconfigure((0, 3));
-        } b = tkinter.Button(self.root);
+            this.root.grid_rowconfigure((0, 3));
+        } b = tkinter.Button(this.root);
         b.grid_configure(column=0, row=0);
         if tcl_version >= (8, 5){
-            self.root.grid_rowconfigure('all', weight=3);
-            with self.assertRaisesRegexp(TclError, 'expected integer but got "all"'){
-                self.root.grid_rowconfigure('all');
-            } self.assertEqual(self.root.grid_rowconfigure(0, 'weight'), 3);
-        } self.assertEqual(self.root.grid_rowconfigure(3, 'weight'), 2);
-        self.assertEqual(self.root.grid_rowconfigure(265, 'weight'), 0);
+            this.root.grid_rowconfigure('all', weight=3);
+            with this.assertRaisesRegexp(TclError, 'expected integer but got "all"'){
+                this.root.grid_rowconfigure('all');
+            } this.assertEqual(this.root.grid_rowconfigure(0, 'weight'), 3);
+        } this.assertEqual(this.root.grid_rowconfigure(3, 'weight'), 2);
+        this.assertEqual(this.root.grid_rowconfigure(265, 'weight'), 0);
         if tcl_version >= (8, 5){
-            self.root.grid_rowconfigure(b, weight=4);
-            self.assertEqual(self.root.grid_rowconfigure(0, 'weight'), 4);
+            this.root.grid_rowconfigure(b, weight=4);
+            this.assertEqual(this.root.grid_rowconfigure(0, 'weight'), 4);
 
     }
-    } def test_grid_rowconfigure_minsize(self){
-        with self.assertRaisesRegexp(TclError, 'bad screen distance "foo"'){
-            self.root.grid_rowconfigure(0, minsize='foo');
-        } self.root.grid_rowconfigure(0, minsize=10);
-        self.assertEqual(self.root.grid_rowconfigure(0, 'minsize'), 10);
-        self.assertEqual(self.root.grid_rowconfigure(0)['minsize'], 10);
+    } function test_grid_rowconfigure_minsize(){
+        with this.assertRaisesRegexp(TclError, 'bad screen distance "foo"'){
+            this.root.grid_rowconfigure(0, minsize='foo');
+        } this.root.grid_rowconfigure(0, minsize=10);
+        this.assertEqual(this.root.grid_rowconfigure(0, 'minsize'), 10);
+        this.assertEqual(this.root.grid_rowconfigure(0)['minsize'], 10);
 
     }
-    def test_grid_rowconfigure_weight(self){
-        with self.assertRaisesRegexp(TclError, 'expected integer but got "bad"'){
-            self.root.grid_rowconfigure(0, weight='bad');
-        } with self.assertRaisesRegexp(TclError, 'invalid arg "-weight": '
+    function test_grid_rowconfigure_weight(){
+        with this.assertRaisesRegexp(TclError, 'expected integer but got "bad"'){
+            this.root.grid_rowconfigure(0, weight='bad');
+        } with this.assertRaisesRegexp(TclError, 'invalid arg "-weight": '
                                      'should be non-negative'){
-            self.root.grid_rowconfigure(0, weight=-3);
-        } self.root.grid_rowconfigure(0, weight=3);
-        self.assertEqual(self.root.grid_rowconfigure(0, 'weight'), 3);
-        self.assertEqual(self.root.grid_rowconfigure(0)['weight'], 3);
+            this.root.grid_rowconfigure(0, weight=-3);
+        } this.root.grid_rowconfigure(0, weight=3);
+        this.assertEqual(this.root.grid_rowconfigure(0, 'weight'), 3);
+        this.assertEqual(this.root.grid_rowconfigure(0)['weight'], 3);
 
     }
-    def test_grid_rowconfigure_pad(self){
-        with self.assertRaisesRegexp(TclError, 'bad screen distance "foo"'){
-            self.root.grid_rowconfigure(0, pad='foo');
-        } with self.assertRaisesRegexp(TclError, 'invalid arg "-pad": '
+    function test_grid_rowconfigure_pad(){
+        with this.assertRaisesRegexp(TclError, 'bad screen distance "foo"'){
+            this.root.grid_rowconfigure(0, pad='foo');
+        } with this.assertRaisesRegexp(TclError, 'invalid arg "-pad": '
                                      'should be non-negative'){
-            self.root.grid_rowconfigure(0, pad=-3);
-        } self.root.grid_rowconfigure(0, pad=3);
-        self.assertEqual(self.root.grid_rowconfigure(0, 'pad'), 3);
-        self.assertEqual(self.root.grid_rowconfigure(0)['pad'], 3);
+            this.root.grid_rowconfigure(0, pad=-3);
+        } this.root.grid_rowconfigure(0, pad=3);
+        this.assertEqual(this.root.grid_rowconfigure(0, 'pad'), 3);
+        this.assertEqual(this.root.grid_rowconfigure(0)['pad'], 3);
 
     }
-    def test_grid_rowconfigure_uniform(self){
-        self.root.grid_rowconfigure(0, uniform='foo');
-        self.assertEqual(self.root.grid_rowconfigure(0, 'uniform'), 'foo');
-        self.assertEqual(self.root.grid_rowconfigure(0)['uniform'], 'foo');
+    function test_grid_rowconfigure_uniform(){
+        this.root.grid_rowconfigure(0, uniform='foo');
+        this.assertEqual(this.root.grid_rowconfigure(0, 'uniform'), 'foo');
+        this.assertEqual(this.root.grid_rowconfigure(0)['uniform'], 'foo');
 
     }
-    def test_grid_forget(self){
-        b = tkinter.Button(self.root);
-        c = tkinter.Button(self.root);
+    function test_grid_forget(){
+        b = tkinter.Button(this.root);
+        c = tkinter.Button(this.root);
         b.grid_configure(row=2, column=2, rowspan=2, columnspan=2,
                          padx=3, pady=4, sticky='ns');
-        self.assertEqual(self.root.grid_slaves(), [b]);
+        this.assertEqual(this.root.grid_slaves(), [b]);
         b.grid_forget();
         c.grid_forget();
-        self.assertEqual(self.root.grid_slaves(), []);
-        self.assertEqual(b.grid_info(), {});
+        this.assertEqual(this.root.grid_slaves(), []);
+        this.assertEqual(b.grid_info(), {});
         b.grid_configure(row=0, column=0);
         info = b.grid_info();
-        self.assertEqual(info['row'], self._str(0));
-        self.assertEqual(info['column'], self._str(0));
-        self.assertEqual(info['rowspan'], self._str(1));
-        self.assertEqual(info['columnspan'], self._str(1));
-        self.assertEqual(info['padx'], self._str(0));
-        self.assertEqual(info['pady'], self._str(0));
-        self.assertEqual(info['sticky'], '');
+        this.assertEqual(info['row'], this._str(0));
+        this.assertEqual(info['column'], this._str(0));
+        this.assertEqual(info['rowspan'], this._str(1));
+        this.assertEqual(info['columnspan'], this._str(1));
+        this.assertEqual(info['padx'], this._str(0));
+        this.assertEqual(info['pady'], this._str(0));
+        this.assertEqual(info['sticky'], '');
 
     }
-    def test_grid_remove(self){
-        b = tkinter.Button(self.root);
-        c = tkinter.Button(self.root);
+    function test_grid_remove(){
+        b = tkinter.Button(this.root);
+        c = tkinter.Button(this.root);
         b.grid_configure(row=2, column=2, rowspan=2, columnspan=2,
                          padx=3, pady=4, sticky='ns');
-        self.assertEqual(self.root.grid_slaves(), [b]);
+        this.assertEqual(this.root.grid_slaves(), [b]);
         b.grid_remove();
         c.grid_remove();
-        self.assertEqual(self.root.grid_slaves(), []);
-        self.assertEqual(b.grid_info(), {});
+        this.assertEqual(this.root.grid_slaves(), []);
+        this.assertEqual(b.grid_info(), {});
         b.grid_configure(row=0, column=0);
         info = b.grid_info();
-        self.assertEqual(info['row'], self._str(0));
-        self.assertEqual(info['column'], self._str(0));
-        self.assertEqual(info['rowspan'], self._str(2));
-        self.assertEqual(info['columnspan'], self._str(2));
-        self.assertEqual(info['padx'], self._str(3));
-        self.assertEqual(info['pady'], self._str(4));
-        self.assertEqual(info['sticky'], 'ns');
+        this.assertEqual(info['row'], this._str(0));
+        this.assertEqual(info['column'], this._str(0));
+        this.assertEqual(info['rowspan'], this._str(2));
+        this.assertEqual(info['columnspan'], this._str(2));
+        this.assertEqual(info['padx'], this._str(3));
+        this.assertEqual(info['pady'], this._str(4));
+        this.assertEqual(info['sticky'], 'ns');
 
     }
-    def test_grid_info(self){
-        b = tkinter.Button(self.root);
-        self.assertEqual(b.grid_info(), {});
+    function test_grid_info(){
+        b = tkinter.Button(this.root);
+        this.assertEqual(b.grid_info(), {});
         b.grid_configure(row=2, column=2, rowspan=2, columnspan=2,
                          padx=3, pady=4, sticky='ns');
         info = b.grid_info();
-        self.assertIsInstance(info, dict);
-        self.assertEqual(info['in'], self.root);
-        self.assertEqual(info['row'], self._str(2));
-        self.assertEqual(info['column'], self._str(2));
-        self.assertEqual(info['rowspan'], self._str(2));
-        self.assertEqual(info['columnspan'], self._str(2));
-        self.assertEqual(info['padx'], self._str(3));
-        self.assertEqual(info['pady'], self._str(4));
-        self.assertEqual(info['sticky'], 'ns');
+        this.assertIsInstance(info, dict);
+        this.assertEqual(info['in'], this.root);
+        this.assertEqual(info['row'], this._str(2));
+        this.assertEqual(info['column'], this._str(2));
+        this.assertEqual(info['rowspan'], this._str(2));
+        this.assertEqual(info['columnspan'], this._str(2));
+        this.assertEqual(info['padx'], this._str(3));
+        this.assertEqual(info['pady'], this._str(4));
+        this.assertEqual(info['sticky'], 'ns');
 
     }
-    def test_grid_bbox(self){
-        self.assertEqual(self.root.grid_bbox(), (0, 0, 0, 0));
-        self.assertEqual(self.root.grid_bbox(0, 0), (0, 0, 0, 0));
-        self.assertEqual(self.root.grid_bbox(0, 0, 1, 1), (0, 0, 0, 0));
-        with self.assertRaisesRegexp(TclError, 'expected integer but got "x"'){
-            self.root.grid_bbox('x', 0);
-        } with self.assertRaisesRegexp(TclError, 'expected integer but got "x"'){
-            self.root.grid_bbox(0, 'x');
-        } with self.assertRaisesRegexp(TclError, 'expected integer but got "x"'){
-            self.root.grid_bbox(0, 0, 'x', 0);
-        } with self.assertRaisesRegexp(TclError, 'expected integer but got "x"'){
-            self.root.grid_bbox(0, 0, 0, 'x');
-        } with self.assertRaises(TypeError){
-            self.root.grid_bbox(0, 0, 0, 0, 0);
-        } t = self.root;
+    function test_grid_bbox(){
+        this.assertEqual(this.root.grid_bbox(), (0, 0, 0, 0));
+        this.assertEqual(this.root.grid_bbox(0, 0), (0, 0, 0, 0));
+        this.assertEqual(this.root.grid_bbox(0, 0, 1, 1), (0, 0, 0, 0));
+        with this.assertRaisesRegexp(TclError, 'expected integer but got "x"'){
+            this.root.grid_bbox('x', 0);
+        } with this.assertRaisesRegexp(TclError, 'expected integer but got "x"'){
+            this.root.grid_bbox(0, 'x');
+        } with this.assertRaisesRegexp(TclError, 'expected integer but got "x"'){
+            this.root.grid_bbox(0, 0, 'x', 0);
+        } with this.assertRaisesRegexp(TclError, 'expected integer but got "x"'){
+            this.root.grid_bbox(0, 0, 0, 'x');
+        } with this.assertRaises(TypeError){
+            this.root.grid_bbox(0, 0, 0, 0, 0);
+        } t = this.root;
         # de-maximize
         t.wm_geometry('1x1+0+0');
         t.wm_geometry('');
@@ -847,99 +847,99 @@ class PackTest(AbstractWidgetTest, unittest.TestCase){
         f2 = tkinter.Frame(t, width=90, height=90, bg='blue');
         f1.grid_configure(row=0, column=0);
         f2.grid_configure(row=1, column=1);
-        self.root.update();
-        self.assertEqual(t.grid_bbox(), (0, 0, 165, 165));
-        self.assertEqual(t.grid_bbox(0, 0), (0, 0, 75, 75));
-        self.assertEqual(t.grid_bbox(0, 0, 1, 1), (0, 0, 165, 165));
-        self.assertEqual(t.grid_bbox(1, 1), (75, 75, 90, 90));
-        self.assertEqual(t.grid_bbox(10, 10, 0, 0), (0, 0, 165, 165));
-        self.assertEqual(t.grid_bbox(-2, -2, -1, -1), (0, 0, 0, 0));
-        self.assertEqual(t.grid_bbox(10, 10, 12, 12), (165, 165, 0, 0));
+        this.root.update();
+        this.assertEqual(t.grid_bbox(), (0, 0, 165, 165));
+        this.assertEqual(t.grid_bbox(0, 0), (0, 0, 75, 75));
+        this.assertEqual(t.grid_bbox(0, 0, 1, 1), (0, 0, 165, 165));
+        this.assertEqual(t.grid_bbox(1, 1), (75, 75, 90, 90));
+        this.assertEqual(t.grid_bbox(10, 10, 0, 0), (0, 0, 165, 165));
+        this.assertEqual(t.grid_bbox(-2, -2, -1, -1), (0, 0, 0, 0));
+        this.assertEqual(t.grid_bbox(10, 10, 12, 12), (165, 165, 0, 0));
 
     }
-    def test_grid_location(self){
-        with self.assertRaises(TypeError){
-            self.root.grid_location();
-        } with self.assertRaises(TypeError){
-            self.root.grid_location(0);
-        } with self.assertRaises(TypeError){
-            self.root.grid_location(0, 0, 0);
-        } with self.assertRaisesRegexp(TclError, 'bad screen distance "x"'){
-            self.root.grid_location('x', 'y');
-        } with self.assertRaisesRegexp(TclError, 'bad screen distance "y"'){
-            self.root.grid_location('1c', 'y');
-        } t = self.root;
+    function test_grid_location(){
+        with this.assertRaises(TypeError){
+            this.root.grid_location();
+        } with this.assertRaises(TypeError){
+            this.root.grid_location(0);
+        } with this.assertRaises(TypeError){
+            this.root.grid_location(0, 0, 0);
+        } with this.assertRaisesRegexp(TclError, 'bad screen distance "x"'){
+            this.root.grid_location('x', 'y');
+        } with this.assertRaisesRegexp(TclError, 'bad screen distance "y"'){
+            this.root.grid_location('1c', 'y');
+        } t = this.root;
         # de-maximize
         t.wm_geometry('1x1+0+0');
         t.wm_geometry('');
         f = tkinter.Frame(t, width=200, height=100,
                           highlightthickness=0, bg='red');
-        self.assertEqual(f.grid_location(10, 10), (-1, -1));
+        this.assertEqual(f.grid_location(10, 10), (-1, -1));
         f.grid_configure();
-        self.root.update();
-        self.assertEqual(t.grid_location(-10, -10), (-1, -1));
-        self.assertEqual(t.grid_location(-10, 0), (-1, 0));
-        self.assertEqual(t.grid_location(-1, 0), (-1, 0));
-        self.assertEqual(t.grid_location(0, -10), (0, -1));
-        self.assertEqual(t.grid_location(0, -1), (0, -1));
-        self.assertEqual(t.grid_location(0, 0), (0, 0));
-        self.assertEqual(t.grid_location(200, 0), (0, 0));
-        self.assertEqual(t.grid_location(201, 0), (1, 0));
-        self.assertEqual(t.grid_location(0, 100), (0, 0));
-        self.assertEqual(t.grid_location(0, 101), (0, 1));
-        self.assertEqual(t.grid_location(201, 101), (1, 1));
+        this.root.update();
+        this.assertEqual(t.grid_location(-10, -10), (-1, -1));
+        this.assertEqual(t.grid_location(-10, 0), (-1, 0));
+        this.assertEqual(t.grid_location(-1, 0), (-1, 0));
+        this.assertEqual(t.grid_location(0, -10), (0, -1));
+        this.assertEqual(t.grid_location(0, -1), (0, -1));
+        this.assertEqual(t.grid_location(0, 0), (0, 0));
+        this.assertEqual(t.grid_location(200, 0), (0, 0));
+        this.assertEqual(t.grid_location(201, 0), (1, 0));
+        this.assertEqual(t.grid_location(0, 100), (0, 0));
+        this.assertEqual(t.grid_location(0, 101), (0, 1));
+        this.assertEqual(t.grid_location(201, 101), (1, 1));
 
     }
-    def test_grid_propagate(self){
-        self.assertEqual(self.root.grid_propagate(), True);
-        with self.assertRaises(TypeError){
-            self.root.grid_propagate(False, False);
-        } self.root.grid_propagate(False);
-        self.assertFalse(self.root.grid_propagate());
-        f = tkinter.Frame(self.root, width=100, height=100, bg='red');
+    function test_grid_propagate(){
+        this.assertEqual(this.root.grid_propagate(), true);
+        with this.assertRaises(TypeError){
+            this.root.grid_propagate(false, false);
+        } this.root.grid_propagate(false);
+        this.assertFalse(this.root.grid_propagate());
+        f = tkinter.Frame(this.root, width=100, height=100, bg='red');
         f.grid_configure(row=0, column=0);
-        self.root.update();
-        self.assertEqual(f.winfo_width(), 100);
-        self.assertEqual(f.winfo_height(), 100);
-        f.grid_propagate(False);
-        g = tkinter.Frame(self.root, width=75, height=85, bg='green');
+        this.root.update();
+        this.assertEqual(f.winfo_width(), 100);
+        this.assertEqual(f.winfo_height(), 100);
+        f.grid_propagate(false);
+        g = tkinter.Frame(this.root, width=75, height=85, bg='green');
         g.grid_configure(in_=f, row=0, column=0);
-        self.root.update();
-        self.assertEqual(f.winfo_width(), 100);
-        self.assertEqual(f.winfo_height(), 100);
-        f.grid_propagate(True);
-        self.root.update();
-        self.assertEqual(f.winfo_width(), 75);
-        self.assertEqual(f.winfo_height(), 85);
+        this.root.update();
+        this.assertEqual(f.winfo_width(), 100);
+        this.assertEqual(f.winfo_height(), 100);
+        f.grid_propagate(true);
+        this.root.update();
+        this.assertEqual(f.winfo_width(), 75);
+        this.assertEqual(f.winfo_height(), 85);
 
     }
-    def test_grid_size(self){
-        with self.assertRaises(TypeError){
-            self.root.grid_size(0);
-        } self.assertEqual(self.root.grid_size(), (0, 0));
-        f = tkinter.Scale(self.root);
+    function test_grid_size(){
+        with this.assertRaises(TypeError){
+            this.root.grid_size(0);
+        } this.assertEqual(this.root.grid_size(), (0, 0));
+        f = tkinter.Scale(this.root);
         f.grid_configure(row=0, column=0);
-        self.assertEqual(self.root.grid_size(), (1, 1));
+        this.assertEqual(this.root.grid_size(), (1, 1));
         f.grid_configure(row=4, column=5);
-        self.assertEqual(self.root.grid_size(), (6, 5));
+        this.assertEqual(this.root.grid_size(), (6, 5));
 
     }
-    def test_grid_slaves(self){
-        self.assertEqual(self.root.grid_slaves(), []);
-        a = tkinter.Label(self.root);
+    function test_grid_slaves(){
+        this.assertEqual(this.root.grid_slaves(), []);
+        a = tkinter.Label(this.root);
         a.grid_configure(row=0, column=1);
-        b = tkinter.Label(self.root);
+        b = tkinter.Label(this.root);
         b.grid_configure(row=1, column=0);
-        c = tkinter.Label(self.root);
+        c = tkinter.Label(this.root);
         c.grid_configure(row=1, column=1);
-        d = tkinter.Label(self.root);
+        d = tkinter.Label(this.root);
         d.grid_configure(row=1, column=1);
-        self.assertEqual(self.root.grid_slaves(), [d, c, b, a]);
-        self.assertEqual(self.root.grid_slaves(row=0), [a]);
-        self.assertEqual(self.root.grid_slaves(row=1), [d, c, b]);
-        self.assertEqual(self.root.grid_slaves(column=0), [b]);
-        self.assertEqual(self.root.grid_slaves(column=1), [d, c, a]);
-        self.assertEqual(self.root.grid_slaves(row=1, column=1), [d, c]);
+        this.assertEqual(this.root.grid_slaves(), [d, c, b, a]);
+        this.assertEqual(this.root.grid_slaves(row=0), [a]);
+        this.assertEqual(this.root.grid_slaves(row=1), [d, c, b]);
+        this.assertEqual(this.root.grid_slaves(column=0), [b]);
+        this.assertEqual(this.root.grid_slaves(column=1), [d, c, a]);
+        this.assertEqual(this.root.grid_slaves(row=1, column=1), [d, c]);
 
 
 }

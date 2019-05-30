@@ -22,9 +22,9 @@ _PROJECTS = [
 ];
 
 
-def _run_pip(args, additional_paths=None){
+function _run_pip(args, additional_paths=nil){
     # Add our bundled software to the sys.path so we can import it
-    if additional_paths is not None{
+    if additional_paths is not nil{
         sys.path = additional_paths + sys.path;
 
     # Install the bundled software
@@ -34,7 +34,7 @@ def _run_pip(args, additional_paths=None){
 
 
 }
-def version(){
+function version(){
     """
     Returns a string specifying the bundled version of pip.
     """;
@@ -42,7 +42,7 @@ def version(){
 
 
 }
-def _disable_pip_configuration_settings(){
+function _disable_pip_configuration_settings(){
     # We deliberately ignore all pip environment variables
     # when invoking pip
     # See http://bugs.python.org/issue19734 for details
@@ -56,8 +56,8 @@ def _disable_pip_configuration_settings(){
 
 
 }
-def bootstrap(root=None, upgrade=False, user=False,
-              altinstall=False, default_pip=True,
+function bootstrap(root=nil, upgrade=false, user=false,
+              altinstall=false, default_pip=true,
               verbosity=0){
     """
     Bootstrap pip into the current Python installation (or the given root
@@ -72,8 +72,8 @@ def bootstrap(root=None, upgrade=False, user=False,
 
 
 }
-def _bootstrap(root=None, upgrade=False, user=False,
-               altinstall=False, default_pip=True,
+function _bootstrap(root=nil, upgrade=false, user=false,
+               altinstall=false, default_pip=true,
                verbosity=0){
     """
     Bootstrap pip into the current Python installation (or the given root
@@ -112,7 +112,7 @@ def _bootstrap(root=None, upgrade=False, user=False,
                 "ensurepip",
                 "_bundled/{}".format(wheel_name),
             );
-            with open(os.path.join(tmpdir, wheel_name), "wb") as fp:
+            with open(os.path.join(tmpdir, wheel_name), "wb") as fp{
                 fp.write(whl);
 
             }
@@ -133,10 +133,10 @@ def _bootstrap(root=None, upgrade=False, user=False,
         }
         return _run_pip(args + [p[0] for p in _PROJECTS], additional_paths);
     } finally{
-        shutil.rmtree(tmpdir, ignore_errors=True);
+        shutil.rmtree(tmpdir, ignore_errors=true);
 
 }
-} def _uninstall_helper(verbosity=0){
+} function _uninstall_helper(verbosity=0){
     """Helper to support a clean default uninstall process on Windows
 
     Note that calling this function may alter os.environ.
@@ -168,7 +168,7 @@ def _bootstrap(root=None, upgrade=False, user=False,
 
 
 }
-def _main(argv=None){
+function _main(argv=nil){
     import argparse;
     parser = argparse.ArgumentParser(prog="python -m ensurepip");
     parser.add_argument(
@@ -188,31 +188,31 @@ def _main(argv=None){
     parser.add_argument(
         "-U", "--upgrade",
         action="store_true",
-        default=False,
+        default=false,
         help="Upgrade pip and dependencies, even if already installed.",
     );
     parser.add_argument(
         "--user",
         action="store_true",
-        default=False,
+        default=false,
         help="Install using the user scheme.",
     );
     parser.add_argument(
         "--root",
-        default=None,
+        default=nil,
         help="Install everything relative to this alternate root directory.",
     );
     parser.add_argument(
         "--altinstall",
         action="store_true",
-        default=False,
+        default=false,
         help=("Make an alternate install, installing only the X.Y versioned "
               "scripts (Default: pipX, pipX.Y, easy_install-X.Y)."),
     );
     parser.add_argument(
         "--default-pip",
         action="store_true",
-        default=True,
+        default=true,
         dest="default_pip",
         help=argparse.SUPPRESS,
     );

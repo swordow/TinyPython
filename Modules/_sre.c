@@ -1834,13 +1834,13 @@ state_getslice(SRE_STATE* state, Py_ssize_t index, PyObject* string, int empty)
 
     index = (index - 1) * 2;
 
-    if (string == Py_None || index >= state->lastmark || !state->mark[index] || !state->mark[index+1]) {
+    if (string == Py_Nil || index >= state->lastmark || !state->mark[index] || !state->mark[index+1]) {
         if (empty)
             /* want empty string */
             i = j = 0;
         else {
-            Py_INCREF(Py_None);
-            return Py_None;
+            Py_INCREF(Py_Nil);
+            return Py_Nil;
         }
     } else {
         i = STATE_OFFSET(state, state->mark[index]);
@@ -2235,7 +2235,7 @@ pattern_finditer(PatternObject* pattern, PyObject* args)
     if (!search)
         return NULL;
 
-    iterator = PyCallIter_New(search, Py_None);
+    iterator = PyCallIter_New(search, Py_Nil);
     Py_DECREF(search);
 
     return iterator;
@@ -2509,7 +2509,7 @@ pattern_subx(PatternObject* self, PyObject* ptemplate, PyObject* string,
         }
 
         /* add to list */
-        if (item != Py_None) {
+        if (item != Py_Nil) {
             status = PyList_Append(list, item);
             Py_DECREF(item);
             if (status < 0)
@@ -3311,7 +3311,7 @@ match_getslice_by_index(MatchObject* self, Py_ssize_t index, PyObject* def)
 
     index *= 2;
 
-    if (self->string == Py_None || self->mark[index] < 0) {
+    if (self->string == Py_Nil || self->mark[index] < 0) {
         /* return default value if the string or group is undefined */
         Py_INCREF(def);
         return def;
@@ -3371,10 +3371,10 @@ match_group(MatchObject* self, PyObject* args)
 
     switch (size) {
     case 0:
-        result = match_getslice(self, Py_False, Py_None);
+        result = match_getslice(self, Py_False, Py_Nil);
         break;
     case 1:
-        result = match_getslice(self, PyTuple_GET_ITEM(args, 0), Py_None);
+        result = match_getslice(self, PyTuple_GET_ITEM(args, 0), Py_Nil);
         break;
     default:
         /* fetch multiple items */
@@ -3383,7 +3383,7 @@ match_group(MatchObject* self, PyObject* args)
             return NULL;
         for (i = 0; i < size; i++) {
             PyObject* item = match_getslice(
-                self, PyTuple_GET_ITEM(args, i), Py_None
+                self, PyTuple_GET_ITEM(args, i), Py_Nil
                 );
             if (!item) {
                 Py_DECREF(result);
@@ -3402,7 +3402,7 @@ match_groups(MatchObject* self, PyObject* args, PyObject* kw)
     PyObject* result;
     Py_ssize_t index;
 
-    PyObject* def = Py_None;
+    PyObject* def = Py_Nil;
     static char* kwlist[] = { "default", NULL };
     if (!PyArg_ParseTupleAndKeywords(args, kw, "|O:groups", kwlist, &def))
         return NULL;
@@ -3431,7 +3431,7 @@ match_groupdict(MatchObject* self, PyObject* args, PyObject* kw)
     PyObject* keys;
     Py_ssize_t index;
 
-    PyObject* def = Py_None;
+    PyObject* def = Py_Nil;
     static char* kwlist[] = { "default", NULL };
     if (!PyArg_ParseTupleAndKeywords(args, kw, "|O:groupdict", kwlist, &def))
         return NULL;
@@ -3704,8 +3704,8 @@ match_lastindex_get(MatchObject *self)
 {
     if (self->lastindex >= 0)
         return PyInt_FromSsize_t(self->lastindex);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -3719,8 +3719,8 @@ match_lastgroup_get(MatchObject *self)
             return result;
         PyErr_Clear();
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -3838,8 +3838,8 @@ pattern_new_match(PatternObject* pattern, SRE_STATE* state, int status)
     } else if (status == 0) {
 
         /* no match */
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
 
     }
 
@@ -3868,7 +3868,7 @@ scanner_match(ScannerObject* self, PyObject *unused)
     int status;
 
     if (state->start == NULL)
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
 
     state_reset(state);
 
@@ -3908,7 +3908,7 @@ scanner_search(ScannerObject* self, PyObject *unused)
     int status;
 
     if (state->start == NULL)
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
 
     state_reset(state);
 

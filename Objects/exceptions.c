@@ -198,7 +198,7 @@ BaseException_setstate(PyObject *self, PyObject *state)
     PyObject *d_key, *d_value;
     Py_ssize_t i = 0;
 
-    if (state != Py_None) {
+    if (state != Py_Nil) {
         if (!PyDict_Check(state)) {
             PyErr_SetString(PyExc_TypeError, "state is not a dictionary");
             return NULL;
@@ -208,7 +208,7 @@ BaseException_setstate(PyObject *self, PyObject *state)
                 return NULL;
         }
     }
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 
@@ -287,8 +287,8 @@ static PyObject *
 BaseException_get_args(PyBaseExceptionObject *self)
 {
     if (self->args == NULL) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     Py_INCREF(self->args);
     return self->args;
@@ -609,7 +609,7 @@ EnvironmentError_init(PyEnvironmentErrorObject *self, PyObject *args,
     Py_INCREF(strerror);
     Py_XSETREF(self->strerror, strerror);
 
-    /* self->filename will remain Py_None otherwise */
+    /* self->filename will remain Py_Nil otherwise */
     if (filename != NULL) {
         Py_INCREF(filename);
         Py_XSETREF(self->filename, filename);
@@ -681,16 +681,16 @@ EnvironmentError_str(PyEnvironmentErrorObject *self)
             PyTuple_SET_ITEM(tuple, 0, self->myerrno);
         }
         else {
-            Py_INCREF(Py_None);
-            PyTuple_SET_ITEM(tuple, 0, Py_None);
+            Py_INCREF(Py_Nil);
+            PyTuple_SET_ITEM(tuple, 0, Py_Nil);
         }
         if (self->strerror) {
             Py_INCREF(self->strerror);
             PyTuple_SET_ITEM(tuple, 1, self->strerror);
         }
         else {
-            Py_INCREF(Py_None);
-            PyTuple_SET_ITEM(tuple, 1, Py_None);
+            Py_INCREF(Py_Nil);
+            PyTuple_SET_ITEM(tuple, 1, Py_Nil);
         }
 
         PyTuple_SET_ITEM(tuple, 2, repr);
@@ -719,16 +719,16 @@ EnvironmentError_str(PyEnvironmentErrorObject *self)
             PyTuple_SET_ITEM(tuple, 0, self->myerrno);
         }
         else {
-            Py_INCREF(Py_None);
-            PyTuple_SET_ITEM(tuple, 0, Py_None);
+            Py_INCREF(Py_Nil);
+            PyTuple_SET_ITEM(tuple, 0, Py_Nil);
         }
         if (self->strerror) {
             Py_INCREF(self->strerror);
             PyTuple_SET_ITEM(tuple, 1, self->strerror);
         }
         else {
-            Py_INCREF(Py_None);
-            PyTuple_SET_ITEM(tuple, 1, Py_None);
+            Py_INCREF(Py_Nil);
+            PyTuple_SET_ITEM(tuple, 1, Py_Nil);
         }
 
         rtnval = PyString_Format(fmt, tuple);
@@ -912,16 +912,16 @@ WindowsError_str(PyWindowsErrorObject *self)
             PyTuple_SET_ITEM(tuple, 0, self->winerror);
         }
         else {
-            Py_INCREF(Py_None);
-            PyTuple_SET_ITEM(tuple, 0, Py_None);
+            Py_INCREF(Py_Nil);
+            PyTuple_SET_ITEM(tuple, 0, Py_Nil);
         }
         if (self->strerror) {
             Py_INCREF(self->strerror);
             PyTuple_SET_ITEM(tuple, 1, self->strerror);
         }
         else {
-            Py_INCREF(Py_None);
-            PyTuple_SET_ITEM(tuple, 1, Py_None);
+            Py_INCREF(Py_Nil);
+            PyTuple_SET_ITEM(tuple, 1, Py_Nil);
         }
 
         PyTuple_SET_ITEM(tuple, 2, repr);
@@ -950,16 +950,16 @@ WindowsError_str(PyWindowsErrorObject *self)
             PyTuple_SET_ITEM(tuple, 0, self->winerror);
         }
         else {
-            Py_INCREF(Py_None);
-            PyTuple_SET_ITEM(tuple, 0, Py_None);
+            Py_INCREF(Py_Nil);
+            PyTuple_SET_ITEM(tuple, 0, Py_Nil);
         }
         if (self->strerror) {
             Py_INCREF(self->strerror);
             PyTuple_SET_ITEM(tuple, 1, self->strerror);
         }
         else {
-            Py_INCREF(Py_None);
-            PyTuple_SET_ITEM(tuple, 1, Py_None);
+            Py_INCREF(Py_Nil);
+            PyTuple_SET_ITEM(tuple, 1, Py_Nil);
         }
 
         rtnval = PyString_Format(fmt, tuple);
@@ -1152,7 +1152,7 @@ SyntaxError_str(PySyntaxErrorObject *self)
     if (self->msg)
         str = PyObject_Str(self->msg);
     else
-        str = PyObject_Str(Py_None);
+        str = PyObject_Str(Py_Nil);
     if (!str)
         return NULL;
     /* Don't fiddle with non-string return (shouldn't happen anyway) */

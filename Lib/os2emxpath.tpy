@@ -33,7 +33,7 @@ devnull = 'nul';
 # Other normalizations (such as optimizing '../' away) are not done
 # (this is done by normpath).
 
-def normcase(s){
+function normcase(s){
     """Normalize case of pathname.
 
     Makes all characters lowercase and all altseps into seps.""";
@@ -43,7 +43,7 @@ def normcase(s){
 # Join two (or more) paths.
 
 }
-def join(a, *p){
+function join(a, *p){
     """Join two or more pathname components, inserting sep as needed""";
     path = a;
     for b in p{
@@ -58,7 +58,7 @@ def join(a, *p){
 
 # Parse UNC paths
 }
-def splitunc(p){
+function splitunc(p){
     """Split a pathname into UNC mount point and relative path specifiers.
 
     Return a 2-tuple (unc, rest); either part may be empty.
@@ -89,7 +89,7 @@ def splitunc(p){
 # Return the tail (basename) part of a path.
 
 }
-def basename(p){
+function basename(p){
     """Returns the final component of a pathname""";
     return split(p)[1];
 
@@ -97,7 +97,7 @@ def basename(p){
 # Return the head (dirname) part of a path.
 
 }
-def dirname(p){
+function dirname(p){
     """Returns the directory component of a pathname""";
     return split(p)[0];
 
@@ -112,7 +112,7 @@ lexists = exists;
 # Is a path a mount point?  Either a root (with or without drive letter)
 # or a UNC path with at most a / or \ after the mount point.
 
-def ismount(path){
+function ismount(path){
     """Test whether a path is a mount point (defined as root of drive)""";
     unc, rest = splitunc(path);
     if unc{
@@ -124,7 +124,7 @@ def ismount(path){
 # Normalize a path, e.g. A//B, A/./B and A/foo/../B all become A/B.
 
 }
-def normpath(path){
+function normpath(path){
     """Normalize path, eliminating double slashes, etc.""";
     path = path.replace('\\', '/');
     prefix, path = splitdrive(path);
@@ -152,7 +152,7 @@ def normpath(path){
 
 # Return an absolute path.
 }
-def abspath(path){
+function abspath(path){
     """Return the absolute version of a path""";
     if not isabs(path){
         if isinstance(path, _unicode){
@@ -166,4 +166,4 @@ def abspath(path){
 }
 realpath = abspath;
 
-supports_unicode_filenames = False;
+supports_unicode_filenames = false;

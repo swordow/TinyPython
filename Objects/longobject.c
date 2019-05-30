@@ -3419,7 +3419,7 @@ long_pow(PyObject *v, PyObject *w, PyObject *x)
         if (c == NULL)
             goto Error;
     }
-    else if (x == Py_None)
+    else if (x == Py_Nil)
         c = NULL;
     else {
         Py_DECREF(a);

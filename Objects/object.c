@@ -1,5 +1,5 @@
 
-/* Generic object operations; and implementation of None (NoObject) */
+/* Generic object operations; and implementation of nil (NoObject) */
 
 #include "Python.h"
 #include "frameobject.h"
@@ -52,7 +52,7 @@ static PyObject refchain = {&refchain, &refchain};
  * Note that objects are normally added to the list via _Py_NewReference,
  * which is called by PyObject_Init.  Not all objects are initialized that
  * way, though; exceptions include statically allocated type objects, and
- * statically allocated singletons (like Py_True and Py_None).
+ * statically allocated singletons (like Py_True and Py_Nil).
  */
 void
 _Py_AddToAllObjects(PyObject *op, int force)
@@ -781,10 +781,10 @@ default_3way_compare(PyObject *v, PyObject *w)
         return (vv < ww) ? -1 : (vv > ww) ? 1 : 0;
     }
 
-    /* None is smaller than anything */
-    if (v == Py_None)
+    /* nil is smaller than anything */
+    if (v == Py_Nil)
         return -1;
-    if (w == Py_None)
+    if (w == Py_Nil)
         return 1;
 
     /* different type: compare type names; numbers are smaller */
@@ -1576,7 +1576,7 @@ PyObject_IsTrue(PyObject *v)
         return 1;
     if (v == Py_False)
         return 0;
-    if (v == Py_None)
+    if (v == Py_Nil)
         return 0;
     else if (v->ob_type->tp_as_number != NULL &&
              v->ob_type->tp_as_number->nb_nonzero != NULL)
@@ -1767,7 +1767,7 @@ merge_list_attr(PyObject* dict, PyObject* obj, const char *attrname)
         for (i = 0; i < PyList_GET_SIZE(list); ++i) {
             PyObject *item = PyList_GET_ITEM(list, i);
             if (PyString_Check(item)) {
-                result = PyDict_SetItem(dict, item, Py_None);
+                result = PyDict_SetItem(dict, item, Py_Nil);
                 if (result < 0)
                     break;
             }
@@ -1993,7 +1993,7 @@ PyObject_Dir(PyObject *obj)
 }
 
 /*
-NoObject is usable as a non-NULL undefined value, used by the macro None.
+NoObject is usable as a non-NULL undefined value, used by the macro nil.
 There is (and should be!) no way to create other objects of this type,
 so there is exactly one (which is indestructible, by the way).
 (XXX This type and the type of NotImplemented below should be unified.)
@@ -2003,7 +2003,7 @@ so there is exactly one (which is indestructible, by the way).
 static PyObject *
 none_repr(PyObject *op)
 {
-    return PyString_FromString("None");
+    return PyString_FromString("nil");
 }
 
 /* ARGUSED */
@@ -2011,15 +2011,15 @@ static void
 none_dealloc(PyObject* ignore)
 {
     /* This should never get called, but we also don't want to SEGV if
-     * we accidentally decref None out of existence.
+     * we accidentally decref nil out of existence.
      */
-    Py_FatalError("deallocating None");
+    Py_FatalError("deallocating nil");
 }
 
 
 static PyTypeObject PyNone_Type = {
     PyVarObject_HEAD_INIT(&PyType_Type, 0)
-    "NoneType",
+    "NilType",
     0,
     0,
     none_dealloc,       /*tp_dealloc*/ /*never called*/
@@ -2034,7 +2034,7 @@ static PyTypeObject PyNone_Type = {
     (hashfunc)_Py_HashPointer, /*tp_hash */
 };
 
-PyObject _Py_NoneStruct = {
+PyObject _Py_NilStruct = {
   _PyObject_EXTRA_INIT
   1, &PyNone_Type
 };
@@ -2098,7 +2098,7 @@ _Py_ReadyTypes(void)
         Py_FatalError("Can't initialize list type");
 
     if (PyType_Ready(&PyNone_Type) < 0)
-        Py_FatalError("Can't initialize None type");
+        Py_FatalError("Can't initialize nil type");
 
     if (PyType_Ready(&PyNotImplemented_Type) < 0)
         Py_FatalError("Can't initialize NotImplemented type");

@@ -55,8 +55,8 @@ from Required_Suite import *;
 from Table_Suite import *;
 from Type_Names_Suite import *;
 
-def getbaseclasses(v){
-    if not getattr(v, '_propdict', None){
+function getbaseclasses(v){
+    if not getattr(v, '_propdict', nil){
         v._propdict = {};
         v._elemdict = {};
         for superclassname in getattr(v, '_superclassnames', []){

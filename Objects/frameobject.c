@@ -31,7 +31,7 @@ static PyObject * frame_get_ ## NAME(PyFrameObject *f) { \
         Py_INCREF(f->NAME); \
         return f->NAME; \
     } \
-    Py_RETURN_NONE;     \
+    Py_RETURN_NIL;     \
 } \
 static int frame_set_ ## NAME(PyFrameObject *f, PyObject *new) { \
     if (PyErr_WarnPy3k(#NAME " has been removed in 3.x", 2) < 0) \
@@ -39,7 +39,7 @@ static int frame_set_ ## NAME(PyFrameObject *f, PyObject *new) { \
     if (f->NAME) { \
         Py_CLEAR(f->NAME); \
     } \
-    if (new == Py_None) \
+    if (new == Py_Nil) \
         new = NULL; \
     Py_XINCREF(new); \
     f->NAME = new; \
@@ -394,7 +394,7 @@ frame_gettrace(PyFrameObject *f, void *closure)
     PyObject* trace = f->f_trace;
 
     if (trace == NULL)
-        trace = Py_None;
+        trace = Py_Nil;
 
     Py_INCREF(trace);
 
@@ -407,7 +407,7 @@ frame_settrace(PyFrameObject *f, PyObject* v, void *closure)
     /* We rely on f_lineno being accurate when f_trace is set. */
     f->f_lineno = PyFrame_GetLineNumber(f);
 
-    if (v == Py_None)
+    if (v == Py_Nil)
         v = NULL;
     Py_XINCREF(v);
     Py_XSETREF(f->f_trace, v);
@@ -690,7 +690,7 @@ PyFrame_New(PyThreadState *tstate, PyCodeObject *code, PyObject *globals,
             builtins = PyDict_New();
             if (builtins == NULL ||
                 PyDict_SetItemString(
-                    builtins, "None", Py_None) < 0)
+                    builtins, "nil", Py_Nil) < 0)
                 return NULL;
         }
         else

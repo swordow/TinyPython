@@ -13,15 +13,15 @@ from test.test_support import captured_stdout, check_warnings, run_unittest;
 try{
     import zlib;
 } except ImportError{
-    zlib = None;
+    zlib = nil;
 
 }
 try{
     import grp;
     import pwd;
-    UID_GID_SUPPORT = True;
+    UID_GID_SUPPORT = true;
 } except ImportError{
-    UID_GID_SUPPORT = False;
+    UID_GID_SUPPORT = false;
 
 
 }
@@ -58,63 +58,63 @@ somecode%(sep)sdoc.txt
 
 class SDistTestCase(PyPIRCCommandTestCase){
 
-    def setUp(self){
+    function setUp(){
         # PyPIRCCommandTestCase creates a temp dir already
         # and put it in self.tmp_dir
-        super(SDistTestCase, self).setUp();
+        super(SDistTestCase, this).setUp();
         # setting up an environment
-        self.old_path = os.getcwd();
-        os.mkdir(join(self.tmp_dir, 'somecode'));
-        os.mkdir(join(self.tmp_dir, 'dist'));
+        this.old_path = os.getcwd();
+        os.mkdir(join(this.tmp_dir, 'somecode'));
+        os.mkdir(join(this.tmp_dir, 'dist'));
         # a package, and a README
-        self.write_file((self.tmp_dir, 'README'), 'xxx');
-        self.write_file((self.tmp_dir, 'somecode', '__init__.py'), '#');
-        self.write_file((self.tmp_dir, 'setup.py'), SETUP_PY);
-        os.chdir(self.tmp_dir);
+        this.write_file((this.tmp_dir, 'README'), 'xxx');
+        this.write_file((this.tmp_dir, 'somecode', '__init__.py'), '#');
+        this.write_file((this.tmp_dir, 'setup.py'), SETUP_PY);
+        os.chdir(this.tmp_dir);
 
     }
-    def tearDown(self){
+    function tearDown(){
         # back to normal
-        os.chdir(self.old_path);
-        super(SDistTestCase, self).tearDown();
+        os.chdir(this.old_path);
+        super(SDistTestCase, this).tearDown();
 
     }
-    def get_cmd(self, metadata=None){
+    function get_cmd( metadata=nil){
         """Returns a cmd""";
-        if metadata is None{
+        if metadata is nil{
             metadata = {'name': 'fake', 'version': '1.0',
                         'url': 'xxx', 'author': 'xxx',
                         'author_email': 'xxx'};
         } dist = Distribution(metadata);
         dist.script_name = 'setup.py';
         dist.packages = ['somecode'];
-        dist.include_package_data = True;
+        dist.include_package_data = true;
         cmd = sdist(dist);
         cmd.dist_dir = 'dist';
         return dist, cmd;
 
     }
     @unittest.skipUnless(zlib, "requires zlib");
-    def test_prune_file_list(self){
+    function test_prune_file_list(){
         # this test creates a project with some VCS dirs and an NFS rename
         # file, then launches sdist to check they get pruned on all systems
 
         # creating VCS directories with some files in them
-        os.mkdir(join(self.tmp_dir, 'somecode', '.svn'));
-        self.write_file((self.tmp_dir, 'somecode', '.svn', 'ok.py'), 'xxx');
+        os.mkdir(join(this.tmp_dir, 'somecode', '.svn'));
+        this.write_file((this.tmp_dir, 'somecode', '.svn', 'ok.py'), 'xxx');
 
-        os.mkdir(join(self.tmp_dir, 'somecode', '.hg'));
-        self.write_file((self.tmp_dir, 'somecode', '.hg',
+        os.mkdir(join(this.tmp_dir, 'somecode', '.hg'));
+        this.write_file((this.tmp_dir, 'somecode', '.hg',
                          'ok'), 'xxx');
 
-        os.mkdir(join(self.tmp_dir, 'somecode', '.git'));
-        self.write_file((self.tmp_dir, 'somecode', '.git',
+        os.mkdir(join(this.tmp_dir, 'somecode', '.git'));
+        this.write_file((this.tmp_dir, 'somecode', '.git',
                          'ok'), 'xxx');
 
-        self.write_file((self.tmp_dir, 'somecode', '.nfs0001'), 'xxx');
+        this.write_file((this.tmp_dir, 'somecode', '.nfs0001'), 'xxx');
 
         # now building a sdist
-        dist, cmd = self.get_cmd();
+        dist, cmd = this.get_cmd();
 
         # zip is available universally
         # (tar might not be installed under win32)
@@ -124,9 +124,9 @@ class SDistTestCase(PyPIRCCommandTestCase){
         cmd.run();
 
         # now let's check what we have
-        dist_folder = join(self.tmp_dir, 'dist');
+        dist_folder = join(this.tmp_dir, 'dist');
         files = os.listdir(dist_folder);
-        self.assertEqual(files, ['fake-1.0.zip']);
+        this.assertEqual(files, ['fake-1.0.zip']);
 
         zip_file = zipfile.ZipFile(join(dist_folder, 'fake-1.0.zip'));
         try{
@@ -138,13 +138,13 @@ class SDistTestCase(PyPIRCCommandTestCase){
         }
         expected = ['', 'PKG-INFO', 'README', 'setup.py',
                     'somecode/', 'somecode/__init__.py'];
-        self.assertEqual(sorted(content), ['fake-1.0/' + x for x in expected]);
+        this.assertEqual(sorted(content), ['fake-1.0/' + x for x in expected]);
 
     }
     @unittest.skipUnless(zlib, "requires zlib");
-    def test_make_distribution(self){
+    function test_make_distribution(){
         # now building a sdist
-        dist, cmd = self.get_cmd();
+        dist, cmd = this.get_cmd();
 
         # creating a gztar then a tar
         cmd.formats = ['gztar', 'tar'];
@@ -152,10 +152,10 @@ class SDistTestCase(PyPIRCCommandTestCase){
         cmd.run();
 
         # making sure we have two files
-        dist_folder = join(self.tmp_dir, 'dist');
+        dist_folder = join(this.tmp_dir, 'dist');
         result = os.listdir(dist_folder);
         result.sort();
-        self.assertEqual(result, ['fake-1.0.tar', 'fake-1.0.tar.gz']);
+        this.assertEqual(result, ['fake-1.0.tar', 'fake-1.0.tar.gz']);
 
         os.remove(join(dist_folder, 'fake-1.0.tar'));
         os.remove(join(dist_folder, 'fake-1.0.tar.gz'));
@@ -168,18 +168,18 @@ class SDistTestCase(PyPIRCCommandTestCase){
 
         result = os.listdir(dist_folder);
         result.sort();
-        self.assertEqual(result, ['fake-1.0.tar', 'fake-1.0.tar.gz']);
+        this.assertEqual(result, ['fake-1.0.tar', 'fake-1.0.tar.gz']);
 
     }
     @unittest.skipUnless(zlib, "requires zlib");
-    def test_unicode_metadata_tgz(self){
+    function test_unicode_metadata_tgz(){
         """
         Unicode name or version should not break building to tar.gz format.
         Reference issue #11638.
         """;
 
         # create the sdist command with unicode parameters
-        dist, cmd = self.get_cmd({'name': u'fake', 'version': u'1.0'});
+        dist, cmd = this.get_cmd({'name': u'fake', 'version': u'1.0'});
 
         # create the sdist as gztar and run the command
         cmd.formats = ['gztar'];
@@ -187,44 +187,44 @@ class SDistTestCase(PyPIRCCommandTestCase){
         cmd.run();
 
         # The command should have created the .tar.gz file
-        dist_folder = join(self.tmp_dir, 'dist');
+        dist_folder = join(this.tmp_dir, 'dist');
         result = os.listdir(dist_folder);
-        self.assertEqual(result, ['fake-1.0.tar.gz']);
+        this.assertEqual(result, ['fake-1.0.tar.gz']);
 
         os.remove(join(dist_folder, 'fake-1.0.tar.gz'));
 
     }
     @unittest.skipUnless(zlib, "requires zlib");
-    def test_add_defaults(self){
+    function test_add_defaults(){
 
         # http://bugs.python.org/issue2279
 
         # add_default should also include
         # data_files and package_data
-        dist, cmd = self.get_cmd();
+        dist, cmd = this.get_cmd();
 
         # filling data_files by pointing files
         # in package_data
         dist.package_data = {'': ['*.cfg', '*.dat'],
                              'somecode': ['*.txt']};
-        self.write_file((self.tmp_dir, 'somecode', 'doc.txt'), '#');
-        self.write_file((self.tmp_dir, 'somecode', 'doc.dat'), '#');
+        this.write_file((this.tmp_dir, 'somecode', 'doc.txt'), '#');
+        this.write_file((this.tmp_dir, 'somecode', 'doc.dat'), '#');
 
         # adding some data in data_files
-        data_dir = join(self.tmp_dir, 'data');
+        data_dir = join(this.tmp_dir, 'data');
         os.mkdir(data_dir);
-        self.write_file((data_dir, 'data.dt'), '#');
-        some_dir = join(self.tmp_dir, 'some');
+        this.write_file((data_dir, 'data.dt'), '#');
+        some_dir = join(this.tmp_dir, 'some');
         os.mkdir(some_dir);
         # make sure VCS directories are pruned (#14004)
-        hg_dir = join(self.tmp_dir, '.hg');
+        hg_dir = join(this.tmp_dir, '.hg');
         os.mkdir(hg_dir);
-        self.write_file((hg_dir, 'last-message.txt'), '#');
+        this.write_file((hg_dir, 'last-message.txt'), '#');
         # a buggy regex used to prevent this from working on windows (#6884)
-        self.write_file((self.tmp_dir, 'buildout.cfg'), '#');
-        self.write_file((self.tmp_dir, 'inroot.txt'), '#');
-        self.write_file((some_dir, 'file.txt'), '#');
-        self.write_file((some_dir, 'other_file.txt'), '#');
+        this.write_file((this.tmp_dir, 'buildout.cfg'), '#');
+        this.write_file((this.tmp_dir, 'inroot.txt'), '#');
+        this.write_file((some_dir, 'file.txt'), '#');
+        this.write_file((some_dir, 'other_file.txt'), '#');
 
         dist.data_files = [('data', ['data/data.dt',
                                      'buildout.cfg',
@@ -234,21 +234,21 @@ class SDistTestCase(PyPIRCCommandTestCase){
                            'some/other_file.txt'];
 
         # adding a script
-        script_dir = join(self.tmp_dir, 'scripts');
+        script_dir = join(this.tmp_dir, 'scripts');
         os.mkdir(script_dir);
-        self.write_file((script_dir, 'script.py'), '#');
+        this.write_file((script_dir, 'script.py'), '#');
         dist.scripts = [join('scripts', 'script.py')];
 
         cmd.formats = ['zip'];
-        cmd.use_defaults = True;
+        cmd.use_defaults = true;
 
         cmd.ensure_finalized();
         cmd.run();
 
         # now let's check what we have
-        dist_folder = join(self.tmp_dir, 'dist');
+        dist_folder = join(this.tmp_dir, 'dist');
         files = os.listdir(dist_folder);
-        self.assertEqual(files, ['fake-1.0.zip']);
+        this.assertEqual(files, ['fake-1.0.zip']);
 
         zip_file = zipfile.ZipFile(join(dist_folder, 'fake-1.0.zip'));
         try{
@@ -264,51 +264,51 @@ class SDistTestCase(PyPIRCCommandTestCase){
                     'some/', 'some/file.txt', 'some/other_file.txt',
                     'somecode/', 'somecode/__init__.py', 'somecode/doc.dat',
                     'somecode/doc.txt'];
-        self.assertEqual(sorted(content), ['fake-1.0/' + x for x in expected]);
+        this.assertEqual(sorted(content), ['fake-1.0/' + x for x in expected]);
 
         # checking the MANIFEST
-        f = open(join(self.tmp_dir, 'MANIFEST'));
+        f = open(join(this.tmp_dir, 'MANIFEST'));
         try{
             manifest = f.read();
         } finally{
             f.close();
-        } self.assertEqual(manifest, MANIFEST % {'sep': os.sep});
+        } this.assertEqual(manifest, MANIFEST % {'sep': os.sep});
 
     }
     @unittest.skipUnless(zlib, "requires zlib");
-    def test_metadata_check_option(self){
+    function test_metadata_check_option(){
         # testing the `medata-check` option
-        dist, cmd = self.get_cmd(metadata={});
+        dist, cmd = this.get_cmd(metadata={});
 
         # this should raise some warnings !
         # with the `check` subcommand
         cmd.ensure_finalized();
         cmd.run();
-        warnings = [msg for msg in self.get_logs(WARN) if
+        warnings = [msg for msg in this.get_logs(WARN) if
                     msg.startswith('warning: check:')];
-        self.assertEqual(len(warnings), 2);
+        this.assertEqual(len(warnings), 2);
 
         # trying with a complete set of metadata
-        self.clear_logs();
-        dist, cmd = self.get_cmd();
+        this.clear_logs();
+        dist, cmd = this.get_cmd();
         cmd.ensure_finalized();
         cmd.metadata_check = 0;
         cmd.run();
-        warnings = [msg for msg in self.get_logs(WARN) if
+        warnings = [msg for msg in this.get_logs(WARN) if
                     msg.startswith('warning: check:')];
-        self.assertEqual(len(warnings), 0);
+        this.assertEqual(len(warnings), 0);
 
     }
-    def test_check_metadata_deprecated(self){
+    function test_check_metadata_deprecated(){
         # makes sure make_metadata is deprecated
-        dist, cmd = self.get_cmd();
+        dist, cmd = this.get_cmd();
         with check_warnings() as w{
             warnings.simplefilter("always");
             cmd.check_metadata();
-            self.assertEqual(len(w.warnings), 1);
+            this.assertEqual(len(w.warnings), 1);
 
     }
-    } def test_show_formats(self){
+    } function test_show_formats(){
         with captured_stdout() as stdout{
             show_formats();
 
@@ -317,39 +317,39 @@ class SDistTestCase(PyPIRCCommandTestCase){
         num_formats = len(ARCHIVE_FORMATS.keys());
         output = [line for line in stdout.getvalue().split('\n')
                   if line.strip().startswith('--formats=')];
-        self.assertEqual(len(output), num_formats);
+        this.assertEqual(len(output), num_formats);
 
     }
-    def test_finalize_options(self){
-        dist, cmd = self.get_cmd();
+    function test_finalize_options(){
+        dist, cmd = this.get_cmd();
         cmd.finalize_options();
 
         # default options set by finalize
-        self.assertEqual(cmd.manifest, 'MANIFEST');
-        self.assertEqual(cmd.template, 'MANIFEST.in');
-        self.assertEqual(cmd.dist_dir, 'dist');
+        this.assertEqual(cmd.manifest, 'MANIFEST');
+        this.assertEqual(cmd.template, 'MANIFEST.in');
+        this.assertEqual(cmd.dist_dir, 'dist');
 
         # formats has to be a string splitable on (' ', ',') or
         # a stringlist
         cmd.formats = 1;
-        self.assertRaises(DistutilsOptionError, cmd.finalize_options);
+        this.assertRaises(DistutilsOptionError, cmd.finalize_options);
         cmd.formats = ['zip'];
         cmd.finalize_options();
 
         # formats has to be known
         cmd.formats = 'supazipa';
-        self.assertRaises(DistutilsOptionError, cmd.finalize_options);
+        this.assertRaises(DistutilsOptionError, cmd.finalize_options);
 
     }
     @unittest.skipUnless(zlib, "requires zlib");
     @unittest.skipUnless(UID_GID_SUPPORT, "Requires grp and pwd support");
-    @unittest.skipIf(find_executable('tar') is None,
+    @unittest.skipIf(find_executable('tar') is nil,
                      "The tar command is not found");
-    @unittest.skipIf(find_executable('gzip') is None,
+    @unittest.skipIf(find_executable('gzip') is nil,
                      "The gzip command is not found");
-    def test_make_distribution_owner_group(self){
+    function test_make_distribution_owner_group(){
         # now building a sdist
-        dist, cmd = self.get_cmd();
+        dist, cmd = this.get_cmd();
 
         # creating a gztar and specifying the owner+group
         cmd.formats = ['gztar'];
@@ -359,18 +359,18 @@ class SDistTestCase(PyPIRCCommandTestCase){
         cmd.run();
 
         # making sure we have the good rights
-        archive_name = join(self.tmp_dir, 'dist', 'fake-1.0.tar.gz');
+        archive_name = join(this.tmp_dir, 'dist', 'fake-1.0.tar.gz');
         archive = tarfile.open(archive_name);
         try{
             for member in archive.getmembers(){
-                self.assertEqual(member.uid, 0);
-                self.assertEqual(member.gid, 0);
+                this.assertEqual(member.uid, 0);
+                this.assertEqual(member.gid, 0);
         } } finally{
             archive.close();
 
         # building a sdist again
         }
-        dist, cmd = self.get_cmd();
+        dist, cmd = this.get_cmd();
 
         # creating a gztar
         cmd.formats = ['gztar'];
@@ -378,7 +378,7 @@ class SDistTestCase(PyPIRCCommandTestCase){
         cmd.run();
 
         # making sure we have the good rights
-        archive_name = join(self.tmp_dir, 'dist', 'fake-1.0.tar.gz');
+        archive_name = join(this.tmp_dir, 'dist', 'fake-1.0.tar.gz');
         archive = tarfile.open(archive_name);
 
         # note that we are not testing the group ownership here
@@ -386,7 +386,7 @@ class SDistTestCase(PyPIRCCommandTestCase){
         # rights (see #7408)
         try{
             for member in archive.getmembers(){
-                self.assertEqual(member.uid, os.getuid());
+                this.assertEqual(member.uid, os.getuid());
         } } finally{
             archive.close();
 
@@ -394,41 +394,41 @@ class SDistTestCase(PyPIRCCommandTestCase){
     # of a traceback when parsing an invalid manifest template
 
     }
-    } def _check_template(self, content){
-        dist, cmd = self.get_cmd();
-        os.chdir(self.tmp_dir);
-        self.write_file('MANIFEST.in', content);
+    } function _check_template( content){
+        dist, cmd = this.get_cmd();
+        os.chdir(this.tmp_dir);
+        this.write_file('MANIFEST.in', content);
         cmd.ensure_finalized();
         cmd.filelist = FileList();
         cmd.read_template();
-        warnings = self.get_logs(WARN);
-        self.assertEqual(len(warnings), 1);
+        warnings = this.get_logs(WARN);
+        this.assertEqual(len(warnings), 1);
 
     }
-    def test_invalid_template_unknown_command(self){
-        self._check_template('taunt knights *');
+    function test_invalid_template_unknown_command(){
+        this._check_template('taunt knights *');
 
     }
-    def test_invalid_template_wrong_arguments(self){
+    function test_invalid_template_wrong_arguments(){
         # this manifest command takes one argument
-        self._check_template('prune');
+        this._check_template('prune');
 
     }
     @unittest.skipIf(os.name != 'nt', 'test relevant for Windows only');
-    def test_invalid_template_wrong_path(self){
+    function test_invalid_template_wrong_path(){
         # on Windows, trailing slashes are not allowed
         # this used to crash instead of raising a warning: #8286
-        self._check_template('include examples/');
+        this._check_template('include examples/');
 
     }
     @unittest.skipUnless(zlib, "requires zlib");
-    def test_get_file_list(self){
+    function test_get_file_list(){
         # make sure MANIFEST is recalculated
-        dist, cmd = self.get_cmd();
+        dist, cmd = this.get_cmd();
 
         # filling data_files by pointing files in package_data
         dist.package_data = {'somecode': ['*.txt']};
-        self.write_file((self.tmp_dir, 'somecode', 'doc.txt'), '#');
+        this.write_file((this.tmp_dir, 'somecode', 'doc.txt'), '#');
         cmd.formats = ['gztar'];
         cmd.ensure_finalized();
         cmd.run();
@@ -441,14 +441,14 @@ class SDistTestCase(PyPIRCCommandTestCase){
             f.close();
 
         }
-        self.assertEqual(len(manifest), 5);
+        this.assertEqual(len(manifest), 5);
 
         # adding a file
-        self.write_file((self.tmp_dir, 'somecode', 'doc2.txt'), '#');
+        this.write_file((this.tmp_dir, 'somecode', 'doc2.txt'), '#');
 
         # make sure build_py is reinitialized, like a fresh run
         build_py = dist.get_command_obj('build_py');
-        build_py.finalized = False;
+        build_py.finalized = false;
         build_py.ensure_finalized();
 
         cmd.run();
@@ -462,14 +462,14 @@ class SDistTestCase(PyPIRCCommandTestCase){
 
         # do we have the new file in MANIFEST ?
         }
-        self.assertEqual(len(manifest2), 6);
-        self.assertIn('doc2.txt', manifest2[-1]);
+        this.assertEqual(len(manifest2), 6);
+        this.assertIn('doc2.txt', manifest2[-1]);
 
     }
     @unittest.skipUnless(zlib, "requires zlib");
-    def test_manifest_marker(self){
+    function test_manifest_marker(){
         # check that autogenerated MANIFESTs have a marker
-        dist, cmd = self.get_cmd();
+        dist, cmd = this.get_cmd();
         cmd.ensure_finalized();
         cmd.run();
 
@@ -481,39 +481,39 @@ class SDistTestCase(PyPIRCCommandTestCase){
             f.close();
 
         }
-        self.assertEqual(manifest[0],
+        this.assertEqual(manifest[0],
                          '# file GENERATED by distutils, do NOT edit');
 
     }
     @unittest.skipUnless(zlib, 'requires zlib');
-    def test_manifest_comments(self){
+    function test_manifest_comments(){
         # make sure comments don't cause exceptions or wrong includes
         contents = dedent("""\
             # bad.py
             #bad.py
             good.py
             """);
-        dist, cmd = self.get_cmd();
+        dist, cmd = this.get_cmd();
         cmd.ensure_finalized();
-        self.write_file((self.tmp_dir, cmd.manifest), contents);
-        self.write_file((self.tmp_dir, 'good.py'), '# pick me!');
-        self.write_file((self.tmp_dir, 'bad.py'), "# don't pick me!");
-        self.write_file((self.tmp_dir, '#bad.py'), "# don't pick me!");
+        this.write_file((this.tmp_dir, cmd.manifest), contents);
+        this.write_file((this.tmp_dir, 'good.py'), '# pick me!');
+        this.write_file((this.tmp_dir, 'bad.py'), "# don't pick me!");
+        this.write_file((this.tmp_dir, '#bad.py'), "# don't pick me!");
         cmd.run();
-        self.assertEqual(cmd.filelist.files, ['good.py']);
+        this.assertEqual(cmd.filelist.files, ['good.py']);
 
     }
     @unittest.skipUnless(zlib, "requires zlib");
-    def test_manual_manifest(self){
+    function test_manual_manifest(){
         # check that a MANIFEST without a marker is left alone
-        dist, cmd = self.get_cmd();
+        dist, cmd = this.get_cmd();
         cmd.formats = ['gztar'];
         cmd.ensure_finalized();
-        self.write_file((self.tmp_dir, cmd.manifest), 'README.manual');
-        self.write_file((self.tmp_dir, 'README.manual'),
+        this.write_file((this.tmp_dir, cmd.manifest), 'README.manual');
+        this.write_file((this.tmp_dir, 'README.manual'),
                          'This project maintains its MANIFEST file itself.');
         cmd.run();
-        self.assertEqual(cmd.filelist.files, ['README.manual']);
+        this.assertEqual(cmd.filelist.files, ['README.manual']);
 
         f = open(cmd.manifest);
         try{
@@ -523,19 +523,19 @@ class SDistTestCase(PyPIRCCommandTestCase){
             f.close();
 
         }
-        self.assertEqual(manifest, ['README.manual']);
+        this.assertEqual(manifest, ['README.manual']);
 
-        archive_name = join(self.tmp_dir, 'dist', 'fake-1.0.tar.gz');
+        archive_name = join(this.tmp_dir, 'dist', 'fake-1.0.tar.gz');
         archive = tarfile.open(archive_name);
         try{
             filenames = [tarinfo.name for tarinfo in archive];
         } finally{
             archive.close();
-        } self.assertEqual(sorted(filenames), ['fake-1.0', 'fake-1.0/PKG-INFO',
+        } this.assertEqual(sorted(filenames), ['fake-1.0', 'fake-1.0/PKG-INFO',
                                              'fake-1.0/README.manual']);
 
 }
-} def test_suite(){
+} function test_suite(){
     return unittest.makeSuite(SDistTestCase);
 
 }

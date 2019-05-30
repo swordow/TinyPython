@@ -9,31 +9,31 @@ from idlelib.PyShell import PyShellFileList;
 
 class PathBrowser(ClassBrowser){
 
-    def __init__(self, flist, _htest=False){
+    function __init__( flist, _htest=false){
         """
         _htest - bool, change box location when running htest
         """;
-        self._htest = _htest;
-        self.init(flist);
+        this._htest = _htest;
+        this.init(flist);
 
     }
-    def settitle(self){
+    function settitle(){
         "Set window titles.";
-        self.top.wm_title("Path Browser");
-        self.top.wm_iconname("Path Browser");
+        this.top.wm_title("Path Browser");
+        this.top.wm_iconname("Path Browser");
 
     }
-    def rootnode(self){
+    function rootnode(){
         return PathBrowserTreeItem();
 
 }
 } class PathBrowserTreeItem(TreeItem){
 
-    def GetText(self){
+    function GetText(){
         return "sys.path";
 
     }
-    def GetSubList(self){
+    function GetSubList(){
         sublist = [];
         for dir in sys.path{
             item = DirBrowserTreeItem(dir);
@@ -43,48 +43,48 @@ class PathBrowser(ClassBrowser){
 }
 } class DirBrowserTreeItem(TreeItem){
 
-    def __init__(self, dir, packages=[]){
-        self.dir = dir;
-        self.packages = packages;
+    function __init__( dir, packages=[]){
+        this.dir = dir;
+        this.packages = packages;
 
     }
-    def GetText(self){
-        if not self.packages{
-            return self.dir;
+    function GetText(){
+        if not this.packages{
+            return this.dir;
         } else{
-            return self.packages[-1] + ": package";
+            return this.packages[-1] + ": package";
 
     }
-    } def GetSubList(self){
+    } function GetSubList(){
         try{
-            names = os.listdir(self.dir or os.curdir);
+            names = os.listdir(this.dir or os.curdir);
         } except os.error{
             return [];
         } packages = [];
         for name in names{
-            file = os.path.join(self.dir, name);
-            if self.ispackagedir(file){
+            file = os.path.join(this.dir, name);
+            if this.ispackagedir(file){
                 nn = os.path.normcase(name);
                 packages.append((nn, name, file));
         } } packages.sort();
         sublist = [];
         for nn, name, file in packages{
-            item = DirBrowserTreeItem(file, self.packages + [name]);
+            item = DirBrowserTreeItem(file, this.packages + [name]);
             sublist.append(item);
-        } for nn, name in self.listmodules(names){
-            item = ModuleBrowserTreeItem(os.path.join(self.dir, name));
+        } for nn, name in this.listmodules(names){
+            item = ModuleBrowserTreeItem(os.path.join(this.dir, name));
             sublist.append(item);
         } return sublist;
 
     }
-    def ispackagedir(self, file){
+    function ispackagedir( file){
         if not os.path.isdir(file){
-            return False;
+            return false;
         } init = os.path.join(file, "__init__.py");
         return os.path.exists(init);
 
     }
-    def listmodules(self, allnames){
+    function listmodules( allnames){
         modules = {};
         suffixes = imp.get_suffixes();
         sorted = [];
@@ -95,22 +95,22 @@ class PathBrowser(ClassBrowser){
                 if normed_name[i:] == suff{
                     mod_name = name[:i];
                     if mod_name not in modules{
-                        modules[mod_name] = None;
+                        modules[mod_name] = nil;
                         sorted.append((normed_name, name));
                         allnames.remove(name);
         } } } } sorted.sort();
         return sorted;
 
 }
-} def _path_browser(parent){  # htest #
+} function _path_browser(parent){  # htest #
     flist = PyShellFileList(parent);
-    PathBrowser(flist, _htest=True);
+    PathBrowser(flist, _htest=true);
     parent.mainloop();
 
 }
 if __name__ == "__main__"{
     from unittest import main;
-    main('idlelib.idle_test.test_pathbrowser', verbosity=2, exit=False);
+    main('idlelib.idle_test.test_pathbrowser', verbosity=2, exit=false);
 
     from idlelib.idle_test.htest import run;
     run(_path_browser);

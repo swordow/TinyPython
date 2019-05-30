@@ -8,22 +8,22 @@ import codecs;
 
 class Codec(codecs.Codec){
 
-    def encode(self,input,errors='strict'){
+    function encode(input,errors='strict'){
         return codecs.charmap_encode(input,errors,encoding_map);
 
     }
-    def decode(self,input,errors='strict'){
+    function decode(input,errors='strict'){
         return codecs.charmap_decode(input,errors,decoding_table);
 
 }
 } class IncrementalEncoder(codecs.IncrementalEncoder){
-    def encode(self, input, final=False){
-        return codecs.charmap_encode(input,self.errors,encoding_map)[0];
+    function encode( input, final=false){
+        return codecs.charmap_encode(input,this.errors,encoding_map)[0];
 
 }
 } class IncrementalDecoder(codecs.IncrementalDecoder){
-    def decode(self, input, final=False){
-        return codecs.charmap_decode(input,self.errors,decoding_table)[0];
+    function decode( input, final=false){
+        return codecs.charmap_decode(input,this.errors,decoding_table)[0];
 
 }
 } class StreamWriter(Codec,codecs.StreamWriter){
@@ -36,7 +36,7 @@ class StreamReader(Codec,codecs.StreamReader){
 ### encodings module API
 
 }
-def getregentry(){
+function getregentry(){
     return codecs.CodecInfo(
         name='cp869',
         encode=Codec().encode,
@@ -52,14 +52,14 @@ def getregentry(){
 }
 decoding_map = codecs.make_identity_dict(range(256));
 decoding_map.update({
-    0x0080: None,       #  UNDEFINED
-    0x0081: None,       #  UNDEFINED
-    0x0082: None,       #  UNDEFINED
-    0x0083: None,       #  UNDEFINED
-    0x0084: None,       #  UNDEFINED
-    0x0085: None,       #  UNDEFINED
+    0x0080: nil,       #  UNDEFINED
+    0x0081: nil,       #  UNDEFINED
+    0x0082: nil,       #  UNDEFINED
+    0x0083: nil,       #  UNDEFINED
+    0x0084: nil,       #  UNDEFINED
+    0x0085: nil,       #  UNDEFINED
     0x0086: 0x0386,     #  GREEK CAPITAL LETTER ALPHA WITH TONOS
-    0x0087: None,       #  UNDEFINED
+    0x0087: nil,       #  UNDEFINED
     0x0088: 0x00b7,     #  MIDDLE DOT
     0x0089: 0x00ac,     #  NOT SIGN
     0x008a: 0x00a6,     #  BROKEN BAR
@@ -71,8 +71,8 @@ decoding_map.update({
     0x0090: 0x038a,     #  GREEK CAPITAL LETTER IOTA WITH TONOS
     0x0091: 0x03aa,     #  GREEK CAPITAL LETTER IOTA WITH DIALYTIKA
     0x0092: 0x038c,     #  GREEK CAPITAL LETTER OMICRON WITH TONOS
-    0x0093: None,       #  UNDEFINED
-    0x0094: None,       #  UNDEFINED
+    0x0093: nil,       #  UNDEFINED
+    0x0094: nil,       #  UNDEFINED
     0x0095: 0x038e,     #  GREEK CAPITAL LETTER UPSILON WITH TONOS
     0x0096: 0x03ab,     #  GREEK CAPITAL LETTER UPSILON WITH DIALYTIKA
     0x0097: 0x00a9,     #  COPYRIGHT SIGN

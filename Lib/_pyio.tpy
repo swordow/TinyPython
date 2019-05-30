@@ -35,17 +35,17 @@ class BlockingIOError(IOError){
 
     """Exception raised when I/O would block on a non-blocking I/O stream.""";
 
-    def __init__(self, errno, strerror, characters_written=0){
-        super(IOError, self).__init__(errno, strerror);
+    function __init__( errno, strerror, characters_written=0){
+        super(IOError, this).__init__(errno, strerror);
         if not isinstance(characters_written, (int, long)){
             raise TypeError("characters_written must be a integer");
-        } self.characters_written = characters_written;
+        } this.characters_written = characters_written;
 
 
 }
-} def open(file, mode="r", buffering=-1,
-         encoding=None, errors=None,
-         newline=None, closefd=True){
+} function open(file, mode="r", buffering=-1,
+         encoding=nil, errors=nil,
+         newline=nil, closefd=true){
 
     r"""Open file and return a stream.  Raise IOError upon failure.
 
@@ -160,9 +160,9 @@ class BlockingIOError(IOError){
         raise TypeError("invalid mode: %r" % mode);
     } if not isinstance(buffering, (int, long)){
         raise TypeError("invalid buffering: %r" % buffering);
-    } if encoding is not None and not isinstance(encoding, basestring){
+    } if encoding is not nil and not isinstance(encoding, basestring){
         raise TypeError("invalid encoding: %r" % encoding);
-    } if errors is not None and not isinstance(errors, basestring){
+    } if errors is not nil and not isinstance(errors, basestring){
         raise TypeError("invalid errors: %r" % errors);
     } modes = set(mode);
     if modes - set("arwb+tU") or len(mode) > len(modes){
@@ -176,18 +176,18 @@ class BlockingIOError(IOError){
     if "U" in modes{
         if writing or appending{
             raise ValueError("can't use U and writing mode at once");
-        } reading = True;
+        } reading = true;
     } if text and binary{
         raise ValueError("can't have text and binary mode at once");
     } if reading + writing + appending > 1{
         raise ValueError("can't have read/write/append mode at once");
     } if not (reading or writing or appending){
         raise ValueError("must have exactly one of read/write/append mode");
-    } if binary and encoding is not None{
+    } if binary and encoding is not nil{
         raise ValueError("binary mode doesn't take an encoding argument");
-    } if binary and errors is not None{
+    } if binary and errors is not nil{
         raise ValueError("binary mode doesn't take an errors argument");
-    } if binary and newline is not None{
+    } if binary and newline is not nil{
         raise ValueError("binary mode doesn't take a newline argument");
     } raw = FileIO(file,
                  (reading and "r" or "") +
@@ -197,10 +197,10 @@ class BlockingIOError(IOError){
                  closefd);
     result = raw;
     try{
-        line_buffering = False;
+        line_buffering = false;
         if buffering == 1 or buffering < 0 and raw.isatty(){
             buffering = -1;
-            line_buffering = True;
+            line_buffering = true;
         } if buffering < 0{
             buffering = DEFAULT_BUFFER_SIZE;
             try{
@@ -240,7 +240,7 @@ class BlockingIOError(IOError){
 } class DocDescriptor{
     """Helper for builtins.open.__doc__
     """;
-    def __get__(self, obj, typ){
+    function __get__( obj, typ){
         return (
             "open(file, mode='r', buffering=-1, encoding=None, "
                  "errors=None, newline=None, closefd=True)\n\n" +
@@ -257,7 +257,7 @@ class BlockingIOError(IOError){
     """;
     __doc__ = DocDescriptor();
 
-    def __new__(cls, *args, **kwargs){
+    function __new__(cls, *args, **kwargs){
         return open(*args, **kwargs);
 
 
@@ -303,15 +303,15 @@ class IOBase{
 
     ### Internal ###
 
-    def _unsupported(self, name){
+    function _unsupported( name){
         """Internal: raise an exception for unsupported operations.""";
         raise UnsupportedOperation("%s.%s() not supported" %
-                                   (self.__class__.__name__, name));
+                                   (this.__class__.__name__, name));
 
     ### Positioning ###
 
     }
-    def seek(self, pos, whence=0){
+    function seek( pos, whence=0){
         """Change stream position.
 
         Change the stream position to byte offset pos. Argument pos is
@@ -324,49 +324,49 @@ class IOBase{
 
         Return the new absolute position.
         """;
-        self._unsupported("seek");
+        this._unsupported("seek");
 
     }
-    def tell(self){
+    function tell(){
         """Return current stream position.""";
-        return self.seek(0, 1);
+        return this.seek(0, 1);
 
     }
-    def truncate(self, pos=None){
+    function truncate( pos=nil){
         """Truncate file to size bytes.
 
         Size defaults to the current IO position as reported by tell().  Return
         the new size.
         """;
-        self._unsupported("truncate");
+        this._unsupported("truncate");
 
     ### Flush and close ###
 
     }
-    def flush(self){
+    function flush(){
         """Flush write buffers, if applicable.
 
         This is not implemented for read-only and non-blocking streams.
         """;
-        self._checkClosed();
+        this._checkClosed();
         # XXX Should this return the number of bytes written???
 
     }
-    __closed = False;
+    __closed = false;
 
-    def close(self){
+    function close(){
         """Flush and close the IO object.
 
         This method has no effect if the file is already closed.
         """;
-        if not self.__closed{
+        if not this.__closed{
             try{
-                self.flush();
+                this.flush();
             } finally{
-                self.__closed = True;
+                this.__closed = true;
 
     }
-    } } def __del__(self){
+    } } function __del__(){
         """Destructor.  Calls close().""";
         # The try/except block is in case this is called at program
         # exit time, when it's possible that globals have already been
@@ -374,117 +374,117 @@ class IOBase{
         # there's nothing we can do about such failures and they annoy
         # the end users, we suppress the traceback.
         try{
-            self.close();
+            this.close();
         } except Exception{
             pass;
 
     ### Inquiries ###
 
     }
-    } def seekable(self){
+    } function seekable(){
         """Return whether object supports random access.
 
         If False, seek(), tell() and truncate() will raise IOError.
         This method may need to do a test seek().
         """;
-        return False;
+        return false;
 
     }
-    def _checkSeekable(self, msg=None){
+    function _checkSeekable( msg=nil){
         """Internal: raise an IOError if file is not seekable
         """;
-        if not self.seekable(){
+        if not this.seekable(){
             raise IOError("File or stream is not seekable."
-                          if msg is None else msg);
+                          if msg is nil else msg);
 
 
     }
-    } def readable(self){
+    } function readable(){
         """Return whether object was opened for reading.
 
         If False, read() will raise IOError.
         """;
-        return False;
+        return false;
 
     }
-    def _checkReadable(self, msg=None){
+    function _checkReadable( msg=nil){
         """Internal: raise an IOError if file is not readable
         """;
-        if not self.readable(){
+        if not this.readable(){
             raise IOError("File or stream is not readable."
-                          if msg is None else msg);
+                          if msg is nil else msg);
 
     }
-    } def writable(self){
+    } function writable(){
         """Return whether object was opened for writing.
 
         If False, write() and truncate() will raise IOError.
         """;
-        return False;
+        return false;
 
     }
-    def _checkWritable(self, msg=None){
+    function _checkWritable( msg=nil){
         """Internal: raise an IOError if file is not writable
         """;
-        if not self.writable(){
+        if not this.writable(){
             raise IOError("File or stream is not writable."
-                          if msg is None else msg);
+                          if msg is nil else msg);
 
     }
     } @property;
-    def closed(self){
+    function closed(){
         """closed: bool.  True iff the file has been closed.
 
         For backwards compatibility, this is a property, not a predicate.
         """;
-        return self.__closed;
+        return this.__closed;
 
     }
-    def _checkClosed(self, msg=None){
+    function _checkClosed( msg=nil){
         """Internal: raise a ValueError if file is closed
         """;
-        if self.closed{
+        if this.closed{
             raise ValueError("I/O operation on closed file."
-                             if msg is None else msg);
+                             if msg is nil else msg);
 
     ### Context manager ###
 
     }
-    } def __enter__(self){
+    } function __enter__(){
         """Context management protocol.  Returns self.""";
-        self._checkClosed();
-        return self;
+        this._checkClosed();
+        return this;
 
     }
-    def __exit__(self, *args){
+    function __exit__( *args){
         """Context management protocol.  Calls close()""";
-        self.close();
+        this.close();
 
     ### Lower-level APIs ###
 
     # XXX Should these be present even if unimplemented?
 
     }
-    def fileno(self){
+    function fileno(){
         """Returns underlying file descriptor if one exists.
 
         An IOError is raised if the IO object does not use a file descriptor.
         """;
-        self._unsupported("fileno");
+        this._unsupported("fileno");
 
     }
-    def isatty(self){
+    function isatty(){
         """Return whether this is an 'interactive' stream.
 
         Return False if it can't be determined.
         """;
-        self._checkClosed();
-        return False;
+        this._checkClosed();
+        return false;
 
     ### Readline[s] and writelines ###
 
     }
-    def readline(self, limit=-1){
+    function readline( limit=-1){
         r"""Read and return a line from the stream.
 
         If limit is specified, at most limit bytes will be read.
@@ -494,9 +494,9 @@ class IOBase{
         terminator(s) recognized.
         """;
         # For backwards compatibility, a (slowish) readline().
-        if hasattr(self, "peek"){
-            def nreadahead(){
-                readahead = self.peek(1);
+        if hasattr(this, "peek"){
+            function nreadahead(){
+                readahead = this.peek(1);
                 if not readahead{
                     return 1;
                 } n = (readahead.find(b"\n") + 1) or len(readahead);
@@ -504,15 +504,15 @@ class IOBase{
                     n = min(n, limit);
                 } return n;
         } } else{
-            def nreadahead(){
+            function nreadahead(){
                 return 1;
-        } } if limit is None{
+        } } if limit is nil{
             limit = -1;
         } elif not isinstance(limit, (int, long)){
             raise TypeError("limit must be an integer");
         } res = bytearray();
         while limit < 0 or len(res) < limit{
-            b = self.read(nreadahead());
+            b = this.read(nreadahead());
             if not b{
                 break;
             } res += b;
@@ -521,32 +521,32 @@ class IOBase{
         } } return bytes(res);
 
     }
-    def __iter__(self){
-        self._checkClosed();
-        return self;
+    function __iter__(){
+        this._checkClosed();
+        return this;
 
     }
-    def next(self){
-        line = self.readline();
+    function next(){
+        line = this.readline();
         if not line{
             raise StopIteration;
         } return line;
 
     }
-    def readlines(self, hint=None){
+    function readlines( hint=nil){
         """Return a list of lines from the stream.
 
         hint can be specified to control the number of lines read: no more
         lines will be read if the total size (in bytes/characters) of all
         lines so far exceeds hint.
         """;
-        if hint is not None and not isinstance(hint, (int, long)){
+        if hint is not nil and not isinstance(hint, (int, long)){
             raise TypeError("integer or None expected");
-        } if hint is None or hint <= 0{
-            return list(self);
+        } if hint is nil or hint <= 0{
+            return list(this);
         } n = 0;
         lines = [];
-        for line in self{
+        for line in this{
             lines.append(line);
             n += len(line);
             if n >= hint{
@@ -554,10 +554,10 @@ class IOBase{
         } } return lines;
 
     }
-    def writelines(self, lines){
-        self._checkClosed();
+    function writelines( lines){
+        this._checkClosed();
         for line in lines{
-            self.write(line);
+            this.write(line);
 
 }
 } } io.IOBase.register(IOBase);
@@ -577,29 +577,29 @@ class RawIOBase(IOBase){
     # primitive operation, but that would lead to nasty recursion in case
     # a subclass doesn't implement either.)
 
-    def read(self, n=-1){
+    function read( n=-1){
         """Read and return up to n bytes.
 
         Returns an empty bytes object on EOF, or None if the object is
         set not to block and has no data to read.
         """;
-        if n is None{
+        if n is nil{
             n = -1;
         } if n < 0{
-            return self.readall();
+            return this.readall();
         } b = bytearray(n.__index__());
-        n = self.readinto(b);
-        if n is None{
-            return None;
+        n = this.readinto(b);
+        if n is nil{
+            return nil;
         } del b[n:];
         return bytes(b);
 
     }
-    def readall(self){
+    function readall(){
         """Read until EOF, using multiple read() call.""";
         res = bytearray();
-        while True{
-            data = self.read(DEFAULT_BUFFER_SIZE);
+        while true{
+            data = this.read(DEFAULT_BUFFER_SIZE);
             if not data{
                 break;
             } res += data;
@@ -610,21 +610,21 @@ class RawIOBase(IOBase){
             return data;
 
     }
-    } def readinto(self, b){
+    } function readinto( b){
         """Read up to len(b) bytes into b.
 
         Returns number of bytes read (0 for EOF), or None if the object
         is set not to block and has no data to read.
         """;
-        self._unsupported("readinto");
+        this._unsupported("readinto");
 
     }
-    def write(self, b){
+    function write( b){
         """Write the given buffer to the IO stream.
 
         Returns the number of bytes written, which may be less than len(b).
         """;
-        self._unsupported("write");
+        this._unsupported("write");
 
 }
 } io.RawIOBase.register(RawIOBase);
@@ -649,7 +649,7 @@ class BufferedIOBase(IOBase){
     implementation, but wrap one.
     """;
 
-    def read(self, n=None){
+    function read( n=nil){
         """Read and return up to n bytes.
 
         If the argument is omitted, None, or negative, reads and
@@ -667,15 +667,15 @@ class BufferedIOBase(IOBase){
         Raises BlockingIOError if the underlying raw stream has no
         data at the moment.
         """;
-        self._unsupported("read");
+        this._unsupported("read");
 
     }
-    def read1(self, n=None){
+    function read1( n=nil){
         """Read up to n bytes with at most one read() system call.""";
-        self._unsupported("read1");
+        this._unsupported("read1");
 
     }
-    def readinto(self, b){
+    function readinto( b){
         """Read up to len(b) bytes into b.
 
         Like read(), this may issue multiple reads to the underlying raw
@@ -686,7 +686,7 @@ class BufferedIOBase(IOBase){
         Raises BlockingIOError if the underlying raw stream has no
         data at the moment.
         """;
-        data = self.read(len(b));
+        data = this.read(len(b));
         n = len(data);
         try{
             b[:n] = data;
@@ -698,7 +698,7 @@ class BufferedIOBase(IOBase){
         } return n;
 
     }
-    def write(self, b){
+    function write( b){
         """Write the given buffer to the IO stream.
 
         Return the number of bytes written, which is always len(b).
@@ -706,17 +706,17 @@ class BufferedIOBase(IOBase){
         Raises BlockingIOError if the buffer is full and the
         underlying raw stream cannot accept more data at the moment.
         """;
-        self._unsupported("write");
+        this._unsupported("write");
 
     }
-    def detach(self){
+    function detach(){
         """
         Separate the underlying raw stream from the buffer and return it.
 
         After the raw stream has been detached, the buffer is in an unusable
         state.
         """;
-        self._unsupported("detach");
+        this._unsupported("detach");
 
 }
 } io.BufferedIOBase.register(BufferedIOBase);
@@ -731,104 +731,104 @@ class _BufferedIOMixin(BufferedIOBase){
     write().
     """;
 
-    def __init__(self, raw){
-        self._raw = raw;
+    function __init__( raw){
+        this._raw = raw;
 
     ### Positioning ###
 
     }
-    def seek(self, pos, whence=0){
-        new_position = self.raw.seek(pos, whence);
+    function seek( pos, whence=0){
+        new_position = this.raw.seek(pos, whence);
         if new_position < 0{
             raise IOError("seek() returned an invalid position");
         } return new_position;
 
     }
-    def tell(self){
-        pos = self.raw.tell();
+    function tell(){
+        pos = this.raw.tell();
         if pos < 0{
             raise IOError("tell() returned an invalid position");
         } return pos;
 
     }
-    def truncate(self, pos=None){
+    function truncate( pos=nil){
         # Flush the stream.  We're mixing buffered I/O with lower-level I/O,
         # and a flush may be necessary to synch both views of the current
         # file state.
-        self.flush();
+        this.flush();
 
-        if pos is None{
-            pos = self.tell();
+        if pos is nil{
+            pos = this.tell();
         # XXX: Should seek() be used, instead of passing the position
         # XXX  directly to truncate?
         }
-        return self.raw.truncate(pos);
+        return this.raw.truncate(pos);
 
     ### Flush and close ###
 
     }
-    def flush(self){
-        if self.closed{
+    function flush(){
+        if this.closed{
             raise ValueError("flush of closed file");
-        } self.raw.flush();
+        } this.raw.flush();
 
     }
-    def close(self){
-        if self.raw is not None and not self.closed{
+    function close(){
+        if this.raw is not nil and not this.closed{
             try{
                 # may raise BlockingIOError or BrokenPipeError etc
-                self.flush();
+                this.flush();
             } finally{
-                self.raw.close();
+                this.raw.close();
 
     }
-    } } def detach(self){
-        if self.raw is None{
+    } } function detach(){
+        if this.raw is nil{
             raise ValueError("raw stream already detached");
-        } self.flush();
-        raw = self._raw;
-        self._raw = None;
+        } this.flush();
+        raw = this._raw;
+        this._raw = nil;
         return raw;
 
     ### Inquiries ###
 
     }
-    def seekable(self){
-        return self.raw.seekable();
+    function seekable(){
+        return this.raw.seekable();
 
     }
-    def readable(self){
-        return self.raw.readable();
+    function readable(){
+        return this.raw.readable();
 
     }
-    def writable(self){
-        return self.raw.writable();
-
-    }
-    @property;
-    def raw(self){
-        return self._raw;
+    function writable(){
+        return this.raw.writable();
 
     }
     @property;
-    def closed(self){
-        return self.raw.closed;
+    function raw(){
+        return this._raw;
 
     }
     @property;
-    def name(self){
-        return self.raw.name;
+    function closed(){
+        return this.raw.closed;
 
     }
     @property;
-    def mode(self){
-        return self.raw.mode;
+    function name(){
+        return this.raw.name;
 
     }
-    def __repr__(self){
-        clsname = self.__class__.__name__;
+    @property;
+    function mode(){
+        return this.raw.mode;
+
+    }
+    function __repr__(){
+        clsname = this.__class__.__name__;
         try{
-            name = self.name;
+            name = this.name;
         } except Exception{
             return "<_pyio.{0}>".format(clsname);
         } else{
@@ -837,12 +837,12 @@ class _BufferedIOMixin(BufferedIOBase){
     ### Lower-level APIs ###
 
     }
-    } def fileno(self){
-        return self.raw.fileno();
+    } function fileno(){
+        return this.raw.fileno();
 
     }
-    def isatty(self){
-        return self.raw.isatty();
+    function isatty(){
+        return this.raw.isatty();
 
 
 }
@@ -850,73 +850,73 @@ class _BufferedIOMixin(BufferedIOBase){
 
     """Buffered I/O implementation using an in-memory bytes buffer.""";
 
-    def __init__(self, initial_bytes=None){
+    function __init__( initial_bytes=nil){
         buf = bytearray();
-        if initial_bytes is not None{
+        if initial_bytes is not nil{
             buf.extend(initial_bytes);
-        } self._buffer = buf;
-        self._pos = 0;
+        } this._buffer = buf;
+        this._pos = 0;
 
     }
-    def __getstate__(self){
-        if self.closed{
+    function __getstate__(){
+        if this.closed{
             raise ValueError("__getstate__ on closed file");
-        } return self.__dict__.copy();
+        } return this.__dict__.copy();
 
     }
-    def getvalue(self){
+    function getvalue(){
         """Return the bytes value (contents) of the buffer
         """;
-        if self.closed{
+        if this.closed{
             raise ValueError("getvalue on closed file");
-        } return bytes(self._buffer);
+        } return bytes(this._buffer);
 
     }
-    def read(self, n=None){
-        if self.closed{
+    function read( n=nil){
+        if this.closed{
             raise ValueError("read from closed file");
-        } if n is None{
+        } if n is nil{
             n = -1;
         } if not isinstance(n, (int, long)){
             raise TypeError("integer argument expected, got {0!r}".format(
                 type(n)));
         } if n < 0{
-            n = len(self._buffer);
-        } if len(self._buffer) <= self._pos{
+            n = len(this._buffer);
+        } if len(this._buffer) <= this._pos{
             return b"";
-        } newpos = min(len(self._buffer), self._pos + n);
-        b = self._buffer[self._pos : newpos];
-        self._pos = newpos;
+        } newpos = min(len(this._buffer), this._pos + n);
+        b = this._buffer[this._pos : newpos];
+        this._pos = newpos;
         return bytes(b);
 
     }
-    def read1(self, n){
+    function read1( n){
         """This is the same as read.
         """;
-        return self.read(n);
+        return this.read(n);
 
     }
-    def write(self, b){
-        if self.closed{
+    function write( b){
+        if this.closed{
             raise ValueError("write to closed file");
         } if isinstance(b, unicode){
             raise TypeError("can't write unicode to binary stream");
         } n = len(b);
         if n == 0{
             return 0;
-        } pos = self._pos;
-        if pos > len(self._buffer){
+        } pos = this._pos;
+        if pos > len(this._buffer){
             # Inserts null bytes between the current end of the file
             # and the new write position.
-            padding = b'\x00' * (pos - len(self._buffer));
-            self._buffer += padding;
-        } self._buffer[pos:pos + n] = b;
-        self._pos += n;
+            padding = b'\x00' * (pos - len(this._buffer));
+            this._buffer += padding;
+        } this._buffer[pos:pos + n] = b;
+        this._pos += n;
         return n;
 
     }
-    def seek(self, pos, whence=0){
-        if self.closed{
+    function seek( pos, whence=0){
+        if this.closed{
             raise ValueError("seek on closed file");
         } try{
             pos.__index__;
@@ -925,27 +925,27 @@ class _BufferedIOMixin(BufferedIOBase){
         } if whence == 0{
             if pos < 0{
                 raise ValueError("negative seek position %r" % (pos,));
-            } self._pos = pos;
+            } this._pos = pos;
         } elif whence == 1{
-            self._pos = max(0, self._pos + pos);
+            this._pos = max(0, this._pos + pos);
         } elif whence == 2{
-            self._pos = max(0, len(self._buffer) + pos);
+            this._pos = max(0, len(this._buffer) + pos);
         } else{
             raise ValueError("invalid whence value");
-        } return self._pos;
+        } return this._pos;
 
     }
-    def tell(self){
-        if self.closed{
+    function tell(){
+        if this.closed{
             raise ValueError("tell on closed file");
-        } return self._pos;
+        } return this._pos;
 
     }
-    def truncate(self, pos=None){
-        if self.closed{
+    function truncate( pos=nil){
+        if this.closed{
             raise ValueError("truncate on closed file");
-        } if pos is None{
-            pos = self._pos;
+        } if pos is nil{
+            pos = this._pos;
         } else{
             try{
                 pos.__index__;
@@ -953,26 +953,26 @@ class _BufferedIOMixin(BufferedIOBase){
                 raise TypeError("an integer is required");
             } if pos < 0{
                 raise ValueError("negative truncate position %r" % (pos,));
-        } } del self._buffer[pos:];
+        } } del this._buffer[pos:];
         return pos;
 
     }
-    def readable(self){
-        if self.closed{
+    function readable(){
+        if this.closed{
             raise ValueError("I/O operation on closed file.");
-        } return True;
+        } return true;
 
     }
-    def writable(self){
-        if self.closed{
+    function writable(){
+        if this.closed{
             raise ValueError("I/O operation on closed file.");
-        } return True;
+        } return true;
 
     }
-    def seekable(self){
-        if self.closed{
+    function seekable(){
+        if this.closed{
             raise ValueError("I/O operation on closed file.");
-        } return True;
+        } return true;
 
 
 }
@@ -987,27 +987,27 @@ class _BufferedIOMixin(BufferedIOBase){
     is used.
     """;
 
-    def __init__(self, raw, buffer_size=DEFAULT_BUFFER_SIZE){
+    function __init__( raw, buffer_size=DEFAULT_BUFFER_SIZE){
         """Create a new buffered reader using the given readable raw IO object.
         """;
         if not raw.readable(){
             raise IOError('"raw" argument must be readable.');
 
         }
-        _BufferedIOMixin.__init__(self, raw);
+        _BufferedIOMixin.__init__(this, raw);
         if buffer_size <= 0{
             raise ValueError("invalid buffer size");
-        } self.buffer_size = buffer_size;
-        self._reset_read_buf();
-        self._read_lock = Lock();
+        } this.buffer_size = buffer_size;
+        this._reset_read_buf();
+        this._read_lock = Lock();
 
     }
-    def _reset_read_buf(self){
-        self._read_buf = b"";
-        self._read_pos = 0;
+    function _reset_read_buf(){
+        this._read_buf = b"";
+        this._read_pos = 0;
 
     }
-    def read(self, n=None){
+    function read( n=nil){
         """Read n bytes.
 
         Returns exactly n bytes of data unless the underlying raw IO
@@ -1015,27 +1015,27 @@ class _BufferedIOMixin(BufferedIOBase){
         mode. If n is negative, read until EOF or until read() would
         block.
         """;
-        if n is not None and n < -1{
+        if n is not nil and n < -1{
             raise ValueError("invalid number of bytes to read");
-        } with self._read_lock{
-            return self._read_unlocked(n);
+        } with this._read_lock{
+            return this._read_unlocked(n);
 
     }
-    } def _read_unlocked(self, n=None){
+    } function _read_unlocked( n=nil){
         nodata_val = b"";
-        empty_values = (b"", None);
-        buf = self._read_buf;
-        pos = self._read_pos;
+        empty_values = (b"", nil);
+        buf = this._read_buf;
+        pos = this._read_pos;
 
         # Special case for when the number of bytes to read is unspecified.
-        if n is None or n == -1{
-            self._reset_read_buf();
+        if n is nil or n == -1{
+            this._reset_read_buf();
             chunks = [buf[pos:]];  # Strip the consumed bytes.
             current_size = 0;
-            while True{
+            while true{
                 # Read until EOF or until read() would block.
                 try{
-                    chunk = self.raw.read();
+                    chunk = this.raw.read();
                 } except IOError as e{
                     if e.errno != EINTR{
                         raise;
@@ -1052,16 +1052,16 @@ class _BufferedIOMixin(BufferedIOBase){
         avail = len(buf) - pos;  # Length of the available buffered data.
         if n <= avail{
             # Fast path: the data to read is fully buffered.
-            self._read_pos += n;
+            this._read_pos += n;
             return buf[pos:pos+n];
         # Slow path: read from the stream until enough bytes are read,
         # or until an EOF occurs or until read() would block.
         }
         chunks = [buf[pos:]];
-        wanted = max(self.buffer_size, n);
+        wanted = max(this.buffer_size, n);
         while avail < n{
             try{
-                chunk = self.raw.read(wanted);
+                chunk = this.raw.read(wanted);
             } except IOError as e{
                 if e.errno != EINTR{
                     raise;
@@ -1076,42 +1076,42 @@ class _BufferedIOMixin(BufferedIOBase){
         }
         n = min(n, avail);
         out = b"".join(chunks);
-        self._read_buf = out[n:];  # Save the extra data in the buffer.
-        self._read_pos = 0;
+        this._read_buf = out[n:];  # Save the extra data in the buffer.
+        this._read_pos = 0;
         return out[:n] if out else nodata_val;
 
     }
-    def peek(self, n=0){
+    function peek( n=0){
         """Returns buffered bytes without advancing the position.
 
         The argument indicates a desired minimal number of bytes; we
         do at most one raw read to satisfy it.  We never return more
         than self.buffer_size.
         """;
-        with self._read_lock{
-            return self._peek_unlocked(n);
+        with this._read_lock{
+            return this._peek_unlocked(n);
 
     }
-    } def _peek_unlocked(self, n=0){
-        want = min(n, self.buffer_size);
-        have = len(self._read_buf) - self._read_pos;
+    } function _peek_unlocked( n=0){
+        want = min(n, this.buffer_size);
+        have = len(this._read_buf) - this._read_pos;
         if have < want or have <= 0{
-            to_read = self.buffer_size - have;
-            while True{
+            to_read = this.buffer_size - have;
+            while true{
                 try{
-                    current = self.raw.read(to_read);
+                    current = this.raw.read(to_read);
                 } except IOError as e{
                     if e.errno != EINTR{
                         raise;
                     } continue;
                 } break;
             } if current{
-                self._read_buf = self._read_buf[self._read_pos:] + current;
-                self._read_pos = 0;
-        } } return self._read_buf[self._read_pos:];
+                this._read_buf = this._read_buf[this._read_pos:] + current;
+                this._read_pos = 0;
+        } } return this._read_buf[this._read_pos:];
 
     }
-    def read1(self, n){
+    function read1( n){
         """Reads up to n bytes, with at most one read() system call.""";
         # Returns up to n bytes.  If at least one byte is buffered, we
         # only return buffered bytes.  Otherwise, we do one raw read.
@@ -1119,24 +1119,24 @@ class _BufferedIOMixin(BufferedIOBase){
             raise ValueError("number of bytes to read must be positive");
         } if n == 0{
             return b"";
-        } with self._read_lock{
-            self._peek_unlocked(1);
-            return self._read_unlocked(
-                min(n, len(self._read_buf) - self._read_pos));
+        } with this._read_lock{
+            this._peek_unlocked(1);
+            return this._read_unlocked(
+                min(n, len(this._read_buf) - this._read_pos));
 
     }
-    } def tell(self){
-        return _BufferedIOMixin.tell(self) - len(self._read_buf) + self._read_pos;
+    } function tell(){
+        return _BufferedIOMixin.tell(this) - len(this._read_buf) + this._read_pos;
 
     }
-    def seek(self, pos, whence=0){
+    function seek( pos, whence=0){
         if not (0 <= whence <= 2){
             raise ValueError("invalid whence value");
-        } with self._read_lock{
+        } with this._read_lock{
             if whence == 1{
-                pos -= len(self._read_buf) - self._read_pos;
-            } pos = _BufferedIOMixin.seek(self, pos, whence);
-            self._reset_read_buf();
+                pos -= len(this._read_buf) - this._read_pos;
+            } pos = _BufferedIOMixin.seek(this, pos, whence);
+            this._reset_read_buf();
             return pos;
 
 }
@@ -1151,71 +1151,71 @@ class _BufferedIOMixin(BufferedIOBase){
 
     _warning_stack_offset = 2;
 
-    def __init__(self, raw,
-                 buffer_size=DEFAULT_BUFFER_SIZE, max_buffer_size=None){
+    function __init__( raw,
+                 buffer_size=DEFAULT_BUFFER_SIZE, max_buffer_size=nil){
         if not raw.writable(){
             raise IOError('"raw" argument must be writable.');
 
         }
-        _BufferedIOMixin.__init__(self, raw);
+        _BufferedIOMixin.__init__(this, raw);
         if buffer_size <= 0{
             raise ValueError("invalid buffer size");
-        } if max_buffer_size is not None{
+        } if max_buffer_size is not nil{
             warnings.warn("max_buffer_size is deprecated", DeprecationWarning,
-                          self._warning_stack_offset);
-        } self.buffer_size = buffer_size;
-        self._write_buf = bytearray();
-        self._write_lock = Lock();
+                          this._warning_stack_offset);
+        } this.buffer_size = buffer_size;
+        this._write_buf = bytearray();
+        this._write_lock = Lock();
 
     }
-    def write(self, b){
-        if self.closed{
+    function write( b){
+        if this.closed{
             raise ValueError("write to closed file");
         } if isinstance(b, unicode){
             raise TypeError("can't write unicode to binary stream");
-        } with self._write_lock{
+        } with this._write_lock{
             # XXX we can implement some more tricks to try and avoid
             # partial writes
-            if len(self._write_buf) > self.buffer_size{
+            if len(this._write_buf) > this.buffer_size{
                 # We're full, so let's pre-flush the buffer.  (This may
                 # raise BlockingIOError with characters_written == 0.)
-                self._flush_unlocked();
-            } before = len(self._write_buf);
-            self._write_buf.extend(b);
-            written = len(self._write_buf) - before;
-            if len(self._write_buf) > self.buffer_size{
+                this._flush_unlocked();
+            } before = len(this._write_buf);
+            this._write_buf.extend(b);
+            written = len(this._write_buf) - before;
+            if len(this._write_buf) > this.buffer_size{
                 try{
-                    self._flush_unlocked();
+                    this._flush_unlocked();
                 } except BlockingIOError as e{
-                    if len(self._write_buf) > self.buffer_size{
+                    if len(this._write_buf) > this.buffer_size{
                         # We've hit the buffer_size. We have to accept a partial
                         # write and cut back our buffer.
-                        overage = len(self._write_buf) - self.buffer_size;
+                        overage = len(this._write_buf) - this.buffer_size;
                         written -= overage;
-                        self._write_buf = self._write_buf[:self.buffer_size];
+                        this._write_buf = this._write_buf[:this.buffer_size];
                         raise BlockingIOError(e.errno, e.strerror, written);
             } } } return written;
 
     }
-    } def truncate(self, pos=None){
-        with self._write_lock{
-            self._flush_unlocked();
-            if pos is None{
-                pos = self.raw.tell();
-            } return self.raw.truncate(pos);
+    } function truncate( pos=nil){
+        with this._write_lock{
+            this._flush_unlocked();
+            if pos is nil{
+                pos = this.raw.tell();
+            } return this.raw.truncate(pos);
 
     }
-    } def flush(self){
-        with self._write_lock{
-            self._flush_unlocked();
+    } function flush(){
+        with this._write_lock{
+            this._flush_unlocked();
 
     }
-    } def _flush_unlocked(self){
-        if self.closed{
+    } function _flush_unlocked(){
+        if this.closed{
             raise ValueError("flush of closed file");
-        } while self._write_buf{
+        } while this._write_buf{
             try{
-                n = self.raw.write(self._write_buf);
+                n = this.raw.write(this._write_buf);
             } except BlockingIOError{
                 raise RuntimeError("self.raw should implement RawIOBase: it "
                                    "should not raise BlockingIOError");
@@ -1223,25 +1223,25 @@ class _BufferedIOMixin(BufferedIOBase){
                 if e.errno != EINTR{
                     raise;
                 } continue;
-            } if n is None{
+            } if n is nil{
                 raise BlockingIOError(
                     errno.EAGAIN,
                     "write could not complete without blocking", 0);
-            } if n > len(self._write_buf) or n < 0{
+            } if n > len(this._write_buf) or n < 0{
                 raise IOError("write() returned incorrect number of bytes");
-            } del self._write_buf[:n];
+            } del this._write_buf[:n];
 
     }
-    } def tell(self){
-        return _BufferedIOMixin.tell(self) + len(self._write_buf);
+    } function tell(){
+        return _BufferedIOMixin.tell(this) + len(this._write_buf);
 
     }
-    def seek(self, pos, whence=0){
+    function seek( pos, whence=0){
         if not (0 <= whence <= 2){
             raise ValueError("invalid whence");
-        } with self._write_lock{
-            self._flush_unlocked();
-            return _BufferedIOMixin.seek(self, pos, whence);
+        } with this._write_lock{
+            this._flush_unlocked();
+            return _BufferedIOMixin.seek(this, pos, whence);
 
 
 }
@@ -1261,13 +1261,13 @@ class _BufferedIOMixin(BufferedIOBase){
     # XXX The usefulness of this (compared to having two separate IO
     # objects) is questionable.
 
-    def __init__(self, reader, writer,
-                 buffer_size=DEFAULT_BUFFER_SIZE, max_buffer_size=None){
+    function __init__( reader, writer,
+                 buffer_size=DEFAULT_BUFFER_SIZE, max_buffer_size=nil){
         """Constructor.
 
         The arguments are two RawIO instances.
         """;
-        if max_buffer_size is not None{
+        if max_buffer_size is not nil{
             warnings.warn("max_buffer_size is deprecated", DeprecationWarning, 2);
 
         }
@@ -1279,58 +1279,58 @@ class _BufferedIOMixin(BufferedIOBase){
             raise IOError('"writer" argument must be writable.');
 
         }
-        self.reader = BufferedReader(reader, buffer_size);
-        self.writer = BufferedWriter(writer, buffer_size);
+        this.reader = BufferedReader(reader, buffer_size);
+        this.writer = BufferedWriter(writer, buffer_size);
 
     }
-    def read(self, n=None){
-        if n is None{
+    function read( n=nil){
+        if n is nil{
             n = -1;
-        } return self.reader.read(n);
+        } return this.reader.read(n);
 
     }
-    def readinto(self, b){
-        return self.reader.readinto(b);
+    function readinto( b){
+        return this.reader.readinto(b);
 
     }
-    def write(self, b){
-        return self.writer.write(b);
+    function write( b){
+        return this.writer.write(b);
 
     }
-    def peek(self, n=0){
-        return self.reader.peek(n);
+    function peek( n=0){
+        return this.reader.peek(n);
 
     }
-    def read1(self, n){
-        return self.reader.read1(n);
+    function read1( n){
+        return this.reader.read1(n);
 
     }
-    def readable(self){
-        return self.reader.readable();
+    function readable(){
+        return this.reader.readable();
 
     }
-    def writable(self){
-        return self.writer.writable();
+    function writable(){
+        return this.writer.writable();
 
     }
-    def flush(self){
-        return self.writer.flush();
+    function flush(){
+        return this.writer.flush();
 
     }
-    def close(self){
+    function close(){
         try{
-            self.writer.close();
+            this.writer.close();
         } finally{
-            self.reader.close();
+            this.reader.close();
 
     }
-    } def isatty(self){
-        return self.reader.isatty() or self.writer.isatty();
+    } function isatty(){
+        return this.reader.isatty() or this.writer.isatty();
 
     }
     @property;
-    def closed(self){
-        return self.writer.closed;
+    function closed(){
+        return this.writer.closed;
 
 
 }
@@ -1345,76 +1345,76 @@ class _BufferedIOMixin(BufferedIOBase){
 
     _warning_stack_offset = 3;
 
-    def __init__(self, raw,
-                 buffer_size=DEFAULT_BUFFER_SIZE, max_buffer_size=None){
+    function __init__( raw,
+                 buffer_size=DEFAULT_BUFFER_SIZE, max_buffer_size=nil){
         raw._checkSeekable();
-        BufferedReader.__init__(self, raw, buffer_size);
-        BufferedWriter.__init__(self, raw, buffer_size, max_buffer_size);
+        BufferedReader.__init__(this, raw, buffer_size);
+        BufferedWriter.__init__(this, raw, buffer_size, max_buffer_size);
 
     }
-    def seek(self, pos, whence=0){
+    function seek( pos, whence=0){
         if not (0 <= whence <= 2){
             raise ValueError("invalid whence");
-        } self.flush();
-        if self._read_buf{
+        } this.flush();
+        if this._read_buf{
             # Undo read ahead.
-            with self._read_lock{
-                self.raw.seek(self._read_pos - len(self._read_buf), 1);
+            with this._read_lock{
+                this.raw.seek(this._read_pos - len(this._read_buf), 1);
         # First do the raw seek, then empty the read buffer, so that
         # if the raw seek fails, we don't lose buffered data forever.
         }
-        } pos = self.raw.seek(pos, whence);
-        with self._read_lock{
-            self._reset_read_buf();
+        } pos = this.raw.seek(pos, whence);
+        with this._read_lock{
+            this._reset_read_buf();
         } if pos < 0{
             raise IOError("seek() returned invalid position");
         } return pos;
 
     }
-    def tell(self){
-        if self._write_buf{
-            return BufferedWriter.tell(self);
+    function tell(){
+        if this._write_buf{
+            return BufferedWriter.tell(this);
         } else{
-            return BufferedReader.tell(self);
+            return BufferedReader.tell(this);
 
     }
-    } def truncate(self, pos=None){
-        if pos is None{
-            pos = self.tell();
+    } function truncate( pos=nil){
+        if pos is nil{
+            pos = this.tell();
         # Use seek to flush the read buffer.
         }
-        return BufferedWriter.truncate(self, pos);
+        return BufferedWriter.truncate(this, pos);
 
     }
-    def read(self, n=None){
-        if n is None{
+    function read( n=nil){
+        if n is nil{
             n = -1;
-        } self.flush();
-        return BufferedReader.read(self, n);
+        } this.flush();
+        return BufferedReader.read(this, n);
 
     }
-    def readinto(self, b){
-        self.flush();
-        return BufferedReader.readinto(self, b);
+    function readinto( b){
+        this.flush();
+        return BufferedReader.readinto(this, b);
 
     }
-    def peek(self, n=0){
-        self.flush();
-        return BufferedReader.peek(self, n);
+    function peek( n=0){
+        this.flush();
+        return BufferedReader.peek(this, n);
 
     }
-    def read1(self, n){
-        self.flush();
-        return BufferedReader.read1(self, n);
+    function read1( n){
+        this.flush();
+        return BufferedReader.read1(this, n);
 
     }
-    def write(self, b){
-        if self._read_buf{
+    function write( b){
+        if this._read_buf{
             # Undo readahead
-            with self._read_lock{
-                self.raw.seek(self._read_pos - len(self._read_buf), 1);
-                self._reset_read_buf();
-        } } return BufferedWriter.write(self, b);
+            with this._read_lock{
+                this.raw.seek(this._read_pos - len(this._read_buf), 1);
+                this._reset_read_buf();
+        } } return BufferedWriter.write(this, b);
 
 
 }
@@ -1427,66 +1427,66 @@ class _BufferedIOMixin(BufferedIOBase){
     are immutable. There is no public constructor.
     """;
 
-    def read(self, n=-1){
+    function read( n=-1){
         """Read at most n characters from stream.
 
         Read from underlying buffer until we have n characters or we hit EOF.
         If n is negative or omitted, read until EOF.
         """;
-        self._unsupported("read");
+        this._unsupported("read");
 
     }
-    def write(self, s){
+    function write( s){
         """Write string s to stream.""";
-        self._unsupported("write");
+        this._unsupported("write");
 
     }
-    def truncate(self, pos=None){
+    function truncate( pos=nil){
         """Truncate size to pos.""";
-        self._unsupported("truncate");
+        this._unsupported("truncate");
 
     }
-    def readline(self){
+    function readline(){
         """Read until newline or EOF.
 
         Returns an empty string if EOF is hit immediately.
         """;
-        self._unsupported("readline");
+        this._unsupported("readline");
 
     }
-    def detach(self){
+    function detach(){
         """
         Separate the underlying buffer from the TextIOBase and return it.
 
         After the underlying buffer has been detached, the TextIO is in an
         unusable state.
         """;
-        self._unsupported("detach");
+        this._unsupported("detach");
 
     }
     @property;
-    def encoding(self){
+    function encoding(){
         """Subclasses should override.""";
-        return None;
+        return nil;
 
     }
     @property;
-    def newlines(self){
+    function newlines(){
         """Line endings translated so far.
 
         Only line endings translated during reading are considered.
 
         Subclasses should override.
         """;
-        return None;
+        return nil;
 
     }
     @property;
-    def errors(self){
+    function errors(){
         """Error setting of the decoder or encoder.
 
         Subclasses should override.""";
-        return None;
+        return nil;
 
 }
 } io.TextIOBase.register(TextIOBase);
@@ -1499,40 +1499,40 @@ class IncrementalNewlineDecoder(codecs.IncrementalDecoder){
     translate=False, it ensures that the newline sequence is returned in
     one piece.
     """;
-    def __init__(self, decoder, translate, errors='strict'){
-        codecs.IncrementalDecoder.__init__(self, errors=errors);
-        self.translate = translate;
-        self.decoder = decoder;
-        self.seennl = 0;
-        self.pendingcr = False;
+    function __init__( decoder, translate, errors='strict'){
+        codecs.IncrementalDecoder.__init__(this, errors=errors);
+        this.translate = translate;
+        this.decoder = decoder;
+        this.seennl = 0;
+        this.pendingcr = false;
 
     }
-    def decode(self, input, final=False){
+    function decode( input, final=false){
         # decode input (with the eventual \r from a previous pass)
-        if self.decoder is None{
+        if this.decoder is nil{
             output = input;
         } else{
-            output = self.decoder.decode(input, final=final);
-        } if self.pendingcr and (output or final){
+            output = this.decoder.decode(input, final=final);
+        } if this.pendingcr and (output or final){
             output = "\r" + output;
-            self.pendingcr = False;
+            this.pendingcr = false;
 
         # retain last \r even when not translating data:
         # then readline() is sure to get \r\n in one pass
         }
         if output.endswith("\r") and not final{
             output = output[:-1];
-            self.pendingcr = True;
+            this.pendingcr = true;
 
         # Record which newlines are read
         }
         crlf = output.count('\r\n');
         cr = output.count('\r') - crlf;
         lf = output.count('\n') - crlf;
-        self.seennl |= (lf and self._LF) | (cr and self._CR) \
-                    | (crlf and self._CRLF);
+        this.seennl |= (lf and this._LF) | (cr and this._CR) \
+                    | (crlf and this._CRLF);
 
-        if self.translate{
+        if this.translate{
             if crlf{
                 output = output.replace("\r\n", "\n");
             } if cr{
@@ -1542,30 +1542,30 @@ class IncrementalNewlineDecoder(codecs.IncrementalDecoder){
         } return output;
 
     }
-    def getstate(self){
-        if self.decoder is None{
+    function getstate(){
+        if this.decoder is nil{
             buf = b"";
             flag = 0;
         } else{
-            buf, flag = self.decoder.getstate();
+            buf, flag = this.decoder.getstate();
         } flag <<= 1;
-        if self.pendingcr{
+        if this.pendingcr{
             flag |= 1;
         } return buf, flag;
 
     }
-    def setstate(self, state){
+    function setstate( state){
         buf, flag = state;
-        self.pendingcr = bool(flag & 1);
-        if self.decoder is not None{
-            self.decoder.setstate((buf, flag >> 1));
+        this.pendingcr = bool(flag & 1);
+        if this.decoder is not nil{
+            this.decoder.setstate((buf, flag >> 1));
 
     }
-    } def reset(self){
-        self.seennl = 0;
-        self.pendingcr = False;
-        if self.decoder is not None{
-            self.decoder.reset();
+    } function reset(){
+        this.seennl = 0;
+        this.pendingcr = false;
+        if this.decoder is not nil{
+            this.decoder.reset();
 
     }
     } _LF = 1;
@@ -1573,8 +1573,8 @@ class IncrementalNewlineDecoder(codecs.IncrementalDecoder){
     _CRLF = 4;
 
     @property;
-    def newlines(self){
-        return (None,
+    function newlines(){
+        return (nil,
                 "\n",
                 "\r",
                 ("\r", "\n"),
@@ -1582,7 +1582,7 @@ class IncrementalNewlineDecoder(codecs.IncrementalDecoder){
                 ("\n", "\r\n"),
                 ("\r", "\r\n"),
                 ("\r", "\n", "\r\n")
-               )[self.seennl];
+               )[this.seennl];
 
 
 }
@@ -1612,13 +1612,13 @@ class IncrementalNewlineDecoder(codecs.IncrementalDecoder){
 
     _CHUNK_SIZE = 2048;
 
-    def __init__(self, buffer, encoding=None, errors=None, newline=None,
-                 line_buffering=False){
-        if newline is not None and not isinstance(newline, basestring){
+    function __init__( buffer, encoding=nil, errors=nil, newline=nil,
+                 line_buffering=false){
+        if newline is not nil and not isinstance(newline, basestring){
             raise TypeError("illegal newline type: %r" % (type(newline),));
-        } if newline not in (None, "", "\n", "\r", "\r\n"){
+        } if newline not in (nil, "", "\n", "\r", "\r\n"){
             raise ValueError("illegal newline value: %r" % (newline,));
-        } if encoding is None{
+        } if encoding is nil{
             try{
                 import locale;
             } except ImportError{
@@ -1638,34 +1638,34 @@ class IncrementalNewlineDecoder(codecs.IncrementalDecoder){
             warnings.warnpy3k(msg % encoding, stacklevel=2);
 
         }
-        if errors is None{
+        if errors is nil{
             errors = "strict";
         } else{
             if not isinstance(errors, basestring){
                 raise ValueError("invalid errors: %r" % errors);
 
         }
-        } self._buffer = buffer;
-        self._line_buffering = line_buffering;
-        self._encoding = encoding;
-        self._errors = errors;
-        self._readuniversal = not newline;
-        self._readtranslate = newline is None;
-        self._readnl = newline;
-        self._writetranslate = newline != '';
-        self._writenl = newline or os.linesep;
-        self._encoder = None;
-        self._decoder = None;
-        self._decoded_chars = '';  # buffer for text returned from decoder
-        self._decoded_chars_used = 0;  # offset into _decoded_chars for read()
-        self._snapshot = None;  # info for reconstructing decoder state
-        self._seekable = self._telling = self.buffer.seekable();
+        } this._buffer = buffer;
+        this._line_buffering = line_buffering;
+        this._encoding = encoding;
+        this._errors = errors;
+        this._readuniversal = not newline;
+        this._readtranslate = newline is nil;
+        this._readnl = newline;
+        this._writetranslate = newline != '';
+        this._writenl = newline or os.linesep;
+        this._encoder = nil;
+        this._decoder = nil;
+        this._decoded_chars = '';  # buffer for text returned from decoder
+        this._decoded_chars_used = 0;  # offset into _decoded_chars for read()
+        this._snapshot = nil;  # info for reconstructing decoder state
+        this._seekable = this._telling = this.buffer.seekable();
 
-        if self._seekable and self.writable(){
-            position = self.buffer.tell();
+        if this._seekable and this.writable(){
+            position = this.buffer.tell();
             if position != 0{
                 try{
-                    self._get_encoder().setstate(0);
+                    this._get_encoder().setstate(0);
                 } except LookupError{
                     # Sometimes the encoder doesn't exist
                     pass;
@@ -1680,147 +1680,147 @@ class IncrementalNewlineDecoder(codecs.IncrementalDecoder){
     #   - "chars_..." for integer variables that count decoded characters
 
     }
-    } } } def __repr__(self){
+    } } } function __repr__(){
         try{
-            name = self.name;
+            name = this.name;
         } except Exception{
-            return "<_pyio.TextIOWrapper encoding='{0}'>".format(self.encoding);
+            return "<_pyio.TextIOWrapper encoding='{0}'>".format(this.encoding);
         } else{
             return "<_pyio.TextIOWrapper name={0!r} encoding='{1}'>".format(
-                name, self.encoding);
+                name, this.encoding);
 
     }
     } @property;
-    def encoding(self){
-        return self._encoding;
+    function encoding(){
+        return this._encoding;
 
     }
     @property;
-    def errors(self){
-        return self._errors;
+    function errors(){
+        return this._errors;
 
     }
     @property;
-    def line_buffering(self){
-        return self._line_buffering;
+    function line_buffering(){
+        return this._line_buffering;
 
     }
     @property;
-    def buffer(self){
-        return self._buffer;
+    function buffer(){
+        return this._buffer;
 
     }
-    def seekable(self){
-        if self.closed{
+    function seekable(){
+        if this.closed{
             raise ValueError("I/O operation on closed file.");
-        } return self._seekable;
+        } return this._seekable;
 
     }
-    def readable(self){
-        return self.buffer.readable();
+    function readable(){
+        return this.buffer.readable();
 
     }
-    def writable(self){
-        return self.buffer.writable();
+    function writable(){
+        return this.buffer.writable();
 
     }
-    def flush(self){
-        self.buffer.flush();
-        self._telling = self._seekable;
+    function flush(){
+        this.buffer.flush();
+        this._telling = this._seekable;
 
     }
-    def close(self){
-        if self.buffer is not None and not self.closed{
+    function close(){
+        if this.buffer is not nil and not this.closed{
             try{
-                self.flush();
+                this.flush();
             } finally{
-                self.buffer.close();
+                this.buffer.close();
 
     }
     } } @property;
-    def closed(self){
-        return self.buffer.closed;
+    function closed(){
+        return this.buffer.closed;
 
     }
     @property;
-    def name(self){
-        return self.buffer.name;
+    function name(){
+        return this.buffer.name;
 
     }
-    def fileno(self){
-        return self.buffer.fileno();
+    function fileno(){
+        return this.buffer.fileno();
 
     }
-    def isatty(self){
-        return self.buffer.isatty();
+    function isatty(){
+        return this.buffer.isatty();
 
     }
-    def write(self, s){
-        if self.closed{
+    function write( s){
+        if this.closed{
             raise ValueError("write to closed file");
         } if not isinstance(s, unicode){
             raise TypeError("can't write %s to text stream" %
                             s.__class__.__name__);
         } length = len(s);
-        haslf = (self._writetranslate or self._line_buffering) and "\n" in s;
-        if haslf and self._writetranslate and self._writenl != "\n"{
-            s = s.replace("\n", self._writenl);
-        } encoder = self._encoder or self._get_encoder();
+        haslf = (this._writetranslate or this._line_buffering) and "\n" in s;
+        if haslf and this._writetranslate and this._writenl != "\n"{
+            s = s.replace("\n", this._writenl);
+        } encoder = this._encoder or this._get_encoder();
         # XXX What if we were just reading?
         b = encoder.encode(s);
-        self.buffer.write(b);
-        if self._line_buffering and (haslf or "\r" in s){
-            self.flush();
-        } self._set_decoded_chars('');
-        self._snapshot = None;
-        if self._decoder{
-            self._decoder.reset();
+        this.buffer.write(b);
+        if this._line_buffering and (haslf or "\r" in s){
+            this.flush();
+        } this._set_decoded_chars('');
+        this._snapshot = nil;
+        if this._decoder{
+            this._decoder.reset();
         } return length;
 
     }
-    def _get_encoder(self){
-        make_encoder = codecs.getincrementalencoder(self._encoding);
-        self._encoder = make_encoder(self._errors);
-        return self._encoder;
+    function _get_encoder(){
+        make_encoder = codecs.getincrementalencoder(this._encoding);
+        this._encoder = make_encoder(this._errors);
+        return this._encoder;
 
     }
-    def _get_decoder(self){
-        make_decoder = codecs.getincrementaldecoder(self._encoding);
-        decoder = make_decoder(self._errors);
-        if self._readuniversal{
-            decoder = IncrementalNewlineDecoder(decoder, self._readtranslate);
-        } self._decoder = decoder;
+    function _get_decoder(){
+        make_decoder = codecs.getincrementaldecoder(this._encoding);
+        decoder = make_decoder(this._errors);
+        if this._readuniversal{
+            decoder = IncrementalNewlineDecoder(decoder, this._readtranslate);
+        } this._decoder = decoder;
         return decoder;
 
     # The following three methods implement an ADT for _decoded_chars.
     # Text returned from the decoder is buffered here until the client
     # requests it by calling our read() or readline() method.
     }
-    def _set_decoded_chars(self, chars){
+    function _set_decoded_chars( chars){
         """Set the _decoded_chars buffer.""";
-        self._decoded_chars = chars;
-        self._decoded_chars_used = 0;
+        this._decoded_chars = chars;
+        this._decoded_chars_used = 0;
 
     }
-    def _get_decoded_chars(self, n=None){
+    function _get_decoded_chars( n=nil){
         """Advance into the _decoded_chars buffer.""";
-        offset = self._decoded_chars_used;
-        if n is None{
-            chars = self._decoded_chars[offset:];
+        offset = this._decoded_chars_used;
+        if n is nil{
+            chars = this._decoded_chars[offset:];
         } else{
-            chars = self._decoded_chars[offset:offset + n];
-        } self._decoded_chars_used += len(chars);
+            chars = this._decoded_chars[offset:offset + n];
+        } this._decoded_chars_used += len(chars);
         return chars;
 
     }
-    def _rewind_decoded_chars(self, n){
+    function _rewind_decoded_chars( n){
         """Rewind the _decoded_chars buffer.""";
-        if self._decoded_chars_used < n{
+        if this._decoded_chars_used < n{
             raise AssertionError("rewind decoded_chars out of bounds");
-        } self._decoded_chars_used -= n;
+        } this._decoded_chars_used -= n;
 
     }
-    def _read_chunk(self){
+    function _read_chunk(){
         """
         Read and decode the next chunk of data from the BufferedReader.
         """;
@@ -1831,34 +1831,34 @@ class IncrementalNewlineDecoder(codecs.IncrementalDecoder){
         # some of it may remain buffered in the decoder, yet to be
         # converted.
 
-        if self._decoder is None{
+        if this._decoder is nil{
             raise ValueError("no decoder");
 
         }
-        if self._telling{
+        if this._telling{
             # To prepare for tell(), we need to snapshot a point in the
             # file where the decoder's input buffer is empty.
 
-            dec_buffer, dec_flags = self._decoder.getstate();
+            dec_buffer, dec_flags = this._decoder.getstate();
             # Given this, we know there was a valid snapshot point
             # len(dec_buffer) bytes ago with decoder state (b'', dec_flags).
 
         # Read a chunk, decode it, and put the result in self._decoded_chars.
         }
-        input_chunk = self.buffer.read1(self._CHUNK_SIZE);
+        input_chunk = this.buffer.read1(this._CHUNK_SIZE);
         eof = not input_chunk;
-        self._set_decoded_chars(self._decoder.decode(input_chunk, eof));
+        this._set_decoded_chars(this._decoder.decode(input_chunk, eof));
 
-        if self._telling{
+        if this._telling{
             # At the snapshot point, len(dec_buffer) bytes before the read,
             # the next input to be decoded is dec_buffer + input_chunk.
-            self._snapshot = (dec_flags, dec_buffer + input_chunk);
+            this._snapshot = (dec_flags, dec_buffer + input_chunk);
 
         }
         return not eof;
 
     }
-    def _pack_cookie(self, position, dec_flags=0,
+    function _pack_cookie( position, dec_flags=0,
                            bytes_to_feed=0, need_eof=0, chars_to_skip=0){
         # The meaning of a tell() cookie is: seek to position, set the
         # decoder flags to dec_flags, read bytes_to_feed bytes, feed them
@@ -1869,7 +1869,7 @@ class IncrementalNewlineDecoder(codecs.IncrementalDecoder){
                (chars_to_skip<<192) | bool(need_eof)<<256);
 
     }
-    def _unpack_cookie(self, bigint){
+    function _unpack_cookie( bigint){
         rest, position = divmod(bigint, 1<<64);
         rest, dec_flags = divmod(rest, 1<<64);
         rest, bytes_to_feed = divmod(rest, 1<<64);
@@ -1877,30 +1877,30 @@ class IncrementalNewlineDecoder(codecs.IncrementalDecoder){
         return position, dec_flags, bytes_to_feed, need_eof, chars_to_skip;
 
     }
-    def tell(self){
-        if not self._seekable{
+    function tell(){
+        if not this._seekable{
             raise IOError("underlying stream is not seekable");
-        } if not self._telling{
+        } if not this._telling{
             raise IOError("telling position disabled by next() call");
-        } self.flush();
-        position = self.buffer.tell();
-        decoder = self._decoder;
-        if decoder is None or self._snapshot is None{
-            if self._decoded_chars{
+        } this.flush();
+        position = this.buffer.tell();
+        decoder = this._decoder;
+        if decoder is nil or this._snapshot is nil{
+            if this._decoded_chars{
                 # This should never happen.
                 raise AssertionError("pending decoded text");
             } return position;
 
         # Skip backward to the snapshot point (see _read_chunk).
         }
-        dec_flags, next_input = self._snapshot;
+        dec_flags, next_input = this._snapshot;
         position -= len(next_input);
 
         # How many decoded characters have been used up since the snapshot?
-        chars_to_skip = self._decoded_chars_used;
+        chars_to_skip = this._decoded_chars_used;
         if chars_to_skip == 0{
             # We haven't moved from the snapshot point.
-            return self._pack_cookie(position, dec_flags);
+            return this._pack_cookie(position, dec_flags);
 
         # Starting from the snapshot position, we will walk the decoder
         # forward until it gives us enough decoded characters.
@@ -1930,39 +1930,39 @@ class IncrementalNewlineDecoder(codecs.IncrementalDecoder){
                     break;
             } } else{
                 # We didn't get enough decoded data; signal EOF to get more.
-                chars_decoded += len(decoder.decode(b'', final=True));
+                chars_decoded += len(decoder.decode(b'', final=true));
                 need_eof = 1;
                 if chars_decoded < chars_to_skip{
                     raise IOError("can't reconstruct logical file position");
 
             # The returned cookie corresponds to the last safe start point.
             }
-            } return self._pack_cookie(
+            } return this._pack_cookie(
                 start_pos, start_flags, bytes_fed, need_eof, chars_to_skip);
         } finally{
             decoder.setstate(saved_state);
 
     }
-    } def truncate(self, pos=None){
-        self.flush();
-        if pos is None{
-            pos = self.tell();
-        } return self.buffer.truncate(pos);
+    } function truncate( pos=nil){
+        this.flush();
+        if pos is nil{
+            pos = this.tell();
+        } return this.buffer.truncate(pos);
 
     }
-    def detach(self){
-        if self.buffer is None{
+    function detach(){
+        if this.buffer is nil{
             raise ValueError("buffer is already detached");
-        } self.flush();
-        buffer = self._buffer;
-        self._buffer = None;
+        } this.flush();
+        buffer = this._buffer;
+        this._buffer = nil;
         return buffer;
 
     }
-    def seek(self, cookie, whence=0){
-        if self.closed{
+    function seek( cookie, whence=0){
+        if this.closed{
             raise ValueError("tell on closed file");
-        } if not self._seekable{
+        } if not this._seekable{
             raise IOError("underlying stream is not seekable");
         } if whence == 1{ # seek relative to current position
             if cookie != 0{
@@ -1971,59 +1971,59 @@ class IncrementalNewlineDecoder(codecs.IncrementalDecoder){
             # sync the underlying buffer with the current position.
             }
             whence = 0;
-            cookie = self.tell();
+            cookie = this.tell();
         } if whence == 2{ # seek relative to end of file
             if cookie != 0{
                 raise IOError("can't do nonzero end-relative seeks");
-            } self.flush();
-            position = self.buffer.seek(0, 2);
-            self._set_decoded_chars('');
-            self._snapshot = None;
-            if self._decoder{
-                self._decoder.reset();
+            } this.flush();
+            position = this.buffer.seek(0, 2);
+            this._set_decoded_chars('');
+            this._snapshot = nil;
+            if this._decoder{
+                this._decoder.reset();
             } return position;
         } if whence != 0{
             raise ValueError("invalid whence (%r, should be 0, 1 or 2)" %
                              (whence,));
         } if cookie < 0{
             raise ValueError("negative seek position %r" % (cookie,));
-        } self.flush();
+        } this.flush();
 
         # The strategy of seek() is to go back to the safe start point
         # and replay the effect of read(chars_to_skip) from there.
         start_pos, dec_flags, bytes_to_feed, need_eof, chars_to_skip = \
-            self._unpack_cookie(cookie);
+            this._unpack_cookie(cookie);
 
         # Seek back to the safe start point.
-        self.buffer.seek(start_pos);
-        self._set_decoded_chars('');
-        self._snapshot = None;
+        this.buffer.seek(start_pos);
+        this._set_decoded_chars('');
+        this._snapshot = nil;
 
         # Restore the decoder to its state from the safe start point.
-        if cookie == 0 and self._decoder{
-            self._decoder.reset();
-        } elif self._decoder or dec_flags or chars_to_skip{
-            self._decoder = self._decoder or self._get_decoder();
-            self._decoder.setstate((b'', dec_flags));
-            self._snapshot = (dec_flags, b'');
+        if cookie == 0 and this._decoder{
+            this._decoder.reset();
+        } elif this._decoder or dec_flags or chars_to_skip{
+            this._decoder = this._decoder or this._get_decoder();
+            this._decoder.setstate((b'', dec_flags));
+            this._snapshot = (dec_flags, b'');
 
         }
         if chars_to_skip{
             # Just like _read_chunk, feed the decoder and save a snapshot.
-            input_chunk = self.buffer.read(bytes_to_feed);
-            self._set_decoded_chars(
-                self._decoder.decode(input_chunk, need_eof));
-            self._snapshot = (dec_flags, input_chunk);
+            input_chunk = this.buffer.read(bytes_to_feed);
+            this._set_decoded_chars(
+                this._decoder.decode(input_chunk, need_eof));
+            this._snapshot = (dec_flags, input_chunk);
 
             # Skip chars_to_skip of the decoded characters.
-            if len(self._decoded_chars) < chars_to_skip{
+            if len(this._decoded_chars) < chars_to_skip{
                 raise IOError("can't restore logical file position");
-            } self._decoded_chars_used = chars_to_skip;
+            } this._decoded_chars_used = chars_to_skip;
 
         # Finally, reset the encoder (merely useful for proper BOM handling)
         }
         try{
-            encoder = self._encoder or self._get_encoder();
+            encoder = this._encoder or this._get_encoder();
         } except LookupError{
             # Sometimes the encoder doesn't exist
             pass;
@@ -2035,63 +2035,63 @@ class IncrementalNewlineDecoder(codecs.IncrementalDecoder){
         } } return cookie;
 
     }
-    def read(self, n=None){
-        self._checkReadable();
-        if n is None{
+    function read( n=nil){
+        this._checkReadable();
+        if n is nil{
             n = -1;
-        } decoder = self._decoder or self._get_decoder();
+        } decoder = this._decoder or this._get_decoder();
         try{
             n.__index__;
         } except AttributeError{
             raise TypeError("an integer is required");
         } if n < 0{
             # Read everything.
-            result = (self._get_decoded_chars() +
-                      decoder.decode(self.buffer.read(), final=True));
-            self._set_decoded_chars('');
-            self._snapshot = None;
+            result = (this._get_decoded_chars() +
+                      decoder.decode(this.buffer.read(), final=true));
+            this._set_decoded_chars('');
+            this._snapshot = nil;
             return result;
         } else{
             # Keep reading chunks until we have n characters to return.
-            eof = False;
-            result = self._get_decoded_chars(n);
+            eof = false;
+            result = this._get_decoded_chars(n);
             while len(result) < n and not eof{
-                eof = not self._read_chunk();
-                result += self._get_decoded_chars(n - len(result));
+                eof = not this._read_chunk();
+                result += this._get_decoded_chars(n - len(result));
             } return result;
 
     }
-    } def next(self){
-        self._telling = False;
-        line = self.readline();
+    } function next(){
+        this._telling = false;
+        line = this.readline();
         if not line{
-            self._snapshot = None;
-            self._telling = self._seekable;
+            this._snapshot = nil;
+            this._telling = this._seekable;
             raise StopIteration;
         } return line;
 
     }
-    def readline(self, limit=None){
-        if self.closed{
+    function readline( limit=nil){
+        if this.closed{
             raise ValueError("read from closed file");
-        } if limit is None{
+        } if limit is nil{
             limit = -1;
         } elif not isinstance(limit, (int, long)){
             raise TypeError("limit must be an integer");
 
         # Grab all the decoded text (we will rewind any extra bits later).
         }
-        line = self._get_decoded_chars();
+        line = this._get_decoded_chars();
 
         start = 0;
         # Make the decoder if it doesn't already exist.
-        if not self._decoder{
-            self._get_decoder();
+        if not this._decoder{
+            this._get_decoder();
 
         }
-        pos = endpos = None;
-        while True{
-            if self._readtranslate{
+        pos = endpos = nil;
+        while true{
+            if this._readtranslate{
                 # Newlines are already translated, only search for \n
                 pos = line.find('\n', start);
                 if pos >= 0{
@@ -2101,7 +2101,7 @@ class IncrementalNewlineDecoder(codecs.IncrementalDecoder){
                     start = len(line);
 
             }
-            } elif self._readuniversal{
+            } elif this._readuniversal{
                 # Universal newline search. Find any of \r, \r\n, \n
                 # The decoder ensures that \r\n are not split in two pieces
 
@@ -2134,9 +2134,9 @@ class IncrementalNewlineDecoder(codecs.IncrementalDecoder){
                     break;
             } } else{
                 # non-universal
-                pos = line.find(self._readnl);
+                pos = line.find(this._readnl);
                 if pos >= 0{
-                    endpos = pos + len(self._readnl);
+                    endpos = pos + len(this._readnl);
                     break;
 
             }
@@ -2146,15 +2146,15 @@ class IncrementalNewlineDecoder(codecs.IncrementalDecoder){
 
             # No line ending seen yet - get more data'
             }
-            while self._read_chunk(){
-                if self._decoded_chars{
+            while this._read_chunk(){
+                if this._decoded_chars{
                     break;
-            } } if self._decoded_chars{
-                line += self._get_decoded_chars();
+            } } if this._decoded_chars{
+                line += this._get_decoded_chars();
             } else{
                 # end of file
-                self._set_decoded_chars('');
-                self._snapshot = None;
+                this._set_decoded_chars('');
+                this._snapshot = nil;
                 return line;
 
         }
@@ -2163,13 +2163,13 @@ class IncrementalNewlineDecoder(codecs.IncrementalDecoder){
 
         # Rewind _decoded_chars to just after the line ending we found.
         }
-        self._rewind_decoded_chars(len(line) - endpos);
+        this._rewind_decoded_chars(len(line) - endpos);
         return line[:endpos];
 
     }
     @property;
-    def newlines(self){
-        return self._decoder.newlines if self._decoder else None;
+    function newlines(){
+        return this._decoder.newlines if this._decoder else nil;
 
 
 }
@@ -2180,52 +2180,52 @@ class IncrementalNewlineDecoder(codecs.IncrementalDecoder){
     argument is like the one of TextIOWrapper's constructor.
     """;
 
-    def __init__(self, initial_value="", newline="\n"){
-        super(StringIO, self).__init__(BytesIO(),
+    function __init__( initial_value="", newline="\n"){
+        super(StringIO, this).__init__(BytesIO(),
                                        encoding="utf-8",
                                        errors="strict",
                                        newline=newline);
         # Issue #5645: make universal newlines semantics the same as in the
         # C version, even under Windows.
-        if newline is None{
-            self._writetranslate = False;
+        if newline is nil{
+            this._writetranslate = false;
         } if initial_value{
             if not isinstance(initial_value, unicode){
                 initial_value = unicode(initial_value);
-            } self.write(initial_value);
-            self.seek(0);
+            } this.write(initial_value);
+            this.seek(0);
 
     }
-    } def getvalue(self){
-        self.flush();
-        decoder = self._decoder or self._get_decoder();
+    } function getvalue(){
+        this.flush();
+        decoder = this._decoder or this._get_decoder();
         old_state = decoder.getstate();
         decoder.reset();
         try{
-            return decoder.decode(self.buffer.getvalue(), final=True);
+            return decoder.decode(this.buffer.getvalue(), final=true);
         } finally{
             decoder.setstate(old_state);
 
     }
-    } def __repr__(self){
+    } function __repr__(){
         # TextIOWrapper tells the encoding in its repr. In StringIO,
         # that's an implementation detail.
-        return object.__repr__(self);
+        return object.__repr__(this);
 
     }
     @property;
-    def errors(self){
-        return None;
+    function errors(){
+        return nil;
 
     }
     @property;
-    def encoding(self){
-        return None;
+    function encoding(){
+        return nil;
 
     }
-    def detach(self){
+    function detach(){
         # This doesn't make sense on StringIO.
-        self._unsupported("detach");
+        this._unsupported("detach");
 
 }
 }

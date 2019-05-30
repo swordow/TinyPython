@@ -61,7 +61,7 @@ QtTimeRecord_New(TimeRecord *itself)
             TimeBaseObj_New, itself->base);
     else
         return  Py_BuildValue("O&lO", PyMac_Buildwide, &itself->value, itself->scale,
-            Py_None);
+            Py_Nil);
 }
 
 static int
@@ -71,7 +71,7 @@ QtTimeRecord_Convert(PyObject *v, TimeRecord *p_itself)
     if( !PyArg_ParseTuple(v, "O&l|O", PyMac_Getwide, &p_itself->value, &p_itself->scale,
                     &base) )
         return 0;
-    if ( base == NULL || base == Py_None )
+    if ( base == NULL || base == Py_Nil )
         p_itself->base = NULL;
     else
         if ( !TimeBaseObj_Convert(base, &p_itself->base) )
@@ -120,7 +120,7 @@ PyObject *IdleManagerObj_New(IdleManager itself)
 
 int IdleManagerObj_Convert(PyObject *v, IdleManager *p_itself)
 {
-    if (v == Py_None)
+    if (v == Py_Nil)
     {
         *p_itself = NULL;
         return 1;
@@ -244,7 +244,7 @@ PyObject *MovieCtlObj_New(MovieController itself)
 
 int MovieCtlObj_Convert(PyObject *v, MovieController *p_itself)
 {
-    if (v == Py_None)
+    if (v == Py_Nil)
     {
         *p_itself = NULL;
         return 1;
@@ -1364,7 +1364,7 @@ PyObject *TimeBaseObj_New(TimeBase itself)
 
 int TimeBaseObj_Convert(PyObject *v, TimeBase *p_itself)
 {
-    if (v == Py_None)
+    if (v == Py_Nil)
     {
         *p_itself = NULL;
         return 1;
@@ -1393,8 +1393,8 @@ static PyObject *TimeBaseObj_DisposeTimeBase(TimeBaseObject *_self, PyObject *_a
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     DisposeTimeBase(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1431,8 +1431,8 @@ static PyObject *TimeBaseObj_SetTimeBaseTime(TimeBaseObject *_self, PyObject *_a
         return NULL;
     SetTimeBaseTime(_self->ob_itself,
                     &tr);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1451,8 +1451,8 @@ static PyObject *TimeBaseObj_SetTimeBaseValue(TimeBaseObject *_self, PyObject *_
     SetTimeBaseValue(_self->ob_itself,
                      t,
                      s);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1483,8 +1483,8 @@ static PyObject *TimeBaseObj_SetTimeBaseRate(TimeBaseObject *_self, PyObject *_a
         return NULL;
     SetTimeBaseRate(_self->ob_itself,
                     r);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1521,8 +1521,8 @@ static PyObject *TimeBaseObj_SetTimeBaseStartTime(TimeBaseObject *_self, PyObjec
         return NULL;
     SetTimeBaseStartTime(_self->ob_itself,
                          &tr);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1559,8 +1559,8 @@ static PyObject *TimeBaseObj_SetTimeBaseStopTime(TimeBaseObject *_self, PyObject
         return NULL;
     SetTimeBaseStopTime(_self->ob_itself,
                         &tr);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1591,8 +1591,8 @@ static PyObject *TimeBaseObj_SetTimeBaseFlags(TimeBaseObject *_self, PyObject *_
         return NULL;
     SetTimeBaseFlags(_self->ob_itself,
                      timeBaseFlags);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1611,8 +1611,8 @@ static PyObject *TimeBaseObj_SetTimeBaseMasterTimeBase(TimeBaseObject *_self, Py
     SetTimeBaseMasterTimeBase(_self->ob_itself,
                               master,
                               &slaveZero);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1646,8 +1646,8 @@ static PyObject *TimeBaseObj_SetTimeBaseMasterClock(TimeBaseObject *_self, PyObj
     SetTimeBaseMasterClock(_self->ob_itself,
                            clockMeister,
                            &slaveZero);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1696,8 +1696,8 @@ static PyObject *TimeBaseObj_SetTimeBaseZero(TimeBaseObject *_self, PyObject *_a
         return NULL;
     SetTimeBaseZero(_self->ob_itself,
                     &zero);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1858,7 +1858,7 @@ PyObject *UserDataObj_New(UserData itself)
 
 int UserDataObj_Convert(PyObject *v, UserData *p_itself)
 {
-    if (v == Py_None)
+    if (v == Py_Nil)
     {
         *p_itself = NULL;
         return 1;
@@ -1898,8 +1898,8 @@ static PyObject *UserDataObj_GetUserData(UserDataObject *_self, PyObject *_args)
                        udType,
                        index);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1920,8 +1920,8 @@ static PyObject *UserDataObj_AddUserData(UserDataObject *_self, PyObject *_args)
                        data,
                        udType);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1942,8 +1942,8 @@ static PyObject *UserDataObj_RemoveUserData(UserDataObject *_self, PyObject *_ar
                           udType,
                           index);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2006,8 +2006,8 @@ static PyObject *UserDataObj_AddUserDataText(UserDataObject *_self, PyObject *_a
                            index,
                            itlRegionTag);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2034,8 +2034,8 @@ static PyObject *UserDataObj_GetUserDataText(UserDataObject *_self, PyObject *_a
                            index,
                            itlRegionTag);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2059,8 +2059,8 @@ static PyObject *UserDataObj_RemoveUserDataText(UserDataObject *_self, PyObject 
                               index,
                               itlRegionTag);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2078,8 +2078,8 @@ static PyObject *UserDataObj_PutUserDataIntoHandle(UserDataObject *_self, PyObje
     _err = PutUserDataIntoHandle(_self->ob_itself,
                                  h);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2100,8 +2100,8 @@ static PyObject *UserDataObj_CopyUserData(UserDataObject *_self, PyObject *_args
                         dstUserData,
                         copyRule);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2229,7 +2229,7 @@ PyObject *MediaObj_New(Media itself)
 
 int MediaObj_Convert(PyObject *v, Media *p_itself)
 {
-    if (v == Py_None)
+    if (v == Py_Nil)
     {
         *p_itself = NULL;
         return 1;
@@ -2269,8 +2269,8 @@ static PyObject *MediaObj_LoadMediaIntoRam(MediaObject *_self, PyObject *_args)
                             duration,
                             flags);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2346,8 +2346,8 @@ static PyObject *MediaObj_SetMediaTimeScale(MediaObject *_self, PyObject *_args)
         return NULL;
     SetMediaTimeScale(_self->ob_itself,
                       timeScale);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2393,8 +2393,8 @@ static PyObject *MediaObj_SetMediaLanguage(MediaObject *_self, PyObject *_args)
         return NULL;
     SetMediaLanguage(_self->ob_itself,
                      language);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2425,8 +2425,8 @@ static PyObject *MediaObj_SetMediaQuality(MediaObject *_self, PyObject *_args)
         return NULL;
     SetMediaQuality(_self->ob_itself,
                     quality);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2496,8 +2496,8 @@ static PyObject *MediaObj_SetMediaHandler(MediaObject *_self, PyObject *_args)
     _err = SetMediaHandler(_self->ob_itself,
                            mH);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2512,8 +2512,8 @@ static PyObject *MediaObj_BeginMediaEdits(MediaObject *_self, PyObject *_args)
         return NULL;
     _err = BeginMediaEdits(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2528,8 +2528,8 @@ static PyObject *MediaObj_EndMediaEdits(MediaObject *_self, PyObject *_args)
         return NULL;
     _err = EndMediaEdits(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2547,8 +2547,8 @@ static PyObject *MediaObj_SetMediaDefaultDataRefIndex(MediaObject *_self, PyObje
     _err = SetMediaDefaultDataRefIndex(_self->ob_itself,
                                        index);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2612,8 +2612,8 @@ static PyObject *MediaObj_SetMediaDataHandler(MediaObject *_self, PyObject *_arg
                                index,
                                dataHandler);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2647,8 +2647,8 @@ static PyObject *MediaObj_GetMediaSampleDescription(MediaObject *_self, PyObject
     GetMediaSampleDescription(_self->ob_itself,
                               index,
                               descH);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2669,8 +2669,8 @@ static PyObject *MediaObj_SetMediaSampleDescription(MediaObject *_self, PyObject
                                      index,
                                      descH);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2933,8 +2933,8 @@ static PyObject *MediaObj_SetMediaPreferredChunkSize(MediaObject *_self, PyObjec
     _err = SetMediaPreferredChunkSize(_self->ob_itself,
                                       maxChunkSize);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2973,8 +2973,8 @@ static PyObject *MediaObj_SetMediaShadowSync(MediaObject *_self, PyObject *_args
                               frameDiffSampleNum,
                               syncSampleNum);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3061,8 +3061,8 @@ static PyObject *MediaObj_CopyMediaUserData(MediaObject *_self, PyObject *_args)
                              dstMedia,
                              copyRule);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3141,8 +3141,8 @@ static PyObject *MediaObj_SetMediaDataRef(MediaObject *_self, PyObject *_args)
                            dataRef,
                            dataRefType);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3163,8 +3163,8 @@ static PyObject *MediaObj_SetMediaDataRefAttributes(MediaObject *_self, PyObject
                                      index,
                                      dataRefAttributes);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3225,8 +3225,8 @@ static PyObject *MediaObj_SetMediaPlayHints(MediaObject *_self, PyObject *_args)
     SetMediaPlayHints(_self->ob_itself,
                       flags,
                       flagsMask);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3471,7 +3471,7 @@ PyObject *TrackObj_New(Track itself)
 
 int TrackObj_Convert(PyObject *v, Track *p_itself)
 {
-    if (v == Py_None)
+    if (v == Py_Nil)
     {
         *p_itself = NULL;
         return 1;
@@ -3511,8 +3511,8 @@ static PyObject *TrackObj_LoadTrackIntoRam(TrackObject *_self, PyObject *_args)
                             duration,
                             flags);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3561,8 +3561,8 @@ static PyObject *TrackObj_SetTrackClipRgn(TrackObject *_self, PyObject *_args)
         return NULL;
     SetTrackClipRgn(_self->ob_itself,
                     theClip);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3638,8 +3638,8 @@ static PyObject *TrackObj_SetTrackMatte(TrackObject *_self, PyObject *_args)
         return NULL;
     SetTrackMatte(_self->ob_itself,
                   theMatte);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3730,8 +3730,8 @@ static PyObject *TrackObj_SetTrackEnabled(TrackObject *_self, PyObject *_args)
         return NULL;
     SetTrackEnabled(_self->ob_itself,
                     isEnabled);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3762,8 +3762,8 @@ static PyObject *TrackObj_SetTrackUsage(TrackObject *_self, PyObject *_args)
         return NULL;
     SetTrackUsage(_self->ob_itself,
                   usage);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3809,8 +3809,8 @@ static PyObject *TrackObj_SetTrackOffset(TrackObject *_self, PyObject *_args)
         return NULL;
     SetTrackOffset(_self->ob_itself,
                    movieOffsetTime);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3841,8 +3841,8 @@ static PyObject *TrackObj_SetTrackLayer(TrackObject *_self, PyObject *_args)
         return NULL;
     SetTrackLayer(_self->ob_itself,
                   layer);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3873,8 +3873,8 @@ static PyObject *TrackObj_SetTrackAlternate(TrackObject *_self, PyObject *_args)
         return NULL;
     SetTrackAlternate(_self->ob_itself,
                       alternateT);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3905,8 +3905,8 @@ static PyObject *TrackObj_SetTrackVolume(TrackObject *_self, PyObject *_args)
         return NULL;
     SetTrackVolume(_self->ob_itself,
                    volume);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3944,8 +3944,8 @@ static PyObject *TrackObj_SetTrackDimensions(TrackObject *_self, PyObject *_args
     SetTrackDimensions(_self->ob_itself,
                        width,
                        height);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3996,8 +3996,8 @@ static PyObject *TrackObj_SetTrackSoundLocalizationSettings(TrackObject *_self, 
     _err = SetTrackSoundLocalizationSettings(_self->ob_itself,
                                              settings);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4066,8 +4066,8 @@ static PyObject *TrackObj_InsertMediaIntoTrack(TrackObject *_self, PyObject *_ar
                                 mediaDuration,
                                 mediaRate);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4094,8 +4094,8 @@ static PyObject *TrackObj_InsertTrackSegment(TrackObject *_self, PyObject *_args
                               srcDuration,
                               dstIn);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4116,8 +4116,8 @@ static PyObject *TrackObj_InsertEmptyTrackSegment(TrackObject *_self, PyObject *
                                    dstIn,
                                    dstDuration);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4138,8 +4138,8 @@ static PyObject *TrackObj_DeleteTrackSegment(TrackObject *_self, PyObject *_args
                               startTime,
                               duration);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4163,8 +4163,8 @@ static PyObject *TrackObj_ScaleTrackSegment(TrackObject *_self, PyObject *_args)
                              oldDuration,
                              newDuration);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4197,8 +4197,8 @@ static PyObject *TrackObj_CopyTrackSettings(TrackObject *_self, PyObject *_args)
     _err = CopyTrackSettings(_self->ob_itself,
                              dstTrack);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4294,8 +4294,8 @@ static PyObject *TrackObj_DeleteTrackReference(TrackObject *_self, PyObject *_ar
                                 refType,
                                 index);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4319,8 +4319,8 @@ static PyObject *TrackObj_SetTrackReference(TrackObject *_self, PyObject *_args)
                              refType,
                              index);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4479,8 +4479,8 @@ static PyObject *TrackObj_CopyTrackUserData(TrackObject *_self, PyObject *_args)
                              dstTrack,
                              copyRule);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4569,8 +4569,8 @@ static PyObject *TrackObj_SetTrackLoadSettings(TrackObject *_self, PyObject *_ar
                          preloadDuration,
                          preloadFlags,
                          defaultHints);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4819,7 +4819,7 @@ PyObject *MovieObj_New(Movie itself)
 
 int MovieObj_Convert(PyObject *v, Movie *p_itself)
 {
-    if (v == Py_None)
+    if (v == Py_Nil)
     {
         *p_itself = NULL;
         return 1;
@@ -4851,8 +4851,8 @@ static PyObject *MovieObj_MoviesTask(MovieObject *_self, PyObject *_args)
         return NULL;
     MoviesTask(_self->ob_itself,
                maxMilliSecToUse);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4873,8 +4873,8 @@ static PyObject *MovieObj_PrerollMovie(MovieObject *_self, PyObject *_args)
                         time,
                         Rate);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4890,8 +4890,8 @@ static PyObject *MovieObj_AbortPrePrerollMovie(MovieObject *_self, PyObject *_ar
         return NULL;
     AbortPrePrerollMovie(_self->ob_itself,
                          err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4915,8 +4915,8 @@ static PyObject *MovieObj_LoadMovieIntoRam(MovieObject *_self, PyObject *_args)
                             duration,
                             flags);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4932,8 +4932,8 @@ static PyObject *MovieObj_SetMovieActive(MovieObject *_self, PyObject *_args)
         return NULL;
     SetMovieActive(_self->ob_itself,
                    active);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4961,8 +4961,8 @@ static PyObject *MovieObj_StartMovie(MovieObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     StartMovie(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4975,8 +4975,8 @@ static PyObject *MovieObj_StopMovie(MovieObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     StopMovie(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -4989,8 +4989,8 @@ static PyObject *MovieObj_GoToBeginningOfMovie(MovieObject *_self, PyObject *_ar
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     GoToBeginningOfMovie(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5003,8 +5003,8 @@ static PyObject *MovieObj_GoToEndOfMovie(MovieObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     GoToEndOfMovie(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5050,8 +5050,8 @@ static PyObject *MovieObj_SetMoviePreviewMode(MovieObject *_self, PyObject *_arg
         return NULL;
     SetMoviePreviewMode(_self->ob_itself,
                         usePreview);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5064,8 +5064,8 @@ static PyObject *MovieObj_ShowMoviePoster(MovieObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     ShowMoviePoster(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5099,8 +5099,8 @@ static PyObject *MovieObj_SetMovieMasterTimeBase(MovieObject *_self, PyObject *_
     SetMovieMasterTimeBase(_self->ob_itself,
                            tb,
                            &slaveZero);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5119,8 +5119,8 @@ static PyObject *MovieObj_SetMovieMasterClock(MovieObject *_self, PyObject *_arg
     SetMovieMasterClock(_self->ob_itself,
                         clockMeister,
                         &slaveZero);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5136,8 +5136,8 @@ static PyObject *MovieObj_ChooseMovieClock(MovieObject *_self, PyObject *_args)
         return NULL;
     ChooseMovieClock(_self->ob_itself,
                      flags);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5175,8 +5175,8 @@ static PyObject *MovieObj_SetMovieGWorld(MovieObject *_self, PyObject *_args)
     SetMovieGWorld(_self->ob_itself,
                    port,
                    gdh);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5276,8 +5276,8 @@ static PyObject *MovieObj_UpdateMovie(MovieObject *_self, PyObject *_args)
         return NULL;
     _err = UpdateMovie(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5295,8 +5295,8 @@ static PyObject *MovieObj_InvalidateMovieRegion(MovieObject *_self, PyObject *_a
     _err = InvalidateMovieRegion(_self->ob_itself,
                                  invalidRgn);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5328,8 +5328,8 @@ static PyObject *MovieObj_SetMovieBox(MovieObject *_self, PyObject *_args)
         return NULL;
     SetMovieBox(_self->ob_itself,
                 &boxRect);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5360,8 +5360,8 @@ static PyObject *MovieObj_SetMovieDisplayClipRgn(MovieObject *_self, PyObject *_
         return NULL;
     SetMovieDisplayClipRgn(_self->ob_itself,
                            theClip);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5392,8 +5392,8 @@ static PyObject *MovieObj_SetMovieClipRgn(MovieObject *_self, PyObject *_args)
         return NULL;
     SetMovieClipRgn(_self->ob_itself,
                     theClip);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5439,8 +5439,8 @@ static PyObject *MovieObj_SetMovieVideoOutput(MovieObject *_self, PyObject *_arg
         return NULL;
     SetMovieVideoOutput(_self->ob_itself,
                         vout);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5458,8 +5458,8 @@ static PyObject *MovieObj_PutMovieIntoHandle(MovieObject *_self, PyObject *_args
     _err = PutMovieIntoHandle(_self->ob_itself,
                               publicMovie);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5483,8 +5483,8 @@ static PyObject *MovieObj_PutMovieIntoDataFork(MovieObject *_self, PyObject *_ar
                                 offset,
                                 maxSize);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5508,8 +5508,8 @@ static PyObject *MovieObj_PutMovieIntoDataFork64(MovieObject *_self, PyObject *_
                                   &offset,
                                   maxSize);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5533,8 +5533,8 @@ static PyObject *MovieObj_PutMovieIntoStorage(MovieObject *_self, PyObject *_arg
                                &offset,
                                maxSize);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5558,8 +5558,8 @@ static PyObject *MovieObj_PutMovieForDataRefIntoHandle(MovieObject *_self, PyObj
                                         dataRefType,
                                         publicMovie);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5620,8 +5620,8 @@ static PyObject *MovieObj_SetMovieTimeScale(MovieObject *_self, PyObject *_args)
         return NULL;
     SetMovieTimeScale(_self->ob_itself,
                       timeScale);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5667,8 +5667,8 @@ static PyObject *MovieObj_SetMovieRate(MovieObject *_self, PyObject *_args)
         return NULL;
     SetMovieRate(_self->ob_itself,
                  rate);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5699,8 +5699,8 @@ static PyObject *MovieObj_SetMoviePreferredRate(MovieObject *_self, PyObject *_a
         return NULL;
     SetMoviePreferredRate(_self->ob_itself,
                           rate);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5731,8 +5731,8 @@ static PyObject *MovieObj_SetMoviePreferredVolume(MovieObject *_self, PyObject *
         return NULL;
     SetMoviePreferredVolume(_self->ob_itself,
                             volume);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5763,8 +5763,8 @@ static PyObject *MovieObj_SetMovieVolume(MovieObject *_self, PyObject *_args)
         return NULL;
     SetMovieVolume(_self->ob_itself,
                    volume);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5802,8 +5802,8 @@ static PyObject *MovieObj_SetMoviePreviewTime(MovieObject *_self, PyObject *_arg
     SetMoviePreviewTime(_self->ob_itself,
                         previewTime,
                         previewDuration);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5834,8 +5834,8 @@ static PyObject *MovieObj_SetMoviePosterTime(MovieObject *_self, PyObject *_args
         return NULL;
     SetMoviePosterTime(_self->ob_itself,
                        posterTime);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5873,8 +5873,8 @@ static PyObject *MovieObj_SetMovieSelection(MovieObject *_self, PyObject *_args)
     SetMovieSelection(_self->ob_itself,
                       selectionTime,
                       selectionDuration);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5893,8 +5893,8 @@ static PyObject *MovieObj_SetMovieActiveSegment(MovieObject *_self, PyObject *_a
     SetMovieActiveSegment(_self->ob_itself,
                           startTime,
                           duration);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5947,8 +5947,8 @@ static PyObject *MovieObj_SetMovieTime(MovieObject *_self, PyObject *_args)
         return NULL;
     SetMovieTime(_self->ob_itself,
                  &newtime);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -5964,8 +5964,8 @@ static PyObject *MovieObj_SetMovieTimeValue(MovieObject *_self, PyObject *_args)
         return NULL;
     SetMovieTimeValue(_self->ob_itself,
                       newtime);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6095,8 +6095,8 @@ static PyObject *MovieObj_SetAutoTrackAlternatesEnabled(MovieObject *_self, PyOb
         return NULL;
     SetAutoTrackAlternatesEnabled(_self->ob_itself,
                                   enable);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6109,8 +6109,8 @@ static PyObject *MovieObj_SelectMovieAlternates(MovieObject *_self, PyObject *_a
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     SelectMovieAlternates(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6137,8 +6137,8 @@ static PyObject *MovieObj_InsertMovieSegment(MovieObject *_self, PyObject *_args
                               srcDuration,
                               dstIn);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6159,8 +6159,8 @@ static PyObject *MovieObj_InsertEmptyMovieSegment(MovieObject *_self, PyObject *
                                    dstIn,
                                    dstDuration);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6181,8 +6181,8 @@ static PyObject *MovieObj_DeleteMovieSegment(MovieObject *_self, PyObject *_args
                               startTime,
                               duration);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6206,8 +6206,8 @@ static PyObject *MovieObj_ScaleMovieSegment(MovieObject *_self, PyObject *_args)
                              oldDuration,
                              newDuration);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6253,8 +6253,8 @@ static PyObject *MovieObj_PasteMovieSelection(MovieObject *_self, PyObject *_arg
         return NULL;
     PasteMovieSelection(_self->ob_itself,
                         src);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6270,8 +6270,8 @@ static PyObject *MovieObj_AddMovieSelection(MovieObject *_self, PyObject *_args)
         return NULL;
     AddMovieSelection(_self->ob_itself,
                       src);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6284,8 +6284,8 @@ static PyObject *MovieObj_ClearMovieSelection(MovieObject *_self, PyObject *_arg
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     ClearMovieSelection(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6321,8 +6321,8 @@ static PyObject *MovieObj_PutMovieIntoTypedHandle(MovieObject *_self, PyObject *
                                    flags,
                                    userComp);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6340,8 +6340,8 @@ static PyObject *MovieObj_CopyMovieSettings(MovieObject *_self, PyObject *_args)
     _err = CopyMovieSettings(_self->ob_itself,
                              dstMovie);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6459,8 +6459,8 @@ static PyObject *MovieObj_SetMovieLanguage(MovieObject *_self, PyObject *_args)
         return NULL;
     SetMovieLanguage(_self->ob_itself,
                      language);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6481,8 +6481,8 @@ static PyObject *MovieObj_CopyMovieUserData(MovieObject *_self, PyObject *_args)
                              dstMovie,
                              copyRule);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6564,8 +6564,8 @@ static PyObject *MovieObj_UpdateMovieResource(MovieObject *_self, PyObject *_arg
                                resId,
                                resName);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6583,8 +6583,8 @@ static PyObject *MovieObj_AddMovieToStorage(MovieObject *_self, PyObject *_args)
     _err = AddMovieToStorage(_self->ob_itself,
                              dh);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6602,8 +6602,8 @@ static PyObject *MovieObj_UpdateMovieInStorage(MovieObject *_self, PyObject *_ar
     _err = UpdateMovieInStorage(_self->ob_itself,
                                 dh);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6631,8 +6631,8 @@ static PyObject *MovieObj_ClearMovieChanged(MovieObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     ClearMovieChanged(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6653,8 +6653,8 @@ static PyObject *MovieObj_SetMovieDefaultDataRef(MovieObject *_self, PyObject *_
                                   dataRef,
                                   dataRefType);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6693,8 +6693,8 @@ static PyObject *MovieObj_SetMovieColorTable(MovieObject *_self, PyObject *_args
     _err = SetMovieColorTable(_self->ob_itself,
                               ctab);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6874,8 +6874,8 @@ static PyObject *MovieObj_SetPosterBox(MovieObject *_self, PyObject *_args)
         return NULL;
     SetPosterBox(_self->ob_itself,
                  &boxRect);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6953,8 +6953,8 @@ static PyObject *MovieObj_PutMovieOnScrap(MovieObject *_self, PyObject *_args)
     _err = PutMovieOnScrap(_self->ob_itself,
                            movieScrapFlags);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -6973,8 +6973,8 @@ static PyObject *MovieObj_SetMoviePlayHints(MovieObject *_self, PyObject *_args)
     SetMoviePlayHints(_self->ob_itself,
                       flags,
                       flagsMask);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -7372,7 +7372,7 @@ PyObject *SGOutputObj_New(SGOutput itself)
 
 int SGOutputObj_Convert(PyObject *v, SGOutput *p_itself)
 {
-    if (v == Py_None)
+    if (v == Py_Nil)
     {
         *p_itself = NULL;
         return 1;
@@ -7481,8 +7481,8 @@ static PyObject *Qt_EnterMovies(PyObject *_self, PyObject *_args)
         return NULL;
     _err = EnterMovies();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -7495,8 +7495,8 @@ static PyObject *Qt_ExitMovies(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     ExitMovies();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -7511,8 +7511,8 @@ static PyObject *Qt_GetMoviesError(PyObject *_self, PyObject *_args)
         return NULL;
     _err = GetMoviesError();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -7525,8 +7525,8 @@ static PyObject *Qt_ClearMoviesStickyError(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     ClearMoviesStickyError();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -7541,8 +7541,8 @@ static PyObject *Qt_GetMoviesStickyError(PyObject *_self, PyObject *_args)
         return NULL;
     _err = GetMoviesStickyError();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -7618,8 +7618,8 @@ static PyObject *Qt_DisposeMatte(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &theMatte))
         return NULL;
     DisposeMatte(theMatte);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -7708,8 +7708,8 @@ static PyObject *Qt_PasteHandleIntoMovie(PyObject *_self, PyObject *_args)
                                 flags,
                                 userComp);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -7893,8 +7893,8 @@ static PyObject *Qt_CloseMovieFile(PyObject *_self, PyObject *_args)
         return NULL;
     _err = CloseMovieFile(resRefNum);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -7911,8 +7911,8 @@ static PyObject *Qt_DeleteMovieFile(PyObject *_self, PyObject *_args)
         return NULL;
     _err = DeleteMovieFile(&fileSpec);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -8137,8 +8137,8 @@ static PyObject *Qt_RemoveMovieResource(PyObject *_self, PyObject *_args)
     _err = RemoveMovieResource(resRefNum,
                                resId);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -8216,8 +8216,8 @@ static PyObject *Qt_CloseMovieStorage(PyObject *_self, PyObject *_args)
         return NULL;
     _err = CloseMovieStorage(dh);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -8237,8 +8237,8 @@ static PyObject *Qt_DeleteMovieStorage(PyObject *_self, PyObject *_args)
     _err = DeleteMovieStorage(dataRef,
                               dataRefType);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -8270,8 +8270,8 @@ static PyObject *Qt_CreateShortcutMovieFile(PyObject *_self, PyObject *_args)
                                    targetDataRef,
                                    targetDataRefType);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -8398,8 +8398,8 @@ static PyObject *Qt_EndFullScreen(PyObject *_self, PyObject *_args)
     _err = EndFullScreen(fullState,
                          flags);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -8422,8 +8422,8 @@ static PyObject *Qt_AddSoundDescriptionExtension(PyObject *_self, PyObject *_arg
                                         extension,
                                         idType);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -8466,8 +8466,8 @@ static PyObject *Qt_RemoveSoundDescriptionExtension(PyObject *_self, PyObject *_
     _err = RemoveSoundDescriptionExtension(desc,
                                            idType);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -8504,8 +8504,8 @@ static PyObject *Qt_QTDismissStandardParameterDialog(PyObject *_self, PyObject *
         return NULL;
     _err = QTDismissStandardParameterDialog(createdDialog);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -8528,8 +8528,8 @@ static PyObject *Qt_QTStandardParameterDialogDoAction(PyObject *_self, PyObject 
                                              action,
                                              params);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -8552,8 +8552,8 @@ static PyObject *Qt_QTRegisterAccessKey(PyObject *_self, PyObject *_args)
                                flags,
                                accessKey);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -8576,8 +8576,8 @@ static PyObject *Qt_QTUnregisterAccessKey(PyObject *_self, PyObject *_args)
                                  flags,
                                  accessKey);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -8620,8 +8620,8 @@ static PyObject *Qt_QTTextToNativeText(PyObject *_self, PyObject *_args)
                               encoding,
                               flags);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -10477,8 +10477,8 @@ static PyObject *Qt_CompressImage(PyObject *_self, PyObject *_args)
                          desc,
                          data);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -10513,8 +10513,8 @@ static PyObject *Qt_DecompressImage(PyObject *_self, PyObject *_args)
                            mode,
                            mask);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -10583,8 +10583,8 @@ static PyObject *Qt_SetImageDescriptionCTable(PyObject *_self, PyObject *_args)
     _err = SetImageDescriptionCTable(desc,
                                      ctable);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -10633,8 +10633,8 @@ static PyObject *Qt_AddImageDescriptionExtension(PyObject *_self, PyObject *_arg
                                         extension,
                                         idType);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -10657,8 +10657,8 @@ static PyObject *Qt_RemoveImageDescriptionExtension(PyObject *_self, PyObject *_
                                            idType,
                                            index);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -10753,8 +10753,8 @@ static PyObject *Qt_CompressPicture(PyObject *_self, PyObject *_args)
                            quality,
                            cType);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -10780,8 +10780,8 @@ static PyObject *Qt_CompressPictureFile(PyObject *_self, PyObject *_args)
                                quality,
                                cType);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -10825,8 +10825,8 @@ static PyObject *Qt_ConvertImage(PyObject *_self, PyObject *_args)
                         dstDD,
                         dstData);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -10849,8 +10849,8 @@ static PyObject *Qt_AddFilePreview(PyObject *_self, PyObject *_args)
                           previewType,
                           previewData);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -10939,8 +10939,8 @@ static PyObject *Qt_GDSetScale(PyObject *_self, PyObject *_args)
                       scale,
                       flags);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -11143,8 +11143,8 @@ static PyObject *Qt_QTSetPixMapHandleRowBytes(PyObject *_self, PyObject *_args)
     _err = QTSetPixMapHandleRowBytes(pm,
                                      rowBytes);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -11181,8 +11181,8 @@ static PyObject *Qt_QTSetPixMapHandleGammaLevel(PyObject *_self, PyObject *_args
     _err = QTSetPixMapHandleGammaLevel(pm,
                                        gammaLevel);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -11219,8 +11219,8 @@ static PyObject *Qt_QTSetPixMapHandleRequestedGammaLevel(PyObject *_self, PyObje
     _err = QTSetPixMapHandleRequestedGammaLevel(pm,
                                                 requestedGammaLevel);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -26250,8 +26250,8 @@ static PyObject *Qt_AlignWindow(PyObject *_self, PyObject *_args)
                 front,
                 (Rect *)0,
                 (ICMAlignmentProcRecordPtr)0);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -26274,8 +26274,8 @@ static PyObject *Qt_DragAlignedWindow(PyObject *_self, PyObject *_args)
                       &boundsRect,
                       (Rect *)0,
                       (ICMAlignmentProcRecordPtr)0);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -26291,8 +26291,8 @@ static PyObject *Qt_MoviesTask(PyObject *_self, PyObject *_args)
         return NULL;
     MoviesTask((Movie)0,
                maxMilliSecToUse);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 #endif /* APPLE_SUPPORTS_QUICKTIME */

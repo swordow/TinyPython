@@ -8,14 +8,14 @@ from idlelib.AutoExpand import AutoExpand;
 
 class Dummy_Editwin{
     # AutoExpand.__init__ only needs .text
-    def __init__(self, text){
-        self.text = text;
+    function __init__( text){
+        this.text = text;
 
 }
 } class AutoExpandTest(unittest.TestCase){
 
     @classmethod;
-    def setUpClass(cls){
+    function setUpClass(cls){
         if 'Tkinter' in str(Text){
             requires('gui');
             cls.tk = Tk();
@@ -26,21 +26,21 @@ class Dummy_Editwin{
 
     }
     @classmethod;
-    def tearDownClass(cls){
+    function tearDownClass(cls){
         del cls.text, cls.auto_expand;
         if hasattr(cls, 'tk'){
             cls.tk.destroy();
             del cls.tk;
 
     }
-    } def tearDown(self){
-        self.text.delete('1.0', 'end');
+    } function tearDown(){
+        this.text.delete('1.0', 'end');
 
     }
-    def test_get_prevword(self){
-        text = self.text;
-        previous = self.auto_expand.getprevword;
-        equal = self.assertEqual;
+    function test_get_prevword(){
+        text = this.text;
+        previous = this.auto_expand.getprevword;
+        equal = this.assertEqual;
 
         equal(previous(), '');
 
@@ -66,13 +66,13 @@ class Dummy_Editwin{
         equal(previous(), '');
 
     }
-    def test_before_only(self){
-        previous = self.auto_expand.getprevword;
-        expand = self.auto_expand.expand_word_event;
-        equal = self.assertEqual;
+    function test_before_only(){
+        previous = this.auto_expand.getprevword;
+        expand = this.auto_expand.expand_word_event;
+        equal = this.assertEqual;
 
-        self.text.insert('insert', 'ab ac bx ad ab a');
-        equal(self.auto_expand.getwords(), ['ab', 'ad', 'ac', 'a']);
+        this.text.insert('insert', 'ab ac bx ad ab a');
+        equal(this.auto_expand.getwords(), ['ab', 'ad', 'ac', 'a']);
         expand('event');
         equal(previous(), 'ab');
         expand('event');
@@ -83,16 +83,16 @@ class Dummy_Editwin{
         equal(previous(), 'a');
 
     }
-    def test_after_only(self){
+    function test_after_only(){
         # Also add punctuation 'noise' that shoud be ignored.
-        text = self.text;
-        previous = self.auto_expand.getprevword;
-        expand = self.auto_expand.expand_word_event;
-        equal = self.assertEqual;
+        text = this.text;
+        previous = this.auto_expand.getprevword;
+        expand = this.auto_expand.expand_word_event;
+        equal = this.assertEqual;
 
         text.insert('insert', 'a, [ab] ac: () bx"" cd ac= ad ya');
         text.mark_set('insert', '1.1');
-        equal(self.auto_expand.getwords(), ['ab', 'ac', 'ad', 'a']);
+        equal(this.auto_expand.getwords(), ['ab', 'ac', 'ad', 'a']);
         expand('event');
         equal(previous(), 'ab');
         expand('event');
@@ -103,17 +103,17 @@ class Dummy_Editwin{
         equal(previous(), 'a');
 
     }
-    def test_both_before_after(self){
-        text = self.text;
-        previous = self.auto_expand.getprevword;
-        expand = self.auto_expand.expand_word_event;
-        equal = self.assertEqual;
+    function test_both_before_after(){
+        text = this.text;
+        previous = this.auto_expand.getprevword;
+        expand = this.auto_expand.expand_word_event;
+        equal = this.assertEqual;
 
         text.insert('insert', 'ab xy yz\n');
         text.insert('insert', 'a ac by ac');
 
         text.mark_set('insert', '2.1');
-        equal(self.auto_expand.getwords(), ['ab', 'ac', 'a']);
+        equal(this.auto_expand.getwords(), ['ab', 'ac', 'a']);
         expand('event');
         equal(previous(), 'ab');
         expand('event');
@@ -122,28 +122,28 @@ class Dummy_Editwin{
         equal(previous(), 'a');
 
     }
-    def test_other_expand_cases(self){
-        text = self.text;
-        expand = self.auto_expand.expand_word_event;
-        equal = self.assertEqual;
+    function test_other_expand_cases(){
+        text = this.text;
+        expand = this.auto_expand.expand_word_event;
+        equal = this.assertEqual;
 
         # no expansion candidate found
-        equal(self.auto_expand.getwords(), []);
+        equal(this.auto_expand.getwords(), []);
         equal(expand('event'), 'break');
 
         text.insert('insert', 'bx cy dz a');
-        equal(self.auto_expand.getwords(), []);
+        equal(this.auto_expand.getwords(), []);
 
         # reset state by successfully expanding once
         # move cursor to another position and expand again
         text.insert('insert', 'ac xy a ac ad a');
         text.mark_set('insert', '1.7');
         expand('event');
-        initial_state = self.auto_expand.state;
+        initial_state = this.auto_expand.state;
         text.mark_set('insert', '1.end');
         expand('event');
-        new_state = self.auto_expand.state;
-        self.assertNotEqual(initial_state, new_state);
+        new_state = this.auto_expand.state;
+        this.assertNotEqual(initial_state, new_state);
 
 }
 } if __name__ == '__main__'{

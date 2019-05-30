@@ -112,36 +112,36 @@ IPPORT_USERRESERVED = 5000;
 IPPORT_HIFIRSTAUTO = 49152;
 IPPORT_HILASTAUTO = 65535;
 IPPORT_RESERVEDSTART = 600;
-def IN_CLASSA(i){ return (((u_int32_t)(i) & 0x80000000) == 0);
+function IN_CLASSA(i){ return (((u_int32_t)(i) & 0x80000000) == 0);}
 
 IN_CLASSA_NET = 0xff000000;
 IN_CLASSA_NSHIFT = 24;
 IN_CLASSA_HOST = 0x00ffffff;
 IN_CLASSA_MAX = 128;
-def IN_CLASSB(i){ return (((u_int32_t)(i) & 0xc0000000) == 0x80000000);
+function IN_CLASSB(i){ return (((u_int32_t)(i) & 0xc0000000) == 0x80000000);}
 
 IN_CLASSB_NET = 0xffff0000;
 IN_CLASSB_NSHIFT = 16;
 IN_CLASSB_HOST = 0x0000ffff;
 IN_CLASSB_MAX = 65536;
-def IN_CLASSC(i){ return (((u_int32_t)(i) & 0xe0000000) == 0xc0000000);
+function IN_CLASSC(i){ return (((u_int32_t)(i) & 0xe0000000) == 0xc0000000);}
 
 IN_CLASSC_NET = 0xffffff00;
 IN_CLASSC_NSHIFT = 8;
 IN_CLASSC_HOST = 0x000000ff;
-def IN_CLASSD(i){ return (((u_int32_t)(i) & 0xf0000000) == 0xe0000000);
+function IN_CLASSD(i){ return (((u_int32_t)(i) & 0xf0000000) == 0xe0000000);}
 
 IN_CLASSD_NET = 0xf0000000;
 IN_CLASSD_NSHIFT = 28;
 IN_CLASSD_HOST = 0x0fffffff;
-def IN_MULTICAST(i){ return IN_CLASSD(i);
+function IN_MULTICAST(i){ return IN_CLASSD(i);}
 
-def IN_EXPERIMENTAL(i){ return (((u_int32_t)(i) & 0xf0000000) == 0xf0000000);
+function IN_EXPERIMENTAL(i){ return (((u_int32_t)(i) & 0xf0000000) == 0xf0000000);}
 
-def IN_BADCLASS(i){ return (((u_int32_t)(i) & 0xf0000000) == 0xf0000000);
+function IN_BADCLASS(i){ return (((u_int32_t)(i) & 0xf0000000) == 0xf0000000);}
 
 INADDR_NONE = 0xffffffff;
-def IN_LINKLOCAL(i){ return (((u_int32_t)(i) & IN_CLASSB_NET) == IN_LINKLOCALNETNUM);
+function IN_LINKLOCAL(i){ return (((u_int32_t)(i) & IN_CLASSB_NET) == IN_LINKLOCALNETNUM);}
 
 IN_LOOPBACKNET = 127;
 INET_ADDRSTRLEN = 16;
@@ -234,13 +234,13 @@ IPV6_ADDR_INT32_SMP = 0xffff0000;
 IPV6_ADDR_INT16_ULL = 0x80fe;
 IPV6_ADDR_INT16_USL = 0xc0fe;
 IPV6_ADDR_INT16_MLL = 0x02ff;
-def IN6_IS_ADDR_UNSPECIFIED(a){ return; \
+function IN6_IS_ADDR_UNSPECIFIED(a){ return;} \
 
-def IN6_IS_ADDR_LOOPBACK(a){ return; \
+function IN6_IS_ADDR_LOOPBACK(a){ return;} \
 
-def IN6_IS_ADDR_V4COMPAT(a){ return; \
+function IN6_IS_ADDR_V4COMPAT(a){ return;} \
 
-def IN6_IS_ADDR_V4MAPPED(a){ return; \
+function IN6_IS_ADDR_V4MAPPED(a){ return;} \
 
 IPV6_ADDR_SCOPE_NODELOCAL = 0x01;
 IPV6_ADDR_SCOPE_LINKLOCAL = 0x02;
@@ -252,35 +252,35 @@ __IPV6_ADDR_SCOPE_LINKLOCAL = 0x02;
 __IPV6_ADDR_SCOPE_SITELOCAL = 0x05;
 __IPV6_ADDR_SCOPE_ORGLOCAL = 0x08;
 __IPV6_ADDR_SCOPE_GLOBAL = 0x0e;
-def IN6_IS_ADDR_LINKLOCAL(a){ return; \
+function IN6_IS_ADDR_LINKLOCAL(a){ return;} \
 
-def IN6_IS_ADDR_SITELOCAL(a){ return; \
+function IN6_IS_ADDR_SITELOCAL(a){ return;} \
 
-def IN6_IS_ADDR_MC_NODELOCAL(a){ return; \
+function IN6_IS_ADDR_MC_NODELOCAL(a){ return;} \
 
-def IN6_IS_ADDR_MC_LINKLOCAL(a){ return; \
+function IN6_IS_ADDR_MC_LINKLOCAL(a){ return;} \
 
-def IN6_IS_ADDR_MC_SITELOCAL(a){ return; \
+function IN6_IS_ADDR_MC_SITELOCAL(a){ return;} \
 
-def IN6_IS_ADDR_MC_ORGLOCAL(a){ return; \
+function IN6_IS_ADDR_MC_ORGLOCAL(a){ return;} \
 
-def IN6_IS_ADDR_MC_GLOBAL(a){ return; \
+function IN6_IS_ADDR_MC_GLOBAL(a){ return;} \
 
-def IN6_IS_ADDR_MC_NODELOCAL(a){ return; \
+function IN6_IS_ADDR_MC_NODELOCAL(a){ return;} \
 
-def IN6_IS_ADDR_MC_LINKLOCAL(a){ return; \
+function IN6_IS_ADDR_MC_LINKLOCAL(a){ return;} \
 
-def IN6_IS_ADDR_MC_SITELOCAL(a){ return; \
+function IN6_IS_ADDR_MC_SITELOCAL(a){ return;} \
 
-def IN6_IS_ADDR_MC_ORGLOCAL(a){ return; \
+function IN6_IS_ADDR_MC_ORGLOCAL(a){ return;} \
 
-def IN6_IS_ADDR_MC_GLOBAL(a){ return; \
+function IN6_IS_ADDR_MC_GLOBAL(a){ return;} \
 
-def IN6_IS_SCOPE_LINKLOCAL(a){ return; \
+function IN6_IS_SCOPE_LINKLOCAL(a){ return;} \
 
-def IFA6_IS_DEPRECATED(a){ return; \
+function IFA6_IS_DEPRECATED(a){ return;} \
 
-def IFA6_IS_INVALID(a){ return; \
+function IFA6_IS_INVALID(a){ return;} \
 
 IPV6_OPTIONS = 1;
 IPV6_RECVOPTS = 5;

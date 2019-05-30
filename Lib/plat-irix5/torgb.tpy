@@ -57,9 +57,9 @@ class error(Exception){
     pass;
 
 }
-def torgb(filename){
+function torgb(filename){
     temps = [];
-    ret = None;
+    ret = nil;
     try{
         ret = _torgb(filename, temps);
     } finally{
@@ -73,7 +73,7 @@ def torgb(filename){
     } } } return ret;
 
 }
-def _torgb(filename, temps){
+function _torgb(filename, temps){
     if filename[-2:] == '.Z'{
         (fd, fname) = tempfile.mkstemp();
         os.close(fd);
@@ -94,7 +94,7 @@ def _torgb(filename, temps){
         } raise error, filename + ': ' + msg;
     } if ftype == 'rgb'{
         return fname;
-    } if ftype is None or not table.has_key(ftype){
+    } if ftype is nil or not table.has_key(ftype){
         raise error, '%s: unsupported image file type %r' % (filename, ftype);
     } (fd, temp) = tempfile.mkstemp();
     os.close(fd);

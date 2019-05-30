@@ -563,8 +563,8 @@ PyHKEY_CloseMethod(PyObject *self, PyObject *args)
         return NULL;
     if (!PyHKEY_Close(self))
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -591,7 +591,7 @@ PyHKEY_Exit(PyObject *self, PyObject *args)
 {
     if (!PyHKEY_Close(self))
         return NULL;
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 
@@ -628,7 +628,7 @@ PyHKEY_Close(PyObject *ob_handle)
 BOOL
 PyHKEY_AsHKEY(PyObject *ob, HKEY *pHANDLE, BOOL bNoneOK)
 {
-    if (ob == Py_None) {
+    if (ob == Py_Nil) {
         if (!bNoneOK) {
             PyErr_SetString(
                       PyExc_TypeError,
@@ -753,7 +753,7 @@ Py2Reg(PyObject *value, DWORD typ, BYTE **retDataBuf, DWORD *retDataSize)
     Py_ssize_t i,j;
     switch (typ) {
         case REG_DWORD:
-            if (value != Py_None && !_PyAnyInt_Check(value))
+            if (value != Py_Nil && !_PyAnyInt_Check(value))
                 return FALSE;
             *retDataBuf = (BYTE *)PyMem_NEW(DWORD, 1);
             if (*retDataBuf==NULL){
@@ -761,7 +761,7 @@ Py2Reg(PyObject *value, DWORD typ, BYTE **retDataBuf, DWORD *retDataSize)
                 return FALSE;
             }
             *retDataSize = sizeof(DWORD);
-            if (value == Py_None) {
+            if (value == Py_Nil) {
                 DWORD zero = 0;
                 memcpy(*retDataBuf, &zero, sizeof(DWORD));
             }
@@ -774,7 +774,7 @@ Py2Reg(PyObject *value, DWORD typ, BYTE **retDataBuf, DWORD *retDataSize)
         case REG_EXPAND_SZ:
             {
             int need_decref = 0;
-            if (value == Py_None)
+            if (value == Py_Nil)
                 *retDataSize = 1;
             else {
                 if (PyUnicode_Check(value)) {
@@ -797,7 +797,7 @@ Py2Reg(PyObject *value, DWORD typ, BYTE **retDataBuf, DWORD *retDataSize)
                 PyErr_NoMemory();
                 return FALSE;
             }
-            if (value == Py_None)
+            if (value == Py_Nil)
                 strcpy((char *)*retDataBuf, "");
             else
                 strcpy((char *)*retDataBuf,
@@ -813,7 +813,7 @@ Py2Reg(PyObject *value, DWORD typ, BYTE **retDataBuf, DWORD *retDataSize)
                 char *P;
                 PyObject **obs = NULL;
 
-                if (value == Py_None)
+                if (value == Py_Nil)
                     i = 0;
                 else {
                     if (!PyList_Check(value))
@@ -882,7 +882,7 @@ Py2Reg(PyObject *value, DWORD typ, BYTE **retDataBuf, DWORD *retDataSize)
         /* ALSO handle ALL unknown data types here.  Even if we can't
            support it natively, we should handle the bits. */
         default:
-            if (value == Py_None) {
+            if (value == Py_Nil) {
                 *retDataSize = 0;
                 *retDataBuf = NULL;
             }
@@ -982,8 +982,8 @@ Reg2Py(char *retDataBuf, DWORD retDataSize, DWORD typ)
            support it natively, we should handle the bits. */
         default:
             if (retDataSize == 0) {
-                Py_INCREF(Py_None);
-                obData = Py_None;
+                Py_INCREF(Py_Nil);
+                obData = Py_Nil;
             }
             else
                 obData = Py_BuildValue("s#",
@@ -1007,8 +1007,8 @@ PyCloseKey(PyObject *self, PyObject *args)
         return NULL;
     if (!PyHKEY_Close(obKey))
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -1087,8 +1087,8 @@ PyDeleteKey(PyObject *self, PyObject *args)
     rc = RegDeleteKey(hKey, subKey );
     if (rc != ERROR_SUCCESS)
         return PyErr_SetFromWindowsErrWithFunction(rc, "RegDeleteKey");
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -1127,8 +1127,8 @@ PyDeleteKeyEx(PyObject *self, PyObject *args)
 
     if (rc != ERROR_SUCCESS)
         return PyErr_SetFromWindowsErrWithFunction(rc, "RegDeleteKeyEx");
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -1148,8 +1148,8 @@ PyDeleteValue(PyObject *self, PyObject *args)
     if (rc !=ERROR_SUCCESS)
         return PyErr_SetFromWindowsErrWithFunction(rc,
                                                    "RegDeleteValue");
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -1318,8 +1318,8 @@ PyFlushKey(PyObject *self, PyObject *args)
     Py_END_ALLOW_THREADS
     if (rc != ERROR_SUCCESS)
         return PyErr_SetFromWindowsErrWithFunction(rc, "RegFlushKey");
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 static PyObject *
 PyLoadKey(PyObject *self, PyObject *args)
@@ -1339,8 +1339,8 @@ PyLoadKey(PyObject *self, PyObject *args)
     Py_END_ALLOW_THREADS
     if (rc != ERROR_SUCCESS)
         return PyErr_SetFromWindowsErrWithFunction(rc, "RegLoadKey");
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -1543,8 +1543,8 @@ PySaveKey(PyObject *self, PyObject *args)
     Py_END_ALLOW_THREADS
     if (rc != ERROR_SUCCESS)
         return PyErr_SetFromWindowsErrWithFunction(rc, "RegSaveKey");
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -1577,7 +1577,7 @@ PySetValue(PyObject *self, PyObject *args)
     if (str == NULL)
         return NULL;
     len = PyString_Size(obStrVal);
-    if (obSubKey == Py_None)
+    if (obSubKey == Py_Nil)
         subKey = NULL;
     else {
         subKey = PyString_AsString(obSubKey);
@@ -1589,8 +1589,8 @@ PySetValue(PyObject *self, PyObject *args)
     Py_END_ALLOW_THREADS
     if (rc != ERROR_SUCCESS)
         return PyErr_SetFromWindowsErrWithFunction(rc, "RegSetValue");
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -1630,8 +1630,8 @@ PySetValueEx(PyObject *self, PyObject *args)
     if (rc != ERROR_SUCCESS)
         return PyErr_SetFromWindowsErrWithFunction(rc,
                                                    "RegSetValueEx");
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -1666,8 +1666,8 @@ PyDisableReflectionKey(PyObject *self, PyObject *args)
     if (rc != ERROR_SUCCESS)
         return PyErr_SetFromWindowsErrWithFunction(rc,
                                                    "RegDisableReflectionKey");
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -1702,8 +1702,8 @@ PyEnableReflectionKey(PyObject *self, PyObject *args)
     if (rc != ERROR_SUCCESS)
         return PyErr_SetFromWindowsErrWithFunction(rc,
                                                    "RegEnableReflectionKey");
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *

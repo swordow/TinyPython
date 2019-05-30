@@ -972,7 +972,7 @@ _parse_object_str(PyScannerObject *s, PyObject *pystr, Py_ssize_t idx, Py_ssize_
     }
 
     /* if pairs_hook is not None: rval = object_pairs_hook(pairs) */
-    if (s->pairs_hook != Py_None) {
+    if (s->pairs_hook != Py_Nil) {
         val = PyObject_CallFunctionObjArgs(s->pairs_hook, pairs, NULL);
         if (val == NULL)
             goto bail;
@@ -988,7 +988,7 @@ _parse_object_str(PyScannerObject *s, PyObject *pystr, Py_ssize_t idx, Py_ssize_
     Py_CLEAR(pairs);
 
     /* if object_hook is not None: rval = object_hook(rval) */
-    if (s->object_hook != Py_None) {
+    if (s->object_hook != Py_Nil) {
         val = PyObject_CallFunctionObjArgs(s->object_hook, rval, NULL);
         if (val == NULL)
             goto bail;
@@ -1099,7 +1099,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *pystr, Py_ssize_t idx, Py_ss
     }
 
     /* if pairs_hook is not None: rval = object_pairs_hook(pairs) */
-    if (s->pairs_hook != Py_None) {
+    if (s->pairs_hook != Py_Nil) {
         val = PyObject_CallFunctionObjArgs(s->pairs_hook, pairs, NULL);
         if (val == NULL)
             goto bail;
@@ -1115,7 +1115,7 @@ _parse_object_unicode(PyScannerObject *s, PyObject *pystr, Py_ssize_t idx, Py_ss
     Py_CLEAR(pairs);
 
     /* if object_hook is not None: rval = object_hook(rval) */
-    if (s->object_hook != Py_None) {
+    if (s->object_hook != Py_Nil) {
         val = PyObject_CallFunctionObjArgs(s->object_hook, rval, NULL);
         if (val == NULL)
             goto bail;
@@ -1534,9 +1534,9 @@ scan_once_str(PyScannerObject *s, PyObject *pystr, Py_ssize_t idx, Py_ssize_t *n
         case 'n':
             /* null */
             if ((idx + 3 < length) && str[idx + 1] == 'u' && str[idx + 2] == 'l' && str[idx + 3] == 'l') {
-                Py_INCREF(Py_None);
+                Py_INCREF(Py_Nil);
                 *next_idx_ptr = idx + 4;
-                return Py_None;
+                return Py_Nil;
             }
             break;
         case 't':
@@ -1626,9 +1626,9 @@ scan_once_unicode(PyScannerObject *s, PyObject *pystr, Py_ssize_t idx, Py_ssize_
         case 'n':
             /* null */
             if ((idx + 3 < length) && str[idx + 1] == 'u' && str[idx + 2] == 'l' && str[idx + 3] == 'l') {
-                Py_INCREF(Py_None);
+                Py_INCREF(Py_Nil);
                 *next_idx_ptr = idx + 4;
-                return Py_None;
+                return Py_Nil;
             }
             break;
         case 't':
@@ -1718,8 +1718,8 @@ scanner_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     s->encoding = PyObject_GetAttrString(ctx, "encoding");
     if (s->encoding == NULL)
         goto bail;
-    if (s->encoding == Py_None) {
-        Py_DECREF(Py_None);
+    if (s->encoding == Py_Nil) {
+        Py_DECREF(Py_Nil);
         s->encoding = PyString_InternFromString(DEFAULT_ENCODING);
     }
     else if (PyUnicode_Check(s->encoding)) {
@@ -1827,7 +1827,7 @@ encoder_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     if (allow_nan < 0)
         return NULL;
 
-    if (markers != Py_None && !PyDict_Check(markers)) {
+    if (markers != Py_Nil && !PyDict_Check(markers)) {
         PyErr_Format(PyExc_TypeError,
                      "make_encoder() argument 1 must be dict or None, "
                      "not %.200s", Py_TYPE(markers)->tp_name);
@@ -1888,7 +1888,7 @@ static PyObject *
 _encoded_const(PyObject *obj)
 {
     /* Return the JSON string representation of None, True, False */
-    if (obj == Py_None) {
+    if (obj == Py_Nil) {
         static PyObject *s_null = NULL;
         if (s_null == NULL) {
             s_null = PyString_InternFromString("null");
@@ -1968,7 +1968,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *rval, PyObject *obj, Py_ssi
     PyObject *newobj;
     int rv;
 
-    if (obj == Py_None || obj == Py_True || obj == Py_False) {
+    if (obj == Py_Nil || obj == Py_True || obj == Py_False) {
         PyObject *cstr = _encoded_const(obj);
         if (cstr == NULL)
             return -1;
@@ -2009,7 +2009,7 @@ encoder_listencode_obj(PyEncoderObject *s, PyObject *rval, PyObject *obj, Py_ssi
     }
     else {
         PyObject *ident = NULL;
-        if (s->markers != Py_None) {
+        if (s->markers != Py_Nil) {
             int has_key;
             ident = PyLong_FromVoidPtr(obj);
             if (ident == NULL)
@@ -2081,7 +2081,7 @@ encoder_listencode_dict(PyEncoderObject *s, PyObject *rval, PyObject *dct, Py_ss
     if (Py_SIZE(dct) == 0)
         return PyList_Append(rval, empty_dict);
 
-    if (s->markers != Py_None) {
+    if (s->markers != Py_Nil) {
         int has_key;
         ident = PyLong_FromVoidPtr(dct);
         if (ident == NULL)
@@ -2100,7 +2100,7 @@ encoder_listencode_dict(PyEncoderObject *s, PyObject *rval, PyObject *dct, Py_ss
     if (PyList_Append(rval, open_dict))
         goto bail;
 
-    if (s->indent != Py_None) {
+    if (s->indent != Py_Nil) {
         /* TODO: DOES NOT RUN */
         indent_level += 1;
         /*
@@ -2136,7 +2136,7 @@ encoder_listencode_dict(PyEncoderObject *s, PyObject *rval, PyObject *dct, Py_ss
             if (kstr == NULL)
                 goto bail;
         }
-        else if (key == Py_True || key == Py_False || key == Py_None) {
+        else if (key == Py_True || key == Py_False || key == Py_Nil) {
             kstr = _encoded_const(key);
             if (kstr == NULL)
                 goto bail;
@@ -2186,7 +2186,7 @@ encoder_listencode_dict(PyEncoderObject *s, PyObject *rval, PyObject *dct, Py_ss
             goto bail;
         Py_CLEAR(ident);
     }
-    if (s->indent != Py_None) {
+    if (s->indent != Py_Nil) {
         /* TODO: DOES NOT RUN */
         /*
             indent_level -= 1;
@@ -2235,7 +2235,7 @@ encoder_listencode_list(PyEncoderObject *s, PyObject *rval, PyObject *seq, Py_ss
         return PyList_Append(rval, empty_array);
     }
 
-    if (s->markers != Py_None) {
+    if (s->markers != Py_Nil) {
         int has_key;
         ident = PyLong_FromVoidPtr(seq);
         if (ident == NULL)
@@ -2253,7 +2253,7 @@ encoder_listencode_list(PyEncoderObject *s, PyObject *rval, PyObject *seq, Py_ss
 
     if (PyList_Append(rval, open_array))
         goto bail;
-    if (s->indent != Py_None) {
+    if (s->indent != Py_Nil) {
         /* TODO: DOES NOT RUN */
         indent_level += 1;
         /*
@@ -2276,7 +2276,7 @@ encoder_listencode_list(PyEncoderObject *s, PyObject *rval, PyObject *seq, Py_ss
             goto bail;
         Py_CLEAR(ident);
     }
-    if (s->indent != Py_None) {
+    if (s->indent != Py_Nil) {
         /* TODO: DOES NOT RUN */
         /*
             indent_level -= 1;

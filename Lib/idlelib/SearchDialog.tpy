@@ -3,7 +3,7 @@ from Tkinter import *;
 from idlelib import SearchEngine;
 from idlelib.SearchDialogBase import SearchDialogBase;
 
-def _setup(text){
+function _setup(text){
     root = text._root();
     engine = SearchEngine.get(root);
     if not hasattr(engine, "_searchdialog"){
@@ -11,39 +11,39 @@ def _setup(text){
     } return engine._searchdialog;
 
 }
-def find(text){
+function find(text){
     pat = text.get("sel.first", "sel.last");
     return _setup(text).open(text,pat);
 
 }
-def find_again(text){
+function find_again(text){
     return _setup(text).find_again(text);
 
 }
-def find_selection(text){
+function find_selection(text){
     return _setup(text).find_selection(text);
 
 }
 class SearchDialog(SearchDialogBase){
 
-    def create_widgets(self){
-        SearchDialogBase.create_widgets(self);
-        self.make_button("Find Next", self.default_command, 1);
+    function create_widgets(){
+        SearchDialogBase.create_widgets(this);
+        this.make_button("Find Next", this.default_command, 1);
 
     }
-    def default_command(self, event=None){
-        if not self.engine.getprog(){
+    function default_command( event=nil){
+        if not this.engine.getprog(){
             return;
-        } self.find_again(self.text);
+        } this.find_again(this.text);
 
     }
-    def find_again(self, text){
-        if not self.engine.getpat(){
-            self.open(text);
-            return False;
-        } if not self.engine.getprog(){
-            return False;
-        } res = self.engine.search_text(text);
+    function find_again( text){
+        if not this.engine.getpat(){
+            this.open(text);
+            return false;
+        } if not this.engine.getprog(){
+            return false;
+        } res = this.engine.search_text(text);
         if res{
             line, m = res;
             i, j = m.span();
@@ -54,27 +54,27 @@ class SearchDialog(SearchDialogBase){
                 sellast = text.index("sel.last");
                 if selfirst == first and sellast == last{
                     text.bell();
-                    return False;
+                    return false;
             } } except TclError{
                 pass;
             } text.tag_remove("sel", "1.0", "end");
             text.tag_add("sel", first, last);
-            text.mark_set("insert", self.engine.isback() and first or last);
+            text.mark_set("insert", this.engine.isback() and first or last);
             text.see("insert");
-            return True;
+            return true;
         } else{
             text.bell();
-            return False;
+            return false;
 
     }
-    } def find_selection(self, text){
+    } function find_selection( text){
         pat = text.get("sel.first", "sel.last");
         if pat{
-            self.engine.setcookedpat(pat);
-        } return self.find_again(text);
+            this.engine.setcookedpat(pat);
+        } return this.find_again(text);
 
 }
-} def _search_dialog(parent){
+} function _search_dialog(parent){
     root = Tk();
     root.title("Test SearchDialog");
     width, height, x, y = list(map(int, re.split('[x+]', parent.geometry())));
@@ -83,7 +83,7 @@ class SearchDialog(SearchDialogBase){
     text.pack();
     text.insert("insert","This is a sample string.\n"*10);
 
-    def show_find(){
+    function show_find(){
         text.tag_add(SEL, "1.0", END);
         s = _setup(text);
         s.open(text);

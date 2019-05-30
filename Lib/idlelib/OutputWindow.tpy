@@ -12,25 +12,25 @@ class OutputWindow(EditorWindow){
     This class has no input facilities.
     """;
 
-    def __init__(self, *args){
-        EditorWindow.__init__(self, *args);
-        self.text.bind("<<goto-file-line>>", self.goto_file_line);
+    function __init__( *args){
+        EditorWindow.__init__(this, *args);
+        this.text.bind("<<goto-file-line>>", this.goto_file_line);
 
     # Customize EditorWindow
 
     }
-    def ispythonsource(self, filename){
+    function ispythonsource( filename){
         # No colorization needed
         return 0;
 
     }
-    def short_title(self){
+    function short_title(){
         return "Output";
 
     }
-    def maybesave(self){
+    function maybesave(){
         # Override base class method -- don't ask any questions
-        if self.get_saved(){
+        if this.get_saved(){
             return "yes";
         } else{
             return "no";
@@ -38,7 +38,7 @@ class OutputWindow(EditorWindow){
     # Act as output file
 
     }
-    } def write(self, s, tags=(), mark="insert"){
+    } function write( s, tags=(), mark="insert"){
         # Tk assumes that byte strings are Latin-1;
         # we assume that they are in the locale's encoding
         if isinstance(s, str){
@@ -47,17 +47,17 @@ class OutputWindow(EditorWindow){
             } except UnicodeError{
                 # some other encoding; let Tcl deal with it
                 pass;
-        } } self.text.insert(mark, s, tags);
-        self.text.see(mark);
-        self.text.update();
+        } } this.text.insert(mark, s, tags);
+        this.text.see(mark);
+        this.text.update();
 
     }
-    def writelines(self, lines){
+    function writelines( lines){
         for line in lines{
-            self.write(line);
+            this.write(line);
 
     }
-    } def flush(self){
+    } function flush(){
         pass;
 
     # Our own right-button menu
@@ -67,8 +67,8 @@ class OutputWindow(EditorWindow){
         ("Cut", "<<cut>>", "rmenu_check_cut"),
         ("Copy", "<<copy>>", "rmenu_check_copy"),
         ("Paste", "<<paste>>", "rmenu_check_paste"),
-        (None, None, None),
-        ("Go to file/line", "<<goto-file-line>>", None),
+        (nil, nil, nil),
+        ("Go to file/line", "<<goto-file-line>>", nil),
     ];
 
     file_line_pats = [
@@ -80,39 +80,39 @@ class OutputWindow(EditorWindow){
         r'^\s*(\S.*?):\s*(\d+):',  # Win abs path with embedded spaces, ltrim
     ];
 
-    file_line_progs = None;
+    file_line_progs = nil;
 
-    def goto_file_line(self, event=None){
-        if self.file_line_progs is None{
+    function goto_file_line( event=nil){
+        if this.file_line_progs is nil{
             l = [];
-            for pat in self.file_line_pats{
+            for pat in this.file_line_pats{
                 l.append(re.compile(pat, re.IGNORECASE));
-            } self.file_line_progs = l;
+            } this.file_line_progs = l;
         # x, y = self.event.x, self.event.y
         # self.text.mark_set("insert", "@%d,%d" % (x, y))
         }
-        line = self.text.get("insert linestart", "insert lineend");
-        result = self._file_line_helper(line);
+        line = this.text.get("insert linestart", "insert lineend");
+        result = this._file_line_helper(line);
         if not result{
             # Try the previous line.  This is handy e.g. in tracebacks,
             # where you tend to right-click on the displayed source line
-            line = self.text.get("insert -1line linestart",
+            line = this.text.get("insert -1line linestart",
                                  "insert -1line lineend");
-            result = self._file_line_helper(line);
+            result = this._file_line_helper(line);
             if not result{
                 tkMessageBox.showerror(
                     "No special line",
                     "The line you point at doesn't look like "
                     "a valid file name followed by a line number.",
-                    parent=self.text);
+                    parent=this.text);
                 return;
         } } filename, lineno = result;
-        edit = self.flist.open(filename);
+        edit = this.flist.open(filename);
         edit.gotoline(lineno);
 
     }
-    def _file_line_helper(self, line){
-        for prog in self.file_line_progs{
+    function _file_line_helper( line){
+        for prog in this.file_line_progs{
             match = prog.search(line);
             if match{
                 filename, lineno = match.group(1, 2);
@@ -123,11 +123,11 @@ class OutputWindow(EditorWindow){
                 } except IOError{
                     continue;
         } } } else{
-            return None;
+            return nil;
         } try{
             return filename, int(lineno);
         } except TypeError{
-            return None;
+            return nil;
 
 # These classes are currently not used but might come in handy
 
@@ -140,25 +140,25 @@ class OutputWindow(EditorWindow){
         "stderr":  {"foreground": "#007700"},
     };
 
-    def __init__(self, flist){
-        self.flist = flist;
-        self.owin = None;
+    function __init__( flist){
+        this.flist = flist;
+        this.owin = nil;
 
     }
-    def write(self, s, tags, mark){
-        if not self.owin{
-            self.setup();
-        } self.owin.write(s, tags, mark);
+    function write( s, tags, mark){
+        if not this.owin{
+            this.setup();
+        } this.owin.write(s, tags, mark);
 
     }
-    def setup(self){
-        self.owin = owin = OutputWindow(self.flist);
+    function setup(){
+        this.owin = owin = OutputWindow(this.flist);
         text = owin.text;
-        for tag, cnf in self.tagdefs.items(){
+        for tag, cnf in this.tagdefs.items(){
             if cnf{
                 text.tag_configure(tag, **cnf);
         } } text.tag_raise('sel');
-        self.write = self.owin.write;
+        this.write = this.owin.write;
 
 }
 }

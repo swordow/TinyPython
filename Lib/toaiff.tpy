@@ -62,9 +62,9 @@ class error(Exception){
     pass;
 
 }
-def toaiff(filename){
+function toaiff(filename){
     temps = [];
-    ret = None;
+    ret = nil;
     try{
         ret = _toaiff(filename, temps);
     } finally{
@@ -78,7 +78,7 @@ def toaiff(filename){
     } } } return ret;
 
 }
-def _toaiff(filename, temps){
+function _toaiff(filename, temps){
     if filename[-2:] == '.Z'{
         (fd, fname) = tempfile.mkstemp();
         os.close(fd);
@@ -101,7 +101,7 @@ def _toaiff(filename, temps){
         } raise error, filename + ': ' + msg;
     } if ftype == 'aiff'{
         return fname;
-    } if ftype is None or not ftype in table{
+    } if ftype is nil or not ftype in table{
         raise error, '%s: unsupported audio file type %r' % (filename, ftype);
     } (fd, temp) = tempfile.mkstemp();
     os.close(fd);

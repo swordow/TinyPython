@@ -32,7 +32,7 @@ class StreamWriter(Codec, mbc.MultibyteStreamWriter, codecs.StreamWriter){
     codec = codec;
 
 }
-def getregentry(){
+function getregentry(){
     return codecs.CodecInfo(
         name='euc_jisx0213',
         encode=Codec().encode,

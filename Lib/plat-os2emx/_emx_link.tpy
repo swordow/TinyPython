@@ -38,7 +38,7 @@ import errno;
 
 __all__ = ['link'];
 
-def link(source, target){
+function link(source, target){
     """link(source, target) -> None
 
     Attempt to hard link the source file to the target file name.

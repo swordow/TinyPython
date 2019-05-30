@@ -2,30 +2,30 @@ class Delegator{
 
     # The cache is only used to be able to change delegates!
 
-    def __init__(self, delegate=None){
-        self.delegate = delegate;
-        self.__cache = set();
+    function __init__( delegate=nil){
+        this.delegate = delegate;
+        this.__cache = set();
 
     }
-    def __getattr__(self, name){
-        attr = getattr(self.delegate, name); # May raise AttributeError
-        setattr(self, name, attr);
-        self.__cache.add(name);
+    function __getattr__( name){
+        attr = getattr(this.delegate, name); # May raise AttributeError
+        setattr(this, name, attr);
+        this.__cache.add(name);
         return attr;
 
     }
-    def resetcache(self){
-        for key in self.__cache{
+    function resetcache(){
+        for key in this.__cache{
             try{
-                delattr(self, key);
+                delattr(this, key);
             } except AttributeError{
                 pass;
-        } } self.__cache.clear();
+        } } this.__cache.clear();
 
     }
-    def setdelegate(self, delegate){
-        self.resetcache();
-        self.delegate = delegate;
+    function setdelegate( delegate){
+        this.resetcache();
+        this.delegate = delegate;
 
 }
 }

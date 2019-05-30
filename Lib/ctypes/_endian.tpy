@@ -3,7 +3,7 @@ from ctypes import *;
 
 _array_type = type(Array);
 
-def _other_endian(typ){
+function _other_endian(typ){
     """Return the type with the 'other' byte order.  Simple types like
     c_int and so on already have __ctype_be__ and __ctype_le__
     attributes which contain the types, for more complicated types
@@ -24,7 +24,7 @@ def _other_endian(typ){
 
 }
 class _swapped_meta(type(Structure)){
-    def __setattr__(self, attrname, value){
+    function __setattr__( attrname, value){
         if attrname == "_fields_"{
             fields = [];
             for desc in value{
@@ -33,7 +33,7 @@ class _swapped_meta(type(Structure)){
                 rest = desc[2:];
                 fields.append((name, _other_endian(typ)) + rest);
             } value = fields;
-        } super(_swapped_meta, self).__setattr__(attrname, value);
+        } super(_swapped_meta, this).__setattr__(attrname, value);
 
 ################################################################
 
@@ -50,7 +50,7 @@ class _swapped_meta(type(Structure)){
     class BigEndianStructure(Structure){
         """Structure with big endian byte order""";
         __metaclass__ = _swapped_meta;
-        _swappedbytes_ = None;
+        _swappedbytes_ = nil;
 
 }
 } elif sys.byteorder == "big"{
@@ -60,7 +60,7 @@ class _swapped_meta(type(Structure)){
     class LittleEndianStructure(Structure){
         """Structure with little endian byte order""";
         __metaclass__ = _swapped_meta;
-        _swappedbytes_ = None;
+        _swappedbytes_ = nil;
 
 }
 } else{

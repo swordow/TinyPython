@@ -2,29 +2,29 @@ from Tkinter import *;
 
 class WindowList{
 
-    def __init__(self){
-        self.dict = {};
-        self.callbacks = [];
+    function __init__(){
+        this.dict = {};
+        this.callbacks = [];
 
     }
-    def add(self, window){
-        window.after_idle(self.call_callbacks);
-        self.dict[str(window)] = window;
+    function add( window){
+        window.after_idle(this.call_callbacks);
+        this.dict[str(window)] = window;
 
     }
-    def delete(self, window){
+    function delete( window){
         try{
-            del self.dict[str(window)];
+            del this.dict[str(window)];
         } except KeyError{
             # Sometimes, destroy() is called twice
             pass;
-        } self.call_callbacks();
+        } this.call_callbacks();
 
     }
-    def add_windows_to_menu(self,  menu){
+    function add_windows_to_menu(  menu){
         list = [];
-        for key in self.dict.keys(){
-            window = self.dict[key];
+        for key in this.dict.keys(){
+            window = this.dict[key];
             try{
                 title = window.get_title();
             } except TclError{
@@ -35,19 +35,19 @@ class WindowList{
             menu.add_command(label=title, command=window.wakeup);
 
     }
-    } def register_callback(self, callback){
-        self.callbacks.append(callback);
+    } function register_callback( callback){
+        this.callbacks.append(callback);
 
     }
-    def unregister_callback(self, callback){
+    function unregister_callback( callback){
         try{
-            self.callbacks.remove(callback);
+            this.callbacks.remove(callback);
         } except ValueError{
             pass;
 
     }
-    } def call_callbacks(self){
-        for callback in self.callbacks{
+    } function call_callbacks(){
+        for callback in this.callbacks{
             try{
                 callback();
             } except Exception{
@@ -64,37 +64,37 @@ unregister_callback = registry.unregister_callback;
 
 class ListedToplevel(Toplevel){
 
-    def __init__(self, master, **kw){
-        Toplevel.__init__(self, master, kw);
-        registry.add(self);
-        self.focused_widget = self;
+    function __init__( master, **kw){
+        Toplevel.__init__(this, master, kw);
+        registry.add(this);
+        this.focused_widget = this;
 
     }
-    def destroy(self){
-        registry.delete(self);
-        Toplevel.destroy(self);
+    function destroy(){
+        registry.delete(this);
+        Toplevel.destroy(this);
         # If this is Idle's last window then quit the mainloop
         # (Needed for clean exit on Windows 98)
         if not registry.dict{
-            self.quit();
+            this.quit();
 
     }
-    } def update_windowlist_registry(self, window){
+    } function update_windowlist_registry( window){
         registry.call_callbacks();
 
     }
-    def get_title(self){
+    function get_title(){
         # Subclass can override
-        return self.wm_title();
+        return this.wm_title();
 
     }
-    def wakeup(self){
+    function wakeup(){
         try{
-            if self.wm_state() == "iconic"{
-                self.wm_withdraw();
-                self.wm_deiconify();
-            } self.tkraise();
-            self.focused_widget.focus_set();
+            if this.wm_state() == "iconic"{
+                this.wm_withdraw();
+                this.wm_deiconify();
+            } this.tkraise();
+            this.focused_widget.focus_set();
         } except TclError{
             # This can happen when the window menu was torn off.
             # Simply ignore it.

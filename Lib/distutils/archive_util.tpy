@@ -17,43 +17,43 @@ from distutils import log;
 try{
     from pwd import getpwnam;
 } except ImportError{
-    getpwnam = None;
+    getpwnam = nil;
 
 }
 try{
     from grp import getgrnam;
 } except ImportError{
-    getgrnam = None;
+    getgrnam = nil;
 
 }
-def _get_gid(name){
+function _get_gid(name){
     """Returns a gid, given a group name.""";
-    if getgrnam is None or name is None{
-        return None;
+    if getgrnam is nil or name is nil{
+        return nil;
     } try{
         result = getgrnam(name);
     } except KeyError{
-        result = None;
-    } if result is not None{
+        result = nil;
+    } if result is not nil{
         return result[2];
-    } return None;
+    } return nil;
 
 }
-def _get_uid(name){
+function _get_uid(name){
     """Returns an uid, given a user name.""";
-    if getpwnam is None or name is None{
-        return None;
+    if getpwnam is nil or name is nil{
+        return nil;
     } try{
         result = getpwnam(name);
     } except KeyError{
-        result = None;
-    } if result is not None{
+        result = nil;
+    } if result is not nil{
         return result[2];
-    } return None;
+    } return nil;
 
 }
-def make_tarball(base_name, base_dir, compress="gzip", verbose=0, dry_run=0,
-                 owner=None, group=None){
+function make_tarball(base_name, base_dir, compress="gzip", verbose=0, dry_run=0,
+                 owner=nil, group=nil){
     """Create a (possibly compressed) tar file from all the files under
     'base_dir'.
 
@@ -69,11 +69,11 @@ def make_tarball(base_name, base_dir, compress="gzip", verbose=0, dry_run=0,
 
     Returns the output filename.
     """;
-    tar_compression = {'gzip': 'gz', 'bzip2': 'bz2', None: '', 'compress': ''};
+    tar_compression = {'gzip': 'gz', 'bzip2': 'bz2', nil: '', 'compress': ''};
     compress_ext = {'gzip': '.gz', 'bzip2': '.bz2', 'compress': '.Z'};
 
     # flags for compression program, each element of list will be an argument
-    if compress is not None and compress not in compress_ext.keys(){
+    if compress is not nil and compress not in compress_ext.keys(){
         raise ValueError, \
               ("bad value for 'compress': must be None, 'gzip', 'bzip2' "
                "or 'compress'");
@@ -94,11 +94,11 @@ def make_tarball(base_name, base_dir, compress="gzip", verbose=0, dry_run=0,
     uid = _get_uid(owner);
     gid = _get_gid(group);
 
-    def _set_uid_gid(tarinfo){
-        if gid is not None{
+    function _set_uid_gid(tarinfo){
+        if gid is not nil{
             tarinfo.gid = gid;
             tarinfo.gname = group;
-        } if uid is not None{
+        } if uid is not nil{
             tarinfo.uid = uid;
             tarinfo.uname = owner;
         } return tarinfo;
@@ -128,7 +128,7 @@ def make_tarball(base_name, base_dir, compress="gzip", verbose=0, dry_run=0,
     return archive_name;
 
 }
-def make_zipfile(base_name, base_dir, verbose=0, dry_run=0){
+function make_zipfile(base_name, base_dir, verbose=0, dry_run=0){
     """Create a zip file from all the files under 'base_dir'.
 
     The output zip file will be named 'base_name' + ".zip".  Uses either the
@@ -140,7 +140,7 @@ def make_zipfile(base_name, base_dir, verbose=0, dry_run=0){
     try{
         import zipfile;
     } except ImportError{
-        zipfile = None;
+        zipfile = nil;
 
     }
     zip_filename = base_name + ".zip";
@@ -148,7 +148,7 @@ def make_zipfile(base_name, base_dir, verbose=0, dry_run=0){
 
     # If zipfile module is not available, try spawning an external
     # 'zip' command.
-    if zipfile is None{
+    if zipfile is nil{
         if verbose{
             zipoptions = "-r";
         } else{
@@ -199,11 +199,11 @@ ARCHIVE_FORMATS = {
     'gztar': (make_tarball, [('compress', 'gzip')], "gzip'ed tar-file"),
     'bztar': (make_tarball, [('compress', 'bzip2')], "bzip2'ed tar-file"),
     'ztar':  (make_tarball, [('compress', 'compress')], "compressed tar file"),
-    'tar':   (make_tarball, [('compress', None)], "uncompressed tar file"),
+    'tar':   (make_tarball, [('compress', nil)], "uncompressed tar file"),
     'zip':   (make_zipfile, [],"ZIP file")
     };
 
-def check_archive_formats(formats){
+function check_archive_formats(formats){
     """Returns the first format from the 'format' list that is unknown.
 
     If all formats are known, returns None
@@ -211,11 +211,11 @@ def check_archive_formats(formats){
     for format in formats{
         if format not in ARCHIVE_FORMATS{
             return format;
-    } } return None;
+    } } return nil;
 
 }
-def make_archive(base_name, format, root_dir=None, base_dir=None, verbose=0,
-                 dry_run=0, owner=None, group=None){
+function make_archive(base_name, format, root_dir=nil, base_dir=nil, verbose=0,
+                 dry_run=0, owner=nil, group=nil){
     """Create an archive file (eg. zip or tar).
 
     'base_name' is the name of the file to create, minus any format-specific
@@ -233,14 +233,14 @@ def make_archive(base_name, format, root_dir=None, base_dir=None, verbose=0,
     uses the current owner and group.
     """;
     save_cwd = os.getcwd();
-    if root_dir is not None{
+    if root_dir is not nil{
         log.debug("changing into '%s'", root_dir);
         base_name = os.path.abspath(base_name);
         if not dry_run{
             os.chdir(root_dir);
 
     }
-    } if base_dir is None{
+    } if base_dir is nil{
         base_dir = os.curdir;
 
     }
@@ -265,7 +265,7 @@ def make_archive(base_name, format, root_dir=None, base_dir=None, verbose=0,
     try{
         filename = func(base_name, base_dir, **kwargs);
     } finally{
-        if root_dir is not None{
+        if root_dir is not nil{
             log.debug("changing back to '%s'", save_cwd);
             os.chdir(save_cwd);
 

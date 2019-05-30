@@ -99,8 +99,8 @@ PyMember_GetOne(const char *addr, PyMemberDef *l)
         break;
     case T_STRING:
         if (*(char**)addr == NULL) {
-            Py_INCREF(Py_None);
-            v = Py_None;
+            Py_INCREF(Py_Nil);
+            v = Py_Nil;
         }
         else
             v = PyString_FromString(*(char**)addr);
@@ -114,7 +114,7 @@ PyMember_GetOne(const char *addr, PyMemberDef *l)
     case T_OBJECT:
         v = *(PyObject **)addr;
         if (v == NULL)
-            v = Py_None;
+            v = Py_Nil;
         Py_INCREF(v);
         break;
     case T_OBJECT_EX:

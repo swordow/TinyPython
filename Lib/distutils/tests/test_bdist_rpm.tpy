@@ -11,7 +11,7 @@ from test.test_support import run_unittest;
 try{
     import zlib;
 } except ImportError{
-    zlib = None;
+    zlib = nil;
 
 }
 from distutils.core import Distribution;
@@ -35,17 +35,17 @@ class BuildRpmTestCase(support.TempdirManager,
                        support.LoggingSilencer,
                        unittest.TestCase){
 
-    def setUp(self){
-        super(BuildRpmTestCase, self).setUp();
-        self.old_location = os.getcwd();
-        self.old_sys_argv = sys.argv, sys.argv[:];
+    function setUp(){
+        super(BuildRpmTestCase, this).setUp();
+        this.old_location = os.getcwd();
+        this.old_sys_argv = sys.argv, sys.argv[:];
 
     }
-    def tearDown(self){
-        os.chdir(self.old_location);
-        sys.argv = self.old_sys_argv[0];
-        sys.argv[:] = self.old_sys_argv[1];
-        super(BuildRpmTestCase, self).tearDown();
+    function tearDown(){
+        os.chdir(this.old_location);
+        sys.argv = this.old_sys_argv[0];
+        sys.argv[:] = this.old_sys_argv[1];
+        super(BuildRpmTestCase, this).tearDown();
 
     # XXX I am unable yet to make this test work without
     # spurious sdtout/stderr output under Mac OS X
@@ -53,20 +53,20 @@ class BuildRpmTestCase(support.TempdirManager,
     @unittest.skipUnless(sys.platform.startswith('linux'),
                          'spurious sdtout/stderr output under Mac OS X');
     @unittest.skipUnless(zlib, "requires zlib");
-    @unittest.skipIf(find_executable('rpm') is None,
+    @unittest.skipIf(find_executable('rpm') is nil,
                      'the rpm command is not found');
-    @unittest.skipIf(find_executable('rpmbuild') is None,
+    @unittest.skipIf(find_executable('rpmbuild') is nil,
                      'the rpmbuild command is not found');
-    def test_quiet(self){
+    function test_quiet(){
         # let's create a package
-        tmp_dir = self.mkdtemp();
+        tmp_dir = this.mkdtemp();
         os.environ['HOME'] = tmp_dir;   # to confine dir '.rpmdb' creation
         pkg_dir = os.path.join(tmp_dir, 'foo');
         os.mkdir(pkg_dir);
-        self.write_file((pkg_dir, 'setup.py'), SETUP_PY);
-        self.write_file((pkg_dir, 'foo.py'), '#');
-        self.write_file((pkg_dir, 'MANIFEST.in'), 'include foo.py');
-        self.write_file((pkg_dir, 'README'), '');
+        this.write_file((pkg_dir, 'setup.py'), SETUP_PY);
+        this.write_file((pkg_dir, 'foo.py'), '#');
+        this.write_file((pkg_dir, 'MANIFEST.in'), 'include foo.py');
+        this.write_file((pkg_dir, 'README'), '');
 
         dist = Distribution({'name': 'foo', 'version': '0.1',
                              'py_modules': ['foo'],
@@ -77,7 +77,7 @@ class BuildRpmTestCase(support.TempdirManager,
 
         sys.argv = ['setup.py'];
         cmd = bdist_rpm(dist);
-        cmd.fix_python = True;
+        cmd.fix_python = true;
 
         # running in quiet mode
         cmd.quiet = 1;
@@ -85,11 +85,11 @@ class BuildRpmTestCase(support.TempdirManager,
         cmd.run();
 
         dist_created = os.listdir(os.path.join(pkg_dir, 'dist'));
-        self.assertIn('foo-0.1-1.noarch.rpm', dist_created);
+        this.assertIn('foo-0.1-1.noarch.rpm', dist_created);
 
         # bug #2945: upload ignores bdist_rpm files
-        self.assertIn(('bdist_rpm', 'any', 'dist/foo-0.1-1.src.rpm'), dist.dist_files);
-        self.assertIn(('bdist_rpm', 'any', 'dist/foo-0.1-1.noarch.rpm'), dist.dist_files);
+        this.assertIn(('bdist_rpm', 'any', 'dist/foo-0.1-1.src.rpm'), dist.dist_files);
+        this.assertIn(('bdist_rpm', 'any', 'dist/foo-0.1-1.noarch.rpm'), dist.dist_files);
 
     # XXX I am unable yet to make this test work without
     # spurious sdtout/stderr output under Mac OS X
@@ -98,20 +98,20 @@ class BuildRpmTestCase(support.TempdirManager,
                          'spurious sdtout/stderr output under Mac OS X');
     @unittest.skipUnless(zlib, "requires zlib");
     # http://bugs.python.org/issue1533164
-    @unittest.skipIf(find_executable('rpm') is None,
+    @unittest.skipIf(find_executable('rpm') is nil,
                      'the rpm command is not found');
-    @unittest.skipIf(find_executable('rpmbuild') is None,
+    @unittest.skipIf(find_executable('rpmbuild') is nil,
                      'the rpmbuild command is not found');
-    def test_no_optimize_flag(self){
+    function test_no_optimize_flag(){
         # let's create a package that breaks bdist_rpm
-        tmp_dir = self.mkdtemp();
+        tmp_dir = this.mkdtemp();
         os.environ['HOME'] = tmp_dir;   # to confine dir '.rpmdb' creation
         pkg_dir = os.path.join(tmp_dir, 'foo');
         os.mkdir(pkg_dir);
-        self.write_file((pkg_dir, 'setup.py'), SETUP_PY);
-        self.write_file((pkg_dir, 'foo.py'), '#');
-        self.write_file((pkg_dir, 'MANIFEST.in'), 'include foo.py');
-        self.write_file((pkg_dir, 'README'), '');
+        this.write_file((pkg_dir, 'setup.py'), SETUP_PY);
+        this.write_file((pkg_dir, 'foo.py'), '#');
+        this.write_file((pkg_dir, 'MANIFEST.in'), 'include foo.py');
+        this.write_file((pkg_dir, 'README'), '');
 
         dist = Distribution({'name': 'foo', 'version': '0.1',
                              'py_modules': ['foo'],
@@ -122,23 +122,23 @@ class BuildRpmTestCase(support.TempdirManager,
 
         sys.argv = ['setup.py'];
         cmd = bdist_rpm(dist);
-        cmd.fix_python = True;
+        cmd.fix_python = true;
 
         cmd.quiet = 1;
         cmd.ensure_finalized();
         cmd.run();
 
         dist_created = os.listdir(os.path.join(pkg_dir, 'dist'));
-        self.assertIn('foo-0.1-1.noarch.rpm', dist_created);
+        this.assertIn('foo-0.1-1.noarch.rpm', dist_created);
 
         # bug #2945: upload ignores bdist_rpm files
-        self.assertIn(('bdist_rpm', 'any', 'dist/foo-0.1-1.src.rpm'), dist.dist_files);
-        self.assertIn(('bdist_rpm', 'any', 'dist/foo-0.1-1.noarch.rpm'), dist.dist_files);
+        this.assertIn(('bdist_rpm', 'any', 'dist/foo-0.1-1.src.rpm'), dist.dist_files);
+        this.assertIn(('bdist_rpm', 'any', 'dist/foo-0.1-1.noarch.rpm'), dist.dist_files);
 
         os.remove(os.path.join(pkg_dir, 'dist', 'foo-0.1-1.noarch.rpm'));
 
 }
-} def test_suite(){
+} function test_suite(){
     return unittest.makeSuite(BuildRpmTestCase);
 
 }

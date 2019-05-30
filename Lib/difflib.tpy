@@ -36,7 +36,7 @@ from functools import reduce;
 
 Match = _namedtuple('Match', 'a b size');
 
-def _calculate_ratio(matches, length){
+function _calculate_ratio(matches, length){
     if length{
         return 2.0 * matches / length;
     } return 1.0;
@@ -150,7 +150,7 @@ class SequenceMatcher{
         Return an upper bound on ratio() very quickly.
     """;
 
-    def __init__(self, isjunk=None, a='', b='', autojunk=True){
+    function __init__( isjunk=nil, a='', b='', autojunk=true){
         """Construct a SequenceMatcher.
 
         Optional arg isjunk is None (the default), or a one-argument
@@ -214,13 +214,13 @@ class SequenceMatcher{
         #      its elements (when autojunk is enabled).
         #      DOES NOT WORK for x in a!
 
-        self.isjunk = isjunk;
-        self.a = self.b = None;
-        self.autojunk = autojunk;
-        self.set_seqs(a, b);
+        this.isjunk = isjunk;
+        this.a = this.b = nil;
+        this.autojunk = autojunk;
+        this.set_seqs(a, b);
 
     }
-    def set_seqs(self, a, b){
+    function set_seqs( a, b){
         """Set the two sequences to be compared.
 
         >>> s = SequenceMatcher()
@@ -229,11 +229,11 @@ class SequenceMatcher{
         0.75
         """;
 
-        self.set_seq1(a);
-        self.set_seq2(b);
+        this.set_seq1(a);
+        this.set_seq2(b);
 
     }
-    def set_seq1(self, a){
+    function set_seq1( a){
         """Set the first sequence to be compared.
 
         The second sequence to be compared is not changed.
@@ -254,13 +254,13 @@ class SequenceMatcher{
         See also set_seqs() and set_seq2().
         """;
 
-        if a is self.a{
+        if a is this.a{
             return;
-        } self.a = a;
-        self.matching_blocks = self.opcodes = None;
+        } this.a = a;
+        this.matching_blocks = this.opcodes = nil;
 
     }
-    def set_seq2(self, b){
+    function set_seq2( b){
         """Set the second sequence to be compared.
 
         The first sequence to be compared is not changed.
@@ -281,12 +281,12 @@ class SequenceMatcher{
         See also set_seqs() and set_seq1().
         """;
 
-        if b is self.b{
+        if b is this.b{
             return;
-        } self.b = b;
-        self.matching_blocks = self.opcodes = None;
-        self.fullbcount = None;
-        self.__chain_b();
+        } this.b = b;
+        this.matching_blocks = this.opcodes = nil;
+        this.fullbcount = nil;
+        this.__chain_b();
 
     # For each element x in b, set b2j[x] to a list of the indices in
     # b where x appears; the indices are in increasing order; note that
@@ -306,7 +306,7 @@ class SequenceMatcher{
     # repeatedly
 
     }
-    def __chain_b(self){
+    function __chain_b(){
         # Because isjunk is a user-defined (not C) function, and we test
         # for junk a LOT, it's important to minimize the number of calls.
         # Before the tricks described here, __chain_b was by far the most
@@ -317,8 +317,8 @@ class SequenceMatcher{
         # of junk.  I.e., we don't call isjunk at all yet.  Throwing
         # out the junk later is much cheaper than building b2j "right"
         # from the start.
-        b = self.b;
-        self.b2j = b2j = {};
+        b = this.b;
+        this.b2j = b2j = {};
 
         for i, elt in enumerate(b){
             indices = b2j.setdefault(elt, []);
@@ -327,7 +327,7 @@ class SequenceMatcher{
         # Purge junk elements
         }
         junk = set();
-        isjunk = self.isjunk;
+        isjunk = this.isjunk;
         if isjunk{
             for elt in list(b2j.keys()){  # using list() since b2j is modified
                 if isjunk(elt){
@@ -338,7 +338,7 @@ class SequenceMatcher{
         }
         } } popular = set();
         n = len(b);
-        if self.autojunk and n >= 200{
+        if this.autojunk and n >= 200{
             ntest = n // 100 + 1;
             for elt, idxs in list(b2j.items()){
                 if len(idxs) > ntest{
@@ -350,11 +350,11 @@ class SequenceMatcher{
         # memory burden of keeping this set alive is likely trivial compared to
         # the size of b2j.
         }
-        } } self.isbjunk = junk.__contains__;
-        self.isbpopular = popular.__contains__;
+        } } this.isbjunk = junk.__contains__;
+        this.isbpopular = popular.__contains__;
 
     }
-    def find_longest_match(self, alo, ahi, blo, bhi){
+    function find_longest_match( alo, ahi, blo, bhi){
         """Find longest matching block in a[alo:ahi] and b[blo:bhi].
 
         If isjunk is not defined:
@@ -410,7 +410,7 @@ class SequenceMatcher{
         # Windiff ends up at the same place as diff, but by pairing up
         # the unique 'b's and then matching the first two 'a's.
 
-        a, b, b2j, isbjunk = self.a, self.b, self.b2j, self.isbjunk;
+        a, b, b2j, isbjunk = this.a, this.b, this.b2j, this.isbjunk;
         besti, bestj, bestsize = alo, blo, 0;
         # find longest junk-free match
         # during an iteration of the loop, j2len[j] = length of longest
@@ -468,7 +468,7 @@ class SequenceMatcher{
         return Match(besti, bestj, bestsize);
 
     }
-    def get_matching_blocks(self){
+    function get_matching_blocks(){
         """Return list of triples describing matching subsequences.
 
         Each triple is of the form (i, j, n), and means that
@@ -487,9 +487,9 @@ class SequenceMatcher{
         [Match(a=0, b=0, size=2), Match(a=3, b=2, size=2), Match(a=5, b=4, size=0)]
         """;
 
-        if self.matching_blocks is not None{
-            return self.matching_blocks;
-        } la, lb = len(self.a), len(self.b);
+        if this.matching_blocks is not nil{
+            return this.matching_blocks;
+        } la, lb = len(this.a), len(this.b);
 
         # This is most naturally expressed as a recursive algorithm, but
         # at least one user bumped into extreme use cases that exceeded
@@ -501,7 +501,7 @@ class SequenceMatcher{
         matching_blocks = [];
         while queue{
             alo, ahi, blo, bhi = queue.pop();
-            i, j, k = x = self.find_longest_match(alo, ahi, blo, bhi);
+            i, j, k = x = this.find_longest_match(alo, ahi, blo, bhi);
             # a[alo:i] vs b[blo:j] unknown
             # a[i:i+k] same as b[j:j+k]
             # a[i+k:ahi] vs b[j+k:bhi] unknown
@@ -537,11 +537,11 @@ class SequenceMatcher{
 
         }
         non_adjacent.append( (la, lb, 0) );
-        self.matching_blocks = map(Match._make, non_adjacent);
-        return self.matching_blocks;
+        this.matching_blocks = map(Match._make, non_adjacent);
+        return this.matching_blocks;
 
     }
-    def get_opcodes(self){
+    function get_opcodes(){
         """Return list of 5-tuples describing how to turn a into b.
 
         Each tuple is of the form (tag, i1, i2, j1, j2).  The first tuple
@@ -570,11 +570,11 @@ class SequenceMatcher{
          insert a[6:6] () b[5:6] (f)
         """;
 
-        if self.opcodes is not None{
-            return self.opcodes;
+        if this.opcodes is not nil{
+            return this.opcodes;
         } i = j = 0;
-        self.opcodes = answer = [];
-        for ai, bj, size in self.get_matching_blocks(){
+        this.opcodes = answer = [];
+        for ai, bj, size in this.get_matching_blocks(){
             # invariant:  we've pumped out correct diffs to change
             # a[:i] into b[:j], and the next matching block is
             # a[ai:ai+size] == b[bj:bj+size].  So we need to pump
@@ -597,7 +597,7 @@ class SequenceMatcher{
         } } return answer;
 
     }
-    def get_grouped_opcodes(self, n=3){
+    function get_grouped_opcodes( n=3){
         """ Isolate change clusters by eliminating ranges with no changes.
 
         Return a generator of groups with up to n lines of context.
@@ -622,7 +622,7 @@ class SequenceMatcher{
           ('equal', 35, 38, 31, 34)]]
         """;
 
-        codes = self.get_opcodes();
+        codes = this.get_opcodes();
         if not codes{
             codes = [("equal", 0, 1, 0, 1)];
         # Fixup leading and trailing groups if they show no changes.
@@ -650,7 +650,7 @@ class SequenceMatcher{
             yield group;
 
     }
-    } def ratio(self){
+    } function ratio(){
         """Return a measure of the sequences' similarity (float in [0,1]).
 
         Where T is the total number of elements in both sequences, and
@@ -673,11 +673,11 @@ class SequenceMatcher{
         """;
 
         matches = reduce(lambda sum, triple{ sum + triple[-1]},
-                         self.get_matching_blocks(), 0);
-        return _calculate_ratio(matches, len(self.a) + len(self.b));
+                         this.get_matching_blocks(), 0);
+        return _calculate_ratio(matches, len(this.a) + len(this.b));
 
     }
-    def quick_ratio(self){
+    function quick_ratio(){
         """Return an upper bound on ratio() relatively quickly.
 
         This isn't defined beyond that it is an upper bound on .ratio(), and
@@ -687,16 +687,16 @@ class SequenceMatcher{
         # viewing a and b as multisets, set matches to the cardinality
         # of their intersection; this counts the number of matches
         # without regard to order, so is clearly an upper bound
-        if self.fullbcount is None{
-            self.fullbcount = fullbcount = {};
-            for elt in self.b{
+        if this.fullbcount is nil{
+            this.fullbcount = fullbcount = {};
+            for elt in this.b{
                 fullbcount[elt] = fullbcount.get(elt, 0) + 1;
-        } } fullbcount = self.fullbcount;
+        } } fullbcount = this.fullbcount;
         # avail[x] is the number of times x appears in 'b' less the
         # number of times we've seen it in 'a' so far ... kinda
         avail = {};
         availhas, matches = avail.__contains__, 0;
-        for elt in self.a{
+        for elt in this.a{
             if availhas(elt){
                 numb = avail[elt];
             } else{
@@ -704,23 +704,23 @@ class SequenceMatcher{
             } avail[elt] = numb - 1;
             if numb > 0{
                 matches = matches + 1;
-        } } return _calculate_ratio(matches, len(self.a) + len(self.b));
+        } } return _calculate_ratio(matches, len(this.a) + len(this.b));
 
     }
-    def real_quick_ratio(self){
+    function real_quick_ratio(){
         """Return an upper bound on ratio() very quickly.
 
         This isn't defined beyond that it is an upper bound on .ratio(), and
         is faster to compute than either .ratio() or .quick_ratio().
         """;
 
-        la, lb = len(self.a), len(self.b);
+        la, lb = len(this.a), len(this.b);
         # can't have more matches than the number of elements in the
         # shorter sequence
         return _calculate_ratio(min(la, lb), la + lb);
 
 }
-} def get_close_matches(word, possibilities, n=3, cutoff=0.6){
+} function get_close_matches(word, possibilities, n=3, cutoff=0.6){
     """Use SequenceMatcher to return list of the best "good enough" matches.
 
     word is a sequence for which close matches are desired (typically a
@@ -770,7 +770,7 @@ class SequenceMatcher{
     return [x for score, x in result];
 
 }
-def _count_leading(line, ch){
+function _count_leading(line, ch){
     """
     Return number of `ch` characters at the start of `line`.
 
@@ -880,7 +880,7 @@ class Differ{
         Compare two sequences of lines; generate the resulting delta.
     """;
 
-    def __init__(self, linejunk=None, charjunk=None){
+    function __init__( linejunk=nil, charjunk=nil){
         """
         Construct a text differencer, with optional filters.
 
@@ -901,11 +901,11 @@ class Differ{
           newline in this!).  Use of IS_CHARACTER_JUNK is recommended.
         """;
 
-        self.linejunk = linejunk;
-        self.charjunk = charjunk;
+        this.linejunk = linejunk;
+        this.charjunk = charjunk;
 
     }
-    def compare(self, a, b){
+    function compare( a, b){
         r"""
         Compare two sequences of lines; generate the resulting delta.
 
@@ -930,16 +930,16 @@ class Differ{
         + emu
         """;
 
-        cruncher = SequenceMatcher(self.linejunk, a, b);
+        cruncher = SequenceMatcher(this.linejunk, a, b);
         for tag, alo, ahi, blo, bhi in cruncher.get_opcodes(){
             if tag == 'replace'{
-                g = self._fancy_replace(a, alo, ahi, b, blo, bhi);
+                g = this._fancy_replace(a, alo, ahi, b, blo, bhi);
             } elif tag == 'delete'{
-                g = self._dump('-', a, alo, ahi);
+                g = this._dump('-', a, alo, ahi);
             } elif tag == 'insert'{
-                g = self._dump('+', b, blo, bhi);
+                g = this._dump('+', b, blo, bhi);
             } elif tag == 'equal'{
-                g = self._dump(' ', a, alo, ahi);
+                g = this._dump(' ', a, alo, ahi);
             } else{
                 raise ValueError, 'unknown tag %r' % (tag,);
 
@@ -948,22 +948,22 @@ class Differ{
                 yield line;
 
     }
-    } } def _dump(self, tag, x, lo, hi){
+    } } function _dump( tag, x, lo, hi){
         """Generate comparison results for a same-tagged range.""";
         for i in xrange(lo, hi){
             yield '%s %s' % (tag, x[i]);
 
     }
-    } def _plain_replace(self, a, alo, ahi, b, blo, bhi){
+    } function _plain_replace( a, alo, ahi, b, blo, bhi){
         assert alo < ahi and blo < bhi;
         # dump the shorter block first -- reduces the burden on short-term
         # memory if the blocks are of very different sizes
         if bhi - blo < ahi - alo{
-            first  = self._dump('+', b, blo, bhi);
-            second = self._dump('-', a, alo, ahi);
+            first  = this._dump('+', b, blo, bhi);
+            second = this._dump('-', a, alo, ahi);
         } else{
-            first  = self._dump('-', a, alo, ahi);
-            second = self._dump('+', b, blo, bhi);
+            first  = this._dump('-', a, alo, ahi);
+            second = this._dump('+', b, blo, bhi);
 
         }
         for g in first, second{
@@ -971,7 +971,7 @@ class Differ{
                 yield line;
 
     }
-    } } def _fancy_replace(self, a, alo, ahi, b, blo, bhi){
+    } } function _fancy_replace( a, alo, ahi, b, blo, bhi){
         r"""
         When replacing one block of lines with another, search the blocks
         for *similar* lines; the best-matching pair (if any) is used as a
@@ -993,8 +993,8 @@ class Differ{
         # don't synch up unless the lines have a similarity score of at
         # least cutoff; best_ratio tracks the best score seen so far
         best_ratio, cutoff = 0.74, 0.75;
-        cruncher = SequenceMatcher(self.charjunk);
-        eqi, eqj = None, None;   # 1st indices of equal lines (if any)
+        cruncher = SequenceMatcher(this.charjunk);
+        eqi, eqj = nil, nil;   # 1st indices of equal lines (if any)
 
         # search for the pair that matches best without being identical
         # (identical lines must be junk lines, & we don't want to synch up
@@ -1005,7 +1005,7 @@ class Differ{
             for i in xrange(alo, ahi){
                 ai = a[i];
                 if ai == bj{
-                    if eqi is None{
+                    if eqi is nil{
                         eqi, eqj = i, j;
                     } continue;
                 } cruncher.set_seq1(ai);
@@ -1021,9 +1021,9 @@ class Differ{
                     best_ratio, best_i, best_j = cruncher.ratio(), i, j;
         } } } if best_ratio < cutoff{
             # no non-identical "pretty close" pair
-            if eqi is None{
+            if eqi is nil{
                 # no identical pair either -- treat it as a straight replace
-                for line in self._plain_replace(a, alo, ahi, b, blo, bhi){
+                for line in this._plain_replace(a, alo, ahi, b, blo, bhi){
                     yield line;
                 } return;
             # no close pair, but an identical pair -- synch up on that
@@ -1031,20 +1031,20 @@ class Differ{
             best_i, best_j, best_ratio = eqi, eqj, 1.0;
         } else{
             # there's a close pair, so forget the identical pair (if any)
-            eqi = None;
+            eqi = nil;
 
         # a[best_i] very similar to b[best_j]; eqi is None iff they're not
         # identical
 
         # pump out diffs from before the synch point
         }
-        for line in self._fancy_helper(a, alo, best_i, b, blo, best_j){
+        for line in this._fancy_helper(a, alo, best_i, b, blo, best_j){
             yield line;
 
         # do intraline marking on the synch pair
         }
         aelt, belt = a[best_i], b[best_j];
-        if eqi is None{
+        if eqi is nil{
             # pump out a '-', '?', '+', '?' quad for the synched lines
             atags = btags = "";
             cruncher.set_seqs(aelt, belt);
@@ -1062,7 +1062,7 @@ class Differ{
                     btags += ' ' * lb;
                 } else{
                     raise ValueError, 'unknown tag %r' % (tag,);
-            } } for line in self._qformat(aelt, belt, atags, btags){
+            } } for line in this._qformat(aelt, belt, atags, btags){
                 yield line;
         } } else{
             # the synch pair is identical
@@ -1070,26 +1070,26 @@ class Differ{
 
         # pump out diffs from after the synch point
         }
-        for line in self._fancy_helper(a, best_i+1, ahi, b, best_j+1, bhi){
+        for line in this._fancy_helper(a, best_i+1, ahi, b, best_j+1, bhi){
             yield line;
 
     }
-    } def _fancy_helper(self, a, alo, ahi, b, blo, bhi){
+    } function _fancy_helper( a, alo, ahi, b, blo, bhi){
         g = [];
         if alo < ahi{
             if blo < bhi{
-                g = self._fancy_replace(a, alo, ahi, b, blo, bhi);
+                g = this._fancy_replace(a, alo, ahi, b, blo, bhi);
             } else{
-                g = self._dump('-', a, alo, ahi);
+                g = this._dump('-', a, alo, ahi);
         } } elif blo < bhi{
-            g = self._dump('+', b, blo, bhi);
+            g = this._dump('+', b, blo, bhi);
 
         }
         for line in g{
             yield line;
 
     }
-    } def _qformat(self, aline, bline, atags, btags){
+    } function _qformat( aline, bline, atags, btags){
         r"""
         Format "?" output and deal with leading tabs.
 
@@ -1143,7 +1143,7 @@ class Differ{
 }
 } } import re;
 
-def IS_LINE_JUNK(line, pat=re.compile(r"\s*(?:#\s*)?$").match){
+function IS_LINE_JUNK(line, pat=re.compile(r"\s*(?:#\s*)?$").match){
     r"""
     Return 1 for ignorable line: iff `line` is blank or contains a single '#'.
 
@@ -1157,10 +1157,10 @@ def IS_LINE_JUNK(line, pat=re.compile(r"\s*(?:#\s*)?$").match){
     False
     """;
 
-    return pat(line) is not None;
+    return pat(line) is not nil;
 
 }
-def IS_CHARACTER_JUNK(ch, ws=" \t"){
+function IS_CHARACTER_JUNK(ch, ws=" \t"){
     r"""
     Return 1 for ignorable character: iff `ch` is a space or tab.
 
@@ -1184,7 +1184,7 @@ def IS_CHARACTER_JUNK(ch, ws=" \t"){
 ########################################################################
 
 }
-def _format_range_unified(start, stop){
+function _format_range_unified(start, stop){
     'Convert range to the "ed" format';
     # Per the diff spec at http://www.unix.org/single_unix_specification/
     beginning = start + 1;     # lines start numbering with one
@@ -1196,7 +1196,7 @@ def _format_range_unified(start, stop){
     } return '{},{}'.format(beginning, length);
 
 }
-def unified_diff(a, b, fromfile='', tofile='', fromfiledate='',
+function unified_diff(a, b, fromfile='', tofile='', fromfiledate='',
                  tofiledate='', n=3, lineterm='\n'){
     r"""
     Compare two sequences of lines; generate the delta as a unified diff.
@@ -1237,10 +1237,10 @@ def unified_diff(a, b, fromfile='', tofile='', fromfiledate='',
      four
     """;
 
-    started = False;
-    for group in SequenceMatcher(None,a,b).get_grouped_opcodes(n){
+    started = false;
+    for group in SequenceMatcher(nil,a,b).get_grouped_opcodes(n){
         if not started{
-            started = True;
+            started = true;
             fromdate = '\t{}'.format(fromfiledate) if fromfiledate else '';
             todate = '\t{}'.format(tofiledate) if tofiledate else '';
             yield '--- {}{}{}'.format(fromfile, fromdate, lineterm);
@@ -1270,7 +1270,7 @@ def unified_diff(a, b, fromfile='', tofile='', fromfiledate='',
 ########################################################################
 
 }
-} } } } def _format_range_context(start, stop){
+} } } } function _format_range_context(start, stop){
     'Convert range to the "ed" format';
     # Per the diff spec at http://www.unix.org/single_unix_specification/
     beginning = start + 1;     # lines start numbering with one
@@ -1283,7 +1283,7 @@ def unified_diff(a, b, fromfile='', tofile='', fromfiledate='',
 
 # See http://www.unix.org/single_unix_specification/
 }
-def context_diff(a, b, fromfile='', tofile='',
+function context_diff(a, b, fromfile='', tofile='',
                  fromfiledate='', tofiledate='', n=3, lineterm='\n'){
     r"""
     Compare two sequences of lines; generate the delta as a context diff.
@@ -1327,10 +1327,10 @@ def context_diff(a, b, fromfile='', tofile='',
     """;
 
     prefix = dict(insert='+ ', delete='- ', replace='! ', equal='  ');
-    started = False;
-    for group in SequenceMatcher(None,a,b).get_grouped_opcodes(n){
+    started = false;
+    for group in SequenceMatcher(nil,a,b).get_grouped_opcodes(n){
         if not started{
-            started = True;
+            started = true;
             fromdate = '\t{}'.format(fromfiledate) if fromfiledate else '';
             todate = '\t{}'.format(tofiledate) if tofiledate else '';
             yield '*** {}{}{}'.format(fromfile, fromdate, lineterm);
@@ -1360,7 +1360,7 @@ def context_diff(a, b, fromfile='', tofile='',
                         yield prefix[tag] + line;
 
 }
-} } } } } def ndiff(a, b, linejunk=None, charjunk=IS_CHARACTER_JUNK){
+} } } } } function ndiff(a, b, linejunk=nil, charjunk=IS_CHARACTER_JUNK){
     r"""
     Compare `a` and `b` (lists of strings); return a `Differ`-style delta.
 
@@ -1397,7 +1397,7 @@ def context_diff(a, b, fromfile='', tofile='',
     return Differ(linejunk, charjunk).compare(a, b);
 
 }
-def _mdiff(fromlines, tolines, context=None, linejunk=None,
+function _mdiff(fromlines, tolines, context=nil, linejunk=nil,
            charjunk=IS_CHARACTER_JUNK){
     r"""Returns generator yielding marked up from/to side by side differences.
 
@@ -1439,7 +1439,7 @@ def _mdiff(fromlines, tolines, context=None, linejunk=None,
     # create the difference iterator to generate the differences
     diff_lines_iterator = ndiff(fromlines,tolines,linejunk,charjunk);
 
-    def _make_line(lines, format_key, side, num_lines=[0,0]){
+    function _make_line(lines, format_key, side, num_lines=[0,0]){
         """Returns line of text with user's change markup and line formatting.
 
         lines -- list of lines from the ndiff generator to produce a line of
@@ -1465,7 +1465,7 @@ def _mdiff(fromlines, tolines, context=None, linejunk=None,
         num_lines[side] += 1;
         # Handle case where no user markup is to be added, just return line of
         # text with user's line format to allow for usage of the line number.
-        if format_key is None{
+        if format_key is nil{
             return (num_lines[side],lines.pop(0)[2:]);
         # Handle case of intraline changes
         }
@@ -1473,7 +1473,7 @@ def _mdiff(fromlines, tolines, context=None, linejunk=None,
             text, markers = lines.pop(0), lines.pop(0);
             # find intraline changes (store change type and indices in tuples)
             sub_info = [];
-            def record_sub_info(match_object,sub_info=sub_info){
+            function record_sub_info(match_object,sub_info=sub_info){
                 sub_info.append([match_object.group(1)[0],match_object.span()]);
                 return match_object.group(1);
             } change_re.sub(record_sub_info,markers);
@@ -1500,7 +1500,7 @@ def _mdiff(fromlines, tolines, context=None, linejunk=None,
         return (num_lines[side],text);
 
     }
-    def _line_iterator(){
+    function _line_iterator(){
         """Yields from/to lines of text with a change indication.
 
         This function is an iterator.  It itself pulls lines from a
@@ -1516,7 +1516,7 @@ def _mdiff(fromlines, tolines, context=None, linejunk=None,
         """;
         lines = [];
         num_blanks_pending, num_blanks_to_yield = 0, 0;
-        while True{
+        while true{
             # Load up next 4 lines so we can look ahead, create strings which
             # are a concatenation of the first character of each of the 4 lines
             # so we can do some very readable comparisons.
@@ -1533,67 +1533,67 @@ def _mdiff(fromlines, tolines, context=None, linejunk=None,
                 num_blanks_to_yield = num_blanks_pending;
             } elif s.startswith('-?+?'){
                 # simple intraline change
-                yield _make_line(lines,'?',0), _make_line(lines,'?',1), True;
+                yield _make_line(lines,'?',0), _make_line(lines,'?',1), true;
                 continue;
             } elif s.startswith('--++'){
                 # in delete block, add block coming: we do NOT want to get
                 # caught up on blank lines yet, just process the delete line
                 num_blanks_pending -= 1;
-                yield _make_line(lines,'-',0), None, True;
+                yield _make_line(lines,'-',0), nil, true;
                 continue;
             } elif s.startswith(('--?+', '--+', '- ')){
                 # in delete block and see an intraline change or unchanged line
                 # coming: yield the delete line and then blanks
-                from_line,to_line = _make_line(lines,'-',0), None;
+                from_line,to_line = _make_line(lines,'-',0), nil;
                 num_blanks_to_yield,num_blanks_pending = num_blanks_pending-1,0;
             } elif s.startswith('-+?'){
                 # intraline change
-                yield _make_line(lines,None,0), _make_line(lines,'?',1), True;
+                yield _make_line(lines,nil,0), _make_line(lines,'?',1), true;
                 continue;
             } elif s.startswith('-?+'){
                 # intraline change
-                yield _make_line(lines,'?',0), _make_line(lines,None,1), True;
+                yield _make_line(lines,'?',0), _make_line(lines,nil,1), true;
                 continue;
             } elif s.startswith('-'){
                 # delete FROM line
                 num_blanks_pending -= 1;
-                yield _make_line(lines,'-',0), None, True;
+                yield _make_line(lines,'-',0), nil, true;
                 continue;
             } elif s.startswith('+--'){
                 # in add block, delete block coming: we do NOT want to get
                 # caught up on blank lines yet, just process the add line
                 num_blanks_pending += 1;
-                yield None, _make_line(lines,'+',1), True;
+                yield nil, _make_line(lines,'+',1), true;
                 continue;
             } elif s.startswith(('+ ', '+-')){
                 # will be leaving an add block: yield blanks then add line
-                from_line, to_line = None, _make_line(lines,'+',1);
+                from_line, to_line = nil, _make_line(lines,'+',1);
                 num_blanks_to_yield,num_blanks_pending = num_blanks_pending+1,0;
             } elif s.startswith('+'){
                 # inside an add block, yield the add line
                 num_blanks_pending += 1;
-                yield None, _make_line(lines,'+',1), True;
+                yield nil, _make_line(lines,'+',1), true;
                 continue;
             } elif s.startswith(' '){
                 # unchanged text, yield it to both sides
-                yield _make_line(lines[:],None,0),_make_line(lines,None,1),False;
+                yield _make_line(lines[:],nil,0),_make_line(lines,nil,1),false;
                 continue;
             # Catch up on the blank lines so when we yield the next from/to
             # pair, they are lined up.
             }
             while(num_blanks_to_yield < 0){
                 num_blanks_to_yield += 1;
-                yield None,('','\n'),True;
+                yield nil,('','\n'),true;
             } while(num_blanks_to_yield > 0){
                 num_blanks_to_yield -= 1;
-                yield ('','\n'),None,True;
+                yield ('','\n'),nil,true;
             } if s.startswith('X'){
                 raise StopIteration;
             } else{
-                yield from_line,to_line,True;
+                yield from_line,to_line,true;
 
     }
-    } } def _line_pair_iterator(){
+    } } function _line_pair_iterator(){
         """Yields from/to lines of text with a change indication.
 
         This function is an iterator.  It itself pulls lines from the line
@@ -1608,13 +1608,13 @@ def _mdiff(fromlines, tolines, context=None, linejunk=None,
         """;
         line_iterator = _line_iterator();
         fromlines,tolines=[],[];
-        while True{
+        while true{
             # Collecting lines of text until we have a from/to pair
             while (len(fromlines)==0 or len(tolines)==0){
                 from_line, to_line, found_diff =line_iterator.next();
-                if from_line is not None{
+                if from_line is not nil{
                     fromlines.append((from_line,found_diff));
-                } if to_line is not None{
+                } if to_line is not nil{
                     tolines.append((to_line,found_diff));
             # Once we have a pair, remove them from the collection and yield it
             }
@@ -1626,8 +1626,8 @@ def _mdiff(fromlines, tolines, context=None, linejunk=None,
     # them up without doing anything else with them.
     }
     } line_pair_iterator = _line_pair_iterator();
-    if context is None{
-        while True{
+    if context is nil{
+        while true{
             yield line_pair_iterator.next();
     # Handle case where user wants context differencing.  We must do some
     # storage of lines until we know for sure that they are to be yielded.
@@ -1635,13 +1635,13 @@ def _mdiff(fromlines, tolines, context=None, linejunk=None,
     } else{
         context += 1;
         lines_to_write = 0;
-        while True{
+        while true{
             # Store lines up until we find a difference, note use of a
             # circular queue because we only need to keep around what
             # we need for context.
-            index, contextLines = 0, [None]*(context);
-            found_diff = False;
-            while(found_diff is False){
+            index, contextLines = 0, [nil]*(context);
+            found_diff = false;
+            while(found_diff is false){
                 from_line, to_line, found_diff = line_pair_iterator.next();
                 i = index % context;
                 contextLines[i] = (from_line, to_line, found_diff);
@@ -1650,7 +1650,7 @@ def _mdiff(fromlines, tolines, context=None, linejunk=None,
             # the user's separator.
             }
             if index > context{
-                yield None, None, None;
+                yield nil, nil, nil;
                 lines_to_write = context;
             } else{
                 lines_to_write = index;
@@ -1752,7 +1752,7 @@ class HtmlDiff(object){
     _legend = _legend;
     _default_prefix = 0;
 
-    def __init__(self,tabsize=8,wrapcolumn=None,linejunk=None,
+    function __init__(tabsize=8,wrapcolumn=nil,linejunk=nil,
                  charjunk=IS_CHARACTER_JUNK){
         """HtmlDiff instance initializer
 
@@ -1764,13 +1764,13 @@ class HtmlDiff(object){
             HtmlDiff() to generate the side by side HTML differences).  See
             ndiff() documentation for argument default values and descriptions.
         """;
-        self._tabsize = tabsize;
-        self._wrapcolumn = wrapcolumn;
-        self._linejunk = linejunk;
-        self._charjunk = charjunk;
+        this._tabsize = tabsize;
+        this._wrapcolumn = wrapcolumn;
+        this._linejunk = linejunk;
+        this._charjunk = charjunk;
 
     }
-    def make_file(self,fromlines,tolines,fromdesc='',todesc='',context=False,
+    function make_file(fromlines,tolines,fromdesc='',todesc='',context=false,
                   numlines=5){
         """Returns HTML file of side by side comparison with change highlights
 
@@ -1788,14 +1788,14 @@ class HtmlDiff(object){
             "next" link jumps to just before the change).
         """;
 
-        return self._file_template % dict(
-            styles = self._styles,
-            legend = self._legend,
-            table = self.make_table(fromlines,tolines,fromdesc,todesc,
+        return this._file_template % dict(
+            styles = this._styles,
+            legend = this._legend,
+            table = this.make_table(fromlines,tolines,fromdesc,todesc,
                                     context=context,numlines=numlines));
 
     }
-    def _tab_newline_replace(self,fromlines,tolines){
+    function _tab_newline_replace(fromlines,tolines){
         """Returns from/to line lists with tabs expanded and newlines removed.
 
         Instead of tab characters being replaced by the number of spaces
@@ -1805,11 +1805,11 @@ class HtmlDiff(object){
         spaces and vice versa.  At the end of the HTML generation, the tab
         characters will be replaced with a nonbreakable space.
         """;
-        def expand_tabs(line){
+        function expand_tabs(line){
             # hide real spaces
             line = line.replace(' ','\0');
             # expand tabs into spaces
-            line = line.expandtabs(self._tabsize);
+            line = line.expandtabs(this._tabsize);
             # replace spaces from expanded tabs back into tab characters
             # (we'll replace them with markup after we do differencing)
             line = line.replace(' ','\t');
@@ -1819,7 +1819,7 @@ class HtmlDiff(object){
         return fromlines,tolines;
 
     }
-    def _split_line(self,data_list,line_num,text){
+    function _split_line(data_list,line_num,text){
         """Builds list of text lines by splitting text lines at wrap point
 
         This function will determine if the input text line needs to be
@@ -1836,7 +1836,7 @@ class HtmlDiff(object){
         # if line text doesn't need wrapping, just add it to the output list
         }
         size = len(text);
-        max = self._wrapcolumn;
+        max = this._wrapcolumn;
         if (size <= max) or ((size -(text.count('\0')*3)) <= max){
             data_list.append((line_num,text));
             return;
@@ -1876,24 +1876,24 @@ class HtmlDiff(object){
         data_list.append((line_num,line1));
 
         # use this routine again to wrap the remaining text
-        self._split_line(data_list,'>',line2);
+        this._split_line(data_list,'>',line2);
 
     }
-    def _line_wrapper(self,diffs){
+    function _line_wrapper(diffs){
         """Returns iterator that splits (wraps) mdiff text lines""";
 
         # pull from/to data and flags from mdiff iterator
         for fromdata,todata,flag in diffs{
             # check for context separators and pass them through
-            if flag is None{
+            if flag is nil{
                 yield fromdata,todata,flag;
                 continue;
             } (fromline,fromtext),(toline,totext) = fromdata,todata;
             # for each from/to line split it at the wrap column to form
             # list of text lines.
             fromlist,tolist = [],[];
-            self._split_line(fromlist,fromline,fromtext);
-            self._split_line(tolist,toline,totext);
+            this._split_line(fromlist,fromline,fromtext);
+            this._split_line(tolist,toline,totext);
             # yield from/to line in pairs inserting blank lines as
             # necessary when one side has more wrapped lines
             while fromlist or tolist{
@@ -1908,7 +1908,7 @@ class HtmlDiff(object){
                 } yield fromdata,todata,flag;
 
     }
-    } } def _collect_lines(self,diffs){
+    } } function _collect_lines(diffs){
         """Collects mdiff output into separate lists
 
         Before storing the mdiff from/to data into a list, it is converted
@@ -1920,17 +1920,17 @@ class HtmlDiff(object){
         for fromdata,todata,flag in diffs{
             try{
                 # store HTML markup of the lines into the lists
-                fromlist.append(self._format_line(0,flag,*fromdata));
-                tolist.append(self._format_line(1,flag,*todata));
+                fromlist.append(this._format_line(0,flag,*fromdata));
+                tolist.append(this._format_line(1,flag,*todata));
             } except TypeError{
                 # exceptions occur for lines where context separators go
-                fromlist.append(None);
-                tolist.append(None);
+                fromlist.append(nil);
+                tolist.append(nil);
             } flaglist.append(flag);
         } return fromlist,tolist,flaglist;
 
     }
-    def _format_line(self,side,flag,linenum,text){
+    function _format_line(side,flag,linenum,text){
         """Returns HTML markup of "from" / "to" text lines
 
         side -- 0 or 1 indicating "from" or "to" text
@@ -1940,7 +1940,7 @@ class HtmlDiff(object){
         """;
         try{
             linenum = '%d' % linenum;
-            id = ' id="%s%s"' % (self._prefix[side],linenum);
+            id = ' id="%s%s"' % (this._prefix[side],linenum);
         } except TypeError{
             # handle blank lines where linenum is '>' or ''
             id = '';
@@ -1955,7 +1955,7 @@ class HtmlDiff(object){
                % (id,linenum,text);
 
     }
-    def _make_prefix(self){
+    function _make_prefix(){
         """Create unique anchor prefixes""";
 
         # Generate a unique anchor prefix so multiple tables
@@ -1964,24 +1964,24 @@ class HtmlDiff(object){
         toprefix = "to%d_" % HtmlDiff._default_prefix;
         HtmlDiff._default_prefix += 1;
         # store prefixes so line format method has access
-        self._prefix = [fromprefix,toprefix];
+        this._prefix = [fromprefix,toprefix];
 
     }
-    def _convert_flags(self,fromlist,tolist,flaglist,context,numlines){
+    function _convert_flags(fromlist,tolist,flaglist,context,numlines){
         """Makes list of "next" links""";
 
         # all anchor names will be generated using the unique "to" prefix
-        toprefix = self._prefix[1];
+        toprefix = this._prefix[1];
 
         # process change flags, generating middle column of next anchors/links
         next_id = ['']*len(flaglist);
         next_href = ['']*len(flaglist);
-        num_chg, in_change = 0, False;
+        num_chg, in_change = 0, false;
         last = 0;
         for i,flag in enumerate(flaglist){
             if flag{
                 if not in_change{
-                    in_change = True;
+                    in_change = true;
                     last = i;
                     # at the beginning of a change, drop an anchor a few lines
                     # (the context lines) before the change for the previous
@@ -1994,11 +1994,11 @@ class HtmlDiff(object){
                     next_href[last] = '<a href="#difflib_chg_%s_%d">n</a>' % (
                          toprefix,num_chg);
             } } else{
-                in_change = False;
+                in_change = false;
         # check for cases where there is no content to avoid exceptions
         }
         } if not flaglist{
-            flaglist = [False];
+            flaglist = [false];
             next_id = [''];
             next_href = [''];
             last = 0;
@@ -2018,7 +2018,7 @@ class HtmlDiff(object){
         return fromlist,tolist,flaglist,next_href,next_id;
 
     }
-    def make_table(self,fromlines,tolines,fromdesc='',todesc='',context=False,
+    function make_table(fromlines,tolines,fromdesc='',todesc='',context=false,
                    numlines=5){
         """Returns HTML table of side by side comparison with change highlights
 
@@ -2038,37 +2038,37 @@ class HtmlDiff(object){
 
         # make unique anchor prefixes so that multiple tables may exist
         # on the same page without conflict.
-        self._make_prefix();
+        this._make_prefix();
 
         # change tabs to spaces before it gets more difficult after we insert
         # markup
-        fromlines,tolines = self._tab_newline_replace(fromlines,tolines);
+        fromlines,tolines = this._tab_newline_replace(fromlines,tolines);
 
         # create diffs iterator which generates side by side from/to data
         if context{
             context_lines = numlines;
         } else{
-            context_lines = None;
-        } diffs = _mdiff(fromlines,tolines,context_lines,linejunk=self._linejunk,
-                      charjunk=self._charjunk);
+            context_lines = nil;
+        } diffs = _mdiff(fromlines,tolines,context_lines,linejunk=this._linejunk,
+                      charjunk=this._charjunk);
 
         # set up iterator to wrap lines that exceed desired width
-        if self._wrapcolumn{
-            diffs = self._line_wrapper(diffs);
+        if this._wrapcolumn{
+            diffs = this._line_wrapper(diffs);
 
         # collect up from/to lines and flags into lists (also format the lines)
         }
-        fromlist,tolist,flaglist = self._collect_lines(diffs);
+        fromlist,tolist,flaglist = this._collect_lines(diffs);
 
         # process change flags, generating middle column of next anchors/links
-        fromlist,tolist,flaglist,next_href,next_id = self._convert_flags(
+        fromlist,tolist,flaglist,next_href,next_id = this._convert_flags(
             fromlist,tolist,flaglist,context,numlines);
 
         s = [];
         fmt = '            <tr><td class="diff_next"%s>%s</td>%s' + \
               '<td class="diff_next">%s</td>%s</tr>\n';
         for i in range(len(flaglist)){
-            if flaglist[i] is None{
+            if flaglist[i] is nil{
                 # mdiff yields None on separator lines skip the bogus ones
                 # generated for the first line
                 if i > 0{
@@ -2086,10 +2086,10 @@ class HtmlDiff(object){
             header_row = '';
 
         }
-        table = self._table_template % dict(
+        table = this._table_template % dict(
             data_rows=''.join(s),
             header_row=header_row,
-            prefix=self._prefix[1]);
+            prefix=this._prefix[1]);
 
         return table.replace('\0+','<span class="diff_add">'). \
                      replace('\0-','<span class="diff_sub">'). \
@@ -2100,7 +2100,7 @@ class HtmlDiff(object){
 }
 } del re;
 
-def restore(delta, which){
+function restore(delta, which){
     r"""
     Generate one of the two sequences that generated a delta.
 
@@ -2133,7 +2133,7 @@ def restore(delta, which){
             yield line[2:];
 
 }
-} } def _test(){
+} } function _test(){
     import doctest, difflib;
     return doctest.testmod(difflib);
 

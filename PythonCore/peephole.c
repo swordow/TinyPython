@@ -102,7 +102,7 @@ fold_binops_on_constants(unsigned char *codestr, PyObject *consts)
     opcode = codestr[6];
     switch (opcode) {
         case BINARY_POWER:
-            newconst = PyNumber_Power(v, w, Py_None);
+            newconst = PyNumber_Power(v, w, Py_Nil);
             break;
         case BINARY_MULTIPLY:
             newconst = PyNumber_Multiply(v, w);
@@ -395,17 +395,17 @@ PyCode_Optimize(PyObject *code, PyObject* consts, PyObject *names,
             case LOAD_GLOBAL:
                 j = GETARG(codestr, i);
                 name = PyString_AsString(PyTuple_GET_ITEM(names, j));
-                if (name == NULL  ||  strcmp(name, "None") != 0)
+                if (name == NULL  ||  strcmp(name, "nil") != 0)
                     continue;
                 for (j=0 ; j < PyList_GET_SIZE(consts) ; j++) {
-                    if (PyList_GET_ITEM(consts, j) == Py_None)
+                    if (PyList_GET_ITEM(consts, j) == Py_Nil)
                         break;
                 }
                 if (j == PyList_GET_SIZE(consts)) {
-                    if (PyList_Append(consts, Py_None) == -1)
+                    if (PyList_Append(consts, Py_Nil) == -1)
                         goto exitError;
                 }
-                assert(PyList_GET_ITEM(consts, j) == Py_None);
+                assert(PyList_GET_ITEM(consts, j) == Py_Nil);
                 codestr[i] = LOAD_CONST;
                 SETARG(codestr, i, j);
                 cumlc = lastlc + 1;

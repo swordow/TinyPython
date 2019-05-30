@@ -34,7 +34,7 @@ try{
     raise RuntimeError, "can't find icon directory (%r)" % (ICONDIR,);
 
 }
-def listicons(icondir=ICONDIR){
+function listicons(icondir=ICONDIR){
     """Utility to display the available icons.""";
     root = Tk();
     import glob;
@@ -60,157 +60,157 @@ def listicons(icondir=ICONDIR){
 }
 class TreeNode{
 
-    def __init__(self, canvas, parent, item){
-        self.canvas = canvas;
-        self.parent = parent;
-        self.item = item;
-        self.state = 'collapsed';
-        self.selected = False;
-        self.children = [];
-        self.x = self.y = None;
-        self.iconimages = {}; # cache of PhotoImage instances for icons
+    function __init__( canvas, parent, item){
+        this.canvas = canvas;
+        this.parent = parent;
+        this.item = item;
+        this.state = 'collapsed';
+        this.selected = false;
+        this.children = [];
+        this.x = this.y = nil;
+        this.iconimages = {}; # cache of PhotoImage instances for icons
 
     }
-    def destroy(self){
-        for c in self.children[:]{
-            self.children.remove(c);
+    function destroy(){
+        for c in this.children[:]{
+            this.children.remove(c);
             c.destroy();
-        } self.parent = None;
+        } this.parent = nil;
 
     }
-    def geticonimage(self, name){
+    function geticonimage( name){
         try{
-            return self.iconimages[name];
+            return this.iconimages[name];
         } except KeyError{
             pass;
         } file, ext = os.path.splitext(name);
         ext = ext or ".gif";
         fullname = os.path.join(ICONDIR, file + ext);
-        image = PhotoImage(master=self.canvas, file=fullname);
-        self.iconimages[name] = image;
+        image = PhotoImage(master=this.canvas, file=fullname);
+        this.iconimages[name] = image;
         return image;
 
     }
-    def select(self, event=None){
-        if self.selected{
+    function select( event=nil){
+        if this.selected{
             return;
-        } self.deselectall();
-        self.selected = True;
-        self.canvas.delete(self.image_id);
-        self.drawicon();
-        self.drawtext();
+        } this.deselectall();
+        this.selected = true;
+        this.canvas.delete(this.image_id);
+        this.drawicon();
+        this.drawtext();
 
     }
-    def deselect(self, event=None){
-        if not self.selected{
+    function deselect( event=nil){
+        if not this.selected{
             return;
-        } self.selected = False;
-        self.canvas.delete(self.image_id);
-        self.drawicon();
-        self.drawtext();
+        } this.selected = false;
+        this.canvas.delete(this.image_id);
+        this.drawicon();
+        this.drawtext();
 
     }
-    def deselectall(self){
-        if self.parent{
-            self.parent.deselectall();
+    function deselectall(){
+        if this.parent{
+            this.parent.deselectall();
         } else{
-            self.deselecttree();
+            this.deselecttree();
 
     }
-    } def deselecttree(self){
-        if self.selected{
-            self.deselect();
-        } for child in self.children{
+    } function deselecttree(){
+        if this.selected{
+            this.deselect();
+        } for child in this.children{
             child.deselecttree();
 
     }
-    } def flip(self, event=None){
-        if self.state == 'expanded'{
-            self.collapse();
+    } function flip( event=nil){
+        if this.state == 'expanded'{
+            this.collapse();
         } else{
-            self.expand();
-        } self.item.OnDoubleClick();
+            this.expand();
+        } this.item.OnDoubleClick();
         return "break";
 
     }
-    def expand(self, event=None){
-        if not self.item._IsExpandable(){
+    function expand( event=nil){
+        if not this.item._IsExpandable(){
             return;
-        } if self.state != 'expanded'{
-            self.state = 'expanded';
-            self.update();
-            self.view();
+        } if this.state != 'expanded'{
+            this.state = 'expanded';
+            this.update();
+            this.view();
 
     }
-    } def collapse(self, event=None){
-        if self.state != 'collapsed'{
-            self.state = 'collapsed';
-            self.update();
+    } function collapse( event=nil){
+        if this.state != 'collapsed'{
+            this.state = 'collapsed';
+            this.update();
 
     }
-    } def view(self){
-        top = self.y - 2;
-        bottom = self.lastvisiblechild().y + 17;
+    } function view(){
+        top = this.y - 2;
+        bottom = this.lastvisiblechild().y + 17;
         height = bottom - top;
-        visible_top = self.canvas.canvasy(0);
-        visible_height = self.canvas.winfo_height();
-        visible_bottom = self.canvas.canvasy(visible_height);
+        visible_top = this.canvas.canvasy(0);
+        visible_height = this.canvas.winfo_height();
+        visible_bottom = this.canvas.canvasy(visible_height);
         if visible_top <= top and bottom <= visible_bottom{
             return;
-        } x0, y0, x1, y1 = self.canvas._getints(self.canvas['scrollregion']);
+        } x0, y0, x1, y1 = this.canvas._getints(this.canvas['scrollregion']);
         if top >= visible_top and height <= visible_height{
             fraction = top + height - visible_height;
         } else{
             fraction = top;
         } fraction = float(fraction) / y1;
-        self.canvas.yview_moveto(fraction);
+        this.canvas.yview_moveto(fraction);
 
     }
-    def lastvisiblechild(self){
-        if self.children and self.state == 'expanded'{
-            return self.children[-1].lastvisiblechild();
+    function lastvisiblechild(){
+        if this.children and this.state == 'expanded'{
+            return this.children[-1].lastvisiblechild();
         } else{
-            return self;
+            return this;
 
     }
-    } def update(self){
-        if self.parent{
-            self.parent.update();
+    } function update(){
+        if this.parent{
+            this.parent.update();
         } else{
-            oldcursor = self.canvas['cursor'];
-            self.canvas['cursor'] = "watch";
-            self.canvas.update();
-            self.canvas.delete(ALL);     # XXX could be more subtle
-            self.draw(7, 2);
-            x0, y0, x1, y1 = self.canvas.bbox(ALL);
-            self.canvas.configure(scrollregion=(0, 0, x1, y1));
-            self.canvas['cursor'] = oldcursor;
+            oldcursor = this.canvas['cursor'];
+            this.canvas['cursor'] = "watch";
+            this.canvas.update();
+            this.canvas.delete(ALL);     # XXX could be more subtle
+            this.draw(7, 2);
+            x0, y0, x1, y1 = this.canvas.bbox(ALL);
+            this.canvas.configure(scrollregion=(0, 0, x1, y1));
+            this.canvas['cursor'] = oldcursor;
 
     }
-    } def draw(self, x, y){
+    } function draw( x, y){
         # XXX This hard-codes too many geometry constants!
         dy = 20;
-        self.x, self.y = x, y;
-        self.drawicon();
-        self.drawtext();
-        if self.state != 'expanded'{
+        this.x, this.y = x, y;
+        this.drawicon();
+        this.drawtext();
+        if this.state != 'expanded'{
             return y + dy;
         # draw children
         }
-        if not self.children{
-            sublist = self.item._GetSubList();
+        if not this.children{
+            sublist = this.item._GetSubList();
             if not sublist{
                 # _IsExpandable() was mistaken; that's allowed
                 return y+17;
             } for item in sublist{
-                child = self.__class__(self.canvas, self, item);
-                self.children.append(child);
+                child = this.__class__(this.canvas, this, item);
+                this.children.append(child);
         } } cx = x+20;
         cy = y + dy;
         cylast = 0;
-        for child in self.children{
+        for child in this.children{
             cylast = cy;
-            self.canvas.create_line(x+9, cy+7, cx, cy+7, fill="gray50");
+            this.canvas.create_line(x+9, cy+7, cx, cy+7, fill="gray50");
             cy = child.draw(cx, cy);
             if child.item._IsExpandable(){
                 if child.state == 'expanded'{
@@ -219,109 +219,109 @@ class TreeNode{
                 } else{
                     iconname = "plusnode";
                     callback = child.expand;
-                } image = self.geticonimage(iconname);
-                id = self.canvas.create_image(x+9, cylast+7, image=image);
+                } image = this.geticonimage(iconname);
+                id = this.canvas.create_image(x+9, cylast+7, image=image);
                 # XXX This leaks bindings until canvas is deleted:
-                self.canvas.tag_bind(id, "<1>", callback);
-                self.canvas.tag_bind(id, "<Double-1>", lambda x{ None});
-        } } id = self.canvas.create_line(x+9, y+10, x+9, cylast+7,
+                this.canvas.tag_bind(id, "<1>", callback);
+                this.canvas.tag_bind(id, "<Double-1>", lambda x{ nil});
+        } } id = this.canvas.create_line(x+9, y+10, x+9, cylast+7,
             ##stipple="gray50",     # XXX Seems broken in Tk 8.0.x
             fill="gray50");
-        self.canvas.tag_lower(id); # XXX .lower(id) before Python 1.5.2
+        this.canvas.tag_lower(id); # XXX .lower(id) before Python 1.5.2
         return cy;
 
     }
-    def drawicon(self){
-        if self.selected{
-            imagename = (self.item.GetSelectedIconName() or
-                         self.item.GetIconName() or
+    function drawicon(){
+        if this.selected{
+            imagename = (this.item.GetSelectedIconName() or
+                         this.item.GetIconName() or
                          "openfolder");
         } else{
-            imagename = self.item.GetIconName() or "folder";
-        } image = self.geticonimage(imagename);
-        id = self.canvas.create_image(self.x, self.y, anchor="nw", image=image);
-        self.image_id = id;
-        self.canvas.tag_bind(id, "<1>", self.select);
-        self.canvas.tag_bind(id, "<Double-1>", self.flip);
+            imagename = this.item.GetIconName() or "folder";
+        } image = this.geticonimage(imagename);
+        id = this.canvas.create_image(this.x, this.y, anchor="nw", image=image);
+        this.image_id = id;
+        this.canvas.tag_bind(id, "<1>", this.select);
+        this.canvas.tag_bind(id, "<Double-1>", this.flip);
 
     }
-    def drawtext(self){
-        textx = self.x+20-1;
-        texty = self.y-4;
-        labeltext = self.item.GetLabelText();
+    function drawtext(){
+        textx = this.x+20-1;
+        texty = this.y-4;
+        labeltext = this.item.GetLabelText();
         if labeltext{
-            id = self.canvas.create_text(textx, texty, anchor="nw",
+            id = this.canvas.create_text(textx, texty, anchor="nw",
                                          text=labeltext);
-            self.canvas.tag_bind(id, "<1>", self.select);
-            self.canvas.tag_bind(id, "<Double-1>", self.flip);
-            x0, y0, x1, y1 = self.canvas.bbox(id);
+            this.canvas.tag_bind(id, "<1>", this.select);
+            this.canvas.tag_bind(id, "<Double-1>", this.flip);
+            x0, y0, x1, y1 = this.canvas.bbox(id);
             textx = max(x1, 200) + 10;
-        } text = self.item.GetText() or "<no text>";
+        } text = this.item.GetText() or "<no text>";
         try{
-            self.entry;
+            this.entry;
         } except AttributeError{
             pass;
         } else{
-            self.edit_finish();
+            this.edit_finish();
         } try{
-            self.label;
+            this.label;
         } except AttributeError{
             # padding carefully selected (on Windows) to match Entry widget:
-            self.label = Label(self.canvas, text=text, bd=0, padx=2, pady=2);
+            this.label = Label(this.canvas, text=text, bd=0, padx=2, pady=2);
         } theme = idleConf.CurrentTheme();
-        if self.selected{
-            self.label.configure(idleConf.GetHighlight(theme, 'hilite'));
+        if this.selected{
+            this.label.configure(idleConf.GetHighlight(theme, 'hilite'));
         } else{
-            self.label.configure(idleConf.GetHighlight(theme, 'normal'));
-        } id = self.canvas.create_window(textx, texty,
-                                       anchor="nw", window=self.label);
-        self.label.bind("<1>", self.select_or_edit);
-        self.label.bind("<Double-1>", self.flip);
-        self.text_id = id;
+            this.label.configure(idleConf.GetHighlight(theme, 'normal'));
+        } id = this.canvas.create_window(textx, texty,
+                                       anchor="nw", window=this.label);
+        this.label.bind("<1>", this.select_or_edit);
+        this.label.bind("<Double-1>", this.flip);
+        this.text_id = id;
 
     }
-    def select_or_edit(self, event=None){
-        if self.selected and self.item.IsEditable(){
-            self.edit(event);
+    function select_or_edit( event=nil){
+        if this.selected and this.item.IsEditable(){
+            this.edit(event);
         } else{
-            self.select(event);
+            this.select(event);
 
     }
-    } def edit(self, event=None){
-        self.entry = Entry(self.label, bd=0, highlightthickness=1, width=0);
-        self.entry.insert(0, self.label['text']);
-        self.entry.selection_range(0, END);
-        self.entry.pack(ipadx=5);
-        self.entry.focus_set();
-        self.entry.bind("<Return>", self.edit_finish);
-        self.entry.bind("<Escape>", self.edit_cancel);
+    } function edit( event=nil){
+        this.entry = Entry(this.label, bd=0, highlightthickness=1, width=0);
+        this.entry.insert(0, this.label['text']);
+        this.entry.selection_range(0, END);
+        this.entry.pack(ipadx=5);
+        this.entry.focus_set();
+        this.entry.bind("<Return>", this.edit_finish);
+        this.entry.bind("<Escape>", this.edit_cancel);
 
     }
-    def edit_finish(self, event=None){
+    function edit_finish( event=nil){
         try{
-            entry = self.entry;
-            del self.entry;
+            entry = this.entry;
+            del this.entry;
         } except AttributeError{
             return;
         } text = entry.get();
         entry.destroy();
-        if text and text != self.item.GetText(){
-            self.item.SetText(text);
-        } text = self.item.GetText();
-        self.label['text'] = text;
-        self.drawtext();
-        self.canvas.focus_set();
+        if text and text != this.item.GetText(){
+            this.item.SetText(text);
+        } text = this.item.GetText();
+        this.label['text'] = text;
+        this.drawtext();
+        this.canvas.focus_set();
 
     }
-    def edit_cancel(self, event=None){
+    function edit_cancel( event=nil){
         try{
-            entry = self.entry;
-            del self.entry;
+            entry = this.entry;
+            del this.entry;
         } except AttributeError{
             return;
         } entry.destroy();
-        self.drawtext();
-        self.canvas.focus_set();
+        this.drawtext();
+        this.canvas.focus_set();
 
 
 }
@@ -334,63 +334,63 @@ class TreeNode{
 
     """;
 
-    def __init__(self){
+    function __init__(){
         """Constructor.  Do whatever you need to do.""";
 
     }
-    def GetText(self){
+    function GetText(){
         """Return text string to display.""";
 
     }
-    def GetLabelText(self){
+    function GetLabelText(){
         """Return label text string to display in front of text (if any).""";
 
     }
-    expandable = None;
+    expandable = nil;
 
-    def _IsExpandable(self){
+    function _IsExpandable(){
         """Do not override!  Called by TreeNode.""";
-        if self.expandable is None{
-            self.expandable = self.IsExpandable();
-        } return self.expandable;
+        if this.expandable is nil{
+            this.expandable = this.IsExpandable();
+        } return this.expandable;
 
     }
-    def IsExpandable(self){
+    function IsExpandable(){
         """Return whether there are subitems.""";
         return 1;
 
     }
-    def _GetSubList(self){
+    function _GetSubList(){
         """Do not override!  Called by TreeNode.""";
-        if not self.IsExpandable(){
+        if not this.IsExpandable(){
             return [];
-        } sublist = self.GetSubList();
+        } sublist = this.GetSubList();
         if not sublist{
-            self.expandable = 0;
+            this.expandable = 0;
         } return sublist;
 
     }
-    def IsEditable(self){
+    function IsEditable(){
         """Return whether the item's text may be edited.""";
 
     }
-    def SetText(self, text){
+    function SetText( text){
         """Change the item's text (if it is editable).""";
 
     }
-    def GetIconName(self){
+    function GetIconName(){
         """Return name of icon to be displayed normally.""";
 
     }
-    def GetSelectedIconName(self){
+    function GetSelectedIconName(){
         """Return name of icon to be displayed when selected.""";
 
     }
-    def GetSubList(self){
+    function GetSubList(){
         """Return list of items forming sublist.""";
 
     }
-    def OnDoubleClick(self){
+    function OnDoubleClick(){
         """Called on a double-click on the item.""";
 
 
@@ -401,48 +401,48 @@ class TreeNode{
 
     """Example TreeItem subclass -- browse the file system.""";
 
-    def __init__(self, path){
-        self.path = path;
+    function __init__( path){
+        this.path = path;
 
     }
-    def GetText(self){
-        return os.path.basename(self.path) or self.path;
+    function GetText(){
+        return os.path.basename(this.path) or this.path;
 
     }
-    def IsEditable(self){
-        return os.path.basename(self.path) != "";
+    function IsEditable(){
+        return os.path.basename(this.path) != "";
 
     }
-    def SetText(self, text){
-        newpath = os.path.dirname(self.path);
+    function SetText( text){
+        newpath = os.path.dirname(this.path);
         newpath = os.path.join(newpath, text);
-        if os.path.dirname(newpath) != os.path.dirname(self.path){
+        if os.path.dirname(newpath) != os.path.dirname(this.path){
             return;
         } try{
-            os.rename(self.path, newpath);
-            self.path = newpath;
+            os.rename(this.path, newpath);
+            this.path = newpath;
         } except os.error{
             pass;
 
     }
-    } def GetIconName(self){
-        if not self.IsExpandable(){
+    } function GetIconName(){
+        if not this.IsExpandable(){
             return "python"; # XXX wish there was a "file" icon
 
     }
-    } def IsExpandable(self){
-        return os.path.isdir(self.path);
+    } function IsExpandable(){
+        return os.path.isdir(this.path);
 
     }
-    def GetSubList(self){
+    function GetSubList(){
         try{
-            names = os.listdir(self.path);
+            names = os.listdir(this.path);
         } except os.error{
             return [];
         } names.sort(key = os.path.normcase);
         sublist = [];
         for name in names{
-            item = FileTreeItem(os.path.join(self.path, name));
+            item = FileTreeItem(os.path.join(this.path, name));
             sublist.append(item);
         } return sublist;
 
@@ -451,49 +451,49 @@ class TreeNode{
 
 }
 } class ScrolledCanvas{
-    def __init__(self, master, **opts){
+    function __init__( master, **opts){
         if 'yscrollincrement' not in opts{
             opts['yscrollincrement'] = 17;
-        } self.master = master;
-        self.frame = Frame(master);
-        self.frame.rowconfigure(0, weight=1);
-        self.frame.columnconfigure(0, weight=1);
-        self.canvas = Canvas(self.frame, **opts);
-        self.canvas.grid(row=0, column=0, sticky="nsew");
-        self.vbar = Scrollbar(self.frame, name="vbar");
-        self.vbar.grid(row=0, column=1, sticky="nse");
-        self.hbar = Scrollbar(self.frame, name="hbar", orient="horizontal");
-        self.hbar.grid(row=1, column=0, sticky="ews");
-        self.canvas['yscrollcommand'] = self.vbar.set;
-        self.vbar['command'] = self.canvas.yview;
-        self.canvas['xscrollcommand'] = self.hbar.set;
-        self.hbar['command'] = self.canvas.xview;
-        self.canvas.bind("<Key-Prior>", self.page_up);
-        self.canvas.bind("<Key-Next>", self.page_down);
-        self.canvas.bind("<Key-Up>", self.unit_up);
-        self.canvas.bind("<Key-Down>", self.unit_down);
+        } this.master = master;
+        this.frame = Frame(master);
+        this.frame.rowconfigure(0, weight=1);
+        this.frame.columnconfigure(0, weight=1);
+        this.canvas = Canvas(this.frame, **opts);
+        this.canvas.grid(row=0, column=0, sticky="nsew");
+        this.vbar = Scrollbar(this.frame, name="vbar");
+        this.vbar.grid(row=0, column=1, sticky="nse");
+        this.hbar = Scrollbar(this.frame, name="hbar", orient="horizontal");
+        this.hbar.grid(row=1, column=0, sticky="ews");
+        this.canvas['yscrollcommand'] = this.vbar.set;
+        this.vbar['command'] = this.canvas.yview;
+        this.canvas['xscrollcommand'] = this.hbar.set;
+        this.hbar['command'] = this.canvas.xview;
+        this.canvas.bind("<Key-Prior>", this.page_up);
+        this.canvas.bind("<Key-Next>", this.page_down);
+        this.canvas.bind("<Key-Up>", this.unit_up);
+        this.canvas.bind("<Key-Down>", this.unit_down);
         #if isinstance(master, Toplevel) or isinstance(master, Tk):
-        self.canvas.bind("<Alt-Key-2>", self.zoom_height);
-        self.canvas.focus_set();
-    } def page_up(self, event){
-        self.canvas.yview_scroll(-1, "page");
+        this.canvas.bind("<Alt-Key-2>", this.zoom_height);
+        this.canvas.focus_set();
+    } function page_up( event){
+        this.canvas.yview_scroll(-1, "page");
         return "break";
-    } def page_down(self, event){
-        self.canvas.yview_scroll(1, "page");
+    } function page_down( event){
+        this.canvas.yview_scroll(1, "page");
         return "break";
-    } def unit_up(self, event){
-        self.canvas.yview_scroll(-1, "unit");
+    } function unit_up( event){
+        this.canvas.yview_scroll(-1, "unit");
         return "break";
-    } def unit_down(self, event){
-        self.canvas.yview_scroll(1, "unit");
+    } function unit_down( event){
+        this.canvas.yview_scroll(1, "unit");
         return "break";
-    } def zoom_height(self, event){
-        ZoomHeight.zoom_height(self.master);
+    } function zoom_height( event){
+        ZoomHeight.zoom_height(this.master);
         return "break";
 
 
 }
-} def _tree_widget(parent){
+} function _tree_widget(parent){
     root = Tk();
     root.title("Test TreeWidget");
     width, height, x, y = list(map(int, re.split('[x+]', parent.geometry())));
@@ -501,7 +501,7 @@ class TreeNode{
     sc = ScrolledCanvas(root, bg="white", highlightthickness=0, takefocus=1);
     sc.frame.pack(expand=1, fill="both", side=LEFT);
     item = FileTreeItem(os.getcwd());
-    node = TreeNode(sc.canvas, None, item);
+    node = TreeNode(sc.canvas, nil, item);
     node.expand();
     root.mainloop();
 

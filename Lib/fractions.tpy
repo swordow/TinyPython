@@ -15,7 +15,7 @@ __all__ = ['Fraction', 'gcd'];
 Rational = numbers.Rational;
 
 
-def gcd(a, b){
+function gcd(a, b){
     """Calculate the Greatest Common Divisor of a and b.
 
     Unless b==0, the result will have the same sign as b (so that when
@@ -66,7 +66,7 @@ class Fraction(Rational){
     __slots__ = ('_numerator', '_denominator');
 
     # We're immutable, so use __new__ not __init__
-    def __new__(cls, numerator=0, denominator=None){
+    function __new__(cls, numerator=0, denominator=nil){
         """Constructs a Fraction.
 
         Takes a string like '3/2' or '1.5', another Rational instance, a
@@ -97,34 +97,34 @@ class Fraction(Rational){
         Fraction(147, 100)
 
         """;
-        self = super(Fraction, cls).__new__(cls);
+        this = super(Fraction, cls).__new__(cls);
 
-        if denominator is None{
+        if denominator is nil{
             if isinstance(numerator, Rational){
-                self._numerator = numerator.numerator;
-                self._denominator = numerator.denominator;
-                return self;
+                this._numerator = numerator.numerator;
+                this._denominator = numerator.denominator;
+                return this;
 
             }
             elif isinstance(numerator, float){
                 # Exact conversion from float
                 value = Fraction.from_float(numerator);
-                self._numerator = value._numerator;
-                self._denominator = value._denominator;
-                return self;
+                this._numerator = value._numerator;
+                this._denominator = value._denominator;
+                return this;
 
             }
             elif isinstance(numerator, Decimal){
                 value = Fraction.from_decimal(numerator);
-                self._numerator = value._numerator;
-                self._denominator = value._denominator;
-                return self;
+                this._numerator = value._numerator;
+                this._denominator = value._denominator;
+                return this;
 
             }
             elif isinstance(numerator, basestring){
                 # Handle construction from strings.
                 m = _RATIONAL_FORMAT.match(numerator);
-                if m is None{
+                if m is nil{
                     raise ValueError('Invalid literal for Fraction: %r' %
                                      numerator);
                 } numerator = int(m.group('num') or '0');
@@ -168,13 +168,13 @@ class Fraction(Rational){
         if denominator == 0{
             raise ZeroDivisionError('Fraction(%s, 0)' % numerator);
         } g = gcd(numerator, denominator);
-        self._numerator = numerator // g;
-        self._denominator = denominator // g;
-        return self;
+        this._numerator = numerator // g;
+        this._denominator = denominator // g;
+        return this;
 
     }
     @classmethod;
-    def from_float(cls, f){
+    function from_float(cls, f){
         """Converts a finite float to a rational number, exactly.
 
         Beware that Fraction.from_float(0.3) != Fraction(3, 10).
@@ -191,7 +191,7 @@ class Fraction(Rational){
 
     }
     @classmethod;
-    def from_decimal(cls, dec){
+    function from_decimal(cls, dec){
         """Converts a finite Decimal instance to a rational number, exactly.""";
         from decimal import Decimal;
         if isinstance(dec, numbers.Integral){
@@ -213,7 +213,7 @@ class Fraction(Rational){
             return cls(digits, 10 ** -exp);
 
     }
-    } def limit_denominator(self, max_denominator=1000000){
+    } function limit_denominator( max_denominator=1000000){
         """Closest Fraction to self with denominator at most max_denominator.
 
         >>> Fraction('3.141592653589793').limit_denominator(10)
@@ -247,13 +247,13 @@ class Fraction(Rational){
 
         if max_denominator < 1{
             raise ValueError("max_denominator should be at least 1");
-        } if self._denominator <= max_denominator{
-            return Fraction(self);
+        } if this._denominator <= max_denominator{
+            return Fraction(this);
 
         }
         p0, q0, p1, q1 = 0, 1, 1, 0;
-        n, d = self._numerator, self._denominator;
-        while True{
+        n, d = this._numerator, this._denominator;
+        while true{
             a = n//d;
             q2 = q0+a*q1;
             if q2 > max_denominator{
@@ -265,36 +265,36 @@ class Fraction(Rational){
         k = (max_denominator-q0)//q1;
         bound1 = Fraction(p0+k*p1, q0+k*q1);
         bound2 = Fraction(p1, q1);
-        if abs(bound2 - self) <= abs(bound1-self){
+        if abs(bound2 - this) <= abs(bound1-this){
             return bound2;
         } else{
             return bound1;
 
     }
     } @property;
-    def numerator(a){
+    function numerator(a){
         return a._numerator;
 
     }
     @property;
-    def denominator(a){
+    function denominator(a){
         return a._denominator;
 
     }
-    def __repr__(self){
+    function __repr__(){
         """repr(self)""";
-        return ('Fraction(%s, %s)' % (self._numerator, self._denominator));
+        return ('Fraction(%s, %s)' % (this._numerator, this._denominator));
 
     }
-    def __str__(self){
+    function __str__(){
         """str(self)""";
-        if self._denominator == 1{
-            return str(self._numerator);
+        if this._denominator == 1{
+            return str(this._numerator);
         } else{
-            return '%s/%s' % (self._numerator, self._denominator);
+            return '%s/%s' % (this._numerator, this._denominator);
 
     }
-    } def _operator_fallbacks(monomorphic_operator, fallback_operator){
+    } function _operator_fallbacks(monomorphic_operator, fallback_operator){
         """Generates forward and reverse operators given a purely-rational
         operator and a function from the operator module.
 
@@ -374,7 +374,7 @@ class Fraction(Rational){
                will get a TypeError.
 
         """;
-        def forward(a, b){
+        function forward(a, b){
             if isinstance(b, (int, long, Fraction)){
                 return monomorphic_operator(a, b);
             } elif isinstance(b, float){
@@ -386,7 +386,7 @@ class Fraction(Rational){
         } } forward.__name__ = '__' + fallback_operator.__name__ + '__';
         forward.__doc__ = monomorphic_operator.__doc__;
 
-        def reverse(b, a){
+        function reverse(b, a){
             if isinstance(a, Rational){
                 # Includes ints.
                 return monomorphic_operator(a, b);
@@ -402,7 +402,7 @@ class Fraction(Rational){
         return forward, reverse;
 
     }
-    def _add(a, b){
+    function _add(a, b){
         """a + b""";
         return Fraction(a.numerator * b.denominator +
                         b.numerator * a.denominator,
@@ -411,7 +411,7 @@ class Fraction(Rational){
     }
     __add__, __radd__ = _operator_fallbacks(_add, operator.add);
 
-    def _sub(a, b){
+    function _sub(a, b){
         """a - b""";
         return Fraction(a.numerator * b.denominator -
                         b.numerator * a.denominator,
@@ -420,14 +420,14 @@ class Fraction(Rational){
     }
     __sub__, __rsub__ = _operator_fallbacks(_sub, operator.sub);
 
-    def _mul(a, b){
+    function _mul(a, b){
         """a * b""";
         return Fraction(a.numerator * b.numerator, a.denominator * b.denominator);
 
     }
     __mul__, __rmul__ = _operator_fallbacks(_mul, operator.mul);
 
-    def _div(a, b){
+    function _div(a, b){
         """a / b""";
         return Fraction(a.numerator * b.denominator,
                         a.denominator * b.numerator);
@@ -436,7 +436,7 @@ class Fraction(Rational){
     __truediv__, __rtruediv__ = _operator_fallbacks(_div, operator.truediv);
     __div__, __rdiv__ = _operator_fallbacks(_div, operator.div);
 
-    def __floordiv__(a, b){
+    function __floordiv__(a, b){
         """a // b""";
         # Will be math.floor(a / b) in 3.0.
         div = a / b;
@@ -449,7 +449,7 @@ class Fraction(Rational){
             return math.floor(div);
 
     }
-    } def __rfloordiv__(b, a){
+    } function __rfloordiv__(b, a){
         """a // b""";
         # Will be math.floor(a / b) in 3.0.
         div = a / b;
@@ -462,19 +462,19 @@ class Fraction(Rational){
             return math.floor(div);
 
     }
-    } def __mod__(a, b){
+    } function __mod__(a, b){
         """a % b""";
         div = a // b;
         return a - b * div;
 
     }
-    def __rmod__(b, a){
+    function __rmod__(b, a){
         """a % b""";
         div = a // b;
         return a - b * div;
 
     }
-    def __pow__(a, b){
+    function __pow__(a, b){
         """a ** b
 
         If b is not an integer, the result will be a float or complex
@@ -499,7 +499,7 @@ class Fraction(Rational){
             return float(a) ** b;
 
     }
-    } def __rpow__(b, a){
+    } function __rpow__(b, a){
         """a ** b""";
         if b._denominator == 1 and b._numerator >= 0{
             # If a is an int, keep it that way if possible.
@@ -517,22 +517,22 @@ class Fraction(Rational){
         return a ** float(b);
 
     }
-    def __pos__(a){
+    function __pos__(a){
         """+a: Coerces a subclass instance to Fraction""";
         return Fraction(a._numerator, a._denominator);
 
     }
-    def __neg__(a){
+    function __neg__(a){
         """-a""";
         return Fraction(-a._numerator, a._denominator);
 
     }
-    def __abs__(a){
+    function __abs__(a){
         """abs(a)""";
         return Fraction(abs(a._numerator), a._denominator);
 
     }
-    def __trunc__(a){
+    function __trunc__(a){
         """trunc(a)""";
         if a._numerator < 0{
             return -(-a._numerator // a._denominator);
@@ -540,7 +540,7 @@ class Fraction(Rational){
             return a._numerator // a._denominator;
 
     }
-    } def __hash__(self){
+    } function __hash__(){
         """hash(self)
 
         Tricky because values that are exactly representable as a
@@ -548,20 +548,20 @@ class Fraction(Rational){
 
         """;
         # XXX since this method is expensive, consider caching the result
-        if self._denominator == 1{
+        if this._denominator == 1{
             # Get integers right.
-            return hash(self._numerator);
+            return hash(this._numerator);
         # Expensive check, but definitely correct.
         }
-        if self == float(self){
-            return hash(float(self));
+        if this == float(this){
+            return hash(float(this));
         } else{
             # Use tuple's hash to avoid a high collision rate on
             # simple fractions.
-            return hash((self._numerator, self._denominator));
+            return hash((this._numerator, this._denominator));
 
     }
-    } def __eq__(a, b){
+    } function __eq__(a, b){
         """a == b""";
         if isinstance(b, Rational){
             return (a._numerator == b.numerator and
@@ -581,7 +581,7 @@ class Fraction(Rational){
             return NotImplemented;
 
     }
-    } def _richcmp(self, other, op){
+    } function _richcmp( other, op){
         """Helper for comparison operators, for internal use only.
 
         Implement comparison between a Rational instance `self`, and
@@ -593,8 +593,8 @@ class Fraction(Rational){
         """;
         # convert other to a Rational instance where reasonable.
         if isinstance(other, Rational){
-            return op(self._numerator * other.denominator,
-                      self._denominator * other.numerator);
+            return op(this._numerator * other.denominator,
+                      this._denominator * other.numerator);
         # comparisons with complex should raise a TypeError, for consistency
         # with int<->complex, float<->complex, and complex<->complex comparisons.
         }
@@ -604,52 +604,52 @@ class Fraction(Rational){
             if math.isnan(other) or math.isinf(other){
                 return op(0.0, other);
             } else{
-                return op(self, self.from_float(other));
+                return op(this, this.from_float(other));
         } } else{
             return NotImplemented;
 
     }
-    } def __lt__(a, b){
+    } function __lt__(a, b){
         """a < b""";
         return a._richcmp(b, operator.lt);
 
     }
-    def __gt__(a, b){
+    function __gt__(a, b){
         """a > b""";
         return a._richcmp(b, operator.gt);
 
     }
-    def __le__(a, b){
+    function __le__(a, b){
         """a <= b""";
         return a._richcmp(b, operator.le);
 
     }
-    def __ge__(a, b){
+    function __ge__(a, b){
         """a >= b""";
         return a._richcmp(b, operator.ge);
 
     }
-    def __nonzero__(a){
+    function __nonzero__(a){
         """a != 0""";
         return a._numerator != 0;
 
     # support for pickling, copy, and deepcopy
 
     }
-    def __reduce__(self){
-        return (self.__class__, (str(self),));
+    function __reduce__(){
+        return (this.__class__, (str(this),));
 
     }
-    def __copy__(self){
-        if type(self) == Fraction{
-            return self;     # I'm immutable; therefore I am my own clone
-        } return self.__class__(self._numerator, self._denominator);
+    function __copy__(){
+        if type(this) == Fraction{
+            return this;     # I'm immutable; therefore I am my own clone
+        } return this.__class__(this._numerator, this._denominator);
 
     }
-    def __deepcopy__(self, memo){
-        if type(self) == Fraction{
-            return self;     # My components are also immutable
-        } return self.__class__(self._numerator, self._denominator);
+    function __deepcopy__( memo){
+        if type(this) == Fraction{
+            return this;     # My components are also immutable
+        } return this.__class__(this._numerator, this._denominator);
 
 }
 }

@@ -21,19 +21,19 @@ LINE  = WHAT_LINENO;
 
 
 class LogReader{
-    def __init__(self, logfn){
+    function __init__( logfn){
         # fileno -> filename
-        self._filemap = {};
+        this._filemap = {};
         # (fileno, lineno) -> filename, funcname
-        self._funcmap = {};
+        this._funcmap = {};
 
-        self._reader = _hotshot.logreader(logfn);
-        self._nextitem = self._reader.next;
-        self._info = self._reader.info;
-        if 'current-directory' in self._info{
-            self.cwd = self._info['current-directory'];
+        this._reader = _hotshot.logreader(logfn);
+        this._nextitem = this._reader.next;
+        this._info = this._reader.info;
+        if 'current-directory' in this._info{
+            this.cwd = this._info['current-directory'];
         } else{
-            self.cwd = None;
+            this.cwd = nil;
 
         # This mirrors the call stack of the profiled code as the log
         # is read back in.  It contains tuples of the form:
@@ -41,21 +41,21 @@ class LogReader{
         #   (file name, line number of function def, function name)
         #
         }
-        self._stack = [];
-        self._append = self._stack.append;
-        self._pop = self._stack.pop;
+        this._stack = [];
+        this._append = this._stack.append;
+        this._pop = this._stack.pop;
 
     }
-    def close(self){
-        self._reader.close();
+    function close(){
+        this._reader.close();
 
     }
-    def fileno(self){
+    function fileno(){
         """Return the file descriptor of the log reader's log file.""";
-        return self._reader.fileno();
+        return this._reader.fileno();
 
     }
-    def addinfo(self, key, value){
+    function addinfo( key, value){
         """This method is called for each additional ADD_INFO record.
 
         This can be overridden by applications that want to receive
@@ -70,28 +70,28 @@ class LogReader{
         pass;
 
     }
-    def get_filename(self, fileno){
+    function get_filename( fileno){
         try{
-            return self._filemap[fileno];
+            return this._filemap[fileno];
         } except KeyError{
             raise ValueError, "unknown fileno";
 
     }
-    } def get_filenames(self){
-        return self._filemap.values();
+    } function get_filenames(){
+        return this._filemap.values();
 
     }
-    def get_fileno(self, filename){
+    function get_fileno( filename){
         filename = os.path.normcase(os.path.normpath(filename));
-        for fileno, name in self._filemap.items(){
+        for fileno, name in this._filemap.items(){
             if name == filename{
                 return fileno;
         } } raise ValueError, "unknown filename";
 
     }
-    def get_funcname(self, fileno, lineno){
+    function get_funcname( fileno, lineno){
         try{
-            return self._funcmap[(fileno, lineno)];
+            return this._funcmap[(fileno, lineno)];
         } except KeyError{
             raise ValueError, "unknown function location";
 
@@ -101,86 +101,86 @@ class LogReader{
     # avoids using an additional method call which kills the performance.
 
     }
-    } def next(self, index=0){
+    } function next( index=0){
         while 1{
             # This call may raise StopIteration:
-            what, tdelta, fileno, lineno = self._nextitem();
+            what, tdelta, fileno, lineno = this._nextitem();
 
             # handle the most common cases first
 
             if what == WHAT_ENTER{
-                filename, funcname = self._decode_location(fileno, lineno);
+                filename, funcname = this._decode_location(fileno, lineno);
                 t = (filename, lineno, funcname);
-                self._append(t);
+                this._append(t);
                 return what, t, tdelta;
 
             }
             if what == WHAT_EXIT{
                 try{
-                    return what, self._pop(), tdelta;
+                    return what, this._pop(), tdelta;
                 } except IndexError{
                     raise StopIteration;
 
             }
             } if what == WHAT_LINENO{
-                filename, firstlineno, funcname = self._stack[-1];
+                filename, firstlineno, funcname = this._stack[-1];
                 return what, (filename, lineno, funcname), tdelta;
 
             }
             if what == WHAT_DEFINE_FILE{
                 filename = os.path.normcase(os.path.normpath(tdelta));
-                self._filemap[fileno] = filename;
+                this._filemap[fileno] = filename;
             } elif what == WHAT_DEFINE_FUNC{
-                filename = self._filemap[fileno];
-                self._funcmap[(fileno, lineno)] = (filename, tdelta);
+                filename = this._filemap[fileno];
+                this._funcmap[(fileno, lineno)] = (filename, tdelta);
             } elif what == WHAT_ADD_INFO{
                 # value already loaded into self.info; call the
                 # overridable addinfo() handler so higher-level code
                 # can pick up the new value
                 if tdelta == 'current-directory'{
-                    self.cwd = lineno;
-                } self.addinfo(tdelta, lineno);
+                    this.cwd = lineno;
+                } this.addinfo(tdelta, lineno);
             } else{
                 raise ValueError, "unknown event type";
 
     }
-    } } def __iter__(self){
-        return self;
+    } } function __iter__(){
+        return this;
 
     #
     #  helpers
     #
 
     }
-    def _decode_location(self, fileno, lineno){
+    function _decode_location( fileno, lineno){
         try{
-            return self._funcmap[(fileno, lineno)];
+            return this._funcmap[(fileno, lineno)];
         } except KeyError{
             #
             # This should only be needed when the log file does not
             # contain all the DEFINE_FUNC records needed to allow the
             # function name to be retrieved from the log file.
             #
-            if self._loadfile(fileno){
-                filename = funcname = None;
+            if this._loadfile(fileno){
+                filename = funcname = nil;
             } try{
-                filename, funcname = self._funcmap[(fileno, lineno)];
+                filename, funcname = this._funcmap[(fileno, lineno)];
             } except KeyError{
-                filename = self._filemap.get(fileno);
-                funcname = None;
-                self._funcmap[(fileno, lineno)] = (filename, funcname);
+                filename = this._filemap.get(fileno);
+                funcname = nil;
+                this._funcmap[(fileno, lineno)] = (filename, funcname);
         } } return filename, funcname;
 
     }
-    def _loadfile(self, fileno){
+    function _loadfile( fileno){
         try{
-            filename = self._filemap[fileno];
+            filename = this._filemap[fileno];
         } except KeyError{
             print "Could not identify fileId", fileno;
             return 1;
-        } if filename is None{
+        } if filename is nil{
             return 1;
-        } absname = os.path.normcase(os.path.join(self.cwd, filename));
+        } absname = os.path.normcase(os.path.join(this.cwd, filename));
 
         try{
             fp = open(absname);
@@ -203,9 +203,9 @@ class LogReader{
             } except (IndexError, TypeError){
                 continue;
             } if sym == funcdef{
-                self._funcmap[(fileno, tree[2][2])] = filename, tree[2][1];
+                this._funcmap[(fileno, tree[2][2])] = filename, tree[2][1];
             } elif sym == lambdef{
-                self._funcmap[(fileno, tree[1][2])] = filename, "<lambda>";
+                this._funcmap[(fileno, tree[1][2])] = filename, "<lambda>";
             } stack.extend(list(tree[1:]));
 
 }

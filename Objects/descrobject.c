@@ -350,8 +350,8 @@ static PyObject *
 method_get_doc(PyMethodDescrObject *descr, void *closure)
 {
     if (descr->d_method->ml_doc == NULL) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     return PyString_FromString(descr->d_method->ml_doc);
 }
@@ -371,8 +371,8 @@ static PyObject *
 member_get_doc(PyMemberDescrObject *descr, void *closure)
 {
     if (descr->d_member->doc == NULL) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     return PyString_FromString(descr->d_member->doc);
 }
@@ -386,8 +386,8 @@ static PyObject *
 getset_get_doc(PyGetSetDescrObject *descr, void *closure)
 {
     if (descr->d_getset->doc == NULL) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     return PyString_FromString(descr->d_getset->doc);
 }
@@ -401,8 +401,8 @@ static PyObject *
 wrapperdescr_get_doc(PyWrapperDescrObject *descr, void *closure)
 {
     if (descr->d_base->doc == NULL) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     return PyString_FromString(descr->d_base->doc);
 }
@@ -746,7 +746,7 @@ proxy_has_key(proxyobject *pp, PyObject *key)
 static PyObject *
 proxy_get(proxyobject *pp, PyObject *args)
 {
-    PyObject *key, *def = Py_None;
+    PyObject *key, *def = Py_Nil;
 
     if (!PyArg_UnpackTuple(args, "get", 1, 2, &key, &def))
         return NULL;
@@ -1009,8 +1009,8 @@ wrapper_doc(wrapperobject *wp)
     char *s = wp->descr->d_base->doc;
 
     if (s == NULL) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     else {
         return PyString_FromString(s);
@@ -1223,7 +1223,7 @@ property_descr_get(PyObject *self, PyObject *obj, PyObject *type)
 {
     propertyobject *gs = (propertyobject *)self;
 
-    if (obj == NULL || obj == Py_None) {
+    if (obj == NULL || obj == Py_Nil) {
         Py_INCREF(self);
         return self;
     }
@@ -1271,24 +1271,24 @@ property_copy(PyObject *old, PyObject *get, PyObject *set, PyObject *del)
     if (type == NULL)
         return NULL;
 
-    if (get == NULL || get == Py_None) {
+    if (get == NULL || get == Py_Nil) {
         Py_XDECREF(get);
-        get = pold->prop_get ? pold->prop_get : Py_None;
+        get = pold->prop_get ? pold->prop_get : Py_Nil;
     }
-    if (set == NULL || set == Py_None) {
+    if (set == NULL || set == Py_Nil) {
         Py_XDECREF(set);
-        set = pold->prop_set ? pold->prop_set : Py_None;
+        set = pold->prop_set ? pold->prop_set : Py_Nil;
     }
-    if (del == NULL || del == Py_None) {
+    if (del == NULL || del == Py_Nil) {
         Py_XDECREF(del);
-        del = pold->prop_del ? pold->prop_del : Py_None;
+        del = pold->prop_del ? pold->prop_del : Py_Nil;
     }
-    if (pold->getter_doc && get != Py_None) {
+    if (pold->getter_doc && get != Py_Nil) {
         /* make _init use __doc__ from getter */
-        doc = Py_None;
+        doc = Py_Nil;
     }
     else {
-        doc = pold->prop_doc ? pold->prop_doc : Py_None;
+        doc = pold->prop_doc ? pold->prop_doc : Py_Nil;
     }
 
     new =  PyObject_CallFunction(type, "OOOO", get, set, del, doc);
@@ -1309,11 +1309,11 @@ property_init(PyObject *self, PyObject *args, PyObject *kwds)
                                      kwlist, &get, &set, &del, &doc))
         return -1;
 
-    if (get == Py_None)
+    if (get == Py_Nil)
         get = NULL;
-    if (set == Py_None)
+    if (set == Py_Nil)
         set = NULL;
-    if (del == Py_None)
+    if (del == Py_Nil)
         del = NULL;
 
     Py_XINCREF(get);
@@ -1328,7 +1328,7 @@ property_init(PyObject *self, PyObject *args, PyObject *kwds)
     prop->getter_doc = 0;
 
     /* if no docstring given and the getter has one, use that one */
-    if ((doc == NULL || doc == Py_None) && get != NULL) {
+    if ((doc == NULL || doc == Py_Nil) && get != NULL) {
         PyObject *get_doc = PyObject_GetAttrString(get, "__doc__");
         if (get_doc) {
             if (Py_TYPE(self) == &PyProperty_Type) {

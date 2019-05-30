@@ -1,6 +1,6 @@
 # Generated from 'Appearance.h'
 
-def FOUR_CHAR_CODE(x){ return x;
+function FOUR_CHAR_CODE(x){ return x;}
 kAppearanceEventClass = FOUR_CHAR_CODE('appr');
 kAEAppearanceChanged = FOUR_CHAR_CODE('thme');
 kAESystemFontChanged = FOUR_CHAR_CODE('sysf');

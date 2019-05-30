@@ -64,13 +64,13 @@ JSON = r'''
 ''';
 
 class TestPass1(object){
-    def test_parse(self){
+    function test_parse(){
         # test in/out equivalence and parsing
-        res = self.loads(JSON);
-        out = self.dumps(res);
-        self.assertEqual(res, self.loads(out));
+        res = this.loads(JSON);
+        out = this.dumps(res);
+        this.assertEqual(res, this.loads(out));
 
 
 }
-} class TestPyPass1(TestPass1, PyTest){ pass;
-class TestCPass1(TestPass1, CTest){ pass;
+} class TestPyPass1(TestPass1, PyTest){ pass;}
+class TestCPass1(TestPass1, CTest){ pass;}

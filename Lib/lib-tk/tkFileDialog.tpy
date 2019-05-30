@@ -44,15 +44,15 @@ from tkCommonDialog import Dialog;
 
 class _Dialog(Dialog){
 
-    def _fixoptions(self){
+    function _fixoptions(){
         try{
             # make sure "filetypes" is a tuple
-            self.options["filetypes"] = tuple(self.options["filetypes"]);
+            this.options["filetypes"] = tuple(this.options["filetypes"]);
         } except KeyError{
             pass;
 
     }
-    } def _fixresult(self, widget, result){
+    } function _fixresult( widget, result){
         if result{
             # keep directory and filename until next time
             import os;
@@ -63,9 +63,9 @@ class _Dialog(Dialog){
                 # it already is a string
                 pass;
             } path, file = os.path.split(result);
-            self.options["initialdir"] = path;
-            self.options["initialfile"] = file;
-        } self.filename = result; # compatibility
+            this.options["initialdir"] = path;
+            this.options["initialfile"] = file;
+        } this.filename = result; # compatibility
         return result;
 
 
@@ -78,21 +78,21 @@ class _Dialog(Dialog){
 
     command = "tk_getOpenFile";
 
-    def _fixresult(self, widget, result){
+    function _fixresult( widget, result){
         if isinstance(result, tuple){
             # multiple results:
             result = tuple([getattr(r, "string", r) for r in result]);
             if result{
                 import os;
                 path, file = os.path.split(result[0]);
-                self.options["initialdir"] = path;
+                this.options["initialdir"] = path;
                 # don't set initialfile or filename, as we have multiple of these
             }
             return result;
-        } if not widget.tk.wantobjects() and "multiple" in self.options{
+        } if not widget.tk.wantobjects() and "multiple" in this.options{
             # Need to split result explicitly
-            return self._fixresult(widget, widget.tk.splitlist(result));
-        } return _Dialog._fixresult(self, widget, result);
+            return this._fixresult(widget, widget.tk.splitlist(result));
+        } return _Dialog._fixresult(this, widget, result);
 
 }
 } class SaveAs(_Dialog){
@@ -108,7 +108,7 @@ class Directory(Dialog){
 
     command = "tk_chooseDirectory";
 
-    def _fixresult(self, widget, result){
+    function _fixresult( widget, result){
         if result{
             # convert Tcl path objects to strings
             try{
@@ -118,27 +118,27 @@ class Directory(Dialog){
                 pass;
             # keep directory until next time
             }
-            self.options["initialdir"] = result;
-        } self.directory = result; # compatibility
+            this.options["initialdir"] = result;
+        } this.directory = result; # compatibility
         return result;
 
 #
 # convenience stuff
 
 }
-} def askopenfilename(**options){
+} function askopenfilename(**options){
     "Ask for a filename to open";
 
     return Open(**options).show();
 
 }
-def asksaveasfilename(**options){
+function asksaveasfilename(**options){
     "Ask for a filename to save as";
 
     return SaveAs(**options).show();
 
 }
-def askopenfilenames(**options){
+function askopenfilenames(**options){
     """Ask for multiple filenames to open
 
     Returns a list of filenames or empty list if
@@ -150,16 +150,16 @@ def askopenfilenames(**options){
 # FIXME: are the following  perhaps a bit too convenient?
 
 }
-def askopenfile(mode = "r", **options){
+function askopenfile(mode = "r", **options){
     "Ask for a filename to open, and returned the opened file";
 
     filename = Open(**options).show();
     if filename{
         return open(filename, mode);
-    } return None;
+    } return nil;
 
 }
-def askopenfiles(mode = "r", **options){
+function askopenfiles(mode = "r", **options){
     """Ask for multiple filenames and return the open file
     objects
 
@@ -177,16 +177,16 @@ def askopenfiles(mode = "r", **options){
 
 
 }
-def asksaveasfile(mode = "w", **options){
+function asksaveasfile(mode = "w", **options){
     "Ask for a filename to save as, and returned the opened file";
 
     filename = SaveAs(**options).show();
     if filename{
         return open(filename, mode);
-    } return None;
+    } return nil;
 
 }
-def askdirectory (**options){
+function askdirectory (**options){
     "Ask for a directory, and return the file name";
     return Directory(**options).show();
 

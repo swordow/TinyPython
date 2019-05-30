@@ -387,8 +387,8 @@ PyObject *py_func_si(PyObject *self, PyObject *args)
     int i;
     if (!PyArg_ParseTuple(args, "si", &name, &i))
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 EXPORT(void) _py_func_si(char *s, int i)
@@ -397,8 +397,8 @@ EXPORT(void) _py_func_si(char *s, int i)
 
 PyObject *py_func(PyObject *self, PyObject *args)
 {
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 EXPORT(void) _py_func(void)

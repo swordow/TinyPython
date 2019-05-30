@@ -70,20 +70,20 @@ try{
 } except ImportError{
     _settrace = sys.settrace;
 
-    def _unsettrace(){
-        sys.settrace(None);
+    function _unsettrace(){
+        sys.settrace(nil);
 } } else{
-    def _settrace(func){
+    function _settrace(func){
         threading.settrace(func);
         sys.settrace(func);
 
     }
-    def _unsettrace(){
-        sys.settrace(None);
-        threading.settrace(None);
+    function _unsettrace(){
+        sys.settrace(nil);
+        threading.settrace(nil);
 
 }
-} def usage(outfile){
+} function usage(outfile){
     outfile.write("""Usage: %s [OPTIONS] <file> [ARGS]
 
 Meta-options:
@@ -135,26 +135,26 @@ PRAGMA_NOCOVER = "#pragma NO COVER";
 rx_blank = re.compile(r'^\s*(#.*)?$');
 
 class Ignore{
-    def __init__(self, modules = None, dirs = None){
-        self._mods = modules or [];
-        self._dirs = dirs or [];
+    function __init__( modules = nil, dirs = nil){
+        this._mods = modules or [];
+        this._dirs = dirs or [];
 
-        self._dirs = map(os.path.normpath, self._dirs);
-        self._ignore = { '<string>': 1 };
+        this._dirs = map(os.path.normpath, this._dirs);
+        this._ignore = { '<string>': 1 };
 
     }
-    def names(self, filename, modulename){
-        if modulename in self._ignore{
-            return self._ignore[modulename];
+    function names( filename, modulename){
+        if modulename in this._ignore{
+            return this._ignore[modulename];
 
         # haven't seen this one before, so see if the module name is
         # on the ignore list.  Need to take some care since ignoring
         # "cmp" musn't mean ignoring "cmpcache" but ignoring
         # "Spam" must also mean ignoring "Spam.Eggs".
         }
-        for mod in self._mods{
+        for mod in this._mods{
             if mod == modulename{  # Identical names, so ignore
-                self._ignore[modulename] = 1;
+                this._ignore[modulename] = 1;
                 return 1;
             # check if the module is a proper submodule of something on
             # the ignore list
@@ -164,19 +164,19 @@ class Ignore{
             # same and the name has not already occurred, then the size
             # of "name" is greater than that of "mod")
             if mod == modulename[:n] and modulename[n] == '.'{
-                self._ignore[modulename] = 1;
+                this._ignore[modulename] = 1;
                 return 1;
 
         # Now check that __file__ isn't in one of the directories
         }
-        } if filename is None{
+        } if filename is nil{
             # must be a built-in, so we must ignore
-            self._ignore[modulename] = 1;
+            this._ignore[modulename] = 1;
             return 1;
 
         # Ignore a file when it contains one of the ignorable paths
         }
-        for d in self._dirs{
+        for d in this._dirs{
             # The '+ os.sep' is to ensure that d is a parent directory,
             # as compared to cases like:
             #  d = "/usr/local"
@@ -185,16 +185,16 @@ class Ignore{
             #  d = "/usr/local.py"
             #  filename = "/usr/local.py"
             if filename.startswith(d + os.sep){
-                self._ignore[modulename] = 1;
+                this._ignore[modulename] = 1;
                 return 1;
 
         # Tried the different ways, so we don't ignore this module
         }
-        } self._ignore[modulename] = 0;
+        } this._ignore[modulename] = 0;
         return 0;
 
 }
-} def modname(path){
+} function modname(path){
     """Return a plausible module name for the patch.""";
 
     base = os.path.basename(path);
@@ -202,7 +202,7 @@ class Ignore{
     return filename;
 
 }
-def fullmodname(path){
+function fullmodname(path){
     """Return a plausible module name for the path.""";
 
     # If the file 'path' is part of a package, then the filename isn't
@@ -234,38 +234,38 @@ def fullmodname(path){
 
 }
 class CoverageResults{
-    def __init__(self, counts=None, calledfuncs=None, infile=None,
-                 callers=None, outfile=None){
-        self.counts = counts;
-        if self.counts is None{
-            self.counts = {};
-        } self.counter = self.counts.copy(); # map (filename, lineno) to count
-        self.calledfuncs = calledfuncs;
-        if self.calledfuncs is None{
-            self.calledfuncs = {};
-        } self.calledfuncs = self.calledfuncs.copy();
-        self.callers = callers;
-        if self.callers is None{
-            self.callers = {};
-        } self.callers = self.callers.copy();
-        self.infile = infile;
-        self.outfile = outfile;
-        if self.infile{
+    function __init__( counts=nil, calledfuncs=nil, infile=nil,
+                 callers=nil, outfile=nil){
+        this.counts = counts;
+        if this.counts is nil{
+            this.counts = {};
+        } this.counter = this.counts.copy(); # map (filename, lineno) to count
+        this.calledfuncs = calledfuncs;
+        if this.calledfuncs is nil{
+            this.calledfuncs = {};
+        } this.calledfuncs = this.calledfuncs.copy();
+        this.callers = callers;
+        if this.callers is nil{
+            this.callers = {};
+        } this.callers = this.callers.copy();
+        this.infile = infile;
+        this.outfile = outfile;
+        if this.infile{
             # Try to merge existing counts file.
             try{
                 counts, calledfuncs, callers = \
-                        pickle.load(open(self.infile, 'rb'));
-                self.update(self.__class__(counts, calledfuncs, callers));
+                        pickle.load(open(this.infile, 'rb'));
+                this.update(this.__class__(counts, calledfuncs, callers));
             } except (IOError, EOFError, ValueError), err{
                 print >> sys.stderr, ("Skipping counts file %r: %s"
-                                      % (self.infile, err));
+                                      % (this.infile, err));
 
     }
-    } } def update(self, other){
+    } } function update( other){
         """Merge in the data from another CoverageResults""";
-        counts = self.counts;
-        calledfuncs = self.calledfuncs;
-        callers = self.callers;
+        counts = this.counts;
+        calledfuncs = this.calledfuncs;
+        callers = this.callers;
         other_counts = other.counts;
         other_calledfuncs = other.calledfuncs;
         other_callers = other.callers;
@@ -282,24 +282,24 @@ class CoverageResults{
             callers[key] = 1;
 
     }
-    } def write_results(self, show_missing=True, summary=False, coverdir=None){
+    } function write_results( show_missing=true, summary=false, coverdir=nil){
         """
         @param coverdir
         """;
-        if self.calledfuncs{
+        if this.calledfuncs{
             print;
             print "functions called:";
-            calls = self.calledfuncs.keys();
+            calls = this.calledfuncs.keys();
             calls.sort();
             for filename, modulename, funcname in calls{
                 print ("filename: %s, modulename: %s, funcname: %s"
                        % (filename, modulename, funcname));
 
         }
-        } if self.callers{
+        } if this.callers{
             print;
             print "calling relationships:";
-            calls = self.callers.keys();
+            calls = this.callers.keys();
             calls.sort();
             lastfile = lastcfile = "";
             for ((pfile, pmod, pfunc), (cfile, cmod, cfunc)) in calls{
@@ -317,9 +317,9 @@ class CoverageResults{
         # accessible on a per-file basis
         }
         } per_file = {};
-        for filename, lineno in self.counts.keys(){
+        for filename, lineno in this.counts.keys(){
             lines_hit = per_file[filename] = per_file.get(filename, {});
-            lines_hit[lineno] = self.counts[(filename, lineno)];
+            lines_hit[lineno] = this.counts[(filename, lineno)];
 
         # accumulate summary info, if needed
         }
@@ -337,7 +337,7 @@ class CoverageResults{
                 filename = filename[:-1];
 
             }
-            if coverdir is None{
+            if coverdir is nil{
                 dir = os.path.dirname(os.path.abspath(filename));
                 modulename = modname(filename);
             } else{
@@ -357,7 +357,7 @@ class CoverageResults{
             }
             source = linecache.getlines(filename);
             coverpath = os.path.join(dir, modulename + ".cover");
-            n_hits, n_lines = self.write_results_file(coverpath, source,
+            n_hits, n_lines = this.write_results_file(coverpath, source,
                                                       lnotab, count);
 
             if summary and n_lines{
@@ -374,16 +374,16 @@ class CoverageResults{
                 print "%5d   %3d%%   %s   (%s)" % sums[m];
 
         }
-        } if self.outfile{
+        } if this.outfile{
             # try and store counts and module info into self.outfile
             try{
-                pickle.dump((self.counts, self.calledfuncs, self.callers),
-                            open(self.outfile, 'wb'), 1);
+                pickle.dump((this.counts, this.calledfuncs, this.callers),
+                            open(this.outfile, 'wb'), 1);
             } except IOError, err{
                 print >> sys.stderr, "Can't save counts files because %s" % err;
 
     }
-    } } def write_results_file(self, path, lines, lnotab, lines_hit){
+    } } function write_results_file( path, lines, lnotab, lines_hit){
         """Return a coverage results file in path.""";
 
         try{
@@ -421,7 +421,7 @@ class CoverageResults{
         return n_hits, n_lines;
 
 }
-} def find_lines_from_code(code, strs){
+} function find_lines_from_code(code, strs){
     """Return dict where keys are lines in the line number table.""";
     linenos = {};
 
@@ -433,7 +433,7 @@ class CoverageResults{
     } return linenos;
 
 }
-def find_lines(code, strs){
+function find_lines(code, strs){
     """Return lineno dict for all code objects reachable from code.""";
     # get all of the lineno information from the code of this scope level
     linenos = find_lines_from_code(code, strs);
@@ -446,7 +446,7 @@ def find_lines(code, strs){
     } } return linenos;
 
 }
-def find_strings(filename){
+function find_strings(filename){
     """Return a dict of possible docstring positions.
 
     The dict maps line numbers to strings.  There is an entry for
@@ -470,7 +470,7 @@ def find_strings(filename){
     return d;
 
 }
-def find_executable_linenos(filename){
+function find_executable_linenos(filename){
     """Return dict where keys are line numbers in the line number table.""";
     try{
         prog = open(filename, "rU").read();
@@ -484,9 +484,9 @@ def find_executable_linenos(filename){
 
 }
 class Trace{
-    def __init__(self, count=1, trace=1, countfuncs=0, countcallers=0,
-                 ignoremods=(), ignoredirs=(), infile=None, outfile=None,
-                 timing=False){
+    function __init__( count=1, trace=1, countfuncs=0, countcallers=0,
+                 ignoremods=(), ignoredirs=(), infile=nil, outfile=nil,
+                 timing=false){
         """
         @param count true iff it should count number of times each
                      line is executed
@@ -504,84 +504,84 @@ class Trace{
         @param outfile file in which to write the results
         @param timing true iff timing information be displayed
         """;
-        self.infile = infile;
-        self.outfile = outfile;
-        self.ignore = Ignore(ignoremods, ignoredirs);
-        self.counts = {};   # keys are (filename, linenumber)
-        self.blabbed = {}; # for debugging
-        self.pathtobasename = {}; # for memoizing os.path.basename
-        self.donothing = 0;
-        self.trace = trace;
-        self._calledfuncs = {};
-        self._callers = {};
-        self._caller_cache = {};
-        self.start_time = None;
+        this.infile = infile;
+        this.outfile = outfile;
+        this.ignore = Ignore(ignoremods, ignoredirs);
+        this.counts = {};   # keys are (filename, linenumber)
+        this.blabbed = {}; # for debugging
+        this.pathtobasename = {}; # for memoizing os.path.basename
+        this.donothing = 0;
+        this.trace = trace;
+        this._calledfuncs = {};
+        this._callers = {};
+        this._caller_cache = {};
+        this.start_time = nil;
         if timing{
-            self.start_time = time.time();
+            this.start_time = time.time();
         } if countcallers{
-            self.globaltrace = self.globaltrace_trackcallers;
+            this.globaltrace = this.globaltrace_trackcallers;
         } elif countfuncs{
-            self.globaltrace = self.globaltrace_countfuncs;
+            this.globaltrace = this.globaltrace_countfuncs;
         } elif trace and count{
-            self.globaltrace = self.globaltrace_lt;
-            self.localtrace = self.localtrace_trace_and_count;
+            this.globaltrace = this.globaltrace_lt;
+            this.localtrace = this.localtrace_trace_and_count;
         } elif trace{
-            self.globaltrace = self.globaltrace_lt;
-            self.localtrace = self.localtrace_trace;
+            this.globaltrace = this.globaltrace_lt;
+            this.localtrace = this.localtrace_trace;
         } elif count{
-            self.globaltrace = self.globaltrace_lt;
-            self.localtrace = self.localtrace_count;
+            this.globaltrace = this.globaltrace_lt;
+            this.localtrace = this.localtrace_count;
         } else{
             # Ahem -- do nothing?  Okay.
-            self.donothing = 1;
+            this.donothing = 1;
 
     }
-    } def run(self, cmd){
+    } function run( cmd){
         import __main__;
         dict = __main__.__dict__;
-        self.runctx(cmd, dict, dict);
+        this.runctx(cmd, dict, dict);
 
     }
-    def runctx(self, cmd, globals=None, locals=None){
-        if globals is None{ globals = {};
-        if locals is None{ locals = {};
-        if not self.donothing{
-            _settrace(self.globaltrace);
+    function runctx( cmd, globals=nil, locals=nil){
+        if globals is nil{ globals = {};}
+        if locals is nil{ locals = {};}
+        if not this.donothing{
+            _settrace(this.globaltrace);
         } try{
             exec cmd in globals, locals;
         } finally{
-            if not self.donothing{
+            if not this.donothing{
                 _unsettrace();
 
     }
-    } } def runfunc(self, func, *args, **kw){
-        result = None;
-        if not self.donothing{
-            sys.settrace(self.globaltrace);
+    } } function runfunc( func, *args, **kw){
+        result = nil;
+        if not this.donothing{
+            sys.settrace(this.globaltrace);
         } try{
             result = func(*args, **kw);
         } finally{
-            if not self.donothing{
-                sys.settrace(None);
+            if not this.donothing{
+                sys.settrace(nil);
         } } return result;
 
     }
-    def file_module_function_of(self, frame){
+    function file_module_function_of( frame){
         code = frame.f_code;
         filename = code.co_filename;
         if filename{
             modulename = modname(filename);
         } else{
-            modulename = None;
+            modulename = nil;
 
         }
         funcname = code.co_name;
-        clsname = None;
-        if code in self._caller_cache{
-            if self._caller_cache[code] is not None{
-                clsname = self._caller_cache[code];
+        clsname = nil;
+        if code in this._caller_cache{
+            if this._caller_cache[code] is not nil{
+                clsname = this._caller_cache[code];
         } } else{
-            self._caller_cache[code] = None;
+            this._caller_cache[code] = nil;
             ## use of gc.get_referrers() was suggested by Michael Hudson
             # all functions which refer to this code object
             funcs = [f for f in gc.get_referrers(code)
@@ -602,37 +602,37 @@ class Trace{
                         # not called later to disturb this relationship
                         # _caller_cache could be flushed if functions in
                         # the new module get called.
-                        self._caller_cache[code] = clsname;
-        } } } } if clsname is not None{
+                        this._caller_cache[code] = clsname;
+        } } } } if clsname is not nil{
             funcname = "%s.%s" % (clsname, funcname);
 
         }
         return filename, modulename, funcname;
 
     }
-    def globaltrace_trackcallers(self, frame, why, arg){
+    function globaltrace_trackcallers( frame, why, arg){
         """Handler for call events.
 
         Adds information about who called who to the self._callers dict.
         """;
         if why == 'call'{
             # XXX Should do a better job of identifying methods
-            this_func = self.file_module_function_of(frame);
-            parent_func = self.file_module_function_of(frame.f_back);
-            self._callers[(parent_func, this_func)] = 1;
+            this_func = this.file_module_function_of(frame);
+            parent_func = this.file_module_function_of(frame.f_back);
+            this._callers[(parent_func, this_func)] = 1;
 
     }
-    } def globaltrace_countfuncs(self, frame, why, arg){
+    } function globaltrace_countfuncs( frame, why, arg){
         """Handler for call events.
 
         Adds (filename, modulename, funcname) to the self._calledfuncs dict.
         """;
         if why == 'call'{
-            this_func = self.file_module_function_of(frame);
-            self._calledfuncs[this_func] = 1;
+            this_func = this.file_module_function_of(frame);
+            this._calledfuncs[this_func] = 1;
 
     }
-    } def globaltrace_lt(self, frame, why, arg){
+    } function globaltrace_lt( frame, why, arg){
         """Handler for call events.
 
         If the code block being entered is to be ignored, returns `None',
@@ -640,77 +640,77 @@ class Trace{
         """;
         if why == 'call'{
             code = frame.f_code;
-            filename = frame.f_globals.get('__file__', None);
+            filename = frame.f_globals.get('__file__', nil);
             if filename{
                 # XXX modname() doesn't work right for packages, so
                 # the ignore support won't work right for packages
                 modulename = modname(filename);
-                if modulename is not None{
-                    ignore_it = self.ignore.names(filename, modulename);
+                if modulename is not nil{
+                    ignore_it = this.ignore.names(filename, modulename);
                     if not ignore_it{
-                        if self.trace{
+                        if this.trace{
                             print (" --- modulename: %s, funcname: %s"
                                    % (modulename, code.co_name));
-                        } return self.localtrace;
+                        } return this.localtrace;
             } } } else{
-                return None;
+                return nil;
 
     }
-    } } def localtrace_trace_and_count(self, frame, why, arg){
+    } } function localtrace_trace_and_count( frame, why, arg){
         if why == "line"{
             # record the file name and line number of every trace
             filename = frame.f_code.co_filename;
             lineno = frame.f_lineno;
             key = filename, lineno;
-            self.counts[key] = self.counts.get(key, 0) + 1;
+            this.counts[key] = this.counts.get(key, 0) + 1;
 
-            if self.start_time{
-                print '%.2f' % (time.time() - self.start_time),;
+            if this.start_time{
+                print '%.2f' % (time.time() - this.start_time),;
             } bname = os.path.basename(filename);
             print "%s(%d): %s" % (bname, lineno,
                                   linecache.getline(filename, lineno)),;
-        } return self.localtrace;
+        } return this.localtrace;
 
     }
-    def localtrace_trace(self, frame, why, arg){
+    function localtrace_trace( frame, why, arg){
         if why == "line"{
             # record the file name and line number of every trace
             filename = frame.f_code.co_filename;
             lineno = frame.f_lineno;
 
-            if self.start_time{
-                print '%.2f' % (time.time() - self.start_time),;
+            if this.start_time{
+                print '%.2f' % (time.time() - this.start_time),;
             } bname = os.path.basename(filename);
             print "%s(%d): %s" % (bname, lineno,
                                   linecache.getline(filename, lineno)),;
-        } return self.localtrace;
+        } return this.localtrace;
 
     }
-    def localtrace_count(self, frame, why, arg){
+    function localtrace_count( frame, why, arg){
         if why == "line"{
             filename = frame.f_code.co_filename;
             lineno = frame.f_lineno;
             key = filename, lineno;
-            self.counts[key] = self.counts.get(key, 0) + 1;
-        } return self.localtrace;
+            this.counts[key] = this.counts.get(key, 0) + 1;
+        } return this.localtrace;
 
     }
-    def results(self){
-        return CoverageResults(self.counts, infile=self.infile,
-                               outfile=self.outfile,
-                               calledfuncs=self._calledfuncs,
-                               callers=self._callers);
+    function results(){
+        return CoverageResults(this.counts, infile=this.infile,
+                               outfile=this.outfile,
+                               calledfuncs=this._calledfuncs,
+                               callers=this._callers);
 
 }
-} def _err_exit(msg){
+} function _err_exit(msg){
     sys.stderr.write("%s: %s\n" % (sys.argv[0], msg));
     sys.exit(1);
 
 }
-def main(argv=None){
+function main(argv=nil){
     import getopt;
 
-    if argv is None{
+    if argv is nil{
         argv = sys.argv;
     } try{
         opts, prog_argv = getopt.getopt(argv[1:], "tcrRf:d:msC:lTg",
@@ -733,15 +733,15 @@ def main(argv=None){
     count = 0;
     report = 0;
     no_report = 0;
-    counts_file = None;
+    counts_file = nil;
     missing = 0;
     ignore_modules = [];
     ignore_dirs = [];
-    coverdir = None;
+    coverdir = nil;
     summary = 0;
-    listfuncs = False;
-    countcallers = False;
-    timing = False;
+    listfuncs = false;
+    countcallers = false;
+    timing = false;
 
     for opt, val in opts{
         if opt == "--help"{
@@ -755,17 +755,17 @@ def main(argv=None){
 
         }
         if opt == "-T" or opt == "--trackcalls"{
-            countcallers = True;
+            countcallers = true;
             continue;
 
         }
         if opt == "-l" or opt == "--listfuncs"{
-            listfuncs = True;
+            listfuncs = true;
             continue;
 
         }
         if opt == "-g" or opt == "--timing"{
-            timing = True;
+            timing = true;
             continue;
 
         }
@@ -876,8 +876,8 @@ def main(argv=None){
             globs = {
                 '__file__': progname,
                 '__name__': '__main__',
-                '__package__': None,
-                '__cached__': None,
+                '__package__': nil,
+                '__cached__': nil,
             };
             t.runctx(code, globs, globs);
         } except IOError, err{

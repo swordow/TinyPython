@@ -153,80 +153,80 @@ class IMAP4{
     most IMAP servers implement a sub-set of the commands available here.
     """;
 
-    class error(Exception){ pass;    # Logical errors - debug required
-    class abort(error){ pass;        # Service errors - close and retry
-    class readonly(abort){ pass;     # Mailbox status changed to READ-ONLY
+    class error(Exception){ pass;}    # Logical errors - debug required
+    class abort(error){ pass;}        # Service errors - close and retry
+    class readonly(abort){ pass;}     # Mailbox status changed to READ-ONLY
 
     mustquote = re.compile(r"[^\w!#$%&'*+,.:;<=>?^`|~-]");
 
-    def __init__(self, host = '', port = IMAP4_PORT){
-        self.debug = Debug;
-        self.state = 'LOGOUT';
-        self.literal = None;             # A literal argument to a command
-        self.tagged_commands = {};       # Tagged commands awaiting response
-        self.untagged_responses = {};    # {typ: [data, ...], ...}
-        self.continuation_response = ''; # Last continuation response
-        self.is_readonly = False;        # READ-ONLY desired state
-        self.tagnum = 0;
+    function __init__( host = '', port = IMAP4_PORT){
+        this.debug = Debug;
+        this.state = 'LOGOUT';
+        this.literal = nil;             # A literal argument to a command
+        this.tagged_commands = {};       # Tagged commands awaiting response
+        this.untagged_responses = {};    # {typ: [data, ...], ...}
+        this.continuation_response = ''; # Last continuation response
+        this.is_readonly = false;        # READ-ONLY desired state
+        this.tagnum = 0;
 
         # Open socket to server.
 
-        self.open(host, port);
+        this.open(host, port);
 
         # Create unique tag for this session,
         # and compile tagged response matcher.
 
-        self.tagpre = Int2AP(random.randint(4096, 65535));
-        self.tagre = re.compile(r'(?P<tag>'
-                        + self.tagpre
+        this.tagpre = Int2AP(random.randint(4096, 65535));
+        this.tagre = re.compile(r'(?P<tag>'
+                        + this.tagpre
                         + r'\d+) (?P<type>[A-Z]+) (?P<data>.*)');
 
         # Get server welcome message,
         # request and store CAPABILITY response.
 
         if __debug__{
-            self._cmd_log_len = 10;
-            self._cmd_log_idx = 0;
-            self._cmd_log = {};           # Last `_cmd_log_len' interactions
-            if self.debug >= 1{
-                self._mesg('imaplib version %s' % __version__);
-                self._mesg('new IMAP4 connection, tag=%s' % self.tagpre);
+            this._cmd_log_len = 10;
+            this._cmd_log_idx = 0;
+            this._cmd_log = {};           # Last `_cmd_log_len' interactions
+            if this.debug >= 1{
+                this._mesg('imaplib version %s' % __version__);
+                this._mesg('new IMAP4 connection, tag=%s' % this.tagpre);
 
         }
-        } self.welcome = self._get_response();
-        if 'PREAUTH' in self.untagged_responses{
-            self.state = 'AUTH';
-        } elif 'OK' in self.untagged_responses{
-            self.state = 'NONAUTH';
+        } this.welcome = this._get_response();
+        if 'PREAUTH' in this.untagged_responses{
+            this.state = 'AUTH';
+        } elif 'OK' in this.untagged_responses{
+            this.state = 'NONAUTH';
         } else{
-            raise self.error(self.welcome);
+            raise this.error(this.welcome);
 
         }
-        typ, dat = self.capability();
-        if dat == [None]{
-            raise self.error('no CAPABILITY response from server');
-        } self.capabilities = tuple(dat[-1].upper().split());
+        typ, dat = this.capability();
+        if dat == [nil]{
+            raise this.error('no CAPABILITY response from server');
+        } this.capabilities = tuple(dat[-1].upper().split());
 
         if __debug__{
-            if self.debug >= 3{
-                self._mesg('CAPABILITIES: %r' % (self.capabilities,));
+            if this.debug >= 3{
+                this._mesg('CAPABILITIES: %r' % (this.capabilities,));
 
         }
         } for version in AllowedVersions{
-            if not version in self.capabilities{
+            if not version in this.capabilities{
                 continue;
-            } self.PROTOCOL_VERSION = version;
+            } this.PROTOCOL_VERSION = version;
             return;
 
         }
-        raise self.error('server not IMAP4 compliant');
+        raise this.error('server not IMAP4 compliant');
 
 
     }
-    def __getattr__(self, attr){
+    function __getattr__( attr){
         #       Allow UPPERCASE variants of IMAP4 command methods.
         if attr in Commands{
-            return getattr(self, attr.lower());
+            return getattr(this, attr.lower());
         } raise AttributeError("Unknown IMAP4 command: '%s'" % attr);
 
 
@@ -235,45 +235,45 @@ class IMAP4{
 
 
     }
-    def open(self, host = '', port = IMAP4_PORT){
+    function open( host = '', port = IMAP4_PORT){
         """Setup connection to remote server on "host:port"
             (default: localhost:standard IMAP4 port).
         This connection will be used by the routines:
             read, readline, send, shutdown.
         """;
-        self.host = host;
-        self.port = port;
-        self.sock = socket.create_connection((host, port));
-        self.file = self.sock.makefile('rb');
+        this.host = host;
+        this.port = port;
+        this.sock = socket.create_connection((host, port));
+        this.file = this.sock.makefile('rb');
 
 
     }
-    def read(self, size){
+    function read( size){
         """Read 'size' bytes from remote.""";
-        return self.file.read(size);
+        return this.file.read(size);
 
 
     }
-    def readline(self){
+    function readline(){
         """Read line from remote.""";
-        line = self.file.readline(_MAXLINE + 1);
+        line = this.file.readline(_MAXLINE + 1);
         if len(line) > _MAXLINE{
-            raise self.error("got more than %d bytes" % _MAXLINE);
+            raise this.error("got more than %d bytes" % _MAXLINE);
         } return line;
 
 
     }
-    def send(self, data){
+    function send( data){
         """Send data to remote.""";
-        self.sock.sendall(data);
+        this.sock.sendall(data);
 
 
     }
-    def shutdown(self){
+    function shutdown(){
         """Close I/O established in "open".""";
-        self.file.close();
+        this.file.close();
         try{
-            self.sock.shutdown(socket.SHUT_RDWR);
+            this.sock.shutdown(socket.SHUT_RDWR);
         } except socket.error as e{
             # The server might already have closed the connection.
             # On Windows, this may result in WSAEINVAL (error 10022):
@@ -281,16 +281,16 @@ class IMAP4{
             if e.errno not in (errno.ENOTCONN, 10022){
                 raise;
         } } finally{
-            self.sock.close();
+            this.sock.close();
 
 
     }
-    } def socket(self){
+    } function socket(){
         """Return socket instance used to connect to IMAP4 server.
 
         socket = <instance>.socket()
         """;
-        return self.sock;
+        return this.sock;
 
 
 
@@ -298,7 +298,7 @@ class IMAP4{
 
 
     }
-    def recent(self){
+    function recent(){
         """Return most recent 'RECENT' responses if any exist,
         else prompt server for an update using the 'NOOP' command.
 
@@ -308,22 +308,22 @@ class IMAP4{
         else list of RECENT responses, most recent last.
         """;
         name = 'RECENT';
-        typ, dat = self._untagged_response('OK', [None], name);
+        typ, dat = this._untagged_response('OK', [nil], name);
         if dat[-1]{
             return typ, dat;
-        } typ, dat = self.noop();  # Prod server for response
-        return self._untagged_response(typ, dat, name);
+        } typ, dat = this.noop();  # Prod server for response
+        return this._untagged_response(typ, dat, name);
 
 
     }
-    def response(self, code){
+    function response( code){
         """Return data for response 'code' if received, or None.
 
         Old value for response 'code' is cleared.
 
         (code, [data]) = <instance>.response(code)
         """;
-        return self._untagged_response(code, [None], code.upper());
+        return this._untagged_response(code, [nil], code.upper());
 
 
 
@@ -331,7 +331,7 @@ class IMAP4{
 
 
     }
-    def append(self, mailbox, flags, date_time, message){
+    function append( mailbox, flags, date_time, message){
         """Append message to named mailbox.
 
         (typ, [data]) = <instance>.append(mailbox, flags, date_time, message)
@@ -345,17 +345,17 @@ class IMAP4{
             if (flags[0],flags[-1]) != ('(',')'){
                 flags = '(%s)' % flags;
         } } else{
-            flags = None;
+            flags = nil;
         } if date_time{
             date_time = Time2Internaldate(date_time);
         } else{
-            date_time = None;
-        } self.literal = MapCRLF.sub(CRLF, message);
-        return self._simple_command(name, mailbox, flags, date_time);
+            date_time = nil;
+        } this.literal = MapCRLF.sub(CRLF, message);
+        return this._simple_command(name, mailbox, flags, date_time);
 
 
     }
-    def authenticate(self, mechanism, authobject){
+    function authenticate( mechanism, authobject){
         """Authenticate command - requires response processing.
 
         'mechanism' specifies which authentication mechanism is to
@@ -376,35 +376,35 @@ class IMAP4{
         #cap = 'AUTH=%s' % mech
         #if not cap in self.capabilities:       # Let the server decide!
         #    raise self.error("Server doesn't allow %s authentication." % mech)
-        self.literal = _Authenticator(authobject).process;
-        typ, dat = self._simple_command('AUTHENTICATE', mech);
+        this.literal = _Authenticator(authobject).process;
+        typ, dat = this._simple_command('AUTHENTICATE', mech);
         if typ != 'OK'{
-            raise self.error(dat[-1]);
-        } self.state = 'AUTH';
+            raise this.error(dat[-1]);
+        } this.state = 'AUTH';
         return typ, dat;
 
 
     }
-    def capability(self){
+    function capability(){
         """(typ, [data]) = <instance>.capability()
         Fetch capabilities list from server.""";
 
         name = 'CAPABILITY';
-        typ, dat = self._simple_command(name);
-        return self._untagged_response(typ, dat, name);
+        typ, dat = this._simple_command(name);
+        return this._untagged_response(typ, dat, name);
 
 
     }
-    def check(self){
+    function check(){
         """Checkpoint mailbox on server.
 
         (typ, [data]) = <instance>.check()
         """;
-        return self._simple_command('CHECK');
+        return this._simple_command('CHECK');
 
 
     }
-    def close(self){
+    function close(){
         """Close currently selected mailbox.
 
         Deleted messages are removed from writable mailbox.
@@ -413,48 +413,48 @@ class IMAP4{
         (typ, [data]) = <instance>.close()
         """;
         try{
-            typ, dat = self._simple_command('CLOSE');
+            typ, dat = this._simple_command('CLOSE');
         } finally{
-            self.state = 'AUTH';
+            this.state = 'AUTH';
         } return typ, dat;
 
 
     }
-    def copy(self, message_set, new_mailbox){
+    function copy( message_set, new_mailbox){
         """Copy 'message_set' messages onto end of 'new_mailbox'.
 
         (typ, [data]) = <instance>.copy(message_set, new_mailbox)
         """;
-        return self._simple_command('COPY', message_set, new_mailbox);
+        return this._simple_command('COPY', message_set, new_mailbox);
 
 
     }
-    def create(self, mailbox){
+    function create( mailbox){
         """Create new mailbox.
 
         (typ, [data]) = <instance>.create(mailbox)
         """;
-        return self._simple_command('CREATE', mailbox);
+        return this._simple_command('CREATE', mailbox);
 
 
     }
-    def delete(self, mailbox){
+    function delete( mailbox){
         """Delete old mailbox.
 
         (typ, [data]) = <instance>.delete(mailbox)
         """;
-        return self._simple_command('DELETE', mailbox);
+        return this._simple_command('DELETE', mailbox);
 
     }
-    def deleteacl(self, mailbox, who){
+    function deleteacl( mailbox, who){
         """Delete the ACLs (remove any rights) set for who on mailbox.
 
         (typ, [data]) = <instance>.deleteacl(mailbox, who)
         """;
-        return self._simple_command('DELETEACL', mailbox, who);
+        return this._simple_command('DELETEACL', mailbox, who);
 
     }
-    def expunge(self){
+    function expunge(){
         """Permanently remove deleted items from selected mailbox.
 
         Generates 'EXPUNGE' response for each deleted message.
@@ -464,12 +464,12 @@ class IMAP4{
         'data' is list of 'EXPUNGE'd message numbers in order received.
         """;
         name = 'EXPUNGE';
-        typ, dat = self._simple_command(name);
-        return self._untagged_response(typ, dat, name);
+        typ, dat = this._simple_command(name);
+        return this._untagged_response(typ, dat, name);
 
 
     }
-    def fetch(self, message_set, message_parts){
+    function fetch( message_set, message_parts){
         """Fetch (parts of) messages.
 
         (typ, [data, ...]) = <instance>.fetch(message_set, message_parts)
@@ -480,55 +480,55 @@ class IMAP4{
         'data' are tuples of message part envelope and data.
         """;
         name = 'FETCH';
-        typ, dat = self._simple_command(name, message_set, message_parts);
-        return self._untagged_response(typ, dat, name);
+        typ, dat = this._simple_command(name, message_set, message_parts);
+        return this._untagged_response(typ, dat, name);
 
 
     }
-    def getacl(self, mailbox){
+    function getacl( mailbox){
         """Get the ACLs for a mailbox.
 
         (typ, [data]) = <instance>.getacl(mailbox)
         """;
-        typ, dat = self._simple_command('GETACL', mailbox);
-        return self._untagged_response(typ, dat, 'ACL');
+        typ, dat = this._simple_command('GETACL', mailbox);
+        return this._untagged_response(typ, dat, 'ACL');
 
 
     }
-    def getannotation(self, mailbox, entry, attribute){
+    function getannotation( mailbox, entry, attribute){
         """(typ, [data]) = <instance>.getannotation(mailbox, entry, attribute)
         Retrieve ANNOTATIONs.""";
 
-        typ, dat = self._simple_command('GETANNOTATION', mailbox, entry, attribute);
-        return self._untagged_response(typ, dat, 'ANNOTATION');
+        typ, dat = this._simple_command('GETANNOTATION', mailbox, entry, attribute);
+        return this._untagged_response(typ, dat, 'ANNOTATION');
 
 
     }
-    def getquota(self, root){
+    function getquota( root){
         """Get the quota root's resource usage and limits.
 
         Part of the IMAP4 QUOTA extension defined in rfc2087.
 
         (typ, [data]) = <instance>.getquota(root)
         """;
-        typ, dat = self._simple_command('GETQUOTA', root);
-        return self._untagged_response(typ, dat, 'QUOTA');
+        typ, dat = this._simple_command('GETQUOTA', root);
+        return this._untagged_response(typ, dat, 'QUOTA');
 
 
     }
-    def getquotaroot(self, mailbox){
+    function getquotaroot( mailbox){
         """Get the list of quota roots for the named mailbox.
 
         (typ, [[QUOTAROOT responses...], [QUOTA responses]]) = <instance>.getquotaroot(mailbox)
         """;
-        typ, dat = self._simple_command('GETQUOTAROOT', mailbox);
-        typ, quota = self._untagged_response(typ, dat, 'QUOTA');
-        typ, quotaroot = self._untagged_response(typ, dat, 'QUOTAROOT');
+        typ, dat = this._simple_command('GETQUOTAROOT', mailbox);
+        typ, quota = this._untagged_response(typ, dat, 'QUOTA');
+        typ, quotaroot = this._untagged_response(typ, dat, 'QUOTAROOT');
         return typ, [quotaroot, quota];
 
 
     }
-    def list(self, directory='""', pattern='*'){
+    function list( directory='""', pattern='*'){
         """List mailbox names in directory matching pattern.
 
         (typ, [data]) = <instance>.list(directory='""', pattern='*')
@@ -536,61 +536,61 @@ class IMAP4{
         'data' is list of LIST responses.
         """;
         name = 'LIST';
-        typ, dat = self._simple_command(name, directory, pattern);
-        return self._untagged_response(typ, dat, name);
+        typ, dat = this._simple_command(name, directory, pattern);
+        return this._untagged_response(typ, dat, name);
 
 
     }
-    def login(self, user, password){
+    function login( user, password){
         """Identify client using plaintext password.
 
         (typ, [data]) = <instance>.login(user, password)
 
         NB: 'password' will be quoted.
         """;
-        typ, dat = self._simple_command('LOGIN', user, self._quote(password));
+        typ, dat = this._simple_command('LOGIN', user, this._quote(password));
         if typ != 'OK'{
-            raise self.error(dat[-1]);
-        } self.state = 'AUTH';
+            raise this.error(dat[-1]);
+        } this.state = 'AUTH';
         return typ, dat;
 
 
     }
-    def login_cram_md5(self, user, password){
+    function login_cram_md5( user, password){
         """ Force use of CRAM-MD5 authentication.
 
         (typ, [data]) = <instance>.login_cram_md5(user, password)
         """;
-        self.user, self.password = user, password;
-        return self.authenticate('CRAM-MD5', self._CRAM_MD5_AUTH);
+        this.user, this.password = user, password;
+        return this.authenticate('CRAM-MD5', this._CRAM_MD5_AUTH);
 
 
     }
-    def _CRAM_MD5_AUTH(self, challenge){
+    function _CRAM_MD5_AUTH( challenge){
         """ Authobject to use with CRAM-MD5 authentication. """;
         import hmac;
-        return self.user + " " + hmac.HMAC(self.password, challenge).hexdigest();
+        return this.user + " " + hmac.HMAC(this.password, challenge).hexdigest();
 
 
     }
-    def logout(self){
+    function logout(){
         """Shutdown connection to server.
 
         (typ, [data]) = <instance>.logout()
 
         Returns server 'BYE' response.
         """;
-        self.state = 'LOGOUT';
-        try{ typ, dat = self._simple_command('LOGOUT');
-        except Exception{ typ, dat = 'NO', ['%s: %s' % sys.exc_info()[:2]];
-        self.shutdown();
-        if 'BYE' in self.untagged_responses{
-            return 'BYE', self.untagged_responses['BYE'];
+        this.state = 'LOGOUT';
+        try{ typ, dat = this._simple_command('LOGOUT');}
+        except Exception{ typ, dat = 'NO', ['%s: %s' % sys.exc_info()[:2]];}
+        this.shutdown();
+        if 'BYE' in this.untagged_responses{
+            return 'BYE', this.untagged_responses['BYE'];
         } return typ, dat;
 
 
     }
-    def lsub(self, directory='""', pattern='*'){
+    function lsub( directory='""', pattern='*'){
         """List 'subscribed' mailbox names in directory matching pattern.
 
         (typ, [data, ...]) = <instance>.lsub(directory='""', pattern='*')
@@ -598,43 +598,43 @@ class IMAP4{
         'data' are tuples of message part envelope and data.
         """;
         name = 'LSUB';
-        typ, dat = self._simple_command(name, directory, pattern);
-        return self._untagged_response(typ, dat, name);
+        typ, dat = this._simple_command(name, directory, pattern);
+        return this._untagged_response(typ, dat, name);
 
     }
-    def myrights(self, mailbox){
+    function myrights( mailbox){
         """Show my ACLs for a mailbox (i.e. the rights that I have on mailbox).
 
         (typ, [data]) = <instance>.myrights(mailbox)
         """;
-        typ,dat = self._simple_command('MYRIGHTS', mailbox);
-        return self._untagged_response(typ, dat, 'MYRIGHTS');
+        typ,dat = this._simple_command('MYRIGHTS', mailbox);
+        return this._untagged_response(typ, dat, 'MYRIGHTS');
 
     }
-    def namespace(self){
+    function namespace(){
         """ Returns IMAP namespaces ala rfc2342
 
         (typ, [data, ...]) = <instance>.namespace()
         """;
         name = 'NAMESPACE';
-        typ, dat = self._simple_command(name);
-        return self._untagged_response(typ, dat, name);
+        typ, dat = this._simple_command(name);
+        return this._untagged_response(typ, dat, name);
 
 
     }
-    def noop(self){
+    function noop(){
         """Send NOOP command.
 
         (typ, [data]) = <instance>.noop()
         """;
         if __debug__{
-            if self.debug >= 3{
-                self._dump_ur(self.untagged_responses);
-        } } return self._simple_command('NOOP');
+            if this.debug >= 3{
+                this._dump_ur(this.untagged_responses);
+        } } return this._simple_command('NOOP');
 
 
     }
-    def partial(self, message_num, message_part, start, length){
+    function partial( message_num, message_part, start, length){
         """Fetch truncated part of a message.
 
         (typ, [data, ...]) = <instance>.partial(message_num, message_part, start, length)
@@ -642,12 +642,12 @@ class IMAP4{
         'data' is tuple of message part envelope and data.
         """;
         name = 'PARTIAL';
-        typ, dat = self._simple_command(name, message_num, message_part, start, length);
-        return self._untagged_response(typ, dat, 'FETCH');
+        typ, dat = this._simple_command(name, message_num, message_part, start, length);
+        return this._untagged_response(typ, dat, 'FETCH');
 
 
     }
-    def proxyauth(self, user){
+    function proxyauth( user){
         """Assume authentication as "user".
 
         Allows an authorised administrator to proxy into any user's
@@ -657,20 +657,20 @@ class IMAP4{
         """;
 
         name = 'PROXYAUTH';
-        return self._simple_command('PROXYAUTH', user);
+        return this._simple_command('PROXYAUTH', user);
 
 
     }
-    def rename(self, oldmailbox, newmailbox){
+    function rename( oldmailbox, newmailbox){
         """Rename old mailbox name to new.
 
         (typ, [data]) = <instance>.rename(oldmailbox, newmailbox)
         """;
-        return self._simple_command('RENAME', oldmailbox, newmailbox);
+        return this._simple_command('RENAME', oldmailbox, newmailbox);
 
 
     }
-    def search(self, charset, *criteria){
+    function search( charset, *criteria){
         """Search mailbox for matching messages.
 
         (typ, [data]) = <instance>.search(charset, criterion, ...)
@@ -679,14 +679,14 @@ class IMAP4{
         """;
         name = 'SEARCH';
         if charset{
-            typ, dat = self._simple_command(name, 'CHARSET', charset, *criteria);
+            typ, dat = this._simple_command(name, 'CHARSET', charset, *criteria);
         } else{
-            typ, dat = self._simple_command(name, *criteria);
-        } return self._untagged_response(typ, dat, name);
+            typ, dat = this._simple_command(name, *criteria);
+        } return this._untagged_response(typ, dat, name);
 
 
     }
-    def select(self, mailbox='INBOX', readonly=False){
+    function select( mailbox='INBOX', readonly=false){
         """Select a mailbox.
 
         Flush all untagged responses.
@@ -698,56 +698,56 @@ class IMAP4{
         Mandated responses are ('FLAGS', 'EXISTS', 'RECENT', 'UIDVALIDITY'), so
         other responses should be obtained via <instance>.response('FLAGS') etc.
         """;
-        self.untagged_responses = {};    # Flush old responses.
-        self.is_readonly = readonly;
+        this.untagged_responses = {};    # Flush old responses.
+        this.is_readonly = readonly;
         if readonly{
             name = 'EXAMINE';
         } else{
             name = 'SELECT';
-        } typ, dat = self._simple_command(name, mailbox);
+        } typ, dat = this._simple_command(name, mailbox);
         if typ != 'OK'{
-            self.state = 'AUTH';     # Might have been 'SELECTED'
+            this.state = 'AUTH';     # Might have been 'SELECTED'
             return typ, dat;
-        } self.state = 'SELECTED';
-        if 'READ-ONLY' in self.untagged_responses \
+        } this.state = 'SELECTED';
+        if 'READ-ONLY' in this.untagged_responses \
                 and not readonly{
             if __debug__{
-                if self.debug >= 1{
-                    self._dump_ur(self.untagged_responses);
-            } } raise self.readonly('%s is not writable' % mailbox);
-        } return typ, self.untagged_responses.get('EXISTS', [None]);
+                if this.debug >= 1{
+                    this._dump_ur(this.untagged_responses);
+            } } raise this.readonly('%s is not writable' % mailbox);
+        } return typ, this.untagged_responses.get('EXISTS', [nil]);
 
 
     }
-    def setacl(self, mailbox, who, what){
+    function setacl( mailbox, who, what){
         """Set a mailbox acl.
 
         (typ, [data]) = <instance>.setacl(mailbox, who, what)
         """;
-        return self._simple_command('SETACL', mailbox, who, what);
+        return this._simple_command('SETACL', mailbox, who, what);
 
 
     }
-    def setannotation(self, *args){
+    function setannotation( *args){
         """(typ, [data]) = <instance>.setannotation(mailbox[, entry, attribute]+)
         Set ANNOTATIONs.""";
 
-        typ, dat = self._simple_command('SETANNOTATION', *args);
-        return self._untagged_response(typ, dat, 'ANNOTATION');
+        typ, dat = this._simple_command('SETANNOTATION', *args);
+        return this._untagged_response(typ, dat, 'ANNOTATION');
 
 
     }
-    def setquota(self, root, limits){
+    function setquota( root, limits){
         """Set the quota root's resource limits.
 
         (typ, [data]) = <instance>.setquota(root, limits)
         """;
-        typ, dat = self._simple_command('SETQUOTA', root, limits);
-        return self._untagged_response(typ, dat, 'QUOTA');
+        typ, dat = this._simple_command('SETQUOTA', root, limits);
+        return this._untagged_response(typ, dat, 'QUOTA');
 
 
     }
-    def sort(self, sort_criteria, charset, *search_criteria){
+    function sort( sort_criteria, charset, *search_criteria){
         """IMAP4rev1 extension SORT command.
 
         (typ, [data]) = <instance>.sort(sort_criteria, charset, search_criteria, ...)
@@ -757,12 +757,12 @@ class IMAP4{
         #       raise self.error('unimplemented extension command: %s' % name)
         if (sort_criteria[0],sort_criteria[-1]) != ('(',')'){
             sort_criteria = '(%s)' % sort_criteria;
-        } typ, dat = self._simple_command(name, sort_criteria, charset, *search_criteria);
-        return self._untagged_response(typ, dat, name);
+        } typ, dat = this._simple_command(name, sort_criteria, charset, *search_criteria);
+        return this._untagged_response(typ, dat, name);
 
 
     }
-    def status(self, mailbox, names){
+    function status( mailbox, names){
         """Request named status conditions for mailbox.
 
         (typ, [data]) = <instance>.status(mailbox, names)
@@ -770,44 +770,44 @@ class IMAP4{
         name = 'STATUS';
         #if self.PROTOCOL_VERSION == 'IMAP4':   # Let the server decide!
         #    raise self.error('%s unimplemented in IMAP4 (obtain IMAP4rev1 server, or re-code)' % name)
-        typ, dat = self._simple_command(name, mailbox, names);
-        return self._untagged_response(typ, dat, name);
+        typ, dat = this._simple_command(name, mailbox, names);
+        return this._untagged_response(typ, dat, name);
 
 
     }
-    def store(self, message_set, command, flags){
+    function store( message_set, command, flags){
         """Alters flag dispositions for messages in mailbox.
 
         (typ, [data]) = <instance>.store(message_set, command, flags)
         """;
         if (flags[0],flags[-1]) != ('(',')'){
             flags = '(%s)' % flags;  # Avoid quoting the flags
-        } typ, dat = self._simple_command('STORE', message_set, command, flags);
-        return self._untagged_response(typ, dat, 'FETCH');
+        } typ, dat = this._simple_command('STORE', message_set, command, flags);
+        return this._untagged_response(typ, dat, 'FETCH');
 
 
     }
-    def subscribe(self, mailbox){
+    function subscribe( mailbox){
         """Subscribe to new mailbox.
 
         (typ, [data]) = <instance>.subscribe(mailbox)
         """;
-        return self._simple_command('SUBSCRIBE', mailbox);
+        return this._simple_command('SUBSCRIBE', mailbox);
 
 
     }
-    def thread(self, threading_algorithm, charset, *search_criteria){
+    function thread( threading_algorithm, charset, *search_criteria){
         """IMAPrev1 extension THREAD command.
 
         (type, [data]) = <instance>.thread(threading_algorithm, charset, search_criteria, ...)
         """;
         name = 'THREAD';
-        typ, dat = self._simple_command(name, threading_algorithm, charset, *search_criteria);
-        return self._untagged_response(typ, dat, name);
+        typ, dat = this._simple_command(name, threading_algorithm, charset, *search_criteria);
+        return this._untagged_response(typ, dat, name);
 
 
     }
-    def uid(self, command, *args){
+    function uid( command, *args){
         """Execute "command arg ..." with messages identified by UID,
                 rather than message number.
 
@@ -817,32 +817,32 @@ class IMAP4{
         """;
         command = command.upper();
         if not command in Commands{
-            raise self.error("Unknown IMAP4 UID command: %s" % command);
-        } if self.state not in Commands[command]{
-            raise self.error("command %s illegal in state %s, "
+            raise this.error("Unknown IMAP4 UID command: %s" % command);
+        } if this.state not in Commands[command]{
+            raise this.error("command %s illegal in state %s, "
                              "only allowed in states %s" %
-                             (command, self.state,
+                             (command, this.state,
                               ', '.join(Commands[command])));
         } name = 'UID';
-        typ, dat = self._simple_command(name, command, *args);
+        typ, dat = this._simple_command(name, command, *args);
         if command in ('SEARCH', 'SORT', 'THREAD'){
             name = command;
         } else{
             name = 'FETCH';
-        } return self._untagged_response(typ, dat, name);
+        } return this._untagged_response(typ, dat, name);
 
 
     }
-    def unsubscribe(self, mailbox){
+    function unsubscribe( mailbox){
         """Unsubscribe from old mailbox.
 
         (typ, [data]) = <instance>.unsubscribe(mailbox)
         """;
-        return self._simple_command('UNSUBSCRIBE', mailbox);
+        return this._simple_command('UNSUBSCRIBE', mailbox);
 
 
     }
-    def xatom(self, name, *args){
+    function xatom( name, *args){
         """Allow simple extension commands
                 notified by server in CAPABILITY response.
 
@@ -856,8 +856,8 @@ class IMAP4{
         #if not name in self.capabilities:      # Let the server decide!
         #    raise self.error('unknown extension command: %s' % name)
         if not name in Commands{
-            Commands[name] = (self.state,);
-        } return self._simple_command(name, *args);
+            Commands[name] = (this.state,);
+        } return this._simple_command(name, *args);
 
 
 
@@ -865,13 +865,13 @@ class IMAP4{
 
 
     }
-    def _append_untagged(self, typ, dat){
+    function _append_untagged( typ, dat){
 
-        if dat is None{ dat = '';
-        ur = self.untagged_responses;
+        if dat is nil{ dat = '';}
+        ur = this.untagged_responses;
         if __debug__{
-            if self.debug >= 5{
-                self._mesg('untagged_responses[%s] %s += ["%s"]' %
+            if this.debug >= 5{
+                this._mesg('untagged_responses[%s] %s += ["%s"]' %
                         (typ, len(ur.get(typ,'')), dat));
         } } if typ in ur{
             ur[typ].append(dat);
@@ -880,91 +880,91 @@ class IMAP4{
 
 
     }
-    } def _check_bye(self){
-        bye = self.untagged_responses.get('BYE');
+    } function _check_bye(){
+        bye = this.untagged_responses.get('BYE');
         if bye{
-            raise self.abort(bye[-1]);
+            raise this.abort(bye[-1]);
 
 
     }
-    } def _command(self, name, *args){
+    } function _command( name, *args){
 
-        if self.state not in Commands[name]{
-            self.literal = None;
-            raise self.error("command %s illegal in state %s, "
+        if this.state not in Commands[name]{
+            this.literal = nil;
+            raise this.error("command %s illegal in state %s, "
                              "only allowed in states %s" %
-                             (name, self.state,
+                             (name, this.state,
                               ', '.join(Commands[name])));
 
         }
         for typ in ('OK', 'NO', 'BAD'){
-            if typ in self.untagged_responses{
-                del self.untagged_responses[typ];
+            if typ in this.untagged_responses{
+                del this.untagged_responses[typ];
 
         }
-        } if 'READ-ONLY' in self.untagged_responses \
-        and not self.is_readonly{
-            raise self.readonly('mailbox status changed to READ-ONLY');
+        } if 'READ-ONLY' in this.untagged_responses \
+        and not this.is_readonly{
+            raise this.readonly('mailbox status changed to READ-ONLY');
 
         }
-        tag = self._new_tag();
+        tag = this._new_tag();
         data = '%s %s' % (tag, name);
         for arg in args{
-            if arg is None{ continue;
-            data = '%s %s' % (data, self._checkquote(arg));
+            if arg is nil{ continue;}
+            data = '%s %s' % (data, this._checkquote(arg));
 
         }
-        literal = self.literal;
-        if literal is not None{
-            self.literal = None;
-            if type(literal) is type(self._command){
+        literal = this.literal;
+        if literal is not nil{
+            this.literal = nil;
+            if type(literal) is type(this._command){
                 literator = literal;
             } else{
-                literator = None;
+                literator = nil;
                 data = '%s {%s}' % (data, len(literal));
 
         }
         } if __debug__{
-            if self.debug >= 4{
-                self._mesg('> %s' % data);
+            if this.debug >= 4{
+                this._mesg('> %s' % data);
             } else{
-                self._log('> %s' % data);
+                this._log('> %s' % data);
 
         }
         } try{
-            self.send('%s%s' % (data, CRLF));
+            this.send('%s%s' % (data, CRLF));
         } except (socket.error, OSError), val{
-            raise self.abort('socket error: %s' % val);
+            raise this.abort('socket error: %s' % val);
 
         }
-        if literal is None{
+        if literal is nil{
             return tag;
 
         }
         while 1{
             # Wait for continuation response
 
-            while self._get_response(){
-                if self.tagged_commands[tag]{   # BAD/NO?
+            while this._get_response(){
+                if this.tagged_commands[tag]{   # BAD/NO?
                     return tag;
 
             # Send literal
 
             }
             } if literator{
-                literal = literator(self.continuation_response);
+                literal = literator(this.continuation_response);
 
             }
             if __debug__{
-                if self.debug >= 4{
-                    self._mesg('write literal size %s' % len(literal));
+                if this.debug >= 4{
+                    this._mesg('write literal size %s' % len(literal));
 
             }
             } try{
-                self.send(literal);
-                self.send(CRLF);
+                this.send(literal);
+                this.send(CRLF);
             } except (socket.error, OSError), val{
-                raise self.abort('socket error: %s' % val);
+                raise this.abort('socket error: %s' % val);
 
             }
             if not literator{
@@ -975,122 +975,122 @@ class IMAP4{
 
 
     }
-    def _command_complete(self, name, tag){
+    function _command_complete( name, tag){
         # BYE is expected after LOGOUT
         if name != 'LOGOUT'{
-            self._check_bye();
+            this._check_bye();
         } try{
-            typ, data = self._get_tagged_response(tag);
-        } except self.abort, val{
-            raise self.abort('command: %s => %s' % (name, val));
-        } except self.error, val{
-            raise self.error('command: %s => %s' % (name, val));
+            typ, data = this._get_tagged_response(tag);
+        } except this.abort, val{
+            raise this.abort('command: %s => %s' % (name, val));
+        } except this.error, val{
+            raise this.error('command: %s => %s' % (name, val));
         } if name != 'LOGOUT'{
-            self._check_bye();
+            this._check_bye();
         } if typ == 'BAD'{
-            raise self.error('%s command error: %s %s' % (name, typ, data));
+            raise this.error('%s command error: %s %s' % (name, typ, data));
         } return typ, data;
 
 
     }
-    def _get_response(self){
+    function _get_response(){
 
         # Read response and store.
         #
         # Returns None for continuation responses,
         # otherwise first response line received.
 
-        resp = self._get_line();
+        resp = this._get_line();
 
         # Command completion response?
 
-        if self._match(self.tagre, resp){
-            tag = self.mo.group('tag');
-            if not tag in self.tagged_commands{
-                raise self.abort('unexpected tagged response: %s' % resp);
+        if this._match(this.tagre, resp){
+            tag = this.mo.group('tag');
+            if not tag in this.tagged_commands{
+                raise this.abort('unexpected tagged response: %s' % resp);
 
             }
-            typ = self.mo.group('type');
-            dat = self.mo.group('data');
-            self.tagged_commands[tag] = (typ, [dat]);
+            typ = this.mo.group('type');
+            dat = this.mo.group('data');
+            this.tagged_commands[tag] = (typ, [dat]);
         } else{
-            dat2 = None;
+            dat2 = nil;
 
             # '*' (untagged) responses?
 
-            if not self._match(Untagged_response, resp){
-                if self._match(Untagged_status, resp){
-                    dat2 = self.mo.group('data2');
+            if not this._match(Untagged_response, resp){
+                if this._match(Untagged_status, resp){
+                    dat2 = this.mo.group('data2');
 
             }
-            } if self.mo is None{
+            } if this.mo is nil{
                 # Only other possibility is '+' (continuation) response...
 
-                if self._match(Continuation, resp){
-                    self.continuation_response = self.mo.group('data');
-                    return None;     # NB: indicates continuation
+                if this._match(Continuation, resp){
+                    this.continuation_response = this.mo.group('data');
+                    return nil;     # NB: indicates continuation
 
                 }
-                raise self.abort("unexpected response: '%s'" % resp);
+                raise this.abort("unexpected response: '%s'" % resp);
 
             }
-            typ = self.mo.group('type');
-            dat = self.mo.group('data');
-            if dat is None{ dat = '';        # Null untagged response
-            if dat2{ dat = dat + ' ' + dat2;
+            typ = this.mo.group('type');
+            dat = this.mo.group('data');
+            if dat is nil{ dat = '';}        # Null untagged response
+            if dat2{ dat = dat + ' ' + dat2;}
 
             # Is there a literal to come?
 
-            while self._match(Literal, dat){
+            while this._match(Literal, dat){
 
                 # Read literal direct from connection.
 
-                size = int(self.mo.group('size'));
+                size = int(this.mo.group('size'));
                 if __debug__{
-                    if self.debug >= 4{
-                        self._mesg('read literal size %s' % size);
-                } } data = self.read(size);
+                    if this.debug >= 4{
+                        this._mesg('read literal size %s' % size);
+                } } data = this.read(size);
 
                 # Store response with literal as tuple
 
-                self._append_untagged(typ, (dat, data));
+                this._append_untagged(typ, (dat, data));
 
                 # Read trailer - possibly containing another literal
 
-                dat = self._get_line();
+                dat = this._get_line();
 
             }
-            self._append_untagged(typ, dat);
+            this._append_untagged(typ, dat);
 
         # Bracketed response information?
 
         }
-        if typ in ('OK', 'NO', 'BAD') and self._match(Response_code, dat){
-            self._append_untagged(self.mo.group('type'), self.mo.group('data'));
+        if typ in ('OK', 'NO', 'BAD') and this._match(Response_code, dat){
+            this._append_untagged(this.mo.group('type'), this.mo.group('data'));
 
         }
         if __debug__{
-            if self.debug >= 1 and typ in ('NO', 'BAD', 'BYE'){
-                self._mesg('%s response: %s' % (typ, dat));
+            if this.debug >= 1 and typ in ('NO', 'BAD', 'BYE'){
+                this._mesg('%s response: %s' % (typ, dat));
 
         }
         } return resp;
 
 
     }
-    def _get_tagged_response(self, tag){
+    function _get_tagged_response( tag){
 
         while 1{
-            result = self.tagged_commands[tag];
-            if result is not None{
-                del self.tagged_commands[tag];
+            result = this.tagged_commands[tag];
+            if result is not nil{
+                del this.tagged_commands[tag];
                 return result;
 
             # If we've seen a BYE at this point, the socket will be
             # closed, so report the BYE now.
 
             }
-            self._check_bye();
+            this._check_bye();
 
             # Some have reported "unexpected response" exceptions.
             # Note that ignoring them here causes loops.
@@ -1098,60 +1098,60 @@ class IMAP4{
             # I'll update the code in `_get_response()'.
 
             try{
-                self._get_response();
-            } except self.abort, val{
+                this._get_response();
+            } except this.abort, val{
                 if __debug__{
-                    if self.debug >= 1{
-                        self.print_log();
+                    if this.debug >= 1{
+                        this.print_log();
                 } } raise;
 
 
     }
-    } } def _get_line(self){
+    } } function _get_line(){
 
-        line = self.readline();
+        line = this.readline();
         if not line{
-            raise self.abort('socket error: EOF');
+            raise this.abort('socket error: EOF');
 
         # Protocol mandates all lines terminated by CRLF
         }
         if not line.endswith('\r\n'){
-            raise self.abort('socket error: unterminated line');
+            raise this.abort('socket error: unterminated line');
 
         }
         line = line[:-2];
         if __debug__{
-            if self.debug >= 4{
-                self._mesg('< %s' % line);
+            if this.debug >= 4{
+                this._mesg('< %s' % line);
             } else{
-                self._log('< %s' % line);
+                this._log('< %s' % line);
         } } return line;
 
 
     }
-    def _match(self, cre, s){
+    function _match( cre, s){
 
         # Run compiled regular expression match method on 's'.
         # Save result, return success.
 
-        self.mo = cre.match(s);
+        this.mo = cre.match(s);
         if __debug__{
-            if self.mo is not None and self.debug >= 5{
-                self._mesg("\tmatched r'%s' => %r" % (cre.pattern, self.mo.groups()));
-        } } return self.mo is not None;
+            if this.mo is not nil and this.debug >= 5{
+                this._mesg("\tmatched r'%s' => %r" % (cre.pattern, this.mo.groups()));
+        } } return this.mo is not nil;
 
 
     }
-    def _new_tag(self){
+    function _new_tag(){
 
-        tag = '%s%s' % (self.tagpre, self.tagnum);
-        self.tagnum = self.tagnum + 1;
-        self.tagged_commands[tag] = None;
+        tag = '%s%s' % (this.tagpre, this.tagnum);
+        this.tagnum = this.tagnum + 1;
+        this.tagged_commands[tag] = nil;
         return tag;
 
 
     }
-    def _checkquote(self, arg){
+    function _checkquote( arg){
 
         # Must quote command args if non-alphanumeric chars present,
         # and not already quoted.
@@ -1160,13 +1160,13 @@ class IMAP4{
             return arg;
         } if len(arg) >= 2 and (arg[0],arg[-1]) in (('(',')'),('"','"')){
             return arg;
-        } if arg and self.mustquote.search(arg) is None{
+        } if arg and this.mustquote.search(arg) is nil{
             return arg;
-        } return self._quote(arg);
+        } return this._quote(arg);
 
 
     }
-    def _quote(self, arg){
+    function _quote( arg){
 
         arg = arg.replace('\\', '\\\\');
         arg = arg.replace('"', '\\"');
@@ -1175,63 +1175,63 @@ class IMAP4{
 
 
     }
-    def _simple_command(self, name, *args){
+    function _simple_command( name, *args){
 
-        return self._command_complete(name, self._command(name, *args));
+        return this._command_complete(name, this._command(name, *args));
 
 
     }
-    def _untagged_response(self, typ, dat, name){
+    function _untagged_response( typ, dat, name){
 
         if typ == 'NO'{
             return typ, dat;
-        } if not name in self.untagged_responses{
-            return typ, [None];
-        } data = self.untagged_responses.pop(name);
+        } if not name in this.untagged_responses{
+            return typ, [nil];
+        } data = this.untagged_responses.pop(name);
         if __debug__{
-            if self.debug >= 5{
-                self._mesg('untagged_responses[%s] => %s' % (name, data));
+            if this.debug >= 5{
+                this._mesg('untagged_responses[%s] => %s' % (name, data));
         } } return typ, data;
 
 
     }
     if __debug__{
 
-        def _mesg(self, s, secs=None){
-            if secs is None{
+        function _mesg( s, secs=nil){
+            if secs is nil{
                 secs = time.time();
             } tm = time.strftime('%M:%S', time.localtime(secs));
             sys.stderr.write('  %s.%02d %s\n' % (tm, (secs*100)%100, s));
             sys.stderr.flush();
 
         }
-        def _dump_ur(self, dict){
+        function _dump_ur( dict){
             # Dump untagged responses (in `dict').
             l = dict.items();
-            if not l{ return;
+            if not l{ return;}
             t = '\n\t\t';
             l = map(lambda x{'%s: "%s"' % (x[0], x[1][0] and '" "'.join(x[1]) or '')}, l);
-            self._mesg('untagged responses dump:%s%s' % (t, t.join(l)));
+            this._mesg('untagged responses dump:%s%s' % (t, t.join(l)));
 
         }
-        def _log(self, line){
+        function _log( line){
             # Keep log of last `_cmd_log_len' interactions for debugging.
-            self._cmd_log[self._cmd_log_idx] = (line, time.time());
-            self._cmd_log_idx += 1;
-            if self._cmd_log_idx >= self._cmd_log_len{
-                self._cmd_log_idx = 0;
+            this._cmd_log[this._cmd_log_idx] = (line, time.time());
+            this._cmd_log_idx += 1;
+            if this._cmd_log_idx >= this._cmd_log_len{
+                this._cmd_log_idx = 0;
 
         }
-        } def print_log(self){
-            self._mesg('last %d IMAP4 interactions:' % len(self._cmd_log));
-            i, n = self._cmd_log_idx, self._cmd_log_len;
+        } function print_log(){
+            this._mesg('last %d IMAP4 interactions:' % len(this._cmd_log));
+            i, n = this._cmd_log_idx, this._cmd_log_len;
             while n{
                 try{
-                    self._mesg(*self._cmd_log[i]);
+                    this._mesg(*this._cmd_log[i]);
                 } except Exception{
                     pass;
                 } i += 1;
-                if i >= self._cmd_log_len{
+                if i >= this._cmd_log_len{
                     i = 0;
                 } n -= 1;
 
@@ -1258,32 +1258,32 @@ class IMAP4{
         """;
 
 
-        def __init__(self, host = '', port = IMAP4_SSL_PORT, keyfile = None, certfile = None){
-            self.keyfile = keyfile;
-            self.certfile = certfile;
-            IMAP4.__init__(self, host, port);
+        function __init__( host = '', port = IMAP4_SSL_PORT, keyfile = nil, certfile = nil){
+            this.keyfile = keyfile;
+            this.certfile = certfile;
+            IMAP4.__init__(this, host, port);
 
 
         }
-        def open(self, host = '', port = IMAP4_SSL_PORT){
+        function open( host = '', port = IMAP4_SSL_PORT){
             """Setup connection to remote server on "host:port".
                 (default: localhost:standard IMAP4 SSL port).
             This connection will be used by the routines:
                 read, readline, send, shutdown.
             """;
-            self.host = host;
-            self.port = port;
-            self.sock = socket.create_connection((host, port));
-            self.sslobj = ssl.wrap_socket(self.sock, self.keyfile, self.certfile);
-            self.file = self.sslobj.makefile('rb');
+            this.host = host;
+            this.port = port;
+            this.sock = socket.create_connection((host, port));
+            this.sslobj = ssl.wrap_socket(this.sock, this.keyfile, this.certfile);
+            this.file = this.sslobj.makefile('rb');
 
 
         }
-        def send(self, data){
+        function send( data){
             """Send data to remote.""";
             bytes = len(data);
             while bytes > 0{
-                sent = self.sslobj.write(data);
+                sent = this.sslobj.write(data);
                 if sent == bytes{
                     break;    # avoid copy
                 } data = data[sent:];
@@ -1291,28 +1291,28 @@ class IMAP4{
 
 
         }
-        } def shutdown(self){
+        } function shutdown(){
             """Close I/O established in "open".""";
-            self.file.close();
-            self.sock.close();
+            this.file.close();
+            this.sock.close();
 
 
         }
-        def socket(self){
+        function socket(){
             """Return socket instance used to connect to IMAP4 server.
 
             socket = <instance>.socket()
             """;
-            return self.sock;
+            return this.sock;
 
 
         }
-        def ssl(self){
+        function ssl(){
             """Return SSLObject instance used to communicate with the IMAP4 server.
 
             ssl = ssl.wrap_socket(<instance>.socket)
             """;
-            return self.sslobj;
+            return this.sslobj;
 
     }
     } __all__.append("IMAP4_SSL");
@@ -1331,53 +1331,53 @@ class IMAP4_stream(IMAP4){
     """;
 
 
-    def __init__(self, command){
-        self.command = command;
-        IMAP4.__init__(self);
+    function __init__( command){
+        this.command = command;
+        IMAP4.__init__(this);
 
 
     }
-    def open(self, host = None, port = None){
+    function open( host = nil, port = nil){
         """Setup a stream connection.
         This connection will be used by the routines:
             read, readline, send, shutdown.
         """;
-        self.host = None;        # For compatibility with parent class
-        self.port = None;
-        self.sock = None;
-        self.file = None;
-        self.process = subprocess.Popen(self.command,
+        this.host = nil;        # For compatibility with parent class
+        this.port = nil;
+        this.sock = nil;
+        this.file = nil;
+        this.process = subprocess.Popen(this.command,
             stdin=subprocess.PIPE, stdout=subprocess.PIPE,
-            shell=True, close_fds=True);
-        self.writefile = self.process.stdin;
-        self.readfile = self.process.stdout;
+            shell=true, close_fds=true);
+        this.writefile = this.process.stdin;
+        this.readfile = this.process.stdout;
 
 
     }
-    def read(self, size){
+    function read( size){
         """Read 'size' bytes from remote.""";
-        return self.readfile.read(size);
+        return this.readfile.read(size);
 
 
     }
-    def readline(self){
+    function readline(){
         """Read line from remote.""";
-        return self.readfile.readline();
+        return this.readfile.readline();
 
 
     }
-    def send(self, data){
+    function send( data){
         """Send data to remote.""";
-        self.writefile.write(data);
-        self.writefile.flush();
+        this.writefile.write(data);
+        this.writefile.flush();
 
 
     }
-    def shutdown(self){
+    function shutdown(){
         """Close I/O established in "open".""";
-        self.readfile.close();
-        self.writefile.close();
-        self.process.wait();
+        this.readfile.close();
+        this.writefile.close();
+        this.process.wait();
 
 
 
@@ -1388,18 +1388,18 @@ class IMAP4_stream(IMAP4){
             for base64-based authentication conversation.
     """;
 
-    def __init__(self, mechinst){
-        self.mech = mechinst;    # Callable object to provide/process data
+    function __init__( mechinst){
+        this.mech = mechinst;    # Callable object to provide/process data
 
     }
-    def process(self, data){
-        ret = self.mech(self.decode(data));
-        if ret is None{
+    function process( data){
+        ret = this.mech(this.decode(data));
+        if ret is nil{
             return '*';      # Abort conversation
-        } return self.encode(ret);
+        } return this.encode(ret);
 
     }
-    def encode(self, inp){
+    function encode( inp){
         #
         #  Invoke binascii.b2a_base64 iteratively with
         #  short even length buffers, strip the trailing
@@ -1422,7 +1422,7 @@ class IMAP4_stream(IMAP4){
         } } return oup;
 
     }
-    def decode(self, inp){
+    function decode( inp){
         if not inp{
             return '';
         } return binascii.a2b_base64(inp);
@@ -1433,7 +1433,7 @@ class IMAP4_stream(IMAP4){
 } Mon2num = {'Jan': 1, 'Feb': 2, 'Mar': 3, 'Apr': 4, 'May': 5, 'Jun': 6,
         'Jul': 7, 'Aug': 8, 'Sep': 9, 'Oct': 10, 'Nov': 11, 'Dec': 12};
 
-def Internaldate2tuple(resp){
+function Internaldate2tuple(resp){
     """Parse an IMAP4 INTERNALDATE string.
 
     Return corresponding local time.  The return value is a
@@ -1442,7 +1442,7 @@ def Internaldate2tuple(resp){
 
     mo = InternalDate.match(resp);
     if not mo{
-        return None;
+        return nil;
 
     }
     mon = Mon2num[mo.group('mon')];
@@ -1482,7 +1482,7 @@ def Internaldate2tuple(resp){
 
 
 }
-def Int2AP(num){
+function Int2AP(num){
 
     """Convert integer to A-P string representation.""";
 
@@ -1496,7 +1496,7 @@ def Int2AP(num){
 
 
 }
-def ParseFlags(resp){
+function ParseFlags(resp){
 
     """Convert IMAP4 flags response to python tuple.""";
 
@@ -1509,7 +1509,7 @@ def ParseFlags(resp){
 
 
 }
-def Time2Internaldate(date_time){
+function Time2Internaldate(date_time){
 
     """Convert date_time to IMAP4 INTERNALDATE representation.
 
@@ -1557,16 +1557,16 @@ if __name__ == '__main__'{
         optlist, args = (), ();
 
     }
-    stream_command = None;
+    stream_command = nil;
     for opt,val in optlist{
         if opt == '-d'{
             Debug = int(val);
         } elif opt == '-s'{
             stream_command = val;
-            if not args{ args = (stream_command,);
+            if not args{ args = (stream_command,);}
 
     }
-    } if not args{ args = ('',);
+    } if not args{ args = ('',);}
 
     host = args[0];
 
@@ -1579,10 +1579,10 @@ if __name__ == '__main__'{
     ('create', ('/tmp/xxx 1',)),
     ('rename', ('/tmp/xxx 1', '/tmp/yyy')),
     ('CREATE', ('/tmp/yyz 2',)),
-    ('append', ('/tmp/yyz 2', None, None, test_mesg)),
+    ('append', ('/tmp/yyz 2', nil, nil, test_mesg)),
     ('list', ('/tmp', 'yy*')),
     ('select', ('/tmp/yyz 2',)),
-    ('search', (None, 'SUBJECT', 'test')),
+    ('search', (nil, 'SUBJECT', 'test')),
     ('fetch', ('1', '(FLAGS INTERNALDATE RFC822)')),
     ('store', ('1', 'FLAGS', '(\Deleted)')),
     ('namespace', ()),
@@ -1596,16 +1596,16 @@ if __name__ == '__main__'{
     ('response',('UIDVALIDITY',)),
     ('uid', ('SEARCH', 'ALL')),
     ('response', ('EXISTS',)),
-    ('append', (None, None, None, test_mesg)),
+    ('append', (nil, nil, nil, test_mesg)),
     ('recent', ()),
     ('logout', ()),
     );
 
-    def run(cmd, args){
+    function run(cmd, args){
         M._mesg('%s %s' % (cmd, args));
         typ, dat = getattr(M, cmd)(*args);
         M._mesg('%s => %s %s' % (cmd, typ, dat));
-        if typ == 'NO'{ raise dat[0];
+        if typ == 'NO'{ raise dat[0];}
         return dat;
 
     }
@@ -1625,8 +1625,8 @@ if __name__ == '__main__'{
         }
         for ml in run('list', ('/tmp/', 'yy%')){
             mo = re.match(r'.*"([^"]+)"$', ml);
-            if mo{ path = mo.group(1);
-            else{ path = ml.split()[-1];
+            if mo{ path = mo.group(1);}
+            else{ path = ml.split()[-1];}
             run('delete', (path,));
 
         }
@@ -1638,7 +1638,7 @@ if __name__ == '__main__'{
 
             }
             uid = dat[-1].split();
-            if not uid{ continue;
+            if not uid{ continue;}
             run('uid', ('FETCH', '%s' % uid[-1],
                     '(FLAGS INTERNALDATE RFC822.SIZE RFC822.HEADER RFC822.TEXT)'));
 

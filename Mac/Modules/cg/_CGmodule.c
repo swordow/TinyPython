@@ -134,8 +134,8 @@ static PyObject *CGContextRefObj_CGContextSaveGState(CGContextRefObject *_self, 
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CGContextSaveGState(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -145,8 +145,8 @@ static PyObject *CGContextRefObj_CGContextRestoreGState(CGContextRefObject *_sel
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CGContextRestoreGState(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -162,8 +162,8 @@ static PyObject *CGContextRefObj_CGContextScaleCTM(CGContextRefObject *_self, Py
     CGContextScaleCTM(_self->ob_itself,
                       sx,
                       sy);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -179,8 +179,8 @@ static PyObject *CGContextRefObj_CGContextTranslateCTM(CGContextRefObject *_self
     CGContextTranslateCTM(_self->ob_itself,
                           tx,
                           ty);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -193,8 +193,8 @@ static PyObject *CGContextRefObj_CGContextRotateCTM(CGContextRefObject *_self, P
         return NULL;
     CGContextRotateCTM(_self->ob_itself,
                        angle);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -207,8 +207,8 @@ static PyObject *CGContextRefObj_CGContextConcatCTM(CGContextRefObject *_self, P
         return NULL;
     CGContextConcatCTM(_self->ob_itself,
                        transform);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -233,8 +233,8 @@ static PyObject *CGContextRefObj_CGContextSetLineWidth(CGContextRefObject *_self
         return NULL;
     CGContextSetLineWidth(_self->ob_itself,
                           width);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -247,8 +247,8 @@ static PyObject *CGContextRefObj_CGContextSetLineCap(CGContextRefObject *_self, 
         return NULL;
     CGContextSetLineCap(_self->ob_itself,
                         cap);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -261,8 +261,8 @@ static PyObject *CGContextRefObj_CGContextSetLineJoin(CGContextRefObject *_self,
         return NULL;
     CGContextSetLineJoin(_self->ob_itself,
                          join);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -275,8 +275,8 @@ static PyObject *CGContextRefObj_CGContextSetMiterLimit(CGContextRefObject *_sel
         return NULL;
     CGContextSetMiterLimit(_self->ob_itself,
                            limit);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -289,8 +289,8 @@ static PyObject *CGContextRefObj_CGContextSetFlatness(CGContextRefObject *_self,
         return NULL;
     CGContextSetFlatness(_self->ob_itself,
                          flatness);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -303,8 +303,8 @@ static PyObject *CGContextRefObj_CGContextSetAlpha(CGContextRefObject *_self, Py
         return NULL;
     CGContextSetAlpha(_self->ob_itself,
                       alpha);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -314,8 +314,8 @@ static PyObject *CGContextRefObj_CGContextBeginPath(CGContextRefObject *_self, P
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CGContextBeginPath(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -331,8 +331,8 @@ static PyObject *CGContextRefObj_CGContextMoveToPoint(CGContextRefObject *_self,
     CGContextMoveToPoint(_self->ob_itself,
                          x,
                          y);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -348,8 +348,8 @@ static PyObject *CGContextRefObj_CGContextAddLineToPoint(CGContextRefObject *_se
     CGContextAddLineToPoint(_self->ob_itself,
                             x,
                             y);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -377,8 +377,8 @@ static PyObject *CGContextRefObj_CGContextAddCurveToPoint(CGContextRefObject *_s
                              cp2y,
                              x,
                              y);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -400,8 +400,8 @@ static PyObject *CGContextRefObj_CGContextAddQuadCurveToPoint(CGContextRefObject
                                  cpy,
                                  x,
                                  y);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -411,8 +411,8 @@ static PyObject *CGContextRefObj_CGContextClosePath(CGContextRefObject *_self, P
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CGContextClosePath(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -425,8 +425,8 @@ static PyObject *CGContextRefObj_CGContextAddRect(CGContextRefObject *_self, PyO
         return NULL;
     CGContextAddRect(_self->ob_itself,
                      rect);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -454,8 +454,8 @@ static PyObject *CGContextRefObj_CGContextAddArc(CGContextRefObject *_self, PyOb
                     startAngle,
                     endAngle,
                     clockwise);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -480,8 +480,8 @@ static PyObject *CGContextRefObj_CGContextAddArcToPoint(CGContextRefObject *_sel
                            x2,
                            y2,
                            radius);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -530,8 +530,8 @@ static PyObject *CGContextRefObj_CGContextDrawPath(CGContextRefObject *_self, Py
         return NULL;
     CGContextDrawPath(_self->ob_itself,
                       mode);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -541,8 +541,8 @@ static PyObject *CGContextRefObj_CGContextFillPath(CGContextRefObject *_self, Py
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CGContextFillPath(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -552,8 +552,8 @@ static PyObject *CGContextRefObj_CGContextEOFillPath(CGContextRefObject *_self, 
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CGContextEOFillPath(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -563,8 +563,8 @@ static PyObject *CGContextRefObj_CGContextStrokePath(CGContextRefObject *_self, 
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CGContextStrokePath(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -577,8 +577,8 @@ static PyObject *CGContextRefObj_CGContextFillRect(CGContextRefObject *_self, Py
         return NULL;
     CGContextFillRect(_self->ob_itself,
                       rect);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -591,8 +591,8 @@ static PyObject *CGContextRefObj_CGContextStrokeRect(CGContextRefObject *_self, 
         return NULL;
     CGContextStrokeRect(_self->ob_itself,
                         rect);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -608,8 +608,8 @@ static PyObject *CGContextRefObj_CGContextStrokeRectWithWidth(CGContextRefObject
     CGContextStrokeRectWithWidth(_self->ob_itself,
                                  rect,
                                  width);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -622,8 +622,8 @@ static PyObject *CGContextRefObj_CGContextClearRect(CGContextRefObject *_self, P
         return NULL;
     CGContextClearRect(_self->ob_itself,
                        rect);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -633,8 +633,8 @@ static PyObject *CGContextRefObj_CGContextClip(CGContextRefObject *_self, PyObje
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CGContextClip(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -644,8 +644,8 @@ static PyObject *CGContextRefObj_CGContextEOClip(CGContextRefObject *_self, PyOb
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CGContextEOClip(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -658,8 +658,8 @@ static PyObject *CGContextRefObj_CGContextClipToRect(CGContextRefObject *_self, 
         return NULL;
     CGContextClipToRect(_self->ob_itself,
                         rect);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -675,8 +675,8 @@ static PyObject *CGContextRefObj_CGContextSetGrayFillColor(CGContextRefObject *_
     CGContextSetGrayFillColor(_self->ob_itself,
                               gray,
                               alpha);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -692,8 +692,8 @@ static PyObject *CGContextRefObj_CGContextSetGrayStrokeColor(CGContextRefObject 
     CGContextSetGrayStrokeColor(_self->ob_itself,
                                 gray,
                                 alpha);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -715,8 +715,8 @@ static PyObject *CGContextRefObj_CGContextSetRGBFillColor(CGContextRefObject *_s
                              green,
                              blue,
                              alpha);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -738,8 +738,8 @@ static PyObject *CGContextRefObj_CGContextSetRGBStrokeColor(CGContextRefObject *
                                green,
                                blue,
                                alpha);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -764,8 +764,8 @@ static PyObject *CGContextRefObj_CGContextSetCMYKFillColor(CGContextRefObject *_
                               yellow,
                               black,
                               alpha);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -790,8 +790,8 @@ static PyObject *CGContextRefObj_CGContextSetCMYKStrokeColor(CGContextRefObject 
                                 yellow,
                                 black,
                                 alpha);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -816,8 +816,8 @@ static PyObject *CGContextRefObj_CGContextSetInterpolationQuality(CGContextRefOb
         return NULL;
     CGContextSetInterpolationQuality(_self->ob_itself,
                                      quality);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -830,8 +830,8 @@ static PyObject *CGContextRefObj_CGContextSetCharacterSpacing(CGContextRefObject
         return NULL;
     CGContextSetCharacterSpacing(_self->ob_itself,
                                  spacing);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -847,8 +847,8 @@ static PyObject *CGContextRefObj_CGContextSetTextPosition(CGContextRefObject *_s
     CGContextSetTextPosition(_self->ob_itself,
                              x,
                              y);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -873,8 +873,8 @@ static PyObject *CGContextRefObj_CGContextSetTextMatrix(CGContextRefObject *_sel
         return NULL;
     CGContextSetTextMatrix(_self->ob_itself,
                            transform);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -899,8 +899,8 @@ static PyObject *CGContextRefObj_CGContextSetTextDrawingMode(CGContextRefObject 
         return NULL;
     CGContextSetTextDrawingMode(_self->ob_itself,
                                 mode);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -913,8 +913,8 @@ static PyObject *CGContextRefObj_CGContextSetFontSize(CGContextRefObject *_self,
         return NULL;
     CGContextSetFontSize(_self->ob_itself,
                          size);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -933,8 +933,8 @@ static PyObject *CGContextRefObj_CGContextSelectFont(CGContextRefObject *_self, 
                         name,
                         size,
                         textEncoding);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -950,8 +950,8 @@ static PyObject *CGContextRefObj_CGContextShowText(CGContextRefObject *_self, Py
     cstring__len__ = cstring__in_len__;
     CGContextShowText(_self->ob_itself,
                       cstring__in__, cstring__len__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -973,8 +973,8 @@ static PyObject *CGContextRefObj_CGContextShowTextAtPoint(CGContextRefObject *_s
                              x,
                              y,
                              cstring__in__, cstring__len__);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -984,8 +984,8 @@ static PyObject *CGContextRefObj_CGContextEndPage(CGContextRefObject *_self, PyO
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CGContextEndPage(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -995,8 +995,8 @@ static PyObject *CGContextRefObj_CGContextFlush(CGContextRefObject *_self, PyObj
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CGContextFlush(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1006,8 +1006,8 @@ static PyObject *CGContextRefObj_CGContextSynchronize(CGContextRefObject *_self,
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CGContextSynchronize(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1020,8 +1020,8 @@ static PyObject *CGContextRefObj_CGContextSetShouldAntialias(CGContextRefObject 
         return NULL;
     CGContextSetShouldAntialias(_self->ob_itself,
                                 shouldAntialias);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1035,8 +1035,8 @@ static PyObject *CGContextRefObj_SyncCGContextOriginWithPort(CGContextRefObject 
         return NULL;
     SyncCGContextOriginWithPort(_self->ob_itself,
                                 port);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1052,8 +1052,8 @@ static PyObject *CGContextRefObj_ClipCGContextToRegion(CGContextRefObject *_self
     ClipCGContextToRegion(_self->ob_itself,
                           &portRect,
                           region);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 #endif

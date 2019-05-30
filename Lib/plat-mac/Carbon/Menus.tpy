@@ -1,6 +1,6 @@
 # Generated from 'Menus.h'
 
-def FOUR_CHAR_CODE(x){ return x;
+function FOUR_CHAR_CODE(x){ return x;}
 noMark = 0;
 kMenuDrawMsg = 0;
 kMenuSizeMsg = 2;

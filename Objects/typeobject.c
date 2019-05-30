@@ -105,7 +105,7 @@ PyType_Modified(PyTypeObject *type)
         for (i = 0; i < n; i++) {
             ref = PyList_GET_ITEM(raw, i);
             ref = PyWeakref_GET_OBJECT(ref);
-            if (ref != Py_None) {
+            if (ref != Py_Nil) {
                 PyType_Modified((PyTypeObject *)ref);
             }
         }
@@ -182,13 +182,13 @@ assign_version_tag(PyTypeObject *type)
 
     if (type->tp_version_tag == 0) {
         /* wrap-around or just starting Python - clear the whole
-           cache by filling names with references to Py_None.
+           cache by filling names with references to Py_Nil.
            Values are also set to NULL for added protection, as they
            are borrowed reference */
         for (i = 0; i < (1 << MCACHE_SIZE_EXP); i++) {
             method_cache[i].value = NULL;
-            Py_INCREF(Py_None);
-            Py_XSETREF(method_cache[i].name, Py_None);
+            Py_INCREF(Py_Nil);
+            Py_XSETREF(method_cache[i].name, Py_Nil);
         }
         /* mark all version tags as invalid */
         PyType_Modified(&PyBaseObject_Type);
@@ -413,7 +413,7 @@ mro_subclasses(PyTypeObject *type, PyObject* temp)
         assert(PyWeakref_CheckRef(ref));
         subclass = (PyTypeObject *)PyWeakref_GET_OBJECT(ref);
         assert(subclass != NULL);
-        if ((PyObject *)subclass == Py_None)
+        if ((PyObject *)subclass == Py_Nil)
             continue;
         assert(PyType_Check(subclass));
         old_mro = subclass->tp_mro;
@@ -582,8 +582,8 @@ static PyObject *
 type_dict(PyTypeObject *type, void *context)
 {
     if (type->tp_dict == NULL) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     return PyDictProxy_New(type->tp_dict);
 }
@@ -596,7 +596,7 @@ type_get_doc(PyTypeObject *type, void *context)
         return PyString_FromString(type->tp_doc);
     result = PyDict_GetItemString(type->tp_dict, "__doc__");
     if (result == NULL) {
-        result = Py_None;
+        result = Py_Nil;
         Py_INCREF(result);
     }
     else if (Py_TYPE(result)->tp_descr_get) {
@@ -1474,7 +1474,7 @@ set_mro_error(PyObject *to_merge, int *remain)
         PyObject *L = PyList_GET_ITEM(to_merge, i);
         if (remain[i] < PyList_GET_SIZE(L)) {
             PyObject *c = PyList_GET_ITEM(L, remain[i]);
-            if (PyDict_SetItem(set, c, Py_None) < 0) {
+            if (PyDict_SetItem(set, c, Py_Nil) < 0) {
                 Py_DECREF(set);
                 return;
             }
@@ -1961,7 +1961,7 @@ subtype_getweakref(PyObject *obj, void *context)
     weaklistptr = (PyObject **)
         ((char *)obj + Py_TYPE(obj)->tp_weaklistoffset);
     if (*weaklistptr == NULL)
-        result = Py_None;
+        result = Py_Nil;
     else
         result = *weaklistptr;
     Py_INCREF(result);
@@ -2592,7 +2592,7 @@ _PyType_Lookup(PyTypeObject *type, PyObject *name)
         Py_INCREF(name);
         assert(((PyStringObject *)(name))->ob_shash != -1);
 #if MCACHE_STATS
-        if (method_cache[h].name != Py_None && method_cache[h].name != name)
+        if (method_cache[h].name != Py_Nil && method_cache[h].name != name)
             method_cache_collisions++;
         else
             method_cache_misses++;
@@ -2782,7 +2782,7 @@ type_subclasses(PyTypeObject *type, PyObject *args_ignored)
         ref = PyList_GET_ITEM(raw, i);
         assert(PyWeakref_CheckRef(ref));
         ref = PyWeakref_GET_OBJECT(ref);
-        if (ref != Py_None) {
+        if (ref != Py_Nil) {
             if (PyList_Append(list, ref) < 0) {
                 Py_DECREF(list);
                 return NULL;
@@ -3277,8 +3277,8 @@ slotnames(PyObject *cls)
     PyObject *slotnames;
 
     if (!PyType_Check(cls)) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
 
     clsdict = ((PyTypeObject *)cls)->tp_dict;
@@ -3295,7 +3295,7 @@ slotnames(PyObject *cls)
     slotnames = PyObject_CallMethod(copyreg, "_slotnames", "O", cls);
     Py_DECREF(copyreg);
     if (slotnames != NULL &&
-        slotnames != Py_None &&
+        slotnames != Py_Nil &&
         !PyList_Check(slotnames))
     {
         PyErr_SetString(PyExc_TypeError,
@@ -3367,13 +3367,13 @@ reduce_2(PyObject *obj)
         state = PyObject_GetAttrString(obj, "__dict__");
         if (state == NULL) {
             PyErr_Clear();
-            state = Py_None;
+            state = Py_Nil;
             Py_INCREF(state);
         }
         names = slotnames(cls);
         if (names == NULL)
             goto end;
-        assert(names == Py_None || PyList_Check(names));
+        assert(names == Py_Nil || PyList_Check(names));
 
         if (required_state && Py_Py3kWarningFlag) {
             Py_ssize_t basicsize = PyBaseObject_Type.tp_basicsize;
@@ -3381,7 +3381,7 @@ reduce_2(PyObject *obj)
                 basicsize += sizeof(PyObject *);
             if (obj->ob_type->tp_weaklistoffset)
                 basicsize += sizeof(PyObject *);
-            if (names != Py_None)
+            if (names != Py_Nil)
                 basicsize += sizeof(PyObject *) * PyList_GET_SIZE(names);
             if (obj->ob_type->tp_basicsize > basicsize) {
                 PyObject *msg = PyString_FromFormat(
@@ -3398,7 +3398,7 @@ reduce_2(PyObject *obj)
             }
         }
 
-        if (names != Py_None) {
+        if (names != Py_Nil) {
             slots = PyDict_New();
             if (slots == NULL)
                 goto end;
@@ -3434,7 +3434,7 @@ reduce_2(PyObject *obj)
     }
 
     if (!PyList_Check(obj)) {
-        listitems = Py_None;
+        listitems = Py_Nil;
         Py_INCREF(listitems);
     }
     else {
@@ -3444,7 +3444,7 @@ reduce_2(PyObject *obj)
     }
 
     if (!PyDict_Check(obj)) {
-        dictitems = Py_None;
+        dictitems = Py_Nil;
         Py_INCREF(dictitems);
     }
     else {
@@ -4275,7 +4275,7 @@ PyType_Ready(PyTypeObject *type)
             Py_DECREF(doc);
         } else {
             PyDict_SetItemString(type->tp_dict,
-                                 "__doc__", Py_None);
+                                 "__doc__", Py_Nil);
         }
     }
 
@@ -4332,7 +4332,7 @@ add_subclass(PyTypeObject *base, PyTypeObject *type)
     while (--i >= 0) {
         ref = PyList_GET_ITEM(list, i);
         assert(PyWeakref_CheckRef(ref));
-        if (PyWeakref_GET_OBJECT(ref) == Py_None)
+        if (PyWeakref_GET_OBJECT(ref) == Py_Nil)
             return PyList_SetItem(list, i, newobj);
     }
     result = PyList_Append(list, newobj);
@@ -4494,7 +4494,7 @@ wrap_ternaryfunc(PyObject *self, PyObject *args, void *wrapped)
 {
     ternaryfunc func = (ternaryfunc)wrapped;
     PyObject *other;
-    PyObject *third = Py_None;
+    PyObject *third = Py_Nil;
 
     /* Note: This wrapper only works for __pow__() */
 
@@ -4508,7 +4508,7 @@ wrap_ternaryfunc_r(PyObject *self, PyObject *args, void *wrapped)
 {
     ternaryfunc func = (ternaryfunc)wrapped;
     PyObject *other;
-    PyObject *third = Py_None;
+    PyObject *third = Py_Nil;
 
     /* Note: This wrapper only works for __pow__() */
 
@@ -4608,8 +4608,8 @@ wrap_sq_setitem(PyObject *self, PyObject *args, void *wrapped)
     res = (*func)(self, i, value);
     if (res == -1 && PyErr_Occurred())
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -4629,8 +4629,8 @@ wrap_sq_delitem(PyObject *self, PyObject *args, void *wrapped)
     res = (*func)(self, i, NULL);
     if (res == -1 && PyErr_Occurred())
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -4646,8 +4646,8 @@ wrap_ssizessizeobjargproc(PyObject *self, PyObject *args, void *wrapped)
     res = (*func)(self, i, j, value);
     if (res == -1 && PyErr_Occurred())
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -4662,8 +4662,8 @@ wrap_delslice(PyObject *self, PyObject *args, void *wrapped)
     res = (*func)(self, i, j, NULL);
     if (res == -1 && PyErr_Occurred())
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 /* XXX objobjproc is a misnomer; should be objargpred */
@@ -4696,8 +4696,8 @@ wrap_objobjargproc(PyObject *self, PyObject *args, void *wrapped)
     res = (*func)(self, key, value);
     if (res == -1 && PyErr_Occurred())
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -4713,8 +4713,8 @@ wrap_delitem(PyObject *self, PyObject *args, void *wrapped)
     res = (*func)(self, key, NULL);
     if (res == -1 && PyErr_Occurred())
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -4777,8 +4777,8 @@ wrap_setattr(PyObject *self, PyObject *args, void *wrapped)
     res = (*func)(self, name, value);
     if (res < 0)
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -4796,8 +4796,8 @@ wrap_delattr(PyObject *self, PyObject *args, void *wrapped)
     res = (*func)(self, name, NULL);
     if (res < 0)
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -4872,9 +4872,9 @@ wrap_descr_get(PyObject *self, PyObject *args, void *wrapped)
 
     if (!PyArg_UnpackTuple(args, "", 1, 2, &obj, &type))
         return NULL;
-    if (obj == Py_None)
+    if (obj == Py_Nil)
         obj = NULL;
-    if (type == Py_None)
+    if (type == Py_Nil)
         type = NULL;
     if (type == NULL &&obj == NULL) {
         PyErr_SetString(PyExc_TypeError,
@@ -4896,8 +4896,8 @@ wrap_descr_set(PyObject *self, PyObject *args, void *wrapped)
     ret = (*func)(self, obj, value);
     if (ret < 0)
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -4913,8 +4913,8 @@ wrap_descr_delete(PyObject *self, PyObject *args, void *wrapped)
     ret = (*func)(self, obj, NULL);
     if (ret < 0)
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -4924,8 +4924,8 @@ wrap_init(PyObject *self, PyObject *args, void *wrapped, PyObject *kwds)
 
     if (func(self, args, kwds) < 0)
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -5305,7 +5305,7 @@ slot_nb_power(PyObject *self, PyObject *other, PyObject *modulus)
 {
     static PyObject *pow_str;
 
-    if (modulus == Py_None)
+    if (modulus == Py_Nil)
         return slot_nb_power_binary(self, other);
     /* Three-arg power doesn't use __rpow__.  But ternary_op
        can call this when the second argument's type uses
@@ -5565,7 +5565,7 @@ slot_tp_hash(PyObject *self)
 
     func = lookup_method(self, "__hash__", &hash_str);
 
-    if (func != NULL && func != Py_None) {
+    if (func != NULL && func != Py_Nil) {
         PyObject *res = PyEval_CallObject(func, NULL);
         Py_DECREF(func);
         if (res == NULL)
@@ -5833,9 +5833,9 @@ slot_tp_descr_get(PyObject *self, PyObject *obj, PyObject *type)
         return self;
     }
     if (obj == NULL)
-        obj = Py_None;
+        obj = Py_Nil;
     if (type == NULL)
-        type = Py_None;
+        type = Py_Nil;
     return PyObject_CallFunctionObjArgs(get, self, obj, type, NULL);
 }
 
@@ -5870,7 +5870,7 @@ slot_tp_init(PyObject *self, PyObject *args, PyObject *kwds)
     Py_DECREF(meth);
     if (res == NULL)
         return -1;
-    if (res != Py_None) {
+    if (res != Py_Nil) {
         PyErr_Format(PyExc_TypeError,
                      "__init__() should return None, not '%.200s'",
                      Py_TYPE(res)->tp_name);
@@ -6373,7 +6373,7 @@ update_one_slot(PyTypeObject *type, slotdef *p)
                sanity checks.  I'll buy the first person to
                point out a bug in this reasoning a beer. */
         }
-        else if (descr == Py_None &&
+        else if (descr == Py_Nil &&
                  ptr == (void**)&type->tp_hash) {
             /* We specifically allow __hash__ to be set to None
                to prevent inheritance of the default
@@ -6519,7 +6519,7 @@ recurse_down_subclasses(PyTypeObject *type, PyObject *name,
         assert(PyWeakref_CheckRef(ref));
         subclass = (PyTypeObject *)PyWeakref_GET_OBJECT(ref);
         assert(subclass != NULL);
-        if ((PyObject *)subclass == Py_None)
+        if ((PyObject *)subclass == Py_Nil)
             continue;
         assert(PyType_Check(subclass));
         /* Avoid recursing down into unaffected classes */
@@ -6584,7 +6584,7 @@ add_operators(PyTypeObject *type)
             /* Classes may prevent the inheritance of the tp_hash
                slot by storing PyObject_HashNotImplemented in it. Make it
                visible as a None value for the __hash__ attribute. */
-            if (PyDict_SetItem(dict, p->name_strobj, Py_None) < 0)
+            if (PyDict_SetItem(dict, p->name_strobj, Py_Nil) < 0)
                 return -1;
         }
         else {
@@ -6791,7 +6791,7 @@ super_descr_get(PyObject *self, PyObject *obj, PyObject *type)
     superobject *su = (superobject *)self;
     superobject *newobj;
 
-    if (obj == NULL || obj == Py_None || su->obj != NULL) {
+    if (obj == NULL || obj == Py_Nil || su->obj != NULL) {
         /* Not binding to an object, or already bound */
         Py_INCREF(self);
         return self;
@@ -6831,7 +6831,7 @@ super_init(PyObject *self, PyObject *args, PyObject *kwds)
         return -1;
     if (!PyArg_ParseTuple(args, "O!|O:super", &PyType_Type, &type, &obj))
         return -1;
-    if (obj == Py_None)
+    if (obj == Py_Nil)
         obj = NULL;
     if (obj != NULL) {
         obj_type = supercheck(type, obj);

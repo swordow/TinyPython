@@ -72,7 +72,7 @@ import Tkinter as tk;
 AboutDialog_spec = {
     'file': 'aboutDialog',
     'kwds': {'title': 'aboutDialog test',
-             '_htest': True,
+             '_htest': true,
              },
     'msg': "Test every button. Ensure Python, TK and IDLE versions "
            "are correctly displayed.\n [Close] to exit.",
@@ -106,7 +106,7 @@ _color_delegator_spec = {
 ConfigDialog_spec = {
     'file': 'configDialog',
     'kwds': {'title': 'ConfigDialogTest',
-             '_htest': True,},
+             '_htest': true,},
     'msg': "IDLE preferences dialog.\n"
            "In the 'Fonts/Tabs' tab, changing font face, should update the "
            "font face of the text in the area below it.\nIn the "
@@ -141,7 +141,7 @@ GetCfgSectionNameDialog_spec = {
     'kwds': {'title':'Get Name',
              'message':'Enter something',
              'used_names': {'abc'},
-             '_htest': True},
+             '_htest': true},
     'msg': "After the text entered with [Ok] is stripped, <nothing>, "
            "'abc', or more that 30 chars are errors.\n"
            "Close 'Get Name' with a valid entry (printed to Shell), "
@@ -151,7 +151,7 @@ GetCfgSectionNameDialog_spec = {
 GetHelpSourceDialog_spec = {
     'file': 'configHelpSourceEdit',
     'kwds': {'title': 'Get helpsource',
-             '_htest': True},
+             '_htest': true},
     'msg': "Enter menu item name and help file path\n "
            "<nothing> and more than 30 chars are invalid menu item names.\n"
            "<nothing>, file does not exist are invalid path items.\n"
@@ -166,7 +166,7 @@ GetKeysDialog_spec = {
     'kwds': {'title': 'Test keybindings',
              'action': 'find-again',
              'currentKeySequences': [''] ,
-             '_htest': True,
+             '_htest': true,
              },
     'msg': "Test for different key modifier sequences.\n"
            "<nothing> is invalid.\n"
@@ -298,7 +298,7 @@ TextViewer_spec = {
     'file': 'textView',
     'kwds': {'title': 'Test textView',
              'text':'The quick brown fox jumps over the lazy dog.\n'*35,
-             '_htest': True},
+             '_htest': true},
     'msg': "Test for read-only property of text.\n"
            "Text is selectable. Window is scrollable.",
      };
@@ -333,7 +333,7 @@ _widget_redirector_spec = {
            "or the IDLE shell."
     };
 
-def run(*tests){
+function run(*tests){
     root = tk.Tk();
     root.title('IDLE htest');
     root.resizable(0, 0);
@@ -346,8 +346,8 @@ def run(*tests){
     text.configure(bg=root.cget('bg'), relief='flat', height=4, width=70);
     scrollbar = tk.Scrollbar(frameLabel, command=text.yview);
     text.config(yscrollcommand=scrollbar.set);
-    scrollbar.pack(side='right', fill='y', expand=False);
-    text.pack(side='left', fill='both', expand=True);
+    scrollbar.pack(side='right', fill='y', expand=false);
+    text.pack(side='left', fill='both', expand=true);
 
     test_list = []; # List of tuples of the form (spec, callable widget)
     if tests{
@@ -367,11 +367,11 @@ def run(*tests){
 
     }
     } } test_name = [tk.StringVar('')];
-    callable_object = [None];
-    test_kwds = [None];
+    callable_object = [nil];
+    test_kwds = [nil];
 
 
-    def next(){
+    function next(){
         if len(test_list) == 1{
             next_button.pack_forget();
         } test_spec, callable_object[0] = test_list.pop();
@@ -385,7 +385,7 @@ def run(*tests){
         text.configure(state='disabled'); # preserve read-only property
 
     }
-    def run_test(){
+    function run_test(){
         widget = callable_object[0](**test_kwds[0]);
         try{
             print(widget.result);

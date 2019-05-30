@@ -50,13 +50,13 @@ if os.name == 'nt'{
 } elif os.name == 'riscos'{
     from rourl2path import url2pathname, pathname2url;
 } else{
-    def url2pathname(pathname){
+    function url2pathname(pathname){
         """OS-specific conversion from a relative URL of the 'file' scheme
         to a file system path; not recommended for general use.""";
         return unquote(pathname);
 
     }
-    def pathname2url(pathname){
+    function pathname2url(pathname){
         """OS-specific conversion from a file system path to a relative URL
         of the 'file' scheme; not recommended for general use.""";
         return quote(pathname);
@@ -70,35 +70,35 @@ if os.name == 'nt'{
 
 # Shortcut for basic usage
 }
-} _urlopener = None;
-def urlopen(url, data=None, proxies=None, context=None){
+} _urlopener = nil;
+function urlopen(url, data=nil, proxies=nil, context=nil){
     """Create a file-like object for the specified URL to read from.""";
     from warnings import warnpy3k;
     warnpy3k("urllib.urlopen() has been removed in Python 3.0 in "
              "favor of urllib2.urlopen()", stacklevel=2);
 
     global _urlopener;
-    if proxies is not None or context is not None{
+    if proxies is not nil or context is not nil{
         opener = FancyURLopener(proxies=proxies, context=context);
     } elif not _urlopener{
         opener = FancyURLopener();
         _urlopener = opener;
     } else{
         opener = _urlopener;
-    } if data is None{
+    } if data is nil{
         return opener.open(url);
     } else{
         return opener.open(url, data);
-} } def urlretrieve(url, filename=None, reporthook=None, data=None, context=None){
+} } function urlretrieve(url, filename=nil, reporthook=nil, data=nil, context=nil){
     global _urlopener;
-    if context is not None{
+    if context is not nil{
         opener = FancyURLopener(context=context);
     } elif not _urlopener{
         _urlopener = opener = FancyURLopener();
     } else{
         opener = _urlopener;
     } return opener.retrieve(url, filename, reporthook, data);
-} def urlcleanup(){
+} function urlcleanup(){
     if _urlopener{
         _urlopener.cleanup();
     } _safe_quoters.clear();
@@ -109,16 +109,16 @@ def urlopen(url, data=None, proxies=None, context=None){
 try{
     import ssl;
 } except Exception{
-    _have_ssl = False;
+    _have_ssl = false;
 } else{
-    _have_ssl = True;
+    _have_ssl = true;
 
 # exception raised when downloaded size does not match content-length
 }
 class ContentTooShortError(IOError){
-    def __init__(self, message, content){
-        IOError.__init__(self, message);
-        self.content = content;
+    function __init__( message, content){
+        IOError.__init__(this, message);
+        this.content = content;
 
 }
 } ftpcache = {};
@@ -130,132 +130,132 @@ class URLopener{
     automatic handling of errors type 302 (relocated) and 401
     (authorization needed).""";
 
-    __tempfiles = None;
+    __tempfiles = nil;
 
     version = "Python-urllib/%s" % __version__;
 
     # Constructor
-    def __init__(self, proxies=None, context=None, **x509){
-        if proxies is None{
+    function __init__( proxies=nil, context=nil, **x509){
+        if proxies is nil{
             proxies = getproxies();
         } assert hasattr(proxies, 'has_key'), "proxies must be a mapping";
-        self.proxies = proxies;
-        self.key_file = x509.get('key_file');
-        self.cert_file = x509.get('cert_file');
-        self.context = context;
-        self.addheaders = [('User-Agent', self.version), ('Accept', '*/*')];
-        self.__tempfiles = [];
-        self.__unlink = os.unlink; # See cleanup()
-        self.tempcache = None;
+        this.proxies = proxies;
+        this.key_file = x509.get('key_file');
+        this.cert_file = x509.get('cert_file');
+        this.context = context;
+        this.addheaders = [('User-Agent', this.version), ('Accept', '*/*')];
+        this.__tempfiles = [];
+        this.__unlink = os.unlink; # See cleanup()
+        this.tempcache = nil;
         # Undocumented feature: if you assign {} to tempcache,
         # it is used to cache files retrieved with
         # self.retrieve().  This is not enabled by default
         # since it does not work for changing documents (and I
         # haven't got the logic to check expiration headers
         # yet).
-        self.ftpcache = ftpcache;
+        this.ftpcache = ftpcache;
         # Undocumented feature: you can use a different
         # ftp cache by assigning to the .ftpcache member;
         # in case you want logically independent URL openers
         # XXX This is not threadsafe.  Bah.
 
     }
-    def __del__(self){
-        self.close();
+    function __del__(){
+        this.close();
 
     }
-    def close(self){
-        self.cleanup();
+    function close(){
+        this.cleanup();
 
     }
-    def cleanup(self){
+    function cleanup(){
         # This code sometimes runs when the rest of this module
         # has already been deleted, so it can't use any globals
         # or import anything.
-        if self.__tempfiles{
-            for file in self.__tempfiles{
+        if this.__tempfiles{
+            for file in this.__tempfiles{
                 try{
-                    self.__unlink(file);
+                    this.__unlink(file);
                 } except OSError{
                     pass;
-            } } del self.__tempfiles[:];
-        } if self.tempcache{
-            self.tempcache.clear();
+            } } del this.__tempfiles[:];
+        } if this.tempcache{
+            this.tempcache.clear();
 
     }
-    } def addheader(self, *args){
+    } function addheader( *args){
         """Add a header to be used by the HTTP interface only
         e.g. u.addheader('Accept', 'sound/basic')""";
-        self.addheaders.append(args);
+        this.addheaders.append(args);
 
     # External interface
     }
-    def open(self, fullurl, data=None){
+    function open( fullurl, data=nil){
         """Use URLopener().open(file) instead of open(file, 'r').""";
         fullurl = unwrap(toBytes(fullurl));
         # percent encode url, fixing lame server errors for e.g, like space
         # within url paths.
         fullurl = quote(fullurl, safe="%/:=&?~#+!$,;'@()*[]|");
-        if self.tempcache and fullurl in self.tempcache{
-            filename, headers = self.tempcache[fullurl];
+        if this.tempcache and fullurl in this.tempcache{
+            filename, headers = this.tempcache[fullurl];
             fp = open(filename, 'rb');
             return addinfourl(fp, headers, fullurl);
         } urltype, url = splittype(fullurl);
         if not urltype{
             urltype = 'file';
-        } if urltype in self.proxies{
-            proxy = self.proxies[urltype];
+        } if urltype in this.proxies{
+            proxy = this.proxies[urltype];
             urltype, proxyhost = splittype(proxy);
             host, selector = splithost(proxyhost);
             url = (host, fullurl); # Signal special case to open_*()
         } else{
-            proxy = None;
+            proxy = nil;
         } name = 'open_' + urltype;
-        self.type = urltype;
+        this.type = urltype;
         name = name.replace('-', '_');
-        if not hasattr(self, name){
+        if not hasattr(this, name){
             if proxy{
-                return self.open_unknown_proxy(proxy, fullurl, data);
+                return this.open_unknown_proxy(proxy, fullurl, data);
             } else{
-                return self.open_unknown(fullurl, data);
+                return this.open_unknown(fullurl, data);
         } } try{
-            if data is None{
-                return getattr(self, name)(url);
+            if data is nil{
+                return getattr(this, name)(url);
             } else{
-                return getattr(self, name)(url, data);
+                return getattr(this, name)(url, data);
         } } except socket.error, msg{
             raise IOError, ('socket error', msg), sys.exc_info()[2];
 
     }
-    } def open_unknown(self, fullurl, data=None){
+    } function open_unknown( fullurl, data=nil){
         """Overridable interface to open unknown URL type.""";
         type, url = splittype(fullurl);
         raise IOError, ('url error', 'unknown url type', type);
 
     }
-    def open_unknown_proxy(self, proxy, fullurl, data=None){
+    function open_unknown_proxy( proxy, fullurl, data=nil){
         """Overridable interface to open unknown URL type.""";
         type, url = splittype(fullurl);
         raise IOError, ('url error', 'invalid proxy for %s' % type, proxy);
 
     # External interface
     }
-    def retrieve(self, url, filename=None, reporthook=None, data=None){
+    function retrieve( url, filename=nil, reporthook=nil, data=nil){
         """retrieve(url) returns (filename, headers) for a local object
         or (tempfilename, headers) for a remote object.""";
         url = unwrap(toBytes(url));
-        if self.tempcache and url in self.tempcache{
-            return self.tempcache[url];
+        if this.tempcache and url in this.tempcache{
+            return this.tempcache[url];
         } type, url1 = splittype(url);
-        if filename is None and (not type or type == 'file'){
+        if filename is nil and (not type or type == 'file'){
             try{
-                fp = self.open_local_file(url1);
+                fp = this.open_local_file(url1);
                 hdrs = fp.info();
                 fp.close();
                 return url2pathname(splithost(url1)[1]), hdrs;
             } except IOError{
                 pass;
-        } } fp = self.open(url, data);
+        } } fp = this.open(url, data);
         try{
             headers = fp.info();
             if filename{
@@ -268,12 +268,12 @@ class URLopener{
                 path, garbage = splitattr(path or "");
                 suffix = os.path.splitext(path)[1];
                 (fd, filename) = tempfile.mkstemp(suffix);
-                self.__tempfiles.append(filename);
+                this.__tempfiles.append(filename);
                 tfp = os.fdopen(fd, 'wb');
             } try{
                 result = filename, headers;
-                if self.tempcache is not None{
-                    self.tempcache[url] = result;
+                if this.tempcache is not nil{
+                    this.tempcache[url] = result;
                 } bs = 1024*8;
                 size = -1;
                 read = 0;
@@ -308,11 +308,11 @@ class URLopener{
     # Each method named open_<type> knows how to open that type of URL
 
     }
-    def open_http(self, url, data=None){
+    function open_http( url, data=nil){
         """Use HTTP protocol.""";
         import httplib;
-        user_passwd = None;
-        proxy_passwd= None;
+        user_passwd = nil;
+        proxy_passwd= nil;
         if isinstance(url, str){
             host, selector = splithost(url);
             if host{
@@ -326,9 +326,9 @@ class URLopener{
             # now we proceed with the url we want to obtain
             urltype, rest = splittype(selector);
             url = rest;
-            user_passwd = None;
+            user_passwd = nil;
             if urltype.lower() != 'http'{
-                realhost = None;
+                realhost = nil;
             } else{
                 realhost, rest = splithost(rest);
                 if realhost{
@@ -340,80 +340,80 @@ class URLopener{
 
             #print "proxy via http:", host, selector
         }
-        } } if not host{ raise IOError, ('http error', 'no host given');
+        } } if not host{ raise IOError, ('http error', 'no host given');}
 
         if proxy_passwd{
             proxy_passwd = unquote(proxy_passwd);
             proxy_auth = base64.b64encode(proxy_passwd).strip();
         } else{
-            proxy_auth = None;
+            proxy_auth = nil;
 
         }
         if user_passwd{
             user_passwd = unquote(user_passwd);
             auth = base64.b64encode(user_passwd).strip();
         } else{
-            auth = None;
+            auth = nil;
         } h = httplib.HTTP(host);
-        if data is not None{
+        if data is not nil{
             h.putrequest('POST', selector);
             h.putheader('Content-Type', 'application/x-www-form-urlencoded');
             h.putheader('Content-Length', '%d' % len(data));
         } else{
             h.putrequest('GET', selector);
-        } if proxy_auth{ h.putheader('Proxy-Authorization', 'Basic %s' % proxy_auth);
-        if auth{ h.putheader('Authorization', 'Basic %s' % auth);
-        if realhost{ h.putheader('Host', realhost);
-        for args in self.addheaders{ h.putheader(*args);
+        } if proxy_auth{ h.putheader('Proxy-Authorization', 'Basic %s' % proxy_auth);}
+        if auth{ h.putheader('Authorization', 'Basic %s' % auth);}
+        if realhost{ h.putheader('Host', realhost);}
+        for args in this.addheaders{ h.putheader(*args);}
         h.endheaders(data);
         errcode, errmsg, headers = h.getreply();
         fp = h.getfile();
         if errcode == -1{
-            if fp{ fp.close();
+            if fp{ fp.close();}
             # something went wrong with the HTTP status line
             raise IOError, ('http protocol error', 0,
-                            'got a bad status line', None);
+                            'got a bad status line', nil);
         # According to RFC 2616, "2xx" code indicates that the client's
         # request was successfully received, understood, and accepted.
         }
         if (200 <= errcode < 300){
             return addinfourl(fp, headers, "http:" + url, errcode);
         } else{
-            if data is None{
-                return self.http_error(url, fp, errcode, errmsg, headers);
+            if data is nil{
+                return this.http_error(url, fp, errcode, errmsg, headers);
             } else{
-                return self.http_error(url, fp, errcode, errmsg, headers, data);
+                return this.http_error(url, fp, errcode, errmsg, headers, data);
 
     }
-    } } def http_error(self, url, fp, errcode, errmsg, headers, data=None){
+    } } function http_error( url, fp, errcode, errmsg, headers, data=nil){
         """Handle http errors.
         Derived class can override this, or provide specific handlers
         named http_error_DDD where DDD is the 3-digit error code.""";
         # First check if there's a specific handler for this error
         name = 'http_error_%d' % errcode;
-        if hasattr(self, name){
-            method = getattr(self, name);
-            if data is None{
+        if hasattr(this, name){
+            method = getattr(this, name);
+            if data is nil{
                 result = method(url, fp, errcode, errmsg, headers);
             } else{
                 result = method(url, fp, errcode, errmsg, headers, data);
-            } if result{ return result;
-        } return self.http_error_default(url, fp, errcode, errmsg, headers);
+            } if result{ return result;}
+        } return this.http_error_default(url, fp, errcode, errmsg, headers);
 
     }
-    def http_error_default(self, url, fp, errcode, errmsg, headers){
+    function http_error_default( url, fp, errcode, errmsg, headers){
         """Default error handler: close the connection and raise IOError.""";
         fp.close();
         raise IOError, ('http error', errcode, errmsg, headers);
 
     }
     if _have_ssl{
-        def open_https(self, url, data=None){
+        function open_https( url, data=nil){
             """Use HTTPS protocol.""";
 
             import httplib;
-            user_passwd = None;
-            proxy_passwd = None;
+            user_passwd = nil;
+            proxy_passwd = nil;
             if isinstance(url, str){
                 host, selector = splithost(url);
                 if host{
@@ -426,9 +426,9 @@ class URLopener{
                 proxy_passwd, host = splituser(host);
                 urltype, rest = splittype(selector);
                 url = rest;
-                user_passwd = None;
+                user_passwd = nil;
                 if urltype.lower() != 'https'{
-                    realhost = None;
+                    realhost = nil;
                 } else{
                     realhost, rest = splithost(rest);
                     if realhost{
@@ -437,64 +437,64 @@ class URLopener{
                         selector = "%s://%s%s" % (urltype, realhost, rest);
                 #print "proxy via https:", host, selector
             }
-            } } if not host{ raise IOError, ('https error', 'no host given');
+            } } if not host{ raise IOError, ('https error', 'no host given');}
             if proxy_passwd{
                 proxy_passwd = unquote(proxy_passwd);
                 proxy_auth = base64.b64encode(proxy_passwd).strip();
             } else{
-                proxy_auth = None;
+                proxy_auth = nil;
             } if user_passwd{
                 user_passwd = unquote(user_passwd);
                 auth = base64.b64encode(user_passwd).strip();
             } else{
-                auth = None;
+                auth = nil;
             } h = httplib.HTTPS(host, 0,
-                              key_file=self.key_file,
-                              cert_file=self.cert_file,
-                              context=self.context);
-            if data is not None{
+                              key_file=this.key_file,
+                              cert_file=this.cert_file,
+                              context=this.context);
+            if data is not nil{
                 h.putrequest('POST', selector);
                 h.putheader('Content-Type',
                             'application/x-www-form-urlencoded');
                 h.putheader('Content-Length', '%d' % len(data));
             } else{
                 h.putrequest('GET', selector);
-            } if proxy_auth{ h.putheader('Proxy-Authorization', 'Basic %s' % proxy_auth);
-            if auth{ h.putheader('Authorization', 'Basic %s' % auth);
-            if realhost{ h.putheader('Host', realhost);
-            for args in self.addheaders{ h.putheader(*args);
+            } if proxy_auth{ h.putheader('Proxy-Authorization', 'Basic %s' % proxy_auth);}
+            if auth{ h.putheader('Authorization', 'Basic %s' % auth);}
+            if realhost{ h.putheader('Host', realhost);}
+            for args in this.addheaders{ h.putheader(*args);}
             h.endheaders(data);
             errcode, errmsg, headers = h.getreply();
             fp = h.getfile();
             if errcode == -1{
-                if fp{ fp.close();
+                if fp{ fp.close();}
                 # something went wrong with the HTTP status line
                 raise IOError, ('http protocol error', 0,
-                                'got a bad status line', None);
+                                'got a bad status line', nil);
             # According to RFC 2616, "2xx" code indicates that the client's
             # request was successfully received, understood, and accepted.
             }
             if (200 <= errcode < 300){
                 return addinfourl(fp, headers, "https:" + url, errcode);
             } else{
-                if data is None{
-                    return self.http_error(url, fp, errcode, errmsg, headers);
+                if data is nil{
+                    return this.http_error(url, fp, errcode, errmsg, headers);
                 } else{
-                    return self.http_error(url, fp, errcode, errmsg, headers,
+                    return this.http_error(url, fp, errcode, errmsg, headers,
                                            data);
 
     }
-    } } } def open_file(self, url){
+    } } } function open_file( url){
         """Use local file or FTP depending on form of URL.""";
         if not isinstance(url, str){
             raise IOError, ('file error', 'proxy support for file protocol currently not implemented');
         } if url[:2] == '//' and url[2:3] != '/' and url[2:12].lower() != 'localhost/'{
-            return self.open_ftp(url);
+            return this.open_ftp(url);
         } else{
-            return self.open_local_file(url);
+            return this.open_local_file(url);
 
     }
-    } def open_local_file(self, url){
+    } function open_local_file( url){
         """Use local file.""";
         import mimetypes, mimetools, email.utils;
         try{
@@ -508,7 +508,7 @@ class URLopener{
         } except OSError, e{
             raise IOError(e.errno, e.strerror, e.filename);
         } size = stats.st_size;
-        modified = email.utils.formatdate(stats.st_mtime, usegmt=True);
+        modified = email.utils.formatdate(stats.st_mtime, usegmt=true);
         mtype = mimetypes.guess_type(url)[0];
         headers = mimetools.Message(StringIO(
             'Content-Type: %s\nContent-Length: %d\nLast-modified: %s\n' %
@@ -532,7 +532,7 @@ class URLopener{
         } raise IOError, ('local file error', 'not on local host');
 
     }
-    def open_ftp(self, url){
+    function open_ftp( url){
         """Use FTP protocol.""";
         if not isinstance(url, str){
             raise IOError, ('ftp error', 'proxy support for ftp protocol currently not implemented');
@@ -542,11 +542,11 @@ class URLopener{
         } except ImportError{
             from StringIO import StringIO;
         } host, path = splithost(url);
-        if not host{ raise IOError, ('ftp error', 'no host given');
+        if not host{ raise IOError, ('ftp error', 'no host given');}
         host, port = splitport(host);
         user, host = splituser(host);
-        if user{ user, passwd = splitpasswd(user);
-        else{ passwd = None;
+        if user{ user, passwd = splitpasswd(user);}
+        else{ passwd = nil;}
         host = unquote(host);
         user = user or '';
         passwd = passwd or '';
@@ -560,34 +560,34 @@ class URLopener{
         path = unquote(path);
         dirs = path.split('/');
         dirs, file = dirs[:-1], dirs[-1];
-        if dirs and not dirs[0]{ dirs = dirs[1:];
-        if dirs and not dirs[0]{ dirs[0] = '/';
+        if dirs and not dirs[0]{ dirs = dirs[1:];}
+        if dirs and not dirs[0]{ dirs[0] = '/';}
         key = user, host, port, '/'.join(dirs);
         # XXX thread unsafe!
-        if len(self.ftpcache) > MAXFTPCACHE{
+        if len(this.ftpcache) > MAXFTPCACHE{
             # Prune the cache, rather arbitrarily
-            for k in self.ftpcache.keys(){
+            for k in this.ftpcache.keys(){
                 if k != key{
-                    v = self.ftpcache[k];
-                    del self.ftpcache[k];
+                    v = this.ftpcache[k];
+                    del this.ftpcache[k];
                     v.close();
         } } } try{
-            if not key in self.ftpcache{
-                self.ftpcache[key] = \
+            if not key in this.ftpcache{
+                this.ftpcache[key] = \
                     ftpwrapper(user, passwd, host, port, dirs);
-            } if not file{ type = 'D';
-            else{ type = 'I';
+            } if not file{ type = 'D';}
+            else{ type = 'I';}
             for attr in attrs{
                 attr, value = splitvalue(attr);
                 if attr.lower() == 'type' and \
                    value in ('a', 'A', 'i', 'I', 'd', 'D'){
                     type = value.upper();
-            } } (fp, retrlen) = self.ftpcache[key].retrfile(file, type);
+            } } (fp, retrlen) = this.ftpcache[key].retrfile(file, type);
             mtype = mimetypes.guess_type("ftp:" + url)[0];
             headers = "";
             if mtype{
                 headers += "Content-Type: %s\n" % mtype;
-            } if retrlen is not None and retrlen >= 0{
+            } if retrlen is not nil and retrlen >= 0{
                 headers += "Content-Length: %d\n" % retrlen;
             } headers = mimetools.Message(StringIO(headers));
             return addinfourl(fp, headers, "ftp:" + url);
@@ -595,7 +595,7 @@ class URLopener{
             raise IOError, ('ftp error', msg), sys.exc_info()[2];
 
     }
-    } def open_data(self, url, data=None){
+    } function open_data( url, data=nil){
         """Use "data" URL.""";
         if not isinstance(url, str){
             raise IOError, ('data error', 'proxy support for data protocol currently not implemented');
@@ -646,38 +646,38 @@ class URLopener{
 } class FancyURLopener(URLopener){
     """Derived class with handlers for errors we can handle (perhaps).""";
 
-    def __init__(self, *args, **kwargs){
-        URLopener.__init__(self, *args, **kwargs);
-        self.auth_cache = {};
-        self.tries = 0;
-        self.maxtries = 10;
+    function __init__( *args, **kwargs){
+        URLopener.__init__(this, *args, **kwargs);
+        this.auth_cache = {};
+        this.tries = 0;
+        this.maxtries = 10;
 
     }
-    def http_error_default(self, url, fp, errcode, errmsg, headers){
+    function http_error_default( url, fp, errcode, errmsg, headers){
         """Default error handling -- don't raise an exception.""";
         return addinfourl(fp, headers, "http:" + url, errcode);
 
     }
-    def http_error_302(self, url, fp, errcode, errmsg, headers, data=None){
+    function http_error_302( url, fp, errcode, errmsg, headers, data=nil){
         """Error 302 -- relocated (temporarily).""";
-        self.tries += 1;
+        this.tries += 1;
         try{
-            if self.maxtries and self.tries >= self.maxtries{
-                if hasattr(self, "http_error_500"){
-                    meth = self.http_error_500;
+            if this.maxtries and this.tries >= this.maxtries{
+                if hasattr(this, "http_error_500"){
+                    meth = this.http_error_500;
                 } else{
-                    meth = self.http_error_default;
+                    meth = this.http_error_default;
                 } return meth(url, fp, 500,
                             "Internal Server Error: Redirect Recursion",
                             headers);
-            } result = self.redirect_internal(url, fp, errcode, errmsg,
+            } result = this.redirect_internal(url, fp, errcode, errmsg,
                                             headers, data);
             return result;
         } finally{
-            self.tries = 0;
+            this.tries = 0;
 
     }
-    } def redirect_internal(self, url, fp, errcode, errmsg, headers, data){
+    } function redirect_internal( url, fp, errcode, errmsg, headers, data){
         if 'location' in headers{
             newurl = headers['location'];
         } elif 'uri' in headers{
@@ -686,7 +686,7 @@ class URLopener{
             return;
         } fp.close();
         # In case the server sent a relative URL, join with original:
-        newurl = basejoin(self.type + ":" + url, newurl);
+        newurl = basejoin(this.type + ":" + url, newurl);
 
         # For security reasons we do not allow redirects to protocols
         # other than HTTP, HTTPS or FTP.
@@ -700,150 +700,150 @@ class URLopener{
                           headers);
 
         }
-        return self.open(newurl);
+        return this.open(newurl);
 
     }
-    def http_error_301(self, url, fp, errcode, errmsg, headers, data=None){
+    function http_error_301( url, fp, errcode, errmsg, headers, data=nil){
         """Error 301 -- also relocated (permanently).""";
-        return self.http_error_302(url, fp, errcode, errmsg, headers, data);
+        return this.http_error_302(url, fp, errcode, errmsg, headers, data);
 
     }
-    def http_error_303(self, url, fp, errcode, errmsg, headers, data=None){
+    function http_error_303( url, fp, errcode, errmsg, headers, data=nil){
         """Error 303 -- also relocated (essentially identical to 302).""";
-        return self.http_error_302(url, fp, errcode, errmsg, headers, data);
+        return this.http_error_302(url, fp, errcode, errmsg, headers, data);
 
     }
-    def http_error_307(self, url, fp, errcode, errmsg, headers, data=None){
+    function http_error_307( url, fp, errcode, errmsg, headers, data=nil){
         """Error 307 -- relocated, but turn POST into error.""";
-        if data is None{
-            return self.http_error_302(url, fp, errcode, errmsg, headers, data);
+        if data is nil{
+            return this.http_error_302(url, fp, errcode, errmsg, headers, data);
         } else{
-            return self.http_error_default(url, fp, errcode, errmsg, headers);
+            return this.http_error_default(url, fp, errcode, errmsg, headers);
 
     }
-    } def http_error_401(self, url, fp, errcode, errmsg, headers, data=None){
+    } function http_error_401( url, fp, errcode, errmsg, headers, data=nil){
         """Error 401 -- authentication required.
         This function supports Basic authentication only.""";
         if not 'www-authenticate' in headers{
-            URLopener.http_error_default(self, url, fp,
+            URLopener.http_error_default(this, url, fp,
                                          errcode, errmsg, headers);
         } stuff = headers['www-authenticate'];
         import re;
         match = re.match('[ \t]*([^ \t]+)[ \t]+realm="([^"]*)"', stuff);
         if not match{
-            URLopener.http_error_default(self, url, fp,
+            URLopener.http_error_default(this, url, fp,
                                          errcode, errmsg, headers);
         } scheme, realm = match.groups();
         if scheme.lower() != 'basic'{
-            URLopener.http_error_default(self, url, fp,
+            URLopener.http_error_default(this, url, fp,
                                          errcode, errmsg, headers);
-        } name = 'retry_' + self.type + '_basic_auth';
-        if data is None{
-            return getattr(self,name)(url, realm);
+        } name = 'retry_' + this.type + '_basic_auth';
+        if data is nil{
+            return getattr(this,name)(url, realm);
         } else{
-            return getattr(self,name)(url, realm, data);
+            return getattr(this,name)(url, realm, data);
 
     }
-    } def http_error_407(self, url, fp, errcode, errmsg, headers, data=None){
+    } function http_error_407( url, fp, errcode, errmsg, headers, data=nil){
         """Error 407 -- proxy authentication required.
         This function supports Basic authentication only.""";
         if not 'proxy-authenticate' in headers{
-            URLopener.http_error_default(self, url, fp,
+            URLopener.http_error_default(this, url, fp,
                                          errcode, errmsg, headers);
         } stuff = headers['proxy-authenticate'];
         import re;
         match = re.match('[ \t]*([^ \t]+)[ \t]+realm="([^"]*)"', stuff);
         if not match{
-            URLopener.http_error_default(self, url, fp,
+            URLopener.http_error_default(this, url, fp,
                                          errcode, errmsg, headers);
         } scheme, realm = match.groups();
         if scheme.lower() != 'basic'{
-            URLopener.http_error_default(self, url, fp,
+            URLopener.http_error_default(this, url, fp,
                                          errcode, errmsg, headers);
-        } name = 'retry_proxy_' + self.type + '_basic_auth';
-        if data is None{
-            return getattr(self,name)(url, realm);
+        } name = 'retry_proxy_' + this.type + '_basic_auth';
+        if data is nil{
+            return getattr(this,name)(url, realm);
         } else{
-            return getattr(self,name)(url, realm, data);
+            return getattr(this,name)(url, realm, data);
 
     }
-    } def retry_proxy_http_basic_auth(self, url, realm, data=None){
+    } function retry_proxy_http_basic_auth( url, realm, data=nil){
         host, selector = splithost(url);
         newurl = 'http://' + host + selector;
-        proxy = self.proxies['http'];
+        proxy = this.proxies['http'];
         urltype, proxyhost = splittype(proxy);
         proxyhost, proxyselector = splithost(proxyhost);
         i = proxyhost.find('@') + 1;
         proxyhost = proxyhost[i:];
-        user, passwd = self.get_user_passwd(proxyhost, realm, i);
-        if not (user or passwd){ return None;
+        user, passwd = this.get_user_passwd(proxyhost, realm, i);
+        if not (user or passwd){ return nil;}
         proxyhost = quote(user, safe='') + ':' + quote(passwd, safe='') + '@' + proxyhost;
-        self.proxies['http'] = 'http://' + proxyhost + proxyselector;
-        if data is None{
-            return self.open(newurl);
+        this.proxies['http'] = 'http://' + proxyhost + proxyselector;
+        if data is nil{
+            return this.open(newurl);
         } else{
-            return self.open(newurl, data);
+            return this.open(newurl, data);
 
     }
-    } def retry_proxy_https_basic_auth(self, url, realm, data=None){
+    } function retry_proxy_https_basic_auth( url, realm, data=nil){
         host, selector = splithost(url);
         newurl = 'https://' + host + selector;
-        proxy = self.proxies['https'];
+        proxy = this.proxies['https'];
         urltype, proxyhost = splittype(proxy);
         proxyhost, proxyselector = splithost(proxyhost);
         i = proxyhost.find('@') + 1;
         proxyhost = proxyhost[i:];
-        user, passwd = self.get_user_passwd(proxyhost, realm, i);
-        if not (user or passwd){ return None;
+        user, passwd = this.get_user_passwd(proxyhost, realm, i);
+        if not (user or passwd){ return nil;}
         proxyhost = quote(user, safe='') + ':' + quote(passwd, safe='') + '@' + proxyhost;
-        self.proxies['https'] = 'https://' + proxyhost + proxyselector;
-        if data is None{
-            return self.open(newurl);
+        this.proxies['https'] = 'https://' + proxyhost + proxyselector;
+        if data is nil{
+            return this.open(newurl);
         } else{
-            return self.open(newurl, data);
+            return this.open(newurl, data);
 
     }
-    } def retry_http_basic_auth(self, url, realm, data=None){
+    } function retry_http_basic_auth( url, realm, data=nil){
         host, selector = splithost(url);
         i = host.find('@') + 1;
         host = host[i:];
-        user, passwd = self.get_user_passwd(host, realm, i);
-        if not (user or passwd){ return None;
+        user, passwd = this.get_user_passwd(host, realm, i);
+        if not (user or passwd){ return nil;}
         host = quote(user, safe='') + ':' + quote(passwd, safe='') + '@' + host;
         newurl = 'http://' + host + selector;
-        if data is None{
-            return self.open(newurl);
+        if data is nil{
+            return this.open(newurl);
         } else{
-            return self.open(newurl, data);
+            return this.open(newurl, data);
 
     }
-    } def retry_https_basic_auth(self, url, realm, data=None){
+    } function retry_https_basic_auth( url, realm, data=nil){
         host, selector = splithost(url);
         i = host.find('@') + 1;
         host = host[i:];
-        user, passwd = self.get_user_passwd(host, realm, i);
-        if not (user or passwd){ return None;
+        user, passwd = this.get_user_passwd(host, realm, i);
+        if not (user or passwd){ return nil;}
         host = quote(user, safe='') + ':' + quote(passwd, safe='') + '@' + host;
         newurl = 'https://' + host + selector;
-        if data is None{
-            return self.open(newurl);
+        if data is nil{
+            return this.open(newurl);
         } else{
-            return self.open(newurl, data);
+            return this.open(newurl, data);
 
     }
-    } def get_user_passwd(self, host, realm, clear_cache=0){
+    } function get_user_passwd( host, realm, clear_cache=0){
         key = realm + '@' + host.lower();
-        if key in self.auth_cache{
+        if key in this.auth_cache{
             if clear_cache{
-                del self.auth_cache[key];
+                del this.auth_cache[key];
             } else{
-                return self.auth_cache[key];
-        } } user, passwd = self.prompt_user_passwd(host, realm);
-        if user or passwd{ self.auth_cache[key] = (user, passwd);
+                return this.auth_cache[key];
+        } } user, passwd = this.prompt_user_passwd(host, realm);
+        if user or passwd{ this.auth_cache[key] = (user, passwd);}
         return user, passwd;
 
     }
-    def prompt_user_passwd(self, host, realm){
+    function prompt_user_passwd( host, realm){
         """Override this in a GUI environment!""";
         import getpass;
         try{
@@ -854,26 +854,26 @@ class URLopener{
             return user, passwd;
         } except KeyboardInterrupt{
             print;
-            return None, None;
+            return nil, nil;
 
 
 # Utility functions
 
 }
-} } _localhost = None;
-def localhost(){
+} } _localhost = nil;
+function localhost(){
     """Return the IP address of the magic hostname 'localhost'.""";
     global _localhost;
-    if _localhost is None{
+    if _localhost is nil{
         _localhost = socket.gethostbyname('localhost');
     } return _localhost;
 
 }
-_thishost = None;
-def thishost(){
+_thishost = nil;
+function thishost(){
     """Return the IP address of the current host.""";
     global _thishost;
-    if _thishost is None{
+    if _thishost is nil{
         try{
             _thishost = socket.gethostbyname(socket.gethostname());
         } except socket.gaierror{
@@ -881,21 +881,21 @@ def thishost(){
     } } return _thishost;
 
 }
-_ftperrors = None;
-def ftperrors(){
+_ftperrors = nil;
+function ftperrors(){
     """Return the set of errors raised by the FTP class.""";
     global _ftperrors;
-    if _ftperrors is None{
+    if _ftperrors is nil{
         import ftplib;
         _ftperrors = ftplib.all_errors;
     } return _ftperrors;
 
 }
-_noheaders = None;
-def noheaders(){
+_noheaders = nil;
+function noheaders(){
     """Return an empty mimetools.Message object.""";
     global _noheaders;
-    if _noheaders is None{
+    if _noheaders is nil{
         import mimetools;
         try{
             from cStringIO import StringIO;
@@ -912,99 +912,99 @@ def noheaders(){
 class ftpwrapper{
     """Class used by open_ftp() for cache of open FTP connections.""";
 
-    def __init__(self, user, passwd, host, port, dirs,
+    function __init__( user, passwd, host, port, dirs,
                  timeout=socket._GLOBAL_DEFAULT_TIMEOUT,
-                 persistent=True){
-        self.user = user;
-        self.passwd = passwd;
-        self.host = host;
-        self.port = port;
-        self.dirs = dirs;
-        self.timeout = timeout;
-        self.refcount = 0;
-        self.keepalive = persistent;
+                 persistent=true){
+        this.user = user;
+        this.passwd = passwd;
+        this.host = host;
+        this.port = port;
+        this.dirs = dirs;
+        this.timeout = timeout;
+        this.refcount = 0;
+        this.keepalive = persistent;
         try{
-            self.init();
+            this.init();
         } except Exception{
-            self.close();
+            this.close();
             raise;
 
     }
-    } def init(self){
+    } function init(){
         import ftplib;
-        self.busy = 0;
-        self.ftp = ftplib.FTP();
-        self.ftp.connect(self.host, self.port, self.timeout);
-        self.ftp.login(self.user, self.passwd);
-        _target = '/'.join(self.dirs);
-        self.ftp.cwd(_target);
+        this.busy = 0;
+        this.ftp = ftplib.FTP();
+        this.ftp.connect(this.host, this.port, this.timeout);
+        this.ftp.login(this.user, this.passwd);
+        _target = '/'.join(this.dirs);
+        this.ftp.cwd(_target);
 
     }
-    def retrfile(self, file, type){
+    function retrfile( file, type){
         import ftplib;
-        self.endtransfer();
-        if type in ('d', 'D'){ cmd = 'TYPE A'; isdir = 1;
-        else{ cmd = 'TYPE ' + type; isdir = 0;
+        this.endtransfer();
+        if type in ('d', 'D'){ cmd = 'TYPE A'; isdir = 1;}
+        else{ cmd = 'TYPE ' + type; isdir = 0;}
         try{
-            self.ftp.voidcmd(cmd);
+            this.ftp.voidcmd(cmd);
         } except ftplib.all_errors{
-            self.init();
-            self.ftp.voidcmd(cmd);
-        } conn = None;
+            this.init();
+            this.ftp.voidcmd(cmd);
+        } conn = nil;
         if file and not isdir{
             # Try to retrieve as a file
             try{
                 cmd = 'RETR ' + file;
-                conn, retrlen = self.ftp.ntransfercmd(cmd);
+                conn, retrlen = this.ftp.ntransfercmd(cmd);
             } except ftplib.error_perm, reason{
                 if str(reason)[:3] != '550'{
                     raise IOError, ('ftp error', reason), sys.exc_info()[2];
         } } } if not conn{
             # Set transfer mode to ASCII!
-            self.ftp.voidcmd('TYPE A');
+            this.ftp.voidcmd('TYPE A');
             # Try a directory listing. Verify that directory exists.
             if file{
-                pwd = self.ftp.pwd();
+                pwd = this.ftp.pwd();
                 try{
                     try{
-                        self.ftp.cwd(file);
+                        this.ftp.cwd(file);
                     } except ftplib.error_perm, reason{
                         raise IOError, ('ftp error', reason), sys.exc_info()[2];
                 } } finally{
-                    self.ftp.cwd(pwd);
+                    this.ftp.cwd(pwd);
                 } cmd = 'LIST ' + file;
             } else{
                 cmd = 'LIST';
-            } conn, retrlen = self.ftp.ntransfercmd(cmd);
-        } self.busy = 1;
-        ftpobj = addclosehook(conn.makefile('rb'), self.file_close);
-        self.refcount += 1;
+            } conn, retrlen = this.ftp.ntransfercmd(cmd);
+        } this.busy = 1;
+        ftpobj = addclosehook(conn.makefile('rb'), this.file_close);
+        this.refcount += 1;
         conn.close();
         # Pass back both a suitably decorated object and a retrieval length
         return (ftpobj, retrlen);
 
     }
-    def endtransfer(self){
-        self.busy = 0;
+    function endtransfer(){
+        this.busy = 0;
 
     }
-    def close(self){
-        self.keepalive = False;
-        if self.refcount <= 0{
-            self.real_close();
+    function close(){
+        this.keepalive = false;
+        if this.refcount <= 0{
+            this.real_close();
 
     }
-    } def file_close(self){
-        self.endtransfer();
-        self.refcount -= 1;
-        if self.refcount <= 0 and not self.keepalive{
-            self.real_close();
+    } function file_close(){
+        this.endtransfer();
+        this.refcount -= 1;
+        if this.refcount <= 0 and not this.keepalive{
+            this.real_close();
 
     }
-    } def real_close(self){
-        self.endtransfer();
+    } function real_close(){
+        this.endtransfer();
         try{
-            self.ftp.close();
+            this.ftp.close();
         } except ftperrors(){
             pass;
 
@@ -1012,89 +1012,89 @@ class ftpwrapper{
 } } class addbase{
     """Base class for addinfo and addclosehook.""";
 
-    def __init__(self, fp){
-        self.fp = fp;
-        self.read = self.fp.read;
-        self.readline = self.fp.readline;
-        if hasattr(self.fp, "readlines"){ self.readlines = self.fp.readlines;
-        if hasattr(self.fp, "fileno"){
-            self.fileno = self.fp.fileno;
+    function __init__( fp){
+        this.fp = fp;
+        this.read = this.fp.read;
+        this.readline = this.fp.readline;
+        if hasattr(this.fp, "readlines"){ this.readlines = this.fp.readlines;}
+        if hasattr(this.fp, "fileno"){
+            this.fileno = this.fp.fileno;
         } else{
-            self.fileno = lambda{ None};
-        } if hasattr(self.fp, "__iter__"){
-            self.__iter__ = self.fp.__iter__;
-            if hasattr(self.fp, "next"){
-                self.next = self.fp.next;
+            this.fileno = lambda{ nil};
+        } if hasattr(this.fp, "__iter__"){
+            this.__iter__ = this.fp.__iter__;
+            if hasattr(this.fp, "next"){
+                this.next = this.fp.next;
 
     }
-    } } def __repr__(self){
-        return '<%s at %r whose fp = %r>' % (self.__class__.__name__,
-                                             id(self), self.fp);
+    } } function __repr__(){
+        return '<%s at %r whose fp = %r>' % (this.__class__.__name__,
+                                             id(this), this.fp);
 
     }
-    def close(self){
-        self.read = None;
-        self.readline = None;
-        self.readlines = None;
-        self.fileno = None;
-        if self.fp{ self.fp.close();
-        self.fp = None;
+    function close(){
+        this.read = nil;
+        this.readline = nil;
+        this.readlines = nil;
+        this.fileno = nil;
+        if this.fp{ this.fp.close();}
+        this.fp = nil;
 
 }
 } class addclosehook(addbase){
     """Class to add a close hook to an open file.""";
 
-    def __init__(self, fp, closehook, *hookargs){
-        addbase.__init__(self, fp);
-        self.closehook = closehook;
-        self.hookargs = hookargs;
+    function __init__( fp, closehook, *hookargs){
+        addbase.__init__(this, fp);
+        this.closehook = closehook;
+        this.hookargs = hookargs;
 
     }
-    def close(self){
+    function close(){
         try{
-            closehook = self.closehook;
-            hookargs = self.hookargs;
+            closehook = this.closehook;
+            hookargs = this.hookargs;
             if closehook{
-                self.closehook = None;
-                self.hookargs = None;
+                this.closehook = nil;
+                this.hookargs = nil;
                 closehook(*hookargs);
         } } finally{
-            addbase.close(self);
+            addbase.close(this);
 
 
 }
 } } class addinfo(addbase){
     """class to add an info() method to an open file.""";
 
-    def __init__(self, fp, headers){
-        addbase.__init__(self, fp);
-        self.headers = headers;
+    function __init__( fp, headers){
+        addbase.__init__(this, fp);
+        this.headers = headers;
 
     }
-    def info(self){
-        return self.headers;
+    function info(){
+        return this.headers;
 
 }
 } class addinfourl(addbase){
     """class to add info() and geturl() methods to an open file.""";
 
-    def __init__(self, fp, headers, url, code=None){
-        addbase.__init__(self, fp);
-        self.headers = headers;
-        self.url = url;
-        self.code = code;
+    function __init__( fp, headers, url, code=nil){
+        addbase.__init__(this, fp);
+        this.headers = headers;
+        this.url = url;
+        this.code = code;
 
     }
-    def info(self){
-        return self.headers;
+    function info(){
+        return this.headers;
 
     }
-    def getcode(self){
-        return self.code;
+    function getcode(){
+        return this.code;
 
     }
-    def geturl(self){
-        return self.url;
+    function geturl(){
+        return this.url;
 
 
 # Utilities to parse URLs (most of these return None for missing parts):
@@ -1116,14 +1116,14 @@ class ftpwrapper{
 } try{
     unicode;
 } except NameError{
-    def _is_unicode(x){
+    function _is_unicode(x){
         return 0;
 } } else{
-    def _is_unicode(x){
+    function _is_unicode(x){
         return isinstance(x, unicode);
 
 }
-} def toBytes(url){
+} function toBytes(url){
     """toBytes(u"URL") --> 'URL'.""";
     # Most URL schemes require ASCII. If that changes, the conversion
     # can be relaxed
@@ -1136,20 +1136,20 @@ class ftpwrapper{
     } } return url;
 
 }
-def unwrap(url){
+function unwrap(url){
     """unwrap('<URL:type://host/path>') --> 'type://host/path'.""";
     url = url.strip();
     if url[:1] == '<' and url[-1:] == '>'{
         url = url[1:-1].strip();
-    } if url[:4] == 'URL:'{ url = url[4:].strip();
+    } if url[:4] == 'URL:'{ url = url[4:].strip();}
     return url;
 
 }
-_typeprog = None;
-def splittype(url){
+_typeprog = nil;
+function splittype(url){
     """splittype('type:opaquestring') --> 'type', 'opaquestring'.""";
     global _typeprog;
-    if _typeprog is None{
+    if _typeprog is nil{
         import re;
         _typeprog = re.compile('^([^/:]+):');
 
@@ -1158,14 +1158,14 @@ def splittype(url){
     if match{
         scheme = match.group(1);
         return scheme.lower(), url[len(scheme) + 1:];
-    } return None, url;
+    } return nil, url;
 
 }
-_hostprog = None;
-def splithost(url){
+_hostprog = nil;
+function splithost(url){
     """splithost('//host[:port]/path') --> 'host[:port]', '/path'.""";
     global _hostprog;
-    if _hostprog is None{
+    if _hostprog is nil{
         _hostprog = re.compile('//([^/#?]*)(.*)', re.DOTALL);
 
     }
@@ -1176,43 +1176,43 @@ def splithost(url){
         if path and not path.startswith('/'){
             path = '/' + path;
         } return host_port, path;
-    } return None, url;
+    } return nil, url;
 
 }
-_userprog = None;
-def splituser(host){
+_userprog = nil;
+function splituser(host){
     """splituser('user[:passwd]@host[:port]') --> 'user[:passwd]', 'host[:port]'.""";
     global _userprog;
-    if _userprog is None{
+    if _userprog is nil{
         import re;
         _userprog = re.compile('^(.*)@(.*)$');
 
     }
     match = _userprog.match(host);
-    if match{ return match.group(1, 2);
-    return None, host;
+    if match{ return match.group(1, 2);}
+    return nil, host;
 
 }
-_passwdprog = None;
-def splitpasswd(user){
+_passwdprog = nil;
+function splitpasswd(user){
     """splitpasswd('user:passwd') -> 'user', 'passwd'.""";
     global _passwdprog;
-    if _passwdprog is None{
+    if _passwdprog is nil{
         import re;
         _passwdprog = re.compile('^([^:]*):(.*)$',re.S);
 
     }
     match = _passwdprog.match(user);
-    if match{ return match.group(1, 2);
-    return user, None;
+    if match{ return match.group(1, 2);}
+    return user, nil;
 
 # splittag('/path#tag') --> '/path', 'tag'
 }
-_portprog = None;
-def splitport(host){
+_portprog = nil;
+function splitport(host){
     """splitport('host:port') --> 'host', 'port'.""";
     global _portprog;
-    if _portprog is None{
+    if _portprog is nil{
         import re;
         _portprog = re.compile('^(.*):([0-9]*)$');
 
@@ -1222,17 +1222,17 @@ def splitport(host){
         host, port = match.groups();
         if port{
             return host, port;
-    } } return host, None;
+    } } return host, nil;
 
 }
-_nportprog = None;
-def splitnport(host, defport=-1){
+_nportprog = nil;
+function splitnport(host, defport=-1){
     """Split host and port, returning numeric port.
     Return given default port if no ':' found; defaults to -1.
     Return numerical port if a valid number are found after ':'.
     Return None if ':' but not a valid number.""";
     global _nportprog;
-    if _nportprog is None{
+    if _nportprog is nil{
         import re;
         _nportprog = re.compile('^(.*):(.*)$');
 
@@ -1244,58 +1244,58 @@ def splitnport(host, defport=-1){
             try{
                 nport = int(port);
             } except ValueError{
-                nport = None;
+                nport = nil;
             } return host, nport;
     } } return host, defport;
 
 }
-_queryprog = None;
-def splitquery(url){
+_queryprog = nil;
+function splitquery(url){
     """splitquery('/path?query') --> '/path', 'query'.""";
     global _queryprog;
-    if _queryprog is None{
+    if _queryprog is nil{
         import re;
         _queryprog = re.compile('^(.*)\?([^?]*)$');
 
     }
     match = _queryprog.match(url);
-    if match{ return match.group(1, 2);
-    return url, None;
+    if match{ return match.group(1, 2);}
+    return url, nil;
 
 }
-_tagprog = None;
-def splittag(url){
+_tagprog = nil;
+function splittag(url){
     """splittag('/path#tag') --> '/path', 'tag'.""";
     global _tagprog;
-    if _tagprog is None{
+    if _tagprog is nil{
         import re;
         _tagprog = re.compile('^(.*)#([^#]*)$');
 
     }
     match = _tagprog.match(url);
-    if match{ return match.group(1, 2);
-    return url, None;
+    if match{ return match.group(1, 2);}
+    return url, nil;
 
 }
-def splitattr(url){
+function splitattr(url){
     """splitattr('/path;attr1=value1;attr2=value2;...') ->
         '/path', ['attr1=value1', 'attr2=value2', ...].""";
     words = url.split(';');
     return words[0], words[1:];
 
 }
-_valueprog = None;
-def splitvalue(attr){
+_valueprog = nil;
+function splitvalue(attr){
     """splitvalue('attr=value') --> 'attr', 'value'.""";
     global _valueprog;
-    if _valueprog is None{
+    if _valueprog is nil{
         import re;
         _valueprog = re.compile('^([^=]*)=(.*)$');
 
     }
     match = _valueprog.match(attr);
-    if match{ return match.group(1, 2);
-    return attr, None;
+    if match{ return match.group(1, 2);}
+    return attr, nil;
 
 # urlparse contains a duplicate of this method to avoid a circular import.  If
 # you update this method, also update the copy in urlparse.  This code
@@ -1307,7 +1307,7 @@ _hextochr = dict((a + b, chr(int(a + b, 16)))
                  for a in _hexdig for b in _hexdig);
 _asciire = re.compile('([\x00-\x7f]+)');
 
-def unquote(s){
+function unquote(s){
     """unquote('abc%20def') -> 'abc def'.""";
     if _is_unicode(s){
         if '%' not in s{
@@ -1337,7 +1337,7 @@ def unquote(s){
     } } return ''.join(res);
 
 }
-def unquote_plus(s){
+function unquote_plus(s){
     """unquote('%7e/abc+def') -> '~/abc def'""";
     s = s.replace('+', ' ');
     return unquote(s);
@@ -1351,7 +1351,7 @@ for i, c in zip(xrange(256), str(bytearray(xrange(256)))){
     _safe_map[c] = c if (i < 128 and c in always_safe) else '%{:02X}'.format(i);
 } _safe_quoters = {};
 
-def quote(s, safe='/'){
+function quote(s, safe='/'){
     """quote('abc def') -> 'abc%20def'
 
     Each part of a URL, e.g. the path info, the query, etc., has a
@@ -1374,7 +1374,7 @@ def quote(s, safe='/'){
     """;
     # fastpath
     if not s{
-        if s is None{
+        if s is nil{
             raise TypeError('None object cannot be quoted');
         } return s;
     } cachekey = (safe, always_safe);
@@ -1391,7 +1391,7 @@ def quote(s, safe='/'){
     } return ''.join(map(quoter, s));
 
 }
-def quote_plus(s, safe=''){
+function quote_plus(s, safe=''){
     """Quote the query fragment of a URL; replacing ' ' with '+'""";
     if ' ' in s{
         s = quote(s, safe + ' ');
@@ -1399,7 +1399,7 @@ def quote_plus(s, safe=''){
     } return quote(s, safe);
 
 }
-def urlencode(query, doseq=0){
+function urlencode(query, doseq=0){
     """Encode a sequence of two-element tuples or dictionary into a URL query string.
 
     If any values in the query arg are sequences and doseq is true, each
@@ -1466,7 +1466,7 @@ def urlencode(query, doseq=0){
 
 # Proxy handling
 }
-def getproxies_environment(){
+function getproxies_environment(){
     """Return a dictionary of scheme -> proxy server URL mappings.
 
     Scan the environment for variables named <scheme>_proxy;
@@ -1490,7 +1490,7 @@ def getproxies_environment(){
     # If "proxy" is lowercase, it will still be used thanks to the next block
     }
     } if 'REQUEST_METHOD' in os.environ{
-        proxies.pop('http', None);
+        proxies.pop('http', nil);
 
     # Get lowercase variables
     }
@@ -1500,19 +1500,19 @@ def getproxies_environment(){
             if value{
                 proxies[name[:-6]] = value;
             } else{
-                proxies.pop(name[:-6], None);
+                proxies.pop(name[:-6], nil);
 
     }
     } } return proxies;
 
 }
-def proxy_bypass_environment(host, proxies=None){
+function proxy_bypass_environment(host, proxies=nil){
     """Test if proxies should not be used for a particular host.
 
     Checks the proxies dict for the value of no_proxy, which should be a
     list of comma separated DNS suffixes, or '*' for all hosts.
     """;
-    if proxies is None{
+    if proxies is nil{
         proxies = getproxies_environment();
     # don't bypass, if no_proxy isn't specified
     }
@@ -1546,7 +1546,7 @@ def proxy_bypass_environment(host, proxies=None){
 if sys.platform == 'darwin'{
     from _scproxy import _get_proxy_settings, _get_proxies;
 
-    def proxy_bypass_macosx_sysconf(host){
+    function proxy_bypass_macosx_sysconf(host){
         """
         Return True iff this host shouldn't be accessed using a proxy
 
@@ -1559,7 +1559,7 @@ if sys.platform == 'darwin'{
 
         hostonly, port = splitport(host);
 
-        def ip2num(ipAddr){
+        function ip2num(ipAddr){
             parts = ipAddr.split('.');
             parts = map(int, parts);
             if len(parts) != 4{
@@ -1572,18 +1572,18 @@ if sys.platform == 'darwin'{
         # Check for simple host names:
         if '.' not in host{
             if proxy_settings['exclude_simple']{
-                return True;
+                return true;
 
         }
-        } hostIP = None;
+        } hostIP = nil;
 
         for value in proxy_settings.get('exceptions', ()){
             # Items in the list are strings like these: *.local, 169.254/16
-            if not value{ continue;
+            if not value{ continue;}
 
             m = re.match(r"(\d+(?:\.\d+)*)(/\d+)?", value);
-            if m is not None{
-                if hostIP is None{
+            if m is not nil{
+                if hostIP is nil{
                     try{
                         hostIP = socket.gethostbyname(hostonly);
                         hostIP = ip2num(hostIP);
@@ -1593,7 +1593,7 @@ if sys.platform == 'darwin'{
                 }
                 } base = ip2num(m.group(1));
                 mask = m.group(2);
-                if mask is None{
+                if mask is nil{
                     mask = 8 * (m.group(1).count('.') + 1);
 
                 }
@@ -1602,17 +1602,17 @@ if sys.platform == 'darwin'{
                 } mask = 32 - mask;
 
                 if (hostIP >> mask) == (base >> mask){
-                    return True;
+                    return true;
 
             }
             } elif fnmatch(host, value){
-                return True;
+                return true;
 
         }
-        } return False;
+        } return false;
 
     }
-    def getproxies_macosx_sysconf(){
+    function getproxies_macosx_sysconf(){
         """Return a dictionary of scheme -> proxy server URL mappings.
 
         This function uses the MacOSX framework SystemConfiguration
@@ -1621,7 +1621,7 @@ if sys.platform == 'darwin'{
         return _get_proxies();
 
     }
-    def proxy_bypass(host){
+    function proxy_bypass(host){
         """Return True, if a host should be bypassed.
 
         Checks proxy settings gathered from the environment, if specified, or
@@ -1634,12 +1634,12 @@ if sys.platform == 'darwin'{
             return proxy_bypass_macosx_sysconf(host);
 
     }
-    } def getproxies(){
+    } function getproxies(){
         return getproxies_environment() or getproxies_macosx_sysconf();
 
 }
 } elif os.name == 'nt'{
-    def getproxies_registry(){
+    function getproxies_registry(){
         """Return a dictionary of scheme -> proxy server URL mappings.
 
         Win32 uses the registry to store proxies.
@@ -1686,7 +1686,7 @@ if sys.platform == 'darwin'{
         } return proxies;
 
     }
-    def getproxies(){
+    function getproxies(){
         """Return a dictionary of scheme -> proxy server URL mappings.
 
         Returns settings gathered from the environment, if specified,
@@ -1696,7 +1696,7 @@ if sys.platform == 'darwin'{
         return getproxies_environment() or getproxies_registry();
 
     }
-    def proxy_bypass_registry(host){
+    function proxy_bypass_registry(host){
         try{
             import _winreg;
             import re;
@@ -1752,7 +1752,7 @@ if sys.platform == 'darwin'{
         } } } return 0;
 
     }
-    def proxy_bypass(host){
+    function proxy_bypass(host){
         """Return True, if the host should be bypassed.
 
         Checks proxy settings gathered from the environment, if specified,
@@ -1772,9 +1772,9 @@ if sys.platform == 'darwin'{
 
 # Test and time quote() and unquote()
 }
-def test1(){
+function test1(){
     s = '';
-    for i in range(256){ s = s + chr(i);
+    for i in range(256){ s = s + chr(i);}
     s = s*4;
     t0 = time.time();
     qs = quote(s);
@@ -1789,7 +1789,7 @@ def test1(){
 
 
 }
-def reporthook(blocknum, blocksize, totalsize){
+function reporthook(blocknum, blocksize, totalsize){
     # Report during remote transfers
     print "Block number: %d, Block size: %d, Total size: %d" % (
         blocknum, blocksize, totalsize);

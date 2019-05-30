@@ -6,12 +6,12 @@ from idlelib.EditorWindow import EditorWindow;
 from idlelib.HyperParser import HyperParser;
 
 class DummyEditwin{
-    def __init__(self, text){
-        self.text = text;
-        self.indentwidth = 8;
-        self.tabwidth = 8;
-        self.context_use_ps1 = True;
-        self.num_context_lines = 50, 500, 1000;
+    function __init__( text){
+        this.text = text;
+        this.indentwidth = 8;
+        this.tabwidth = 8;
+        this.context_use_ps1 = true;
+        this.num_context_lines = 50, 500, 1000;
 
     }
     _build_char_in_string_func = EditorWindow._build_char_in_string_func.im_func;
@@ -35,7 +35,7 @@ class HyperParserTest(unittest.TestCase){
             );
 
     @classmethod;
-    def setUpClass(cls){
+    function setUpClass(cls){
         requires('gui');
         cls.root = Tk();
         cls.root.withdraw();
@@ -44,161 +44,161 @@ class HyperParserTest(unittest.TestCase){
 
     }
     @classmethod;
-    def tearDownClass(cls){
+    function tearDownClass(cls){
         del cls.text, cls.editwin;
         cls.root.destroy();
         del cls.root;
 
     }
-    def setUp(self){
-        self.text.insert('insert', self.code);
+    function setUp(){
+        this.text.insert('insert', this.code);
 
     }
-    def tearDown(self){
-        self.text.delete('1.0', 'end');
-        self.editwin.context_use_ps1 = True;
+    function tearDown(){
+        this.text.delete('1.0', 'end');
+        this.editwin.context_use_ps1 = true;
 
     }
-    def get_parser(self, index){
+    function get_parser( index){
         """
         Return a parser object with index at 'index'
         """;
-        return HyperParser(self.editwin, index);
+        return HyperParser(this.editwin, index);
 
     }
-    def test_init(self){
+    function test_init(){
         """
         test corner cases in the init method
         """;
-        with self.assertRaises(ValueError) as ve:
-            self.text.tag_add('console', '1.0', '1.end');
-            p = self.get_parser('1.5');
-        } self.assertIn('precedes', str(ve.exception));
+        with this.assertRaises(ValueError) as ve{
+            this.text.tag_add('console', '1.0', '1.end');
+            p = this.get_parser('1.5');
+        } this.assertIn('precedes', str(ve.exception));
 
         # test without ps1
-        self.editwin.context_use_ps1 = False;
+        this.editwin.context_use_ps1 = false;
 
         # number of lines lesser than 50
-        p = self.get_parser('end');
-        self.assertEqual(p.rawtext, self.text.get('1.0', 'end'));
+        p = this.get_parser('end');
+        this.assertEqual(p.rawtext, this.text.get('1.0', 'end'));
 
         # number of lines greater than 50
-        self.text.insert('end', self.text.get('1.0', 'end')*4);
-        p = self.get_parser('54.5');
+        this.text.insert('end', this.text.get('1.0', 'end')*4);
+        p = this.get_parser('54.5');
 
     }
-    def test_is_in_string(self){
-        get = self.get_parser;
+    function test_is_in_string(){
+        get = this.get_parser;
 
         p = get('1.0');
-        self.assertFalse(p.is_in_string());
+        this.assertFalse(p.is_in_string());
         p = get('1.4');
-        self.assertTrue(p.is_in_string());
+        this.assertTrue(p.is_in_string());
         p = get('2.3');
-        self.assertFalse(p.is_in_string());
+        this.assertFalse(p.is_in_string());
         p = get('3.3');
-        self.assertFalse(p.is_in_string());
+        this.assertFalse(p.is_in_string());
         p = get('3.7');
-        self.assertTrue(p.is_in_string());
+        this.assertTrue(p.is_in_string());
         p = get('4.6');
-        self.assertTrue(p.is_in_string());
+        this.assertTrue(p.is_in_string());
 
     }
-    def test_is_in_code(self){
-        get = self.get_parser;
+    function test_is_in_code(){
+        get = this.get_parser;
 
         p = get('1.0');
-        self.assertTrue(p.is_in_code());
+        this.assertTrue(p.is_in_code());
         p = get('1.1');
-        self.assertFalse(p.is_in_code());
+        this.assertFalse(p.is_in_code());
         p = get('2.5');
-        self.assertFalse(p.is_in_code());
+        this.assertFalse(p.is_in_code());
         p = get('3.4');
-        self.assertTrue(p.is_in_code());
+        this.assertTrue(p.is_in_code());
         p = get('3.6');
-        self.assertFalse(p.is_in_code());
+        this.assertFalse(p.is_in_code());
         p = get('4.14');
-        self.assertFalse(p.is_in_code());
+        this.assertFalse(p.is_in_code());
 
     }
-    def test_get_surrounding_bracket(self){
-        get = self.get_parser;
+    function test_get_surrounding_bracket(){
+        get = this.get_parser;
 
-        def without_mustclose(parser){
+        function without_mustclose(parser){
             # a utility function to get surrounding bracket
             # with mustclose=False
-            return parser.get_surrounding_brackets(mustclose=False);
+            return parser.get_surrounding_brackets(mustclose=false);
 
         }
-        def with_mustclose(parser){
+        function with_mustclose(parser){
             # a utility function to get surrounding bracket
             # with mustclose=True
-            return parser.get_surrounding_brackets(mustclose=True);
+            return parser.get_surrounding_brackets(mustclose=true);
 
         }
         p = get('3.2');
-        self.assertIsNone(with_mustclose(p));
-        self.assertIsNone(without_mustclose(p));
+        this.assertIsNone(with_mustclose(p));
+        this.assertIsNone(without_mustclose(p));
 
         p = get('5.6');
-        self.assertTupleEqual(without_mustclose(p), ('5.4', '5.25'));
-        self.assertTupleEqual(without_mustclose(p), with_mustclose(p));
+        this.assertTupleEqual(without_mustclose(p), ('5.4', '5.25'));
+        this.assertTupleEqual(without_mustclose(p), with_mustclose(p));
 
         p = get('5.23');
-        self.assertTupleEqual(without_mustclose(p), ('5.21', '5.24'));
-        self.assertTupleEqual(without_mustclose(p), with_mustclose(p));
+        this.assertTupleEqual(without_mustclose(p), ('5.21', '5.24'));
+        this.assertTupleEqual(without_mustclose(p), with_mustclose(p));
 
         p = get('6.15');
-        self.assertTupleEqual(without_mustclose(p), ('6.4', '6.end'));
-        self.assertIsNone(with_mustclose(p));
+        this.assertTupleEqual(without_mustclose(p), ('6.4', '6.end'));
+        this.assertIsNone(with_mustclose(p));
 
         p = get('9.end');
-        self.assertIsNone(with_mustclose(p));
-        self.assertIsNone(without_mustclose(p));
+        this.assertIsNone(with_mustclose(p));
+        this.assertIsNone(without_mustclose(p));
 
     }
-    def test_get_expression(self){
-        get = self.get_parser;
+    function test_get_expression(){
+        get = this.get_parser;
 
         p = get('4.2');
-        self.assertEqual(p.get_expression(), 'y ');
+        this.assertEqual(p.get_expression(), 'y ');
 
         p = get('4.7');
-        with self.assertRaises(ValueError) as ve:
+        with this.assertRaises(ValueError) as ve{
             p.get_expression();
-        } self.assertIn('is inside a code', str(ve.exception));
+        } this.assertIn('is inside a code', str(ve.exception));
 
         p = get('5.25');
-        self.assertEqual(p.get_expression(), 'range(10)');
+        this.assertEqual(p.get_expression(), 'range(10)');
 
         p = get('6.7');
-        self.assertEqual(p.get_expression(), 'py');
+        this.assertEqual(p.get_expression(), 'py');
 
         p = get('6.8');
-        self.assertEqual(p.get_expression(), '');
+        this.assertEqual(p.get_expression(), '');
 
         p = get('7.9');
-        self.assertEqual(p.get_expression(), 'py');
+        this.assertEqual(p.get_expression(), 'py');
 
         p = get('8.end');
-        self.assertEqual(p.get_expression(), 'x.__len__');
+        this.assertEqual(p.get_expression(), 'x.__len__');
 
         p = get('9.13');
-        self.assertEqual(p.get_expression(), "r'asdf'");
+        this.assertEqual(p.get_expression(), "r'asdf'");
 
         p = get('9.17');
-        with self.assertRaises(ValueError) as ve:
+        with this.assertRaises(ValueError) as ve{
             p.get_expression();
-        } self.assertIn('is inside a code', str(ve.exception));
+        } this.assertIn('is inside a code', str(ve.exception));
 
         p = get('10.0');
-        self.assertEqual(p.get_expression(), '');
+        this.assertEqual(p.get_expression(), '');
 
         p = get('11.3');
-        self.assertEqual(p.get_expression(), '');
+        this.assertEqual(p.get_expression(), '');
 
         p = get('11.11');
-        self.assertEqual(p.get_expression(), 'False');
+        this.assertEqual(p.get_expression(), 'False');
 
 
 }

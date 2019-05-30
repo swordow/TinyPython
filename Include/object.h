@@ -865,16 +865,16 @@ PyAPI_FUNC(void) Py_IncRef(PyObject *);
 PyAPI_FUNC(void) Py_DecRef(PyObject *);
 
 /*
-_Py_NoneStruct is an object of undefined type which can be used in contexts
+_Py_NilStruct is an object of undefined type which can be used in contexts
 where NULL (nil) is not suitable (since NULL often means 'error').
 
 Don't forget to apply Py_INCREF() when returning this value!!!
 */
-PyAPI_DATA(PyObject) _Py_NoneStruct; /* Don't use this directly */
-#define Py_None (&_Py_NoneStruct)
+PyAPI_DATA(PyObject) _Py_NilStruct; /* Don't use this directly */
+#define Py_Nil (&_Py_NilStruct)
 
-/* Macro for returning Py_None from a function */
-#define Py_RETURN_NONE return Py_INCREF(Py_None), Py_None
+/* Macro for returning Py_Nil from a function */
+#define Py_RETURN_NIL return Py_INCREF(Py_Nil), Py_Nil
 
 /*
 Py_NotImplemented is a singleton used to signal that an operation is

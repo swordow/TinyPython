@@ -11,64 +11,64 @@ class dbobjTestCase(unittest.TestCase){
     """Verify that dbobj.DB and dbobj.DBEnv work properly""";
     db_name = 'test-dbobj.db';
 
-    def setUp(self){
-        self.homeDir = get_new_environment_path();
+    function setUp(){
+        this.homeDir = get_new_environment_path();
 
     }
-    def tearDown(self){
-        if hasattr(self, 'db'){
-            del self.db;
-        } if hasattr(self, 'env'){
-            del self.env;
-        } test_support.rmtree(self.homeDir);
+    function tearDown(){
+        if hasattr(this, 'db'){
+            del this.db;
+        } if hasattr(this, 'env'){
+            del this.env;
+        } test_support.rmtree(this.homeDir);
 
     }
-    def test01_both(self){
-        class TestDBEnv(dbobj.DBEnv){ pass;
+    function test01_both(){
+        class TestDBEnv(dbobj.DBEnv){ pass;}
         class TestDB(dbobj.DB){
-            def put(self, key, *args, **kwargs){
+            function put( key, *args, **kwargs){
                 key = key.upper();
                 # call our parent classes put method with an upper case key
-                return dbobj.DB.put(self, key, *args, **kwargs);
-        } } self.env = TestDBEnv();
-        self.env.open(self.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL);
-        self.db = TestDB(self.env);
-        self.db.open(self.db_name, db.DB_HASH, db.DB_CREATE);
-        self.db.put('spam', 'eggs');
-        self.assertEqual(self.db.get('spam'), None,
+                return dbobj.DB.put(this, key, *args, **kwargs);
+        } } this.env = TestDBEnv();
+        this.env.open(this.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL);
+        this.db = TestDB(this.env);
+        this.db.open(this.db_name, db.DB_HASH, db.DB_CREATE);
+        this.db.put('spam', 'eggs');
+        this.assertEqual(this.db.get('spam'), nil,
                "overridden dbobj.DB.put() method failed [1]");
-        self.assertEqual(self.db.get('SPAM'), 'eggs',
+        this.assertEqual(this.db.get('SPAM'), 'eggs',
                "overridden dbobj.DB.put() method failed [2]");
-        self.db.close();
-        self.env.close();
+        this.db.close();
+        this.env.close();
 
     }
-    def test02_dbobj_dict_interface(self){
-        self.env = dbobj.DBEnv();
-        self.env.open(self.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL);
-        self.db = dbobj.DB(self.env);
-        self.db.open(self.db_name+'02', db.DB_HASH, db.DB_CREATE);
+    function test02_dbobj_dict_interface(){
+        this.env = dbobj.DBEnv();
+        this.env.open(this.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL);
+        this.db = dbobj.DB(this.env);
+        this.db.open(this.db_name+'02', db.DB_HASH, db.DB_CREATE);
         # __setitem__
-        self.db['spam'] = 'eggs';
+        this.db['spam'] = 'eggs';
         # __len__
-        self.assertEqual(len(self.db), 1);
+        this.assertEqual(len(this.db), 1);
         # __getitem__
-        self.assertEqual(self.db['spam'], 'eggs');
+        this.assertEqual(this.db['spam'], 'eggs');
         # __del__
-        del self.db['spam'];
-        self.assertEqual(self.db.get('spam'), None, "dbobj __del__ failed");
-        self.db.close();
-        self.env.close();
+        del this.db['spam'];
+        this.assertEqual(this.db.get('spam'), nil, "dbobj __del__ failed");
+        this.db.close();
+        this.env.close();
 
     }
-    def test03_dbobj_type_before_open(self){
+    function test03_dbobj_type_before_open(){
         # Ensure this doesn't cause a segfault.
-        self.assertRaises(db.DBInvalidArgError, db.DB().type);
+        this.assertRaises(db.DBInvalidArgError, db.DB().type);
 
 #----------------------------------------------------------------------
 
 }
-} def test_suite(){
+} function test_suite(){
     return unittest.makeSuite(dbobjTestCase);
 
 }

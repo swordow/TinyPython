@@ -150,8 +150,8 @@ meth_get__doc__(PyCFunctionObject *m, void *closure)
 
     if (doc != NULL)
         return PyString_FromString(doc);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -179,7 +179,7 @@ meth_get__self__(PyCFunctionObject *m, void *closure)
     }
     self = m->m_self;
     if (self == NULL)
-        self = Py_None;
+        self = Py_Nil;
     Py_INCREF(self);
     return self;
 }

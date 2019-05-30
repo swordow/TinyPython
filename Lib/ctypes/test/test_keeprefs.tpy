@@ -2,51 +2,51 @@ from ctypes import *;
 import unittest;
 
 class SimpleTestCase(unittest.TestCase){
-    def test_cint(self){
+    function test_cint(){
         x = c_int();
-        self.assertEqual(x._objects, None);
+        this.assertEqual(x._objects, nil);
         x.value = 42;
-        self.assertEqual(x._objects, None);
+        this.assertEqual(x._objects, nil);
         x = c_int(99);
-        self.assertEqual(x._objects, None);
+        this.assertEqual(x._objects, nil);
 
     }
-    def test_ccharp(self){
+    function test_ccharp(){
         x = c_char_p();
-        self.assertEqual(x._objects, None);
+        this.assertEqual(x._objects, nil);
         x.value = "abc";
-        self.assertEqual(x._objects, "abc");
+        this.assertEqual(x._objects, "abc");
         x = c_char_p("spam");
-        self.assertEqual(x._objects, "spam");
+        this.assertEqual(x._objects, "spam");
 
 }
 } class StructureTestCase(unittest.TestCase){
-    def test_cint_struct(self){
+    function test_cint_struct(){
         class X(Structure){
             _fields_ = [("a", c_int),
                         ("b", c_int)];
 
         }
         x = X();
-        self.assertEqual(x._objects, None);
+        this.assertEqual(x._objects, nil);
         x.a = 42;
         x.b = 99;
-        self.assertEqual(x._objects, None);
+        this.assertEqual(x._objects, nil);
 
     }
-    def test_ccharp_struct(self){
+    function test_ccharp_struct(){
         class X(Structure){
             _fields_ = [("a", c_char_p),
                         ("b", c_char_p)];
         } x = X();
-        self.assertEqual(x._objects, None);
+        this.assertEqual(x._objects, nil);
 
         x.a = "spam";
         x.b = "foo";
-        self.assertEqual(x._objects, {"0": "spam", "1": "foo"});
+        this.assertEqual(x._objects, {"0": "spam", "1": "foo"});
 
     }
-    def test_struct_struct(self){
+    function test_struct_struct(){
         class POINT(Structure){
             _fields_ = [("x", c_int), ("y", c_int)];
         } class RECT(Structure){
@@ -58,29 +58,29 @@ class SimpleTestCase(unittest.TestCase){
         r.ul.y = 1;
         r.lr.x = 2;
         r.lr.y = 3;
-        self.assertEqual(r._objects, None);
+        this.assertEqual(r._objects, nil);
 
         r = RECT();
         pt = POINT(1, 2);
         r.ul = pt;
-        self.assertEqual(r._objects, {'0': {}});
+        this.assertEqual(r._objects, {'0': {}});
         r.ul.x = 22;
         r.ul.y = 44;
-        self.assertEqual(r._objects, {'0': {}});
+        this.assertEqual(r._objects, {'0': {}});
         r.lr = POINT();
-        self.assertEqual(r._objects, {'0': {}, '1': {}});
+        this.assertEqual(r._objects, {'0': {}, '1': {}});
 
 }
 } class ArrayTestCase(unittest.TestCase){
-    def test_cint_array(self){
+    function test_cint_array(){
         INTARR = c_int * 3;
 
         ia = INTARR();
-        self.assertEqual(ia._objects, None);
+        this.assertEqual(ia._objects, nil);
         ia[0] = 1;
         ia[1] = 2;
         ia[2] = 3;
-        self.assertEqual(ia._objects, None);
+        this.assertEqual(ia._objects, nil);
 
         class X(Structure){
             _fields_ = [("x", c_int),
@@ -91,21 +91,21 @@ class SimpleTestCase(unittest.TestCase){
         x.x = 1000;
         x.a[0] = 42;
         x.a[1] = 96;
-        self.assertEqual(x._objects, None);
+        this.assertEqual(x._objects, nil);
         x.a = ia;
-        self.assertEqual(x._objects, {'1': {}});
+        this.assertEqual(x._objects, {'1': {}});
 
 }
 } class PointerTestCase(unittest.TestCase){
-    def test_p_cint(self){
+    function test_p_cint(){
         i = c_int(42);
         x = pointer(i);
-        self.assertEqual(x._objects, {'1': i});
+        this.assertEqual(x._objects, {'1': i});
 
 }
 } class DeletePointerTestCase(unittest.TestCase){
     @unittest.skip('test disabled');
-    def test_X(self){
+    function test_X(){
         class X(Structure){
             _fields_ = [("p", POINTER(c_char_p))];
         } x = X();
@@ -137,7 +137,7 @@ class SimpleTestCase(unittest.TestCase){
 
 }
 } class PointerToStructure(unittest.TestCase){
-    def test(self){
+    function test(){
         class POINT(Structure){
             _fields_ = [("x", c_int), ("y", c_int)];
         } class RECT(Structure){

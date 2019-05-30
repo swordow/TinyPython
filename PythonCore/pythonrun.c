@@ -1013,7 +1013,7 @@ parse_syntax_error(PyObject *err, PyObject **message, const char **filename,
     v = PyObject_GetAttrString(err, "filename");
     if (!v)
         goto finally;
-    if (v == Py_None) {
+    if (v == Py_Nil) {
         Py_DECREF(v);
         *filename = NULL;
     }
@@ -1036,7 +1036,7 @@ parse_syntax_error(PyObject *err, PyObject **message, const char **filename,
     v = PyObject_GetAttrString(err, "offset");
     if (!v)
         goto finally;
-    if (v == Py_None) {
+    if (v == Py_Nil) {
         *offset = -1;
         Py_DECREF(v);
     } else {
@@ -1050,7 +1050,7 @@ parse_syntax_error(PyObject *err, PyObject **message, const char **filename,
     v = PyObject_GetAttrString(err, "text");
     if (!v)
         goto finally;
-    if (v == Py_None) {
+    if (v == Py_Nil) {
         Py_DECREF(v);
         *text = NULL;
     }
@@ -1122,7 +1122,7 @@ handle_system_exit(void)
     if (Py_FlushLine())
         PyErr_Clear();
     fflush(stdout);
-    if (value == NULL || value == Py_None)
+    if (value == NULL || value == Py_Nil)
         goto done;
     if (PyExceptionInstance_Check(value)) {
         /* The error code should be in the `code' attribute. */
@@ -1130,7 +1130,7 @@ handle_system_exit(void)
         if (code) {
             Py_DECREF(value);
             value = code;
-            if (value == Py_None)
+            if (value == Py_Nil)
                 goto done;
         }
         /* If we failed to dig out the 'code' attribute,
@@ -1140,7 +1140,7 @@ handle_system_exit(void)
         exitcode = (int)PyInt_AsLong(value);
     else {
         PyObject *sys_stderr = PySys_GetObject("stderr");
-        if (sys_stderr != NULL && sys_stderr != Py_None) {
+        if (sys_stderr != NULL && sys_stderr != Py_Nil) {
             PyFile_WriteObject(value, sys_stderr, Py_PRINT_RAW);
         } else {
             PyObject_Print(value, stderr, Py_PRINT_RAW);
@@ -1182,9 +1182,9 @@ PyErr_PrintEx(int set_sys_last_vars)
         PySys_SetObject("last_traceback", tb);
     }
     hook = PySys_GetObject("excepthook");
-    if (hook && hook != Py_None) {
+    if (hook && hook != Py_Nil) {
         PyObject *args = PyTuple_Pack(3,
-            exception, v, tb ? tb : Py_None);
+            exception, v, tb ? tb : Py_Nil);
         PyObject *result = PyEval_CallObject(hook, args);
         if (result == NULL) {
             PyObject *exception2, *v2, *tb2;
@@ -1197,11 +1197,11 @@ PyErr_PrintEx(int set_sys_last_vars)
                to be NULL. However PyErr_Display() can't
                tolerate NULLs, so just be safe. */
             if (exception2 == NULL) {
-                exception2 = Py_None;
+                exception2 = Py_Nil;
                 Py_INCREF(exception2);
             }
             if (v2 == NULL) {
-                v2 = Py_None;
+                v2 = Py_Nil;
                 Py_INCREF(v2);
             }
             if (Py_FlushLine())
@@ -1232,13 +1232,13 @@ PyErr_Display(PyObject *exception, PyObject *value, PyObject *tb)
     int err = 0;
     PyObject *f = PySys_GetObject("stderr");
     Py_INCREF(value);
-    if (f == NULL || f == Py_None)
+    if (f == NULL || f == Py_Nil)
         fprintf(stderr, "lost sys.stderr\n");
     else {
         if (Py_FlushLine())
             PyErr_Clear();
         fflush(stdout);
-        if (tb && tb != Py_None)
+        if (tb && tb != Py_Nil)
             err = PyTraceBack_Print(tb, f);
         if (err == 0 &&
             PyObject_HasAttrString(value, "print_file_and_line"))
@@ -1303,7 +1303,7 @@ PyErr_Display(PyObject *exception, PyObject *value, PyObject *tb)
         }
         else
             err = PyFile_WriteObject(exception, f, Py_PRINT_RAW);
-        if (err == 0 && (value != Py_None)) {
+        if (err == 0 && (value != Py_Nil)) {
             PyObject *s = PyObject_Str(value);
             /* only print colon if the str() of the
                object is not the empty string

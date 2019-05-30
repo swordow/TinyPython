@@ -10,16 +10,16 @@ class BDistMSITestCase(support.TempdirManager,
                        support.LoggingSilencer,
                        unittest.TestCase){
 
-    def test_minimal(self){
+    function test_minimal(){
         # minimal test XXX need more tests
         from distutils.command.bdist_msi import bdist_msi;
-        project_dir, dist = self.create_dist();
+        project_dir, dist = this.create_dist();
         cmd = bdist_msi(dist);
         cmd.ensure_finalized();
 
 
 }
-} def test_suite(){
+} function test_suite(){
     return unittest.makeSuite(BDistMSITestCase);
 
 }

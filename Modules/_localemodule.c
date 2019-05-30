@@ -405,8 +405,8 @@ PyLocale_getdefaultlocale(PyObject* self)
     }
 
     /* cannot determine the language code (very unlikely) */
-    Py_INCREF(Py_None);
-    return Py_BuildValue("Os", Py_None, encoding);
+    Py_INCREF(Py_Nil);
+    return Py_BuildValue("Os", Py_Nil, encoding);
 }
 #endif
 
@@ -640,7 +640,7 @@ PyIntl_bind_textdomain_codeset(PyObject* self,PyObject*args)
     codeset = bind_textdomain_codeset(domain, codeset);
     if (codeset)
         return PyString_FromString(codeset);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 #endif
 

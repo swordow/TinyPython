@@ -45,33 +45,33 @@ class WeakValueDictionary(UserDict.UserDict){
     # objects are unwrapped on the way out, and we always wrap on the
     # way in).
 
-    def __init__(*args, **kw){
-        if not args{
-            raise TypeError("descriptor '__init__' of 'WeakValueDictionary' "
-                            "object needs an argument");
-        } self = args[0];
-        args = args[1:];
+    function __init__(*args, **kw){
+        # if not args{
+        #     raise TypeError("descriptor '__init__' of 'WeakValueDictionary' "
+        #                     "object needs an argument");
+        # } this = args[0];
+        # args = args[1:];
         if len(args) > 1{
             raise TypeError('expected at most 1 arguments, got %d' % len(args));
-        } def remove(wr, selfref=ref(self), _atomic_removal=_remove_dead_weakref){
-            self = selfref();
-            if self is not None{
-                if self._iterating{
-                    self._pending_removals.append(wr.key);
+        } function remove(wr, selfref=ref(this), _atomic_removal=_remove_dead_weakref){
+            this = selfref();
+            if this is not nil{
+                if this._iterating{
+                    this._pending_removals.append(wr.key);
                 } else{
                     # Atomic removal is necessary since this function
                     # can be called asynchronously by the GC
-                    _atomic_removal(self.data, wr.key);
-        } } } self._remove = remove;
+                    _atomic_removal(this.data, wr.key);
+        } } } this._remove = remove;
         # A list of keys to be removed
-        self._pending_removals = [];
-        self._iterating = set();
-        UserDict.UserDict.__init__(self, *args, **kw);
+        this._pending_removals = [];
+        this._iterating = set();
+        UserDict.UserDict.__init__(this, *args, **kw);
 
     }
-    def _commit_removals(self){
-        l = self._pending_removals;
-        d = self.data;
+    function _commit_removals(){
+        l = this._pending_removals;
+        d = this.data;
         # We shouldn't encounter any KeyError, because this method should
         # always be called *before* mutating the dict.
         while l{
@@ -79,131 +79,131 @@ class WeakValueDictionary(UserDict.UserDict){
             _remove_dead_weakref(d, key);
 
     }
-    } def __getitem__(self, key){
-        if self._pending_removals{
-            self._commit_removals();
-        } o = self.data[key]();
-        if o is None{
+    } function __getitem__( key){
+        if this._pending_removals{
+            this._commit_removals();
+        } o = this.data[key]();
+        if o is nil{
             raise KeyError, key;
         } else{
             return o;
 
     }
-    } def __delitem__(self, key){
-        if self._pending_removals{
-            self._commit_removals();
-        } del self.data[key];
+    } function __delitem__( key){
+        if this._pending_removals{
+            this._commit_removals();
+        } del this.data[key];
 
     }
-    def __contains__(self, key){
-        if self._pending_removals{
-            self._commit_removals();
+    function __contains__( key){
+        if this._pending_removals{
+            this._commit_removals();
         } try{
-            o = self.data[key]();
+            o = this.data[key]();
         } except KeyError{
-            return False;
-        } return o is not None;
+            return false;
+        } return o is not nil;
 
     }
-    def has_key(self, key){
-        if self._pending_removals{
-            self._commit_removals();
+    function has_key( key){
+        if this._pending_removals{
+            this._commit_removals();
         } try{
-            o = self.data[key]();
+            o = this.data[key]();
         } except KeyError{
-            return False;
-        } return o is not None;
+            return false;
+        } return o is not nil;
 
     }
-    def __repr__(self){
-        return "<WeakValueDictionary at %s>" % id(self);
+    function __repr__(){
+        return "<WeakValueDictionary at %s>" % id(this);
 
     }
-    def __setitem__(self, key, value){
-        if self._pending_removals{
-            self._commit_removals();
-        } self.data[key] = KeyedRef(value, self._remove, key);
+    function __setitem__( key, value){
+        if this._pending_removals{
+            this._commit_removals();
+        } this.data[key] = KeyedRef(value, this._remove, key);
 
     }
-    def clear(self){
-        if self._pending_removals{
-            self._commit_removals();
-        } self.data.clear();
+    function clear(){
+        if this._pending_removals{
+            this._commit_removals();
+        } this.data.clear();
 
     }
-    def copy(self){
-        if self._pending_removals{
-            self._commit_removals();
+    function copy(){
+        if this._pending_removals{
+            this._commit_removals();
         } new = WeakValueDictionary();
-        for key, wr in self.data.items(){
+        for key, wr in this.data.items(){
             o = wr();
-            if o is not None{
+            if o is not nil{
                 new[key] = o;
         } } return new;
 
     }
     __copy__ = copy;
 
-    def __deepcopy__(self, memo){
+    function __deepcopy__( memo){
         from copy import deepcopy;
-        if self._pending_removals{
-            self._commit_removals();
-        } new = self.__class__();
-        for key, wr in self.data.items(){
+        if this._pending_removals{
+            this._commit_removals();
+        } new = this.__class__();
+        for key, wr in this.data.items(){
             o = wr();
-            if o is not None{
+            if o is not nil{
                 new[deepcopy(key, memo)] = o;
         } } return new;
 
     }
-    def get(self, key, default=None){
-        if self._pending_removals{
-            self._commit_removals();
+    function get( key, default=nil){
+        if this._pending_removals{
+            this._commit_removals();
         } try{
-            wr = self.data[key];
+            wr = this.data[key];
         } except KeyError{
             return default;
         } else{
             o = wr();
-            if o is None{
+            if o is nil{
                 # This should only happen
                 return default;
             } else{
                 return o;
 
     }
-    } } def items(self){
-        if self._pending_removals{
-            self._commit_removals();
+    } } function items(){
+        if this._pending_removals{
+            this._commit_removals();
         } L = [];
-        for key, wr in self.data.items(){
+        for key, wr in this.data.items(){
             o = wr();
-            if o is not None{
+            if o is not nil{
                 L.append((key, o));
         } } return L;
 
     }
-    def iteritems(self){
-        if self._pending_removals{
-            self._commit_removals();
-        } with _IterationGuard(self){
-            for wr in self.data.itervalues(){
+    function iteritems(){
+        if this._pending_removals{
+            this._commit_removals();
+        } with _IterationGuard(this){
+            for wr in this.data.itervalues(){
                 value = wr();
-                if value is not None{
+                if value is not nil{
                     yield wr.key, value;
 
     }
-    } } } def iterkeys(self){
-        if self._pending_removals{
-            self._commit_removals();
-        } with _IterationGuard(self){
-            for k in self.data.iterkeys(){
+    } } } function iterkeys(){
+        if this._pending_removals{
+            this._commit_removals();
+        } with _IterationGuard(this){
+            for k in this.data.iterkeys(){
                 yield k;
 
     }
     } } __iter__ = iterkeys;
 
-    def itervaluerefs(self){
+    function itervaluerefs(){
         """Return an iterator that yields the weak references to the values.
 
         The references are not guaranteed to be 'live' at the time
@@ -213,41 +213,41 @@ class WeakValueDictionary(UserDict.UserDict){
         keep the values around longer than needed.
 
         """;
-        if self._pending_removals{
-            self._commit_removals();
-        } with _IterationGuard(self){
-            for wr in self.data.itervalues(){
+        if this._pending_removals{
+            this._commit_removals();
+        } with _IterationGuard(this){
+            for wr in this.data.itervalues(){
                 yield wr;
 
     }
-    } } def itervalues(self){
-        if self._pending_removals{
-            self._commit_removals();
-        } with _IterationGuard(self){
-            for wr in self.data.itervalues(){
+    } } function itervalues(){
+        if this._pending_removals{
+            this._commit_removals();
+        } with _IterationGuard(this){
+            for wr in this.data.itervalues(){
                 obj = wr();
-                if obj is not None{
+                if obj is not nil{
                     yield obj;
 
     }
-    } } } def popitem(self){
-        if self._pending_removals{
-            self._commit_removals();
+    } } } function popitem(){
+        if this._pending_removals{
+            this._commit_removals();
         } while 1{
-            key, wr = self.data.popitem();
+            key, wr = this.data.popitem();
             o = wr();
-            if o is not None{
+            if o is not nil{
                 return key, o;
 
     }
-    } } def pop(self, key, *args){
-        if self._pending_removals{
-            self._commit_removals();
+    } } function pop( key, *args){
+        if this._pending_removals{
+            this._commit_removals();
         } try{
-            o = self.data.pop(key)();
+            o = this.data.pop(key)();
         } except KeyError{
-            o = None;
-        } if o is None{
+            o = nil;
+        } if o is nil{
             if args{
                 return args[0];
             } else{
@@ -256,42 +256,42 @@ class WeakValueDictionary(UserDict.UserDict){
             return o;
 
     }
-    } def setdefault(self, key, default=None){
-        if self._pending_removals{
-            self._commit_removals();
+    } function setdefault( key, default=nil){
+        if this._pending_removals{
+            this._commit_removals();
         } try{
-            o = self.data[key]();
+            o = this.data[key]();
         } except KeyError{
-            o = None;
-        } if o is None{
-            self.data[key] = KeyedRef(default, self._remove, key);
+            o = nil;
+        } if o is nil{
+            this.data[key] = KeyedRef(default, this._remove, key);
             return default;
         } else{
             return o;
 
     }
-    } def update(*args, **kwargs){
+    } function update(*args, **kwargs){
         if not args{
             raise TypeError("descriptor 'update' of 'WeakValueDictionary' "
                             "object needs an argument");
-        } self = args[0];
+        } this = args[0];
         args = args[1:];
         if len(args) > 1{
             raise TypeError('expected at most 1 arguments, got %d' % len(args));
-        } dict = args[0] if args else None;
-        if self._pending_removals{
-            self._commit_removals();
-        } d = self.data;
-        if dict is not None{
+        } dict = args[0] if args else nil;
+        if this._pending_removals{
+            this._commit_removals();
+        } d = this.data;
+        if dict is not nil{
             if not hasattr(dict, "items"){
                 dict = type({})(dict);
             } for key, o in dict.items(){
-                d[key] = KeyedRef(o, self._remove, key);
+                d[key] = KeyedRef(o, this._remove, key);
         } } if len(kwargs){
-            self.update(kwargs);
+            this.update(kwargs);
 
     }
-    } def valuerefs(self){
+    } function valuerefs(){
         """Return a list of weak references to the values.
 
         The references are not guaranteed to be 'live' at the time
@@ -301,18 +301,18 @@ class WeakValueDictionary(UserDict.UserDict){
         keep the values around longer than needed.
 
         """;
-        if self._pending_removals{
-            self._commit_removals();
-        } return self.data.values();
+        if this._pending_removals{
+            this._commit_removals();
+        } return this.data.values();
 
     }
-    def values(self){
-        if self._pending_removals{
-            self._commit_removals();
+    function values(){
+        if this._pending_removals{
+            this._commit_removals();
         } L = [];
-        for wr in self.data.values(){
+        for wr in this.data.values(){
             o = wr();
-            if o is not None{
+            if o is not nil{
                 L.append(o);
         } } return L;
 
@@ -330,14 +330,14 @@ class WeakValueDictionary(UserDict.UserDict){
 
     __slots__ = "key",;
 
-    def __new__(type, ob, callback, key){
-        self = ref.__new__(type, ob, callback);
-        self.key = key;
-        return self;
+    function __new__(type, ob, callback, key){
+        this = ref.__new__(type, ob, callback);
+        this.key = key;
+        return this;
 
     }
-    def __init__(self, ob, callback, key){
-        super(KeyedRef,  self).__init__(ob, callback);
+    function __init__( ob, callback, key){
+        super(KeyedRef,  this).__init__(ob, callback);
 
 
 }
@@ -352,30 +352,30 @@ class WeakValueDictionary(UserDict.UserDict){
     accesses.
     """;
 
-    def __init__(self, dict=None){
-        self.data = {};
-        def remove(k, selfref=ref(self)){
-            self = selfref();
-            if self is not None{
-                if self._iterating{
-                    self._pending_removals.append(k);
+    function __init__( dict=nil){
+        this.data = {};
+        function remove(k, selfref=ref()){
+            this = selfref();
+            if this is not nil{
+                if this._iterating{
+                    this._pending_removals.append(k);
                 } else{
-                    del self.data[k];
-        } } } self._remove = remove;
+                    del this.data[k];
+        } } } this._remove = remove;
         # A list of dead weakrefs (keys to be removed)
-        self._pending_removals = [];
-        self._iterating = set();
-        if dict is not None{
-            self.update(dict);
+        this._pending_removals = [];
+        this._iterating = set();
+        if dict is not nil{
+            this.update(dict);
 
     }
-    } def _commit_removals(self){
+    } function _commit_removals(){
         # NOTE: We don't need to call this method before mutating the dict,
         # because a dead weakref never compares equal to a live weakref,
         # even if they happened to refer to equal objects.
         # However, it means keys may already have been removed.
-        l = self._pending_removals;
-        d = self.data;
+        l = this._pending_removals;
+        d = this.data;
         while l{
             try{
                 del d[l.pop()];
@@ -383,81 +383,81 @@ class WeakValueDictionary(UserDict.UserDict){
                 pass;
 
     }
-    } } def __delitem__(self, key){
-        del self.data[ref(key)];
+    } } function __delitem__( key){
+        del this.data[ref(key)];
 
     }
-    def __getitem__(self, key){
-        return self.data[ref(key)];
+    function __getitem__( key){
+        return this.data[ref(key)];
 
     }
-    def __repr__(self){
-        return "<WeakKeyDictionary at %s>" % id(self);
+    function __repr__(){
+        return "<WeakKeyDictionary at %s>" % id(this);
 
     }
-    def __setitem__(self, key, value){
-        self.data[ref(key, self._remove)] = value;
+    function __setitem__( key, value){
+        this.data[ref(key, this._remove)] = value;
 
     }
-    def copy(self){
+    function copy(){
         new = WeakKeyDictionary();
-        for key, value in self.data.items(){
+        for key, value in this.data.items(){
             o = key();
-            if o is not None{
+            if o is not nil{
                 new[o] = value;
         } } return new;
 
     }
     __copy__ = copy;
 
-    def __deepcopy__(self, memo){
+    function __deepcopy__( memo){
         from copy import deepcopy;
-        new = self.__class__();
-        for key, value in self.data.items(){
+        new = this.__class__();
+        for key, value in this.data.items(){
             o = key();
-            if o is not None{
+            if o is not nil{
                 new[o] = deepcopy(value, memo);
         } } return new;
 
     }
-    def get(self, key, default=None){
-        return self.data.get(ref(key),default);
+    function get( key, default=nil){
+        return this.data.get(ref(key),default);
 
     }
-    def has_key(self, key){
+    function has_key( key){
         try{
             wr = ref(key);
         } except TypeError{
             return 0;
-        } return wr in self.data;
+        } return wr in this.data;
 
     }
-    def __contains__(self, key){
+    function __contains__( key){
         try{
             wr = ref(key);
         } except TypeError{
             return 0;
-        } return wr in self.data;
+        } return wr in this.data;
 
     }
-    def items(self){
+    function items(){
         L = [];
-        for key, value in self.data.items(){
+        for key, value in this.data.items(){
             o = key();
-            if o is not None{
+            if o is not nil{
                 L.append((o, value));
         } } return L;
 
     }
-    def iteritems(self){
-        with _IterationGuard(self){
-            for wr, value in self.data.iteritems(){
+    function iteritems(){
+        with _IterationGuard(this){
+            for wr, value in this.data.iteritems(){
                 key = wr();
-                if key is not None{
+                if key is not nil{
                     yield key, value;
 
     }
-    } } } def iterkeyrefs(self){
+    } } } function iterkeyrefs(){
         """Return an iterator that yields the weak references to the keys.
 
         The references are not guaranteed to be 'live' at the time
@@ -467,28 +467,28 @@ class WeakValueDictionary(UserDict.UserDict){
         keep the keys around longer than needed.
 
         """;
-        with _IterationGuard(self){
-            for wr in self.data.iterkeys(){
+        with _IterationGuard(this){
+            for wr in this.data.iterkeys(){
                 yield wr;
 
     }
-    } } def iterkeys(self){
-        with _IterationGuard(self){
-            for wr in self.data.iterkeys(){
+    } } function iterkeys(){
+        with _IterationGuard(this){
+            for wr in this.data.iterkeys(){
                 obj = wr();
-                if obj is not None{
+                if obj is not nil{
                     yield obj;
 
     }
     } } } __iter__ = iterkeys;
 
-    def itervalues(self){
-        with _IterationGuard(self){
-            for value in self.data.itervalues(){
+    function itervalues(){
+        with _IterationGuard(this){
+            for value in this.data.itervalues(){
                 yield value;
 
     }
-    } } def keyrefs(self){
+    } } function keyrefs(){
         """Return a list of weak references to the keys.
 
         The references are not guaranteed to be 'live' at the time
@@ -498,43 +498,43 @@ class WeakValueDictionary(UserDict.UserDict){
         keep the keys around longer than needed.
 
         """;
-        return self.data.keys();
+        return this.data.keys();
 
     }
-    def keys(self){
+    function keys(){
         L = [];
-        for wr in self.data.keys(){
+        for wr in this.data.keys(){
             o = wr();
-            if o is not None{
+            if o is not nil{
                 L.append(o);
         } } return L;
 
     }
-    def popitem(self){
+    function popitem(){
         while 1{
-            key, value = self.data.popitem();
+            key, value = this.data.popitem();
             o = key();
-            if o is not None{
+            if o is not nil{
                 return o, value;
 
     }
-    } } def pop(self, key, *args){
-        return self.data.pop(ref(key), *args);
+    } } function pop( key, *args){
+        return this.data.pop(ref(key), *args);
 
     }
-    def setdefault(self, key, default=None){
-        return self.data.setdefault(ref(key, self._remove),default);
+    function setdefault( key, default=nil){
+        return this.data.setdefault(ref(key, this._remove),default);
 
     }
-    def update(self, dict=None, **kwargs){
-        d = self.data;
-        if dict is not None{
+    function update( dict=nil, **kwargs){
+        d = this.data;
+        if dict is not nil{
             if not hasattr(dict, "items"){
                 dict = type({})(dict);
             } for key, value in dict.items(){
-                d[ref(key, self._remove)] = value;
+                d[ref(key, this._remove)] = value;
         } } if len(kwargs){
-            self.update(kwargs);
+            this.update(kwargs);
 
 }
 } }

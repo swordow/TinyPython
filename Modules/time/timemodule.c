@@ -208,8 +208,8 @@ time_sleep(PyObject *self, PyObject *args)
         return NULL;
     if (floatsleep(secs) != 0)
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(sleep_doc,
@@ -305,7 +305,7 @@ parse_time_double_args(PyObject *args, char *format, double *pwhen)
 
     if (!PyArg_ParseTuple(args, format, &ot))
         return 0;
-    if (ot == NULL || ot == Py_None)
+    if (ot == NULL || ot == Py_Nil)
         *pwhen = floattime();
     else {
         double when = PyFloat_AsDouble(ot);
@@ -696,7 +696,7 @@ time_ctime(PyObject *self, PyObject *args)
 
     if (!PyArg_UnpackTuple(args, "ctime", 0, 1, &ot))
         return NULL;
-    if (ot == NULL || ot == Py_None)
+    if (ot == NULL || ot == Py_Nil)
         tt = time(NULL);
     else {
         double dt = PyFloat_AsDouble(ot);
@@ -770,8 +770,8 @@ time_tzset(PyObject *self, PyObject *unused)
     inittimezone(m);
     Py_DECREF(m);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(tzset_doc,

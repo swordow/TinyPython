@@ -16,7 +16,7 @@ STRICT_FRAMEWORK_RE = re.compile(r"""(?x)
 )$
 """);
 
-def framework_info(filename){
+function framework_info(filename){
     """
     A framework name can take one of the following four forms:
         Location/Name.framework/Versions/SomeVersion/Name_Suffix
@@ -38,12 +38,12 @@ def framework_info(filename){
     """;
     is_framework = STRICT_FRAMEWORK_RE.match(filename);
     if not is_framework{
-        return None;
+        return nil;
     } return is_framework.groupdict();
 
 }
-def test_framework_info(){
-    def d(location=None, name=None, shortname=None, version=None, suffix=None){
+function test_framework_info(){
+    function d(location=nil, name=nil, shortname=nil, version=nil, suffix=nil){
         return dict(
             location=location,
             name=name,
@@ -51,14 +51,14 @@ def test_framework_info(){
             version=version,
             suffix=suffix
         );
-    } assert framework_info('completely/invalid') is None;
-    assert framework_info('completely/invalid/_debug') is None;
-    assert framework_info('P/F.framework') is None;
-    assert framework_info('P/F.framework/_debug') is None;
+    } assert framework_info('completely/invalid') is nil;
+    assert framework_info('completely/invalid/_debug') is nil;
+    assert framework_info('P/F.framework') is nil;
+    assert framework_info('P/F.framework/_debug') is nil;
     assert framework_info('P/F.framework/F') == d('P', 'F.framework/F', 'F');
     assert framework_info('P/F.framework/F_debug') == d('P', 'F.framework/F_debug', 'F', suffix='debug');
-    assert framework_info('P/F.framework/Versions') is None;
-    assert framework_info('P/F.framework/Versions/A') is None;
+    assert framework_info('P/F.framework/Versions') is nil;
+    assert framework_info('P/F.framework/Versions/A') is nil;
     assert framework_info('P/F.framework/Versions/A/F') == d('P', 'F.framework/Versions/A/F', 'F', 'A');
     assert framework_info('P/F.framework/Versions/A/F_debug') == d('P', 'F.framework/Versions/A/F_debug', 'F', 'A', 'debug');
 

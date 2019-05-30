@@ -11,63 +11,63 @@ class Error(Exception){
     pass;
 
 }
-def _doatime(self, cb_type, data){
-    if ((data[0] * 60) + data[1]) * 75 + data[2] > self.end{
+function _doatime( cb_type, data){
+    if ((data[0] * 60) + data[1]) * 75 + data[2] > this.end{
 ##              print 'done with list entry', repr(self.listindex)
         raise _Stop;
-    } func, arg = self.callbacks[cb_type];
+    } func, arg = this.callbacks[cb_type];
     if func{
         func(arg, cb_type, data);
 
 }
-} def _dopnum(self, cb_type, data){
-    if data > self.end{
+} function _dopnum( cb_type, data){
+    if data > this.end{
 ##              print 'done with list entry', repr(self.listindex)
         raise _Stop;
-    } func, arg = self.callbacks[cb_type];
+    } func, arg = this.callbacks[cb_type];
     if func{
         func(arg, cb_type, data);
 
 }
 } class Readcd{
-    def __init__(self, *arg){
+    function __init__( *arg){
         if len(arg) == 0{
-            self.player = cd.open();
+            this.player = cd.open();
         } elif len(arg) == 1{
-            self.player = cd.open(arg[0]);
+            this.player = cd.open(arg[0]);
         } elif len(arg) == 2{
-            self.player = cd.open(arg[0], arg[1]);
+            this.player = cd.open(arg[0], arg[1]);
         } else{
             raise Error, 'bad __init__ call';
-        } self.list = [];
-        self.callbacks = [(None, None)] * 8;
-        self.parser = cd.createparser();
-        self.playing = 0;
-        self.end = 0;
-        self.status = None;
-        self.trackinfo = None;
+        } this.list = [];
+        this.callbacks = [(nil, nil)] * 8;
+        this.parser = cd.createparser();
+        this.playing = 0;
+        this.end = 0;
+        this.status = nil;
+        this.trackinfo = nil;
 
     }
-    def eject(self){
-        self.player.eject();
-        self.list = [];
-        self.end = 0;
-        self.listindex = 0;
-        self.status = None;
-        self.trackinfo = None;
-        if self.playing{
+    function eject(){
+        this.player.eject();
+        this.list = [];
+        this.end = 0;
+        this.listindex = 0;
+        this.status = nil;
+        this.trackinfo = nil;
+        if this.playing{
 ##                      print 'stop playing from eject'
             raise _Stop;
 
     }
-    } def pmsf2msf(self, track, min, sec, frame){
-        if not self.status{
-            self.cachestatus();
-        } if track < self.status[5] or track > self.status[6]{
+    } function pmsf2msf( track, min, sec, frame){
+        if not this.status{
+            this.cachestatus();
+        } if track < this.status[5] or track > this.status[6]{
             raise Error, 'track number out of range';
-        } if not self.trackinfo{
-            self.cacheinfo();
-        } start, total = self.trackinfo[track];
+        } if not this.trackinfo{
+            this.cacheinfo();
+        } start, total = this.trackinfo[track];
         start = ((start[0] * 60) + start[1]) * 75 + start[2];
         total = ((total[0] * 60) + total[1]) * 75 + total[2];
         block = ((min * 60) + sec) * 75 + frame;
@@ -79,188 +79,188 @@ def _doatime(self, cb_type, data){
         return min, sec, frame;
 
     }
-    def reset(self){
-        self.list = [];
+    function reset(){
+        this.list = [];
 
     }
-    def appendtrack(self, track){
-        self.appendstretch(track, track);
+    function appendtrack( track){
+        this.appendstretch(track, track);
 
     }
-    def appendstretch(self, start, end){
-        if not self.status{
-            self.cachestatus();
+    function appendstretch( start, end){
+        if not this.status{
+            this.cachestatus();
         } if not start{
             start = 1;
         } if not end{
-            end = self.status[6];
+            end = this.status[6];
         } if type(end) == type(0){
-            if end < self.status[5] or end > self.status[6]{
+            if end < this.status[5] or end > this.status[6]{
                 raise Error, 'range error';
         } } else{
             l = len(end);
             if l == 4{
                 prog, min, sec, frame = end;
-                if prog < self.status[5] or prog > self.status[6]{
+                if prog < this.status[5] or prog > this.status[6]{
                     raise Error, 'range error';
-                } end = self.pmsf2msf(prog, min, sec, frame);
+                } end = this.pmsf2msf(prog, min, sec, frame);
             } elif l != 3{
                 raise Error, 'syntax error';
         } } if type(start) == type(0){
-            if start < self.status[5] or start > self.status[6]{
+            if start < this.status[5] or start > this.status[6]{
                 raise Error, 'range error';
-            } if len(self.list) > 0{
-                s, e = self.list[-1];
+            } if len(this.list) > 0{
+                s, e = this.list[-1];
                 if type(e) == type(0){
                     if start == e+1{
                         start = s;
-                        del self.list[-1];
+                        del this.list[-1];
         } } } } else{
             l = len(start);
             if l == 4{
                 prog, min, sec, frame = start;
-                if prog < self.status[5] or prog > self.status[6]{
+                if prog < this.status[5] or prog > this.status[6]{
                     raise Error, 'range error';
-                } start = self.pmsf2msf(prog, min, sec, frame);
+                } start = this.pmsf2msf(prog, min, sec, frame);
             } elif l != 3{
                 raise Error, 'syntax error';
-        } } self.list.append((start, end));
+        } } this.list.append((start, end));
 
     }
-    def settracks(self, list){
-        self.list = [];
+    function settracks( list){
+        this.list = [];
         for track in list{
-            self.appendtrack(track);
+            this.appendtrack(track);
 
     }
-    } def setcallback(self, cb_type, func, arg){
+    } function setcallback( cb_type, func, arg){
         if cb_type < 0 or cb_type >= 8{
             raise Error, 'type out of range';
-        } self.callbacks[cb_type] = (func, arg);
-        if self.playing{
-            start, end = self.list[self.listindex];
+        } this.callbacks[cb_type] = (func, arg);
+        if this.playing{
+            start, end = this.list[this.listindex];
             if type(end) == type(0){
                 if cb_type != CD.PNUM{
-                    self.parser.setcallback(cb_type, func, arg);
+                    this.parser.setcallback(cb_type, func, arg);
             } } else{
                 if cb_type != CD.ATIME{
-                    self.parser.setcallback(cb_type, func, arg);
+                    this.parser.setcallback(cb_type, func, arg);
 
     }
-    } } } def removecallback(self, cb_type){
+    } } } function removecallback( cb_type){
         if cb_type < 0 or cb_type >= 8{
             raise Error, 'type out of range';
-        } self.callbacks[cb_type] = (None, None);
-        if self.playing{
-            start, end = self.list[self.listindex];
+        } this.callbacks[cb_type] = (nil, nil);
+        if this.playing{
+            start, end = this.list[this.listindex];
             if type(end) == type(0){
                 if cb_type != CD.PNUM{
-                    self.parser.removecallback(cb_type);
+                    this.parser.removecallback(cb_type);
             } } else{
                 if cb_type != CD.ATIME{
-                    self.parser.removecallback(cb_type);
+                    this.parser.removecallback(cb_type);
 
     }
-    } } } def gettrackinfo(self, *arg){
-        if not self.status{
-            self.cachestatus();
-        } if not self.trackinfo{
-            self.cacheinfo();
+    } } } function gettrackinfo( *arg){
+        if not this.status{
+            this.cachestatus();
+        } if not this.trackinfo{
+            this.cacheinfo();
         } if len(arg) == 0{
-            return self.trackinfo[self.status[5]:self.status[6]+1];
+            return this.trackinfo[this.status[5]:this.status[6]+1];
         } result = [];
         for i in arg{
-            if i < self.status[5] or i > self.status[6]{
+            if i < this.status[5] or i > this.status[6]{
                 raise Error, 'range error';
-            } result.append(self.trackinfo[i]);
+            } result.append(this.trackinfo[i]);
         } return result;
 
     }
-    def cacheinfo(self){
-        if not self.status{
-            self.cachestatus();
-        } self.trackinfo = [];
-        for i in range(self.status[5]){
-            self.trackinfo.append(None);
-        } for i in range(self.status[5], self.status[6]+1){
-            self.trackinfo.append(self.player.gettrackinfo(i));
+    function cacheinfo(){
+        if not this.status{
+            this.cachestatus();
+        } this.trackinfo = [];
+        for i in range(this.status[5]){
+            this.trackinfo.append(nil);
+        } for i in range(this.status[5], this.status[6]+1){
+            this.trackinfo.append(this.player.gettrackinfo(i));
 
     }
-    } def cachestatus(self){
-        self.status = self.player.getstatus();
-        if self.status[0] == CD.NODISC{
-            self.status = None;
+    } function cachestatus(){
+        this.status = this.player.getstatus();
+        if this.status[0] == CD.NODISC{
+            this.status = nil;
             raise Error, 'no disc in player';
 
     }
-    } def getstatus(self){
-        return self.player.getstatus();
+    } function getstatus(){
+        return this.player.getstatus();
 
     }
-    def play(self){
-        if not self.status{
-            self.cachestatus();
-        } size = self.player.bestreadsize();
-        self.listindex = 0;
-        self.playing = 0;
+    function play(){
+        if not this.status{
+            this.cachestatus();
+        } size = this.player.bestreadsize();
+        this.listindex = 0;
+        this.playing = 0;
         for i in range(8){
-            func, arg = self.callbacks[i];
+            func, arg = this.callbacks[i];
             if func{
-                self.parser.setcallback(i, func, arg);
+                this.parser.setcallback(i, func, arg);
             } else{
-                self.parser.removecallback(i);
-        } } if len(self.list) == 0{
-            for i in range(self.status[5], self.status[6]+1){
-                self.appendtrack(i);
+                this.parser.removecallback(i);
+        } } if len(this.list) == 0{
+            for i in range(this.status[5], this.status[6]+1){
+                this.appendtrack(i);
         } } try{
             while 1{
-                if not self.playing{
-                    if self.listindex >= len(self.list){
+                if not this.playing{
+                    if this.listindex >= len(this.list){
                         return;
-                    } start, end = self.list[self.listindex];
+                    } start, end = this.list[this.listindex];
                     if type(start) == type(0){
-                        dummy = self.player.seektrack(
+                        dummy = this.player.seektrack(
                                 start);
                     } else{
                         min, sec, frame = start;
-                        dummy = self.player.seek(
+                        dummy = this.player.seek(
                                 min, sec, frame);
                     } if type(end) == type(0){
-                        self.parser.setcallback(
-                                CD.PNUM, _dopnum, self);
-                        self.end = end;
+                        this.parser.setcallback(
+                                CD.PNUM, _dopnum, this);
+                        this.end = end;
                         func, arg = \
-                              self.callbacks[CD.ATIME];
+                              this.callbacks[CD.ATIME];
                         if func{
-                            self.parser.setcallback(CD.ATIME, func, arg);
+                            this.parser.setcallback(CD.ATIME, func, arg);
                         } else{
-                            self.parser.removecallback(CD.ATIME);
+                            this.parser.removecallback(CD.ATIME);
                     } } else{
                         min, sec, frame = end;
-                        self.parser.setcallback(
+                        this.parser.setcallback(
                                 CD.ATIME, _doatime,
-                                self);
-                        self.end = (min * 60 + sec) * \
+                                this);
+                        this.end = (min * 60 + sec) * \
                                    75 + frame;
                         func, arg = \
-                              self.callbacks[CD.PNUM];
+                              this.callbacks[CD.PNUM];
                         if func{
-                            self.parser.setcallback(CD.PNUM, func, arg);
+                            this.parser.setcallback(CD.PNUM, func, arg);
                         } else{
-                            self.parser.removecallback(CD.PNUM);
-                    } } self.playing = 1;
-                } data = self.player.readda(size);
+                            this.parser.removecallback(CD.PNUM);
+                    } } this.playing = 1;
+                } data = this.player.readda(size);
                 if data == ''{
-                    self.playing = 0;
-                    self.listindex = self.listindex + 1;
+                    this.playing = 0;
+                    this.listindex = this.listindex + 1;
                     continue;
                 } try{
-                    self.parser.parseframe(data);
+                    this.parser.parseframe(data);
                 } except _Stop{
-                    self.playing = 0;
-                    self.listindex = self.listindex + 1;
+                    this.playing = 0;
+                    this.listindex = this.listindex + 1;
         } } } finally{
-            self.playing = 0;
+            this.playing = 0;
 
 }
 } }

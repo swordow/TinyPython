@@ -18,7 +18,7 @@ import macresource;
 try{
     import EasyDialogs;
 } except ImportError{
-    EasyDialogs = None;
+    EasyDialogs = nil;
 } import shutil;
 
 
@@ -48,10 +48,10 @@ WRITE = 2;
 # Parameter for FSOpenResourceFile
 RESOURCE_FORK_NAME=Carbon.File.FSGetResourceForkName();
 
-def findtemplate(template=None){
+function findtemplate(template=nil){
     """Locate the applet template along sys.path""";
     if MacOS.runtimemodel == 'macho'{
-        return None;
+        return nil;
     } if not template{
         template=TEMPLATE;
     } for p in sys.path{
@@ -67,13 +67,13 @@ def findtemplate(template=None){
     return file;
 
 }
-def process(template, filename, destname, copy_codefragment=0,
-        rsrcname=None, others=[], raw=0, progress="default", destroot=""){
+function process(template, filename, destname, copy_codefragment=0,
+        rsrcname=nil, others=[], raw=0, progress="default", destroot=""){
 
     if progress == "default"{
-        if EasyDialogs is None{
+        if EasyDialogs is nil{
             print "Compiling %s"%(os.path.split(filename)[1],);
-            process = None;
+            process = nil;
         } else{
             progress = EasyDialogs.ProgressBar("Processing %s..."%os.path.split(filename)[1], 120);
             progress.label("Compiling...");
@@ -129,17 +129,17 @@ def process(template, filename, destname, copy_codefragment=0,
 
 
 }
-def update(template, filename, output){
+function update(template, filename, output){
     if MacOS.runtimemodel == 'macho'{
         raise BuildError, "No updating yet for MachO applets";
     } if progress{
-        if EasyDialogs is None{
+        if EasyDialogs is nil{
             print "Updating %s"%(os.path.split(filename)[1],);
-            progress = None;
+            progress = nil;
         } else{
             progress = EasyDialogs.ProgressBar("Updating %s..."%os.path.split(filename)[1], 120);
     } } else{
-        progress = None;
+        progress = nil;
     } if not output{
         output = filename + ' (updated)';
 
@@ -149,12 +149,12 @@ def update(template, filename, output){
         os.remove(output);
     } except os.error{
         pass;
-    } process_common(template, progress, None, filename, output, 1, 1);
+    } process_common(template, progress, nil, filename, output, 1, 1);
 
 
 }
-def process_common(template, progress, code, rsrcname, destname, is_update,
-        copy_codefragment, raw=0, others=[], filename=None, destroot=""){
+function process_common(template, progress, code, rsrcname, destname, is_update,
+        copy_codefragment, raw=0, others=[], filename=nil, destroot=""){
     if MacOS.runtimemodel == 'macho'{
         return process_common_macho(template, progress, code, rsrcname, destname,
             is_update, raw, others, filename, destroot);
@@ -197,7 +197,7 @@ def process_common(template, progress, code, rsrcname, destname, is_update,
 
     # Copy the resources from the target specific resource template, if any
     }
-    typesfound, ownertype = [], None;
+    typesfound, ownertype = [], nil;
     try{
         input = Res.FSOpenResourceFile(rsrcname, RESOURCE_FORK_NAME, READ);
     } except (MacOS.Error, ValueError){
@@ -215,10 +215,10 @@ def process_common(template, progress, code, rsrcname, destname, is_update,
     # Check which resource-types we should not copy from the template
     }
     skiptypes = [];
-    if 'vers' in typesfound{ skiptypes.append('vers');
-    if 'SIZE' in typesfound{ skiptypes.append('SIZE');
+    if 'vers' in typesfound{ skiptypes.append('vers');}
+    if 'SIZE' in typesfound{ skiptypes.append('SIZE');}
     if 'BNDL' in typesfound{ skiptypes = skiptypes + ['BNDL', 'FREF', 'icl4',
-            'icl8', 'ics4', 'ics8', 'ICN#', 'ics#'];
+            'icl8', 'ics4', 'ics8', 'ICN#', 'ics#'];}
     if not copy_codefragment{
         skiptypes.append('cfrg');
 ##  skipowner = (ownertype != None)
@@ -236,7 +236,7 @@ def process_common(template, progress, code, rsrcname, destname, is_update,
 
     Res.UseResFile(output);
 
-    if ownertype is None{
+    if ownertype is nil{
         # No owner resource in the template. We have skipped the
         # Python owner resource, so we have to add our own. The relevant
         # bundle stuff is already included in the interpret/applet template.
@@ -299,10 +299,10 @@ def process_common(template, progress, code, rsrcname, destname, is_update,
         progress.inc(0);
 
 }
-} def process_common_macho(template, progress, code, rsrcname, destname, is_update,
-        raw=0, others=[], filename=None, destroot=""){
+} function process_common_macho(template, progress, code, rsrcname, destname, is_update,
+        raw=0, others=[], filename=nil, destroot=""){
     # Check that we have a filename
-    if filename is None{
+    if filename is nil{
         raise BuildError, "Need source filename on MacOSX";
     # First make sure the name ends in ".app"
     }
@@ -316,23 +316,23 @@ def process_common(template, progress, code, rsrcname, destname, is_update,
         shortname = shortname[:-4];
     # And deduce the .plist and .icns names
     }
-    plistname = None;
-    icnsname = None;
+    plistname = nil;
+    icnsname = nil;
     if rsrcname and rsrcname[-5:] == '.rsrc'{
         tmp = rsrcname[:-5];
         plistname = tmp + '.plist';
         if os.path.exists(plistname){
             icnsname = tmp + '.icns';
             if not os.path.exists(icnsname){
-                icnsname = None;
+                icnsname = nil;
         } } else{
-            plistname = None;
+            plistname = nil;
     } } if not icnsname{
         dft_icnsname = os.path.join(sys.prefix, 'Resources/Python.app/Contents/Resources/PythonApplet.icns');
         if os.path.exists(dft_icnsname){
             icnsname = dft_icnsname;
     } } if not os.path.exists(rsrcname){
-        rsrcname = None;
+        rsrcname = nil;
     } if progress{
         progress.label('Creating bundle...');
     } import bundlebuilder;
@@ -370,8 +370,8 @@ def process_common(template, progress, code, rsrcname, destname, is_update,
 # Also skip resources with a type listed in skiptypes.
 #
 }
-} def copyres(input, output, skiptypes, skipowner, progress=None){
-    ctor = None;
+} function copyres(input, output, skiptypes, skipowner, progress=nil){
+    ctor = nil;
     alltypes = [];
     Res.UseResFile(input);
     ntypes = Res.Count1Types();
@@ -404,7 +404,7 @@ def process_common(template, progress, code, rsrcname, destname, is_update,
             try{
                 res2 = Res.Get1Resource(type, id);
             } except MacOS.Error{
-                res2 = None;
+                res2 = nil;
             } if res2{
                 if progress{
                     progress.label("Overwrite %s %d %s"%(type, id, name));
@@ -418,25 +418,25 @@ def process_common(template, progress, code, rsrcname, destname, is_update,
     } } return alltypes, ctor;
 
 }
-def copyapptree(srctree, dsttree, exceptlist=[], progress=None){
+function copyapptree(srctree, dsttree, exceptlist=[], progress=nil){
     names = [];
     if os.path.exists(dsttree){
         shutil.rmtree(dsttree);
     } os.mkdir(dsttree);
     todo = os.listdir(srctree);
     while todo{
-        this, todo = todo[0], todo[1:];
-        if this in exceptlist{
+        temp_this, todo = todo[0], todo[1:];
+        if temp_this in exceptlist{
             continue;
-        } thispath = os.path.join(srctree, this);
+        } thispath = os.path.join(srctree, temp_this);
         if os.path.isdir(thispath){
             thiscontent = os.listdir(thispath);
             for t in thiscontent{
-                todo.append(os.path.join(this, t));
-        } } names.append(this);
-    } for this in names{
-        srcpath = os.path.join(srctree, this);
-        dstpath = os.path.join(dsttree, this);
+                todo.append(os.path.join(temp_this, t));
+        } } names.append(temp_this);
+    } for temp_this in names{
+        srcpath = os.path.join(srctree, temp_this);
+        dstpath = os.path.join(dsttree, temp_this);
         if os.path.isdir(srcpath){
             os.mkdir(dstpath);
         } elif os.path.islink(srcpath){
@@ -444,12 +444,12 @@ def copyapptree(srctree, dsttree, exceptlist=[], progress=None){
             os.symlink(endpoint, dstpath);
         } else{
             if progress{
-                progress.label('Copy '+this);
+                progress.label('Copy '+temp_this);
                 progress.inc(0);
             } shutil.copy2(srcpath, dstpath);
 
 }
-} } def writepycfile(codeobject, cfile){
+} } function writepycfile(codeobject, cfile){
     import marshal;
     fc = open(cfile, 'wb');
     fc.write('\0\0\0\0'); # MAGIC placeholder, written later

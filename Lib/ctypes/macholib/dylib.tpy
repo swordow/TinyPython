@@ -16,7 +16,7 @@ DYLIB_RE = re.compile(r"""(?x)
 )
 """);
 
-def dylib_info(filename){
+function dylib_info(filename){
     """
     A dylib name can take one of the following four forms:
         Location/Name.SomeVersion_Suffix.dylib
@@ -38,13 +38,13 @@ def dylib_info(filename){
     """;
     is_dylib = DYLIB_RE.match(filename);
     if not is_dylib{
-        return None;
+        return nil;
     } return is_dylib.groupdict();
 
 
 }
-def test_dylib_info(){
-    def d(location=None, name=None, shortname=None, version=None, suffix=None){
+function test_dylib_info(){
+    function d(location=nil, name=nil, shortname=nil, version=nil, suffix=nil){
         return dict(
             location=location,
             name=name,
@@ -52,8 +52,8 @@ def test_dylib_info(){
             version=version,
             suffix=suffix
         );
-    } assert dylib_info('completely/invalid') is None;
-    assert dylib_info('completely/invalide_debug') is None;
+    } assert dylib_info('completely/invalid') is nil;
+    assert dylib_info('completely/invalide_debug') is nil;
     assert dylib_info('P/Foo.dylib') == d('P', 'Foo.dylib', 'Foo');
     assert dylib_info('P/Foo_debug.dylib') == d('P', 'Foo_debug.dylib', 'Foo', suffix='debug');
     assert dylib_info('P/Foo.A.dylib') == d('P', 'Foo.A.dylib', 'Foo', 'A');

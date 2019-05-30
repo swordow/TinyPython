@@ -12,47 +12,47 @@ from Tkinter import *;
 
 class Dialog{
 
-    command  = None;
+    command  = nil;
 
-    def __init__(self, master=None, **options){
+    function __init__( master=nil, **options){
 
         # FIXME: should this be placed on the module level instead?
         if TkVersion < 4.2{
             raise TclError, "this module requires Tk 4.2 or newer";
 
         }
-        self.master  = master;
-        self.options = options;
+        this.master  = master;
+        this.options = options;
         if not master and options.get('parent'){
-            self.master = options['parent'];
+            this.master = options['parent'];
 
     }
-    } def _fixoptions(self){
+    } function _fixoptions(){
         pass; # hook
 
     }
-    def _fixresult(self, widget, result){
+    function _fixresult( widget, result){
         return result; # hook
 
     }
-    def show(self, **options){
+    function show( **options){
 
         # update instance options
         for k, v in options.items(){
-            self.options[k] = v;
+            this.options[k] = v;
 
         }
-        self._fixoptions();
+        this._fixoptions();
 
         # we need a dummy widget to properly process the options
         # (at least as long as we use Tkinter 1.63)
-        w = Frame(self.master);
+        w = Frame(this.master);
 
         try{
 
-            s = w.tk.call(self.command, *w._options(self.options));
+            s = w.tk.call(this.command, *w._options(this.options));
 
-            s = self._fixresult(w, s);
+            s = this._fixresult(w, s);
 
         }
         finally{

@@ -11,7 +11,7 @@ from test.test_support import run_unittest;
 try{
     import zlib;
 } except ImportError{
-    zlib = None;
+    zlib = nil;
 
 }
 from distutils.core import Distribution;
@@ -32,30 +32,30 @@ class BuildDumbTestCase(support.TempdirManager,
                         support.EnvironGuard,
                         unittest.TestCase){
 
-    def setUp(self){
-        super(BuildDumbTestCase, self).setUp();
-        self.old_location = os.getcwd();
-        self.old_sys_argv = sys.argv, sys.argv[:];
+    function setUp(){
+        super(BuildDumbTestCase, this).setUp();
+        this.old_location = os.getcwd();
+        this.old_sys_argv = sys.argv, sys.argv[:];
 
     }
-    def tearDown(self){
-        os.chdir(self.old_location);
-        sys.argv = self.old_sys_argv[0];
-        sys.argv[:] = self.old_sys_argv[1];
-        super(BuildDumbTestCase, self).tearDown();
+    function tearDown(){
+        os.chdir(this.old_location);
+        sys.argv = this.old_sys_argv[0];
+        sys.argv[:] = this.old_sys_argv[1];
+        super(BuildDumbTestCase, this).tearDown();
 
     }
     @unittest.skipUnless(zlib, "requires zlib");
-    def test_simple_built(self){
+    function test_simple_built(){
 
         # let's create a simple package
-        tmp_dir = self.mkdtemp();
+        tmp_dir = this.mkdtemp();
         pkg_dir = os.path.join(tmp_dir, 'foo');
         os.mkdir(pkg_dir);
-        self.write_file((pkg_dir, 'setup.py'), SETUP_PY);
-        self.write_file((pkg_dir, 'foo.py'), '#');
-        self.write_file((pkg_dir, 'MANIFEST.in'), 'include foo.py');
-        self.write_file((pkg_dir, 'README'), '');
+        this.write_file((pkg_dir, 'setup.py'), SETUP_PY);
+        this.write_file((pkg_dir, 'foo.py'), '#');
+        this.write_file((pkg_dir, 'MANIFEST.in'), 'include foo.py');
+        this.write_file((pkg_dir, 'README'), '');
 
         dist = Distribution({'name': 'foo', 'version': '0.1',
                              'py_modules': ['foo'],
@@ -81,7 +81,7 @@ class BuildDumbTestCase(support.TempdirManager,
             base = base.replace(':', '-');
 
         }
-        self.assertEqual(dist_created, [base]);
+        this.assertEqual(dist_created, [base]);
 
         # now let's check what we have in the zip file
         fp = zipfile.ZipFile(os.path.join('dist', base));
@@ -91,30 +91,30 @@ class BuildDumbTestCase(support.TempdirManager,
             fp.close();
 
         }
-        contents = sorted(filter(None, map(os.path.basename, contents)));
+        contents = sorted(filter(nil, map(os.path.basename, contents)));
         wanted = ['foo-0.1-py%s.%s.egg-info' % sys.version_info[:2], 'foo.py'];
         if not sys.dont_write_bytecode{
             wanted.append('foo.pyc');
-        } self.assertEqual(contents, sorted(wanted));
+        } this.assertEqual(contents, sorted(wanted));
 
     }
-    def test_finalize_options(self){
-        pkg_dir, dist = self.create_dist();
+    function test_finalize_options(){
+        pkg_dir, dist = this.create_dist();
         os.chdir(pkg_dir);
         cmd = bdist_dumb(dist);
-        self.assertEqual(cmd.bdist_dir, None);
+        this.assertEqual(cmd.bdist_dir, nil);
         cmd.finalize_options();
 
         # bdist_dir is initialized to bdist_base/dumb if not set
         base = cmd.get_finalized_command('bdist').bdist_base;
-        self.assertEqual(cmd.bdist_dir, os.path.join(base, 'dumb'));
+        this.assertEqual(cmd.bdist_dir, os.path.join(base, 'dumb'));
 
         # the format is set to a default value depending on the os.name
         default = cmd.default_format[os.name];
-        self.assertEqual(cmd.format, default);
+        this.assertEqual(cmd.format, default);
 
 }
-} def test_suite(){
+} function test_suite(){
     return unittest.makeSuite(BuildDumbTestCase);
 
 }

@@ -33,25 +33,25 @@ class Dialect{
 
     """;
     _name = "";
-    _valid = False;
+    _valid = false;
     # placeholders
-    delimiter = None;
-    quotechar = None;
-    escapechar = None;
-    doublequote = None;
-    skipinitialspace = None;
-    lineterminator = None;
-    quoting = None;
+    delimiter = nil;
+    quotechar = nil;
+    escapechar = nil;
+    doublequote = nil;
+    skipinitialspace = nil;
+    lineterminator = nil;
+    quoting = nil;
 
-    def __init__(self){
-        if self.__class__ != Dialect{
-            self._valid = True;
-        } self._validate();
+    function __init__(){
+        if this.__class__ != Dialect{
+            this._valid = true;
+        } this._validate();
 
     }
-    def _validate(self){
+    function _validate(){
         try{
-            _Dialect(self);
+            _Dialect(this);
         } except TypeError, e{
             # We do this for compatibility with py2.3
             raise Error(str(e));
@@ -61,8 +61,8 @@ class Dialect{
     """Describe the usual properties of Excel-generated CSV files.""";
     delimiter = ',';
     quotechar = '"';
-    doublequote = True;
-    skipinitialspace = False;
+    doublequote = true;
+    skipinitialspace = false;
     lineterminator = '\r\n';
     quoting = QUOTE_MINIMAL;
 } register_dialect("excel", excel);
@@ -74,29 +74,29 @@ class excel_tab(excel){
 
 
 class DictReader{
-    def __init__(self, f, fieldnames=None, restkey=None, restval=None,
+    function __init__( f, fieldnames=nil, restkey=nil, restval=nil,
                  dialect="excel", *args, **kwds){
-        self._fieldnames = fieldnames;   # list of keys for the dict
-        self.restkey = restkey;          # key to catch long rows
-        self.restval = restval;          # default value for short rows
-        self.reader = reader(f, dialect, *args, **kwds);
-        self.dialect = dialect;
-        self.line_num = 0;
+        this._fieldnames = fieldnames;   # list of keys for the dict
+        this.restkey = restkey;          # key to catch long rows
+        this.restval = restval;          # default value for short rows
+        this.reader = reader(f, dialect, *args, **kwds);
+        this.dialect = dialect;
+        this.line_num = 0;
 
     }
-    def __iter__(self){
-        return self;
+    function __iter__(){
+        return this;
 
     }
     @property;
-    def fieldnames(self){
-        if self._fieldnames is None{
+    function fieldnames(){
+        if this._fieldnames is nil{
             try{
-                self._fieldnames = self.reader.next();
+                this._fieldnames = this.reader.next();
             } except StopIteration{
                 pass;
-        } } self.line_num = self.reader.line_num;
-        return self._fieldnames;
+        } } this.line_num = this.reader.line_num;
+        return this._fieldnames;
 
     # Issue 20004: Because DictReader is a classic class, this setter is
     # ignored.  At this point in 2.7's lifecycle, it is too late to change the
@@ -104,70 +104,70 @@ class DictReader{
     # fieldnames without overwriting the getter, set _fieldnames directly.
     }
     @fieldnames.setter;
-    def fieldnames(self, value){
-        self._fieldnames = value;
+    function fieldnames( value){
+        this._fieldnames = value;
 
     }
-    def next(self){
-        if self.line_num == 0{
+    function next(){
+        if this.line_num == 0{
             # Used only for its side effect.
-            self.fieldnames;
-        } row = self.reader.next();
-        self.line_num = self.reader.line_num;
+            this.fieldnames;
+        } row = this.reader.next();
+        this.line_num = this.reader.line_num;
 
         # unlike the basic reader, we prefer not to return blanks,
         # because we will typically wind up with a dict full of None
         # values
         while row == []{
-            row = self.reader.next();
-        } d = dict(zip(self.fieldnames, row));
-        lf = len(self.fieldnames);
+            row = this.reader.next();
+        } d = dict(zip(this.fieldnames, row));
+        lf = len(this.fieldnames);
         lr = len(row);
         if lf < lr{
-            d[self.restkey] = row[lf:];
+            d[this.restkey] = row[lf:];
         } elif lf > lr{
-            for key in self.fieldnames[lr:]{
-                d[key] = self.restval;
+            for key in this.fieldnames[lr:]{
+                d[key] = this.restval;
         } } return d;
 
 
 }
 } class DictWriter{
-    def __init__(self, f, fieldnames, restval="", extrasaction="raise",
+    function __init__( f, fieldnames, restval="", extrasaction="raise",
                  dialect="excel", *args, **kwds){
-        self.fieldnames = fieldnames;    # list of keys for the dict
-        self.restval = restval;          # for writing short dicts
+        this.fieldnames = fieldnames;    # list of keys for the dict
+        this.restval = restval;          # for writing short dicts
         if extrasaction.lower() not in ("raise", "ignore"){
             raise ValueError, \
                   ("extrasaction (%s) must be 'raise' or 'ignore'" %
                    extrasaction);
-        } self.extrasaction = extrasaction;
-        self.writer = writer(f, dialect, *args, **kwds);
+        } this.extrasaction = extrasaction;
+        this.writer = writer(f, dialect, *args, **kwds);
 
     }
-    def writeheader(self){
-        header = dict(zip(self.fieldnames, self.fieldnames));
-        self.writerow(header);
+    function writeheader(){
+        header = dict(zip(this.fieldnames, this.fieldnames));
+        this.writerow(header);
 
     }
-    def _dict_to_list(self, rowdict){
-        if self.extrasaction == "raise"{
-            wrong_fields = [k for k in rowdict if k not in self.fieldnames];
+    function _dict_to_list( rowdict){
+        if this.extrasaction == "raise"{
+            wrong_fields = [k for k in rowdict if k not in this.fieldnames];
             if wrong_fields{
                 raise ValueError("dict contains fields not in fieldnames: "
                                  + ", ".join([repr(x) for x in wrong_fields]));
-        } } return [rowdict.get(key, self.restval) for key in self.fieldnames];
+        } } return [rowdict.get(key, this.restval) for key in this.fieldnames];
 
     }
-    def writerow(self, rowdict){
-        return self.writer.writerow(self._dict_to_list(rowdict));
+    function writerow( rowdict){
+        return this.writer.writerow(this._dict_to_list(rowdict));
 
     }
-    def writerows(self, rowdicts){
+    function writerows( rowdicts){
         rows = [];
         for rowdict in rowdicts{
-            rows.append(self._dict_to_list(rowdict));
-        } return self.writer.writerows(rows);
+            rows.append(this._dict_to_list(rowdict));
+        } return this.writer.writerows(rows);
 
 # Guard Sniffer's type checking against builds that exclude complex()
 }
@@ -182,21 +182,21 @@ class Sniffer{
     "Sniffs" the format of a CSV file (i.e. delimiter, quotechar)
     Returns a Dialect object.
     ''';
-    def __init__(self){
+    function __init__(){
         # in case there is more than one possible delimiter
-        self.preferred = [',', '\t', ';', ' ', ':'];
+        this.preferred = [',', '\t', ';', ' ', ':'];
 
 
     }
-    def sniff(self, sample, delimiters=None){
+    function sniff( sample, delimiters=nil){
         """
         Returns a dialect (or None) corresponding to the sample
         """;
 
         quotechar, doublequote, delimiter, skipinitialspace = \
-                   self._guess_quote_and_delimiter(sample, delimiters);
+                   this._guess_quote_and_delimiter(sample, delimiters);
         if not delimiter{
-            delimiter, skipinitialspace = self._guess_delimiter(sample,
+            delimiter, skipinitialspace = this._guess_delimiter(sample,
                                                                 delimiters);
 
         }
@@ -221,7 +221,7 @@ class Sniffer{
 
 
     }
-    def _guess_quote_and_delimiter(self, data, delimiters){
+    function _guess_quote_and_delimiter( data, delimiters){
         """
         Looks for text enclosed between two identical quotes
         (the probable quotechar) which are preceded and followed
@@ -246,7 +246,7 @@ class Sniffer{
         }
         } if not matches{
             # (quotechar, doublequote, delimiter, skipinitialspace)
-            return ('', False, None, 0);
+            return ('', false, nil, 0);
         } quotes = {};
         delims = {};
         spaces = 0;
@@ -260,7 +260,7 @@ class Sniffer{
                 key = m[n];
             } except KeyError{
                 continue;
-            } if key and (delimiters is None or key in delimiters){
+            } if key and (delimiters is nil or key in delimiters){
                 delims[key] = delims.get(key, 0) + 1;
             } try{
                 n = regexp.groupindex['space'] - 1;
@@ -294,16 +294,16 @@ class Sniffer{
 
 
         if dq_regexp.search(data){
-            doublequote = True;
+            doublequote = true;
         } else{
-            doublequote = False;
+            doublequote = false;
 
         }
         return (quotechar, doublequote, delim, skipinitialspace);
 
 
     }
-    def _guess_delimiter(self, data, delimiters){
+    function _guess_delimiter( data, delimiters){
         """
         The delimiter /should/ occur the same number of times on
         each row. However, due to malformed data, it may not. We don't want
@@ -322,7 +322,7 @@ class Sniffer{
         additional chunks as necessary.
         """;
 
-        data = filter(None, data.split('\n'));
+        data = filter(nil, data.split('\n'));
 
         ascii = [chr(c) for c in range(127)]; # 7-bit ASCII
 
@@ -375,7 +375,7 @@ class Sniffer{
                 for k, v in modeList{
                     if v[0] > 0 and v[1] > 0{
                         if ((v[1]/total) >= consistency and
-                            (delimiters is None or k in delimiters)){
+                            (delimiters is nil or k in delimiters)){
                             delims[k] = v;
                 } } } consistency -= 0.01;
 
@@ -398,7 +398,7 @@ class Sniffer{
         # if there's more than one, fall back to a 'preferred' list
         }
         if len(delims) > 1{
-            for d in self.preferred{
+            for d in this.preferred{
                 if d in delims.keys(){
                     skipinitialspace = (data[0].count(d) ==
                                         data[0].count("%c " % d));
@@ -417,7 +417,7 @@ class Sniffer{
 
 
     }
-    def has_header(self, sample){
+    function has_header( sample){
         # Creates a dictionary of types of data in each column. If any
         # column is of a single type (say, integers), *except* for the first
         # row, then the first row is presumed to be labels. If the type
@@ -427,13 +427,13 @@ class Sniffer{
         # Finally, a 'vote' is taken at the end for each column, adding or
         # subtracting from the likelihood of the first row being a header.
 
-        rdr = reader(StringIO(sample), self.sniff(sample));
+        rdr = reader(StringIO(sample), this.sniff(sample));
 
         header = rdr.next(); # assume first row is header
 
         columns = len(header);
         columnTypes = {};
-        for i in range(columns){ columnTypes[i] = None;
+        for i in range(columns){ columnTypes[i] = nil;}
 
         checked = 0;
         for row in rdr{
@@ -465,7 +465,7 @@ class Sniffer{
 
                 }
                 if thisType != columnTypes[col]{
-                    if columnTypes[col] is None{ # add new column type
+                    if columnTypes[col] is nil{ # add new column type
                         columnTypes[col] = thisType;
                     } else{
                         # type is inconsistent, remove column from

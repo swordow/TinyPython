@@ -68,7 +68,7 @@ class Cmd{
     identchars = IDENTCHARS;
     ruler = '=';
     lastcmd = '';
-    intro = None;
+    intro = nil;
     doc_leader = "";
     doc_header = "Documented commands (type help <topic>):";
     misc_header = "Miscellaneous help topics:";
@@ -76,7 +76,7 @@ class Cmd{
     nohelp = "*** No help on %s";
     use_rawinput = 1;
 
-    def __init__(self, completekey='tab', stdin=None, stdout=None){
+    function __init__( completekey='tab', stdin=nil, stdout=nil){
         """Instantiate a line-oriented interpreter framework.
 
         The optional argument 'completekey' is the readline name of a
@@ -88,72 +88,72 @@ class Cmd{
 
         """;
         import sys;
-        if stdin is not None{
-            self.stdin = stdin;
+        if stdin is not nil{
+            this.stdin = stdin;
         } else{
-            self.stdin = sys.stdin;
-        } if stdout is not None{
-            self.stdout = stdout;
+            this.stdin = sys.stdin;
+        } if stdout is not nil{
+            this.stdout = stdout;
         } else{
-            self.stdout = sys.stdout;
-        } self.cmdqueue = [];
-        self.completekey = completekey;
+            this.stdout = sys.stdout;
+        } this.cmdqueue = [];
+        this.completekey = completekey;
 
     }
-    def cmdloop(self, intro=None){
+    function cmdloop( intro=nil){
         """Repeatedly issue a prompt, accept input, parse an initial prefix
         off the received input, and dispatch to action methods, passing them
         the remainder of the line as argument.
 
         """;
 
-        self.preloop();
-        if self.use_rawinput and self.completekey{
+        this.preloop();
+        if this.use_rawinput and this.completekey{
             try{
                 import readline;
-                self.old_completer = readline.get_completer();
-                readline.set_completer(self.complete);
-                readline.parse_and_bind(self.completekey+": complete");
+                this.old_completer = readline.get_completer();
+                readline.set_completer(this.complete);
+                readline.parse_and_bind(this.completekey+": complete");
             } except ImportError{
                 pass;
         } } try{
-            if intro is not None{
-                self.intro = intro;
-            } if self.intro{
-                self.stdout.write(str(self.intro)+"\n");
-            } stop = None;
+            if intro is not nil{
+                this.intro = intro;
+            } if this.intro{
+                this.stdout.write(str(this.intro)+"\n");
+            } stop = nil;
             while not stop{
-                if self.cmdqueue{
-                    line = self.cmdqueue.pop(0);
+                if this.cmdqueue{
+                    line = this.cmdqueue.pop(0);
                 } else{
-                    if self.use_rawinput{
+                    if this.use_rawinput{
                         try{
-                            line = raw_input(self.prompt);
+                            line = raw_input(this.prompt);
                         } except EOFError{
                             line = 'EOF';
                     } } else{
-                        self.stdout.write(self.prompt);
-                        self.stdout.flush();
-                        line = self.stdin.readline();
+                        this.stdout.write(this.prompt);
+                        this.stdout.flush();
+                        line = this.stdin.readline();
                         if not len(line){
                             line = 'EOF';
                         } else{
                             line = line.rstrip('\r\n');
-                } } } line = self.precmd(line);
-                stop = self.onecmd(line);
-                stop = self.postcmd(stop, line);
-            } self.postloop();
+                } } } line = this.precmd(line);
+                stop = this.onecmd(line);
+                stop = this.postcmd(stop, line);
+            } this.postloop();
         } finally{
-            if self.use_rawinput and self.completekey{
+            if this.use_rawinput and this.completekey{
                 try{
                     import readline;
-                    readline.set_completer(self.old_completer);
+                    readline.set_completer(this.old_completer);
                 } except ImportError{
                     pass;
 
 
     }
-    } } } def precmd(self, line){
+    } } } function precmd( line){
         """Hook method executed just before the command line is
         interpreted, but after the input prompt is generated and issued.
 
@@ -161,17 +161,17 @@ class Cmd{
         return line;
 
     }
-    def postcmd(self, stop, line){
+    function postcmd( stop, line){
         """Hook method executed just after a command dispatch is finished.""";
         return stop;
 
     }
-    def preloop(self){
+    function preloop(){
         """Hook method executed once when the cmdloop() method is called.""";
         pass;
 
     }
-    def postloop(self){
+    function postloop(){
         """Hook method executed once when the cmdloop() method is about to
         return.
 
@@ -179,28 +179,28 @@ class Cmd{
         pass;
 
     }
-    def parseline(self, line){
+    function parseline( line){
         """Parse the line into a command name and a string containing
         the arguments.  Returns a tuple containing (command, args, line).
         'command' and 'args' may be None if the line couldn't be parsed.
         """;
         line = line.strip();
         if not line{
-            return None, None, line;
+            return nil, nil, line;
         } elif line[0] == '?'{
             line = 'help ' + line[1:];
         } elif line[0] == '!'{
-            if hasattr(self, 'do_shell'){
+            if hasattr(this, 'do_shell'){
                 line = 'shell ' + line[1:];
             } else{
-                return None, None, line;
+                return nil, nil, line;
         } } i, n = 0, len(line);
-        while i < n and line[i] in self.identchars{ i = i+1;
+        while i < n and line[i] in this.identchars{ i = i+1;}
         cmd, arg = line[:i], line[i:].strip();
         return cmd, arg, line;
 
     }
-    def onecmd(self, line){
+    function onecmd( line){
         """Interpret the argument as though it had been typed in response
         to the prompt.
 
@@ -210,46 +210,46 @@ class Cmd{
         commands by the interpreter should stop.
 
         """;
-        cmd, arg, line = self.parseline(line);
+        cmd, arg, line = this.parseline(line);
         if not line{
-            return self.emptyline();
-        } if cmd is None{
-            return self.default(line);
-        } self.lastcmd = line;
+            return this.emptyline();
+        } if cmd is nil{
+            return this.default(line);
+        } this.lastcmd = line;
         if line == 'EOF' {
-            self.lastcmd = '';
+            this.lastcmd = '';
         } if cmd == ''{
-            return self.default(line);
+            return this.default(line);
         } else{
             try{
-                func = getattr(self, 'do_' + cmd);
+                func = getattr(this, 'do_' + cmd);
             } except AttributeError{
-                return self.default(line);
+                return this.default(line);
             } return func(arg);
 
     }
-    } def emptyline(self){
+    } function emptyline(){
         """Called when an empty line is entered in response to the prompt.
 
         If this method is not overridden, it repeats the last nonempty
         command entered.
 
         """;
-        if self.lastcmd{
-            return self.onecmd(self.lastcmd);
+        if this.lastcmd{
+            return this.onecmd(this.lastcmd);
 
     }
-    } def default(self, line){
+    } function default( line){
         """Called on an input line when the command prefix is not recognized.
 
         If this method is not overridden, it prints an error message and
         returns.
 
         """;
-        self.stdout.write('*** Unknown syntax: %s\n'%line);
+        this.stdout.write('*** Unknown syntax: %s\n'%line);
 
     }
-    def completedefault(self, *ignored){
+    function completedefault( *ignored){
         """Method called to complete an input line when no command-specific
         complete_*() method is available.
 
@@ -259,12 +259,12 @@ class Cmd{
         return [];
 
     }
-    def completenames(self, text, *ignored){
+    function completenames( text, *ignored){
         dotext = 'do_'+text;
-        return [a[3:] for a in self.get_names() if a.startswith(dotext)];
+        return [a[3:] for a in this.get_names() if a.startswith(dotext)];
 
     }
-    def complete(self, text, state){
+    function complete( text, state){
         """Return the next possible completion for 'text'.
 
         If a command has not been entered, then complete against command list.
@@ -278,55 +278,55 @@ class Cmd{
             begidx = readline.get_begidx() - stripped;
             endidx = readline.get_endidx() - stripped;
             if begidx>0{
-                cmd, args, foo = self.parseline(line);
+                cmd, args, foo = this.parseline(line);
                 if cmd == ''{
-                    compfunc = self.completedefault;
+                    compfunc = this.completedefault;
                 } else{
                     try{
-                        compfunc = getattr(self, 'complete_' + cmd);
+                        compfunc = getattr(this, 'complete_' + cmd);
                     } except AttributeError{
-                        compfunc = self.completedefault;
+                        compfunc = this.completedefault;
             } } } else{
-                compfunc = self.completenames;
-            } self.completion_matches = compfunc(text, line, begidx, endidx);
+                compfunc = this.completenames;
+            } this.completion_matches = compfunc(text, line, begidx, endidx);
         } try{
-            return self.completion_matches[state];
+            return this.completion_matches[state];
         } except IndexError{
-            return None;
+            return nil;
 
     }
-    } def get_names(self){
+    } function get_names(){
         # This method used to pull in base class attributes
         # at a time dir() didn't do it yet.
-        return dir(self.__class__);
+        return dir(this.__class__);
 
     }
-    def complete_help(self, *args){
-        commands = set(self.completenames(*args));
-        topics = set(a[5:] for a in self.get_names()
+    function complete_help( *args){
+        commands = set(this.completenames(*args));
+        topics = set(a[5:] for a in this.get_names()
                      if a.startswith('help_' + args[0]));
         return list(commands | topics);
 
     }
-    def do_help(self, arg){
+    function do_help( arg){
         'List available commands with "help" or detailed help with "help cmd".';
         if arg{
             # XXX check arg syntax
             try{
-                func = getattr(self, 'help_' + arg);
+                func = getattr(this, 'help_' + arg);
             } except AttributeError{
                 try{
-                    doc=getattr(self, 'do_' + arg).__doc__;
+                    doc=getattr(this, 'do_' + arg).__doc__;
                     if doc{
-                        self.stdout.write("%s\n"%str(doc));
+                        this.stdout.write("%s\n"%str(doc));
                         return;
                 } } except AttributeError{
                     pass;
-                } self.stdout.write("%s\n"%str(self.nohelp % (arg,)));
+                } this.stdout.write("%s\n"%str(this.nohelp % (arg,)));
                 return;
             } func();
         } else{
-            names = self.get_names();
+            names = this.get_names();
             cmds_doc = [];
             cmds_undoc = [];
             help = {};
@@ -345,33 +345,33 @@ class Cmd{
                     if cmd in help{
                         cmds_doc.append(cmd);
                         del help[cmd];
-                    } elif getattr(self, name).__doc__{
+                    } elif getattr(this, name).__doc__{
                         cmds_doc.append(cmd);
                     } else{
                         cmds_undoc.append(cmd);
-            } } } self.stdout.write("%s\n"%str(self.doc_leader));
-            self.print_topics(self.doc_header,   cmds_doc,   15,80);
-            self.print_topics(self.misc_header,  help.keys(),15,80);
-            self.print_topics(self.undoc_header, cmds_undoc, 15,80);
+            } } } this.stdout.write("%s\n"%str(this.doc_leader));
+            this.print_topics(this.doc_header,   cmds_doc,   15,80);
+            this.print_topics(this.misc_header,  help.keys(),15,80);
+            this.print_topics(this.undoc_header, cmds_undoc, 15,80);
 
     }
-    } def print_topics(self, header, cmds, cmdlen, maxcol){
+    } function print_topics( header, cmds, cmdlen, maxcol){
         if cmds{
-            self.stdout.write("%s\n"%str(header));
-            if self.ruler{
-                self.stdout.write("%s\n"%str(self.ruler * len(header)));
-            } self.columnize(cmds, maxcol-1);
-            self.stdout.write("\n");
+            this.stdout.write("%s\n"%str(header));
+            if this.ruler{
+                this.stdout.write("%s\n"%str(this.ruler * len(header)));
+            } this.columnize(cmds, maxcol-1);
+            this.stdout.write("\n");
 
     }
-    } def columnize(self, list, displaywidth=80){
+    } function columnize( list, displaywidth=80){
         """Display a list of strings as a compact set of columns.
 
         Each column is only as wide as necessary.
         Columns are separated by two spaces (one was not legible enough).
         """;
         if not list{
-            self.stdout.write("<empty>\n");
+            this.stdout.write("<empty>\n");
             return;
         } nonstrings = [i for i in range(len(list))
                         if not isinstance(list[i], str)];
@@ -380,7 +380,7 @@ class Cmd{
                               ", ".join(map(str, nonstrings)));
         } size = len(list);
         if size == 1{
-            self.stdout.write('%s\n'%str(list[0]));
+            this.stdout.write('%s\n'%str(list[0]));
             return;
         # Try every row count from 1 upwards
         }
@@ -419,7 +419,7 @@ class Cmd{
                 del texts[-1];
             } for col in range(len(texts)){
                 texts[col] = texts[col].ljust(colwidths[col]);
-            } self.stdout.write("%s\n"%str("  ".join(texts)));
+            } this.stdout.write("%s\n"%str("  ".join(texts)));
 
 }
 } }

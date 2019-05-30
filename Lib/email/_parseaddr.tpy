@@ -42,7 +42,7 @@ _timezones = {'UT':0, 'UTC':0, 'GMT':0, 'Z':0,
               };
 
 
-def parsedate_tz(data){
+function parsedate_tz(data){
     """Convert a date string to a time tuple.
 
     Accounts for military timezones.
@@ -69,14 +69,14 @@ def parsedate_tz(data){
         } else{
             data.append(''); # Dummy tz
     } } if len(data) < 5{
-        return None;
+        return nil;
     } data = data[:5];
     [dd, mm, yy, tm, tz] = data;
     mm = mm.lower();
     if mm not in _monthnames{
         dd, mm = mm, dd.lower();
         if mm not in _monthnames{
-            return None;
+            return nil;
     } } mm = _monthnames.index(mm) + 1;
     if mm > 12{
         mm -= 12;
@@ -98,7 +98,7 @@ def parsedate_tz(data){
     } elif len(tm) == 3{
         [thh, tmm, tss] = tm;
     } else{
-        return None;
+        return nil;
     } try{
         yy = int(yy);
         dd = int(dd);
@@ -106,7 +106,7 @@ def parsedate_tz(data){
         tmm = int(tmm);
         tss = int(tss);
     } except ValueError{
-        return None;
+        return nil;
     # Check for a yy specified in two-digit format, then convert it to the
     # appropriate four-digit format, according to the POSIX standard. RFC 822
     # calls for a two-digit yy, but RFC 2822 (which obsoletes RFC 822)
@@ -121,7 +121,7 @@ def parsedate_tz(data){
         }
         else{
             yy += 2000;
-    } } tzoffset = None;
+    } } tzoffset = nil;
     tz = tz.upper();
     if tz in _timezones{
         tzoffset = _timezones[tz];
@@ -145,7 +145,7 @@ def parsedate_tz(data){
 
 
 }
-def parsedate(data){
+function parsedate(data){
     """Convert a time string to a time tuple.""";
     t = parsedate_tz(data);
     if isinstance(t, tuple){
@@ -155,9 +155,9 @@ def parsedate(data){
 
 
 }
-} def mktime_tz(data){
+} function mktime_tz(data){
     """Turn a 10-tuple as returned by parsedate_tz() into a POSIX timestamp.""";
-    if data[9] is None{
+    if data[9] is nil{
         # No zone info, so localtime is better assumption than GMT
         return time.mktime(data[:8] + (-1,));
     } else{
@@ -166,7 +166,7 @@ def parsedate(data){
 
 
 }
-} def quote(str){
+} function quote(str){
     """Prepare string to be used in a quoted string.
 
     Turns backslash and double quote characters into quoted pairs.  These
@@ -187,45 +187,45 @@ class AddrlistClass{
     Use rfc822.AddressList instead.
     """;
 
-    def __init__(self, field){
+    function __init__( field){
         """Initialize a new instance.
 
         `field' is an unparsed address header field, containing
         one or more addresses.
         """;
-        self.specials = '()<>@,:;.\"[]';
-        self.pos = 0;
-        self.LWS = ' \t';
-        self.CR = '\r\n';
-        self.FWS = self.LWS + self.CR;
-        self.atomends = self.specials + self.LWS + self.CR;
+        this.specials = '()<>@,:;.\"[]';
+        this.pos = 0;
+        this.LWS = ' \t';
+        this.CR = '\r\n';
+        this.FWS = this.LWS + this.CR;
+        this.atomends = this.specials + this.LWS + this.CR;
         # Note that RFC 2822 now specifies `.' as obs-phrase, meaning that it
         # is obsolete syntax.  RFC 2822 requires that we recognize obsolete
         # syntax, so allow dots in phrases.
-        self.phraseends = self.atomends.replace('.', '');
-        self.field = field;
-        self.commentlist = [];
+        this.phraseends = this.atomends.replace('.', '');
+        this.field = field;
+        this.commentlist = [];
 
     }
-    def gotonext(self){
+    function gotonext(){
         """Parse up to the start of the next address.""";
-        while self.pos < len(self.field){
-            if self.field[self.pos] in self.LWS + '\n\r'{
-                self.pos += 1;
-            } elif self.field[self.pos] == '('{
-                self.commentlist.append(self.getcomment());
+        while this.pos < len(this.field){
+            if this.field[this.pos] in this.LWS + '\n\r'{
+                this.pos += 1;
+            } elif this.field[this.pos] == '('{
+                this.commentlist.append(this.getcomment());
             } else{
                 break;
 
     }
-    } } def getaddrlist(self){
+    } } function getaddrlist(){
         """Parse all addresses.
 
         Returns a list containing all of the addresses.
         """;
         result = [];
-        while self.pos < len(self.field){
-            ad = self.getaddress();
+        while this.pos < len(this.field){
+            ad = this.getaddress();
             if ad{
                 result += ad;
             } else{
@@ -233,155 +233,155 @@ class AddrlistClass{
         } } return result;
 
     }
-    def getaddress(self){
+    function getaddress(){
         """Parse the next address.""";
-        self.commentlist = [];
-        self.gotonext();
+        this.commentlist = [];
+        this.gotonext();
 
-        oldpos = self.pos;
-        oldcl = self.commentlist;
-        plist = self.getphraselist();
+        oldpos = this.pos;
+        oldcl = this.commentlist;
+        plist = this.getphraselist();
 
-        self.gotonext();
+        this.gotonext();
         returnlist = [];
 
-        if self.pos >= len(self.field){
+        if this.pos >= len(this.field){
             # Bad email address technically, no domain.
             if plist{
-                returnlist = [(SPACE.join(self.commentlist), plist[0])];
+                returnlist = [(SPACE.join(this.commentlist), plist[0])];
 
         }
-        } elif self.field[self.pos] in '.@'{
+        } elif this.field[this.pos] in '.@'{
             # email address is just an addrspec
             # this isn't very efficient since we start over
-            self.pos = oldpos;
-            self.commentlist = oldcl;
-            addrspec = self.getaddrspec();
-            returnlist = [(SPACE.join(self.commentlist), addrspec)];
+            this.pos = oldpos;
+            this.commentlist = oldcl;
+            addrspec = this.getaddrspec();
+            returnlist = [(SPACE.join(this.commentlist), addrspec)];
 
         }
-        elif self.field[self.pos] == ':'{
+        elif this.field[this.pos] == ':'{
             # address is a group
             returnlist = [];
 
-            fieldlen = len(self.field);
-            self.pos += 1;
-            while self.pos < len(self.field){
-                self.gotonext();
-                if self.pos < fieldlen and self.field[self.pos] == ';'{
-                    self.pos += 1;
+            fieldlen = len(this.field);
+            this.pos += 1;
+            while this.pos < len(this.field){
+                this.gotonext();
+                if this.pos < fieldlen and this.field[this.pos] == ';'{
+                    this.pos += 1;
                     break;
-                } returnlist = returnlist + self.getaddress();
+                } returnlist = returnlist + this.getaddress();
 
         }
-        } elif self.field[self.pos] == '<'{
+        } elif this.field[this.pos] == '<'{
             # Address is a phrase then a route addr
-            routeaddr = self.getrouteaddr();
+            routeaddr = this.getrouteaddr();
 
-            if self.commentlist{
+            if this.commentlist{
                 returnlist = [(SPACE.join(plist) + ' (' +
-                               ' '.join(self.commentlist) + ')', routeaddr)];
+                               ' '.join(this.commentlist) + ')', routeaddr)];
             } else{
                 returnlist = [(SPACE.join(plist), routeaddr)];
 
         }
         } else{
             if plist{
-                returnlist = [(SPACE.join(self.commentlist), plist[0])];
-            } elif self.field[self.pos] in self.specials{
-                self.pos += 1;
+                returnlist = [(SPACE.join(this.commentlist), plist[0])];
+            } elif this.field[this.pos] in this.specials{
+                this.pos += 1;
 
         }
-        } self.gotonext();
-        if self.pos < len(self.field) and self.field[self.pos] == ','{
-            self.pos += 1;
+        } this.gotonext();
+        if this.pos < len(this.field) and this.field[this.pos] == ','{
+            this.pos += 1;
         } return returnlist;
 
     }
-    def getrouteaddr(self){
+    function getrouteaddr(){
         """Parse a route address (Return-path value).
 
         This method just skips all the route stuff and returns the addrspec.
         """;
-        if self.field[self.pos] != '<'{
+        if this.field[this.pos] != '<'{
             return;
 
         }
-        expectroute = False;
-        self.pos += 1;
-        self.gotonext();
+        expectroute = false;
+        this.pos += 1;
+        this.gotonext();
         adlist = '';
-        while self.pos < len(self.field){
+        while this.pos < len(this.field){
             if expectroute{
-                self.getdomain();
-                expectroute = False;
-            } elif self.field[self.pos] == '>'{
-                self.pos += 1;
+                this.getdomain();
+                expectroute = false;
+            } elif this.field[this.pos] == '>'{
+                this.pos += 1;
                 break;
-            } elif self.field[self.pos] == '@'{
-                self.pos += 1;
-                expectroute = True;
-            } elif self.field[self.pos] == ':'{
-                self.pos += 1;
+            } elif this.field[this.pos] == '@'{
+                this.pos += 1;
+                expectroute = true;
+            } elif this.field[this.pos] == ':'{
+                this.pos += 1;
             } else{
-                adlist = self.getaddrspec();
-                self.pos += 1;
+                adlist = this.getaddrspec();
+                this.pos += 1;
                 break;
-            } self.gotonext();
+            } this.gotonext();
 
         }
         return adlist;
 
     }
-    def getaddrspec(self){
+    function getaddrspec(){
         """Parse an RFC 2822 addr-spec.""";
         aslist = [];
 
-        self.gotonext();
-        while self.pos < len(self.field){
-            if self.field[self.pos] == '.'{
+        this.gotonext();
+        while this.pos < len(this.field){
+            if this.field[this.pos] == '.'{
                 aslist.append('.');
-                self.pos += 1;
-            } elif self.field[self.pos] == '"'{
-                aslist.append('"%s"' % quote(self.getquote()));
-            } elif self.field[self.pos] in self.atomends{
+                this.pos += 1;
+            } elif this.field[this.pos] == '"'{
+                aslist.append('"%s"' % quote(this.getquote()));
+            } elif this.field[this.pos] in this.atomends{
                 break;
             } else{
-                aslist.append(self.getatom());
-            } self.gotonext();
+                aslist.append(this.getatom());
+            } this.gotonext();
 
         }
-        if self.pos >= len(self.field) or self.field[self.pos] != '@'{
+        if this.pos >= len(this.field) or this.field[this.pos] != '@'{
             return EMPTYSTRING.join(aslist);
 
         }
         aslist.append('@');
-        self.pos += 1;
-        self.gotonext();
-        return EMPTYSTRING.join(aslist) + self.getdomain();
+        this.pos += 1;
+        this.gotonext();
+        return EMPTYSTRING.join(aslist) + this.getdomain();
 
     }
-    def getdomain(self){
+    function getdomain(){
         """Get the complete domain name from an address.""";
         sdlist = [];
-        while self.pos < len(self.field){
-            if self.field[self.pos] in self.LWS{
-                self.pos += 1;
-            } elif self.field[self.pos] == '('{
-                self.commentlist.append(self.getcomment());
-            } elif self.field[self.pos] == '['{
-                sdlist.append(self.getdomainliteral());
-            } elif self.field[self.pos] == '.'{
-                self.pos += 1;
+        while this.pos < len(this.field){
+            if this.field[this.pos] in this.LWS{
+                this.pos += 1;
+            } elif this.field[this.pos] == '('{
+                this.commentlist.append(this.getcomment());
+            } elif this.field[this.pos] == '['{
+                sdlist.append(this.getdomainliteral());
+            } elif this.field[this.pos] == '.'{
+                this.pos += 1;
                 sdlist.append('.');
-            } elif self.field[self.pos] in self.atomends{
+            } elif this.field[this.pos] in this.atomends{
                 break;
             } else{
-                sdlist.append(self.getatom());
+                sdlist.append(this.getatom());
         } } return EMPTYSTRING.join(sdlist);
 
     }
-    def getdelimited(self, beginchar, endchars, allowcomments=True){
+    function getdelimited( beginchar, endchars, allowcomments=true){
         """Parse a header fragment delimited by special characters.
 
         `beginchar' is the start character for the fragment.
@@ -394,49 +394,49 @@ class AddrlistClass{
         If `allowcomments' is non-zero, embedded RFC 2822 comments are allowed
         within the parsed fragment.
         """;
-        if self.field[self.pos] != beginchar{
+        if this.field[this.pos] != beginchar{
             return '';
 
         }
         slist = [''];
-        quote = False;
-        self.pos += 1;
-        while self.pos < len(self.field){
+        quote = false;
+        this.pos += 1;
+        while this.pos < len(this.field){
             if quote{
-                slist.append(self.field[self.pos]);
-                quote = False;
-            } elif self.field[self.pos] in endchars{
-                self.pos += 1;
+                slist.append(this.field[this.pos]);
+                quote = false;
+            } elif this.field[this.pos] in endchars{
+                this.pos += 1;
                 break;
-            } elif allowcomments and self.field[self.pos] == '('{
-                slist.append(self.getcomment());
+            } elif allowcomments and this.field[this.pos] == '('{
+                slist.append(this.getcomment());
                 continue;        # have already advanced pos from getcomment
-            } elif self.field[self.pos] == '\\'{
-                quote = True;
+            } elif this.field[this.pos] == '\\'{
+                quote = true;
             } else{
-                slist.append(self.field[self.pos]);
-            } self.pos += 1;
+                slist.append(this.field[this.pos]);
+            } this.pos += 1;
 
         }
         return EMPTYSTRING.join(slist);
 
     }
-    def getquote(self){
+    function getquote(){
         """Get a quote-delimited fragment from self's field.""";
-        return self.getdelimited('"', '"\r', False);
+        return this.getdelimited('"', '"\r', false);
 
     }
-    def getcomment(self){
+    function getcomment(){
         """Get a parenthesis-delimited fragment from self's field.""";
-        return self.getdelimited('(', ')\r', True);
+        return this.getdelimited('(', ')\r', true);
 
     }
-    def getdomainliteral(self){
+    function getdomainliteral(){
         """Parse an RFC 2822 domain-literal.""";
-        return '[%s]' % self.getdelimited('[', ']\r', False);
+        return '[%s]' % this.getdelimited('[', ']\r', false);
 
     }
-    def getatom(self, atomends=None){
+    function getatom( atomends=nil){
         """Parse an RFC 2822 atom.
 
         Optional atomends specifies a different set of end token delimiters
@@ -444,22 +444,22 @@ class AddrlistClass{
         getphraselist() since phrase endings must not include the `.' (which
         is legal in phrases).""";
         atomlist = [''];
-        if atomends is None{
-            atomends = self.atomends;
+        if atomends is nil{
+            atomends = this.atomends;
 
         }
-        while self.pos < len(self.field){
-            if self.field[self.pos] in atomends{
+        while this.pos < len(this.field){
+            if this.field[this.pos] in atomends{
                 break;
             } else{
-                atomlist.append(self.field[self.pos]);
-            } self.pos += 1;
+                atomlist.append(this.field[this.pos]);
+            } this.pos += 1;
 
         }
         return EMPTYSTRING.join(atomlist);
 
     }
-    def getphraselist(self){
+    function getphraselist(){
         """Parse a sequence of RFC 2822 phrases.
 
         A phrase is a sequence of words, which are in turn either RFC 2822
@@ -468,17 +468,17 @@ class AddrlistClass{
         """;
         plist = [];
 
-        while self.pos < len(self.field){
-            if self.field[self.pos] in self.FWS{
-                self.pos += 1;
-            } elif self.field[self.pos] == '"'{
-                plist.append(self.getquote());
-            } elif self.field[self.pos] == '('{
-                self.commentlist.append(self.getcomment());
-            } elif self.field[self.pos] in self.phraseends{
+        while this.pos < len(this.field){
+            if this.field[this.pos] in this.FWS{
+                this.pos += 1;
+            } elif this.field[this.pos] == '"'{
+                plist.append(this.getquote());
+            } elif this.field[this.pos] == '('{
+                this.commentlist.append(this.getcomment());
+            } elif this.field[this.pos] in this.phraseends{
                 break;
             } else{
-                plist.append(self.getatom(self.phraseends));
+                plist.append(this.getatom(this.phraseends));
 
         }
         } return plist;
@@ -486,56 +486,56 @@ class AddrlistClass{
 }
 } class AddressList(AddrlistClass){
     """An AddressList encapsulates a list of parsed RFC 2822 addresses.""";
-    def __init__(self, field){
-        AddrlistClass.__init__(self, field);
+    function __init__( field){
+        AddrlistClass.__init__(this, field);
         if field{
-            self.addresslist = self.getaddrlist();
+            this.addresslist = this.getaddrlist();
         } else{
-            self.addresslist = [];
+            this.addresslist = [];
 
     }
-    } def __len__(self){
-        return len(self.addresslist);
+    } function __len__(){
+        return len(this.addresslist);
 
     }
-    def __add__(self, other){
+    function __add__( other){
         # Set union
-        newaddr = AddressList(None);
-        newaddr.addresslist = self.addresslist[:];
+        newaddr = AddressList(nil);
+        newaddr.addresslist = this.addresslist[:];
         for x in other.addresslist{
-            if not x in self.addresslist{
+            if not x in this.addresslist{
                 newaddr.addresslist.append(x);
         } } return newaddr;
 
     }
-    def __iadd__(self, other){
+    function __iadd__( other){
         # Set union, in-place
         for x in other.addresslist{
-            if not x in self.addresslist{
-                self.addresslist.append(x);
-        } } return self;
+            if not x in this.addresslist{
+                this.addresslist.append(x);
+        } } return this;
 
     }
-    def __sub__(self, other){
+    function __sub__( other){
         # Set difference
-        newaddr = AddressList(None);
-        for x in self.addresslist{
+        newaddr = AddressList(nil);
+        for x in this.addresslist{
             if not x in other.addresslist{
                 newaddr.addresslist.append(x);
         } } return newaddr;
 
     }
-    def __isub__(self, other){
+    function __isub__( other){
         # Set difference, in-place
         for x in other.addresslist{
-            if x in self.addresslist{
-                self.addresslist.remove(x);
-        } } return self;
+            if x in this.addresslist{
+                this.addresslist.remove(x);
+        } } return this;
 
     }
-    def __getitem__(self, index){
+    function __getitem__( index){
         # Make indexing, slices, and 'in' work
-        return self.addresslist[index];
+        return this.addresslist[index];
 
 }
 }

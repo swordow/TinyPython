@@ -16,10 +16,10 @@ ROMAN = "roman";
 BOLD   = "bold";
 ITALIC = "italic";
 
-def nametofont(name){
+function nametofont(name){
     """Given the name of a tk named font, returns a Font representation.
     """;
-    return Font(name=name, exists=True);
+    return Font(name=name, exists=true);
 
 }
 class Font{
@@ -45,7 +45,7 @@ class Font{
 
     """;
 
-    def _set(self, kw){
+    function _set( kw){
         options = [];
         for k, v in kw.items(){
             if not isinstance(v, basestring){
@@ -55,21 +55,21 @@ class Font{
         } return tuple(options);
 
     }
-    def _get(self, args){
+    function _get( args){
         options = [];
         for k in args{
             options.append("-"+k);
         } return tuple(options);
 
     }
-    def _mkdict(self, args){
+    function _mkdict( args){
         options = {};
         for i in range(0, len(args), 2){
             options[args[i][1:]] = args[i+1];
         } return options;
 
     }
-    def __init__(self, root=None, font=None, name=None, exists=False, **options){
+    function __init__( root=nil, font=nil, name=nil, exists=false, **options){
         if not root{
             root = Tkinter._default_root;
         } tk = getattr(root, 'tk', root);
@@ -77,94 +77,94 @@ class Font{
             # get actual settings corresponding to the given font
             font = tk.splitlist(tk.call("font", "actual", font));
         } else{
-            font = self._set(options);
+            font = this._set(options);
         } if not name{
-            name = "font" + str(id(self));
-        } self.name = name;
+            name = "font" + str(id(this));
+        } this.name = name;
 
         if exists{
-            self.delete_font = False;
+            this.delete_font = false;
             # confirm font exists
-            if self.name not in tk.splitlist(tk.call("font", "names")){
-                raise Tkinter._tkinter.TclError, "named font %s does not already exist" % (self.name,);
+            if this.name not in tk.splitlist(tk.call("font", "names")){
+                raise Tkinter._tkinter.TclError, "named font %s does not already exist" % (this.name,);
             # if font config info supplied, apply it
             }
             if font{
-                tk.call("font", "configure", self.name, *font);
+                tk.call("font", "configure", this.name, *font);
         } } else{
             # create new font (raises TclError if the font exists)
-            tk.call("font", "create", self.name, *font);
-            self.delete_font = True;
-        } self._tk = tk;
-        self._split = tk.splitlist;
-        self._call  = tk.call;
+            tk.call("font", "create", this.name, *font);
+            this.delete_font = true;
+        } this._tk = tk;
+        this._split = tk.splitlist;
+        this._call  = tk.call;
 
     }
-    def __str__(self){
-        return self.name;
+    function __str__(){
+        return this.name;
 
     }
-    def __eq__(self, other){
-        return isinstance(other, Font) and self.name == other.name;
+    function __eq__( other){
+        return isinstance(other, Font) and this.name == other.name;
 
     }
-    def __getitem__(self, key){
-        return self.cget(key);
+    function __getitem__( key){
+        return this.cget(key);
 
     }
-    def __setitem__(self, key, value){
-        self.configure(**{key: value});
+    function __setitem__( key, value){
+        this.configure(**{key: value});
 
     }
-    def __del__(self){
+    function __del__(){
         try{
-            if self.delete_font{
-                self._call("font", "delete", self.name);
+            if this.delete_font{
+                this._call("font", "delete", this.name);
         } } except (KeyboardInterrupt, SystemExit){
             raise;
         } except Exception{
             pass;
 
     }
-    } def copy(self){
+    } function copy(){
         "Return a distinct copy of the current font";
-        return Font(self._tk, **self.actual());
+        return Font(this._tk, **this.actual());
 
     }
-    def actual(self, option=None){
+    function actual( option=nil){
         "Return actual font attributes";
         if option{
-            return self._call("font", "actual", self.name, "-"+option);
+            return this._call("font", "actual", this.name, "-"+option);
         } else{
-            return self._mkdict(
-                self._split(self._call("font", "actual", self.name))
+            return this._mkdict(
+                this._split(this._call("font", "actual", this.name))
                 );
 
     }
-    } def cget(self, option){
+    } function cget( option){
         "Get font attribute";
-        return self._call("font", "config", self.name, "-"+option);
+        return this._call("font", "config", this.name, "-"+option);
 
     }
-    def config(self, **options){
+    function config( **options){
         "Modify font attributes";
         if options{
-            self._call("font", "config", self.name,
-                  *self._set(options));
+            this._call("font", "config", this.name,
+                  *this._set(options));
         } else{
-            return self._mkdict(
-                self._split(self._call("font", "config", self.name))
+            return this._mkdict(
+                this._split(this._call("font", "config", this.name))
                 );
 
     }
     } configure = config;
 
-    def measure(self, text){
+    function measure( text){
         "Return text width";
-        return int(self._call("font", "measure", self.name, text));
+        return int(this._call("font", "measure", this.name, text));
 
     }
-    def metrics(self, *options){
+    function metrics( *options){
         """Return font metrics.
 
         For best performance, create a dummy widget
@@ -172,24 +172,24 @@ class Font{
 
         if options{
             return int(
-                self._call("font", "metrics", self.name, self._get(options))
+                this._call("font", "metrics", this.name, this._get(options))
                 );
         } else{
-            res = self._split(self._call("font", "metrics", self.name));
+            res = this._split(this._call("font", "metrics", this.name));
             options = {};
             for i in range(0, len(res), 2){
                 options[res[i][1:]] = int(res[i+1]);
             } return options;
 
 }
-} } def families(root=None){
+} } function families(root=nil){
     "Get font families (as a tuple)";
     if not root{
         root = Tkinter._default_root;
     } return root.tk.splitlist(root.tk.call("font", "families"));
 
 }
-def names(root=None){
+function names(root=nil){
     "Get names of defined fonts (as a tuple)";
     if not root{
         root = Tkinter._default_root;

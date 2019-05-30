@@ -32,14 +32,14 @@ explicitly given directories.
 
 __all__ = ["what","whathdr"];
 
-def what(filename){
+function what(filename){
     """Guess the type of a sound file""";
     res = whathdr(filename);
     return res;
 
 
 }
-def whathdr(filename){
+function whathdr(filename){
     """Recognize sound headers""";
     f = open(filename, 'rb');
     h = f.read(512);
@@ -47,7 +47,7 @@ def whathdr(filename){
         res = tf(h, f);
         if res{
             return res;
-    } } return None;
+    } } return nil;
 
 
 #-----------------------------------#
@@ -57,21 +57,21 @@ def whathdr(filename){
 }
 tests = [];
 
-def test_aifc(h, f){
+function test_aifc(h, f){
     import aifc;
     if h[:4] != 'FORM'{
-        return None;
+        return nil;
     } if h[8:12] == 'AIFC'{
         fmt = 'aifc';
     } elif h[8:12] == 'AIFF'{
         fmt = 'aiff';
     } else{
-        return None;
+        return nil;
     } f.seek(0);
     try{
         a = aifc.openfp(f, 'r');
     } except (EOFError, aifc.Error){
-        return None;
+        return nil;
     } return (fmt, a.getframerate(), a.getnchannels(), \
             a.getnframes(), 8*a.getsampwidth());
 
@@ -79,13 +79,13 @@ def test_aifc(h, f){
 tests.append(test_aifc);
 
 
-def test_au(h, f){
+function test_au(h, f){
     if h[:4] == '.snd'{
         f = get_long_be;
     } elif h[:4] in ('\0ds.', 'dns.'){
         f = get_long_le;
     } else{
-        return None;
+        return nil;
     } type = 'au';
     hdr_size = f(h[4:8]);
     data_size = f(h[8:12]);
@@ -109,9 +109,9 @@ def test_au(h, f){
 tests.append(test_au);
 
 
-def test_hcom(h, f){
+function test_hcom(h, f){
     if h[65:69] != 'FSSD' or h[128:132] != 'HCOM'{
-        return None;
+        return nil;
     } divisor = get_long_be(h[128+16:128+20]);
     return 'hcom', 22050//divisor, 1, -1, 8;
 
@@ -119,9 +119,9 @@ def test_hcom(h, f){
 tests.append(test_hcom);
 
 
-def test_voc(h, f){
+function test_voc(h, f){
     if h[:20] != 'Creative Voice File\032'{
-        return None;
+        return nil;
     } sbseek = get_short_le(h[20:22]);
     rate = 0;
     if 0 <= sbseek < 500 and h[sbseek] == '\1'{
@@ -133,10 +133,10 @@ def test_voc(h, f){
 tests.append(test_voc);
 
 
-def test_wav(h, f){
+function test_wav(h, f){
     # 'RIFF' <len> 'WAVE' 'fmt ' <len>
     if h[:4] != 'RIFF' or h[8:12] != 'WAVE' or h[12:16] != 'fmt '{
-        return None;
+        return nil;
     } style = get_short_le(h[20:22]);
     nchannels = get_short_le(h[22:24]);
     rate = get_long_le(h[24:28]);
@@ -147,9 +147,9 @@ def test_wav(h, f){
 tests.append(test_wav);
 
 
-def test_8svx(h, f){
+function test_8svx(h, f){
     if h[:4] != 'FORM' or h[8:12] != '8SVX'{
-        return None;
+        return nil;
     # Should decode it to get #channels -- assume always 1
     }
     return '8svx', 0, 1, 0, 8;
@@ -158,7 +158,7 @@ def test_8svx(h, f){
 tests.append(test_8svx);
 
 
-def test_sndt(h, f){
+function test_sndt(h, f){
     if h[:5] == 'SOUND'{
         nsamples = get_long_le(h[8:12]);
         rate = get_short_le(h[20:22]);
@@ -168,7 +168,7 @@ def test_sndt(h, f){
 } tests.append(test_sndt);
 
 
-def test_sndr(h, f){
+function test_sndr(h, f){
     if h[:2] == '\0\0'{
         rate = get_short_le(h[2:4]);
         if 4000 <= rate <= 25000{
@@ -182,19 +182,19 @@ def test_sndr(h, f){
 # Subroutines to extract numbers from strings #
 #---------------------------------------------#
 
-def get_long_be(s){
+function get_long_be(s){
     return (ord(s[0])<<24) | (ord(s[1])<<16) | (ord(s[2])<<8) | ord(s[3]);
 
 }
-def get_long_le(s){
+function get_long_le(s){
     return (ord(s[3])<<24) | (ord(s[2])<<16) | (ord(s[1])<<8) | ord(s[0]);
 
 }
-def get_short_be(s){
+function get_short_be(s){
     return (ord(s[0])<<8) | ord(s[1]);
 
 }
-def get_short_le(s){
+function get_short_le(s){
     return (ord(s[1])<<8) | ord(s[0]);
 
 
@@ -203,7 +203,7 @@ def get_short_le(s){
 #--------------------#
 
 }
-def test(){
+function test(){
     import sys;
     recursive = 0;
     if sys.argv[1:] and sys.argv[1] == '-r'{
@@ -219,7 +219,7 @@ def test(){
         sys.exit(1);
 
 }
-} def testall(list, recursive, toplevel){
+} function testall(list, recursive, toplevel){
     import sys;
     import os;
     for filename in list{

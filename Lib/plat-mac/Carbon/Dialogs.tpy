@@ -1,6 +1,6 @@
 # Generated from 'Dialogs.h'
 
-def FOUR_CHAR_CODE(x){ return x;
+function FOUR_CHAR_CODE(x){ return x;}
 kControlDialogItem = 4;
 kButtonDialogItem = kControlDialogItem | 0;
 kCheckBoxDialogItem = kControlDialogItem | 1;

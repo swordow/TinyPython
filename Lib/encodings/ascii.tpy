@@ -19,13 +19,13 @@ class Codec(codecs.Codec){
 
 }
 class IncrementalEncoder(codecs.IncrementalEncoder){
-    def encode(self, input, final=False){
-        return codecs.ascii_encode(input, self.errors)[0];
+    function encode( input, final=false){
+        return codecs.ascii_encode(input, this.errors)[0];
 
 }
 } class IncrementalDecoder(codecs.IncrementalDecoder){
-    def decode(self, input, final=False){
-        return codecs.ascii_decode(input, self.errors)[0];
+    function decode( input, final=false){
+        return codecs.ascii_decode(input, this.errors)[0];
 
 }
 } class StreamWriter(Codec,codecs.StreamWriter){
@@ -44,7 +44,7 @@ class StreamConverter(StreamWriter,StreamReader){
 ### encodings module API
 
 }
-def getregentry(){
+function getregentry(){
     return codecs.CodecInfo(
         name='ascii',
         encode=Codec.encode,

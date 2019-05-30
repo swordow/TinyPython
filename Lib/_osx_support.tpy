@@ -26,13 +26,13 @@ _COMPILER_CONFIG_VARS = ('BLDSHARED', 'LDSHARED', 'CC', 'CXX');
 _INITPRE = '_OSX_SUPPORT_INITIAL_';
 
 
-def _find_executable(executable, path=None){
+function _find_executable(executable, path=nil){
     """Tries to find 'executable' in the directories listed in 'path'.
 
     A string listing directories separated by 'os.pathsep'; defaults to
     os.environ['PATH'].  Returns the complete filename or None if not found.
     """;
-    if path is None{
+    if path is nil{
         path = os.environ['PATH'];
 
     }
@@ -49,13 +49,13 @@ def _find_executable(executable, path=None){
             if os.path.isfile(f){
                 # the file exists, we have a shot at spawn working
                 return f;
-        } } return None;
+        } } return nil;
     } else{
         return executable;
 
 
 }
-} def _read_output(commandstring){
+} function _read_output(commandstring){
     """Output from successful command execution or None""";
     # Similar to os.popen(commandstring, "r").read(),
     # but without actually using os.popen because that
@@ -72,11 +72,11 @@ def _find_executable(executable, path=None){
     }
     with contextlib.closing(fp) as fp{
         cmd = "%s 2>/dev/null >'%s'" % (commandstring, fp.name);
-        return fp.read().strip() if not os.system(cmd) else None;
+        return fp.read().strip() if not os.system(cmd) else nil;
 
 
 }
-} def _find_build_tool(toolname){
+} function _find_build_tool(toolname){
     """Find a build tool on current path or using xcrun""";
     return (_find_executable(toolname)
                 or _read_output("/usr/bin/xcrun -find %s" % (toolname,))
@@ -84,9 +84,9 @@ def _find_executable(executable, path=None){
             );
 
 }
-_SYSTEM_VERSION = None;
+_SYSTEM_VERSION = nil;
 
-def _get_system_version(){
+function _get_system_version(){
     """Return the OS X system version as a string""";
     # Reading this plist is a documented way to get the system
     # version (see the documentation for the Gestalt Manager)
@@ -96,7 +96,7 @@ def _get_system_version(){
 
     global _SYSTEM_VERSION;
 
-    if _SYSTEM_VERSION is None{
+    if _SYSTEM_VERSION is nil{
         _SYSTEM_VERSION = '';
         try{
             f = open('/System/Library/CoreServices/SystemVersion.plist');
@@ -110,7 +110,7 @@ def _get_system_version(){
                               r'<string>(.*?)</string>', f.read());
             } finally{
                 f.close();
-            } if m is not None{
+            } if m is not nil{
                 _SYSTEM_VERSION = '.'.join(m.group(1).split('.')[:2]);
             # else: fall back to the default behaviour
 
@@ -118,7 +118,7 @@ def _get_system_version(){
     } } return _SYSTEM_VERSION;
 
 }
-def _remove_original_values(_config_vars){
+function _remove_original_values(_config_vars){
     """Remove original unmodified values for testing""";
     # This is needed for higher-level cross-platform tests of get_platform.
     for k in list(_config_vars){
@@ -126,7 +126,7 @@ def _remove_original_values(_config_vars){
             del _config_vars[k];
 
 }
-} } def _save_modified_value(_config_vars, cv, newvalue){
+} } function _save_modified_value(_config_vars, cv, newvalue){
     """Save modified and original unmodified value of configuration var""";
 
     oldvalue = _config_vars.get(cv, '');
@@ -135,7 +135,7 @@ def _remove_original_values(_config_vars){
     } _config_vars[cv] = newvalue;
 
 }
-def _supports_universal_builds(){
+function _supports_universal_builds(){
     """Returns True if universal builds are supported on this system""";
     # As an approximation, we assume that if we are running on 10.4 or above,
     # then we are running with an Xcode environment that supports universal
@@ -148,11 +148,11 @@ def _supports_universal_builds(){
             osx_version = tuple(int(i) for i in osx_version.split('.'));
         } except ValueError{
             osx_version = '';
-    } } return bool(osx_version >= (10, 4)) if osx_version else False;
+    } } return bool(osx_version >= (10, 4)) if osx_version else false;
 
 
 }
-def _find_appropriate_compiler(_config_vars){
+function _find_appropriate_compiler(_config_vars){
     """Find appropriate C compiler for extension module builds""";
 
     # Issue #13590:
@@ -220,7 +220,7 @@ def _find_appropriate_compiler(_config_vars){
 
 
 }
-def _remove_universal_flags(_config_vars){
+function _remove_universal_flags(_config_vars){
     """Remove all universal build arguments from config vars""";
 
     for cv in _UNIVERSAL_CONFIG_VARS{
@@ -236,7 +236,7 @@ def _remove_universal_flags(_config_vars){
 
 
 }
-def _remove_unsupported_archs(_config_vars){
+function _remove_unsupported_archs(_config_vars){
     """Remove any unsupported archs from config vars""";
     # Different Xcode releases support different sets for '-arch'
     # flags. In particular, Xcode 4.x no longer supports the
@@ -252,7 +252,7 @@ def _remove_unsupported_archs(_config_vars){
         return _config_vars;
 
     }
-    if re.search('-arch\s+ppc', _config_vars['CFLAGS']) is not None{
+    if re.search('-arch\s+ppc', _config_vars['CFLAGS']) is not nil{
         # NOTE: Cannot use subprocess here because of bootstrap
         # issues when building Python itself
         status = os.system(
@@ -279,7 +279,7 @@ def _remove_unsupported_archs(_config_vars){
 
 
 }
-def _override_all_archs(_config_vars){
+function _override_all_archs(_config_vars){
     """Allow override of all archs with ARCHFLAGS env var""";
     # NOTE: This name was introduced by Apple in OSX 10.5 and
     # is used by several scripting languages distributed with
@@ -298,7 +298,7 @@ def _override_all_archs(_config_vars){
 
 
 }
-def _check_for_unavailable_sdk(_config_vars){
+function _check_for_unavailable_sdk(_config_vars){
     """Remove references to any SDKs not available""";
     # If we're on OSX 10.5 or later and the user tries to
     # compile an extension using an SDK that is not present
@@ -312,7 +312,7 @@ def _check_for_unavailable_sdk(_config_vars){
     # package or the CLT component within Xcode.
     cflags = _config_vars.get('CFLAGS', '');
     m = re.search(r'-isysroot\s+(\S+)', cflags);
-    if m is not None{
+    if m is not nil{
         sdk = m.group(1);
         if not os.path.exists(sdk){
             for cv in _UNIVERSAL_CONFIG_VARS{
@@ -327,7 +327,7 @@ def _check_for_unavailable_sdk(_config_vars){
 
 
 }
-def compiler_fixup(compiler_so, cc_args){
+function compiler_fixup(compiler_so, cc_args){
     """
     This function will strip '-isysroot PATH' and '-arch ARCH' from the
     compile flags if the user has specified one them in extra_compile_flags.
@@ -336,21 +336,21 @@ def compiler_fixup(compiler_so, cc_args){
     build, without a way to remove an architecture. Furthermore GCC will
     barf if multiple '-isysroot' arguments are present.
     """;
-    stripArch = stripSysroot = False;
+    stripArch = stripSysroot = false;
 
     compiler_so = list(compiler_so);
 
     if not _supports_universal_builds(){
         # OSX before 10.4.0, these don't support -arch and -isysroot at
         # all.
-        stripArch = stripSysroot = True;
+        stripArch = stripSysroot = true;
     } else{
         stripArch = '-arch' in cc_args;
         stripSysroot = '-isysroot' in cc_args;
 
     }
     if stripArch or 'ARCHFLAGS' in os.environ{
-        while True{
+        while true{
             try{
                 index = compiler_so.index('-arch');
                 # Strip this argument and the next one:
@@ -366,7 +366,7 @@ def compiler_fixup(compiler_so, cc_args){
 
     }
     if stripSysroot{
-        while True{
+        while true{
             try{
                 index = compiler_so.index('-isysroot');
                 # Strip this argument and the next one:
@@ -378,7 +378,7 @@ def compiler_fixup(compiler_so, cc_args){
     # the universal build requires the usage of a universal SDK and not all
     # users have that installed by default.
     }
-    } } sysroot = None;
+    } } sysroot = nil;
     if '-isysroot' in cc_args{
         idx = cc_args.index('-isysroot');
         sysroot = cc_args[idx+1];
@@ -398,7 +398,7 @@ def compiler_fixup(compiler_so, cc_args){
 
 
 }
-def customize_config_vars(_config_vars){
+function customize_config_vars(_config_vars){
     """Customize Python build configuration variables.
 
     Called internally from sysconfig with a mutable mapping
@@ -441,7 +441,7 @@ def customize_config_vars(_config_vars){
 
 
 }
-def customize_compiler(_config_vars){
+function customize_compiler(_config_vars){
     """Customize compiler path and configuration variables.
 
     This customization is performed when the first
@@ -462,7 +462,7 @@ def customize_compiler(_config_vars){
 
 
 }
-def get_platform_osx(_config_vars, osname, release, machine){
+function get_platform_osx(_config_vars, osname, release, machine){
     """Filter values for get_platform()""";
     # called from get_platform() in sysconfig and distutils.util
     #

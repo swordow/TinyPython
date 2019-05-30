@@ -99,11 +99,11 @@ sys_displayhook(PyObject *self, PyObject *o)
     /* Print value except if None */
     /* After printing, also assign to '_' */
     /* Before, set '_' to None to avoid recursion */
-    if (o == Py_None) {
-        Py_INCREF(Py_None);
-        return Py_None;
+    if (o == Py_Nil) {
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
-    if (PyObject_SetAttrString(builtins, "_", Py_None) != 0)
+    if (PyObject_SetAttrString(builtins, "_", Py_Nil) != 0)
         return NULL;
     if (Py_FlushLine() != 0)
         return NULL;
@@ -119,8 +119,8 @@ sys_displayhook(PyObject *self, PyObject *o)
         return NULL;
     if (PyObject_SetAttrString(builtins, "_", o) != 0)
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(displayhook_doc,
@@ -136,8 +136,8 @@ sys_excepthook(PyObject* self, PyObject* args)
     if (!PyArg_UnpackTuple(args, "excepthook", 3, 3, &exc, &value, &tb))
         return NULL;
     PyErr_Display(exc, value, tb);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(excepthook_doc,
@@ -153,10 +153,10 @@ sys_exc_info(PyObject *self, PyObject *noargs)
     tstate = PyThreadState_GET();
     return Py_BuildValue(
         "(OOO)",
-        tstate->exc_type != NULL ? tstate->exc_type : Py_None,
-        tstate->exc_value != NULL ? tstate->exc_value : Py_None,
+        tstate->exc_type != NULL ? tstate->exc_type : Py_Nil,
+        tstate->exc_value != NULL ? tstate->exc_value : Py_Nil,
         tstate->exc_traceback != NULL ?
-            tstate->exc_traceback : Py_None);
+            tstate->exc_traceback : Py_Nil);
 }
 
 PyDoc_STRVAR(exc_info_doc,
@@ -187,11 +187,11 @@ sys_exc_clear(PyObject *self, PyObject *noargs)
     Py_XDECREF(tmp_value);
     Py_XDECREF(tmp_tb);
     /* For b/w compatibility */
-    PySys_SetObject("exc_type", Py_None);
-    PySys_SetObject("exc_value", Py_None);
-    PySys_SetObject("exc_traceback", Py_None);
-    Py_INCREF(Py_None);
-    return Py_None;
+    PySys_SetObject("exc_type", Py_Nil);
+    PySys_SetObject("exc_value", Py_Nil);
+    PySys_SetObject("exc_traceback", Py_Nil);
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(exc_clear_doc,
@@ -247,8 +247,8 @@ sys_setdefaultencoding(PyObject *self, PyObject *args)
         return NULL;
     if (PyUnicode_SetDefaultEncoding(encoding))
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(setdefaultencoding_doc,
@@ -262,8 +262,8 @@ sys_getfilesystemencoding(PyObject *self)
 {
     if (Py_FileSystemDefaultEncoding)
         return PyString_FromString(Py_FileSystemDefaultEncoding);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(getfilesystemencoding_doc,
@@ -314,7 +314,7 @@ call_trampoline(PyThreadState *tstate, PyObject* callback,
     whatstr = whatstrings[what];
     Py_INCREF(whatstr);
     if (arg == NULL)
-        arg = Py_None;
+        arg = Py_Nil;
     Py_INCREF(arg);
     PyTuple_SET_ITEM(args, 0, (PyObject *)frame);
     PyTuple_SET_ITEM(args, 1, whatstr);
@@ -340,7 +340,7 @@ profile_trampoline(PyObject *self, PyFrameObject *frame,
     PyObject *result;
 
     if (arg == NULL)
-        arg = Py_None;
+        arg = Py_Nil;
     result = call_trampoline(tstate, self, frame, what, arg);
     if (result == NULL) {
         PyEval_SetProfile(NULL, NULL);
@@ -370,7 +370,7 @@ trace_trampoline(PyObject *self, PyFrameObject *frame,
         Py_CLEAR(frame->f_trace);
         return -1;
     }
-    if (result != Py_None) {
+    if (result != Py_Nil) {
         PyObject *temp = frame->f_trace;
         frame->f_trace = NULL;
         Py_XDECREF(temp);
@@ -387,12 +387,12 @@ sys_settrace(PyObject *self, PyObject *args)
 {
     if (trace_init() == -1)
         return NULL;
-    if (args == Py_None)
+    if (args == Py_Nil)
         PyEval_SetTrace(NULL, NULL);
     else
         PyEval_SetTrace(trace_trampoline, args);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(settrace_doc,
@@ -409,7 +409,7 @@ sys_gettrace(PyObject *self, PyObject *args)
     PyObject *temp = tstate->c_traceobj;
 
     if (temp == NULL)
-        temp = Py_None;
+        temp = Py_Nil;
     Py_INCREF(temp);
     return temp;
 }
@@ -426,12 +426,12 @@ sys_setprofile(PyObject *self, PyObject *args)
 {
     if (trace_init() == -1)
         return NULL;
-    if (args == Py_None)
+    if (args == Py_Nil)
         PyEval_SetProfile(NULL, NULL);
     else
         PyEval_SetProfile(profile_trampoline, args);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(setprofile_doc,
@@ -448,7 +448,7 @@ sys_getprofile(PyObject *self, PyObject *args)
     PyObject *temp = tstate->c_profileobj;
 
     if (temp == NULL)
-        temp = Py_None;
+        temp = Py_Nil;
     Py_INCREF(temp);
     return temp;
 }
@@ -466,8 +466,8 @@ sys_setcheckinterval(PyObject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, "i:setcheckinterval", &_Py_CheckInterval))
         return NULL;
     _Py_Ticker = _Py_CheckInterval;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(setcheckinterval_doc,
@@ -500,8 +500,8 @@ sys_settscdump(PyObject *self, PyObject *args)
         tstate->interp->tscdump = 1;
     else
         tstate->interp->tscdump = 0;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 
 }
 
@@ -526,8 +526,8 @@ sys_setrecursionlimit(PyObject *self, PyObject *args)
         return NULL;
     }
     Py_SetRecursionLimit(new_limit);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(setrecursionlimit_doc,
@@ -635,8 +635,8 @@ sys_setdlopenflags(PyObject *self, PyObject *args)
     if (!tstate)
         return NULL;
     tstate->interp->dlopenflags = new_val;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(setdlopenflags_doc,
@@ -679,8 +679,8 @@ sys_mdebug(PyObject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, "i:mdebug", &flag))
         return NULL;
     mallopt(M_DEBUG, flag);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif /* USE_MALLOPT */
 
@@ -908,7 +908,7 @@ static PyObject *
 sys_clear_type_cache(PyObject* self, PyObject* args)
 {
     PyType_ClearCache();
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(sys_clear_type_cache__doc__,

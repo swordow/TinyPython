@@ -248,8 +248,8 @@ signal_pause(PyObject *self)
     if (PyErr_CheckSignals())
         return NULL;
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 PyDoc_STRVAR(pause_doc,
 "pause()\n\
@@ -324,7 +324,7 @@ signal_signal(PyObject *self, PyObject *args)
     if (old_handler != NULL)
         return old_handler;
     else
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(signal_doc,
@@ -357,7 +357,7 @@ signal_getsignal(PyObject *self, PyObject *args)
         return old_handler;
     }
     else {
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     }
 }
 
@@ -395,8 +395,8 @@ signal_siginterrupt(PyObject *self, PyObject *args)
         return NULL;
     }
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 #endif
@@ -615,7 +615,7 @@ initsignal(void)
         else if (t == SIG_IGN)
             Handlers[i].func = IgnoreHandler;
         else
-            Handlers[i].func = Py_None; /* None of our business */
+            Handlers[i].func = Py_Nil; /* None of our business */
         Py_INCREF(Handlers[i].func);
     }
     if (Handlers[SIGINT].func == DefaultHandler) {
@@ -869,7 +869,7 @@ finisignal(void)
         func = Handlers[i].func;
         Handlers[i].tripped = 0;
         Handlers[i].func = NULL;
-        if (func != NULL && func != Py_None &&
+        if (func != NULL && func != Py_Nil &&
             func != DefaultHandler && func != IgnoreHandler)
             PyOS_setsig(i, SIG_DFL);
         Py_XDECREF(func);
@@ -916,7 +916,7 @@ PyErr_CheckSignals(void)
     is_tripped = 0;
 
     if (!(f = (PyObject *)PyEval_GetFrame()))
-        f = Py_None;
+        f = Py_Nil;
 
     for (i = 1; i < NSIG; i++) {
         if (Handlers[i].tripped) {

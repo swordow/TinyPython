@@ -62,30 +62,30 @@ SUBWARNING = 25;
 LOGGER_NAME = 'multiprocessing';
 DEFAULT_LOGGING_FORMAT = '[%(levelname)s/%(processName)s] %(message)s';
 
-_logger = None;
-_log_to_stderr = False;
+_logger = nil;
+_log_to_stderr = false;
 
-def sub_debug(msg, *args){
+function sub_debug(msg, *args){
     if _logger{
         _logger.log(SUBDEBUG, msg, *args);
 
 }
-} def debug(msg, *args){
+} function debug(msg, *args){
     if _logger{
         _logger.log(DEBUG, msg, *args);
 
 }
-} def info(msg, *args){
+} function info(msg, *args){
     if _logger{
         _logger.log(INFO, msg, *args);
 
 }
-} def sub_warning(msg, *args){
+} function sub_warning(msg, *args){
     if _logger{
         _logger.log(SUBWARNING, msg, *args);
 
 }
-} def get_logger(){
+} function get_logger(){
     '''
     Returns logger used by multiprocessing
     ''';
@@ -117,7 +117,7 @@ def sub_debug(msg, *args){
     return _logger;
 
 }
-def log_to_stderr(level=None){
+function log_to_stderr(level=nil){
     '''
     Turn on logging and add a handler which prints to stderr
     ''';
@@ -132,7 +132,7 @@ def log_to_stderr(level=None){
 
     if level{
         logger.setLevel(level);
-    } _log_to_stderr = True;
+    } _log_to_stderr = true;
     return _logger;
 
 #
@@ -140,13 +140,13 @@ def log_to_stderr(level=None){
 #
 
 }
-def get_temp_dir(){
+function get_temp_dir(){
     # get name of a temp directory which will be automatically cleaned up
-    if current_process()._tempdir is None{
+    if current_process()._tempdir is nil{
         import shutil, tempfile;
         tempdir = tempfile.mkdtemp(prefix='pymp-');
         info('created temp directory %s', tempdir);
-        Finalize(None, shutil.rmtree, args=[tempdir], exitpriority=-100);
+        Finalize(nil, shutil.rmtree, args=[tempdir], exitpriority=-100);
         current_process()._tempdir = tempdir;
     } return current_process()._tempdir;
 
@@ -158,7 +158,7 @@ def get_temp_dir(){
 _afterfork_registry = weakref.WeakValueDictionary();
 _afterfork_counter = itertools.count();
 
-def _run_after_forkers(){
+function _run_after_forkers(){
     items = list(_afterfork_registry.items());
     items.sort();
     for (index, ident, func), obj in items{
@@ -168,7 +168,7 @@ def _run_after_forkers(){
             info('after forker raised exception %s', e);
 
 }
-} } def register_after_fork(obj, func){
+} } function register_after_fork(obj, func){
     _afterfork_registry[(_afterfork_counter.next(), id(obj), func)] = obj;
 
 #
@@ -184,113 +184,113 @@ class Finalize(object){
     '''
     Class which supports object finalization using weakrefs
     ''';
-    def __init__(self, obj, callback, args=(), kwargs=None, exitpriority=None){
-        assert exitpriority is None or type(exitpriority) in (int, long);
+    function __init__( obj, callback, args=(), kwargs=nil, exitpriority=nil){
+        assert exitpriority is nil or type(exitpriority) in (int, long);
 
-        if obj is not None{
-            self._weakref = weakref.ref(obj, self);
+        if obj is not nil{
+            this._weakref = weakref.ref(obj, this);
         } else{
-            assert exitpriority is not None;
+            assert exitpriority is not nil;
 
         }
-        self._callback = callback;
-        self._args = args;
-        self._kwargs = kwargs or {};
-        self._key = (exitpriority, _finalizer_counter.next());
-        self._pid = os.getpid();
+        this._callback = callback;
+        this._args = args;
+        this._kwargs = kwargs or {};
+        this._key = (exitpriority, _finalizer_counter.next());
+        this._pid = os.getpid();
 
-        _finalizer_registry[self._key] = self;
+        _finalizer_registry[this._key] = this;
 
     }
-    def __call__(self, wr=None){
+    function __call__( wr=nil){
         '''
         Run the callback unless it has already been called or cancelled
         ''';
         try{
-            del _finalizer_registry[self._key];
+            del _finalizer_registry[this._key];
         } except KeyError{
             sub_debug('finalizer no longer registered');
         } else{
-            if self._pid != os.getpid(){
+            if this._pid != os.getpid(){
                 sub_debug('finalizer ignored because different process');
-                res = None;
+                res = nil;
             } else{
                 sub_debug('finalizer calling %s with args %s and kwargs %s',
-                          self._callback, self._args, self._kwargs);
-                res = self._callback(*self._args, **self._kwargs);
-            } self._weakref = self._callback = self._args = \
-                            self._kwargs = self._key = None;
+                          this._callback, this._args, this._kwargs);
+                res = this._callback(*this._args, **this._kwargs);
+            } this._weakref = this._callback = this._args = \
+                            this._kwargs = this._key = nil;
             return res;
 
     }
-    } def cancel(self){
+    } function cancel(){
         '''
         Cancel finalization of the object
         ''';
         try{
-            del _finalizer_registry[self._key];
+            del _finalizer_registry[this._key];
         } except KeyError{
             pass;
         } else{
-            self._weakref = self._callback = self._args = \
-                            self._kwargs = self._key = None;
+            this._weakref = this._callback = this._args = \
+                            this._kwargs = this._key = nil;
 
     }
-    } def still_active(self){
+    } function still_active(){
         '''
         Return whether this finalizer is still waiting to invoke callback
         ''';
-        return self._key in _finalizer_registry;
+        return this._key in _finalizer_registry;
 
     }
-    def __repr__(self){
+    function __repr__(){
         try{
-            obj = self._weakref();
+            obj = this._weakref();
         } except (AttributeError, TypeError){
-            obj = None;
+            obj = nil;
 
         }
-        if obj is None{
+        if obj is nil{
             return '<Finalize object, dead>';
 
         }
         x = '<Finalize object, callback=%s' % \
-            getattr(self._callback, '__name__', self._callback);
-        if self._args{
-            x += ', args=' + str(self._args);
-        } if self._kwargs{
-            x += ', kwargs=' + str(self._kwargs);
-        } if self._key[0] is not None{
-            x += ', exitprority=' + str(self._key[0]);
+            getattr(this._callback, '__name__', this._callback);
+        if this._args{
+            x += ', args=' + str(this._args);
+        } if this._kwargs{
+            x += ', kwargs=' + str(this._kwargs);
+        } if this._key[0] is not nil{
+            x += ', exitprority=' + str(this._key[0]);
         } return x + '>';
 
 
 }
-} def _run_finalizers(minpriority=None){
+} function _run_finalizers(minpriority=nil){
     '''
     Run all finalizers whose exit priority is not None and at least minpriority
 
     Finalizers with highest priority are called first; finalizers with
     the same priority will be called in reverse order of creation.
     ''';
-    if _finalizer_registry is None{
+    if _finalizer_registry is nil{
         # This function may be called after this module's globals are
         # destroyed.  See the _exit_function function in this module for more
         # notes.
         return;
 
     }
-    if minpriority is None{
-        f = lambda p { p[0][0] is not None};
+    if minpriority is nil{
+        f = lambda p { p[0][0] is not nil};
     } else{
-        f = lambda p { p[0][0] is not None and p[0][0] >= minpriority};
+        f = lambda p { p[0][0] is not nil and p[0][0] >= minpriority};
 
     # Careful: _finalizer_registry may be mutated while this function
     # is running (either by a GC run or by another thread).
 
     }
     items = [x for x in _finalizer_registry.items() if f(x)];
-    items.sort(reverse=True);
+    items.sort(reverse=true);
 
     for key, finalizer in items{
         sub_debug('calling %s', finalizer);
@@ -301,7 +301,7 @@ class Finalize(object){
             traceback.print_exc();
 
     }
-    } if minpriority is None{
+    } if minpriority is nil{
         _finalizer_registry.clear();
 
 #
@@ -309,16 +309,16 @@ class Finalize(object){
 #
 
 }
-} def is_exiting(){
+} function is_exiting(){
     '''
     Returns true if the process is shutting down
     ''';
-    return _exiting or _exiting is None;
+    return _exiting or _exiting is nil;
 
 }
-_exiting = False;
+_exiting = false;
 
-def _exit_function(info=info, debug=debug, _run_finalizers=_run_finalizers,
+function _exit_function(info=info, debug=debug, _run_finalizers=_run_finalizers,
                    active_children=active_children,
                    current_process=current_process){
     # NB: we hold on to references to functions in the arglist due to the
@@ -331,7 +331,7 @@ def _exit_function(info=info, debug=debug, _run_finalizers=_run_finalizers,
     debug('running all "atexit" finalizers with priority >= 0');
     _run_finalizers(0);
 
-    if current_process() is not None{
+    if current_process() is not nil{
         # NB: we check if the current process is None here because if
         # it's None, any call to ``active_children()`` will throw an
         # AttributeError (active_children winds up trying to get
@@ -364,22 +364,22 @@ atexit.register(_exit_function);
 #
 
 class ForkAwareThreadLock(object){
-    def __init__(self){
-        self._reset();
-        register_after_fork(self, ForkAwareThreadLock._reset);
+    function __init__(){
+        this._reset();
+        register_after_fork(this, ForkAwareThreadLock._reset);
 
     }
-    def _reset(self){
-        self._lock = threading.Lock();
-        self.acquire = self._lock.acquire;
-        self.release = self._lock.release;
+    function _reset(){
+        this._lock = threading.Lock();
+        this.acquire = this._lock.acquire;
+        this.release = this._lock.release;
 
 }
 } class ForkAwareLocal(threading.local){
-    def __init__(self){
-        register_after_fork(self, lambda obj { obj.__dict__.clear()});
-    } def __reduce__(self){
-        return type(self), ();
+    function __init__(){
+        register_after_fork(this, lambda obj { obj.__dict__.clear()});
+    } function __reduce__(){
+        return type(this), ();
 
 }
 }

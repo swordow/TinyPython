@@ -1356,8 +1356,8 @@ s_new(PyTypeObject *type, PyObject *args, PyObject *kwds)
     self = type->tp_alloc(type, 0);
     if (self != NULL) {
         PyStructObject *s = (PyStructObject*)self;
-        Py_INCREF(Py_None);
-        s->s_format = Py_None;
+        Py_INCREF(Py_Nil);
+        s->s_format = Py_Nil;
         s->s_codes = NULL;
         s->s_size = -1;
         s->s_len = -1;
@@ -1715,7 +1715,7 @@ s_pack_into(PyObject *self, PyObject *args)
     }
     PyBuffer_Release(&buf);
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject *
@@ -1849,7 +1849,7 @@ static PyObject *
 clearcache(PyObject *self)
 {
     Py_CLEAR(cache);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(calcsize_doc,

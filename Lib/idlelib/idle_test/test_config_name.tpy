@@ -13,12 +13,12 @@ class Dummy_name_dialog(object){
     # Attributes, constant or variable, needed for tests
     used_names = ['used'];
     name = Var();
-    result = None;
-    destroyed = False;
-    def grab_release(self){
+    result = nil;
+    destroyed = false;
+    function grab_release(){
         pass;
-    } def destroy(self){
-        self.destroyed = True;
+    } function destroy(){
+        this.destroyed = true;
 
 # name_ok calls Mbox.showerror if name is not ok
 }
@@ -29,60 +29,60 @@ class ConfigNameTest(unittest.TestCase){
     dialog = Dummy_name_dialog();
 
     @classmethod;
-    def setUpClass(cls){
+    function setUpClass(cls){
         name_dialog_module.tkMessageBox = Mbox;
 
     }
     @classmethod;
-    def tearDownClass(cls){
+    function tearDownClass(cls){
         name_dialog_module.tkMessageBox = orig_mbox;
 
     }
-    def test_blank_name(self){
-        self.dialog.name.set(' ');
-        self.assertEqual(self.dialog.name_ok(), '');
-        self.assertEqual(showerror.title, 'Name Error');
-        self.assertIn('No', showerror.message);
+    function test_blank_name(){
+        this.dialog.name.set(' ');
+        this.assertEqual(this.dialog.name_ok(), '');
+        this.assertEqual(showerror.title, 'Name Error');
+        this.assertIn('No', showerror.message);
 
     }
-    def test_used_name(self){
-        self.dialog.name.set('used');
-        self.assertEqual(self.dialog.name_ok(), '');
-        self.assertEqual(showerror.title, 'Name Error');
-        self.assertIn('use', showerror.message);
+    function test_used_name(){
+        this.dialog.name.set('used');
+        this.assertEqual(this.dialog.name_ok(), '');
+        this.assertEqual(showerror.title, 'Name Error');
+        this.assertIn('use', showerror.message);
 
     }
-    def test_long_name(self){
-        self.dialog.name.set('good'*8);
-        self.assertEqual(self.dialog.name_ok(), '');
-        self.assertEqual(showerror.title, 'Name Error');
-        self.assertIn('too long', showerror.message);
+    function test_long_name(){
+        this.dialog.name.set('good'*8);
+        this.assertEqual(this.dialog.name_ok(), '');
+        this.assertEqual(showerror.title, 'Name Error');
+        this.assertIn('too long', showerror.message);
 
     }
-    def test_good_name(self){
-        self.dialog.name.set('  good ');
+    function test_good_name(){
+        this.dialog.name.set('  good ');
         showerror.title = 'No Error';  # should not be called
-        self.assertEqual(self.dialog.name_ok(), 'good');
-        self.assertEqual(showerror.title, 'No Error');
+        this.assertEqual(this.dialog.name_ok(), 'good');
+        this.assertEqual(showerror.title, 'No Error');
 
     }
-    def test_ok(self){
-        self.dialog.destroyed = False;
-        self.dialog.name.set('good');
-        self.dialog.Ok();
-        self.assertEqual(self.dialog.result, 'good');
-        self.assertTrue(self.dialog.destroyed);
+    function test_ok(){
+        this.dialog.destroyed = false;
+        this.dialog.name.set('good');
+        this.dialog.Ok();
+        this.assertEqual(this.dialog.result, 'good');
+        this.assertTrue(this.dialog.destroyed);
 
     }
-    def test_cancel(self){
-        self.dialog.destroyed = False;
-        self.dialog.Cancel();
-        self.assertEqual(self.dialog.result, '');
-        self.assertTrue(self.dialog.destroyed);
+    function test_cancel(){
+        this.dialog.destroyed = false;
+        this.dialog.Cancel();
+        this.assertEqual(this.dialog.result, '');
+        this.assertTrue(this.dialog.destroyed);
 
 
 }
 } if __name__ == '__main__'{
-    unittest.main(verbosity=2, exit=False);
+    unittest.main(verbosity=2, exit=false);
 
 }

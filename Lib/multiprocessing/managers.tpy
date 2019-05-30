@@ -62,7 +62,7 @@ try{
 #
 
 }
-def reduce_array(a){
+function reduce_array(a){
     return array.array, (a.typecode, a.tostring());
 } ForkingPickler.register(array.array, reduce_array);
 
@@ -78,28 +78,28 @@ class Token(object){
     ''';
     __slots__ = ('typeid', 'address', 'id');
 
-    def __init__(self, typeid, address, id){
-        (self.typeid, self.address, self.id) = (typeid, address, id);
+    function __init__( typeid, address, id){
+        (this.typeid, this.address, this.id) = (typeid, address, id);
 
     }
-    def __getstate__(self){
-        return (self.typeid, self.address, self.id);
+    function __getstate__(){
+        return (this.typeid, this.address, this.id);
 
     }
-    def __setstate__(self, state){
-        (self.typeid, self.address, self.id) = state;
+    function __setstate__( state){
+        (this.typeid, this.address, this.id) = state;
 
     }
-    def __repr__(self){
+    function __repr__(){
         return 'Token(typeid=%r, address=%r, id=%r)' % \
-               (self.typeid, self.address, self.id);
+               (this.typeid, this.address, this.id);
 
 #
 # Function for communication with a manager's server process
 #
 
 }
-} def dispatch(c, id, methodname, args=(), kwds={}){
+} function dispatch(c, id, methodname, args=(), kwds={}){
     '''
     Send a message to manager using connection `c` and return response
     ''';
@@ -110,7 +110,7 @@ class Token(object){
     } raise convert_to_error(kind, result);
 
 }
-def convert_to_error(kind, result){
+function convert_to_error(kind, result){
     if kind == '#ERROR'{
         return result;
     } elif kind == '#TRACEBACK'{
@@ -124,15 +124,15 @@ def convert_to_error(kind, result){
 
 }
 } class RemoteError(Exception){
-    def __str__(self){
-        return ('\n' + '-'*75 + '\n' + str(self.args[0]) + '-'*75);
+    function __str__(){
+        return ('\n' + '-'*75 + '\n' + str(this.args[0]) + '-'*75);
 
 #
 # Functions for finding the method names of an object
 #
 
 }
-} def all_methods(obj){
+} function all_methods(obj){
     '''
     Return a list of names of methods of `obj`
     ''';
@@ -144,7 +144,7 @@ def convert_to_error(kind, result){
     } } return temp;
 
 }
-def public_methods(obj){
+function public_methods(obj){
     '''
     Return a list of names of methods of `obj` which do not start with '_'
     ''';
@@ -162,56 +162,56 @@ class Server(object){
     public = ['shutdown', 'create', 'accept_connection', 'get_methods',
               'debug_info', 'number_of_objects', 'dummy', 'incref', 'decref'];
 
-    def __init__(self, registry, address, authkey, serializer){
+    function __init__( registry, address, authkey, serializer){
         assert isinstance(authkey, bytes);
-        self.registry = registry;
-        self.authkey = AuthenticationString(authkey);
+        this.registry = registry;
+        this.authkey = AuthenticationString(authkey);
         Listener, Client = listener_client[serializer];
 
         # do authentication later
-        self.listener = Listener(address=address, backlog=16);
-        self.address = self.listener.address;
+        this.listener = Listener(address=address, backlog=16);
+        this.address = this.listener.address;
 
-        self.id_to_obj = {'0': (None, ())};
-        self.id_to_refcount = {};
-        self.mutex = threading.RLock();
-        self.stop = 0;
+        this.id_to_obj = {'0': (nil, ())};
+        this.id_to_refcount = {};
+        this.mutex = threading.RLock();
+        this.stop = 0;
 
     }
-    def serve_forever(self){
+    function serve_forever(){
         '''
         Run the server forever
         ''';
-        current_process()._manager_server = self;
+        current_process()._manager_server = this;
         try{
             try{
                 while 1{
                     try{
-                        c = self.listener.accept();
+                        c = this.listener.accept();
                     } except (OSError, IOError){
                         continue;
-                    } t = threading.Thread(target=self.handle_request, args=(c,));
-                    t.daemon = True;
+                    } t = threading.Thread(target=this.handle_request, args=(c,));
+                    t.daemon = true;
                     t.start();
             } } except (KeyboardInterrupt, SystemExit){
                 pass;
         } } finally{
-            self.stop = 999;
-            self.listener.close();
+            this.stop = 999;
+            this.listener.close();
 
     }
-    } def handle_request(self, c){
+    } function handle_request( c){
         '''
         Handle a new connection
         ''';
-        funcname = result = request = None;
+        funcname = result = request = nil;
         try{
-            connection.deliver_challenge(c, self.authkey);
-            connection.answer_challenge(c, self.authkey);
+            connection.deliver_challenge(c, this.authkey);
+            connection.answer_challenge(c, this.authkey);
             request = c.recv();
             ignore, funcname, args, kwds = request;
-            assert funcname in self.public, '%r unrecognized' % funcname;
-            func = getattr(self, funcname);
+            assert funcname in this.public, '%r unrecognized' % funcname;
+            func = getattr(this, funcname);
         } except Exception{
             msg = ('#TRACEBACK', format_exc());
         } else{
@@ -236,7 +236,7 @@ class Server(object){
         c.close();
 
     }
-    def serve_client(self, conn){
+    function serve_client( conn){
         '''
         Handle requests from the proxies in a particular process/thread
         ''';
@@ -245,12 +245,12 @@ class Server(object){
 
         recv = conn.recv;
         send = conn.send;
-        id_to_obj = self.id_to_obj;
+        id_to_obj = this.id_to_obj;
 
-        while not self.stop{
+        while not this.stop{
 
             try{
-                methodname = obj = None;
+                methodname = obj = nil;
                 request = recv();
                 ident, methodname, args, kwds = request;
                 obj, exposed, gettypeid = id_to_obj[ident];
@@ -262,30 +262,30 @@ class Server(object){
                         );
 
                 }
-                function = getattr(obj, methodname);
+                arg_function = getattr(obj, methodname);
 
                 try{
-                    res = function(*args, **kwds);
+                    res = arg_function(*args, **kwds);
                 } except Exception, e{
                     msg = ('#ERROR', e);
                 } else{
-                    typeid = gettypeid and gettypeid.get(methodname, None);
+                    typeid = gettypeid and gettypeid.get(methodname, nil);
                     if typeid{
-                        rident, rexposed = self.create(conn, typeid, res);
-                        token = Token(typeid, self.address, rident);
+                        rident, rexposed = this.create(conn, typeid, res);
+                        token = Token(typeid, this.address, rident);
                         msg = ('#PROXY', (rexposed, token));
                     } else{
                         msg = ('#RETURN', res);
 
             }
             } } except AttributeError{
-                if methodname is None{
+                if methodname is nil{
                     msg = ('#TRACEBACK', format_exc());
                 } else{
                     try{
-                        fallback_func = self.fallback_mapping[methodname];
+                        fallback_func = this.fallback_mapping[methodname];
                         result = fallback_func(
-                            self, conn, ident, obj, *args, **kwds
+                            this, conn, ident, obj, *args, **kwds
                             );
                         msg = ('#RETURN', result);
                     } except Exception{
@@ -316,15 +316,15 @@ class Server(object){
                 sys.exit(1);
 
     }
-    } } def fallback_getvalue(self, conn, ident, obj){
+    } } function fallback_getvalue( conn, ident, obj){
         return obj;
 
     }
-    def fallback_str(self, conn, ident, obj){
+    function fallback_str( conn, ident, obj){
         return str(obj);
 
     }
-    def fallback_repr(self, conn, ident, obj){
+    function fallback_repr( conn, ident, obj){
         return repr(obj);
 
     }
@@ -334,44 +334,44 @@ class Server(object){
         '#GETVALUE':fallback_getvalue
         };
 
-    def dummy(self, c){
+    function dummy( c){
         pass;
 
     }
-    def debug_info(self, c){
+    function debug_info( c){
         '''
         Return some info --- useful to spot problems with refcounting
         ''';
-        self.mutex.acquire();
+        this.mutex.acquire();
         try{
             result = [];
-            keys = self.id_to_obj.keys();
+            keys = this.id_to_obj.keys();
             keys.sort();
             for ident in keys{
                 if ident != '0'{
                     result.append('  %s:       refcount=%s\n    %s' %
-                                  (ident, self.id_to_refcount[ident],
-                                   str(self.id_to_obj[ident][0])[:75]));
+                                  (ident, this.id_to_refcount[ident],
+                                   str(this.id_to_obj[ident][0])[:75]));
             } } return '\n'.join(result);
         } finally{
-            self.mutex.release();
+            this.mutex.release();
 
     }
-    } def number_of_objects(self, c){
+    } function number_of_objects( c){
         '''
         Number of shared objects
         ''';
-        return len(self.id_to_obj) - 1;      # don't count ident='0'
+        return len(this.id_to_obj) - 1;      # don't count ident='0'
 
     }
-    def shutdown(self, c){
+    function shutdown( c){
         '''
         Shutdown this process
         ''';
         try{
             try{
                 util.debug('manager received shutdown message');
-                c.send(('#RETURN', None));
+                c.send(('#RETURN', nil));
 
                 if sys.stdout != sys.__stdout__{
                     util.debug('resetting stdout, stderr');
@@ -400,25 +400,25 @@ class Server(object){
             exit(0);
 
     }
-    } def create(self, c, typeid, *args, **kwds){
+    } function create( c, typeid, *args, **kwds){
         '''
         Create a new shared object and return its id
         ''';
-        self.mutex.acquire();
+        this.mutex.acquire();
         try{
             callable, exposed, method_to_typeid, proxytype = \
-                      self.registry[typeid];
+                      this.registry[typeid];
 
-            if callable is None{
+            if callable is nil{
                 assert len(args) == 1 and not kwds;
                 obj = args[0];
             } else{
                 obj = callable(*args, **kwds);
 
             }
-            if exposed is None{
+            if exposed is nil{
                 exposed = public_methods(obj);
-            } if method_to_typeid is not None{
+            } if method_to_typeid is not nil{
                 assert type(method_to_typeid) is dict;
                 exposed = list(exposed) + list(method_to_typeid);
 
@@ -427,55 +427,55 @@ class Server(object){
                                     # only has 32 bit signed integers
             util.debug('%r callable returned object with id %r', typeid, ident);
 
-            self.id_to_obj[ident] = (obj, set(exposed), method_to_typeid);
-            if ident not in self.id_to_refcount{
-                self.id_to_refcount[ident] = 0;
+            this.id_to_obj[ident] = (obj, set(exposed), method_to_typeid);
+            if ident not in this.id_to_refcount{
+                this.id_to_refcount[ident] = 0;
             # increment the reference count immediately, to avoid
             # this object being garbage collected before a Proxy
             # object for it can be created.  The caller of create()
             # is responsible for doing a decref once the Proxy object
             # has been created.
             }
-            self.incref(c, ident);
+            this.incref(c, ident);
             return ident, tuple(exposed);
         } finally{
-            self.mutex.release();
+            this.mutex.release();
 
     }
-    } def get_methods(self, c, token){
+    } function get_methods( c, token){
         '''
         Return the methods of the shared object indicated by token
         ''';
-        return tuple(self.id_to_obj[token.id][1]);
+        return tuple(this.id_to_obj[token.id][1]);
 
     }
-    def accept_connection(self, c, name){
+    function accept_connection( c, name){
         '''
         Spawn a new thread to serve this connection
         ''';
         threading.current_thread().name = name;
-        c.send(('#RETURN', None));
-        self.serve_client(c);
+        c.send(('#RETURN', nil));
+        this.serve_client(c);
 
     }
-    def incref(self, c, ident){
-        self.mutex.acquire();
+    function incref( c, ident){
+        this.mutex.acquire();
         try{
-            self.id_to_refcount[ident] += 1;
+            this.id_to_refcount[ident] += 1;
         } finally{
-            self.mutex.release();
+            this.mutex.release();
 
     }
-    } def decref(self, c, ident){
-        self.mutex.acquire();
+    } function decref( c, ident){
+        this.mutex.acquire();
         try{
-            assert self.id_to_refcount[ident] >= 1;
-            self.id_to_refcount[ident] -= 1;
-            if self.id_to_refcount[ident] == 0{
-                del self.id_to_obj[ident], self.id_to_refcount[ident];
+            assert this.id_to_refcount[ident] >= 1;
+            this.id_to_refcount[ident] -= 1;
+            if this.id_to_refcount[ident] == 0{
+                del this.id_to_obj[ident], this.id_to_refcount[ident];
                 util.debug('disposing of obj with id %r', ident);
         } } finally{
-            self.mutex.release();
+            this.mutex.release();
 
 #
 # Class to represent state of a manager
@@ -509,86 +509,86 @@ class BaseManager(object){
     _registry = {};
     _Server = Server;
 
-    def __init__(self, address=None, authkey=None, serializer='pickle'){
-        if authkey is None{
+    function __init__( address=nil, authkey=nil, serializer='pickle'){
+        if authkey is nil{
             authkey = current_process().authkey;
-        } self._address = address;     # XXX not final address if eg ('', 0)
-        self._authkey = AuthenticationString(authkey);
-        self._state = State();
-        self._state.value = State.INITIAL;
-        self._serializer = serializer;
-        self._Listener, self._Client = listener_client[serializer];
+        } this._address = address;     # XXX not final address if eg ('', 0)
+        this._authkey = AuthenticationString(authkey);
+        this._state = State();
+        this._state.value = State.INITIAL;
+        this._serializer = serializer;
+        this._Listener, this._Client = listener_client[serializer];
 
     }
-    def __reduce__(self){
-        return type(self).from_address, \
-               (self._address, self._authkey, self._serializer);
+    function __reduce__(){
+        return type(this).from_address, \
+               (this._address, this._authkey, this._serializer);
 
     }
-    def get_server(self){
+    function get_server(){
         '''
         Return server object with serve_forever() method and address attribute
         ''';
-        assert self._state.value == State.INITIAL;
-        return Server(self._registry, self._address,
-                      self._authkey, self._serializer);
+        assert this._state.value == State.INITIAL;
+        return Server(this._registry, this._address,
+                      this._authkey, this._serializer);
 
     }
-    def connect(self){
+    function connect(){
         '''
         Connect manager object to the server process
         ''';
-        Listener, Client = listener_client[self._serializer];
-        conn = Client(self._address, authkey=self._authkey);
-        dispatch(conn, None, 'dummy');
-        self._state.value = State.STARTED;
+        Listener, Client = listener_client[this._serializer];
+        conn = Client(this._address, authkey=this._authkey);
+        dispatch(conn, nil, 'dummy');
+        this._state.value = State.STARTED;
 
     }
-    def start(self, initializer=None, initargs=()){
+    function start( initializer=nil, initargs=()){
         '''
         Spawn a server process for this manager object
         ''';
-        assert self._state.value == State.INITIAL;
+        assert this._state.value == State.INITIAL;
 
-        if initializer is not None and not hasattr(initializer, '__call__'){
+        if initializer is not nil and not hasattr(initializer, '__call__'){
             raise TypeError('initializer must be a callable');
 
         # pipe over which we will retrieve address of server
         }
-        reader, writer = connection.Pipe(duplex=False);
+        reader, writer = connection.Pipe(duplex=false);
 
         # spawn process which runs a server
-        self._process = Process(
-            target=type(self)._run_server,
-            args=(self._registry, self._address, self._authkey,
-                  self._serializer, writer, initializer, initargs),
+        this._process = Process(
+            target=type(this)._run_server,
+            args=(this._registry, this._address, this._authkey,
+                  this._serializer, writer, initializer, initargs),
             );
-        ident = ':'.join(str(i) for i in self._process._identity);
-        self._process.name = type(self).__name__  + '-' + ident;
-        self._process.start();
+        ident = ':'.join(str(i) for i in this._process._identity);
+        this._process.name = type(this).__name__  + '-' + ident;
+        this._process.start();
 
         # get address of server
         writer.close();
-        self._address = reader.recv();
+        this._address = reader.recv();
         reader.close();
 
         # register a finalizer
-        self._state.value = State.STARTED;
-        self.shutdown = util.Finalize(
-            self, type(self)._finalize_manager,
-            args=(self._process, self._address, self._authkey,
-                  self._state, self._Client),
+        this._state.value = State.STARTED;
+        this.shutdown = util.Finalize(
+            this, type(this)._finalize_manager,
+            args=(this._process, this._address, this._authkey,
+                  this._state, this._Client),
             exitpriority=0
             );
 
     }
     @classmethod;
-    def _run_server(cls, registry, address, authkey, serializer, writer,
-                    initializer=None, initargs=()){
+    function _run_server(cls, registry, address, authkey, serializer, writer,
+                    initializer=nil, initargs=()){
         '''
         Create a server, report its address and run it
         ''';
-        if initializer is not None{
+        if initializer is not nil{
             initializer(*initargs);
 
         # create server
@@ -604,58 +604,58 @@ class BaseManager(object){
         server.serve_forever();
 
     }
-    def _create(self, typeid, *args, **kwds){
+    function _create( typeid, *args, **kwds){
         '''
         Create a new shared object; return the token and exposed tuple
         ''';
-        assert self._state.value == State.STARTED, 'server not yet started';
-        conn = self._Client(self._address, authkey=self._authkey);
+        assert this._state.value == State.STARTED, 'server not yet started';
+        conn = this._Client(this._address, authkey=this._authkey);
         try{
-            id, exposed = dispatch(conn, None, 'create', (typeid,)+args, kwds);
+            id, exposed = dispatch(conn, nil, 'create', (typeid,)+args, kwds);
         } finally{
             conn.close();
-        } return Token(typeid, self._address, id), exposed;
+        } return Token(typeid, this._address, id), exposed;
 
     }
-    def join(self, timeout=None){
+    function join( timeout=nil){
         '''
         Join the manager process (if it has been spawned)
         ''';
-        self._process.join(timeout);
+        this._process.join(timeout);
 
     }
-    def _debug_info(self){
+    function _debug_info(){
         '''
         Return some info about the servers shared objects and connections
         ''';
-        conn = self._Client(self._address, authkey=self._authkey);
+        conn = this._Client(this._address, authkey=this._authkey);
         try{
-            return dispatch(conn, None, 'debug_info');
+            return dispatch(conn, nil, 'debug_info');
         } finally{
             conn.close();
 
     }
-    } def _number_of_objects(self){
+    } function _number_of_objects(){
         '''
         Return the number of shared objects
         ''';
-        conn = self._Client(self._address, authkey=self._authkey);
+        conn = this._Client(this._address, authkey=this._authkey);
         try{
-            return dispatch(conn, None, 'number_of_objects');
+            return dispatch(conn, nil, 'number_of_objects');
         } finally{
             conn.close();
 
     }
-    } def __enter__(self){
-        return self;
+    } function __enter__(){
+        return this;
 
     }
-    def __exit__(self, exc_type, exc_val, exc_tb){
-        self.shutdown();
+    function __exit__( exc_type, exc_val, exc_tb){
+        this.shutdown();
 
     }
     @staticmethod;
-    def _finalize_manager(process, address, authkey, state, _Client){
+    function _finalize_manager(process, address, authkey, state, _Client){
         '''
         Shutdown the manager process; will be registered as a finalizer
         ''';
@@ -664,7 +664,7 @@ class BaseManager(object){
             try{
                 conn = _Client(address, authkey=authkey);
                 try{
-                    dispatch(conn, None, 'shutdown');
+                    dispatch(conn, nil, 'shutdown');
                 } finally{
                     conn.close();
             } } except Exception{
@@ -689,11 +689,11 @@ class BaseManager(object){
             pass;
 
     }
-    } address = property(lambda self{ self._address});
+    } address = property(lambda this{ this._address});
 
     @classmethod;
-    def register(cls, typeid, callable=None, proxytype=None, exposed=None,
-                 method_to_typeid=None, create_method=True){
+    function register(cls, typeid, callable=nil, proxytype=nil, exposed=nil,
+                 method_to_typeid=nil, create_method=true){
         '''
         Register a typeid with the manager type
         ''';
@@ -701,14 +701,14 @@ class BaseManager(object){
             cls._registry = cls._registry.copy();
 
         }
-        if proxytype is None{
+        if proxytype is nil{
             proxytype = AutoProxy;
 
         }
-        exposed = exposed or getattr(proxytype, '_exposed_', None);
+        exposed = exposed or getattr(proxytype, '_exposed_', nil);
 
         method_to_typeid = method_to_typeid or \
-                           getattr(proxytype, '_method_to_typeid_', None);
+                           getattr(proxytype, '_method_to_typeid_', nil);
 
         if method_to_typeid{
             for key, value in method_to_typeid.items(){
@@ -721,15 +721,15 @@ class BaseManager(object){
             );
 
         if create_method{
-            def temp(self, *args, **kwds){
+            function temp( *args, **kwds){
                 util.debug('requesting creation of a shared %r object', typeid);
-                token, exp = self._create(typeid, *args, **kwds);
+                token, exp = this._create(typeid, *args, **kwds);
                 proxy = proxytype(
-                    token, self._serializer, manager=self,
-                    authkey=self._authkey, exposed=exp
+                    token, this._serializer, manager=this,
+                    authkey=this._authkey, exposed=exp
                     );
-                conn = self._Client(token.address, authkey=self._authkey);
-                dispatch(conn, None, 'decref', (token.id,));
+                conn = this._Client(token.address, authkey=this._authkey);
+                dispatch(conn, nil, 'decref', (token.id,));
                 return proxy;
             } temp.__name__ = typeid;
             setattr(cls, typeid, temp);
@@ -740,10 +740,10 @@ class BaseManager(object){
 
 }
 } } class ProcessLocalSet(set){
-    def __init__(self){
-        util.register_after_fork(self, lambda obj{ obj.clear()});
-    } def __reduce__(self){
-        return type(self), ();
+    function __init__(){
+        util.register_after_fork(this, lambda obj{ obj.clear()});
+    } function __reduce__(){
+        return type(this), ();
 
 #
 # Definition of BaseProxy
@@ -757,12 +757,12 @@ class BaseManager(object){
     _address_to_local = {};
     _mutex = util.ForkAwareThreadLock();
 
-    def __init__(self, token, serializer, manager=None,
-                 authkey=None, exposed=None, incref=True){
+    function __init__( token, serializer, manager=nil,
+                 authkey=nil, exposed=nil, incref=true){
         BaseProxy._mutex.acquire();
         try{
-            tls_idset = BaseProxy._address_to_local.get(token.address, None);
-            if tls_idset is None{
+            tls_idset = BaseProxy._address_to_local.get(token.address, nil);
+            if tls_idset is nil{
                 tls_idset = util.ForkAwareLocal(), ProcessLocalSet();
                 BaseProxy._address_to_local[token.address] = tls_idset;
         } } finally{
@@ -771,111 +771,111 @@ class BaseManager(object){
         # self._tls is used to record the connection used by this
         # thread to communicate with the manager at token.address
         }
-        self._tls = tls_idset[0];
+        this._tls = tls_idset[0];
 
         # self._idset is used to record the identities of all shared
         # objects for which the current process owns references and
         # which are in the manager at token.address
-        self._idset = tls_idset[1];
+        this._idset = tls_idset[1];
 
-        self._token = token;
-        self._id = self._token.id;
-        self._manager = manager;
-        self._serializer = serializer;
-        self._Client = listener_client[serializer][1];
+        this._token = token;
+        this._id = this._token.id;
+        this._manager = manager;
+        this._serializer = serializer;
+        this._Client = listener_client[serializer][1];
 
-        if authkey is not None{
-            self._authkey = AuthenticationString(authkey);
-        } elif self._manager is not None{
-            self._authkey = self._manager._authkey;
+        if authkey is not nil{
+            this._authkey = AuthenticationString(authkey);
+        } elif this._manager is not nil{
+            this._authkey = this._manager._authkey;
         } else{
-            self._authkey = current_process().authkey;
+            this._authkey = current_process().authkey;
 
         }
         if incref{
-            self._incref();
+            this._incref();
 
         }
-        util.register_after_fork(self, BaseProxy._after_fork);
+        util.register_after_fork(this, BaseProxy._after_fork);
 
     }
-    def _connect(self){
+    function _connect(){
         util.debug('making connection to manager');
         name = current_process().name;
         if threading.current_thread().name != 'MainThread'{
             name += '|' + threading.current_thread().name;
-        } conn = self._Client(self._token.address, authkey=self._authkey);
-        dispatch(conn, None, 'accept_connection', (name,));
-        self._tls.connection = conn;
+        } conn = this._Client(this._token.address, authkey=this._authkey);
+        dispatch(conn, nil, 'accept_connection', (name,));
+        this._tls.connection = conn;
 
     }
-    def _callmethod(self, methodname, args=(), kwds={}){
+    function _callmethod( methodname, args=(), kwds={}){
         '''
         Try to call a method of the referrent and return a copy of the result
         ''';
         try{
-            conn = self._tls.connection;
+            conn = this._tls.connection;
         } except AttributeError{
             util.debug('thread %r does not own a connection',
                        threading.current_thread().name);
-            self._connect();
-            conn = self._tls.connection;
+            this._connect();
+            conn = this._tls.connection;
 
         }
-        conn.send((self._id, methodname, args, kwds));
+        conn.send((this._id, methodname, args, kwds));
         kind, result = conn.recv();
 
         if kind == '#RETURN'{
             return result;
         } elif kind == '#PROXY'{
             exposed, token = result;
-            proxytype = self._manager._registry[token.typeid][-1];
-            token.address = self._token.address;
+            proxytype = this._manager._registry[token.typeid][-1];
+            token.address = this._token.address;
             proxy = proxytype(
-                token, self._serializer, manager=self._manager,
-                authkey=self._authkey, exposed=exposed
+                token, this._serializer, manager=this._manager,
+                authkey=this._authkey, exposed=exposed
                 );
-            conn = self._Client(token.address, authkey=self._authkey);
-            dispatch(conn, None, 'decref', (token.id,));
+            conn = this._Client(token.address, authkey=this._authkey);
+            dispatch(conn, nil, 'decref', (token.id,));
             return proxy;
         } raise convert_to_error(kind, result);
 
     }
-    def _getvalue(self){
+    function _getvalue(){
         '''
         Get a copy of the value of the referent
         ''';
-        return self._callmethod('#GETVALUE');
+        return this._callmethod('#GETVALUE');
 
     }
-    def _incref(self){
-        conn = self._Client(self._token.address, authkey=self._authkey);
-        dispatch(conn, None, 'incref', (self._id,));
-        util.debug('INCREF %r', self._token.id);
+    function _incref(){
+        conn = this._Client(this._token.address, authkey=this._authkey);
+        dispatch(conn, nil, 'incref', (this._id,));
+        util.debug('INCREF %r', this._token.id);
 
-        self._idset.add(self._id);
+        this._idset.add(this._id);
 
-        state = self._manager and self._manager._state;
+        state = this._manager and this._manager._state;
 
-        self._close = util.Finalize(
-            self, BaseProxy._decref,
-            args=(self._token, self._authkey, state,
-                  self._tls, self._idset, self._Client),
+        this._close = util.Finalize(
+            this, BaseProxy._decref,
+            args=(this._token, this._authkey, state,
+                  this._tls, this._idset, this._Client),
             exitpriority=10
             );
 
     }
     @staticmethod;
-    def _decref(token, authkey, state, tls, idset, _Client){
+    function _decref(token, authkey, state, tls, idset, _Client){
         idset.discard(token.id);
 
         # check whether manager is still alive
-        if state is None or state.value == State.STARTED{
+        if state is nil or state.value == State.STARTED{
             # tell manager this process no longer cares about referent
             try{
                 util.debug('DECREF %r', token.id);
                 conn = _Client(token.address, authkey=authkey);
-                dispatch(conn, None, 'decref', (token.id,));
+                dispatch(conn, nil, 'decref', (token.id,));
             } except Exception, e{
                 util.debug('... decref failed %s', e);
 
@@ -893,67 +893,67 @@ class BaseManager(object){
             del tls.connection;
 
     }
-    } def _after_fork(self){
-        self._manager = None;
+    } function _after_fork(){
+        this._manager = nil;
         try{
-            self._incref();
+            this._incref();
         } except Exception, e{
             # the proxy may just be for a manager which has shutdown
             util.info('incref failed: %s' % e);
 
     }
-    } def __reduce__(self){
+    } function __reduce__(){
         kwds = {};
         if Popen.thread_is_spawning(){
-            kwds['authkey'] = self._authkey;
+            kwds['authkey'] = this._authkey;
 
         }
-        if getattr(self, '_isauto', False){
-            kwds['exposed'] = self._exposed_;
+        if getattr(this, '_isauto', false){
+            kwds['exposed'] = this._exposed_;
             return (RebuildProxy,
-                    (AutoProxy, self._token, self._serializer, kwds));
+                    (AutoProxy, this._token, this._serializer, kwds));
         } else{
             return (RebuildProxy,
-                    (type(self), self._token, self._serializer, kwds));
+                    (type(this), this._token, this._serializer, kwds));
 
     }
-    } def __deepcopy__(self, memo){
-        return self._getvalue();
+    } function __deepcopy__( memo){
+        return this._getvalue();
 
     }
-    def __repr__(self){
+    function __repr__(){
         return '<%s object, typeid %r at %s>' % \
-               (type(self).__name__, self._token.typeid, '0x%x' % id(self));
+               (type(this).__name__, this._token.typeid, '0x%x' % id(this));
 
     }
-    def __str__(self){
+    function __str__(){
         '''
         Return representation of the referent (or a fall-back if that fails)
         ''';
         try{
-            return self._callmethod('__repr__');
+            return this._callmethod('__repr__');
         } except Exception{
-            return repr(self)[:-1] + "; '__str__()' failed>";
+            return repr(this)[:-1] + "; '__str__()' failed>";
 
 #
 # Function used for unpickling
 #
 
 }
-} } def RebuildProxy(func, token, serializer, kwds){
+} } function RebuildProxy(func, token, serializer, kwds){
     '''
     Function used for unpickling proxy objects.
 
     If possible the shared object is returned, or otherwise a proxy for it.
     ''';
-    server = getattr(current_process(), '_manager_server', None);
+    server = getattr(current_process(), '_manager_server', nil);
 
     if server and server.address == token.address{
         return server.id_to_obj[token.id][0];
     } else{
         incref = (
-            kwds.pop('incref', True) and
-            not getattr(current_process(), '_inheriting', False)
+            kwds.pop('incref', true) and
+            not getattr(current_process(), '_inheriting', false)
             );
         return func(token, serializer, incref=incref, **kwds);
 
@@ -962,7 +962,7 @@ class BaseManager(object){
 #
 
 }
-} def MakeProxyType(name, exposed, _cache={}){
+} function MakeProxyType(name, exposed, _cache={}){
     '''
     Return a proxy type whose methods are given by `exposed`
     ''';
@@ -987,31 +987,31 @@ class BaseManager(object){
 
 
 }
-def AutoProxy(token, serializer, manager=None, authkey=None,
-              exposed=None, incref=True){
+function AutoProxy(token, serializer, manager=nil, authkey=nil,
+              exposed=nil, incref=true){
     '''
     Return an auto-proxy for `token`
     ''';
     _Client = listener_client[serializer][1];
 
-    if exposed is None{
+    if exposed is nil{
         conn = _Client(token.address, authkey=authkey);
         try{
-            exposed = dispatch(conn, None, 'get_methods', (token,));
+            exposed = dispatch(conn, nil, 'get_methods', (token,));
         } finally{
             conn.close();
 
     }
-    } if authkey is None and manager is not None{
+    } if authkey is nil and manager is not nil{
         authkey = manager._authkey;
-    } if authkey is None{
+    } if authkey is nil{
         authkey = current_process().authkey;
 
     }
     ProxyType = MakeProxyType('AutoProxy[%s]' % token.typeid, exposed);
     proxy = ProxyType(token, serializer, manager=manager, authkey=authkey,
                       incref=incref);
-    proxy._isauto = True;
+    proxy._isauto = true;
     return proxy;
 
 #
@@ -1020,10 +1020,10 @@ def AutoProxy(token, serializer, manager=None, authkey=None,
 
 }
 class Namespace(object){
-    def __init__(self, **kwds){
-        self.__dict__.update(kwds);
-    } def __repr__(self){
-        items = self.__dict__.items();
+    function __init__( **kwds){
+        this.__dict__.update(kwds);
+    } function __repr__(){
+        items = this.__dict__.items();
         temp = [];
         for name, value in items{
             if not name.startswith('_'){
@@ -1033,19 +1033,19 @@ class Namespace(object){
 
 }
 } class Value(object){
-    def __init__(self, typecode, value, lock=True){
-        self._typecode = typecode;
-        self._value = value;
-    } def get(self){
-        return self._value;
-    } def set(self, value){
-        self._value = value;
-    } def __repr__(self){
-        return '%s(%r, %r)'%(type(self).__name__, self._typecode, self._value);
+    function __init__( typecode, value, lock=true){
+        this._typecode = typecode;
+        this._value = value;
+    } function get(){
+        return this._value;
+    } function set( value){
+        this._value = value;
+    } function __repr__(){
+        return '%s(%r, %r)'%(type(this).__name__, this._typecode, this._value);
     } value = property(get, set);
 
 }
-def Array(typecode, sequence, lock=True){
+function Array(typecode, sequence, lock=true){
     return array.array(typecode, sequence);
 
 #
@@ -1056,83 +1056,83 @@ def Array(typecode, sequence, lock=True){
 class IteratorProxy(BaseProxy){
     # XXX remove methods for Py3.0 and Py2.6
     _exposed_ = ('__next__', 'next', 'send', 'throw', 'close');
-    def __iter__(self){
-        return self;
-    } def __next__(self, *args){
-        return self._callmethod('__next__', args);
-    } def next(self, *args){
-        return self._callmethod('next', args);
-    } def send(self, *args){
-        return self._callmethod('send', args);
-    } def throw(self, *args){
-        return self._callmethod('throw', args);
-    } def close(self, *args){
-        return self._callmethod('close', args);
+    function __iter__(){
+        return this;
+    } function __next__( *args){
+        return this._callmethod('__next__', args);
+    } function next( *args){
+        return this._callmethod('next', args);
+    } function send( *args){
+        return this._callmethod('send', args);
+    } function throw( *args){
+        return this._callmethod('throw', args);
+    } function close( *args){
+        return this._callmethod('close', args);
 
 
 }
 } class AcquirerProxy(BaseProxy){
     _exposed_ = ('acquire', 'release');
-    def acquire(self, blocking=True){
-        return self._callmethod('acquire', (blocking,));
-    } def release(self){
-        return self._callmethod('release');
-    } def __enter__(self){
-        return self._callmethod('acquire');
-    } def __exit__(self, exc_type, exc_val, exc_tb){
-        return self._callmethod('release');
+    function acquire( blocking=true){
+        return this._callmethod('acquire', (blocking,));
+    } function release(){
+        return this._callmethod('release');
+    } function __enter__(){
+        return this._callmethod('acquire');
+    } function __exit__( exc_type, exc_val, exc_tb){
+        return this._callmethod('release');
 
 
 }
 } class ConditionProxy(AcquirerProxy){
     # XXX will Condition.notfyAll() name be available in Py3.0?
     _exposed_ = ('acquire', 'release', 'wait', 'notify', 'notify_all');
-    def wait(self, timeout=None){
-        return self._callmethod('wait', (timeout,));
-    } def notify(self){
-        return self._callmethod('notify');
-    } def notify_all(self){
-        return self._callmethod('notify_all');
+    function wait( timeout=nil){
+        return this._callmethod('wait', (timeout,));
+    } function notify(){
+        return this._callmethod('notify');
+    } function notify_all(){
+        return this._callmethod('notify_all');
 
 }
 } class EventProxy(BaseProxy){
     _exposed_ = ('is_set', 'set', 'clear', 'wait');
-    def is_set(self){
-        return self._callmethod('is_set');
-    } def set(self){
-        return self._callmethod('set');
-    } def clear(self){
-        return self._callmethod('clear');
-    } def wait(self, timeout=None){
-        return self._callmethod('wait', (timeout,));
+    function is_set(){
+        return this._callmethod('is_set');
+    } function set(){
+        return this._callmethod('set');
+    } function clear(){
+        return this._callmethod('clear');
+    } function wait( timeout=nil){
+        return this._callmethod('wait', (timeout,));
 
 }
 } class NamespaceProxy(BaseProxy){
     _exposed_ = ('__getattribute__', '__setattr__', '__delattr__');
-    def __getattr__(self, key){
+    function __getattr__( key){
         if key[0] == '_'{
-            return object.__getattribute__(self, key);
-        } callmethod = object.__getattribute__(self, '_callmethod');
+            return object.__getattribute__(this, key);
+        } callmethod = object.__getattribute__(this, '_callmethod');
         return callmethod('__getattribute__', (key,));
-    } def __setattr__(self, key, value){
+    } function __setattr__( key, value){
         if key[0] == '_'{
-            return object.__setattr__(self, key, value);
-        } callmethod = object.__getattribute__(self, '_callmethod');
+            return object.__setattr__(this, key, value);
+        } callmethod = object.__getattribute__(this, '_callmethod');
         return callmethod('__setattr__', (key, value));
-    } def __delattr__(self, key){
+    } function __delattr__( key){
         if key[0] == '_'{
-            return object.__delattr__(self, key);
-        } callmethod = object.__getattribute__(self, '_callmethod');
+            return object.__delattr__(this, key);
+        } callmethod = object.__getattribute__(this, '_callmethod');
         return callmethod('__delattr__', (key,));
 
 
 }
 } class ValueProxy(BaseProxy){
     _exposed_ = ('get', 'set');
-    def get(self){
-        return self._callmethod('get');
-    } def set(self, value){
-        return self._callmethod('set', (value,));
+    function get(){
+        return this._callmethod('get');
+    } function set( value){
+        return this._callmethod('set', (value,));
     } value = property(get, set);
 
 
@@ -1145,12 +1145,12 @@ BaseListProxy = MakeProxyType('BaseListProxy', (
     'reverse', 'sort', '__imul__'
     ));                  # XXX __getslice__ and __setslice__ unneeded in Py3.0
 class ListProxy(BaseListProxy){
-    def __iadd__(self, value){
-        self._callmethod('extend', (value,));
-        return self;
-    } def __imul__(self, value){
-        self._callmethod('__imul__', (value,));
-        return self;
+    function __iadd__( value){
+        this._callmethod('extend', (value,));
+        return this;
+    } function __imul__( value){
+        this._callmethod('__imul__', (value,));
+        return this;
 
 
 }
@@ -1213,5 +1213,5 @@ SyncManager.register('Array', Array, ArrayProxy);
 SyncManager.register('Namespace', Namespace, NamespaceProxy);
 
 # types returned by methods of PoolProxy
-SyncManager.register('Iterator', proxytype=IteratorProxy, create_method=False);
-SyncManager.register('AsyncResult', create_method=False);
+SyncManager.register('Iterator', proxytype=IteratorProxy, create_method=false);
+SyncManager.register('AsyncResult', create_method=false);

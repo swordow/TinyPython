@@ -76,8 +76,8 @@ test_config(PyObject *self)
 
 #undef CHECK_SIZEOF
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject*
@@ -119,8 +119,8 @@ test_list_api(PyObject *self)
     Py_DECREF(list);
 #undef NLIST
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static int
@@ -178,8 +178,8 @@ test_dict_iteration(PyObject* self)
         }
     }
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 
@@ -239,7 +239,7 @@ test_lazy_hash_inheritance(PyObject* self)
     if (type->tp_dict != NULL)
         /* The type has already been initialized. This probably means
            -R is being used. */
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
 
 
     obj = PyObject_New(PyObject, type);
@@ -287,7 +287,7 @@ test_lazy_hash_inheritance(PyObject* self)
 
     Py_DECREF(obj);
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 
@@ -380,7 +380,7 @@ test_broken_memoryview(PyObject* self)
 
     PyErr_Clear();
     Py_DECREF(obj);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject *
@@ -428,7 +428,7 @@ test_to_contiguous(PyObject* self, PyObject *noargs)
         }
     }
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject *
@@ -479,7 +479,7 @@ test_from_contiguous(PyObject* self, PyObject *noargs)
         }
     }
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 
@@ -719,8 +719,8 @@ test_long_and_overflow(PyObject *self)
         return raiseTestError("test_long_and_overflow",
             "overflow was not cleared");
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 /* Test the PyLong_AsLongLongAndOverflow API. General conversion to
@@ -884,8 +884,8 @@ test_long_long_and_overflow(PyObject *self)
         return raiseTestError("test_long_long_and_overflow",
             "overflow was not cleared");
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 /* Test the L code for PyArg_ParseTuple.  This should deliver a PY_LONG_LONG
@@ -932,8 +932,8 @@ test_L_code(PyObject *self)
             "L code returned wrong value for int 42");
 
     Py_DECREF(tuple);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 #endif  /* ifdef HAVE_LONG_LONG */
@@ -941,7 +941,7 @@ test_L_code(PyObject *self)
 static PyObject *
 return_none(void *unused)
 {
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject *
@@ -1028,7 +1028,7 @@ test_buildvalue_N(PyObject *self, PyObject *noargs)
     if (test_buildvalue_N_error("{()O&(())N}") < 0)
         return NULL;
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 
@@ -1036,7 +1036,7 @@ static PyObject *
 get_args(PyObject *self, PyObject *args)
 {
     if (args == NULL) {
-        args = Py_None;
+        args = Py_Nil;
     }
     Py_INCREF(args);
     return args;
@@ -1046,7 +1046,7 @@ static PyObject *
 get_kwargs(PyObject *self, PyObject *args, PyObject *kwargs)
 {
     if (kwargs == NULL) {
-        kwargs = Py_None;
+        kwargs = Py_Nil;
     }
     Py_INCREF(kwargs);
     return kwargs;
@@ -1235,8 +1235,8 @@ test_k_code(PyObject *self)
             "k code returned wrong value for long -0xFFF..000042");
 
     Py_DECREF(tuple);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -1357,7 +1357,7 @@ getargs_z(PyObject *self, PyObject *args)
     if (str != NULL)
         return PyBytes_FromString(str);
     else
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
 }
 
 static PyObject *
@@ -1370,8 +1370,8 @@ getargs_z_star(PyObject *self, PyObject *args)
     if (buffer.buf != NULL)
         bytes = PyBytes_FromStringAndSize(buffer.buf, buffer.len);
     else {
-        Py_INCREF(Py_None);
-        bytes = Py_None;
+        Py_INCREF(Py_Nil);
+        bytes = Py_Nil;
     }
     PyBuffer_Release(&buffer);
     return bytes;
@@ -1387,7 +1387,7 @@ getargs_z_hash(PyObject *self, PyObject *args)
     if (str != NULL)
         return PyBytes_FromStringAndSize(str, size);
     else
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
 }
 
 static PyObject *
@@ -1577,7 +1577,7 @@ get_indices(PyObject *self, PyObject *args)
     }
 
     if (result == -1) {
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     }
     return Py_BuildValue("innn", result, start, stop, step);
 }
@@ -1634,8 +1634,8 @@ parse_tuple_and_keywords(PyObject *self, PyObject *args)
         buffers + 4, buffers + 5, buffers + 6, buffers + 7);
 
     if (result) {
-        return_value = Py_None;
-        Py_INCREF(Py_None);
+        return_value = Py_Nil;
+        Py_INCREF(Py_Nil);
     }
 
 exit:
@@ -1688,8 +1688,8 @@ test_u_code(PyObject *self)
             "u# code returned wrong values for u'test'");
 
     Py_DECREF(tuple);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -1731,7 +1731,7 @@ test_widechar(PyObject *self)
 
     Py_DECREF(wide);
     Py_DECREF(utf8);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject *
@@ -1793,7 +1793,7 @@ test_empty_argparse(PyObject *self)
         return NULL;
     }
     else {
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     }
 }
 
@@ -1857,8 +1857,8 @@ test_long_numbits(PyObject *self)
             return raiseTestError("test_long_numbits",
                             "wrong result for _PyLong_Sign");
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 /* Example passing NULLs to PyObject_Str(NULL) and PyObject_Unicode(NULL). */
@@ -1918,7 +1918,7 @@ set_errno(PyObject *self, PyObject *args)
         return NULL;
 
     errno = new_errno;
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 #if defined(Py_USING_UNICODE) && !defined(Py_BUILD_CORE)
@@ -1929,7 +1929,7 @@ test_datetime_capi(PyObject *self, PyObject *args) {
     if (PyDateTimeAPI) {
         if (test_run_counter) {
             /* Probably regrtest.py -R */
-            Py_RETURN_NONE;
+            Py_RETURN_NIL;
         }
         else {
             PyErr_SetString(PyExc_AssertionError,
@@ -1940,7 +1940,7 @@ test_datetime_capi(PyObject *self, PyObject *args) {
     test_run_counter++;
     PyDateTime_IMPORT;
     if (PyDateTimeAPI)
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     else
         return NULL;
 }
@@ -2029,7 +2029,7 @@ test_thread_state(PyObject *self, PyObject *args)
     PyThread_free_lock(thread_done);
     if (!success)
         return NULL;
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 /* test Py_AddPendingCalls using threads */
@@ -2104,7 +2104,7 @@ test_string_from_format(PyObject *self, PyObject *args)
     CHECK_1_FORMAT("%lld", PY_LONG_LONG);
 #endif
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 
  Fail:
     Py_XDECREF(result);
@@ -2260,7 +2260,7 @@ test_capsule(PyObject *self, PyObject *args)
     if (error) {
         return raiseTestError("test_capsule", error);
     }
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 #undef FAIL
 }
 
@@ -2268,7 +2268,7 @@ test_capsule(PyObject *self, PyObject *args)
 static PyObject *
 test_with_docstring(PyObject *self)
 {
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 /* To test the format of tracebacks as printed out. */
@@ -2286,7 +2286,7 @@ traceback_print(PyObject *self, PyObject *args)
     result = PyTraceBack_Print(traceback, file);
     if (result < 0)
         return NULL;
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 /* To test that the result of PyCode_NewEmpty has the right members. */
@@ -2334,7 +2334,7 @@ sequence_delitem(PyObject *self, PyObject *args)
         return NULL;
     if (PySequence_DelItem(seq, i) < 0)
         return NULL;
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 #ifdef WITH_THREAD
@@ -2413,8 +2413,8 @@ call_in_temporary_c_thread(PyObject *self, PyObject *callback)
         PyThread_release_lock(test_c_thread.exit_event);
     Py_END_ALLOW_THREADS
 
-    Py_INCREF(Py_None);
-    res = Py_None;
+    Py_INCREF(Py_Nil);
+    res = Py_Nil;
 
 exit:
     Py_CLEAR(test_c_thread.callback);
@@ -2451,7 +2451,7 @@ pymarshal_write_long_to_file(PyObject* self, PyObject *args)
     fclose(fp);
     if (PyErr_Occurred())
         return NULL;
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject*
@@ -2477,7 +2477,7 @@ pymarshal_write_object_to_file(PyObject* self, PyObject *args)
     fclose(fp);
     if (PyErr_Occurred())
         return NULL;
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject*
@@ -2595,7 +2595,7 @@ test_raise_signal(PyObject* self, PyObject *args)
     if (PyErr_CheckSignals() < 0)
         return NULL;
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 

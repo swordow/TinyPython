@@ -59,14 +59,14 @@ class Stats{
                             print_stats(5).print_callers(5)
     """;
 
-    def __init__(self, *args, **kwds){
+    function __init__( *args, **kwds){
         # I can't figure out how to explicitly specify a stream keyword arg
         # with *args:
         #   def __init__(self, *args, stream=sys.stdout): ...
         # so I use **kwds and sqauwk if something unexpected is passed in.
-        self.stream = sys.stdout;
+        this.stream = sys.stdout;
         if "stream" in kwds{
-            self.stream = kwds["stream"];
+            this.stream = kwds["stream"];
             del kwds["stream"];
         } if kwds{
             keys = kwds.keys();
@@ -74,104 +74,104 @@ class Stats{
             extras = ", ".join(["%s=%s" % (k, kwds[k]) for k in keys]);
             raise ValueError, "unrecognized keyword args: %s" % extras;
         } if not len(args){
-            arg = None;
+            arg = nil;
         } else{
             arg = args[0];
             args = args[1:];
-        } self.init(arg);
-        self.add(*args);
+        } this.init(arg);
+        this.add(*args);
 
     }
-    def init(self, arg){
-        self.all_callees = None;  # calc only if needed
-        self.files = [];
-        self.fcn_list = None;
-        self.total_tt = 0;
-        self.total_calls = 0;
-        self.prim_calls = 0;
-        self.max_name_len = 0;
-        self.top_level = {};
-        self.stats = {};
-        self.sort_arg_dict = {};
-        self.load_stats(arg);
+    function init( arg){
+        this.all_callees = nil;  # calc only if needed
+        this.files = [];
+        this.fcn_list = nil;
+        this.total_tt = 0;
+        this.total_calls = 0;
+        this.prim_calls = 0;
+        this.max_name_len = 0;
+        this.top_level = {};
+        this.stats = {};
+        this.sort_arg_dict = {};
+        this.load_stats(arg);
         trouble = 1;
         try{
-            self.get_top_level_stats();
+            this.get_top_level_stats();
             trouble = 0;
         } finally{
             if trouble{
-                print >> self.stream, "Invalid timing data",;
-                if self.files{ print >> self.stream, self.files[-1],;
-                print >> self.stream;
+                print >> this.stream, "Invalid timing data",;
+                if this.files{ print >> this.stream, this.files[-1],;}
+                print >> this.stream;
 
     }
-    } } def load_stats(self, arg){
-        if not arg{  self.stats = {};
+    } } function load_stats( arg){
+        if not arg{  this.stats = {};}
         elif isinstance(arg, basestring){
             f = open(arg, 'rb');
-            self.stats = marshal.load(f);
+            this.stats = marshal.load(f);
             f.close();
             try{
                 file_stats = os.stat(arg);
                 arg = time.ctime(file_stats.st_mtime) + "    " + arg;
             } except Exception{  # in case this is not unix
                 pass;
-            } self.files = [ arg ];
+            } this.files = [ arg ];
         } elif hasattr(arg, 'create_stats'){
             arg.create_stats();
-            self.stats = arg.stats;
+            this.stats = arg.stats;
             arg.stats = {};
-        } if not self.stats{
+        } if not this.stats{
             raise TypeError("Cannot create or construct a %r object from %r"
-                            % (self.__class__, arg));
+                            % (this.__class__, arg));
         } return;
 
     }
-    def get_top_level_stats(self){
-        for func, (cc, nc, tt, ct, callers) in self.stats.items(){
-            self.total_calls += nc;
-            self.prim_calls  += cc;
-            self.total_tt    += tt;
+    function get_top_level_stats(){
+        for func, (cc, nc, tt, ct, callers) in this.stats.items(){
+            this.total_calls += nc;
+            this.prim_calls  += cc;
+            this.total_tt    += tt;
             if ("jprofile", 0, "profiler") in callers{
-                self.top_level[func] = None;
-            } if len(func_std_string(func)) > self.max_name_len{
-                self.max_name_len = len(func_std_string(func));
+                this.top_level[func] = nil;
+            } if len(func_std_string(func)) > this.max_name_len{
+                this.max_name_len = len(func_std_string(func));
 
     }
-    } } def add(self, *arg_list){
-        if not arg_list{ return self;
-        if len(arg_list) > 1{ self.add(*arg_list[1:]);
+    } } function add( *arg_list){
+        if not arg_list{ return this;}
+        if len(arg_list) > 1{ this.add(*arg_list[1:]);}
         other = arg_list[0];
-        if type(self) != type(other) or self.__class__ != other.__class__{
+        if type(this) != type(other) or this.__class__ != other.__class__{
             other = Stats(other);
-        } self.files += other.files;
-        self.total_calls += other.total_calls;
-        self.prim_calls += other.prim_calls;
-        self.total_tt += other.total_tt;
+        } this.files += other.files;
+        this.total_calls += other.total_calls;
+        this.prim_calls += other.prim_calls;
+        this.total_tt += other.total_tt;
         for func in other.top_level{
-            self.top_level[func] = None;
+            this.top_level[func] = nil;
 
         }
-        if self.max_name_len < other.max_name_len{
-            self.max_name_len = other.max_name_len;
+        if this.max_name_len < other.max_name_len{
+            this.max_name_len = other.max_name_len;
 
         }
-        self.fcn_list = None;
+        this.fcn_list = nil;
 
         for func, stat in other.stats.iteritems(){
-            if func in self.stats{
-                old_func_stat = self.stats[func];
+            if func in this.stats{
+                old_func_stat = this.stats[func];
             } else{
                 old_func_stat = (0, 0, 0, 0, {},);
-            } self.stats[func] = add_func_stats(old_func_stat, stat);
-        } return self;
+            } this.stats[func] = add_func_stats(old_func_stat, stat);
+        } return this;
 
     }
-    def dump_stats(self, filename){
+    function dump_stats( filename){
         """Write the profile data to a file we know how to load back.""";
         f = file(filename, 'wb');
         try{
-            marshal.dump(self.stats, f);
+            marshal.dump(this.stats, f);
         } finally{
             f.close();
 
@@ -195,12 +195,12 @@ class Stats{
               "tottime"   : (((2,-1),              ), "internal time"),
               };
 
-    def get_sort_arg_defs(self){
+    function get_sort_arg_defs(){
         """Expand all abbreviations that are unique.""";
-        if not self.sort_arg_dict{
-            self.sort_arg_dict = dict = {};
+        if not this.sort_arg_dict{
+            this.sort_arg_dict = dict = {};
             bad_list = {};
-            for word, tup in self.sort_arg_dict_default.iteritems(){
+            for word, tup in this.sort_arg_dict_default.iteritems(){
                 fragment = word;
                 while fragment{
                     if not fragment{
@@ -212,13 +212,13 @@ class Stats{
                     fragment = fragment[:-1];
             } } for word in bad_list{
                 del dict[word];
-        } } return self.sort_arg_dict;
+        } } return this.sort_arg_dict;
 
     }
-    def sort_stats(self, *field){
+    function sort_stats( *field){
         if not field{
-            self.fcn_list = 0;
-            return self;
+            this.fcn_list = 0;
+            return this;
         } if len(field) == 1 and isinstance(field[0], (int, long)){
             # Be compatible with old profiler
             field = [ {-1: "stdname",
@@ -227,39 +227,39 @@ class Stats{
                        2:  "cumulative"}[field[0]] ];
 
         }
-        sort_arg_defs = self.get_sort_arg_defs();
+        sort_arg_defs = this.get_sort_arg_defs();
         sort_tuple = ();
-        self.sort_type = "";
+        this.sort_type = "";
         connector = "";
         for word in field{
             sort_tuple = sort_tuple + sort_arg_defs[word][0];
-            self.sort_type += connector + sort_arg_defs[word][1];
+            this.sort_type += connector + sort_arg_defs[word][1];
             connector = ", ";
 
         }
         stats_list = [];
-        for func, (cc, nc, tt, ct, callers) in self.stats.iteritems(){
+        for func, (cc, nc, tt, ct, callers) in this.stats.iteritems(){
             stats_list.append((cc, nc, tt, ct) + func +
                               (func_std_string(func), func));
 
         }
         stats_list.sort(key=cmp_to_key(TupleComp(sort_tuple).compare));
 
-        self.fcn_list = fcn_list = [];
+        this.fcn_list = fcn_list = [];
         for tuple in stats_list{
             fcn_list.append(tuple[-1]);
-        } return self;
+        } return this;
 
     }
-    def reverse_order(self){
-        if self.fcn_list{
-            self.fcn_list.reverse();
-        } return self;
+    function reverse_order(){
+        if this.fcn_list{
+            this.fcn_list.reverse();
+        } return this;
 
     }
-    def strip_dirs(self){
-        oldstats = self.stats;
-        self.stats = newstats = {};
+    function strip_dirs(){
+        oldstats = this.stats;
+        this.stats = newstats = {};
         max_name_len = 0;
         for func, (cc, nc, tt, ct, callers) in oldstats.iteritems(){
             newfunc = func_strip_path(func);
@@ -276,23 +276,23 @@ class Stats{
                                         (cc, nc, tt, ct, newcallers));
             } else{
                 newstats[newfunc] = (cc, nc, tt, ct, newcallers);
-        } } old_top = self.top_level;
-        self.top_level = new_top = {};
+        } } old_top = this.top_level;
+        this.top_level = new_top = {};
         for func in old_top{
-            new_top[func_strip_path(func)] = None;
+            new_top[func_strip_path(func)] = nil;
 
         }
-        self.max_name_len = max_name_len;
+        this.max_name_len = max_name_len;
 
-        self.fcn_list = None;
-        self.all_callees = None;
-        return self;
+        this.fcn_list = nil;
+        this.all_callees = nil;
+        return this;
 
     }
-    def calc_callees(self){
-        if self.all_callees{ return;
-        self.all_callees = all_callees = {};
-        for func, (cc, nc, tt, ct, callers) in self.stats.iteritems(){
+    function calc_callees(){
+        if this.all_callees{ return;}
+        this.all_callees = all_callees = {};
+        for func, (cc, nc, tt, ct, callers) in this.stats.iteritems(){
             if not func in all_callees{
                 all_callees[func] = {};
             } for func2, caller in callers.iteritems(){
@@ -308,7 +308,7 @@ class Stats{
     # Optional "amount" is either a line count, or a percentage of lines.
 
     }
-    def eval_print_amount(self, sel, list, msg){
+    function eval_print_amount( sel, list, msg){
         new_list = list;
         if isinstance(sel, basestring){
             try{
@@ -336,26 +336,26 @@ class Stats{
         return new_list, msg;
 
     }
-    def get_print_list(self, sel_list){
-        width = self.max_name_len;
-        if self.fcn_list{
-            stat_list = self.fcn_list[:];
-            msg = "   Ordered by: " + self.sort_type + '\n';
+    function get_print_list( sel_list){
+        width = this.max_name_len;
+        if this.fcn_list{
+            stat_list = this.fcn_list[:];
+            msg = "   Ordered by: " + this.sort_type + '\n';
         } else{
-            stat_list = self.stats.keys();
+            stat_list = this.stats.keys();
             msg = "   Random listing order was used\n";
 
         }
         for selection in sel_list{
-            stat_list, msg = self.eval_print_amount(selection, stat_list, msg);
+            stat_list, msg = this.eval_print_amount(selection, stat_list, msg);
 
         }
         count = len(stat_list);
 
         if not stat_list{
             return 0, stat_list;
-        } print >> self.stream, msg;
-        if count < len(self.stats){
+        } print >> this.stream, msg;
+        if count < len(this.stats){
             width = 0;
             for func in stat_list{
                 if  len(func_std_string(func)) > width{
@@ -363,75 +363,75 @@ class Stats{
         } } } return width+2, stat_list;
 
     }
-    def print_stats(self, *amount){
-        for filename in self.files{
-            print >> self.stream, filename;
-        } if self.files{ print >> self.stream;
+    function print_stats( *amount){
+        for filename in this.files{
+            print >> this.stream, filename;
+        } if this.files{ print >> this.stream;}
         indent = ' ' * 8;
-        for func in self.top_level{
-            print >> self.stream, indent, func_get_function_name(func);
+        for func in this.top_level{
+            print >> this.stream, indent, func_get_function_name(func);
 
         }
-        print >> self.stream, indent, self.total_calls, "function calls",;
-        if self.total_calls != self.prim_calls{
-            print >> self.stream, "(%d primitive calls)" % self.prim_calls,;
-        } print >> self.stream, "in %.3f seconds" % self.total_tt;
-        print >> self.stream;
-        width, list = self.get_print_list(amount);
+        print >> this.stream, indent, this.total_calls, "function calls",;
+        if this.total_calls != this.prim_calls{
+            print >> this.stream, "(%d primitive calls)" % this.prim_calls,;
+        } print >> this.stream, "in %.3f seconds" % this.total_tt;
+        print >> this.stream;
+        width, list = this.get_print_list(amount);
         if list{
-            self.print_title();
+            this.print_title();
             for func in list{
-                self.print_line(func);
-            } print >> self.stream;
-            print >> self.stream;
-        } return self;
+                this.print_line(func);
+            } print >> this.stream;
+            print >> this.stream;
+        } return this;
 
     }
-    def print_callees(self, *amount){
-        width, list = self.get_print_list(amount);
+    function print_callees( *amount){
+        width, list = this.get_print_list(amount);
         if list{
-            self.calc_callees();
+            this.calc_callees();
 
-            self.print_call_heading(width, "called...");
+            this.print_call_heading(width, "called...");
             for func in list{
-                if func in self.all_callees{
-                    self.print_call_line(width, func, self.all_callees[func]);
+                if func in this.all_callees{
+                    this.print_call_line(width, func, this.all_callees[func]);
                 } else{
-                    self.print_call_line(width, func, {});
-            } } print >> self.stream;
-            print >> self.stream;
-        } return self;
+                    this.print_call_line(width, func, {});
+            } } print >> this.stream;
+            print >> this.stream;
+        } return this;
 
     }
-    def print_callers(self, *amount){
-        width, list = self.get_print_list(amount);
+    function print_callers( *amount){
+        width, list = this.get_print_list(amount);
         if list{
-            self.print_call_heading(width, "was called by...");
+            this.print_call_heading(width, "was called by...");
             for func in list{
-                cc, nc, tt, ct, callers = self.stats[func];
-                self.print_call_line(width, func, callers, "<-");
-            } print >> self.stream;
-            print >> self.stream;
-        } return self;
+                cc, nc, tt, ct, callers = this.stats[func];
+                this.print_call_line(width, func, callers, "<-");
+            } print >> this.stream;
+            print >> this.stream;
+        } return this;
 
     }
-    def print_call_heading(self, name_size, column_title){
-        print >> self.stream, "Function ".ljust(name_size) + column_title;
+    function print_call_heading( name_size, column_title){
+        print >> this.stream, "Function ".ljust(name_size) + column_title;
         # print sub-header only if we have new-style callers
-        subheader = False;
-        for cc, nc, tt, ct, callers in self.stats.itervalues(){
+        subheader = false;
+        for cc, nc, tt, ct, callers in this.stats.itervalues(){
             if callers{
                 value = callers.itervalues().next();
                 subheader = isinstance(value, tuple);
                 break;
         } } if subheader{
-            print >> self.stream, " "*name_size + "    ncalls  tottime  cumtime";
+            print >> this.stream, " "*name_size + "    ncalls  tottime  cumtime";
 
     }
-    } def print_call_line(self, name_size, source, call_dict, arrow="->"){
-        print >> self.stream, func_std_string(source).ljust(name_size) + arrow,;
+    } function print_call_line( name_size, source, call_dict, arrow="->"){
+        print >> this.stream, func_std_string(source).ljust(name_size) + arrow,;
         if not call_dict{
-            print >> self.stream;
+            print >> this.stream;
             return;
         } clist = call_dict.keys();
         clist.sort();
@@ -449,34 +449,34 @@ class Stats{
                                              f8(tt), f8(ct), name);
                 left_width = name_size + 1;
             } else{
-                substats = '%s(%r) %s' % (name, value, f8(self.stats[func][3]));
+                substats = '%s(%r) %s' % (name, value, f8(this.stats[func][3]));
                 left_width = name_size + 3;
-            } print >> self.stream, indent*left_width + substats;
+            } print >> this.stream, indent*left_width + substats;
             indent = " ";
 
     }
-    } def print_title(self){
-        print >> self.stream, '   ncalls  tottime  percall  cumtime  percall',;
-        print >> self.stream, 'filename:lineno(function)';
+    } function print_title(){
+        print >> this.stream, '   ncalls  tottime  percall  cumtime  percall',;
+        print >> this.stream, 'filename:lineno(function)';
 
     }
-    def print_line(self, func){  # hack : should print percentages
-        cc, nc, tt, ct, callers = self.stats[func];
+    function print_line( func){  # hack : should print percentages
+        cc, nc, tt, ct, callers = this.stats[func];
         c = str(nc);
         if nc != cc{
             c = c + '/' + str(cc);
-        } print >> self.stream, c.rjust(9),;
-        print >> self.stream, f8(tt),;
+        } print >> this.stream, c.rjust(9),;
+        print >> this.stream, f8(tt),;
         if nc == 0{
-            print >> self.stream, ' '*8,;
+            print >> this.stream, ' '*8,;
         } else{
-            print >> self.stream, f8(float(tt)/nc),;
-        } print >> self.stream, f8(ct),;
+            print >> this.stream, f8(float(tt)/nc),;
+        } print >> this.stream, f8(ct),;
         if cc == 0{
-            print >> self.stream, ' '*8,;
+            print >> this.stream, ' '*8,;
         } else{
-            print >> self.stream, f8(float(ct)/cc),;
-        } print >> self.stream, func_std_string(func);
+            print >> this.stream, f8(float(ct)/cc),;
+        } print >> this.stream, func_std_string(func);
 
 }
 } class TupleComp{
@@ -487,12 +487,12 @@ class Stats{
     argument to the system sort() function when a list of tuples need to be
     sorted in the instances order.""";
 
-    def __init__(self, comp_select_list){
-        self.comp_select_list = comp_select_list;
+    function __init__( comp_select_list){
+        this.comp_select_list = comp_select_list;
 
     }
-    def compare (self, left, right){
-        for index, direction in self.comp_select_list{
+    function compare ( left, right){
+        for index, direction in this.comp_select_list{
             l = left[index];
             r = right[index];
             if l < r{
@@ -505,16 +505,16 @@ class Stats{
 # func_name is a triple (file:string, line:int, name:string)
 
 }
-} def func_strip_path(func_name){
+} function func_strip_path(func_name){
     filename, line, name = func_name;
     return os.path.basename(filename), line, name;
 
 }
-def func_get_function_name(func){
+function func_get_function_name(func){
     return func[2];
 
 }
-def func_std_string(func_name){ # match what old profile produced
+function func_std_string(func_name){ # match what old profile produced
     if func_name[:2] == ('~', 0){
         # special case for built-in functions
         name = func_name[2];
@@ -532,7 +532,7 @@ def func_std_string(func_name){ # match what old profile produced
 #**************************************************************************
 
 }
-} def add_func_stats(target, source){
+} function add_func_stats(target, source){
     """Add together all the stats for two profile entries.""";
     cc, nc, tt, ct, callers = source;
     t_cc, t_nc, t_tt, t_ct, t_callers = target;
@@ -540,7 +540,7 @@ def func_std_string(func_name){ # match what old profile produced
               add_callers(t_callers, callers));
 
 }
-def add_callers(target, source){
+function add_callers(target, source){
     """Combine two caller lists in a single list.""";
     new_callers = {};
     for func, caller in target.iteritems(){
@@ -559,7 +559,7 @@ def add_callers(target, source){
     } } return new_callers;
 
 }
-def count_calls(callers){
+function count_calls(callers){
     """Sum the caller statistics to get total number of calls received.""";
     nc = 0;
     for calls in callers.itervalues(){
@@ -571,7 +571,7 @@ def count_calls(callers){
 #**************************************************************************
 
 }
-def f8(x){
+function f8(x){
     return "%8.3f" % x;
 
 #**************************************************************************
@@ -588,16 +588,16 @@ if __name__ == '__main__'{
 
     }
     class ProfileBrowser(cmd.Cmd){
-        def __init__(self, profile=None){
-            cmd.Cmd.__init__(self);
-            self.prompt = "% ";
-            self.stats = None;
-            self.stream = sys.stdout;
-            if profile is not None{
-                self.do_read(profile);
+        function __init__( profile=nil){
+            cmd.Cmd.__init__(this);
+            this.prompt = "% ";
+            this.stats = nil;
+            this.stream = sys.stdout;
+            if profile is not nil{
+                this.do_read(profile);
 
         }
-        } def generic(self, fn, line){
+        } function generic( fn, line){
             args = line.split();
             processed = [];
             for term in args{
@@ -609,146 +609,146 @@ if __name__ == '__main__'{
                 } try{
                     frac = float(term);
                     if frac > 1 or frac < 0{
-                        print >> self.stream, "Fraction argument must be in [0, 1]";
+                        print >> this.stream, "Fraction argument must be in [0, 1]";
                         continue;
                     } processed.append(frac);
                     continue;
                 } except ValueError{
                     pass;
                 } processed.append(term);
-            } if self.stats{
-                getattr(self.stats, fn)(*processed);
+            } if this.stats{
+                getattr(this.stats, fn)(*processed);
             } else{
-                print >> self.stream, "No statistics object is loaded.";
+                print >> this.stream, "No statistics object is loaded.";
             } return 0;
-        } def generic_help(self){
-            print >> self.stream, "Arguments may be:";
-            print >> self.stream, "* An integer maximum number of entries to print.";
-            print >> self.stream, "* A decimal fractional number between 0 and 1, controlling";
-            print >> self.stream, "  what fraction of selected entries to print.";
-            print >> self.stream, "* A regular expression; only entries with function names";
-            print >> self.stream, "  that match it are printed.";
+        } function generic_help(){
+            print >> this.stream, "Arguments may be:";
+            print >> this.stream, "* An integer maximum number of entries to print.";
+            print >> this.stream, "* A decimal fractional number between 0 and 1, controlling";
+            print >> this.stream, "  what fraction of selected entries to print.";
+            print >> this.stream, "* A regular expression; only entries with function names";
+            print >> this.stream, "  that match it are printed.";
 
         }
-        def do_add(self, line){
-            if self.stats{
-                self.stats.add(line);
+        function do_add( line){
+            if this.stats{
+                this.stats.add(line);
             } else{
-                print >> self.stream, "No statistics object is loaded.";
+                print >> this.stream, "No statistics object is loaded.";
             } return 0;
-        } def help_add(self){
-            print >> self.stream, "Add profile info from given file to current statistics object.";
+        } function help_add(){
+            print >> this.stream, "Add profile info from given file to current statistics object.";
 
         }
-        def do_callees(self, line){
-            return self.generic('print_callees', line);
-        } def help_callees(self){
-            print >> self.stream, "Print callees statistics from the current stat object.";
-            self.generic_help();
+        function do_callees( line){
+            return this.generic('print_callees', line);
+        } function help_callees(){
+            print >> this.stream, "Print callees statistics from the current stat object.";
+            this.generic_help();
 
         }
-        def do_callers(self, line){
-            return self.generic('print_callers', line);
-        } def help_callers(self){
-            print >> self.stream, "Print callers statistics from the current stat object.";
-            self.generic_help();
+        function do_callers( line){
+            return this.generic('print_callers', line);
+        } function help_callers(){
+            print >> this.stream, "Print callers statistics from the current stat object.";
+            this.generic_help();
 
         }
-        def do_EOF(self, line){
-            print >> self.stream, "";
+        function do_EOF( line){
+            print >> this.stream, "";
             return 1;
-        } def help_EOF(self){
-            print >> self.stream, "Leave the profile brower.";
+        } function help_EOF(){
+            print >> this.stream, "Leave the profile brower.";
 
         }
-        def do_quit(self, line){
+        function do_quit( line){
             return 1;
-        } def help_quit(self){
-            print >> self.stream, "Leave the profile brower.";
+        } function help_quit(){
+            print >> this.stream, "Leave the profile brower.";
 
         }
-        def do_read(self, line){
+        function do_read( line){
             if line{
                 try{
-                    self.stats = Stats(line);
+                    this.stats = Stats(line);
                 } except IOError, args{
-                    print >> self.stream, args[1];
+                    print >> this.stream, args[1];
                     return;
                 } except Exception as err{
-                    print >> self.stream, err.__class__.__name__ + ':', err;
+                    print >> this.stream, err.__class__.__name__ + ':', err;
                     return;
-                } self.prompt = line + "% ";
-            } elif len(self.prompt) > 2{
-                line = self.prompt[:-2];
-                self.do_read(line);
+                } this.prompt = line + "% ";
+            } elif len(this.prompt) > 2{
+                line = this.prompt[:-2];
+                this.do_read(line);
             } else{
-                print >> self.stream, "No statistics object is current -- cannot reload.";
+                print >> this.stream, "No statistics object is current -- cannot reload.";
             } return 0;
-        } def help_read(self){
-            print >> self.stream, "Read in profile data from a specified file.";
-            print >> self.stream, "Without argument, reload the current file.";
+        } function help_read(){
+            print >> this.stream, "Read in profile data from a specified file.";
+            print >> this.stream, "Without argument, reload the current file.";
 
         }
-        def do_reverse(self, line){
-            if self.stats{
-                self.stats.reverse_order();
+        function do_reverse( line){
+            if this.stats{
+                this.stats.reverse_order();
             } else{
-                print >> self.stream, "No statistics object is loaded.";
+                print >> this.stream, "No statistics object is loaded.";
             } return 0;
-        } def help_reverse(self){
-            print >> self.stream, "Reverse the sort order of the profiling report.";
+        } function help_reverse(){
+            print >> this.stream, "Reverse the sort order of the profiling report.";
 
         }
-        def do_sort(self, line){
-            if not self.stats{
-                print >> self.stream, "No statistics object is loaded.";
+        function do_sort( line){
+            if not this.stats{
+                print >> this.stream, "No statistics object is loaded.";
                 return;
-            } abbrevs = self.stats.get_sort_arg_defs();
+            } abbrevs = this.stats.get_sort_arg_defs();
             if line and all((x in abbrevs) for x in line.split()){
-                self.stats.sort_stats(*line.split());
+                this.stats.sort_stats(*line.split());
             } else{
-                print >> self.stream, "Valid sort keys (unique prefixes are accepted):";
+                print >> this.stream, "Valid sort keys (unique prefixes are accepted):";
                 for (key, value) in Stats.sort_arg_dict_default.iteritems(){
-                    print >> self.stream, "%s -- %s" % (key, value[1]);
+                    print >> this.stream, "%s -- %s" % (key, value[1]);
             } } return 0;
-        } def help_sort(self){
-            print >> self.stream, "Sort profile data according to specified keys.";
-            print >> self.stream, "(Typing `sort' without arguments lists valid keys.)";
-        } def complete_sort(self, text, *args){
+        } function help_sort(){
+            print >> this.stream, "Sort profile data according to specified keys.";
+            print >> this.stream, "(Typing `sort' without arguments lists valid keys.)";
+        } function complete_sort( text, *args){
             return [a for a in Stats.sort_arg_dict_default if a.startswith(text)];
 
         }
-        def do_stats(self, line){
-            return self.generic('print_stats', line);
-        } def help_stats(self){
-            print >> self.stream, "Print statistics from the current stat object.";
-            self.generic_help();
+        function do_stats( line){
+            return this.generic('print_stats', line);
+        } function help_stats(){
+            print >> this.stream, "Print statistics from the current stat object.";
+            this.generic_help();
 
         }
-        def do_strip(self, line){
-            if self.stats{
-                self.stats.strip_dirs();
+        function do_strip( line){
+            if this.stats{
+                this.stats.strip_dirs();
             } else{
-                print >> self.stream, "No statistics object is loaded.";
-        } } def help_strip(self){
-            print >> self.stream, "Strip leading path information from filenames in the report.";
+                print >> this.stream, "No statistics object is loaded.";
+        } } function help_strip(){
+            print >> this.stream, "Strip leading path information from filenames in the report.";
 
         }
-        def help_help(self){
-            print >> self.stream, "Show help for a given command.";
+        function help_help(){
+            print >> this.stream, "Show help for a given command.";
 
         }
-        def postcmd(self, stop, line){
+        function postcmd( stop, line){
             if stop{
                 return stop;
-            } return None;
+            } return nil;
 
     }
     } import sys;
     if len(sys.argv) > 1{
         initprofile = sys.argv[1];
     } else{
-        initprofile = None;
+        initprofile = nil;
     } try{
         browser = ProfileBrowser(initprofile);
         print >> browser.stream, "Welcome to the profile statistics browser.";

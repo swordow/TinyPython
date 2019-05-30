@@ -18,8 +18,8 @@ class Dummy_searchengine{
     passed in SearchEngine instance as attribute 'engine'. Only a few of the
     many possible self.engine.x attributes are needed here.
     ''';
-    def getpat(self){
-        return self._pat;
+    function getpat(){
+        return this._pat;
 
 }
 } searchengine = Dummy_searchengine();
@@ -30,9 +30,9 @@ class Dummy_grep{
     grep_it = GrepDialog.grep_it.im_func;
     findfiles = GrepDialog.findfiles.im_func;
     # Other stuff needed
-    recvar = Var(False);
+    recvar = Var(false);
     engine = searchengine;
-    def close(self){  # gui method
+    function close(){  # gui method
         pass;
 
 }
@@ -51,32 +51,32 @@ class Grep_itTest(unittest.TestCase){
     # Should test file names, but Windows reports have mixed / and \ separators
     # from incomplete replacement, so 'later'.
 
-    def report(self, pat){
+    function report( pat){
         grep.engine._pat = pat;
-        with captured_stdout() as s:
+        with captured_stdout() as s{
             grep.grep_it(re.compile(pat), __file__);
         } lines = s.getvalue().split('\n');
         lines.pop();  # remove bogus '' after last \n
         return lines;
 
     }
-    def test_unfound(self){
+    function test_unfound(){
         pat = 'xyz*'*7;
-        lines = self.report(pat);
-        self.assertEqual(len(lines), 2);
-        self.assertIn(pat, lines[0]);
-        self.assertEqual(lines[1], 'No hits.');
+        lines = this.report(pat);
+        this.assertEqual(len(lines), 2);
+        this.assertIn(pat, lines[0]);
+        this.assertEqual(lines[1], 'No hits.');
 
     }
-    def test_found(self){
+    function test_found(){
 
         pat = '""" !Changing this line will break Test_findfile.test_found!';
-        lines = self.report(pat);
-        self.assertEqual(len(lines), 5);
-        self.assertIn(pat, lines[0]);
-        self.assertIn('py: 1:', lines[1]);  # line number 1
-        self.assertIn('2', lines[3]);  # hits found 2
-        self.assertTrue(lines[4].startswith('(Hint:'));
+        lines = this.report(pat);
+        this.assertEqual(len(lines), 5);
+        this.assertIn(pat, lines[0]);
+        this.assertIn('py: 1:', lines[1]);  # line number 1
+        this.assertIn('2', lines[3]);  # hits found 2
+        this.assertTrue(lines[4].startswith('(Hint:'));
 
 }
 } class Default_commandTest(unittest.TestCase){
@@ -86,6 +86,6 @@ class Grep_itTest(unittest.TestCase){
 
 }
 if __name__ == '__main__'{
-    unittest.main(verbosity=2, exit=False);
+    unittest.main(verbosity=2, exit=false);
 
 }

@@ -12,7 +12,7 @@ from codeop import CommandCompiler, compile_command;
 __all__ = ["InteractiveInterpreter", "InteractiveConsole", "interact",
            "compile_command"];
 
-def softspace(file, newvalue){
+function softspace(file, newvalue){
     oldvalue = 0;
     try{
         oldvalue = file.softspace;
@@ -35,7 +35,7 @@ class InteractiveInterpreter{
 
     """;
 
-    def __init__(self, locals=None){
+    function __init__( locals=nil){
         """Constructor.
 
         The optional 'locals' argument specifies the dictionary in
@@ -44,13 +44,13 @@ class InteractiveInterpreter{
         "__doc__" set to None.
 
         """;
-        if locals is None{
-            locals = {"__name__": "__console__", "__doc__": None};
-        } self.locals = locals;
-        self.compile = CommandCompiler();
+        if locals is nil{
+            locals = {"__name__": "__console__", "__doc__": nil};
+        } this.locals = locals;
+        this.compile = CommandCompiler();
 
     }
-    def runsource(self, source, filename="<input>", symbol="single"){
+    function runsource( source, filename="<input>", symbol="single"){
         """Compile and run some source in the interpreter.
 
         Arguments are as for compile_command().
@@ -75,24 +75,24 @@ class InteractiveInterpreter{
 
         """;
         try{
-            code = self.compile(source, filename, symbol);
+            code = this.compile(source, filename, symbol);
         } except (OverflowError, SyntaxError, ValueError){
             # Case 1
-            self.showsyntaxerror(filename);
-            return False;
+            this.showsyntaxerror(filename);
+            return false;
 
         }
-        if code is None{
+        if code is nil{
             # Case 2
-            return True;
+            return true;
 
         # Case 3
         }
-        self.runcode(code);
-        return False;
+        this.runcode(code);
+        return false;
 
     }
-    def runcode(self, code){
+    function runcode( code){
         """Execute a code object.
 
         When an exception occurs, self.showtraceback() is called to
@@ -105,17 +105,17 @@ class InteractiveInterpreter{
 
         """;
         try{
-            exec code in self.locals;
+            exec code in this.locals;
         } except SystemExit{
             raise;
         } except Exception{
-            self.showtraceback();
+            this.showtraceback();
         } else{
             if softspace(sys.stdout, 0){
                 print;
 
     }
-    } } def showsyntaxerror(self, filename=None){
+    } } function showsyntaxerror( filename=nil){
         """Display the syntax error that just occurred.
 
         This doesn't display a stack trace because there isn't one.
@@ -142,10 +142,10 @@ class InteractiveInterpreter{
                 value = SyntaxError(msg, (filename, lineno, offset, line));
                 sys.last_value = value;
         } } list = traceback.format_exception_only(type, value);
-        map(self.write, list);
+        map(this.write, list);
 
     }
-    def showtraceback(self){
+    function showtraceback(){
         """Display the exception that just occurred.
 
         We remove the first stack item because it is our own code.
@@ -165,11 +165,11 @@ class InteractiveInterpreter{
                 list.insert(0, "Traceback (most recent call last):\n");
             } list[len(list):] = traceback.format_exception_only(type, value);
         } finally{
-            tblist = tb = None;
-        } map(self.write, list);
+            tblist = tb = nil;
+        } map(this.write, list);
 
     }
-    def write(self, data){
+    function write( data){
         """Write a string.
 
         The base implementation writes to sys.stderr; a subclass may
@@ -188,7 +188,7 @@ class InteractiveInterpreter{
 
     """;
 
-    def __init__(self, locals=None, filename="<console>"){
+    function __init__( locals=nil, filename="<console>"){
         """Constructor.
 
         The optional locals argument will be passed to the
@@ -198,17 +198,17 @@ class InteractiveInterpreter{
         of the input stream; it will show up in tracebacks.
 
         """;
-        InteractiveInterpreter.__init__(self, locals);
-        self.filename = filename;
-        self.resetbuffer();
+        InteractiveInterpreter.__init__(this, locals);
+        this.filename = filename;
+        this.resetbuffer();
 
     }
-    def resetbuffer(self){
+    function resetbuffer(){
         """Reset the input buffer.""";
-        self.buffer = [];
+        this.buffer = [];
 
     }
-    def interact(self, banner=None){
+    function interact( banner=nil){
         """Closely emulate the interactive Python console.
 
         The optional banner argument specify the banner to print
@@ -228,12 +228,12 @@ class InteractiveInterpreter{
         } except AttributeError{
             sys.ps2 = "... ";
         } cprt = 'Type "help", "copyright", "credits" or "license" for more information.';
-        if banner is None{
-            self.write("Python %s on %s\n%s\n(%s)\n" %
+        if banner is nil{
+            this.write("Python %s on %s\n%s\n(%s)\n" %
                        (sys.version, sys.platform, cprt,
-                        self.__class__.__name__));
+                        this.__class__.__name__));
         } else{
-            self.write("%s\n" % str(banner));
+            this.write("%s\n" % str(banner));
         } more = 0;
         while 1{
             try{
@@ -242,23 +242,23 @@ class InteractiveInterpreter{
                 } else{
                     prompt = sys.ps1;
                 } try{
-                    line = self.raw_input(prompt);
+                    line = this.raw_input(prompt);
                     # Can be None if sys.stdin was redefined
-                    encoding = getattr(sys.stdin, "encoding", None);
+                    encoding = getattr(sys.stdin, "encoding", nil);
                     if encoding and not isinstance(line, unicode){
                         line = line.decode(encoding);
                 } } except EOFError{
-                    self.write("\n");
+                    this.write("\n");
                     break;
                 } else{
-                    more = self.push(line);
+                    more = this.push(line);
             } } except KeyboardInterrupt{
-                self.write("\nKeyboardInterrupt\n");
-                self.resetbuffer();
+                this.write("\nKeyboardInterrupt\n");
+                this.resetbuffer();
                 more = 0;
 
     }
-    } } def push(self, line){
+    } } function push( line){
         """Push a line to the interpreter.
 
         The line should not have a trailing newline; it may have
@@ -272,15 +272,15 @@ class InteractiveInterpreter{
         with in some way (this is the same as runsource()).
 
         """;
-        self.buffer.append(line);
-        source = "\n".join(self.buffer);
-        more = self.runsource(source, self.filename);
+        this.buffer.append(line);
+        source = "\n".join(this.buffer);
+        more = this.runsource(source, this.filename);
         if not more{
-            self.resetbuffer();
+            this.resetbuffer();
         } return more;
 
     }
-    def raw_input(self, prompt=""){
+    function raw_input( prompt=""){
         """Write a prompt and read a line.
 
         The returned line does not include the trailing newline.
@@ -295,7 +295,7 @@ class InteractiveInterpreter{
 
 
 }
-} def interact(banner=None, readfunc=None, local=None){
+} function interact(banner=nil, readfunc=nil, local=nil){
     """Closely emulate the interactive Python interpreter.
 
     This is a backwards compatible interface to the InteractiveConsole
@@ -310,7 +310,7 @@ class InteractiveInterpreter{
 
     """;
     console = InteractiveConsole(local);
-    if readfunc is not None{
+    if readfunc is not nil{
         console.raw_input = readfunc;
     } else{
         try{

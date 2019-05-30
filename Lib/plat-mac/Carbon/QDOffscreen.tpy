@@ -1,6 +1,6 @@
 # Generated from 'QDOffscreen.h'
 
-def FOUR_CHAR_CODE(x){ return x;
+function FOUR_CHAR_CODE(x){ return x;}
 pixPurgeBit = 0;
 noNewDeviceBit = 1;
 useTempMemBit = 2;

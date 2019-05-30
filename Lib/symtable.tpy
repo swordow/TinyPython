@@ -9,17 +9,17 @@ import weakref;
 
 __all__ = ["symtable", "SymbolTable", "Class", "Function", "Symbol"];
 
-def symtable(code, filename, compile_type){
+function symtable(code, filename, compile_type){
     top = _symtable.symtable(code, filename, compile_type);
     return _newSymbolTable(top, filename);
 
 }
 class SymbolTableFactory{
-    def __init__(self){
-        self.__memo = weakref.WeakValueDictionary();
+    function __init__(){
+        this.__memo = weakref.WeakValueDictionary();
 
     }
-    def new(self, table, filename){
+    function new( table, filename){
         if table.type == _symtable.TYPE_FUNCTION{
             return Function(table, filename);
         } if table.type == _symtable.TYPE_CLASS{
@@ -27,11 +27,11 @@ class SymbolTableFactory{
         } return SymbolTable(table, filename);
 
     }
-    def __call__(self, table, filename){
+    function __call__( table, filename){
         key = table, filename;
-        obj = self.__memo.get(key, None);
-        if obj is None{
-            obj = self.__memo[key] = self.new(table, filename);
+        obj = this.__memo.get(key, nil);
+        if obj is nil{
+            obj = this.__memo[key] = this.new(table, filename);
         } return obj;
 
 }
@@ -40,209 +40,209 @@ class SymbolTableFactory{
 
 class SymbolTable(object){
 
-    def __init__(self, raw_table, filename){
-        self._table = raw_table;
-        self._filename = filename;
-        self._symbols = {};
+    function __init__( raw_table, filename){
+        this._table = raw_table;
+        this._filename = filename;
+        this._symbols = {};
 
     }
-    def __repr__(self){
-        if self.__class__ == SymbolTable{
+    function __repr__(){
+        if this.__class__ == SymbolTable{
             kind = "";
         } else{
-            kind = "%s " % self.__class__.__name__;
+            kind = "%s " % this.__class__.__name__;
 
         }
-        if self._table.name == "global"{
-            return "<{0}SymbolTable for module {1}>".format(kind, self._filename);
+        if this._table.name == "global"{
+            return "<{0}SymbolTable for module {1}>".format(kind, this._filename);
         } else{
             return "<{0}SymbolTable for {1} in {2}>".format(kind,
-                                                            self._table.name,
-                                                            self._filename);
+                                                            this._table.name,
+                                                            this._filename);
 
     }
-    } def get_type(self){
-        if self._table.type == _symtable.TYPE_MODULE{
+    } function get_type(){
+        if this._table.type == _symtable.TYPE_MODULE{
             return "module";
-        } if self._table.type == _symtable.TYPE_FUNCTION{
+        } if this._table.type == _symtable.TYPE_FUNCTION{
             return "function";
-        } if self._table.type == _symtable.TYPE_CLASS{
+        } if this._table.type == _symtable.TYPE_CLASS{
             return "class";
-        } assert self._table.type in (1, 2, 3), \
-               "unexpected type: {0}".format(self._table.type);
+        } assert this._table.type in (1, 2, 3), \
+               "unexpected type: {0}".format(this._table.type);
 
     }
-    def get_id(self){
-        return self._table.id;
+    function get_id(){
+        return this._table.id;
 
     }
-    def get_name(self){
-        return self._table.name;
+    function get_name(){
+        return this._table.name;
 
     }
-    def get_lineno(self){
-        return self._table.lineno;
+    function get_lineno(){
+        return this._table.lineno;
 
     }
-    def is_optimized(self){
-        return bool(self._table.type == _symtable.TYPE_FUNCTION
-                    and not self._table.optimized);
+    function is_optimized(){
+        return bool(this._table.type == _symtable.TYPE_FUNCTION
+                    and not this._table.optimized);
 
     }
-    def is_nested(self){
-        return bool(self._table.nested);
+    function is_nested(){
+        return bool(this._table.nested);
 
     }
-    def has_children(self){
-        return bool(self._table.children);
+    function has_children(){
+        return bool(this._table.children);
 
     }
-    def has_exec(self){
+    function has_exec(){
         """Return true if the scope uses exec""";
-        return bool(self._table.optimized & (OPT_EXEC | OPT_BARE_EXEC));
+        return bool(this._table.optimized & (OPT_EXEC | OPT_BARE_EXEC));
 
     }
-    def has_import_star(self){
+    function has_import_star(){
         """Return true if the scope uses import *""";
-        return bool(self._table.optimized & OPT_IMPORT_STAR);
+        return bool(this._table.optimized & OPT_IMPORT_STAR);
 
     }
-    def get_identifiers(self){
-        return self._table.symbols.keys();
+    function get_identifiers(){
+        return this._table.symbols.keys();
 
     }
-    def lookup(self, name){
-        sym = self._symbols.get(name);
-        if sym is None{
-            flags = self._table.symbols[name];
-            namespaces = self.__check_children(name);
-            sym = self._symbols[name] = Symbol(name, flags, namespaces);
+    function lookup( name){
+        sym = this._symbols.get(name);
+        if sym is nil{
+            flags = this._table.symbols[name];
+            namespaces = this.__check_children(name);
+            sym = this._symbols[name] = Symbol(name, flags, namespaces);
         } return sym;
 
     }
-    def get_symbols(self){
-        return [self.lookup(ident) for ident in self.get_identifiers()];
+    function get_symbols(){
+        return [this.lookup(ident) for ident in this.get_identifiers()];
 
     }
-    def __check_children(self, name){
-        return [_newSymbolTable(st, self._filename)
-                for st in self._table.children
+    function __check_children( name){
+        return [_newSymbolTable(st, this._filename)
+                for st in this._table.children
                 if st.name == name];
 
     }
-    def get_children(self){
-        return [_newSymbolTable(st, self._filename)
-                for st in self._table.children];
+    function get_children(){
+        return [_newSymbolTable(st, this._filename)
+                for st in this._table.children];
 
 
 }
 } class Function(SymbolTable){
 
     # Default values for instance variables
-    __params = None;
-    __locals = None;
-    __frees = None;
-    __globals = None;
+    __params = nil;
+    __locals = nil;
+    __frees = nil;
+    __globals = nil;
 
-    def __idents_matching(self, test_func){
-        return tuple([ident for ident in self.get_identifiers()
-                      if test_func(self._table.symbols[ident])]);
-
-    }
-    def get_parameters(self){
-        if self.__params is None{
-            self.__params = self.__idents_matching(lambda x{x & DEF_PARAM});
-        } return self.__params;
+    function __idents_matching( test_func){
+        return tuple([ident for ident in this.get_identifiers()
+                      if test_func(this._table.symbols[ident])]);
 
     }
-    def get_locals(self){
-        if self.__locals is None{
+    function get_parameters(){
+        if this.__params is nil{
+            this.__params = this.__idents_matching(lambda x{x & DEF_PARAM});
+        } return this.__params;
+
+    }
+    function get_locals(){
+        if this.__locals is nil{
             locs = (LOCAL, CELL);
             test = lambda x{ ((x >> SCOPE_OFF) & SCOPE_MASK) in locs};
-            self.__locals = self.__idents_matching(test);
-        } return self.__locals;
+            this.__locals = this.__idents_matching(test);
+        } return this.__locals;
 
     }
-    def get_globals(self){
-        if self.__globals is None{
+    function get_globals(){
+        if this.__globals is nil{
             glob = (GLOBAL_IMPLICIT, GLOBAL_EXPLICIT);
             test = lambda x{((x >> SCOPE_OFF) & SCOPE_MASK) in glob};
-            self.__globals = self.__idents_matching(test);
-        } return self.__globals;
+            this.__globals = this.__idents_matching(test);
+        } return this.__globals;
 
     }
-    def get_frees(self){
-        if self.__frees is None{
+    function get_frees(){
+        if this.__frees is nil{
             is_free = lambda x{((x >> SCOPE_OFF) & SCOPE_MASK) == FREE};
-            self.__frees = self.__idents_matching(is_free);
-        } return self.__frees;
+            this.__frees = this.__idents_matching(is_free);
+        } return this.__frees;
 
 
 }
 } class Class(SymbolTable){
 
-    __methods = None;
+    __methods = nil;
 
-    def get_methods(self){
-        if self.__methods is None{
+    function get_methods(){
+        if this.__methods is nil{
             d = {};
-            for st in self._table.children{
+            for st in this._table.children{
                 d[st.name] = 1;
-            } self.__methods = tuple(d);
-        } return self.__methods;
+            } this.__methods = tuple(d);
+        } return this.__methods;
 
 
 }
 } class Symbol(object){
 
-    def __init__(self, name, flags, namespaces=None){
-        self.__name = name;
-        self.__flags = flags;
-        self.__scope = (flags >> SCOPE_OFF) & SCOPE_MASK; # like PyST_GetScope()
-        self.__namespaces = namespaces or ();
+    function __init__( name, flags, namespaces=nil){
+        this.__name = name;
+        this.__flags = flags;
+        this.__scope = (flags >> SCOPE_OFF) & SCOPE_MASK; # like PyST_GetScope()
+        this.__namespaces = namespaces or ();
 
     }
-    def __repr__(self){
-        return "<symbol {0!r}>".format(self.__name);
+    function __repr__(){
+        return "<symbol {0!r}>".format(this.__name);
 
     }
-    def get_name(self){
-        return self.__name;
+    function get_name(){
+        return this.__name;
 
     }
-    def is_referenced(self){
-        return bool(self.__flags & _symtable.USE);
+    function is_referenced(){
+        return bool(this.__flags & _symtable.USE);
 
     }
-    def is_parameter(self){
-        return bool(self.__flags & DEF_PARAM);
+    function is_parameter(){
+        return bool(this.__flags & DEF_PARAM);
 
     }
-    def is_global(self){
-        return bool(self.__scope in (GLOBAL_IMPLICIT, GLOBAL_EXPLICIT));
+    function is_global(){
+        return bool(this.__scope in (GLOBAL_IMPLICIT, GLOBAL_EXPLICIT));
 
     }
-    def is_declared_global(self){
-        return bool(self.__scope == GLOBAL_EXPLICIT);
+    function is_declared_global(){
+        return bool(this.__scope == GLOBAL_EXPLICIT);
 
     }
-    def is_local(self){
-        return bool(self.__flags & DEF_BOUND);
+    function is_local(){
+        return bool(this.__flags & DEF_BOUND);
 
     }
-    def is_free(self){
-        return bool(self.__scope == FREE);
+    function is_free(){
+        return bool(this.__scope == FREE);
 
     }
-    def is_imported(self){
-        return bool(self.__flags & DEF_IMPORT);
+    function is_imported(){
+        return bool(this.__flags & DEF_IMPORT);
 
     }
-    def is_assigned(self){
-        return bool(self.__flags & DEF_LOCAL);
+    function is_assigned(){
+        return bool(this.__flags & DEF_LOCAL);
 
     }
-    def is_namespace(self){
+    function is_namespace(){
         """Returns true if name binding introduces new namespace.
 
         If the name is used as the target of a function or class
@@ -253,22 +253,22 @@ class SymbolTable(object){
         objects, like an int or list, that does not introduce a new
         namespace.
         """;
-        return bool(self.__namespaces);
+        return bool(this.__namespaces);
 
     }
-    def get_namespaces(self){
+    function get_namespaces(){
         """Return a list of namespaces bound to this name""";
-        return self.__namespaces;
+        return this.__namespaces;
 
     }
-    def get_namespace(self){
+    function get_namespace(){
         """Returns the single namespace bound to this name.
 
         Raises ValueError if the name is bound to multiple namespaces.
         """;
-        if len(self.__namespaces) != 1{
+        if len(this.__namespaces) != 1{
             raise ValueError, "name is bound to multiple namespaces";
-        } return self.__namespaces[0];
+        } return this.__namespaces[0];
 
 }
 } if __name__ == "__main__"{

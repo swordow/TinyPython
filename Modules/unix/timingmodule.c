@@ -10,17 +10,17 @@
 static PyObject *
 start_timing(PyObject *self)
 {
-    Py_INCREF(Py_None);
+    Py_INCREF(Py_Nil);
     BEGINTIMING;
-    return Py_None;
+    return Py_Nil;
 }
 
 static PyObject *
 finish_timing(PyObject *self)
 {
     ENDTIMING
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *

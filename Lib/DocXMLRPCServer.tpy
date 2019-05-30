@@ -23,10 +23,10 @@ from SimpleXMLRPCServer import (SimpleXMLRPCServer,
 class ServerHTMLDoc(pydoc.HTMLDoc){
     """Class used to generate pydoc HTML document for a server""";
 
-    def markup(self, text, escape=None, funcs={}, classes={}, methods={}){
+    function markup( text, escape=nil, funcs={}, classes={}, methods={}){
         """Mark up some plain text, given a context of symbols to look for.
         Each context dictionary maps object names to anchor names.""";
-        escape = escape or self.escape;
+        escape = escape or this.escape;
         results = [];
         here = 0;
 
@@ -40,7 +40,7 @@ class ServerHTMLDoc(pydoc.HTMLDoc){
                                 r'(self\.)?((?:\w|\.)+))\b');
         while 1{
             match = pattern.search(text, here);
-            if not match{ break;
+            if not match{ break;}
             start, end = match.span();
             results.append(escape(text[here:start]));
 
@@ -55,25 +55,25 @@ class ServerHTMLDoc(pydoc.HTMLDoc){
                 url = 'http://www.python.org/dev/peps/pep-%04d/' % int(pep);
                 results.append('<a href="%s">%s</a>' % (url, escape(all)));
             } elif text[end:end+1] == '('{
-                results.append(self.namelink(name, methods, funcs, classes));
+                results.append(this.namelink(name, methods, funcs, classes));
             } elif selfdot{
                 results.append('self.<strong>%s</strong>' % name);
             } else{
-                results.append(self.namelink(name, classes));
+                results.append(this.namelink(name, classes));
             } here = end;
         } results.append(escape(text[here:]));
         return ''.join(results);
 
     }
-    def docroutine(self, object, name, mod=None,
-                   funcs={}, classes={}, methods={}, cl=None){
+    function docroutine( object, name, mod=nil,
+                   funcs={}, classes={}, methods={}, cl=nil){
         """Produce HTML documentation for a function or method object.""";
 
         anchor = (cl and cl.__name__ or '') + '-' + name;
         note = '';
 
         title = '<a name="%s"><strong>%s</strong></a>' % (
-            self.escape(anchor), self.escape(name));
+            this.escape(anchor), this.escape(name));
 
         if inspect.ismethod(object){
             args, varargs, varkw, defaults = inspect.getargspec(object.im_func);
@@ -84,12 +84,12 @@ class ServerHTMLDoc(pydoc.HTMLDoc){
                     varargs,
                     varkw,
                     defaults,
-                    formatvalue=self.formatvalue
+                    formatvalue=this.formatvalue
                 );
         } elif inspect.isfunction(object){
             args, varargs, varkw, defaults = inspect.getargspec(object);
             argspec = inspect.formatargspec(
-                args, varargs, varkw, defaults, formatvalue=self.formatvalue);
+                args, varargs, varkw, defaults, formatvalue=this.formatvalue);
         } else{
             argspec = '(...)';
 
@@ -101,16 +101,16 @@ class ServerHTMLDoc(pydoc.HTMLDoc){
             docstring = pydoc.getdoc(object);
 
         }
-        decl = title + argspec + (note and self.grey(
+        decl = title + argspec + (note and this.grey(
                '<font face="helvetica, arial">%s</font>' % note));
 
-        doc = self.markup(
-            docstring, self.preformat, funcs, classes, methods);
+        doc = this.markup(
+            docstring, this.preformat, funcs, classes, methods);
         doc = doc and '<dd><tt>%s</tt></dd>' % doc;
         return '<dl><dt>%s</dt>%s</dl>\n' % (decl, doc);
 
     }
-    def docserver(self, server_name, package_documentation, methods){
+    function docserver( server_name, package_documentation, methods){
         """Produce HTML documentation for an XML-RPC server.""";
 
         fdict = {};
@@ -119,19 +119,19 @@ class ServerHTMLDoc(pydoc.HTMLDoc){
             fdict[value] = fdict[key];
 
         }
-        server_name = self.escape(server_name);
+        server_name = this.escape(server_name);
         head = '<big><big><strong>%s</strong></big></big>' % server_name;
-        result = self.heading(head, '#ffffff', '#7799ee');
+        result = this.heading(head, '#ffffff', '#7799ee');
 
-        doc = self.markup(package_documentation, self.preformat, fdict);
+        doc = this.markup(package_documentation, this.preformat, fdict);
         doc = doc and '<tt>%s</tt>' % doc;
         result = result + '<p>%s</p>\n' % doc;
 
         contents = [];
         method_items = sorted(methods.items());
         for key, value in method_items{
-            contents.append(self.docroutine(value, key, funcs=fdict));
-        } result = result + self.bigsection(
+            contents.append(this.docroutine(value, key, funcs=fdict));
+        } result = result + this.bigsection(
             'Methods', '#ffffff', '#eeaa77', pydoc.join(contents));
 
         return result;
@@ -144,34 +144,34 @@ class ServerHTMLDoc(pydoc.HTMLDoc){
     be constructed directly.
     """;
 
-    def __init__(self){
+    function __init__(){
         # setup variables used for HTML documentation
-        self.server_name = 'XML-RPC Server Documentation';
-        self.server_documentation = \
+        this.server_name = 'XML-RPC Server Documentation';
+        this.server_documentation = \
             "This server exports the following methods through the XML-RPC "\
             "protocol.";
-        self.server_title = 'XML-RPC Server Documentation';
+        this.server_title = 'XML-RPC Server Documentation';
 
     }
-    def set_server_title(self, server_title){
+    function set_server_title( server_title){
         """Set the HTML title of the generated server documentation""";
 
-        self.server_title = server_title;
+        this.server_title = server_title;
 
     }
-    def set_server_name(self, server_name){
+    function set_server_name( server_name){
         """Set the name of the generated HTML server documentation""";
 
-        self.server_name = server_name;
+        this.server_name = server_name;
 
     }
-    def set_server_documentation(self, server_documentation){
+    function set_server_documentation( server_documentation){
         """Set the documentation string for the entire server.""";
 
-        self.server_documentation = server_documentation;
+        this.server_documentation = server_documentation;
 
     }
-    def generate_html_documentation(self){
+    function generate_html_documentation(){
         """generate_html_documentation() => html documentation for the server
 
         Generates HTML documentation for the server using introspection for
@@ -184,24 +184,24 @@ class ServerHTMLDoc(pydoc.HTMLDoc){
 
         methods = {};
 
-        for method_name in self.system_listMethods(){
-            if method_name in self.funcs{
-                method = self.funcs[method_name];
-            } elif self.instance is not None{
-                method_info = [None, None]; # argspec, documentation
-                if hasattr(self.instance, '_get_method_argstring'){
-                    method_info[0] = self.instance._get_method_argstring(method_name);
-                } if hasattr(self.instance, '_methodHelp'){
-                    method_info[1] = self.instance._methodHelp(method_name);
+        for method_name in this.system_listMethods(){
+            if method_name in this.funcs{
+                method = this.funcs[method_name];
+            } elif this.instance is not nil{
+                method_info = [nil, nil]; # argspec, documentation
+                if hasattr(this.instance, '_get_method_argstring'){
+                    method_info[0] = this.instance._get_method_argstring(method_name);
+                } if hasattr(this.instance, '_methodHelp'){
+                    method_info[1] = this.instance._methodHelp(method_name);
 
                 }
                 method_info = tuple(method_info);
-                if method_info != (None, None){
+                if method_info != (nil, nil){
                     method = method_info;
-                } elif not hasattr(self.instance, '_dispatch'){
+                } elif not hasattr(this.instance, '_dispatch'){
                     try{
                         method = resolve_dotted_attribute(
-                                    self.instance,
+                                    this.instance,
                                     method_name
                                     );
                     } except AttributeError{
@@ -218,12 +218,12 @@ class ServerHTMLDoc(pydoc.HTMLDoc){
         }
         documenter = ServerHTMLDoc();
         documentation = documenter.docserver(
-                                self.server_name,
-                                self.server_documentation,
+                                this.server_name,
+                                this.server_documentation,
                                 methods
                             );
 
-        return documenter.page(self.server_title, documentation);
+        return documenter.page(this.server_title, documentation);
 
 }
 } class DocXMLRPCRequestHandler(SimpleXMLRPCRequestHandler){
@@ -236,24 +236,24 @@ class ServerHTMLDoc(pydoc.HTMLDoc){
     for documentation.
     """;
 
-    def do_GET(self){
+    function do_GET(){
         """Handles the HTTP GET request.
 
         Interpret all HTTP GET requests as requests for server
         documentation.
         """;
         # Check that the path is legal
-        if not self.is_rpc_path_valid(){
-            self.report_404();
+        if not this.is_rpc_path_valid(){
+            this.report_404();
             return;
 
         }
-        response = self.server.generate_html_documentation();
-        self.send_response(200);
-        self.send_header("Content-type", "text/html");
-        self.send_header("Content-length", str(len(response)));
-        self.end_headers();
-        self.wfile.write(response);
+        response = this.server.generate_html_documentation();
+        this.send_response(200);
+        this.send_header("Content-type", "text/html");
+        this.send_header("Content-length", str(len(response)));
+        this.end_headers();
+        this.wfile.write(response);
 
 }
 } class DocXMLRPCServer(  SimpleXMLRPCServer,
@@ -264,12 +264,12 @@ class ServerHTMLDoc(pydoc.HTMLDoc){
     of SimpleXMLRPCServer.
     """;
 
-    def __init__(self, addr, requestHandler=DocXMLRPCRequestHandler,
-                 logRequests=1, allow_none=False, encoding=None,
-                 bind_and_activate=True){
-        SimpleXMLRPCServer.__init__(self, addr, requestHandler, logRequests,
+    function __init__( addr, requestHandler=DocXMLRPCRequestHandler,
+                 logRequests=1, allow_none=false, encoding=nil,
+                 bind_and_activate=true){
+        SimpleXMLRPCServer.__init__(this, addr, requestHandler, logRequests,
                                     allow_none, encoding, bind_and_activate);
-        XMLRPCDocGenerator.__init__(self);
+        XMLRPCDocGenerator.__init__(this);
 
 }
 } class DocCGIXMLRPCRequestHandler(   CGIXMLRPCRequestHandler,
@@ -277,14 +277,14 @@ class ServerHTMLDoc(pydoc.HTMLDoc){
     """Handler for XML-RPC data and documentation requests passed through
     CGI""";
 
-    def handle_get(self){
+    function handle_get(){
         """Handles the HTTP GET request.
 
         Interpret all HTTP GET requests as requests for server
         documentation.
         """;
 
-        response = self.generate_html_documentation();
+        response = this.generate_html_documentation();
 
         print 'Content-Type: text/html';
         print 'Content-Length: %d' % len(response);
@@ -292,9 +292,9 @@ class ServerHTMLDoc(pydoc.HTMLDoc){
         sys.stdout.write(response);
 
     }
-    def __init__(self){
-        CGIXMLRPCRequestHandler.__init__(self);
-        XMLRPCDocGenerator.__init__(self);
+    function __init__(){
+        CGIXMLRPCRequestHandler.__init__(this);
+        XMLRPCDocGenerator.__init__(this);
 
 }
 }

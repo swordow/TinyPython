@@ -64,83 +64,83 @@ class _posixfile_{
     #
     # Internal routines
     #
-    def __repr__(self){
-        file = self._file_;
+    function __repr__(){
+        file = this._file_;
         return "<%s posixfile '%s', mode '%s' at %s>" % \
-                (self.states[file.closed], file.name, file.mode, \
-                 hex(id(self))[2:]);
+                (this.states[file.closed], file.name, file.mode, \
+                 hex(id(this))[2:]);
 
     #
     # Initialization routines
     #
     }
-    def open(self, name, mode='r', bufsize=-1){
+    function open( name, mode='r', bufsize=-1){
         import __builtin__;
-        return self.fileopen(__builtin__.open(name, mode, bufsize));
+        return this.fileopen(__builtin__.open(name, mode, bufsize));
 
     }
-    def fileopen(self, file){
+    function fileopen( file){
         import types;
         if repr(type(file)) != "<type 'file'>"{
             raise TypeError, 'posixfile.fileopen() arg must be file object';
-        } self._file_  = file;
+        } this._file_  = file;
         # Copy basic file methods
         for maybemethod in dir(file){
             if not maybemethod.startswith('_'){
                 attr = getattr(file, maybemethod);
                 if isinstance(attr, types.BuiltinMethodType){
-                    setattr(self, maybemethod, attr);
-        } } } return self;
+                    setattr(this, maybemethod, attr);
+        } } } return this;
 
     #
     # New methods
     #
     }
-    def file(self){
-        return self._file_;
+    function file(){
+        return this._file_;
 
     }
-    def dup(self){
+    function dup(){
         import posix;
 
         if not hasattr(posix, 'fdopen'){
             raise AttributeError, 'dup() method unavailable';
 
         }
-        return posix.fdopen(posix.dup(self._file_.fileno()), self._file_.mode);
+        return posix.fdopen(posix.dup(this._file_.fileno()), this._file_.mode);
 
     }
-    def dup2(self, fd){
+    function dup2( fd){
         import posix;
 
         if not hasattr(posix, 'fdopen'){
             raise AttributeError, 'dup() method unavailable';
 
         }
-        posix.dup2(self._file_.fileno(), fd);
-        return posix.fdopen(fd, self._file_.mode);
+        posix.dup2(this._file_.fileno(), fd);
+        return posix.fdopen(fd, this._file_.mode);
 
     }
-    def flags(self, *which){
+    function flags( *which){
         import fcntl, os;
 
         if which{
             if len(which) > 1{
                 raise TypeError, 'Too many arguments';
             } which = which[0];
-        } else{ which = '?';
+        } else{ which = '?';}
 
         l_flags = 0;
-        if 'n' in which{ l_flags = l_flags | os.O_NDELAY;
-        if 'a' in which{ l_flags = l_flags | os.O_APPEND;
-        if 's' in which{ l_flags = l_flags | os.O_SYNC;
+        if 'n' in which{ l_flags = l_flags | os.O_NDELAY;}
+        if 'a' in which{ l_flags = l_flags | os.O_APPEND;}
+        if 's' in which{ l_flags = l_flags | os.O_SYNC;}
 
-        file = self._file_;
+        file = this._file_;
 
         if '=' not in which{
             cur_fl = fcntl.fcntl(file.fileno(), fcntl.F_GETFL, 0);
-            if '!' in which{ l_flags = cur_fl & ~ l_flags;
-            else{ l_flags = cur_fl | l_flags;
+            if '!' in which{ l_flags = cur_fl & ~ l_flags;}
+            else{ l_flags = cur_fl | l_flags;}
 
         }
         l_flags = fcntl.fcntl(file.fileno(), fcntl.F_SETFL, l_flags);
@@ -153,25 +153,25 @@ class _posixfile_{
         if '?' in which{
             which = '';                  # Return current flags
             l_flags = fcntl.fcntl(file.fileno(), fcntl.F_GETFL, 0);
-            if os.O_APPEND & l_flags{ which = which + 'a';
+            if os.O_APPEND & l_flags{ which = which + 'a';}
             if fcntl.fcntl(file.fileno(), fcntl.F_GETFD, 0) & 1{
                 which = which + 'c';
-            } if os.O_NDELAY & l_flags{ which = which + 'n';
-            if os.O_SYNC & l_flags{ which = which + 's';
+            } if os.O_NDELAY & l_flags{ which = which + 'n';}
+            if os.O_SYNC & l_flags{ which = which + 's';}
             return which;
 
     }
-    } def lock(self, how, *args){
+    } function lock( how, *args){
         import struct, fcntl;
 
-        if 'w' in how{ l_type = fcntl.F_WRLCK;
-        elif 'r' in how{ l_type = fcntl.F_RDLCK;
-        elif 'u' in how{ l_type = fcntl.F_UNLCK;
-        else{ raise TypeError, 'no type of lock specified';
+        if 'w' in how{ l_type = fcntl.F_WRLCK;}
+        elif 'r' in how{ l_type = fcntl.F_RDLCK;}
+        elif 'u' in how{ l_type = fcntl.F_UNLCK;}
+        else{ raise TypeError, 'no type of lock specified';}
 
-        if '|' in how{ cmd = fcntl.F_SETLKW;
-        elif '?' in how{ cmd = fcntl.F_GETLK;
-        else{ cmd = fcntl.F_SETLK;
+        if '|' in how{ cmd = fcntl.F_SETLKW;}
+        elif '?' in how{ cmd = fcntl.F_GETLK;}
+        else{ cmd = fcntl.F_SETLK;}
 
         l_whence = 0;
         l_start = 0;
@@ -205,7 +205,7 @@ class _posixfile_{
                   l_type, l_whence, l_start, l_len, 0, 0);
 
         }
-        flock = fcntl.fcntl(self._file_.fileno(), cmd, flock);
+        flock = fcntl.fcntl(this._file_.fileno(), cmd, flock);
 
         if '?' in how{
             if sys.platform in ('netbsd1',
@@ -232,12 +232,12 @@ class _posixfile_{
                     return 'w', l_len, l_start, l_whence, l_pid;
 
 }
-} } } } def open(name, mode='r', bufsize=-1){
+} } } } function open(name, mode='r', bufsize=-1){
     """Public routine to open a file as a posixfile object.""";
     return _posixfile_().open(name, mode, bufsize);
 
 }
-def fileopen(file){
+function fileopen(file){
     """Public routine to get a posixfile object from a Python file object.""";
     return _posixfile_().fileopen(file);
 

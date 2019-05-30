@@ -14,29 +14,29 @@ class Is_Get_Test(unittest.TestCase){
     leadingws_comment = '    # This is a comment';
     leadingws_nocomment = '    This is not a comment';
 
-    def test_is_all_white(self){
-        self.assertTrue(fp.is_all_white(''));
-        self.assertTrue(fp.is_all_white('\t\n\r\f\v'));
-        self.assertFalse(fp.is_all_white(self.test_comment));
+    function test_is_all_white(){
+        this.assertTrue(fp.is_all_white(''));
+        this.assertTrue(fp.is_all_white('\t\n\r\f\v'));
+        this.assertFalse(fp.is_all_white(this.test_comment));
 
     }
-    def test_get_indent(self){
-        Equal = self.assertEqual;
-        Equal(fp.get_indent(self.test_comment), '');
-        Equal(fp.get_indent(self.trailingws_comment), '');
-        Equal(fp.get_indent(self.leadingws_comment), '    ');
-        Equal(fp.get_indent(self.leadingws_nocomment), '    ');
+    function test_get_indent(){
+        Equal = this.assertEqual;
+        Equal(fp.get_indent(this.test_comment), '');
+        Equal(fp.get_indent(this.trailingws_comment), '');
+        Equal(fp.get_indent(this.leadingws_comment), '    ');
+        Equal(fp.get_indent(this.leadingws_nocomment), '    ');
 
     }
-    def test_get_comment_header(self){
-        Equal = self.assertEqual;
+    function test_get_comment_header(){
+        Equal = this.assertEqual;
         # Test comment strings
-        Equal(fp.get_comment_header(self.test_comment), '#');
-        Equal(fp.get_comment_header(self.trailingws_comment), '#');
-        Equal(fp.get_comment_header(self.leadingws_comment), '    #');
+        Equal(fp.get_comment_header(this.test_comment), '#');
+        Equal(fp.get_comment_header(this.trailingws_comment), '#');
+        Equal(fp.get_comment_header(this.leadingws_comment), '    #');
         # Test non-comment strings
-        Equal(fp.get_comment_header(self.leadingws_nocomment), '    ');
-        Equal(fp.get_comment_header(self.test_nocomment), '');
+        Equal(fp.get_comment_header(this.leadingws_nocomment), '    ');
+        Equal(fp.get_comment_header(this.test_nocomment), '');
 
 
 }
@@ -51,87 +51,87 @@ class Is_Get_Test(unittest.TestCase){
     """;
 
     @classmethod;
-    def setUpClass(cls){
+    function setUpClass(cls){
         from idlelib.idle_test.mock_tk import Text;
         cls.text = Text();
 
     }
-    def runcase(self, inserttext, stopline, expected){
+    function runcase( inserttext, stopline, expected){
         # Check that find_paragraph returns the expected paragraph when
         # the mark index is set to beginning, middle, end of each line
         # up to but not including the stop line
-        text = self.text;
+        text = this.text;
         text.insert('1.0', inserttext);
         for line in range(1, stopline){
             linelength = int(text.index("%d.end" % line).split('.')[1]);
             for col in (0, linelength//2, linelength){
                 tempindex = "%d.%d" % (line, col);
-                self.assertEqual(fp.find_paragraph(text, tempindex), expected);
+                this.assertEqual(fp.find_paragraph(text, tempindex), expected);
         } } text.delete('1.0', 'end');
 
     }
-    def test_find_comment(self){
+    function test_find_comment(){
         comment = (
             "# Comment block with no blank lines before\n"
             "# Comment line\n"
             "\n");
-        self.runcase(comment, 3, ('1.0', '3.0', '#', comment[0:58]));
+        this.runcase(comment, 3, ('1.0', '3.0', '#', comment[0:58]));
 
         comment = (
             "\n"
             "# Comment block with whitespace line before and after\n"
             "# Comment line\n"
             "\n");
-        self.runcase(comment, 4, ('2.0', '4.0', '#', comment[1:70]));
+        this.runcase(comment, 4, ('2.0', '4.0', '#', comment[1:70]));
 
         comment = (
             "\n"
             "    # Indented comment block with whitespace before and after\n"
             "    # Comment line\n"
             "\n");
-        self.runcase(comment, 4, ('2.0', '4.0', '    #', comment[1:82]));
+        this.runcase(comment, 4, ('2.0', '4.0', '    #', comment[1:82]));
 
         comment = (
             "\n"
             "# Single line comment\n"
             "\n");
-        self.runcase(comment, 3, ('2.0', '3.0', '#', comment[1:23]));
+        this.runcase(comment, 3, ('2.0', '3.0', '#', comment[1:23]));
 
         comment = (
             "\n"
             "    # Single line comment with leading whitespace\n"
             "\n");
-        self.runcase(comment, 3, ('2.0', '3.0', '    #', comment[1:51]));
+        this.runcase(comment, 3, ('2.0', '3.0', '    #', comment[1:51]));
 
         comment = (
             "\n"
             "# Comment immediately followed by code\n"
             "x = 42\n"
             "\n");
-        self.runcase(comment, 3, ('2.0', '3.0', '#', comment[1:40]));
+        this.runcase(comment, 3, ('2.0', '3.0', '#', comment[1:40]));
 
         comment = (
             "\n"
             "    # Indented comment immediately followed by code\n"
             "x = 42\n"
             "\n");
-        self.runcase(comment, 3, ('2.0', '3.0', '    #', comment[1:53]));
+        this.runcase(comment, 3, ('2.0', '3.0', '    #', comment[1:53]));
 
         comment = (
             "\n"
             "# Comment immediately followed by indented code\n"
             "    x = 42\n"
             "\n");
-        self.runcase(comment, 3, ('2.0', '3.0', '#', comment[1:49]));
+        this.runcase(comment, 3, ('2.0', '3.0', '#', comment[1:49]));
 
     }
-    def test_find_paragraph(self){
+    function test_find_paragraph(){
         teststring = (
             '"""String with no blank lines before\n'
             'String line\n'
             '"""\n'
             '\n');
-        self.runcase(teststring, 4, ('1.0', '4.0', '', teststring[0:53]));
+        this.runcase(teststring, 4, ('1.0', '4.0', '', teststring[0:53]));
 
         teststring = (
             "\n"
@@ -139,7 +139,7 @@ class Is_Get_Test(unittest.TestCase){
             'String line.\n'
             '"""\n'
             '\n');
-        self.runcase(teststring, 5, ('2.0', '5.0', '', teststring[1:66]));
+        this.runcase(teststring, 5, ('2.0', '5.0', '', teststring[1:66]));
 
         teststring = (
             '\n'
@@ -147,27 +147,27 @@ class Is_Get_Test(unittest.TestCase){
             '    Comment string.\n'
             '    """\n'
             '\n');
-        self.runcase(teststring, 5, ('2.0', '5.0', '    ', teststring[1:85]));
+        this.runcase(teststring, 5, ('2.0', '5.0', '    ', teststring[1:85]));
 
         teststring = (
             '\n'
             '"""Single line string."""\n'
             '\n');
-        self.runcase(teststring, 3, ('2.0', '3.0', '', teststring[1:27]));
+        this.runcase(teststring, 3, ('2.0', '3.0', '', teststring[1:27]));
 
         teststring = (
             '\n'
             '    """Single line string with leading whitespace."""\n'
             '\n');
-        self.runcase(teststring, 3, ('2.0', '3.0', '    ', teststring[1:55]));
+        this.runcase(teststring, 3, ('2.0', '3.0', '    ', teststring[1:55]));
 
 
 }
 } class ReformatFunctionTest(unittest.TestCase){
     """Test the reformat_paragraph function without the editor window.""";
 
-    def test_reformat_paragraph(self){
-        Equal = self.assertEqual;
+    function test_reformat_paragraph(){
+        Equal = this.assertEqual;
         reform = fp.reformat_paragraph;
         hw = "O hello world";
         Equal(reform(' ', 1), ' ');
@@ -193,8 +193,8 @@ class Is_Get_Test(unittest.TestCase){
 } class ReformatCommentTest(unittest.TestCase){
     """Test the reformat_comment function without the editor window.""";
 
-    def test_reformat_comment(self){
-        Equal = self.assertEqual;
+    function test_reformat_comment(){
+        Equal = this.assertEqual;
 
         # reformat_comment formats to a minimum of 20 characters
         test_string = (
@@ -218,11 +218,11 @@ class Is_Get_Test(unittest.TestCase){
 
 }
 } class FormatClassTest(unittest.TestCase){
-    def test_init_close(self){
+    function test_init_close(){
         instance = fp.FormatParagraph('editor');
-        self.assertEqual(instance.editwin, 'editor');
+        this.assertEqual(instance.editwin, 'editor');
         instance.close();
-        self.assertEqual(instance.editwin, None);
+        this.assertEqual(instance.editwin, nil);
 
 
 # For testing format_paragraph_event, Initialize FormatParagraph with
@@ -238,17 +238,17 @@ class Is_Get_Test(unittest.TestCase){
 
 }
 } class TextWrapper{
-    def __init__(self, master){
-        self.text = Text(master=master);
-    } def __getattr__(self, name){
-        return getattr(self.text, name);
-    } def undo_block_start(self){ pass;
-    def undo_block_stop(self){ pass;
+    function __init__( master){
+        this.text = Text(master=master);
+    } function __getattr__( name){
+        return getattr(this.text, name);
+    } function undo_block_start(){ pass;}
+    function undo_block_stop(){ pass;}
 
 }
 class Editor{
-    def __init__(self, root){
-        self.text = TextWrapper(root);
+    function __init__( root){
+        this.text = TextWrapper(root);
     } get_selection_indices = EditorWindow. get_selection_indices.im_func;
 
 }
@@ -278,7 +278,7 @@ class FormatEventTest(unittest.TestCase){
         "# The fourth line is short like the first line.");
 
     @classmethod;
-    def setUpClass(cls){
+    function setUpClass(cls){
         requires('gui');
         cls.root = Tk();
         editor = Editor(root=cls.root);
@@ -288,69 +288,69 @@ class FormatEventTest(unittest.TestCase){
 
     }
     @classmethod;
-    def tearDownClass(cls){
+    function tearDownClass(cls){
         del cls.text, cls.formatter;
         cls.root.destroy();
         del cls.root;
 
     }
-    def test_short_line(self){
-        self.text.insert('1.0', "Short line\n");
-        self.formatter("Dummy");
-        self.assertEqual(self.text.get('1.0', 'insert'), "Short line\n" );
-        self.text.delete('1.0', 'end');
+    function test_short_line(){
+        this.text.insert('1.0', "Short line\n");
+        this.formatter("Dummy");
+        this.assertEqual(this.text.get('1.0', 'insert'), "Short line\n" );
+        this.text.delete('1.0', 'end');
 
     }
-    def test_long_line(self){
-        text = self.text;
+    function test_long_line(){
+        text = this.text;
 
         # Set cursor ('insert' mark) to '1.0', within text.
-        text.insert('1.0', self.test_string);
+        text.insert('1.0', this.test_string);
         text.mark_set('insert', '1.0');
-        self.formatter('ParameterDoesNothing', limit=70);
+        this.formatter('ParameterDoesNothing', limit=70);
         result = text.get('1.0', 'insert');
         # find function includes \n
         expected = (
 "    '''this is a test of a reformat for a triple quoted string will it\n"
 "    reformat to less than 70 characters for me?'''\n");  # yes
-        self.assertEqual(result, expected);
+        this.assertEqual(result, expected);
         text.delete('1.0', 'end');
 
         # Select from 1.11 to line end.
-        text.insert('1.0', self.test_string);
+        text.insert('1.0', this.test_string);
         text.tag_add('sel', '1.11', '1.end');
-        self.formatter('ParameterDoesNothing', limit=70);
+        this.formatter('ParameterDoesNothing', limit=70);
         result = text.get('1.0', 'insert');
         # selection excludes \n
         expected = (
 "    '''this is a test of a reformat for a triple quoted string will it reformat\n"
 " to less than 70 characters for me?'''");  # no
-        self.assertEqual(result, expected);
+        this.assertEqual(result, expected);
         text.delete('1.0', 'end');
 
     }
-    def test_multiple_lines(self){
-        text = self.text;
+    function test_multiple_lines(){
+        text = this.text;
         #  Select 2 long lines.
-        text.insert('1.0', self.multiline_test_string);
+        text.insert('1.0', this.multiline_test_string);
         text.tag_add('sel', '2.0', '4.0');
-        self.formatter('ParameterDoesNothing', limit=70);
+        this.formatter('ParameterDoesNothing', limit=70);
         result = text.get('2.0', 'insert');
         expected = (
 "    The second line's length is way over the max width. It goes on and\n"
 "    on until it is over 100 characters long. Same thing with the third\n"
 "    line. It is also way over the max width, but FormatParagraph will\n"
 "    fix it.\n");
-        self.assertEqual(result, expected);
+        this.assertEqual(result, expected);
         text.delete('1.0', 'end');
 
     }
-    def test_comment_block(self){
-        text = self.text;
+    function test_comment_block(){
+        text = this.text;
 
         # Set cursor ('insert') to '1.0', within block.
-        text.insert('1.0', self.multiline_test_comment);
-        self.formatter('ParameterDoesNothing', limit=70);
+        text.insert('1.0', this.multiline_test_comment);
+        this.formatter('ParameterDoesNothing', limit=70);
         result = text.get('1.0', 'insert');
         expected = (
 "# The first line is under the max width. The second line's length is\n"
@@ -358,19 +358,19 @@ class FormatEventTest(unittest.TestCase){
 "# characters long. Same thing with the third line. It is also way over\n"
 "# the max width, but FormatParagraph will fix it. The fourth line is\n"
 "# short like the first line.\n");
-        self.assertEqual(result, expected);
+        this.assertEqual(result, expected);
         text.delete('1.0', 'end');
 
         # Select line 2, verify line 1 unaffected.
-        text.insert('1.0', self.multiline_test_comment);
+        text.insert('1.0', this.multiline_test_comment);
         text.tag_add('sel', '2.0', '3.0');
-        self.formatter('ParameterDoesNothing', limit=70);
+        this.formatter('ParameterDoesNothing', limit=70);
         result = text.get('1.0', 'insert');
         expected = (
 "# The first line is under the max width.\n"
 "# The second line's length is way over the max width. It goes on and\n"
 "# on until it is over 100 characters long.\n");
-        self.assertEqual(result, expected);
+        this.assertEqual(result, expected);
         text.delete('1.0', 'end');
 
 # The following block worked with EditorWindow but fails with the mock.

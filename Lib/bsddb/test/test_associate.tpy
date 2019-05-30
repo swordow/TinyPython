@@ -76,37 +76,37 @@ musicdata = {
 #----------------------------------------------------------------------
 
 class AssociateErrorTestCase(unittest.TestCase){
-    def setUp(self){
-        self.filename = self.__class__.__name__ + '.db';
-        self.homeDir = get_new_environment_path();
-        self.env = db.DBEnv();
-        self.env.open(self.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL);
+    function setUp(){
+        this.filename = this.__class__.__name__ + '.db';
+        this.homeDir = get_new_environment_path();
+        this.env = db.DBEnv();
+        this.env.open(this.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL);
 
     }
-    def tearDown(self){
-        self.env.close();
-        self.env = None;
-        test_support.rmtree(self.homeDir);
+    function tearDown(){
+        this.env.close();
+        this.env = nil;
+        test_support.rmtree(this.homeDir);
 
     }
-    def test00_associateDBError(self){
+    function test00_associateDBError(){
         if verbose{
             print '\n', '-=' * 30;
             print "Running %s.test00_associateDBError..." % \
-                  self.__class__.__name__;
+                  this.__class__.__name__;
 
         }
-        dupDB = db.DB(self.env);
+        dupDB = db.DB(this.env);
         dupDB.set_flags(db.DB_DUP);
-        dupDB.open(self.filename, "primary", db.DB_BTREE, db.DB_CREATE);
+        dupDB.open(this.filename, "primary", db.DB_BTREE, db.DB_CREATE);
 
-        secDB = db.DB(self.env);
-        secDB.open(self.filename, "secondary", db.DB_BTREE, db.DB_CREATE);
+        secDB = db.DB(this.env);
+        secDB.open(this.filename, "secondary", db.DB_BTREE, db.DB_CREATE);
 
         # dupDB has been configured to allow duplicates, it can't
         # associate with a secondary.  Berkeley DB will return an error.
         try{
-            def f(a,b){ return a+b;
+            function f(a,b){ return a+b;}
             dupDB.associate(secDB, f);
         } except db.DBError{
             # good
@@ -115,14 +115,14 @@ class AssociateErrorTestCase(unittest.TestCase){
         } else{
             secDB.close();
             dupDB.close();
-            self.fail("DBError exception was expected");
+            this.fail("DBError exception was expected");
 
     }
     } @unittest.skipUnless(db.version() >= (4, 6), 'Needs 4.6+');
-    def test_associateListError(self){
-        db1 = db.DB(self.env);
+    function test_associateListError(){
+        db1 = db.DB(this.env);
         db1.open('bad.db', "a.db", db.DB_BTREE, db.DB_CREATE);
-        db2 = db.DB(self.env);
+        db2 = db.DB(this.env);
         db2.open('bad.db', "b.db", db.DB_BTREE, db.DB_CREATE);
 
         db1.associate(db2, lambda a, b{ [0]});
@@ -133,7 +133,7 @@ class AssociateErrorTestCase(unittest.TestCase){
             db1.put("0", "1");
         } db1.close();
         db2.close();
-        self.assertEquals(s.getvalue().strip(), msg);
+        this.assertEquals(s.getvalue().strip(), msg);
 
 
 #----------------------------------------------------------------------
@@ -145,186 +145,186 @@ class AssociateErrorTestCase(unittest.TestCase){
     envFlags = 0;
     dbFlags = 0;
 
-    def setUp(self){
-        self.filename = self.__class__.__name__ + '.db';
-        self.homeDir = get_new_environment_path();
-        self.env = db.DBEnv();
-        self.env.open(self.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL |
-                               db.DB_INIT_LOCK | db.DB_THREAD | self.envFlags);
+    function setUp(){
+        this.filename = this.__class__.__name__ + '.db';
+        this.homeDir = get_new_environment_path();
+        this.env = db.DBEnv();
+        this.env.open(this.homeDir, db.DB_CREATE | db.DB_INIT_MPOOL |
+                               db.DB_INIT_LOCK | db.DB_THREAD | this.envFlags);
 
     }
-    def tearDown(self){
-        self.closeDB();
-        self.env.close();
-        self.env = None;
-        test_support.rmtree(self.homeDir);
+    function tearDown(){
+        this.closeDB();
+        this.env.close();
+        this.env = nil;
+        test_support.rmtree(this.homeDir);
 
     }
-    def addDataToDB(self, d, txn=None){
+    function addDataToDB( d, txn=nil){
         for key, value in musicdata.items(){
-            if type(self.keytype) == type(''){
+            if type(this.keytype) == type(''){
                 key = "%02d" % key;
             } d.put(key, '|'.join(value), txn=txn);
 
     }
-    } def createDB(self, txn=None){
-        self.cur = None;
-        self.secDB = None;
-        self.primary = db.DB(self.env);
-        self.primary.set_get_returns_none(2);
-        self.primary.open(self.filename, "primary", self.dbtype,
-                      db.DB_CREATE | db.DB_THREAD | self.dbFlags, txn=txn);
+    } function createDB( txn=nil){
+        this.cur = nil;
+        this.secDB = nil;
+        this.primary = db.DB(this.env);
+        this.primary.set_get_returns_none(2);
+        this.primary.open(this.filename, "primary", this.dbtype,
+                      db.DB_CREATE | db.DB_THREAD | this.dbFlags, txn=txn);
 
     }
-    def closeDB(self){
-        if self.cur{
-            self.cur.close();
-            self.cur = None;
-        } if self.secDB{
-            self.secDB.close();
-            self.secDB = None;
-        } self.primary.close();
-        self.primary = None;
+    function closeDB(){
+        if this.cur{
+            this.cur.close();
+            this.cur = nil;
+        } if this.secDB{
+            this.secDB.close();
+            this.secDB = nil;
+        } this.primary.close();
+        this.primary = nil;
 
     }
-    def getDB(self){
-        return self.primary;
+    function getDB(){
+        return this.primary;
 
 
     }
-    def _associateWithDB(self, getGenre){
-        self.createDB();
+    function _associateWithDB( getGenre){
+        this.createDB();
 
-        self.secDB = db.DB(self.env);
-        self.secDB.set_flags(db.DB_DUP);
-        self.secDB.set_get_returns_none(2);
-        self.secDB.open(self.filename, "secondary", db.DB_BTREE,
-                   db.DB_CREATE | db.DB_THREAD | self.dbFlags);
-        self.getDB().associate(self.secDB, getGenre);
+        this.secDB = db.DB(this.env);
+        this.secDB.set_flags(db.DB_DUP);
+        this.secDB.set_get_returns_none(2);
+        this.secDB.open(this.filename, "secondary", db.DB_BTREE,
+                   db.DB_CREATE | db.DB_THREAD | this.dbFlags);
+        this.getDB().associate(this.secDB, getGenre);
 
-        self.addDataToDB(self.getDB());
+        this.addDataToDB(this.getDB());
 
-        self.finish_test(self.secDB);
+        this.finish_test(this.secDB);
 
     }
-    def test01_associateWithDB(self){
+    function test01_associateWithDB(){
         if verbose{
             print '\n', '-=' * 30;
             print "Running %s.test01_associateWithDB..." % \
-                  self.__class__.__name__;
+                  this.__class__.__name__;
 
         }
-        return self._associateWithDB(self.getGenre);
+        return this._associateWithDB(this.getGenre);
 
     }
-    def _associateAfterDB(self, getGenre) {
-        self.createDB();
-        self.addDataToDB(self.getDB());
+    function _associateAfterDB( getGenre) {
+        this.createDB();
+        this.addDataToDB(this.getDB());
 
-        self.secDB = db.DB(self.env);
-        self.secDB.set_flags(db.DB_DUP);
-        self.secDB.open(self.filename, "secondary", db.DB_BTREE,
-                   db.DB_CREATE | db.DB_THREAD | self.dbFlags);
+        this.secDB = db.DB(this.env);
+        this.secDB.set_flags(db.DB_DUP);
+        this.secDB.open(this.filename, "secondary", db.DB_BTREE,
+                   db.DB_CREATE | db.DB_THREAD | this.dbFlags);
 
         # adding the DB_CREATE flag will cause it to index existing records
-        self.getDB().associate(self.secDB, getGenre, db.DB_CREATE);
+        this.getDB().associate(this.secDB, getGenre, db.DB_CREATE);
 
-        self.finish_test(self.secDB);
+        this.finish_test(this.secDB);
 
     }
-    def test02_associateAfterDB(self){
+    function test02_associateAfterDB(){
         if verbose{
             print '\n', '-=' * 30;
             print "Running %s.test02_associateAfterDB..." % \
-                  self.__class__.__name__;
+                  this.__class__.__name__;
 
         }
-        return self._associateAfterDB(self.getGenre);
+        return this._associateAfterDB(this.getGenre);
 
     }
     if db.version() >= (4, 6){
-        def test03_associateWithDB(self){
+        function test03_associateWithDB(){
             if verbose{
                 print '\n', '-=' * 30;
                 print "Running %s.test03_associateWithDB..." % \
-                      self.__class__.__name__;
+                      this.__class__.__name__;
 
             }
-            return self._associateWithDB(self.getGenreList);
+            return this._associateWithDB(this.getGenreList);
 
         }
-        def test04_associateAfterDB(self){
+        function test04_associateAfterDB(){
             if verbose{
                 print '\n', '-=' * 30;
                 print "Running %s.test04_associateAfterDB..." % \
-                      self.__class__.__name__;
+                      this.__class__.__name__;
 
             }
-            return self._associateAfterDB(self.getGenreList);
+            return this._associateAfterDB(this.getGenreList);
 
 
     }
-    } def finish_test(self, secDB, txn=None){
+    } function finish_test( secDB, txn=nil){
         # 'Blues' should not be in the secondary database
         vals = secDB.pget('Blues', txn=txn);
-        self.assertEqual(vals, None, vals);
+        this.assertEqual(vals, nil, vals);
 
         vals = secDB.pget('Unknown', txn=txn);
-        self.assertIn(vals[0], (99, '99'), vals);
+        this.assertIn(vals[0], (99, '99'), vals);
         vals[1].index('Unknown');
         vals[1].index('Unnamed');
         vals[1].index('unknown');
 
         if verbose{
             print "Primary key traversal:";
-        } self.cur = self.getDB().cursor(txn);
+        } this.cur = this.getDB().cursor(txn);
         count = 0;
-        rec = self.cur.first();
-        while rec is not None{
-            if type(self.keytype) == type(''){
-                self.assertTrue(int(rec[0]));  # for primary db, key is a number
+        rec = this.cur.first();
+        while rec is not nil{
+            if type(this.keytype) == type(''){
+                this.assertTrue(int(rec[0]));  # for primary db, key is a number
             } else{
-                self.assertTrue(rec[0]);
-                self.assertIs(type(rec[0]), int);
+                this.assertTrue(rec[0]);
+                this.assertIs(type(rec[0]), int);
             } count = count + 1;
             if verbose{
                 print rec;
-            } rec = getattr(self.cur, "next")();
-        } self.assertEqual(count, len(musicdata));  # all items accounted for
+            } rec = getattr(this.cur, "next")();
+        } this.assertEqual(count, len(musicdata));  # all items accounted for
 
 
         if verbose{
             print "Secondary key traversal:";
-        } self.cur = secDB.cursor(txn);
+        } this.cur = secDB.cursor(txn);
         count = 0;
 
         # test cursor pget
-        vals = self.cur.pget('Unknown', flags=db.DB_LAST);
-        self.assertIn(vals[1], (99, '99'), vals);
-        self.assertEqual(vals[0], 'Unknown');
+        vals = this.cur.pget('Unknown', flags=db.DB_LAST);
+        this.assertIn(vals[1], (99, '99'), vals);
+        this.assertEqual(vals[0], 'Unknown');
         vals[2].index('Unknown');
         vals[2].index('Unnamed');
         vals[2].index('unknown');
 
-        vals = self.cur.pget('Unknown', data='wrong value', flags=db.DB_GET_BOTH);
-        self.assertEqual(vals, None, vals);
+        vals = this.cur.pget('Unknown', data='wrong value', flags=db.DB_GET_BOTH);
+        this.assertEqual(vals, nil, vals);
 
-        rec = self.cur.first();
-        self.assertEqual(rec[0], "Jazz");
-        while rec is not None{
+        rec = this.cur.first();
+        this.assertEqual(rec[0], "Jazz");
+        while rec is not nil{
             count = count + 1;
             if verbose{
                 print rec;
-            } rec = getattr(self.cur, "next")();
+            } rec = getattr(this.cur, "next")();
         # all items accounted for EXCEPT for 1 with "Blues" genre
         }
-        self.assertEqual(count, len(musicdata)-1);
+        this.assertEqual(count, len(musicdata)-1);
 
-        self.cur = None;
+        this.cur = nil;
 
     }
-    def getGenre(self, priKey, priData){
-        self.assertEqual(type(priData), type(""));
+    function getGenre( priKey, priData){
+        this.assertEqual(type(priData), type(""));
         genre = priData.split('|')[2];
 
         if verbose{
@@ -337,8 +337,8 @@ class AssociateErrorTestCase(unittest.TestCase){
             return genre;
 
     }
-    } def getGenreList(self, priKey, PriData) {
-        v = self.getGenre(priKey, PriData);
+    } function getGenreList( priKey, PriData) {
+        v = this.getGenre(priKey, PriData);
         if type(v) == type("") {
             v = [v];
         } return v;
@@ -367,42 +367,42 @@ class AssociateBTreeTxnTestCase(AssociateBTreeTestCase){
     envFlags = db.DB_INIT_TXN;
     dbFlags = 0;
 
-    def txn_finish_test(self, sDB, txn){
+    function txn_finish_test( sDB, txn){
         try{
-            self.finish_test(sDB, txn=txn);
+            this.finish_test(sDB, txn=txn);
         } finally{
-            if self.cur{
-                self.cur.close();
-                self.cur = None;
+            if this.cur{
+                this.cur.close();
+                this.cur = nil;
             } if txn{
                 txn.commit();
 
     }
-    } } def test13_associate_in_transaction(self){
+    } } function test13_associate_in_transaction(){
         if verbose{
             print '\n', '-=' * 30;
             print "Running %s.test13_associateAutoCommit..." % \
-                  self.__class__.__name__;
+                  this.__class__.__name__;
 
         }
-        txn = self.env.txn_begin();
+        txn = this.env.txn_begin();
         try{
-            self.createDB(txn=txn);
+            this.createDB(txn=txn);
 
-            self.secDB = db.DB(self.env);
-            self.secDB.set_flags(db.DB_DUP);
-            self.secDB.set_get_returns_none(2);
-            self.secDB.open(self.filename, "secondary", db.DB_BTREE,
+            this.secDB = db.DB(this.env);
+            this.secDB.set_flags(db.DB_DUP);
+            this.secDB.set_get_returns_none(2);
+            this.secDB.open(this.filename, "secondary", db.DB_BTREE,
                        db.DB_CREATE | db.DB_THREAD, txn=txn);
-            self.getDB().associate(self.secDB, self.getGenre, txn=txn);
+            this.getDB().associate(this.secDB, this.getGenre, txn=txn);
 
-            self.addDataToDB(self.getDB(), txn=txn);
+            this.addDataToDB(this.getDB(), txn=txn);
         } except Exception{
             txn.abort();
             raise;
 
         }
-        self.txn_finish_test(self.secDB, txn=txn);
+        this.txn_finish_test(this.secDB, txn=txn);
 
 
 #----------------------------------------------------------------------
@@ -410,23 +410,23 @@ class AssociateBTreeTxnTestCase(AssociateBTreeTestCase){
 }
 } class ShelveAssociateTestCase(AssociateTestCase){
 
-    def createDB(self){
-        self.primary = dbshelve.open(self.filename,
+    function createDB(){
+        this.primary = dbshelve.open(this.filename,
                                      dbname="primary",
-                                     dbenv=self.env,
-                                     filetype=self.dbtype);
+                                     dbenv=this.env,
+                                     filetype=this.dbtype);
 
     }
-    def addDataToDB(self, d){
+    function addDataToDB( d){
         for key, value in musicdata.items(){
-            if type(self.keytype) == type(''){
+            if type(this.keytype) == type(''){
                 key = "%02d" % key;
             } d.put(key, value);    # save the value as is this time
 
 
     }
-    } def getGenre(self, priKey, priData){
-        self.assertEqual(type(priData), type(()));
+    } function getGenre( priKey, priData){
+        this.assertEqual(type(priData), type(()));
         if verbose{
             print 'getGenre key: %r data: %r' % (priKey, priData);
         } genre = priData[2];
@@ -455,28 +455,28 @@ class ShelveAssociateRecnoTestCase(ShelveAssociateTestCase){
 }
 class ThreadedAssociateTestCase(AssociateTestCase){
 
-    def addDataToDB(self, d){
-        t1 = Thread(target = self.writer1,
+    function addDataToDB( d){
+        t1 = Thread(target = this.writer1,
                     args = (d, ));
-        t2 = Thread(target = self.writer2,
+        t2 = Thread(target = this.writer2,
                     args = (d, ));
 
-        t1.setDaemon(True);
-        t2.setDaemon(True);
+        t1.setDaemon(true);
+        t2.setDaemon(true);
         t1.start();
         t2.start();
         t1.join();
         t2.join();
 
     }
-    def writer1(self, d){
+    function writer1( d){
         for key, value in musicdata.items(){
-            if type(self.keytype) == type(''){
+            if type(this.keytype) == type(''){
                 key = "%02d" % key;
             } d.put(key, '|'.join(value));
 
     }
-    } def writer2(self, d){
+    } function writer2( d){
         for x in range(100, 600){
             key = 'z%2d' % x;
             value = [key] * 4;
@@ -500,7 +500,7 @@ class ThreadedAssociateRecnoTestCase(ShelveAssociateTestCase){
 #----------------------------------------------------------------------
 
 }
-def test_suite(){
+function test_suite(){
     suite = unittest.TestSuite();
 
     suite.addTest(unittest.makeSuite(AssociateErrorTestCase));

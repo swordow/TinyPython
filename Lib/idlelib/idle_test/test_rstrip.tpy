@@ -4,22 +4,22 @@ from idlelib.idle_test.mock_idle import Editor;
 
 class rstripTest(unittest.TestCase){
 
-    def test_rstrip_line(self){
+    function test_rstrip_line(){
         editor = Editor();
         text = editor.text;
         do_rstrip = rs.RstripExtension(editor).do_rstrip;
 
         do_rstrip();
-        self.assertEqual(text.get('1.0', 'insert'), '');
+        this.assertEqual(text.get('1.0', 'insert'), '');
         text.insert('1.0', '     ');
         do_rstrip();
-        self.assertEqual(text.get('1.0', 'insert'), '');
+        this.assertEqual(text.get('1.0', 'insert'), '');
         text.insert('1.0', '     \n');
         do_rstrip();
-        self.assertEqual(text.get('1.0', 'insert'), '\n');
+        this.assertEqual(text.get('1.0', 'insert'), '\n');
 
     }
-    def test_rstrip_multiple(self){
+    function test_rstrip_multiple(){
         editor = Editor();
         #  Uncomment following to verify that test passes with real widgets.
 ##        from idlelib.EditorWindow import EditorWindow as Editor
@@ -44,10 +44,10 @@ class rstripTest(unittest.TestCase){
 
         text.insert('1.0', original);
         do_rstrip();
-        self.assertEqual(text.get('1.0', 'insert'), stripped);
+        this.assertEqual(text.get('1.0', 'insert'), stripped);
 
 }
 } if __name__ == '__main__'{
-    unittest.main(verbosity=2, exit=False);
+    unittest.main(verbosity=2, exit=false);
 
 }

@@ -128,7 +128,7 @@ iobase_flush(PyObject *self, PyObject *args)
         PyErr_SetString(PyExc_ValueError, "I/O operation on closed file.");
         return NULL;
     }
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(iobase_close_doc,
@@ -165,9 +165,9 @@ _PyIOBase_check_closed(PyObject *self, PyObject *args)
         return NULL;
     }
     if (args == Py_True)
-        return Py_None;
+        return Py_Nil;
     else
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
 }
 
 /* XXX: IOBase thinks it has to maintain its own internal state in
@@ -181,7 +181,7 @@ iobase_close(PyObject *self, PyObject *args)
     int rc;
 
     if (IS_CLOSED(self))
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
 
     res = PyObject_CallMethodObjArgs(self, _PyIO_str_flush, NULL);
 
@@ -196,7 +196,7 @@ iobase_close(PyObject *self, PyObject *args)
         return NULL;
     }
     Py_DECREF(res);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 /* Finalization and garbage collection support */
@@ -699,7 +699,7 @@ iobase_writelines(PyObject *self, PyObject *args)
         Py_DECREF(res);
     }
     Py_DECREF(iter);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyMethodDef iobase_methods[] = {
@@ -818,7 +818,7 @@ rawiobase_read(PyObject *self, PyObject *args)
         return NULL;
 
     res = PyObject_CallMethodObjArgs(self, _PyIO_str_readinto, b, NULL);
-    if (res == NULL || res == Py_None) {
+    if (res == NULL || res == Py_Nil) {
         Py_DECREF(b);
         return res;
     }
@@ -861,7 +861,7 @@ rawiobase_readall(PyObject *self, PyObject *args)
             Py_DECREF(chunks);
             return NULL;
         }
-        if (data == Py_None) {
+        if (data == Py_Nil) {
             if (PyList_GET_SIZE(chunks) == 0) {
                 Py_DECREF(chunks);
                 return data;

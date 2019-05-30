@@ -111,8 +111,8 @@ static PyObject *TEObj_TESetText(TEObject *_self, PyObject *_args)
     text__len__ = text__in_len__;
     TESetText(text__in__, text__len__,
               _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -140,8 +140,8 @@ static PyObject *TEObj_TEIdle(TEObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TEIdle(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -160,8 +160,8 @@ static PyObject *TEObj_TESetSelect(TEObject *_self, PyObject *_args)
     TESetSelect(selStart,
                 selEnd,
                 _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -174,8 +174,8 @@ static PyObject *TEObj_TEActivate(TEObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TEActivate(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -188,8 +188,8 @@ static PyObject *TEObj_TEDeactivate(TEObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TEDeactivate(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -205,8 +205,8 @@ static PyObject *TEObj_TEKey(TEObject *_self, PyObject *_args)
         return NULL;
     TEKey(key,
           _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -219,8 +219,8 @@ static PyObject *TEObj_TECut(TEObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TECut(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -233,8 +233,8 @@ static PyObject *TEObj_TECopy(TEObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TECopy(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -247,8 +247,8 @@ static PyObject *TEObj_TEPaste(TEObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TEPaste(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -261,8 +261,8 @@ static PyObject *TEObj_TEDelete(TEObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TEDelete(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -281,8 +281,8 @@ static PyObject *TEObj_TEInsert(TEObject *_self, PyObject *_args)
     text__len__ = text__in_len__;
     TEInsert(text__in__, text__len__,
              _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -298,8 +298,8 @@ static PyObject *TEObj_TESetAlignment(TEObject *_self, PyObject *_args)
         return NULL;
     TESetAlignment(just,
                    _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -315,8 +315,8 @@ static PyObject *TEObj_TEUpdate(TEObject *_self, PyObject *_args)
         return NULL;
     TEUpdate(&rUpdate,
              _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -335,8 +335,8 @@ static PyObject *TEObj_TEScroll(TEObject *_self, PyObject *_args)
     TEScroll(dh,
              dv,
              _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -349,8 +349,8 @@ static PyObject *TEObj_TESelView(TEObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TESelView(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -369,8 +369,8 @@ static PyObject *TEObj_TEPinScroll(TEObject *_self, PyObject *_args)
     TEPinScroll(dh,
                 dv,
                 _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -386,8 +386,8 @@ static PyObject *TEObj_TEAutoView(TEObject *_self, PyObject *_args)
         return NULL;
     TEAutoView(fAuto,
                _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -400,8 +400,8 @@ static PyObject *TEObj_TECalText(TEObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TECalText(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -456,8 +456,8 @@ static PyObject *TEObj_TEClick(TEObject *_self, PyObject *_args)
     TEClick(pt,
         fExtend,
         _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -473,8 +473,8 @@ static PyObject *TEObj_TESetStyleHandle(TEObject *_self, PyObject *_args)
         return NULL;
     TESetStyleHandle(theHandle,
                      _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -527,8 +527,8 @@ static PyObject *TEObj_TEStylePaste(TEObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TEStylePaste(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -550,8 +550,8 @@ static PyObject *TEObj_TESetStyle(TEObject *_self, PyObject *_args)
                &newStyle,
                fRedraw,
                _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -576,8 +576,8 @@ static PyObject *TEObj_TEReplaceStyle(TEObject *_self, PyObject *_args)
                    &newStyle,
                    fRedraw,
                    _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -614,8 +614,8 @@ static PyObject *TEObj_TEStyleInsert(TEObject *_self, PyObject *_args)
     TEStyleInsert(text__in__, text__len__,
                   hST,
                   _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -684,8 +684,8 @@ static PyObject *TEObj_TEUseStyleScrap(TEObject *_self, PyObject *_args)
                     newStyles,
                     fRedraw,
                     _self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -745,8 +745,8 @@ static PyObject *TEObj_TEGetHiliteRgn(TEObject *_self, PyObject *_args)
     _err = TEGetHiliteRgn(region,
                           _self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1117,8 +1117,8 @@ static PyObject *TE_TETextBox(PyObject *_self, PyObject *_args)
     TETextBox(text__in__, text__len__,
               &box,
               just);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1153,8 +1153,8 @@ static PyObject *TE_TESetScrapLength(PyObject *_self, PyObject *_args)
                           &length))
         return NULL;
     TESetScrapLength(length);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1169,8 +1169,8 @@ static PyObject *TE_TEFromScrap(PyObject *_self, PyObject *_args)
         return NULL;
     _err = TEFromScrap();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1185,8 +1185,8 @@ static PyObject *TE_TEToScrap(PyObject *_self, PyObject *_args)
         return NULL;
     _err = TEToScrap();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1216,8 +1216,8 @@ static PyObject *TE_TESetScrapHandle(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &value))
         return NULL;
     TESetScrapHandle(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1247,8 +1247,8 @@ static PyObject *TE_LMSetWordRedraw(PyObject *_self, PyObject *_args)
                           &value))
         return NULL;
     LMSetWordRedraw(value);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 

@@ -8,51 +8,51 @@ _warnpy3k("The 'hotshot' module is not supported in 3.x, "
           "use the 'profile' module instead.", stacklevel=2);
 
 class Profile{
-    def __init__(self, logfn, lineevents=0, linetimings=1){
-        self.lineevents = lineevents and 1 or 0;
-        self.linetimings = (linetimings and lineevents) and 1 or 0;
-        self._prof = p = _hotshot.profiler(
-            logfn, self.lineevents, self.linetimings);
+    function __init__( logfn, lineevents=0, linetimings=1){
+        this.lineevents = lineevents and 1 or 0;
+        this.linetimings = (linetimings and lineevents) and 1 or 0;
+        this._prof = p = _hotshot.profiler(
+            logfn, this.lineevents, this.linetimings);
 
         # Attempt to avoid confusing results caused by the presence of
         # Python wrappers around these functions, but only if we can
         # be sure the methods have not been overridden or extended.
-        if self.__class__ is Profile{
-            self.close = p.close;
-            self.start = p.start;
-            self.stop = p.stop;
-            self.addinfo = p.addinfo;
+        if this.__class__ is Profile{
+            this.close = p.close;
+            this.start = p.start;
+            this.stop = p.stop;
+            this.addinfo = p.addinfo;
 
     }
-    } def close(self){
+    } function close(){
         """Close the logfile and terminate the profiler.""";
-        self._prof.close();
+        this._prof.close();
 
     }
-    def fileno(self){
+    function fileno(){
         """Return the file descriptor of the profiler's log file.""";
-        return self._prof.fileno();
+        return this._prof.fileno();
 
     }
-    def start(self){
+    function start(){
         """Start the profiler.""";
-        self._prof.start();
+        this._prof.start();
 
     }
-    def stop(self){
+    function stop(){
         """Stop the profiler.""";
-        self._prof.stop();
+        this._prof.stop();
 
     }
-    def addinfo(self, key, value){
+    function addinfo( key, value){
         """Add an arbitrary labelled value to the profile log.""";
-        self._prof.addinfo(key, value);
+        this._prof.addinfo(key, value);
 
     # These methods offer the same interface as the profile.Profile class,
     # but delegate most of the work to the C implementation underneath.
 
     }
-    def run(self, cmd){
+    function run( cmd){
         """Profile an exec-compatible string in the script
         environment.
 
@@ -61,21 +61,21 @@ class Profile{
         """;
         import __main__;
         dict = __main__.__dict__;
-        return self.runctx(cmd, dict, dict);
+        return this.runctx(cmd, dict, dict);
 
     }
-    def runctx(self, cmd, globals, locals){
+    function runctx( cmd, globals, locals){
         """Evaluate an exec-compatible string in a specific
         environment.
 
         The string is compiled before profiling begins.
         """;
         code = compile(cmd, "<string>", "exec");
-        self._prof.runcode(code, globals, locals);
-        return self;
+        this._prof.runcode(code, globals, locals);
+        return this;
 
     }
-    def runcall(self, func, *args, **kw){
+    function runcall( func, *args, **kw){
         """Profile a single call of a callable.
 
         Additional positional and keyword arguments may be passed
@@ -83,7 +83,7 @@ class Profile{
         allowed to propagate cleanly, while ensuring that profiling is
         disabled on the way out.
         """;
-        return self._prof.runcall(func, args, kw);
+        return this._prof.runcall(func, args, kw);
 
 }
 }

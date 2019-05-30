@@ -9,13 +9,13 @@ try{
     import dbm;
     _dbmerror = dbm.error;
 } except ImportError{
-    dbm = None;
+    dbm = nil;
     # just some sort of valid exception which might be raised in the
     # dbm test
     _dbmerror = IOError;
 
 }
-def whichdb(filename){
+function whichdb(filename){
     """Guess which db package to use to open a db file.
 
     Return values:
@@ -46,7 +46,7 @@ def whichdb(filename){
             # guarantee we can actually open the file using dbm
             # kind of overkill, but since we are dealing with emulations
             # it seems like a prudent step
-            if dbm is not None{
+            if dbm is not nil{
                 d = dbm.open(filename);
                 d.close();
                 return "dbm";
@@ -76,7 +76,7 @@ def whichdb(filename){
     try{
         f = open(filename, "rb");
     } except IOError{
-        return None;
+        return nil;
 
     # Read the start of the file -- the magic number
     }

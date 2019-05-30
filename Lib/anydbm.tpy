@@ -39,7 +39,7 @@ class error(Exception){
 }
 _names = ['dbhash', 'gdbm', 'dbm', 'dumbdbm'];
 _errors = [error];
-_defaultmod = None;
+_defaultmod = nil;
 
 for _name in _names{
     try{
@@ -57,7 +57,7 @@ if not _defaultmod{
 }
 error = tuple(_errors);
 
-def open(file, flag='r', mode=0666){
+function open(file, flag='r', mode=0666){
     """Open or create database at path given by *file*.
 
     Optional argument *flag* can be 'r' (default) for read-only access, 'w'
@@ -72,7 +72,7 @@ def open(file, flag='r', mode=0666){
     # guess the type of an existing database
     from whichdb import whichdb;
     result=whichdb(file);
-    if result is None{
+    if result is nil{
         # db doesn't exist
         if 'c' in flag or 'n' in flag{
             # file doesn't exist and the new

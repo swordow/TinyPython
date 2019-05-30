@@ -177,7 +177,7 @@ class DecimalException(ArithmeticError){
     To define a new exception, it should be sufficient to have it derive
     from DecimalException.
     """;
-    def handle(self, context, *args){
+    function handle( context, *args){
         pass;
 
 
@@ -218,9 +218,9 @@ class InvalidOperation(DecimalException){
     also a quiet NaN, but with the original sign, and an optional
     diagnostic information.
     """;
-    def handle(self, context, *args){
+    function handle( context, *args){
         if args{
-            ans = _dec_from_triple(args[0]._sign, args[0]._int, 'n', True);
+            ans = _dec_from_triple(args[0]._sign, args[0]._int, 'n', true);
             return ans._fix_nan(context);
         } return _NaN;
 
@@ -232,7 +232,7 @@ class InvalidOperation(DecimalException){
     converted to a number and it does not conform to the numeric string
     syntax.  The result is [0,qNaN].
     """;
-    def handle(self, context, *args){
+    function handle( context, *args){
         return _NaN;
 
 }
@@ -249,7 +249,7 @@ class InvalidOperation(DecimalException){
     -0, for power.
     """;
 
-    def handle(self, context, sign, *args){
+    function handle( context, sign, *args){
         return _SignedInfinity[sign];
 
 }
@@ -261,7 +261,7 @@ class InvalidOperation(DecimalException){
     longer than precision).  The result is [0,qNaN].
     """;
 
-    def handle(self, context, *args){
+    function handle( context, *args){
         return _NaN;
 
 }
@@ -273,7 +273,7 @@ class InvalidOperation(DecimalException){
     the dividend is also zero.  The result is [0,qNaN].
     """;
 
-    def handle(self, context, *args){
+    function handle( context, *args){
         return _NaN;
 
 }
@@ -301,7 +301,7 @@ class InvalidContext(InvalidOperation){
     the values are required to be used.  The result is [0,qNaN].
     """;
 
-    def handle(self, context, *args){
+    function handle( context, *args){
         return _NaN;
 
 }
@@ -352,7 +352,7 @@ class Overflow(Inexact, Rounded){
     will also be raised.
     """;
 
-    def handle(self, context, sign, *args){
+    function handle( context, sign, *args){
         if context.rounding in (ROUND_HALF_UP, ROUND_HALF_EVEN,
                                 ROUND_HALF_DOWN, ROUND_UP){
             return _SignedInfinity[sign];
@@ -409,7 +409,7 @@ try{
     # Python was compiled without threads; create a mock object instead
     import sys;
     class MockThreading(object){
-        def local(self, sys=sys){
+        function local( sys=sys){
             return sys.modules[__name__];
     } } threading = MockThreading();
     del sys, MockThreading;
@@ -427,7 +427,7 @@ except AttributeError{
         del threading.currentThread().__decimal_context__;
 
     }
-    def setcontext(context){
+    function setcontext(context){
         """Set this thread's context to context.""";
         if context in (DefaultContext, BasicContext, ExtendedContext){
             context = context.copy();
@@ -435,7 +435,7 @@ except AttributeError{
         } threading.currentThread().__decimal_context__ = context;
 
     }
-    def getcontext(){
+    function getcontext(){
         """Returns this thread's context.
 
         If this thread does not yet have a context, returns
@@ -457,7 +457,7 @@ except AttributeError{
         del local.__decimal_context__;
 
     }
-    def getcontext(_local=local){
+    function getcontext(_local=local){
         """Returns this thread's context.
 
         If this thread does not yet have a context, returns
@@ -472,7 +472,7 @@ except AttributeError{
             return context;
 
     }
-    } def setcontext(context, _local=local){
+    } function setcontext(context, _local=local){
         """Set this thread's context to context.""";
         if context in (DefaultContext, BasicContext, ExtendedContext){
             context = context.copy();
@@ -483,7 +483,7 @@ except AttributeError{
     del threading, local;        # Don't contaminate the namespace
 
 }
-def localcontext(ctx=None){
+function localcontext(ctx=nil){
     """Return a context manager for a copy of the supplied context
 
     Uses a copy of the current context if no context is specified
@@ -519,7 +519,7 @@ def localcontext(ctx=None){
     >>> print getcontext().prec
     28
     """;
-    if ctx is None{ ctx = getcontext();
+    if ctx is nil{ ctx = getcontext();}
     return _ContextManager(ctx);
 
 
@@ -535,7 +535,7 @@ class Decimal(object){
     # Special values are signified by _is_special == True
 
     # We're immutable, so use __new__ not __init__
-    def __new__(cls, value="0", context=None){
+    function __new__(cls, value="0", context=nil){
         """Create a decimal point instance.
 
         >>> Decimal('3.14')              # string input
@@ -558,76 +558,76 @@ class Decimal(object){
         # and the Decimal constructor still deal with tuples of
         # digits.
 
-        self = object.__new__(cls);
+        this = object.__new__(cls);
 
         # From a string
         # REs insist on real strings, so we can too.
         if isinstance(value, basestring){
             m = _parser(value.strip());
-            if m is None{
-                if context is None{
+            if m is nil{
+                if context is nil{
                     context = getcontext();
                 } return context._raise_error(ConversionSyntax,
                                 "Invalid literal for Decimal: %r" % value);
 
             }
             if m.group('sign') == "-"{
-                self._sign = 1;
+                this._sign = 1;
             } else{
-                self._sign = 0;
+                this._sign = 0;
             } intpart = m.group('int');
-            if intpart is not None{
+            if intpart is not nil{
                 # finite number
                 fracpart = m.group('frac') or '';
                 exp = int(m.group('exp') or '0');
-                self._int = str(int(intpart+fracpart));
-                self._exp = exp - len(fracpart);
-                self._is_special = False;
+                this._int = str(int(intpart+fracpart));
+                this._exp = exp - len(fracpart);
+                this._is_special = false;
             } else{
                 diag = m.group('diag');
-                if diag is not None{
+                if diag is not nil{
                     # NaN
-                    self._int = str(int(diag or '0')).lstrip('0');
+                    this._int = str(int(diag or '0')).lstrip('0');
                     if m.group('signal'){
-                        self._exp = 'N';
+                        this._exp = 'N';
                     } else{
-                        self._exp = 'n';
+                        this._exp = 'n';
                 } } else{
                     # infinity
-                    self._int = '0';
-                    self._exp = 'F';
-                } self._is_special = True;
-            } return self;
+                    this._int = '0';
+                    this._exp = 'F';
+                } this._is_special = true;
+            } return this;
 
         # From an integer
         }
         if isinstance(value, (int,long)){
             if value >= 0{
-                self._sign = 0;
+                this._sign = 0;
             } else{
-                self._sign = 1;
-            } self._exp = 0;
-            self._int = str(abs(value));
-            self._is_special = False;
-            return self;
+                this._sign = 1;
+            } this._exp = 0;
+            this._int = str(abs(value));
+            this._is_special = false;
+            return this;
 
         # From another decimal
         }
         if isinstance(value, Decimal){
-            self._exp  = value._exp;
-            self._sign = value._sign;
-            self._int  = value._int;
-            self._is_special  = value._is_special;
-            return self;
+            this._exp  = value._exp;
+            this._sign = value._sign;
+            this._int  = value._int;
+            this._is_special  = value._is_special;
+            return this;
 
         # From an internal working value
         }
         if isinstance(value, _WorkRep){
-            self._sign = value.sign;
-            self._int = str(value.int);
-            self._exp = int(value.exp);
-            self._is_special = False;
-            return self;
+            this._sign = value.sign;
+            this._int = str(value.int);
+            this._exp = int(value.exp);
+            this._is_special = false;
+            return this;
 
         # tuple/list conversion (possibly from as_tuple())
         }
@@ -642,12 +642,12 @@ class Decimal(object){
                 raise ValueError("Invalid sign.  The first value in the tuple "
                                  "should be an integer; either 0 for a "
                                  "positive number or 1 for a negative number.");
-            } self._sign = value[0];
+            } this._sign = value[0];
             if value[2] == 'F'{
                 # infinity: value[1] is ignored
-                self._int = '0';
-                self._exp = value[2];
-                self._is_special = True;
+                this._int = '0';
+                this._exp = value[2];
+                this._is_special = true;
             } else{
                 # process and validate the digits in value[1]
                 digits = [];
@@ -662,28 +662,28 @@ class Decimal(object){
                                          "0 through 9.");
                 } } if value[2] in ('n', 'N'){
                     # NaN: digits form the diagnostic
-                    self._int = ''.join(map(str, digits));
-                    self._exp = value[2];
-                    self._is_special = True;
+                    this._int = ''.join(map(str, digits));
+                    this._exp = value[2];
+                    this._is_special = true;
                 } elif isinstance(value[2], (int, long)){
                     # finite number: digits give the coefficient
-                    self._int = ''.join(map(str, digits or [0]));
-                    self._exp = value[2];
-                    self._is_special = False;
+                    this._int = ''.join(map(str, digits or [0]));
+                    this._exp = value[2];
+                    this._is_special = false;
                 } else{
                     raise ValueError("The third value in the tuple must "
                                      "be an integer, or one of the "
                                      "strings 'F', 'n', 'N'.");
-            } } return self;
+            } } return this;
 
         }
         if isinstance(value, float){
             value = Decimal.from_float(value);
-            self._exp  = value._exp;
-            self._sign = value._sign;
-            self._int  = value._int;
-            self._is_special  = value._is_special;
-            return self;
+            this._exp  = value._exp;
+            this._sign = value._sign;
+            this._int  = value._int;
+            this._is_special  = value._is_special;
+            return this;
 
         }
         raise TypeError("Cannot convert %r to Decimal" % value);
@@ -691,7 +691,7 @@ class Decimal(object){
     # @classmethod, but @decorator is not valid Python 2.3 syntax, so
     # don't use it (see notes on Py2.3 compatibility at top of file)
     }
-    def from_float(cls, f){
+    function from_float(cls, f){
         """Converts a float to a decimal number, exactly.
 
         Note that Decimal.from_float(0.1) is not the same as Decimal('0.1').
@@ -729,15 +729,15 @@ class Decimal(object){
             return cls(result);
     } } from_float = classmethod(from_float);
 
-    def _isnan(self){
+    function _isnan(){
         """Returns whether the number is not actually one.
 
         0 if a number
         1 if NaN
         2 if sNaN
         """;
-        if self._is_special{
-            exp = self._exp;
+        if this._is_special{
+            exp = this._exp;
             if exp == 'n'{
                 return 1;
             } elif exp == 'N'{
@@ -745,21 +745,21 @@ class Decimal(object){
         } } return 0;
 
     }
-    def _isinfinity(self){
+    function _isinfinity(){
         """Returns whether the number is infinite
 
         0 if finite or not a number
         1 if +INF
         -1 if -INF
         """;
-        if self._exp == 'F'{
-            if self._sign{
+        if this._exp == 'F'{
+            if this._sign{
                 return -1;
             } return 1;
         } return 0;
 
     }
-    def _check_nans(self, other=None, context=None){
+    function _check_nans( other=nil, context=nil){
         """Returns whether the number is not actually one.
 
         if self, other are sNaN, signal
@@ -769,33 +769,33 @@ class Decimal(object){
         Done before operations.
         """;
 
-        self_is_nan = self._isnan();
-        if other is None{
-            other_is_nan = False;
+        self_is_nan = this._isnan();
+        if other is nil{
+            other_is_nan = false;
         } else{
             other_is_nan = other._isnan();
 
         }
         if self_is_nan or other_is_nan{
-            if context is None{
+            if context is nil{
                 context = getcontext();
 
             }
             if self_is_nan == 2{
                 return context._raise_error(InvalidOperation, 'sNaN',
-                                        self);
+                                        this);
             } if other_is_nan == 2{
                 return context._raise_error(InvalidOperation, 'sNaN',
                                         other);
             } if self_is_nan{
-                return self._fix_nan(context);
+                return this._fix_nan(context);
 
             }
             return other._fix_nan(context);
         } return 0;
 
     }
-    def _compare_check_nans(self, other, context){
+    function _compare_check_nans( other, context){
         """Version of _check_nans used for the signaling comparisons
         compare_signal, __le__, __lt__, __ge__, __gt__.
 
@@ -806,23 +806,23 @@ class Decimal(object){
         Return 0 if neither operand is a NaN.
 
         """;
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        if self._is_special or other._is_special{
-            if self.is_snan(){
+        if this._is_special or other._is_special{
+            if this.is_snan(){
                 return context._raise_error(InvalidOperation,
                                             'comparison involving sNaN',
-                                            self);
+                                            this);
             } elif other.is_snan(){
                 return context._raise_error(InvalidOperation,
                                             'comparison involving sNaN',
                                             other);
-            } elif self.is_qnan(){
+            } elif this.is_qnan(){
                 return context._raise_error(InvalidOperation,
                                             'comparison involving NaN',
-                                            self);
+                                            this);
             } elif other.is_qnan(){
                 return context._raise_error(InvalidOperation,
                                             'comparison involving NaN',
@@ -830,22 +830,22 @@ class Decimal(object){
         } } return 0;
 
     }
-    def __nonzero__(self){
+    function __nonzero__(){
         """Return True if self is nonzero; otherwise return False.
 
         NaNs and infinities are considered nonzero.
         """;
-        return self._is_special or self._int != '0';
+        return this._is_special or this._int != '0';
 
     }
-    def _cmp(self, other){
+    function _cmp( other){
         """Compare the two non-NaN decimal instances self and other.
 
         Returns -1 if self < other, 0 if self == other and 1
         if self > other.  This routine is for internal use only.""";
 
-        if self._is_special or other._is_special{
-            self_inf = self._isinfinity();
+        if this._is_special or other._is_special{
+            self_inf = this._isinfinity();
             other_inf = other._isinfinity();
             if self_inf == other_inf{
                 return 0;
@@ -856,37 +856,37 @@ class Decimal(object){
 
         # check for zeros;  Decimal('0') == Decimal('-0')
         }
-        } if not self{
+        } if not this{
             if not other{
                 return 0;
             } else{
                 return -((-1)**other._sign);
         } } if not other{
-            return (-1)**self._sign;
+            return (-1)**this._sign;
 
         # If different signs, neg one is less
         }
-        if other._sign < self._sign{
+        if other._sign < this._sign{
             return -1;
-        } if self._sign < other._sign{
+        } if this._sign < other._sign{
             return 1;
 
         }
-        self_adjusted = self.adjusted();
+        self_adjusted = this.adjusted();
         other_adjusted = other.adjusted();
         if self_adjusted == other_adjusted{
-            self_padded = self._int + '0'*(self._exp - other._exp);
-            other_padded = other._int + '0'*(other._exp - self._exp);
+            self_padded = this._int + '0'*(this._exp - other._exp);
+            other_padded = other._int + '0'*(other._exp - this._exp);
             if self_padded == other_padded{
                 return 0;
             } elif self_padded < other_padded{
-                return -(-1)**self._sign;
+                return -(-1)**this._sign;
             } else{
-                return (-1)**self._sign;
+                return (-1)**this._sign;
         } } elif self_adjusted > other_adjusted{
-            return (-1)**self._sign;
+            return (-1)**this._sign;
         } else{ # self_adjusted < other_adjusted
-            return -((-1)**self._sign);
+            return -((-1)**this._sign);
 
     # Note: The Decimal standard doesn't cover rich comparisons for
     # Decimals.  In particular, the specification is silent on the
@@ -906,65 +906,65 @@ class Decimal(object){
     # that specified by IEEE 754.
 
     }
-    } def __eq__(self, other, context=None){
-        other = _convert_other(other, allow_float=True);
+    } function __eq__( other, context=nil){
+        other = _convert_other(other, allow_float=true);
         if other is NotImplemented{
             return other;
-        } if self._check_nans(other, context){
-            return False;
-        } return self._cmp(other) == 0;
+        } if this._check_nans(other, context){
+            return false;
+        } return this._cmp(other) == 0;
 
     }
-    def __ne__(self, other, context=None){
-        other = _convert_other(other, allow_float=True);
+    function __ne__( other, context=nil){
+        other = _convert_other(other, allow_float=true);
         if other is NotImplemented{
             return other;
-        } if self._check_nans(other, context){
-            return True;
-        } return self._cmp(other) != 0;
+        } if this._check_nans(other, context){
+            return true;
+        } return this._cmp(other) != 0;
 
     }
-    def __lt__(self, other, context=None){
-        other = _convert_other(other, allow_float=True);
+    function __lt__( other, context=nil){
+        other = _convert_other(other, allow_float=true);
         if other is NotImplemented{
             return other;
-        } ans = self._compare_check_nans(other, context);
+        } ans = this._compare_check_nans(other, context);
         if ans{
-            return False;
-        } return self._cmp(other) < 0;
+            return false;
+        } return this._cmp(other) < 0;
 
     }
-    def __le__(self, other, context=None){
-        other = _convert_other(other, allow_float=True);
+    function __le__( other, context=nil){
+        other = _convert_other(other, allow_float=true);
         if other is NotImplemented{
             return other;
-        } ans = self._compare_check_nans(other, context);
+        } ans = this._compare_check_nans(other, context);
         if ans{
-            return False;
-        } return self._cmp(other) <= 0;
+            return false;
+        } return this._cmp(other) <= 0;
 
     }
-    def __gt__(self, other, context=None){
-        other = _convert_other(other, allow_float=True);
+    function __gt__( other, context=nil){
+        other = _convert_other(other, allow_float=true);
         if other is NotImplemented{
             return other;
-        } ans = self._compare_check_nans(other, context);
+        } ans = this._compare_check_nans(other, context);
         if ans{
-            return False;
-        } return self._cmp(other) > 0;
+            return false;
+        } return this._cmp(other) > 0;
 
     }
-    def __ge__(self, other, context=None){
-        other = _convert_other(other, allow_float=True);
+    function __ge__( other, context=nil){
+        other = _convert_other(other, allow_float=true);
         if other is NotImplemented{
             return other;
-        } ans = self._compare_check_nans(other, context);
+        } ans = this._compare_check_nans(other, context);
         if ans{
-            return False;
-        } return self._cmp(other) >= 0;
+            return false;
+        } return this._cmp(other) >= 0;
 
     }
-    def compare(self, other, context=None){
+    function compare( other, context=nil){
         """Compares one to another.
 
         -1 => a < b
@@ -973,19 +973,19 @@ class Decimal(object){
         NaN => one is NaN
         Like __cmp__, but returns Decimal instances.
         """;
-        other = _convert_other(other, raiseit=True);
+        other = _convert_other(other, raiseit=true);
 
         # Compare(NaN, NaN) = NaN
-        if (self._is_special or other and other._is_special){
-            ans = self._check_nans(other, context);
+        if (this._is_special or other and other._is_special){
+            ans = this._check_nans(other, context);
             if ans{
                 return ans;
 
         }
-        } return Decimal(self._cmp(other));
+        } return Decimal(this._cmp(other));
 
     }
-    def __hash__(self){
+    function __hash__(){
         """x.__hash__() <==> hash(x)""";
         # Decimal integers must hash the same as the ints
         #
@@ -998,16 +998,16 @@ class Decimal(object){
         # unpredictably used when checking set and dict membership, we
         # prevent signaling nans from being used as set elements or
         # dict keys by making __hash__ raise an exception.
-        if self._is_special{
-            if self.is_snan(){
+        if this._is_special{
+            if this.is_snan(){
                 raise TypeError('Cannot hash a signaling NaN value.');
-            } elif self.is_nan(){
+            } elif this.is_nan(){
                 # 0 to match hash(float('nan'))
                 return 0;
             } else{
                 # values chosen to match hash(float('inf')) and
                 # hash(float('-inf')).
-                if self._sign{
+                if this._sign{
                     return -271828;
                 } else{
                     return 314159;
@@ -1017,13 +1017,13 @@ class Decimal(object){
         # a Decimal instance is exactly representable as a float then
         # its hash should match that of the float.
         }
-        } } self_as_float = float(self);
-        if Decimal.from_float(self_as_float) == self{
+        } } self_as_float = float(this);
+        if Decimal.from_float(self_as_float) == this{
             return hash(self_as_float);
 
         }
-        if self._isinteger(){
-            op = _WorkRep(self.to_integral_value());
+        if this._isinteger(){
+            op = _WorkRep(this.to_integral_value());
             # to make computation feasible for Decimals with large
             # exponent, we use the fact that hash(n) == hash(m) for
             # any two nonzero integers n and m such that (i) n and m
@@ -1036,54 +1036,54 @@ class Decimal(object){
         # its adjusted exponent, and its coefficient with trailing
         # zeros removed.
         }
-        return hash((self._sign,
-                     self._exp+len(self._int),
-                     self._int.rstrip('0')));
+        return hash((this._sign,
+                     this._exp+len(this._int),
+                     this._int.rstrip('0')));
 
     }
-    def as_tuple(self){
+    function as_tuple(){
         """Represents the number as a triple tuple.
 
         To show the internals exactly as they are.
         """;
-        return DecimalTuple(self._sign, tuple(map(int, self._int)), self._exp);
+        return DecimalTuple(this._sign, tuple(map(int, this._int)), this._exp);
 
     }
-    def __repr__(self){
+    function __repr__(){
         """Represents the number as an instance of Decimal.""";
         # Invariant:  eval(repr(d)) == d
-        return "Decimal('%s')" % str(self);
+        return "Decimal('%s')" % str(this);
 
     }
-    def __str__(self, eng=False, context=None){
+    function __str__( eng=false, context=nil){
         """Return string representation of the number in scientific notation.
 
         Captures all of the information in the underlying representation.
         """;
 
-        sign = ['', '-'][self._sign];
-        if self._is_special{
-            if self._exp == 'F'{
+        sign = ['', '-'][this._sign];
+        if this._is_special{
+            if this._exp == 'F'{
                 return sign + 'Infinity';
-            } elif self._exp == 'n'{
-                return sign + 'NaN' + self._int;
+            } elif this._exp == 'n'{
+                return sign + 'NaN' + this._int;
             } else{ # self._exp == 'N'
-                return sign + 'sNaN' + self._int;
+                return sign + 'sNaN' + this._int;
 
         # number of digits of self._int to left of decimal point
         }
-        } leftdigits = self._exp + len(self._int);
+        } leftdigits = this._exp + len(this._int);
 
         # dotplace is number of digits of self._int to the left of the
         # decimal point in the mantissa of the output string (that is,
         # after adjusting the exponent)
-        if self._exp <= 0 and leftdigits > -6{
+        if this._exp <= 0 and leftdigits > -6{
             # no exponent required
             dotplace = leftdigits;
         } elif not eng{
             # usual scientific notation: 1 digit on left of the point
             dotplace = 1;
-        } elif self._int == '0'{
+        } elif this._int == '0'{
             # engineering notation, zero
             dotplace = (leftdigits + 1) % 3 - 1;
         } else{
@@ -1093,17 +1093,17 @@ class Decimal(object){
         }
         if dotplace <= 0{
             intpart = '0';
-            fracpart = '.' + '0'*(-dotplace) + self._int;
-        } elif dotplace >= len(self._int){
-            intpart = self._int+'0'*(dotplace-len(self._int));
+            fracpart = '.' + '0'*(-dotplace) + this._int;
+        } elif dotplace >= len(this._int){
+            intpart = this._int+'0'*(dotplace-len(this._int));
             fracpart = '';
         } else{
-            intpart = self._int[:dotplace];
-            fracpart = '.' + self._int[dotplace:];
+            intpart = this._int[:dotplace];
+            fracpart = '.' + this._int[dotplace:];
         } if leftdigits == dotplace{
             exp = '';
         } else{
-            if context is None{
+            if context is nil{
                 context = getcontext();
             } exp = ['e', 'E'][context.capitals] + "%+d" % (leftdigits-dotplace);
 
@@ -1111,68 +1111,68 @@ class Decimal(object){
         return sign + intpart + fracpart + exp;
 
     }
-    def to_eng_string(self, context=None){
+    function to_eng_string( context=nil){
         """Convert to a string, using engineering notation if an exponent is needed.
 
         Engineering notation has an exponent which is a multiple of 3.  This
         can leave up to 3 digits to the left of the decimal place and may
         require the addition of either one or two trailing zeros.
         """;
-        return self.__str__(eng=True, context=context);
+        return this.__str__(eng=true, context=context);
 
     }
-    def __neg__(self, context=None){
+    function __neg__( context=nil){
         """Returns a copy with the sign switched.
 
         Rounds, if it has reason.
         """;
-        if self._is_special{
-            ans = self._check_nans(context=context);
+        if this._is_special{
+            ans = this._check_nans(context=context);
             if ans{
                 return ans;
 
         }
-        } if context is None{
+        } if context is nil{
             context = getcontext();
 
         }
-        if not self and context.rounding != ROUND_FLOOR{
+        if not this and context.rounding != ROUND_FLOOR{
             # -Decimal('0') is Decimal('0'), not Decimal('-0'), except
             # in ROUND_FLOOR rounding mode.
-            ans = self.copy_abs();
+            ans = this.copy_abs();
         } else{
-            ans = self.copy_negate();
+            ans = this.copy_negate();
 
         }
         return ans._fix(context);
 
     }
-    def __pos__(self, context=None){
+    function __pos__( context=nil){
         """Returns a copy, unless it is a sNaN.
 
         Rounds the number (if more than precision digits)
         """;
-        if self._is_special{
-            ans = self._check_nans(context=context);
+        if this._is_special{
+            ans = this._check_nans(context=context);
             if ans{
                 return ans;
 
         }
-        } if context is None{
+        } if context is nil{
             context = getcontext();
 
         }
-        if not self and context.rounding != ROUND_FLOOR{
+        if not this and context.rounding != ROUND_FLOOR{
             # + (-0) = 0, except in ROUND_FLOOR rounding mode.
-            ans = self.copy_abs();
+            ans = this.copy_abs();
         } else{
-            ans = Decimal(self);
+            ans = Decimal(this);
 
         }
         return ans._fix(context);
 
     }
-    def __abs__(self, round=True, context=None){
+    function __abs__( round=true, context=nil){
         """Returns the absolute value of self.
 
         If the keyword argument 'round' is false, do not round.  The
@@ -1180,25 +1180,25 @@ class Decimal(object){
         self.copy_abs().
         """;
         if not round{
-            return self.copy_abs();
+            return this.copy_abs();
 
         }
-        if self._is_special{
-            ans = self._check_nans(context=context);
+        if this._is_special{
+            ans = this._check_nans(context=context);
             if ans{
                 return ans;
 
         }
-        } if self._sign{
-            ans = self.__neg__(context=context);
+        } if this._sign{
+            ans = this.__neg__(context=context);
         } else{
-            ans = self.__pos__(context=context);
+            ans = this.__pos__(context=context);
 
         }
         return ans;
 
     }
-    def __add__(self, other, context=None){
+    function __add__( other, context=nil){
         """Returns self + other.
 
         -INF + INF (or the reverse) cause InvalidOperation errors.
@@ -1208,52 +1208,52 @@ class Decimal(object){
             return other;
 
         }
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        if self._is_special or other._is_special{
-            ans = self._check_nans(other, context);
+        if this._is_special or other._is_special{
+            ans = this._check_nans(other, context);
             if ans{
                 return ans;
 
             }
-            if self._isinfinity(){
+            if this._isinfinity(){
                 # If both INF, same sign => same as both, opposite => error.
-                if self._sign != other._sign and other._isinfinity(){
+                if this._sign != other._sign and other._isinfinity(){
                     return context._raise_error(InvalidOperation, '-INF + INF');
-                } return Decimal(self);
+                } return Decimal(this);
             } if other._isinfinity(){
                 return Decimal(other);  # Can't both be infinity here
 
         }
-        } exp = min(self._exp, other._exp);
+        } exp = min(this._exp, other._exp);
         negativezero = 0;
-        if context.rounding == ROUND_FLOOR and self._sign != other._sign{
+        if context.rounding == ROUND_FLOOR and this._sign != other._sign{
             # If the answer is 0, the sign should be negative, in this case.
             negativezero = 1;
 
         }
-        if not self and not other{
-            sign = min(self._sign, other._sign);
+        if not this and not other{
+            sign = min(this._sign, other._sign);
             if negativezero{
                 sign = 1;
             } ans = _dec_from_triple(sign, '0', exp);
             ans = ans._fix(context);
             return ans;
-        } if not self{
+        } if not this{
             exp = max(exp, other._exp - context.prec-1);
             ans = other._rescale(exp, context.rounding);
             ans = ans._fix(context);
             return ans;
         } if not other{
-            exp = max(exp, self._exp - context.prec-1);
-            ans = self._rescale(exp, context.rounding);
+            exp = max(exp, this._exp - context.prec-1);
+            ans = this._rescale(exp, context.rounding);
             ans = ans._fix(context);
             return ans;
 
         }
-        op1 = _WorkRep(self);
+        op1 = _WorkRep(this);
         op2 = _WorkRep(other);
         op1, op2 = _normalize(op1, op2, context.prec);
 
@@ -1297,34 +1297,34 @@ class Decimal(object){
     }
     __radd__ = __add__;
 
-    def __sub__(self, other, context=None){
+    function __sub__( other, context=nil){
         """Return self - other""";
         other = _convert_other(other);
         if other is NotImplemented{
             return other;
 
         }
-        if self._is_special or other._is_special{
-            ans = self._check_nans(other, context=context);
+        if this._is_special or other._is_special{
+            ans = this._check_nans(other, context=context);
             if ans{
                 return ans;
 
         # self - other is computed as self + other.copy_negate()
         }
-        } return self.__add__(other.copy_negate(), context=context);
+        } return this.__add__(other.copy_negate(), context=context);
 
     }
-    def __rsub__(self, other, context=None){
+    function __rsub__( other, context=nil){
         """Return other - self""";
         other = _convert_other(other);
         if other is NotImplemented{
             return other;
 
         }
-        return other.__sub__(self, context=context);
+        return other.__sub__(this, context=context);
 
     }
-    def __mul__(self, other, context=None){
+    function __mul__( other, context=nil){
         """Return self * other.
 
         (+-) INF * 0 (or its reverse) raise InvalidOperation.
@@ -1334,34 +1334,34 @@ class Decimal(object){
             return other;
 
         }
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        resultsign = self._sign ^ other._sign;
+        resultsign = this._sign ^ other._sign;
 
-        if self._is_special or other._is_special{
-            ans = self._check_nans(other, context);
+        if this._is_special or other._is_special{
+            ans = this._check_nans(other, context);
             if ans{
                 return ans;
 
             }
-            if self._isinfinity(){
+            if this._isinfinity(){
                 if not other{
                     return context._raise_error(InvalidOperation, '(+-)INF * 0');
                 } return _SignedInfinity[resultsign];
 
             }
             if other._isinfinity(){
-                if not self{
+                if not this{
                     return context._raise_error(InvalidOperation, '0 * (+-)INF');
                 } return _SignedInfinity[resultsign];
 
         }
-        } resultexp = self._exp + other._exp;
+        } resultexp = this._exp + other._exp;
 
         # Special case for multiplying by zero
-        if not self or not other{
+        if not this or not other{
             ans = _dec_from_triple(resultsign, '0', resultexp);
             # Fixing in case the exponent is out of bounds
             ans = ans._fix(context);
@@ -1369,17 +1369,17 @@ class Decimal(object){
 
         # Special case for multiplying by power of 10
         }
-        if self._int == '1'{
+        if this._int == '1'{
             ans = _dec_from_triple(resultsign, other._int, resultexp);
             ans = ans._fix(context);
             return ans;
         } if other._int == '1'{
-            ans = _dec_from_triple(resultsign, self._int, resultexp);
+            ans = _dec_from_triple(resultsign, this._int, resultexp);
             ans = ans._fix(context);
             return ans;
 
         }
-        op1 = _WorkRep(self);
+        op1 = _WorkRep(this);
         op2 = _WorkRep(other);
 
         ans = _dec_from_triple(resultsign, str(op1.int * op2.int), resultexp);
@@ -1388,30 +1388,30 @@ class Decimal(object){
         return ans;
     } __rmul__ = __mul__;
 
-    def __truediv__(self, other, context=None){
+    function __truediv__( other, context=nil){
         """Return self / other.""";
         other = _convert_other(other);
         if other is NotImplemented{
             return NotImplemented;
 
         }
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        sign = self._sign ^ other._sign;
+        sign = this._sign ^ other._sign;
 
-        if self._is_special or other._is_special{
-            ans = self._check_nans(other, context);
+        if this._is_special or other._is_special{
+            ans = this._check_nans(other, context);
             if ans{
                 return ans;
 
             }
-            if self._isinfinity() and other._isinfinity(){
+            if this._isinfinity() and other._isinfinity(){
                 return context._raise_error(InvalidOperation, '(+-)INF/(+-)INF');
 
             }
-            if self._isinfinity(){
+            if this._isinfinity(){
                 return _SignedInfinity[sign];
 
             }
@@ -1422,19 +1422,19 @@ class Decimal(object){
         # Special cases for zeroes
         }
         } if not other{
-            if not self{
+            if not this{
                 return context._raise_error(DivisionUndefined, '0 / 0');
             } return context._raise_error(DivisionByZero, 'x / 0', sign);
 
         }
-        if not self{
-            exp = self._exp - other._exp;
+        if not this{
+            exp = this._exp - other._exp;
             coeff = 0;
         } else{
             # OK, so neither = 0, INF or NaN
-            shift = len(other._int) - len(self._int) + context.prec + 1;
-            exp = self._exp - other._exp - shift;
-            op1 = _WorkRep(self);
+            shift = len(other._int) - len(this._int) + context.prec + 1;
+            exp = this._exp - other._exp - shift;
+            op1 = _WorkRep(this);
             op2 = _WorkRep(other);
             if shift >= 0{
                 coeff, remainder = divmod(op1.int * 10**shift, op2.int);
@@ -1446,7 +1446,7 @@ class Decimal(object){
                     coeff += 1;
             } } else{
                 # result is exact; get as close to ideal exponent as possible
-                ideal_exp = self._exp - other._exp;
+                ideal_exp = this._exp - other._exp;
                 while exp < ideal_exp and coeff % 10 == 0{
                     coeff //= 10;
                     exp += 1;
@@ -1456,25 +1456,25 @@ class Decimal(object){
         return ans._fix(context);
 
     }
-    def _divide(self, other, context){
+    function _divide( other, context){
         """Return (self // other, self % other), to context.prec precision.
 
         Assumes that neither self nor other is a NaN, that self is not
         infinite and that other is nonzero.
         """;
-        sign = self._sign ^ other._sign;
+        sign = this._sign ^ other._sign;
         if other._isinfinity(){
-            ideal_exp = self._exp;
+            ideal_exp = this._exp;
         } else{
-            ideal_exp = min(self._exp, other._exp);
+            ideal_exp = min(this._exp, other._exp);
 
         }
-        expdiff = self.adjusted() - other.adjusted();
-        if not self or other._isinfinity() or expdiff <= -2{
+        expdiff = this.adjusted() - other.adjusted();
+        if not this or other._isinfinity() or expdiff <= -2{
             return (_dec_from_triple(sign, '0', 0),
-                    self._rescale(ideal_exp, context.rounding));
+                    this._rescale(ideal_exp, context.rounding));
         } if expdiff <= context.prec{
-            op1 = _WorkRep(self);
+            op1 = _WorkRep(this);
             op2 = _WorkRep(other);
             if op1.exp >= op2.exp{
                 op1.int *= 10**(op1.exp - op2.exp);
@@ -1483,7 +1483,7 @@ class Decimal(object){
             } q, r = divmod(op1.int, op2.int);
             if q < 10**context.prec{
                 return (_dec_from_triple(sign, str(q), 0),
-                        _dec_from_triple(self._sign, str(r), ideal_exp));
+                        _dec_from_triple(this._sign, str(r), ideal_exp));
 
         # Here the quotient is too large to be representable
         }
@@ -1492,18 +1492,18 @@ class Decimal(object){
         return ans, ans;
 
     }
-    def __rtruediv__(self, other, context=None){
+    function __rtruediv__( other, context=nil){
         """Swaps self/other and returns __truediv__.""";
         other = _convert_other(other);
         if other is NotImplemented{
             return other;
-        } return other.__truediv__(self, context=context);
+        } return other.__truediv__(this, context=context);
 
     }
     __div__ = __truediv__;
     __rdiv__ = __rtruediv__;
 
-    def __divmod__(self, other, context=None){
+    function __divmod__( other, context=nil){
         """
         Return (self // other, self % other)
         """;
@@ -1512,17 +1512,17 @@ class Decimal(object){
             return other;
 
         }
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        ans = self._check_nans(other, context);
+        ans = this._check_nans(other, context);
         if ans{
             return (ans, ans);
 
         }
-        sign = self._sign ^ other._sign;
-        if self._isinfinity(){
+        sign = this._sign ^ other._sign;
+        if this._isinfinity(){
             if other._isinfinity(){
                 ans = context._raise_error(InvalidOperation, 'divmod(INF, INF)');
                 return ans, ans;
@@ -1532,7 +1532,7 @@ class Decimal(object){
 
         }
         } if not other{
-            if not self{
+            if not this{
                 ans = context._raise_error(DivisionUndefined, 'divmod(0, 0)');
                 return ans, ans;
             } else{
@@ -1540,20 +1540,20 @@ class Decimal(object){
                         context._raise_error(InvalidOperation, 'x % 0'));
 
         }
-        } quotient, remainder = self._divide(other, context);
+        } quotient, remainder = this._divide(other, context);
         remainder = remainder._fix(context);
         return quotient, remainder;
 
     }
-    def __rdivmod__(self, other, context=None){
+    function __rdivmod__( other, context=nil){
         """Swaps self/other and returns __divmod__.""";
         other = _convert_other(other);
         if other is NotImplemented{
             return other;
-        } return other.__divmod__(self, context=context);
+        } return other.__divmod__(this, context=context);
 
     }
-    def __mod__(self, other, context=None){
+    function __mod__( other, context=nil){
         """
         self % other
         """;
@@ -1562,61 +1562,61 @@ class Decimal(object){
             return other;
 
         }
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        ans = self._check_nans(other, context);
+        ans = this._check_nans(other, context);
         if ans{
             return ans;
 
         }
-        if self._isinfinity(){
+        if this._isinfinity(){
             return context._raise_error(InvalidOperation, 'INF % x');
         } elif not other{
-            if self{
+            if this{
                 return context._raise_error(InvalidOperation, 'x % 0');
             } else{
                 return context._raise_error(DivisionUndefined, '0 % 0');
 
         }
-        } remainder = self._divide(other, context)[1];
+        } remainder = this._divide(other, context)[1];
         remainder = remainder._fix(context);
         return remainder;
 
     }
-    def __rmod__(self, other, context=None){
+    function __rmod__( other, context=nil){
         """Swaps self/other and returns __mod__.""";
         other = _convert_other(other);
         if other is NotImplemented{
             return other;
-        } return other.__mod__(self, context=context);
+        } return other.__mod__(this, context=context);
 
     }
-    def remainder_near(self, other, context=None){
+    function remainder_near( other, context=nil){
         """
         Remainder nearest to 0-  abs(remainder-near) <= other/2
         """;
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        other = _convert_other(other, raiseit=True);
+        other = _convert_other(other, raiseit=true);
 
-        ans = self._check_nans(other, context);
+        ans = this._check_nans(other, context);
         if ans{
             return ans;
 
         # self == +/-infinity -> InvalidOperation
         }
-        if self._isinfinity(){
+        if this._isinfinity(){
             return context._raise_error(InvalidOperation,
                                         'remainder_near(infinity, x)');
 
         # other == 0 -> either InvalidOperation or DivisionUndefined
         }
         if not other{
-            if self{
+            if this{
                 return context._raise_error(InvalidOperation,
                                             'remainder_near(x, 0)');
             } else{
@@ -1626,30 +1626,30 @@ class Decimal(object){
         # other = +/-infinity -> remainder = self
         }
         } if other._isinfinity(){
-            ans = Decimal(self);
+            ans = Decimal(this);
             return ans._fix(context);
 
         # self = 0 -> remainder = self, with ideal exponent
         }
-        ideal_exponent = min(self._exp, other._exp);
-        if not self{
-            ans = _dec_from_triple(self._sign, '0', ideal_exponent);
+        ideal_exponent = min(this._exp, other._exp);
+        if not this{
+            ans = _dec_from_triple(this._sign, '0', ideal_exponent);
             return ans._fix(context);
 
         # catch most cases of large or small quotient
         }
-        expdiff = self.adjusted() - other.adjusted();
+        expdiff = this.adjusted() - other.adjusted();
         if expdiff >= context.prec + 1{
             # expdiff >= prec+1 => abs(self/other) > 10**prec
             return context._raise_error(DivisionImpossible);
         } if expdiff <= -2{
             # expdiff <= -2 => abs(self/other) < 0.1
-            ans = self._rescale(ideal_exponent, context.rounding);
+            ans = this._rescale(ideal_exponent, context.rounding);
             return ans._fix(context);
 
         # adjust both arguments to have the same exponent, then divide
         }
-        op1 = _WorkRep(self);
+        op1 = _WorkRep(this);
         op2 = _WorkRep(other);
         if op1.exp >= op2.exp{
             op1.int *= 10**(op1.exp - op2.exp);
@@ -1669,7 +1669,7 @@ class Decimal(object){
 
         # result has same sign as self unless r is negative
         }
-        sign = self._sign;
+        sign = this._sign;
         if r < 0{
             sign = 1-sign;
             r = -r;
@@ -1679,113 +1679,113 @@ class Decimal(object){
         return ans._fix(context);
 
     }
-    def __floordiv__(self, other, context=None){
+    function __floordiv__( other, context=nil){
         """self // other""";
         other = _convert_other(other);
         if other is NotImplemented{
             return other;
 
         }
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        ans = self._check_nans(other, context);
+        ans = this._check_nans(other, context);
         if ans{
             return ans;
 
         }
-        if self._isinfinity(){
+        if this._isinfinity(){
             if other._isinfinity(){
                 return context._raise_error(InvalidOperation, 'INF // INF');
             } else{
-                return _SignedInfinity[self._sign ^ other._sign];
+                return _SignedInfinity[this._sign ^ other._sign];
 
         }
         } if not other{
-            if self{
+            if this{
                 return context._raise_error(DivisionByZero, 'x // 0',
-                                            self._sign ^ other._sign);
+                                            this._sign ^ other._sign);
             } else{
                 return context._raise_error(DivisionUndefined, '0 // 0');
 
         }
-        } return self._divide(other, context)[0];
+        } return this._divide(other, context)[0];
 
     }
-    def __rfloordiv__(self, other, context=None){
+    function __rfloordiv__( other, context=nil){
         """Swaps self/other and returns __floordiv__.""";
         other = _convert_other(other);
         if other is NotImplemented{
             return other;
-        } return other.__floordiv__(self, context=context);
+        } return other.__floordiv__(this, context=context);
 
     }
-    def __float__(self){
+    function __float__(){
         """Float representation.""";
-        if self._isnan(){
-            if self.is_snan(){
+        if this._isnan(){
+            if this.is_snan(){
                 raise ValueError("Cannot convert signaling NaN to float");
-            } s = "-nan" if self._sign else "nan";
+            } s = "-nan" if this._sign else "nan";
         } else{
-            s = str(self);
+            s = str(this);
         } return float(s);
 
     }
-    def __int__(self){
+    function __int__(){
         """Converts self to an int, truncating if necessary.""";
-        if self._is_special{
-            if self._isnan(){
+        if this._is_special{
+            if this._isnan(){
                 raise ValueError("Cannot convert NaN to integer");
-            } elif self._isinfinity(){
+            } elif this._isinfinity(){
                 raise OverflowError("Cannot convert infinity to integer");
-        } } s = (-1)**self._sign;
-        if self._exp >= 0{
-            return s*int(self._int)*10**self._exp;
+        } } s = (-1)**this._sign;
+        if this._exp >= 0{
+            return s*int(this._int)*10**this._exp;
         } else{
-            return s*int(self._int[:self._exp] or '0');
+            return s*int(this._int[:this._exp] or '0');
 
     }
     } __trunc__ = __int__;
 
-    def real(self){
-        return self;
+    function real(){
+        return this;
     } real = property(real);
 
-    def imag(self){
+    function imag(){
         return Decimal(0);
     } imag = property(imag);
 
-    def conjugate(self){
-        return self;
+    function conjugate(){
+        return this;
 
     }
-    def __complex__(self){
-        return complex(float(self));
+    function __complex__(){
+        return complex(float(this));
 
     }
-    def __long__(self){
+    function __long__(){
         """Converts to a long.
 
         Equivalent to long(int(self))
         """;
-        return long(self.__int__());
+        return long(this.__int__());
 
     }
-    def _fix_nan(self, context){
+    function _fix_nan( context){
         """Decapitate the payload of a NaN to fit the context""";
-        payload = self._int;
+        payload = this._int;
 
         # maximum length of payload is precision if _clamp=0,
         # precision-1 if _clamp=1.
         max_payload_len = context.prec - context._clamp;
         if len(payload) > max_payload_len{
             payload = payload[len(payload)-max_payload_len:].lstrip('0');
-            return _dec_from_triple(self._sign, payload, self._exp, True);
-        } return Decimal(self);
+            return _dec_from_triple(this._sign, payload, this._exp, true);
+        } return Decimal(this);
 
     }
-    def _fix(self, context){
+    function _fix( context){
         """Round if it is necessary to keep self within prec precision.
 
         Rounds and fixes the exponent.  Does not raise on a sNaN.
@@ -1795,35 +1795,35 @@ class Decimal(object){
         context - context used.
         """;
 
-        if self._is_special{
-            if self._isnan(){
+        if this._is_special{
+            if this._isnan(){
                 # decapitate payload if necessary
-                return self._fix_nan(context);
+                return this._fix_nan(context);
             } else{
                 # self is +/-Infinity; return unaltered
-                return Decimal(self);
+                return Decimal(this);
 
         # if self is zero then exponent should be between Etiny and
         # Emax if _clamp==0, and between Etiny and Etop if _clamp==1.
         }
         } Etiny = context.Etiny();
         Etop = context.Etop();
-        if not self{
+        if not this{
             exp_max = [context.Emax, Etop][context._clamp];
-            new_exp = min(max(self._exp, Etiny), exp_max);
-            if new_exp != self._exp{
+            new_exp = min(max(this._exp, Etiny), exp_max);
+            if new_exp != this._exp{
                 context._raise_error(Clamped);
-                return _dec_from_triple(self._sign, '0', new_exp);
+                return _dec_from_triple(this._sign, '0', new_exp);
             } else{
-                return Decimal(self);
+                return Decimal(this);
 
         # exp_min is the smallest allowable exponent of the result,
         # equal to max(self.adjusted()-context.prec+1, Etiny)
         }
-        } exp_min = len(self._int) + self._exp - context.prec;
+        } exp_min = len(this._int) + this._exp - context.prec;
         if exp_min > Etop{
             # overflow: exp_min > Etop iff self.adjusted() > Emax
-            ans = context._raise_error(Overflow, 'above Emax', self._sign);
+            ans = context._raise_error(Overflow, 'above Emax', this._sign);
             context._raise_error(Inexact);
             context._raise_error(Rounded);
             return ans;
@@ -1835,14 +1835,14 @@ class Decimal(object){
 
         # round if self has too many digits
         }
-        if self._exp < exp_min{
-            digits = len(self._int) + self._exp - exp_min;
+        if this._exp < exp_min{
+            digits = len(this._int) + this._exp - exp_min;
             if digits < 0{
-                self = _dec_from_triple(self._sign, '1', exp_min-1);
+                this = _dec_from_triple(this._sign, '1', exp_min-1);
                 digits = 0;
-            } rounding_method = self._pick_rounding_function[context.rounding];
-            changed = rounding_method(self, digits);
-            coeff = self._int[:digits] or '0';
+            } rounding_method = this._pick_rounding_function[context.rounding];
+            changed = rounding_method(this, digits);
+            coeff = this._int[:digits] or '0';
             if changed > 0{
                 coeff = str(int(coeff)+1);
                 if len(coeff) > context.prec{
@@ -1852,9 +1852,9 @@ class Decimal(object){
             # check whether the rounding pushed the exponent out of range
             }
             } if exp_min > Etop{
-                ans = context._raise_error(Overflow, 'above Emax', self._sign);
+                ans = context._raise_error(Overflow, 'above Emax', this._sign);
             } else{
-                ans = _dec_from_triple(self._sign, coeff, exp_min);
+                ans = _dec_from_triple(this._sign, coeff, exp_min);
 
             # raise the appropriate signals, taking care to respect
             # the precedence described in the specification
@@ -1877,14 +1877,14 @@ class Decimal(object){
 
         # fold down if _clamp == 1 and self has too few digits
         }
-        if context._clamp == 1 and self._exp > Etop{
+        if context._clamp == 1 and this._exp > Etop{
             context._raise_error(Clamped);
-            self_padded = self._int + '0'*(self._exp - Etop);
-            return _dec_from_triple(self._sign, self_padded, Etop);
+            self_padded = this._int + '0'*(this._exp - Etop);
+            return _dec_from_triple(this._sign, self_padded, Etop);
 
         # here self was representable to begin with; return unchanged
         }
-        return Decimal(self);
+        return Decimal(this);
 
     # for each of the rounding functions below:
     #   self is a finite, nonzero Decimal
@@ -1897,68 +1897,68 @@ class Decimal(object){
     #  -1 indicates that there are nonzero digits to be truncated
 
     }
-    def _round_down(self, prec){
+    function _round_down( prec){
         """Also known as round-towards-0, truncate.""";
-        if _all_zeros(self._int, prec){
+        if _all_zeros(this._int, prec){
             return 0;
         } else{
             return -1;
 
     }
-    } def _round_up(self, prec){
+    } function _round_up( prec){
         """Rounds away from 0.""";
-        return -self._round_down(prec);
+        return -this._round_down(prec);
 
     }
-    def _round_half_up(self, prec){
+    function _round_half_up( prec){
         """Rounds 5 up (away from 0)""";
-        if self._int[prec] in '56789'{
+        if this._int[prec] in '56789'{
             return 1;
-        } elif _all_zeros(self._int, prec){
+        } elif _all_zeros(this._int, prec){
             return 0;
         } else{
             return -1;
 
     }
-    } def _round_half_down(self, prec){
+    } function _round_half_down( prec){
         """Round 5 down""";
-        if _exact_half(self._int, prec){
+        if _exact_half(this._int, prec){
             return -1;
         } else{
-            return self._round_half_up(prec);
+            return this._round_half_up(prec);
 
     }
-    } def _round_half_even(self, prec){
+    } function _round_half_even( prec){
         """Round 5 to even, rest to nearest.""";
-        if _exact_half(self._int, prec) and \
-                (prec == 0 or self._int[prec-1] in '02468'){
+        if _exact_half(this._int, prec) and \
+                (prec == 0 or this._int[prec-1] in '02468'){
             return -1;
         } else{
-            return self._round_half_up(prec);
+            return this._round_half_up(prec);
 
     }
-    } def _round_ceiling(self, prec){
+    } function _round_ceiling( prec){
         """Rounds up (not away from 0 if negative.)""";
-        if self._sign{
-            return self._round_down(prec);
+        if this._sign{
+            return this._round_down(prec);
         } else{
-            return -self._round_down(prec);
+            return -this._round_down(prec);
 
     }
-    } def _round_floor(self, prec){
+    } function _round_floor( prec){
         """Rounds down (not towards 0 if negative)""";
-        if not self._sign{
-            return self._round_down(prec);
+        if not this._sign{
+            return this._round_down(prec);
         } else{
-            return -self._round_down(prec);
+            return -this._round_down(prec);
 
     }
-    } def _round_05up(self, prec){
+    } function _round_05up( prec){
         """Round down unless digit prec-1 is 0 or 5.""";
-        if prec and self._int[prec-1] not in '05'{
-            return self._round_down(prec);
+        if prec and this._int[prec-1] not in '05'{
+            return this._round_down(prec);
         } else{
-            return -self._round_down(prec);
+            return -this._round_down(prec);
 
     }
     } _pick_rounding_function = dict(
@@ -1972,7 +1972,7 @@ class Decimal(object){
         ROUND_05UP = _round_05up,
     );
 
-    def fma(self, other, third, context=None){
+    function fma( other, third, context=nil){
         """Fused multiply-add.
 
         Returns self*other+third with no rounding of the intermediate
@@ -1983,63 +1983,63 @@ class Decimal(object){
         and a single final rounding is performed.
         """;
 
-        other = _convert_other(other, raiseit=True);
+        other = _convert_other(other, raiseit=true);
 
         # compute product; raise InvalidOperation if either operand is
         # a signaling NaN or if the product is zero times infinity.
-        if self._is_special or other._is_special{
-            if context is None{
+        if this._is_special or other._is_special{
+            if context is nil{
                 context = getcontext();
-            } if self._exp == 'N'{
-                return context._raise_error(InvalidOperation, 'sNaN', self);
+            } if this._exp == 'N'{
+                return context._raise_error(InvalidOperation, 'sNaN', this);
             } if other._exp == 'N'{
                 return context._raise_error(InvalidOperation, 'sNaN', other);
-            } if self._exp == 'n'{
-                product = self;
+            } if this._exp == 'n'{
+                product = this;
             } elif other._exp == 'n'{
                 product = other;
-            } elif self._exp == 'F'{
+            } elif this._exp == 'F'{
                 if not other{
                     return context._raise_error(InvalidOperation,
                                                 'INF * 0 in fma');
-                } product = _SignedInfinity[self._sign ^ other._sign];
+                } product = _SignedInfinity[this._sign ^ other._sign];
             } elif other._exp == 'F'{
-                if not self{
+                if not this{
                     return context._raise_error(InvalidOperation,
                                                 '0 * INF in fma');
-                } product = _SignedInfinity[self._sign ^ other._sign];
+                } product = _SignedInfinity[this._sign ^ other._sign];
         } } else{
-            product = _dec_from_triple(self._sign ^ other._sign,
-                                       str(int(self._int) * int(other._int)),
-                                       self._exp + other._exp);
+            product = _dec_from_triple(this._sign ^ other._sign,
+                                       str(int(this._int) * int(other._int)),
+                                       this._exp + other._exp);
 
         }
-        third = _convert_other(third, raiseit=True);
+        third = _convert_other(third, raiseit=true);
         return product.__add__(third, context);
 
     }
-    def _power_modulo(self, other, modulo, context=None){
+    function _power_modulo( other, modulo, context=nil){
         """Three argument version of __pow__""";
 
         # if can't convert other and modulo to Decimal, raise
         # TypeError; there's no point returning NotImplemented (no
         # equivalent of __rpow__ for three argument pow)
-        other = _convert_other(other, raiseit=True);
-        modulo = _convert_other(modulo, raiseit=True);
+        other = _convert_other(other, raiseit=true);
+        modulo = _convert_other(modulo, raiseit=true);
 
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         # deal with NaNs: if there are any sNaNs then first one wins,
         # (i.e. behaviour for NaNs is identical to that of fma)
         }
-        self_is_nan = self._isnan();
+        self_is_nan = this._isnan();
         other_is_nan = other._isnan();
         modulo_is_nan = modulo._isnan();
         if self_is_nan or other_is_nan or modulo_is_nan{
             if self_is_nan == 2{
                 return context._raise_error(InvalidOperation, 'sNaN',
-                                        self);
+                                        this);
             } if other_is_nan == 2{
                 return context._raise_error(InvalidOperation, 'sNaN',
                                         other);
@@ -2047,14 +2047,14 @@ class Decimal(object){
                 return context._raise_error(InvalidOperation, 'sNaN',
                                         modulo);
             } if self_is_nan{
-                return self._fix_nan(context);
+                return this._fix_nan(context);
             } if other_is_nan{
                 return other._fix_nan(context);
             } return modulo._fix_nan(context);
 
         # check inputs: we apply same restrictions as Python's pow()
         }
-        if not (self._isinteger() and
+        if not (this._isinteger() and
                 other._isinteger() and
                 modulo._isinteger()){
             return context._raise_error(InvalidOperation,
@@ -2080,7 +2080,7 @@ class Decimal(object){
         # define 0**0 == NaN, for consistency with two-argument pow
         # (even though it hurts!)
         }
-        if not other and not self{
+        if not other and not this{
             return context._raise_error(InvalidOperation,
                                         'at least one of pow() 1st argument '
                                         'and 2nd argument must be nonzero; '
@@ -2091,13 +2091,13 @@ class Decimal(object){
         if other._iseven(){
             sign = 0;
         } else{
-            sign = self._sign;
+            sign = this._sign;
 
         # convert modulo to a Python integer, and self and other to
         # Decimal integers (i.e. force their exponents to be >= 0)
         }
         modulo = abs(int(modulo));
-        base = _WorkRep(self.to_integral_value());
+        base = _WorkRep(this.to_integral_value());
         exponent = _WorkRep(other.to_integral_value());
 
         # compute result using integer pow()
@@ -2109,7 +2109,7 @@ class Decimal(object){
         return _dec_from_triple(sign, str(base), 0);
 
     }
-    def _power_exact(self, other, p){
+    function _power_exact( other, p){
         """Attempt to compute self**other exactly.
 
         Given Decimals self and other and an integer p, attempt to
@@ -2167,7 +2167,7 @@ class Decimal(object){
         # Similarly, len(str(abs(yc)*xc_bits)) <= -ye implies |y|
         # < 1/nbits(xc).
 
-        x = _WorkRep(self);
+        x = _WorkRep(this);
         xc, xe = x.int, x.exp;
         while xc % 10 == 0{
             xc //= 10;
@@ -2190,14 +2190,14 @@ class Decimal(object){
                 xe //= 10;
                 ye += 1;
             } if ye < 0{
-                return None;
+                return nil;
             } exponent = xe * 10**ye;
             if y.sign == 1{
                 exponent = -exponent;
             # if other is a nonnegative integer, use ideal exponent
             }
             if other._isinteger() and other._sign == 0{
-                ideal_exponent = self._exp*int(other);
+                ideal_exponent = this._exp*int(other);
                 zeros = min(exponent-ideal_exponent, p-1);
             } else{
                 zeros = 0;
@@ -2211,7 +2211,7 @@ class Decimal(object){
             if last_digit in (2,4,6,8){
                 # quick test for power of 2
                 if xc & -xc != xc{
-                    return None;
+                    return nil;
                 # now xc is a power of 2; e is its exponent
                 }
                 e = _nbits(xc)-1;
@@ -2243,18 +2243,18 @@ class Decimal(object){
                 # emax >= largest e such that 5**e < 10**p.
                 emax = p*93//65;
                 if ye >= len(str(emax)){
-                    return None;
+                    return nil;
 
                 # Find -e*y and -xe*y; both must be integers
                 }
                 e = _decimal_lshift_exact(e * yc, ye);
                 xe = _decimal_lshift_exact(xe * yc, ye);
-                if e is None or xe is None{
-                    return None;
+                if e is nil or xe is nil{
+                    return nil;
 
                 }
                 if e > emax{
-                    return None;
+                    return nil;
                 } xc = 5**e;
 
             }
@@ -2264,7 +2264,7 @@ class Decimal(object){
                 e = _nbits(xc)*28//65;
                 xc, remainder = divmod(5**e, xc);
                 if remainder{
-                    return None;
+                    return nil;
                 } while xc % 5 == 0{
                     xc //= 5;
                     e -= 1;
@@ -2275,24 +2275,24 @@ class Decimal(object){
                 }
                 emax = p*10//3;
                 if ye >= len(str(emax)){
-                    return None;
+                    return nil;
 
                 }
                 e = _decimal_lshift_exact(e * yc, ye);
                 xe = _decimal_lshift_exact(xe * yc, ye);
-                if e is None or xe is None{
-                    return None;
+                if e is nil or xe is nil{
+                    return nil;
 
                 }
                 if e > emax{
-                    return None;
+                    return nil;
                 } xc = 2**e;
             } else{
-                return None;
+                return nil;
 
             }
             if xc >= 10**p{
-                return None;
+                return nil;
             } xe = -e-xe;
             return _dec_from_triple(0, str(xc), xe);
 
@@ -2302,10 +2302,10 @@ class Decimal(object){
             m, n = yc*10**ye, 1;
         } else{
             if xe != 0 and len(str(abs(yc*xe))) <= -ye{
-                return None;
+                return nil;
             } xc_bits = _nbits(xc);
             if xc != 1 and len(str(abs(yc)*xc_bits)) <= -ye{
-                return None;
+                return nil;
             } m, n = yc, 10**(-ye);
             while m % 2 == n % 2 == 0{
                 m //= 2;
@@ -2319,24 +2319,24 @@ class Decimal(object){
         } if n > 1{
             # if 1 < xc < 2**n then xc isn't an nth power
             if xc != 1 and xc_bits <= n{
-                return None;
+                return nil;
 
             }
             xe, rem = divmod(xe, n);
             if rem != 0{
-                return None;
+                return nil;
 
             # compute nth root of xc using Newton's method
             }
             a = 1L << -(-_nbits(xc)//n); # initial estimate
-            while True{
+            while true{
                 q, r = divmod(xc, a**(n-1));
                 if a <= q{
                     break;
                 } else{
                     a = (a*(n-1) + q)//n;
             } } if not (a == q and r == 0){
-                return None;
+                return nil;
             } xc = a;
 
         # now xc*10**xe is the nth root of the original xc*10**xe
@@ -2346,11 +2346,11 @@ class Decimal(object){
         # 10**p and the result is not representable.
         }
         if xc > 1 and m > p*100//_log10_lb(xc){
-            return None;
+            return nil;
         } xc = xc**m;
         xe *= m;
         if xc > 10**p{
-            return None;
+            return nil;
 
         # by this point the result *is* exactly representable
         # adjust the exponent to get as close as possible to the ideal
@@ -2358,14 +2358,14 @@ class Decimal(object){
         }
         str_xc = str(xc);
         if other._isinteger() and other._sign == 0{
-            ideal_exponent = self._exp*int(other);
+            ideal_exponent = this._exp*int(other);
             zeros = min(xe-ideal_exponent, p-len(str_xc));
         } else{
             zeros = 0;
         } return _dec_from_triple(0, str_xc+'0'*zeros, xe-zeros);
 
     }
-    def __pow__(self, other, modulo=None, context=None){
+    function __pow__( other, modulo=nil, context=nil){
         """Return self ** other [ % modulo].
 
         With two arguments, compute self**other.
@@ -2389,8 +2389,8 @@ class Decimal(object){
         efficiently.  It is always exact.
         """;
 
-        if modulo is not None{
-            return self._power_modulo(other, modulo, context);
+        if modulo is not nil{
+            return this._power_modulo(other, modulo, context);
 
         }
         other = _convert_other(other);
@@ -2398,19 +2398,19 @@ class Decimal(object){
             return other;
 
         }
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         # either argument is a NaN => result is NaN
         }
-        ans = self._check_nans(other, context);
+        ans = this._check_nans(other, context);
         if ans{
             return ans;
 
         # 0**0 = NaN (!), x**0 = 1 for nonzero x (including +/-Infinity)
         }
         if not other{
-            if not self{
+            if not this{
                 return context._raise_error(InvalidOperation, '0 ** 0');
             } else{
                 return _One;
@@ -2418,23 +2418,23 @@ class Decimal(object){
         # result has sign 1 iff self._sign is 1 and other is an odd integer
         }
         } result_sign = 0;
-        if self._sign == 1{
+        if this._sign == 1{
             if other._isinteger(){
                 if not other._iseven(){
                     result_sign = 1;
             } } else{
                 # -ve**noninteger = NaN
                 # (-0)**noninteger = 0**noninteger
-                if self{
+                if this{
                     return context._raise_error(InvalidOperation,
                         'x ** y with x negative and y not an integer');
             # negate self, without doing any unwanted rounding
             }
-            } self = self.copy_negate();
+            } this = this.copy_negate();
 
         # 0**(+ve or Inf)= 0; 0**(-ve or -Inf) = Infinity
         }
-        if not self{
+        if not this{
             if other._sign == 0{
                 return _dec_from_triple(result_sign, '0', 0);
             } else{
@@ -2442,7 +2442,7 @@ class Decimal(object){
 
         # Inf**(+ve or Inf) = Inf; Inf**(-ve or -Inf) = 0
         }
-        } if self._isinfinity(){
+        } if this._isinfinity(){
             if other._sign == 0{
                 return _SignedInfinity[result_sign];
             } else{
@@ -2452,7 +2452,7 @@ class Decimal(object){
         # depend on the exponent of self, and on whether other is a
         # positive integer, a negative integer, or neither
         }
-        } if self == _One{
+        } if this == _One{
             if other._isinteger(){
                 # exp = max(self._exp*max(int(other), 0),
                 # 1-context.prec) but evaluating int(other) directly
@@ -2466,7 +2466,7 @@ class Decimal(object){
                     multiplier = int(other);
 
                 }
-                exp = self._exp * multiplier;
+                exp = this._exp * multiplier;
                 if exp < 1-context.prec{
                     exp = 1-context.prec;
                     context._raise_error(Rounded);
@@ -2480,7 +2480,7 @@ class Decimal(object){
 
         # compute adjusted exponent of self
         }
-        self_adj = self.adjusted();
+        self_adj = this.adjusted();
 
         # self ** infinity is infinity if self > 1, 0 if self < 1
         # self ** -infinity is infinity if self < 1, 0 if self > 1
@@ -2493,15 +2493,15 @@ class Decimal(object){
         # from here on, the result always goes through the call
         # to _fix at the end of this function.
         }
-        } ans = None;
-        exact = False;
+        } ans = nil;
+        exact = false;
 
         # crude test to catch cases of extreme overflow/underflow.  If
         # log10(self)*other >= 10**bound and bound >= len(str(Emax))
         # then 10**bound >= 10**len(str(Emax)) >= Emax+1 and hence
         # self**other >= 10**(Emax+1), so overflow occurs.  The test
         # for underflow is similar.
-        bound = self._log10_exp_bound() + other.adjusted();
+        bound = this._log10_exp_bound() + other.adjusted();
         if (self_adj >= 0) == (other._sign == 0){
             # self > 1 and other +ve, or self < 1 and other -ve
             # possibility of overflow
@@ -2516,18 +2516,18 @@ class Decimal(object){
 
         # try for an exact result with precision +1
         }
-        } if ans is None{
-            ans = self._power_exact(other, context.prec + 1);
-            if ans is not None{
+        } if ans is nil{
+            ans = this._power_exact(other, context.prec + 1);
+            if ans is not nil{
                 if result_sign == 1{
                     ans = _dec_from_triple(1, ans._int, ans._exp);
-                } exact = True;
+                } exact = true;
 
         # usual case: inexact result, x**y computed directly as exp(y*log(x))
         }
-        } if ans is None{
+        } if ans is nil{
             p = context.prec;
-            x = _WorkRep(self);
+            x = _WorkRep(this);
             xc, xe = x.int, x.exp;
             y = _WorkRep(other);
             yc, ye = y.int, y.exp;
@@ -2538,7 +2538,7 @@ class Decimal(object){
             # then increase precision until result is unambiguously roundable
             }
             extra = 3;
-            while True{
+            while true{
                 coeff, exp = _dpower(xc, xe, yc, ye, p+extra);
                 if coeff % (5*10**(len(str(coeff))-p-1)){
                     break;
@@ -2605,28 +2605,28 @@ class Decimal(object){
         return ans;
 
     }
-    def __rpow__(self, other, context=None){
+    function __rpow__( other, context=nil){
         """Swaps self/other and returns __pow__.""";
         other = _convert_other(other);
         if other is NotImplemented{
             return other;
-        } return other.__pow__(self, context=context);
+        } return other.__pow__(this, context=context);
 
     }
-    def normalize(self, context=None){
+    function normalize( context=nil){
         """Normalize- strip trailing 0s, change anything equal to 0 to 0e0""";
 
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        if self._is_special{
-            ans = self._check_nans(context=context);
+        if this._is_special{
+            ans = this._check_nans(context=context);
             if ans{
                 return ans;
 
         }
-        } dup = self._fix(context);
+        } dup = this._fix(context);
         if dup._isinfinity(){
             return dup;
 
@@ -2642,39 +2642,39 @@ class Decimal(object){
         } return _dec_from_triple(dup._sign, dup._int[:end], exp);
 
     }
-    def quantize(self, exp, rounding=None, context=None, watchexp=True){
+    function quantize( exp, rounding=nil, context=nil, watchexp=true){
         """Quantize self so its exponent is the same as that of exp.
 
         Similar to self._rescale(exp._exp) but with error checking.
         """;
-        exp = _convert_other(exp, raiseit=True);
+        exp = _convert_other(exp, raiseit=true);
 
-        if context is None{
+        if context is nil{
             context = getcontext();
-        } if rounding is None{
+        } if rounding is nil{
             rounding = context.rounding;
 
         }
-        if self._is_special or exp._is_special{
-            ans = self._check_nans(exp, context);
+        if this._is_special or exp._is_special{
+            ans = this._check_nans(exp, context);
             if ans{
                 return ans;
 
             }
-            if exp._isinfinity() or self._isinfinity(){
-                if exp._isinfinity() and self._isinfinity(){
-                    return Decimal(self);  # if both are inf, it is OK
+            if exp._isinfinity() or this._isinfinity(){
+                if exp._isinfinity() and this._isinfinity(){
+                    return Decimal(this);  # if both are inf, it is OK
                 } return context._raise_error(InvalidOperation,
                                         'quantize with one INF');
 
         # if we're not watching exponents, do a simple rescale
         }
         } if not watchexp{
-            ans = self._rescale(exp._exp, rounding);
+            ans = this._rescale(exp._exp, rounding);
             # raise Inexact and Rounded where appropriate
-            if ans._exp > self._exp{
+            if ans._exp > this._exp{
                 context._raise_error(Rounded);
-                if ans != self{
+                if ans != this{
                     context._raise_error(Inexact);
             } } return ans;
 
@@ -2685,12 +2685,12 @@ class Decimal(object){
                    'target exponent out of bounds in quantize');
 
         }
-        if not self{
-            ans = _dec_from_triple(self._sign, '0', exp._exp);
+        if not this{
+            ans = _dec_from_triple(this._sign, '0', exp._exp);
             return ans._fix(context);
 
         }
-        self_adjusted = self.adjusted();
+        self_adjusted = this.adjusted();
         if self_adjusted > context.Emax{
             return context._raise_error(InvalidOperation,
                                         'exponent of quantize result too large for current context');
@@ -2699,7 +2699,7 @@ class Decimal(object){
                                         'quantize result has too many digits for current context');
 
         }
-        ans = self._rescale(exp._exp, rounding);
+        ans = this._rescale(exp._exp, rounding);
         if ans.adjusted() > context.Emax{
             return context._raise_error(InvalidOperation,
                                         'exponent of quantize result too large for current context');
@@ -2711,8 +2711,8 @@ class Decimal(object){
         }
         if ans and ans.adjusted() < context.Emin{
             context._raise_error(Subnormal);
-        } if ans._exp > self._exp{
-            if ans != self{
+        } if ans._exp > this._exp{
+            if ans != this{
                 context._raise_error(Inexact);
             } context._raise_error(Rounded);
 
@@ -2723,7 +2723,7 @@ class Decimal(object){
         return ans;
 
     }
-    def same_quantum(self, other){
+    function same_quantum( other){
         """Return True if self and other have the same exponent; otherwise
         return False.
 
@@ -2732,14 +2732,14 @@ class Decimal(object){
            * return True if both operands are NaNs
            * otherwise, return False.
         """;
-        other = _convert_other(other, raiseit=True);
-        if self._is_special or other._is_special{
-            return (self.is_nan() and other.is_nan() or
-                    self.is_infinite() and other.is_infinite());
-        } return self._exp == other._exp;
+        other = _convert_other(other, raiseit=true);
+        if this._is_special or other._is_special{
+            return (this.is_nan() and other.is_nan() or
+                    this.is_infinite() and other.is_infinite());
+        } return this._exp == other._exp;
 
     }
-    def _rescale(self, exp, rounding){
+    function _rescale( exp, rounding){
         """Rescale self so that the exponent is exp, either by padding with zeros
         or by truncating digits, using the given rounding mode.
 
@@ -2750,33 +2750,33 @@ class Decimal(object){
         exp = exp to scale to (an integer)
         rounding = rounding mode
         """;
-        if self._is_special{
-            return Decimal(self);
-        } if not self{
-            return _dec_from_triple(self._sign, '0', exp);
+        if this._is_special{
+            return Decimal(this);
+        } if not this{
+            return _dec_from_triple(this._sign, '0', exp);
 
         }
-        if self._exp >= exp{
+        if this._exp >= exp{
             # pad answer with zeros if necessary
-            return _dec_from_triple(self._sign,
-                                        self._int + '0'*(self._exp - exp), exp);
+            return _dec_from_triple(this._sign,
+                                        this._int + '0'*(this._exp - exp), exp);
 
         # too many digits; round and lose data.  If self.adjusted() <
         # exp-1, replace self by 10**(exp-1) before rounding
         }
-        digits = len(self._int) + self._exp - exp;
+        digits = len(this._int) + this._exp - exp;
         if digits < 0{
-            self = _dec_from_triple(self._sign, '1', exp-1);
+            this = _dec_from_triple(this._sign, '1', exp-1);
             digits = 0;
-        } this_function = self._pick_rounding_function[rounding];
-        changed = this_function(self, digits);
-        coeff = self._int[:digits] or '0';
+        } this_function = this._pick_rounding_function[rounding];
+        changed = this_function(this, digits);
+        coeff = this._int[:digits] or '0';
         if changed == 1{
             coeff = str(int(coeff)+1);
-        } return _dec_from_triple(self._sign, coeff, exp);
+        } return _dec_from_triple(this._sign, coeff, exp);
 
     }
-    def _round(self, places, rounding){
+    function _round( places, rounding){
         """Round a nonzero, nonspecial Decimal to a fixed number of
         significant figures, using the given rounding mode.
 
@@ -2788,19 +2788,19 @@ class Decimal(object){
         """;
         if places <= 0{
             raise ValueError("argument should be at least 1 in _round");
-        } if self._is_special or not self{
-            return Decimal(self);
-        } ans = self._rescale(self.adjusted()+1-places, rounding);
+        } if this._is_special or not this{
+            return Decimal(this);
+        } ans = this._rescale(this.adjusted()+1-places, rounding);
         # it can happen that the rescale alters the adjusted exponent;
         # for example when rounding 99.97 to 3 significant figures.
         # When this happens we end up with an extra 0 at the end of
         # the number; a second rescale fixes this.
-        if ans.adjusted() != self.adjusted(){
+        if ans.adjusted() != this.adjusted(){
             ans = ans._rescale(ans.adjusted()+1-places, rounding);
         } return ans;
 
     }
-    def to_integral_exact(self, rounding=None, context=None){
+    function to_integral_exact( rounding=nil, context=nil){
         """Rounds to a nearby integer.
 
         If no rounding mode is specified, take the rounding mode from
@@ -2810,69 +2810,69 @@ class Decimal(object){
         See also: to_integral_value, which does exactly the same as
         this method except that it doesn't raise Inexact or Rounded.
         """;
-        if self._is_special{
-            ans = self._check_nans(context=context);
+        if this._is_special{
+            ans = this._check_nans(context=context);
             if ans{
                 return ans;
-            } return Decimal(self);
-        } if self._exp >= 0{
-            return Decimal(self);
-        } if not self{
-            return _dec_from_triple(self._sign, '0', 0);
-        } if context is None{
+            } return Decimal(this);
+        } if this._exp >= 0{
+            return Decimal(this);
+        } if not this{
+            return _dec_from_triple(this._sign, '0', 0);
+        } if context is nil{
             context = getcontext();
-        } if rounding is None{
+        } if rounding is nil{
             rounding = context.rounding;
-        } ans = self._rescale(0, rounding);
-        if ans != self{
+        } ans = this._rescale(0, rounding);
+        if ans != this{
             context._raise_error(Inexact);
         } context._raise_error(Rounded);
         return ans;
 
     }
-    def to_integral_value(self, rounding=None, context=None){
+    function to_integral_value( rounding=nil, context=nil){
         """Rounds to the nearest integer, without raising inexact, rounded.""";
-        if context is None{
+        if context is nil{
             context = getcontext();
-        } if rounding is None{
+        } if rounding is nil{
             rounding = context.rounding;
-        } if self._is_special{
-            ans = self._check_nans(context=context);
+        } if this._is_special{
+            ans = this._check_nans(context=context);
             if ans{
                 return ans;
-            } return Decimal(self);
-        } if self._exp >= 0{
-            return Decimal(self);
+            } return Decimal(this);
+        } if this._exp >= 0{
+            return Decimal(this);
         } else{
-            return self._rescale(0, rounding);
+            return this._rescale(0, rounding);
 
     # the method name changed, but we provide also the old one, for compatibility
     }
     } to_integral = to_integral_value;
 
-    def sqrt(self, context=None){
+    function sqrt( context=nil){
         """Return the square root of self.""";
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        if self._is_special{
-            ans = self._check_nans(context=context);
+        if this._is_special{
+            ans = this._check_nans(context=context);
             if ans{
                 return ans;
 
             }
-            if self._isinfinity() and self._sign == 0{
-                return Decimal(self);
+            if this._isinfinity() and this._sign == 0{
+                return Decimal(this);
 
         }
-        } if not self{
+        } if not this{
             # exponent = self._exp // 2.  sqrt(-0) = -0
-            ans = _dec_from_triple(self._sign, '0', self._exp // 2);
+            ans = _dec_from_triple(this._sign, '0', this._exp // 2);
             return ans._fix(context);
 
         }
-        if self._sign == 1{
+        if this._sign == 1{
             return context._raise_error(InvalidOperation, 'sqrt(-x), x > 0');
 
         # At this point self represents a positive number.  Let p be
@@ -2902,21 +2902,21 @@ class Decimal(object){
         # is the 'ideal' exponent, to be used if the square root is
         # exactly representable.  l is the number of 'digits' of c in
         # base 100, so that 100**(l-1) <= c < 100**l.
-        op = _WorkRep(self);
+        op = _WorkRep(this);
         e = op.exp >> 1;
         if op.exp & 1{
             c = op.int * 10;
-            l = (len(self._int) >> 1) + 1;
+            l = (len(this._int) >> 1) + 1;
         } else{
             c = op.int;
-            l = len(self._int)+1 >> 1;
+            l = len(this._int)+1 >> 1;
 
         # rescale so that c has exactly prec base 100 'digits'
         }
         shift = prec-l;
         if shift >= 0{
             c *= 100**shift;
-            exact = True;
+            exact = true;
         } else{
             c, remainder = divmod(c, 100**-shift);
             exact = not remainder;
@@ -2924,7 +2924,7 @@ class Decimal(object){
 
         # find n = floor(sqrt(c)) using Newton's method
         n = 10**prec;
-        while True{
+        while true{
             q = c//n;
             if n <= q{
                 break;
@@ -2957,32 +2957,32 @@ class Decimal(object){
         return ans;
 
     }
-    def max(self, other, context=None){
+    function max( other, context=nil){
         """Returns the larger value.
 
         Like max(self, other) except if one is not a number, returns
         NaN (and signals if one is sNaN).  Also rounds.
         """;
-        other = _convert_other(other, raiseit=True);
+        other = _convert_other(other, raiseit=true);
 
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        if self._is_special or other._is_special{
+        if this._is_special or other._is_special{
             # If one operand is a quiet NaN and the other is number, then the
             # number is always returned
-            sn = self._isnan();
+            sn = this._isnan();
             on = other._isnan();
             if sn or on{
                 if on == 1 and sn == 0{
-                    return self._fix(context);
+                    return this._fix(context);
                 } if sn == 1 and on == 0{
                     return other._fix(context);
-                } return self._check_nans(other, context);
+                } return this._check_nans(other, context);
 
         }
-        } c = self._cmp(other);
+        } c = this._cmp(other);
         if c == 0{
             # If both operands are finite and equal in numerical value
             # then an ordering is applied:
@@ -2992,50 +2992,50 @@ class Decimal(object){
             #
             # If the signs are the same then the exponent is used to select
             # the result.  This is exactly the ordering used in compare_total.
-            c = self.compare_total(other);
+            c = this.compare_total(other);
 
         }
         if c == -1{
             ans = other;
         } else{
-            ans = self;
+            ans = this;
 
         }
         return ans._fix(context);
 
     }
-    def min(self, other, context=None){
+    function min( other, context=nil){
         """Returns the smaller value.
 
         Like min(self, other) except if one is not a number, returns
         NaN (and signals if one is sNaN).  Also rounds.
         """;
-        other = _convert_other(other, raiseit=True);
+        other = _convert_other(other, raiseit=true);
 
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        if self._is_special or other._is_special{
+        if this._is_special or other._is_special{
             # If one operand is a quiet NaN and the other is number, then the
             # number is always returned
-            sn = self._isnan();
+            sn = this._isnan();
             on = other._isnan();
             if sn or on{
                 if on == 1 and sn == 0{
-                    return self._fix(context);
+                    return this._fix(context);
                 } if sn == 1 and on == 0{
                     return other._fix(context);
-                } return self._check_nans(other, context);
+                } return this._check_nans(other, context);
 
         }
-        } c = self._cmp(other);
+        } c = this._cmp(other);
         if c == 0{
-            c = self.compare_total(other);
+            c = this.compare_total(other);
 
         }
         if c == -1{
-            ans = self;
+            ans = this;
         } else{
             ans = other;
 
@@ -3043,78 +3043,78 @@ class Decimal(object){
         return ans._fix(context);
 
     }
-    def _isinteger(self){
+    function _isinteger(){
         """Returns whether self is an integer""";
-        if self._is_special{
-            return False;
-        } if self._exp >= 0{
-            return True;
-        } rest = self._int[self._exp:];
+        if this._is_special{
+            return false;
+        } if this._exp >= 0{
+            return true;
+        } rest = this._int[this._exp:];
         return rest == '0'*len(rest);
 
     }
-    def _iseven(self){
+    function _iseven(){
         """Returns True if self is even.  Assumes self is an integer.""";
-        if not self or self._exp > 0{
-            return True;
-        } return self._int[-1+self._exp] in '02468';
+        if not this or this._exp > 0{
+            return true;
+        } return this._int[-1+this._exp] in '02468';
 
     }
-    def adjusted(self){
+    function adjusted(){
         """Return the adjusted exponent of self""";
         try{
-            return self._exp + len(self._int) - 1;
+            return this._exp + len(this._int) - 1;
         # If NaN or Infinity, self._exp is string
         }
         except TypeError{
             return 0;
 
     }
-    } def canonical(self, context=None){
+    } function canonical( context=nil){
         """Returns the same Decimal object.
 
         As we do not have different encodings for the same number, the
         received object already is in its canonical form.
         """;
-        return self;
+        return this;
 
     }
-    def compare_signal(self, other, context=None){
+    function compare_signal( other, context=nil){
         """Compares self to the other operand numerically.
 
         It's pretty much like compare(), but all NaNs signal, with signaling
         NaNs taking precedence over quiet NaNs.
         """;
-        other = _convert_other(other, raiseit = True);
-        ans = self._compare_check_nans(other, context);
+        other = _convert_other(other, raiseit = true);
+        ans = this._compare_check_nans(other, context);
         if ans{
             return ans;
-        } return self.compare(other, context=context);
+        } return this.compare(other, context=context);
 
     }
-    def compare_total(self, other){
+    function compare_total( other){
         """Compares self to other using the abstract representations.
 
         This is not like the standard compare, which use their numerical
         value. Note that a total ordering is defined for all possible abstract
         representations.
         """;
-        other = _convert_other(other, raiseit=True);
+        other = _convert_other(other, raiseit=true);
 
         # if one is negative and the other is positive, it's easy
-        if self._sign and not other._sign{
+        if this._sign and not other._sign{
             return _NegativeOne;
-        } if not self._sign and other._sign{
+        } if not this._sign and other._sign{
             return _One;
-        } sign = self._sign;
+        } sign = this._sign;
 
         # let's handle both NaN types
-        self_nan = self._isnan();
+        self_nan = this._isnan();
         other_nan = other._isnan();
         if self_nan or other_nan{
             if self_nan == other_nan{
                 # compare payloads as though they're integers
-                self_key = len(self._int), self._int;
+                self_key = len(this._int), this._int;
                 other_key = len(other._int), other._int;
                 if self_key < other_key{
                     if sign{
@@ -3149,18 +3149,18 @@ class Decimal(object){
                     return _NegativeOne;
 
         }
-        } } if self < other{
+        } } if this < other{
             return _NegativeOne;
-        } if self > other{
+        } if this > other{
             return _One;
 
         }
-        if self._exp < other._exp{
+        if this._exp < other._exp{
             if sign{
                 return _One;
             } else{
                 return _NegativeOne;
-        } } if self._exp > other._exp{
+        } } if this._exp > other._exp{
             if sign{
                 return _NegativeOne;
             } else{
@@ -3169,64 +3169,64 @@ class Decimal(object){
 
 
     }
-    def compare_total_mag(self, other){
+    function compare_total_mag( other){
         """Compares self to other using abstract repr., ignoring sign.
 
         Like compare_total, but with operand's sign ignored and assumed to be 0.
         """;
-        other = _convert_other(other, raiseit=True);
+        other = _convert_other(other, raiseit=true);
 
-        s = self.copy_abs();
+        s = this.copy_abs();
         o = other.copy_abs();
         return s.compare_total(o);
 
     }
-    def copy_abs(self){
+    function copy_abs(){
         """Returns a copy with the sign set to 0. """;
-        return _dec_from_triple(0, self._int, self._exp, self._is_special);
+        return _dec_from_triple(0, this._int, this._exp, this._is_special);
 
     }
-    def copy_negate(self){
+    function copy_negate(){
         """Returns a copy with the sign inverted.""";
-        if self._sign{
-            return _dec_from_triple(0, self._int, self._exp, self._is_special);
+        if this._sign{
+            return _dec_from_triple(0, this._int, this._exp, this._is_special);
         } else{
-            return _dec_from_triple(1, self._int, self._exp, self._is_special);
+            return _dec_from_triple(1, this._int, this._exp, this._is_special);
 
     }
-    } def copy_sign(self, other){
+    } function copy_sign( other){
         """Returns self with the sign of other.""";
-        other = _convert_other(other, raiseit=True);
-        return _dec_from_triple(other._sign, self._int,
-                                self._exp, self._is_special);
+        other = _convert_other(other, raiseit=true);
+        return _dec_from_triple(other._sign, this._int,
+                                this._exp, this._is_special);
 
     }
-    def exp(self, context=None){
+    function exp( context=nil){
         """Returns e ** self.""";
 
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         # exp(NaN) = NaN
         }
-        ans = self._check_nans(context=context);
+        ans = this._check_nans(context=context);
         if ans{
             return ans;
 
         # exp(-Infinity) = 0
         }
-        if self._isinfinity() == -1{
+        if this._isinfinity() == -1{
             return _Zero;
 
         # exp(0) = 1
         }
-        if not self{
+        if not this{
             return _One;
 
         # exp(Infinity) = Infinity
         }
-        if self._isinfinity() == 1{
-            return Decimal(self);
+        if this._isinfinity() == 1{
+            return Decimal(this);
 
         # the result is now guaranteed to be inexact (the true
         # mathematical result is transcendental). There's no need to
@@ -3234,29 +3234,29 @@ class Decimal(object){
         # a result of the call to _fix.
         }
         p = context.prec;
-        adj = self.adjusted();
+        adj = this.adjusted();
 
         # we only need to do any computation for quite a small range
         # of adjusted exponents---for example, -29 <= adj <= 10 for
         # the default context.  For smaller exponent the result is
         # indistinguishable from 1 at the given precision, while for
         # larger exponent the result either overflows or underflows.
-        if self._sign == 0 and adj > len(str((context.Emax+1)*3)){
+        if this._sign == 0 and adj > len(str((context.Emax+1)*3)){
             # overflow
             ans = _dec_from_triple(0, '1', context.Emax+1);
-        } elif self._sign == 1 and adj > len(str((-context.Etiny()+1)*3)){
+        } elif this._sign == 1 and adj > len(str((-context.Etiny()+1)*3)){
             # underflow to 0
             ans = _dec_from_triple(0, '1', context.Etiny()-1);
-        } elif self._sign == 0 and adj < -p{
+        } elif this._sign == 0 and adj < -p{
             # p+1 digits; final round will raise correct flags
             ans = _dec_from_triple(0, '1' + '0'*(p-1) + '1', -p);
-        } elif self._sign == 1 and adj < -p-1{
+        } elif this._sign == 1 and adj < -p-1{
             # p+1 digits; final round will raise correct flags
             ans = _dec_from_triple(0, '9'*(p+1), -p-1);
         # general case
         }
         else{
-            op = _WorkRep(self);
+            op = _WorkRep(this);
             c, e = op.int, op.exp;
             if op.sign == 1{
                 c = -c;
@@ -3266,7 +3266,7 @@ class Decimal(object){
             # roundable result
             }
             extra = 3;
-            while True{
+            while true{
                 coeff, exp = _dexp(c, e, p+extra);
                 if coeff % (5*10**(len(str(coeff))-p-1)){
                     break;
@@ -3286,87 +3286,87 @@ class Decimal(object){
         return ans;
 
     }
-    def is_canonical(self){
+    function is_canonical(){
         """Return True if self is canonical; otherwise return False.
 
         Currently, the encoding of a Decimal instance is always
         canonical, so this method returns True for any Decimal.
         """;
-        return True;
+        return true;
 
     }
-    def is_finite(self){
+    function is_finite(){
         """Return True if self is finite; otherwise return False.
 
         A Decimal instance is considered finite if it is neither
         infinite nor a NaN.
         """;
-        return not self._is_special;
+        return not this._is_special;
 
     }
-    def is_infinite(self){
+    function is_infinite(){
         """Return True if self is infinite; otherwise return False.""";
-        return self._exp == 'F';
+        return this._exp == 'F';
 
     }
-    def is_nan(self){
+    function is_nan(){
         """Return True if self is a qNaN or sNaN; otherwise return False.""";
-        return self._exp in ('n', 'N');
+        return this._exp in ('n', 'N');
 
     }
-    def is_normal(self, context=None){
+    function is_normal( context=nil){
         """Return True if self is a normal number; otherwise return False.""";
-        if self._is_special or not self{
-            return False;
-        } if context is None{
+        if this._is_special or not this{
+            return false;
+        } if context is nil{
             context = getcontext();
-        } return context.Emin <= self.adjusted();
+        } return context.Emin <= this.adjusted();
 
     }
-    def is_qnan(self){
+    function is_qnan(){
         """Return True if self is a quiet NaN; otherwise return False.""";
-        return self._exp == 'n';
+        return this._exp == 'n';
 
     }
-    def is_signed(self){
+    function is_signed(){
         """Return True if self is negative; otherwise return False.""";
-        return self._sign == 1;
+        return this._sign == 1;
 
     }
-    def is_snan(self){
+    function is_snan(){
         """Return True if self is a signaling NaN; otherwise return False.""";
-        return self._exp == 'N';
+        return this._exp == 'N';
 
     }
-    def is_subnormal(self, context=None){
+    function is_subnormal( context=nil){
         """Return True if self is subnormal; otherwise return False.""";
-        if self._is_special or not self{
-            return False;
-        } if context is None{
+        if this._is_special or not this{
+            return false;
+        } if context is nil{
             context = getcontext();
-        } return self.adjusted() < context.Emin;
+        } return this.adjusted() < context.Emin;
 
     }
-    def is_zero(self){
+    function is_zero(){
         """Return True if self is a zero; otherwise return False.""";
-        return not self._is_special and self._int == '0';
+        return not this._is_special and this._int == '0';
 
     }
-    def _ln_exp_bound(self){
+    function _ln_exp_bound(){
         """Compute a lower bound for the adjusted exponent of self.ln().
         In other words, compute r such that self.ln() >= 10**r.  Assumes
         that self is finite and positive and that self != 1.
         """;
 
         # for 0.1 <= x <= 10 we use the inequalities 1-1/x <= ln(x) <= x-1
-        adj = self._exp + len(self._int) - 1;
+        adj = this._exp + len(this._int) - 1;
         if adj >= 1{
             # argument >= 10; we use 23/10 = 2.3 as a lower bound for ln(10)
             return len(str(adj*23//10)) - 1;
         } if adj <= -2{
             # argument <= 0.1
             return len(str((-1-adj)*23//10)) - 1;
-        } op = _WorkRep(self);
+        } op = _WorkRep(this);
         c, e = op.int, op.exp;
         if adj == 0{
             # 1 < self < 10
@@ -3379,49 +3379,49 @@ class Decimal(object){
 
 
     }
-    def ln(self, context=None){
+    function ln( context=nil){
         """Returns the natural (base e) logarithm of self.""";
 
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         # ln(NaN) = NaN
         }
-        ans = self._check_nans(context=context);
+        ans = this._check_nans(context=context);
         if ans{
             return ans;
 
         # ln(0.0) == -Infinity
         }
-        if not self{
+        if not this{
             return _NegativeInfinity;
 
         # ln(Infinity) = Infinity
         }
-        if self._isinfinity() == 1{
+        if this._isinfinity() == 1{
             return _Infinity;
 
         # ln(1.0) == 0.0
         }
-        if self == _One{
+        if this == _One{
             return _Zero;
 
         # ln(negative) raises InvalidOperation
         }
-        if self._sign == 1{
+        if this._sign == 1{
             return context._raise_error(InvalidOperation,
                                         'ln of a negative value');
 
         # result is irrational, so necessarily inexact
         }
-        op = _WorkRep(self);
+        op = _WorkRep(this);
         c, e = op.int, op.exp;
         p = context.prec;
 
         # correctly rounded result: repeatedly increase precision by 3
         # until we get an unambiguously roundable result
-        places = p - self._ln_exp_bound() + 2; # at least p+3 places
-        while True{
+        places = p - this._ln_exp_bound() + 2; # at least p+3 places
+        while true{
             coeff = _dlog(c, e, places);
             # assert len(str(abs(coeff)))-p >= 1
             if coeff % (5*10**(len(str(abs(coeff)))-p-1)){
@@ -3436,7 +3436,7 @@ class Decimal(object){
         return ans;
 
     }
-    def _log10_exp_bound(self){
+    function _log10_exp_bound(){
         """Compute a lower bound for the adjusted exponent of self.log10().
         In other words, find r such that self.log10() >= 10**r.
         Assumes that self is finite and positive and that self != 1.
@@ -3448,14 +3448,14 @@ class Decimal(object){
         # 1-1/x <= log(x) <= x-1. If x > 1 we have |log10(x)| >
         # (1-1/x)/2.31 > 0.  If x < 1 then |log10(x)| > (1-x)/2.31 > 0
 
-        adj = self._exp + len(self._int) - 1;
+        adj = this._exp + len(this._int) - 1;
         if adj >= 1{
             # self >= 10
             return len(str(adj))-1;
         } if adj <= -2{
             # self < 0.1
             return len(str(-1-adj))-1;
-        } op = _WorkRep(self);
+        } op = _WorkRep(this);
         c, e = op.int, op.exp;
         if adj == 0{
             # 1 < self < 10
@@ -3468,49 +3468,49 @@ class Decimal(object){
         return len(num) + e - (num < "231") - 1;
 
     }
-    def log10(self, context=None){
+    function log10( context=nil){
         """Returns the base 10 logarithm of self.""";
 
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         # log10(NaN) = NaN
         }
-        ans = self._check_nans(context=context);
+        ans = this._check_nans(context=context);
         if ans{
             return ans;
 
         # log10(0.0) == -Infinity
         }
-        if not self{
+        if not this{
             return _NegativeInfinity;
 
         # log10(Infinity) = Infinity
         }
-        if self._isinfinity() == 1{
+        if this._isinfinity() == 1{
             return _Infinity;
 
         # log10(negative or -Infinity) raises InvalidOperation
         }
-        if self._sign == 1{
+        if this._sign == 1{
             return context._raise_error(InvalidOperation,
                                         'log10 of a negative value');
 
         # log10(10**n) = n
         }
-        if self._int[0] == '1' and self._int[1:] == '0'*(len(self._int) - 1){
+        if this._int[0] == '1' and this._int[1:] == '0'*(len(this._int) - 1){
             # answer may need rounding
-            ans = Decimal(self._exp + len(self._int) - 1);
+            ans = Decimal(this._exp + len(this._int) - 1);
         } else{
             # result is irrational, so necessarily inexact
-            op = _WorkRep(self);
+            op = _WorkRep(this);
             c, e = op.int, op.exp;
             p = context.prec;
 
             # correctly rounded result: repeatedly increase precision
             # until result is unambiguously roundable
-            places = p-self._log10_exp_bound()+2;
-            while True{
+            places = p-this._log10_exp_bound()+2;
+            while true{
                 coeff = _dlog10(c, e, places);
                 # assert len(str(abs(coeff)))-p >= 1
                 if coeff % (5*10**(len(str(abs(coeff)))-p-1)){
@@ -3526,7 +3526,7 @@ class Decimal(object){
         return ans;
 
     }
-    def logb(self, context=None){
+    function logb( context=nil){
         """ Returns the exponent of the magnitude of self's MSD.
 
         The result is the integer which is the exponent of the magnitude
@@ -3535,48 +3535,48 @@ class Decimal(object){
         without limiting the resulting exponent).
         """;
         # logb(NaN) = NaN
-        ans = self._check_nans(context=context);
+        ans = this._check_nans(context=context);
         if ans{
             return ans;
 
         }
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         # logb(+/-Inf) = +Inf
         }
-        if self._isinfinity(){
+        if this._isinfinity(){
             return _Infinity;
 
         # logb(0) = -Inf, DivisionByZero
         }
-        if not self{
+        if not this{
             return context._raise_error(DivisionByZero, 'logb(0)', 1);
 
         # otherwise, simply return the adjusted exponent of self, as a
         # Decimal.  Note that no attempt is made to fit the result
         # into the current context.
         }
-        ans = Decimal(self.adjusted());
+        ans = Decimal(this.adjusted());
         return ans._fix(context);
 
     }
-    def _islogical(self){
+    function _islogical(){
         """Return True if self is a logical operand.
 
         For being logical, it must be a finite number with a sign of 0,
         an exponent of 0, and a coefficient whose digits must all be
         either 0 or 1.
         """;
-        if self._sign != 0 or self._exp != 0{
-            return False;
-        } for dig in self._int{
+        if this._sign != 0 or this._exp != 0{
+            return false;
+        } for dig in this._int{
             if dig not in '01'{
-                return False;
-        } } return True;
+                return false;
+        } } return true;
 
     }
-    def _fill_logical(self, context, opa, opb){
+    function _fill_logical( context, opa, opb){
         dif = context.prec - len(opa);
         if dif > 0{
             opa = '0'*dif + opa;
@@ -3590,137 +3590,137 @@ class Decimal(object){
         } return opa, opb;
 
     }
-    def logical_and(self, other, context=None){
+    function logical_and( other, context=nil){
         """Applies an 'and' operation between self and other's digits.""";
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        other = _convert_other(other, raiseit=True);
+        other = _convert_other(other, raiseit=true);
 
-        if not self._islogical() or not other._islogical(){
+        if not this._islogical() or not other._islogical(){
             return context._raise_error(InvalidOperation);
 
         # fill to context.prec
         }
-        (opa, opb) = self._fill_logical(context, self._int, other._int);
+        (opa, opb) = this._fill_logical(context, this._int, other._int);
 
         # make the operation, and clean starting zeroes
         result = "".join([str(int(a)&int(b)) for a,b in zip(opa,opb)]);
         return _dec_from_triple(0, result.lstrip('0') or '0', 0);
 
     }
-    def logical_invert(self, context=None){
+    function logical_invert( context=nil){
         """Invert all its digits.""";
-        if context is None{
+        if context is nil{
             context = getcontext();
-        } return self.logical_xor(_dec_from_triple(0,'1'*context.prec,0),
+        } return this.logical_xor(_dec_from_triple(0,'1'*context.prec,0),
                                 context);
 
     }
-    def logical_or(self, other, context=None){
+    function logical_or( other, context=nil){
         """Applies an 'or' operation between self and other's digits.""";
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        other = _convert_other(other, raiseit=True);
+        other = _convert_other(other, raiseit=true);
 
-        if not self._islogical() or not other._islogical(){
+        if not this._islogical() or not other._islogical(){
             return context._raise_error(InvalidOperation);
 
         # fill to context.prec
         }
-        (opa, opb) = self._fill_logical(context, self._int, other._int);
+        (opa, opb) = this._fill_logical(context, this._int, other._int);
 
         # make the operation, and clean starting zeroes
         result = "".join([str(int(a)|int(b)) for a,b in zip(opa,opb)]);
         return _dec_from_triple(0, result.lstrip('0') or '0', 0);
 
     }
-    def logical_xor(self, other, context=None){
+    function logical_xor( other, context=nil){
         """Applies an 'xor' operation between self and other's digits.""";
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        other = _convert_other(other, raiseit=True);
+        other = _convert_other(other, raiseit=true);
 
-        if not self._islogical() or not other._islogical(){
+        if not this._islogical() or not other._islogical(){
             return context._raise_error(InvalidOperation);
 
         # fill to context.prec
         }
-        (opa, opb) = self._fill_logical(context, self._int, other._int);
+        (opa, opb) = this._fill_logical(context, this._int, other._int);
 
         # make the operation, and clean starting zeroes
         result = "".join([str(int(a)^int(b)) for a,b in zip(opa,opb)]);
         return _dec_from_triple(0, result.lstrip('0') or '0', 0);
 
     }
-    def max_mag(self, other, context=None){
+    function max_mag( other, context=nil){
         """Compares the values numerically with their sign ignored.""";
-        other = _convert_other(other, raiseit=True);
+        other = _convert_other(other, raiseit=true);
 
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        if self._is_special or other._is_special{
+        if this._is_special or other._is_special{
             # If one operand is a quiet NaN and the other is number, then the
             # number is always returned
-            sn = self._isnan();
+            sn = this._isnan();
             on = other._isnan();
             if sn or on{
                 if on == 1 and sn == 0{
-                    return self._fix(context);
+                    return this._fix(context);
                 } if sn == 1 and on == 0{
                     return other._fix(context);
-                } return self._check_nans(other, context);
+                } return this._check_nans(other, context);
 
         }
-        } c = self.copy_abs()._cmp(other.copy_abs());
+        } c = this.copy_abs()._cmp(other.copy_abs());
         if c == 0{
-            c = self.compare_total(other);
+            c = this.compare_total(other);
 
         }
         if c == -1{
             ans = other;
         } else{
-            ans = self;
+            ans = this;
 
         }
         return ans._fix(context);
 
     }
-    def min_mag(self, other, context=None){
+    function min_mag( other, context=nil){
         """Compares the values numerically with their sign ignored.""";
-        other = _convert_other(other, raiseit=True);
+        other = _convert_other(other, raiseit=true);
 
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        if self._is_special or other._is_special{
+        if this._is_special or other._is_special{
             # If one operand is a quiet NaN and the other is number, then the
             # number is always returned
-            sn = self._isnan();
+            sn = this._isnan();
             on = other._isnan();
             if sn or on{
                 if on == 1 and sn == 0{
-                    return self._fix(context);
+                    return this._fix(context);
                 } if sn == 1 and on == 0{
                     return other._fix(context);
-                } return self._check_nans(other, context);
+                } return this._check_nans(other, context);
 
         }
-        } c = self.copy_abs()._cmp(other.copy_abs());
+        } c = this.copy_abs()._cmp(other.copy_abs());
         if c == 0{
-            c = self.compare_total(other);
+            c = this.compare_total(other);
 
         }
         if c == -1{
-            ans = self;
+            ans = this;
         } else{
             ans = other;
 
@@ -3728,61 +3728,61 @@ class Decimal(object){
         return ans._fix(context);
 
     }
-    def next_minus(self, context=None){
+    function next_minus( context=nil){
         """Returns the largest representable number smaller than itself.""";
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        ans = self._check_nans(context=context);
+        ans = this._check_nans(context=context);
         if ans{
             return ans;
 
         }
-        if self._isinfinity() == -1{
+        if this._isinfinity() == -1{
             return _NegativeInfinity;
-        } if self._isinfinity() == 1{
+        } if this._isinfinity() == 1{
             return _dec_from_triple(0, '9'*context.prec, context.Etop());
 
         }
         context = context.copy();
         context._set_rounding(ROUND_FLOOR);
         context._ignore_all_flags();
-        new_self = self._fix(context);
-        if new_self != self{
+        new_self = this._fix(context);
+        if new_self != this{
             return new_self;
-        } return self.__sub__(_dec_from_triple(0, '1', context.Etiny()-1),
+        } return this.__sub__(_dec_from_triple(0, '1', context.Etiny()-1),
                             context);
 
     }
-    def next_plus(self, context=None){
+    function next_plus( context=nil){
         """Returns the smallest representable number larger than itself.""";
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        ans = self._check_nans(context=context);
+        ans = this._check_nans(context=context);
         if ans{
             return ans;
 
         }
-        if self._isinfinity() == 1{
+        if this._isinfinity() == 1{
             return _Infinity;
-        } if self._isinfinity() == -1{
+        } if this._isinfinity() == -1{
             return _dec_from_triple(1, '9'*context.prec, context.Etop());
 
         }
         context = context.copy();
         context._set_rounding(ROUND_CEILING);
         context._ignore_all_flags();
-        new_self = self._fix(context);
-        if new_self != self{
+        new_self = this._fix(context);
+        if new_self != this{
             return new_self;
-        } return self.__add__(_dec_from_triple(0, '1', context.Etiny()-1),
+        } return this.__add__(_dec_from_triple(0, '1', context.Etiny()-1),
                             context);
 
     }
-    def next_toward(self, other, context=None){
+    function next_toward( other, context=nil){
         """Returns the number closest to self, in the direction towards other.
 
         The result is the closest representable number to self
@@ -3791,26 +3791,26 @@ class Decimal(object){
         numerically equal, then the result is a copy of self with the
         sign set to be the same as the sign of other.
         """;
-        other = _convert_other(other, raiseit=True);
+        other = _convert_other(other, raiseit=true);
 
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        ans = self._check_nans(other, context);
+        ans = this._check_nans(other, context);
         if ans{
             return ans;
 
         }
-        comparison = self._cmp(other);
+        comparison = this._cmp(other);
         if comparison == 0{
-            return self.copy_sign(other);
+            return this.copy_sign(other);
 
         }
         if comparison == -1{
-            ans = self.next_plus(context);
+            ans = this.next_plus(context);
         } else{ # comparison == 1
-            ans = self.next_minus(context);
+            ans = this.next_minus(context);
 
         # decide which flags to raise using value of ans
         }
@@ -3834,7 +3834,7 @@ class Decimal(object){
         } return ans;
 
     }
-    def number_class(self, context=None){
+    function number_class( context=nil){
         """Returns an indication of the class of self.
 
         The class is one of the following strings:
@@ -3849,49 +3849,49 @@ class Decimal(object){
           +Normal
           +Infinity
         """;
-        if self.is_snan(){
+        if this.is_snan(){
             return "sNaN";
-        } if self.is_qnan(){
+        } if this.is_qnan(){
             return "NaN";
-        } inf = self._isinfinity();
+        } inf = this._isinfinity();
         if inf == 1{
             return "+Infinity";
         } if inf == -1{
             return "-Infinity";
-        } if self.is_zero(){
-            if self._sign{
+        } if this.is_zero(){
+            if this._sign{
                 return "-Zero";
             } else{
                 return "+Zero";
-        } } if context is None{
+        } } if context is nil{
             context = getcontext();
-        } if self.is_subnormal(context=context){
-            if self._sign{
+        } if this.is_subnormal(context=context){
+            if this._sign{
                 return "-Subnormal";
             } else{
                 return "+Subnormal";
         # just a normal, regular, boring number, :)
         }
-        } if self._sign{
+        } if this._sign{
             return "-Normal";
         } else{
             return "+Normal";
 
     }
-    } def radix(self){
+    } function radix(){
         """Just returns 10, as this is Decimal, :)""";
         return Decimal(10);
 
     }
-    def rotate(self, other, context=None){
+    function rotate( other, context=nil){
         """Returns a rotated copy of self, value-of-other times.""";
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        other = _convert_other(other, raiseit=True);
+        other = _convert_other(other, raiseit=true);
 
-        ans = self._check_nans(other, context);
+        ans = this._check_nans(other, context);
         if ans{
             return ans;
 
@@ -3902,13 +3902,13 @@ class Decimal(object){
             return context._raise_error(InvalidOperation);
 
         }
-        if self._isinfinity(){
-            return Decimal(self);
+        if this._isinfinity(){
+            return Decimal(this);
 
         # get values, pad if necessary
         }
         torot = int(other);
-        rotdig = self._int;
+        rotdig = this._int;
         topad = context.prec - len(rotdig);
         if topad > 0{
             rotdig = '0'*topad + rotdig;
@@ -3918,19 +3918,19 @@ class Decimal(object){
         # let's rotate!
         }
         rotated = rotdig[torot:] + rotdig[:torot];
-        return _dec_from_triple(self._sign,
-                                rotated.lstrip('0') or '0', self._exp);
+        return _dec_from_triple(this._sign,
+                                rotated.lstrip('0') or '0', this._exp);
 
     }
-    def scaleb(self, other, context=None){
+    function scaleb( other, context=nil){
         """Returns self operand after adding the second value to its exp.""";
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        other = _convert_other(other, raiseit=True);
+        other = _convert_other(other, raiseit=true);
 
-        ans = self._check_nans(other, context);
+        ans = this._check_nans(other, context);
         if ans{
             return ans;
 
@@ -3943,24 +3943,24 @@ class Decimal(object){
             return context._raise_error(InvalidOperation);
 
         }
-        if self._isinfinity(){
-            return Decimal(self);
+        if this._isinfinity(){
+            return Decimal(this);
 
         }
-        d = _dec_from_triple(self._sign, self._int, self._exp + int(other));
+        d = _dec_from_triple(this._sign, this._int, this._exp + int(other));
         d = d._fix(context);
         return d;
 
     }
-    def shift(self, other, context=None){
+    function shift( other, context=nil){
         """Returns a shifted copy of self, value-of-other times.""";
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
-        other = _convert_other(other, raiseit=True);
+        other = _convert_other(other, raiseit=true);
 
-        ans = self._check_nans(other, context);
+        ans = this._check_nans(other, context);
         if ans{
             return ans;
 
@@ -3971,13 +3971,13 @@ class Decimal(object){
             return context._raise_error(InvalidOperation);
 
         }
-        if self._isinfinity(){
-            return Decimal(self);
+        if this._isinfinity(){
+            return Decimal(this);
 
         # get values, pad if necessary
         }
         torot = int(other);
-        rotdig = self._int;
+        rotdig = this._int;
         topad = context.prec - len(rotdig);
         if topad > 0{
             rotdig = '0'*topad + rotdig;
@@ -3993,30 +3993,30 @@ class Decimal(object){
             shifted = shifted[-context.prec:];
 
         }
-        return _dec_from_triple(self._sign,
-                                    shifted.lstrip('0') or '0', self._exp);
+        return _dec_from_triple(this._sign,
+                                    shifted.lstrip('0') or '0', this._exp);
 
     # Support for pickling, copy, and deepcopy
     }
-    def __reduce__(self){
-        return (self.__class__, (str(self),));
+    function __reduce__(){
+        return (this.__class__, (str(this),));
 
     }
-    def __copy__(self){
-        if type(self) is Decimal{
-            return self;     # I'm immutable; therefore I am my own clone
-        } return self.__class__(str(self));
+    function __copy__(){
+        if type(this) is Decimal{
+            return this;     # I'm immutable; therefore I am my own clone
+        } return this.__class__(str(this));
 
     }
-    def __deepcopy__(self, memo){
-        if type(self) is Decimal{
-            return self;     # My components are also immutable
-        } return self.__class__(str(self));
+    function __deepcopy__( memo){
+        if type(this) is Decimal{
+            return this;     # My components are also immutable
+        } return this.__class__(str(this));
 
     # PEP 3101 support.  the _localeconv keyword argument should be
     # considered private: it's provided for ease of testing only.
     }
-    def __format__(self, specifier, context=None, _localeconv=None){
+    function __format__( specifier, context=nil, _localeconv=nil){
         """Format a Decimal instance according to the given specifier.
 
         The specifier should be a standard format specifier, with the
@@ -4031,59 +4031,59 @@ class Decimal(object){
         # We take the liberty of ignoring this requirement for
         # Decimal---it's presumably there to make sure that
         # format(float, '') behaves similarly to str(float).
-        if context is None{
+        if context is nil{
             context = getcontext();
 
         }
         spec = _parse_format_specifier(specifier, _localeconv=_localeconv);
 
         # special values don't care about the type or precision
-        if self._is_special{
-            sign = _format_sign(self._sign, spec);
-            body = str(self.copy_abs());
+        if this._is_special{
+            sign = _format_sign(this._sign, spec);
+            body = str(this.copy_abs());
             if spec['type'] == '%'{
                 body += '%';
             } return _format_align(sign, body, spec);
 
         # a type of None defaults to 'g' or 'G', depending on context
         }
-        if spec['type'] is None{
+        if spec['type'] is nil{
             spec['type'] = ['g', 'G'][context.capitals];
 
         # if type is '%', adjust exponent of self accordingly
         }
         if spec['type'] == '%'{
-            self = _dec_from_triple(self._sign, self._int, self._exp+2);
+            this = _dec_from_triple(this._sign, this._int, this._exp+2);
 
         # round if necessary, taking rounding mode from the context
         }
         rounding = context.rounding;
         precision = spec['precision'];
-        if precision is not None{
+        if precision is not nil{
             if spec['type'] in 'eE'{
-                self = self._round(precision+1, rounding);
+                this = this._round(precision+1, rounding);
             } elif spec['type'] in 'fF%'{
-                self = self._rescale(-precision, rounding);
-            } elif spec['type'] in 'gG' and len(self._int) > precision{
-                self = self._round(precision, rounding);
+                this = this._rescale(-precision, rounding);
+            } elif spec['type'] in 'gG' and len(this._int) > precision{
+                this = this._round(precision, rounding);
         # special case: zeros with a positive exponent can't be
         # represented in fixed point; rescale them to 0e0.
         }
-        } if not self and self._exp > 0 and spec['type'] in 'fF%'{
-            self = self._rescale(0, rounding);
+        } if not this and this._exp > 0 and spec['type'] in 'fF%'{
+            this = this._rescale(0, rounding);
 
         # figure out placement of the decimal point
         }
-        leftdigits = self._exp + len(self._int);
+        leftdigits = this._exp + len(this._int);
         if spec['type'] in 'eE'{
-            if not self and precision is not None{
+            if not this and precision is not nil{
                 dotplace = 1 - precision;
             } else{
                 dotplace = 1;
         } } elif spec['type'] in 'fF%'{
             dotplace = leftdigits;
         } elif spec['type'] in 'gG'{
-            if self._exp <= 0 and leftdigits > -6{
+            if this._exp <= 0 and leftdigits > -6{
                 dotplace = leftdigits;
             } else{
                 dotplace = 1;
@@ -4092,21 +4092,21 @@ class Decimal(object){
         }
         } if dotplace < 0{
             intpart = '0';
-            fracpart = '0'*(-dotplace) + self._int;
-        } elif dotplace > len(self._int){
-            intpart = self._int + '0'*(dotplace-len(self._int));
+            fracpart = '0'*(-dotplace) + this._int;
+        } elif dotplace > len(this._int){
+            intpart = this._int + '0'*(dotplace-len(this._int));
             fracpart = '';
         } else{
-            intpart = self._int[:dotplace] or '0';
-            fracpart = self._int[dotplace:];
+            intpart = this._int[:dotplace] or '0';
+            fracpart = this._int[dotplace:];
         } exp = leftdigits-dotplace;
 
         # done with the decimal-specific stuff;  hand over the rest
         # of the formatting to the _format_number function
-        return _format_number(self._sign, intpart, fracpart, exp, spec);
+        return _format_number(this._sign, intpart, fracpart, exp, spec);
 
 }
-} def _dec_from_triple(sign, coefficient, exponent, special=False){
+} function _dec_from_triple(sign, coefficient, exponent, special=false){
     """Create a decimal instance directly, without any validation,
     normalization (e.g. removal of leading zeros) or argument
     conversion.
@@ -4114,13 +4114,13 @@ class Decimal(object){
     This function is for *internal use only*.
     """;
 
-    self = object.__new__(Decimal);
-    self._sign = sign;
-    self._int = coefficient;
-    self._exp = exponent;
-    self._is_special = special;
+    this = object.__new__(Decimal);
+    this._sign = sign;
+    this._int = coefficient;
+    this._exp = exponent;
+    this._is_special = special;
 
-    return self;
+    return this;
 
 # Register Decimal as a kind of Number (an abstract base class).
 # However, do not register it as Real (because Decimals are not
@@ -4137,14 +4137,14 @@ class _ContextManager(object){
       Sets a copy of the supplied context in __enter__() and restores
       the previous decimal context in __exit__()
     """;
-    def __init__(self, new_context){
-        self.new_context = new_context.copy();
-    } def __enter__(self){
-        self.saved_context = getcontext();
-        setcontext(self.new_context);
-        return self.new_context;
-    } def __exit__(self, t, v, tb){
-        setcontext(self.saved_context);
+    function __init__( new_context){
+        this.new_context = new_context.copy();
+    } function __enter__(){
+        this.saved_context = getcontext();
+        setcontext(this.new_context);
+        return this.new_context;
+    } function __exit__( t, v, tb){
+        setcontext(this.saved_context);
 
 }
 } class Context(object){
@@ -4166,11 +4166,11 @@ class _ContextManager(object){
     _clamp - If 1, change exponents if too high (Default 0)
     """;
 
-    def __init__(self, prec=None, rounding=None,
-                 traps=None, flags=None,
-                 Emin=None, Emax=None,
-                 capitals=None, _clamp=0,
-                 _ignored_flags=None){
+    function __init__( prec=nil, rounding=nil,
+                 traps=nil, flags=nil,
+                 Emin=nil, Emax=nil,
+                 capitals=nil, _clamp=0,
+                 _ignored_flags=nil){
         # Set defaults; for everything except flags and _ignored_flags,
         # inherit from DefaultContext.
         try{
@@ -4179,71 +4179,71 @@ class _ContextManager(object){
             pass;
 
         }
-        self.prec = prec if prec is not None else dc.prec;
-        self.rounding = rounding if rounding is not None else dc.rounding;
-        self.Emin = Emin if Emin is not None else dc.Emin;
-        self.Emax = Emax if Emax is not None else dc.Emax;
-        self.capitals = capitals if capitals is not None else dc.capitals;
-        self._clamp = _clamp if _clamp is not None else dc._clamp;
+        this.prec = prec if prec is not nil else dc.prec;
+        this.rounding = rounding if rounding is not nil else dc.rounding;
+        this.Emin = Emin if Emin is not nil else dc.Emin;
+        this.Emax = Emax if Emax is not nil else dc.Emax;
+        this.capitals = capitals if capitals is not nil else dc.capitals;
+        this._clamp = _clamp if _clamp is not nil else dc._clamp;
 
-        if _ignored_flags is None{
-            self._ignored_flags = [];
+        if _ignored_flags is nil{
+            this._ignored_flags = [];
         } else{
-            self._ignored_flags = _ignored_flags;
+            this._ignored_flags = _ignored_flags;
 
         }
-        if traps is None{
-            self.traps = dc.traps.copy();
+        if traps is nil{
+            this.traps = dc.traps.copy();
         } elif not isinstance(traps, dict){
-            self.traps = dict((s, int(s in traps)) for s in _signals);
+            this.traps = dict((s, int(s in traps)) for s in _signals);
         } else{
-            self.traps = traps;
+            this.traps = traps;
 
         }
-        if flags is None{
-            self.flags = dict.fromkeys(_signals, 0);
+        if flags is nil{
+            this.flags = dict.fromkeys(_signals, 0);
         } elif not isinstance(flags, dict){
-            self.flags = dict((s, int(s in flags)) for s in _signals);
+            this.flags = dict((s, int(s in flags)) for s in _signals);
         } else{
-            self.flags = flags;
+            this.flags = flags;
 
     }
-    } def __repr__(self){
+    } function __repr__(){
         """Show the current context.""";
         s = [];
         s.append('Context(prec=%(prec)d, rounding=%(rounding)s, '
                  'Emin=%(Emin)d, Emax=%(Emax)d, capitals=%(capitals)d'
-                 % vars(self));
-        names = [f.__name__ for f, v in self.flags.items() if v];
+                 % vars(this));
+        names = [f.__name__ for f, v in this.flags.items() if v];
         s.append('flags=[' + ', '.join(names) + ']');
-        names = [t.__name__ for t, v in self.traps.items() if v];
+        names = [t.__name__ for t, v in this.traps.items() if v];
         s.append('traps=[' + ', '.join(names) + ']');
         return ', '.join(s) + ')';
 
     }
-    def clear_flags(self){
+    function clear_flags(){
         """Reset all flags to zero""";
-        for flag in self.flags{
-            self.flags[flag] = 0;
+        for flag in this.flags{
+            this.flags[flag] = 0;
 
     }
-    } def _shallow_copy(self){
+    } function _shallow_copy(){
         """Returns a shallow copy from self.""";
-        nc = Context(self.prec, self.rounding, self.traps,
-                     self.flags, self.Emin, self.Emax,
-                     self.capitals, self._clamp, self._ignored_flags);
+        nc = Context(this.prec, this.rounding, this.traps,
+                     this.flags, this.Emin, this.Emax,
+                     this.capitals, this._clamp, this._ignored_flags);
         return nc;
 
     }
-    def copy(self){
+    function copy(){
         """Returns a deep copy from self.""";
-        nc = Context(self.prec, self.rounding, self.traps.copy(),
-                     self.flags.copy(), self.Emin, self.Emax,
-                     self.capitals, self._clamp, self._ignored_flags);
+        nc = Context(this.prec, this.rounding, this.traps.copy(),
+                     this.flags.copy(), this.Emin, this.Emax,
+                     this.capitals, this._clamp, this._ignored_flags);
         return nc;
     } __copy__ = copy;
 
-    def _raise_error(self, condition, explanation = None, *args){
+    function _raise_error( condition, explanation = nil, *args){
         """Handles an error
 
         If the flag is in _ignored_flags, returns the default response.
@@ -4252,15 +4252,15 @@ class _ContextManager(object){
         the default value after setting the flag.
         """;
         error = _condition_map.get(condition, condition);
-        if error in self._ignored_flags{
+        if error in this._ignored_flags{
             # Don't touch the flag
-            return error().handle(self, *args);
+            return error().handle(this, *args);
 
         }
-        self.flags[error] = 1;
-        if not self.traps[error]{
+        this.flags[error] = 1;
+        if not this.traps[error]{
             # The errors define how to handle themselves.
-            return condition().handle(self, *args);
+            return condition().handle(this, *args);
 
         # Errors should only be risked on copies of the context
         # self._ignored_flags = []
@@ -4268,41 +4268,41 @@ class _ContextManager(object){
         raise error(explanation);
 
     }
-    def _ignore_all_flags(self){
+    function _ignore_all_flags(){
         """Ignore all flags, if they are raised""";
-        return self._ignore_flags(*_signals);
+        return this._ignore_flags(*_signals);
 
     }
-    def _ignore_flags(self, *flags){
+    function _ignore_flags( *flags){
         """Ignore the flags, if they are raised""";
         # Do not mutate-- This way, copies of a context leave the original
         # alone.
-        self._ignored_flags = (self._ignored_flags + list(flags));
+        this._ignored_flags = (this._ignored_flags + list(flags));
         return list(flags);
 
     }
-    def _regard_flags(self, *flags){
+    function _regard_flags( *flags){
         """Stop ignoring the flags, if they are raised""";
         if flags and isinstance(flags[0], (tuple,list)){
             flags = flags[0];
         } for flag in flags{
-            self._ignored_flags.remove(flag);
+            this._ignored_flags.remove(flag);
 
     # We inherit object.__hash__, so we must deny this explicitly
     }
-    } __hash__ = None;
+    } __hash__ = nil;
 
-    def Etiny(self){
+    function Etiny(){
         """Returns Etiny (= Emin - prec + 1)""";
-        return int(self.Emin - self.prec + 1);
+        return int(this.Emin - this.prec + 1);
 
     }
-    def Etop(self){
+    function Etop(){
         """Returns maximum exponent (= Emax - prec + 1)""";
-        return int(self.Emax - self.prec + 1);
+        return int(this.Emax - this.prec + 1);
 
     }
-    def _set_rounding(self, type){
+    function _set_rounding( type){
         """Sets the rounding type.
 
         Sets the rounding type, and returns the current (previous)
@@ -4317,31 +4317,31 @@ class _ContextManager(object){
 
         This will make it round up for that operation.
         """;
-        rounding = self.rounding;
-        self.rounding= type;
+        rounding = this.rounding;
+        this.rounding= type;
         return rounding;
 
     }
-    def create_decimal(self, num='0'){
+    function create_decimal( num='0'){
         """Creates a new Decimal instance but using self as context.
 
         This method implements the to-number operation of the
         IBM Decimal specification.""";
 
         if isinstance(num, basestring) and num != num.strip(){
-            return self._raise_error(ConversionSyntax,
+            return this._raise_error(ConversionSyntax,
                                      "no trailing or leading whitespace is "
                                      "permitted.");
 
         }
-        d = Decimal(num, context=self);
-        if d._isnan() and len(d._int) > self.prec - self._clamp{
-            return self._raise_error(ConversionSyntax,
+        d = Decimal(num, context=this);
+        if d._isnan() and len(d._int) > this.prec - this._clamp{
+            return this._raise_error(ConversionSyntax,
                                      "diagnostic info too long in NaN");
-        } return d._fix(self);
+        } return d._fix(this);
 
     }
-    def create_decimal_from_float(self, f){
+    function create_decimal_from_float( f){
         """Creates a new Decimal instance from a float but rounding using self
         as the context.
 
@@ -4356,11 +4356,11 @@ class _ContextManager(object){
 
         """;
         d = Decimal.from_float(f);       # An exact conversion
-        return d._fix(self);             # Apply the context rounding
+        return d._fix(this);             # Apply the context rounding
 
     # Methods
     }
-    def abs(self, a){
+    function abs( a){
         """Returns the absolute value of the operand.
 
         If the operand is negative, the result is the same as using the minus
@@ -4378,11 +4378,11 @@ class _ContextManager(object){
         >>> ExtendedContext.abs(-1)
         Decimal('1')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.__abs__(context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.__abs__(context=this);
 
     }
-    def add(self, a, b){
+    function add( a, b){
         """Return the sum of the two operands.
 
         >>> ExtendedContext.add(Decimal('12'), Decimal('7.00'))
@@ -4396,19 +4396,19 @@ class _ContextManager(object){
         >>> ExtendedContext.add(5, 5)
         Decimal('10')
         """;
-        a = _convert_other(a, raiseit=True);
-        r = a.__add__(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        r = a.__add__(b, context=this);
         if r is NotImplemented{
             raise TypeError("Unable to convert %s to Decimal" % b);
         } else{
             return r;
 
     }
-    } def _apply(self, a){
-        return str(a._fix(self));
+    } function _apply( a){
+        return str(a._fix(this));
 
     }
-    def canonical(self, a){
+    function canonical( a){
         """Returns the same Decimal object.
 
         As we do not have different encodings for the same number, the
@@ -4417,10 +4417,10 @@ class _ContextManager(object){
         >>> ExtendedContext.canonical(Decimal('2.50'))
         Decimal('2.50')
         """;
-        return a.canonical(context=self);
+        return a.canonical(context=this);
 
     }
-    def compare(self, a, b){
+    function compare( a, b){
         """Compares values numerically.
 
         If the signs of the operands differ, a value representing each operand
@@ -4453,11 +4453,11 @@ class _ContextManager(object){
         >>> ExtendedContext.compare(1, Decimal(2))
         Decimal('-1')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.compare(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.compare(b, context=this);
 
     }
-    def compare_signal(self, a, b){
+    function compare_signal( a, b){
         """Compares the values of the two operands numerically.
 
         It's pretty much like compare(), but all NaNs signal, with signaling
@@ -4489,11 +4489,11 @@ class _ContextManager(object){
         >>> c.compare_signal(-1, Decimal(2))
         Decimal('-1')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.compare_signal(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.compare_signal(b, context=this);
 
     }
-    def compare_total(self, a, b){
+    function compare_total( a, b){
         """Compares two operands using their abstract representation.
 
         This is not like the standard compare, which use their numerical
@@ -4519,20 +4519,20 @@ class _ContextManager(object){
         >>> ExtendedContext.compare_total(1, Decimal(2))
         Decimal('-1')
         """;
-        a = _convert_other(a, raiseit=True);
+        a = _convert_other(a, raiseit=true);
         return a.compare_total(b);
 
     }
-    def compare_total_mag(self, a, b){
+    function compare_total_mag( a, b){
         """Compares two operands using their abstract representation ignoring sign.
 
         Like compare_total, but with operand's sign ignored and assumed to be 0.
         """;
-        a = _convert_other(a, raiseit=True);
+        a = _convert_other(a, raiseit=true);
         return a.compare_total_mag(b);
 
     }
-    def copy_abs(self, a){
+    function copy_abs( a){
         """Returns a copy of the operand with the sign set to 0.
 
         >>> ExtendedContext.copy_abs(Decimal('2.1'))
@@ -4542,11 +4542,11 @@ class _ContextManager(object){
         >>> ExtendedContext.copy_abs(-1)
         Decimal('1')
         """;
-        a = _convert_other(a, raiseit=True);
+        a = _convert_other(a, raiseit=true);
         return a.copy_abs();
 
     }
-    def copy_decimal(self, a){
+    function copy_decimal( a){
         """Returns a copy of the decimal object.
 
         >>> ExtendedContext.copy_decimal(Decimal('2.1'))
@@ -4556,11 +4556,11 @@ class _ContextManager(object){
         >>> ExtendedContext.copy_decimal(1)
         Decimal('1')
         """;
-        a = _convert_other(a, raiseit=True);
+        a = _convert_other(a, raiseit=true);
         return Decimal(a);
 
     }
-    def copy_negate(self, a){
+    function copy_negate( a){
         """Returns a copy of the operand with the sign inverted.
 
         >>> ExtendedContext.copy_negate(Decimal('101.5'))
@@ -4570,11 +4570,11 @@ class _ContextManager(object){
         >>> ExtendedContext.copy_negate(1)
         Decimal('-1')
         """;
-        a = _convert_other(a, raiseit=True);
+        a = _convert_other(a, raiseit=true);
         return a.copy_negate();
 
     }
-    def copy_sign(self, a, b){
+    function copy_sign( a, b){
         """Copies the second operand's sign to the first one.
 
         In detail, it returns a copy of the first operand with the sign
@@ -4595,11 +4595,11 @@ class _ContextManager(object){
         >>> ExtendedContext.copy_sign(1, Decimal(-2))
         Decimal('-1')
         """;
-        a = _convert_other(a, raiseit=True);
+        a = _convert_other(a, raiseit=true);
         return a.copy_sign(b);
 
     }
-    def divide(self, a, b){
+    function divide( a, b){
         """Decimal division in a specified context.
 
         >>> ExtendedContext.divide(Decimal('1'), Decimal('3'))
@@ -4629,15 +4629,15 @@ class _ContextManager(object){
         >>> ExtendedContext.divide(5, Decimal(5))
         Decimal('1')
         """;
-        a = _convert_other(a, raiseit=True);
-        r = a.__div__(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        r = a.__div__(b, context=this);
         if r is NotImplemented{
             raise TypeError("Unable to convert %s to Decimal" % b);
         } else{
             return r;
 
     }
-    } def divide_int(self, a, b){
+    } function divide_int( a, b){
         """Divides two numbers and returns the integer part of the result.
 
         >>> ExtendedContext.divide_int(Decimal('2'), Decimal('3'))
@@ -4653,15 +4653,15 @@ class _ContextManager(object){
         >>> ExtendedContext.divide_int(10, Decimal(3))
         Decimal('3')
         """;
-        a = _convert_other(a, raiseit=True);
-        r = a.__floordiv__(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        r = a.__floordiv__(b, context=this);
         if r is NotImplemented{
             raise TypeError("Unable to convert %s to Decimal" % b);
         } else{
             return r;
 
     }
-    } def divmod(self, a, b){
+    } function divmod( a, b){
         """Return (a // b, a % b).
 
         >>> ExtendedContext.divmod(Decimal(8), Decimal(3))
@@ -4675,15 +4675,15 @@ class _ContextManager(object){
         >>> ExtendedContext.divmod(8, Decimal(4))
         (Decimal('2'), Decimal('0'))
         """;
-        a = _convert_other(a, raiseit=True);
-        r = a.__divmod__(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        r = a.__divmod__(b, context=this);
         if r is NotImplemented{
             raise TypeError("Unable to convert %s to Decimal" % b);
         } else{
             return r;
 
     }
-    } def exp(self, a){
+    } function exp( a){
         """Returns e ** a.
 
         >>> c = ExtendedContext.copy()
@@ -4704,11 +4704,11 @@ class _ContextManager(object){
         >>> c.exp(10)
         Decimal('22026.4658')
         """;
-        a =_convert_other(a, raiseit=True);
-        return a.exp(context=self);
+        a =_convert_other(a, raiseit=true);
+        return a.exp(context=this);
 
     }
-    def fma(self, a, b, c){
+    function fma( a, b, c){
         """Returns a multiplied by b, plus c.
 
         The first two operands are multiplied together, using multiply,
@@ -4728,11 +4728,11 @@ class _ContextManager(object){
         >>> ExtendedContext.fma(1, 3, Decimal(4))
         Decimal('7')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.fma(b, c, context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.fma(b, c, context=this);
 
     }
-    def is_canonical(self, a){
+    function is_canonical( a){
         """Return True if the operand is canonical; otherwise return False.
 
         Currently, the encoding of a Decimal instance is always
@@ -4744,7 +4744,7 @@ class _ContextManager(object){
         return a.is_canonical();
 
     }
-    def is_finite(self, a){
+    function is_finite( a){
         """Return True if the operand is finite; otherwise return False.
 
         A Decimal instance is considered finite if it is neither
@@ -4763,11 +4763,11 @@ class _ContextManager(object){
         >>> ExtendedContext.is_finite(1)
         True
         """;
-        a = _convert_other(a, raiseit=True);
+        a = _convert_other(a, raiseit=true);
         return a.is_finite();
 
     }
-    def is_infinite(self, a){
+    function is_infinite( a){
         """Return True if the operand is infinite; otherwise return False.
 
         >>> ExtendedContext.is_infinite(Decimal('2.50'))
@@ -4779,11 +4779,11 @@ class _ContextManager(object){
         >>> ExtendedContext.is_infinite(1)
         False
         """;
-        a = _convert_other(a, raiseit=True);
+        a = _convert_other(a, raiseit=true);
         return a.is_infinite();
 
     }
-    def is_nan(self, a){
+    function is_nan( a){
         """Return True if the operand is a qNaN or sNaN;
         otherwise return False.
 
@@ -4796,11 +4796,11 @@ class _ContextManager(object){
         >>> ExtendedContext.is_nan(1)
         False
         """;
-        a = _convert_other(a, raiseit=True);
+        a = _convert_other(a, raiseit=true);
         return a.is_nan();
 
     }
-    def is_normal(self, a){
+    function is_normal( a){
         """Return True if the operand is a normal number;
         otherwise return False.
 
@@ -4820,11 +4820,11 @@ class _ContextManager(object){
         >>> c.is_normal(1)
         True
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.is_normal(context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.is_normal(context=this);
 
     }
-    def is_qnan(self, a){
+    function is_qnan( a){
         """Return True if the operand is a quiet NaN; otherwise return False.
 
         >>> ExtendedContext.is_qnan(Decimal('2.50'))
@@ -4836,11 +4836,11 @@ class _ContextManager(object){
         >>> ExtendedContext.is_qnan(1)
         False
         """;
-        a = _convert_other(a, raiseit=True);
+        a = _convert_other(a, raiseit=true);
         return a.is_qnan();
 
     }
-    def is_signed(self, a){
+    function is_signed( a){
         """Return True if the operand is negative; otherwise return False.
 
         >>> ExtendedContext.is_signed(Decimal('2.50'))
@@ -4854,11 +4854,11 @@ class _ContextManager(object){
         >>> ExtendedContext.is_signed(-8)
         True
         """;
-        a = _convert_other(a, raiseit=True);
+        a = _convert_other(a, raiseit=true);
         return a.is_signed();
 
     }
-    def is_snan(self, a){
+    function is_snan( a){
         """Return True if the operand is a signaling NaN;
         otherwise return False.
 
@@ -4871,11 +4871,11 @@ class _ContextManager(object){
         >>> ExtendedContext.is_snan(1)
         False
         """;
-        a = _convert_other(a, raiseit=True);
+        a = _convert_other(a, raiseit=true);
         return a.is_snan();
 
     }
-    def is_subnormal(self, a){
+    function is_subnormal( a){
         """Return True if the operand is subnormal; otherwise return False.
 
         >>> c = ExtendedContext.copy()
@@ -4894,11 +4894,11 @@ class _ContextManager(object){
         >>> c.is_subnormal(1)
         False
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.is_subnormal(context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.is_subnormal(context=this);
 
     }
-    def is_zero(self, a){
+    function is_zero( a){
         """Return True if the operand is a zero; otherwise return False.
 
         >>> ExtendedContext.is_zero(Decimal('0'))
@@ -4912,11 +4912,11 @@ class _ContextManager(object){
         >>> ExtendedContext.is_zero(0)
         True
         """;
-        a = _convert_other(a, raiseit=True);
+        a = _convert_other(a, raiseit=true);
         return a.is_zero();
 
     }
-    def ln(self, a){
+    function ln( a){
         """Returns the natural (base e) logarithm of the operand.
 
         >>> c = ExtendedContext.copy()
@@ -4935,11 +4935,11 @@ class _ContextManager(object){
         >>> c.ln(1)
         Decimal('0')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.ln(context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.ln(context=this);
 
     }
-    def log10(self, a){
+    function log10( a){
         """Returns the base 10 logarithm of the operand.
 
         >>> c = ExtendedContext.copy()
@@ -4964,11 +4964,11 @@ class _ContextManager(object){
         >>> c.log10(1)
         Decimal('0')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.log10(context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.log10(context=this);
 
     }
-    def logb(self, a){
+    function logb( a){
         """ Returns the exponent of the magnitude of the operand's MSD.
 
         The result is the integer which is the exponent of the magnitude
@@ -4991,11 +4991,11 @@ class _ContextManager(object){
         >>> ExtendedContext.logb(100)
         Decimal('2')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.logb(context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.logb(context=this);
 
     }
-    def logical_and(self, a, b){
+    function logical_and( a, b){
         """Applies the logical operation 'and' between each operand's digits.
 
         The operands must be both logical numbers.
@@ -5019,11 +5019,11 @@ class _ContextManager(object){
         >>> ExtendedContext.logical_and(110, Decimal(1101))
         Decimal('100')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.logical_and(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.logical_and(b, context=this);
 
     }
-    def logical_invert(self, a){
+    function logical_invert( a){
         """Invert all the digits in the operand.
 
         The operand must be a logical number.
@@ -5039,11 +5039,11 @@ class _ContextManager(object){
         >>> ExtendedContext.logical_invert(1101)
         Decimal('111110010')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.logical_invert(context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.logical_invert(context=this);
 
     }
-    def logical_or(self, a, b){
+    function logical_or( a, b){
         """Applies the logical operation 'or' between each operand's digits.
 
         The operands must be both logical numbers.
@@ -5067,11 +5067,11 @@ class _ContextManager(object){
         >>> ExtendedContext.logical_or(110, Decimal(1101))
         Decimal('1111')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.logical_or(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.logical_or(b, context=this);
 
     }
-    def logical_xor(self, a, b){
+    function logical_xor( a, b){
         """Applies the logical operation 'xor' between each operand's digits.
 
         The operands must be both logical numbers.
@@ -5095,11 +5095,11 @@ class _ContextManager(object){
         >>> ExtendedContext.logical_xor(110, Decimal(1101))
         Decimal('1011')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.logical_xor(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.logical_xor(b, context=this);
 
     }
-    def max(self, a, b){
+    function max( a, b){
         """max compares two values numerically and returns the maximum.
 
         If either operand is a NaN then the general rules apply.
@@ -5123,11 +5123,11 @@ class _ContextManager(object){
         >>> ExtendedContext.max(1, Decimal(2))
         Decimal('2')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.max(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.max(b, context=this);
 
     }
-    def max_mag(self, a, b){
+    function max_mag( a, b){
         """Compares the values numerically with their sign ignored.
 
         >>> ExtendedContext.max_mag(Decimal('7'), Decimal('NaN'))
@@ -5141,11 +5141,11 @@ class _ContextManager(object){
         >>> ExtendedContext.max_mag(1, Decimal(-2))
         Decimal('-2')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.max_mag(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.max_mag(b, context=this);
 
     }
-    def min(self, a, b){
+    function min( a, b){
         """min compares two values numerically and returns the minimum.
 
         If either operand is a NaN then the general rules apply.
@@ -5169,11 +5169,11 @@ class _ContextManager(object){
         >>> ExtendedContext.min(1, Decimal(29))
         Decimal('1')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.min(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.min(b, context=this);
 
     }
-    def min_mag(self, a, b){
+    function min_mag( a, b){
         """Compares the values numerically with their sign ignored.
 
         >>> ExtendedContext.min_mag(Decimal('3'), Decimal('-2'))
@@ -5187,11 +5187,11 @@ class _ContextManager(object){
         >>> ExtendedContext.min_mag(1, Decimal(-2))
         Decimal('1')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.min_mag(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.min_mag(b, context=this);
 
     }
-    def minus(self, a){
+    function minus( a){
         """Minus corresponds to unary prefix minus in Python.
 
         The operation is evaluated using the same rules as subtract; the
@@ -5205,11 +5205,11 @@ class _ContextManager(object){
         >>> ExtendedContext.minus(1)
         Decimal('-1')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.__neg__(context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.__neg__(context=this);
 
     }
-    def multiply(self, a, b){
+    function multiply( a, b){
         """multiply multiplies two operands.
 
         If either operand is a special value then the general rules apply.
@@ -5234,15 +5234,15 @@ class _ContextManager(object){
         >>> ExtendedContext.multiply(7, Decimal(7))
         Decimal('49')
         """;
-        a = _convert_other(a, raiseit=True);
-        r = a.__mul__(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        r = a.__mul__(b, context=this);
         if r is NotImplemented{
             raise TypeError("Unable to convert %s to Decimal" % b);
         } else{
             return r;
 
     }
-    } def next_minus(self, a){
+    } function next_minus( a){
         """Returns the largest representable number smaller than a.
 
         >>> c = ExtendedContext.copy()
@@ -5259,11 +5259,11 @@ class _ContextManager(object){
         >>> c.next_minus(1)
         Decimal('0.999999999')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.next_minus(context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.next_minus(context=this);
 
     }
-    def next_plus(self, a){
+    function next_plus( a){
         """Returns the smallest representable number larger than a.
 
         >>> c = ExtendedContext.copy()
@@ -5280,11 +5280,11 @@ class _ContextManager(object){
         >>> c.next_plus(1)
         Decimal('1.00000001')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.next_plus(context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.next_plus(context=this);
 
     }
-    def next_toward(self, a, b){
+    function next_toward( a, b){
         """Returns the number closest to a, in direction towards b.
 
         The result is the closest representable number from the first
@@ -5316,11 +5316,11 @@ class _ContextManager(object){
         >>> c.next_toward(0, Decimal(1))
         Decimal('1E-1007')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.next_toward(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.next_toward(b, context=this);
 
     }
-    def normalize(self, a){
+    function normalize( a){
         """normalize reduces an operand to its simplest form.
 
         Essentially a plus operation with all trailing zeros removed from the
@@ -5341,11 +5341,11 @@ class _ContextManager(object){
         >>> ExtendedContext.normalize(6)
         Decimal('6')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.normalize(context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.normalize(context=this);
 
     }
-    def number_class(self, a){
+    function number_class( a){
         """Returns an indication of the class of the operand.
 
         The class is one of the following strings:
@@ -5392,11 +5392,11 @@ class _ContextManager(object){
         >>> c.number_class(123)
         '+Normal'
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.number_class(context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.number_class(context=this);
 
     }
-    def plus(self, a){
+    function plus( a){
         """Plus corresponds to unary prefix plus in Python.
 
         The operation is evaluated using the same rules as add; the
@@ -5410,11 +5410,11 @@ class _ContextManager(object){
         >>> ExtendedContext.plus(-1)
         Decimal('-1')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.__pos__(context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.__pos__(context=this);
 
     }
-    def power(self, a, b, modulo=None){
+    function power( a, b, modulo=nil){
         """Raises a to the power of b, to modulo if given.
 
         With two arguments, compute a**b.  If a is negative then b
@@ -5487,15 +5487,15 @@ class _ContextManager(object){
         >>> ExtendedContext.power(7, Decimal(7), 2)
         Decimal('1')
         """;
-        a = _convert_other(a, raiseit=True);
-        r = a.__pow__(b, modulo, context=self);
+        a = _convert_other(a, raiseit=true);
+        r = a.__pow__(b, modulo, context=this);
         if r is NotImplemented{
             raise TypeError("Unable to convert %s to Decimal" % b);
         } else{
             return r;
 
     }
-    } def quantize(self, a, b){
+    } function quantize( a, b){
         """Returns a value equal to 'a' (rounded), having the exponent of 'b'.
 
         The coefficient of the result is derived from that of the left-hand
@@ -5550,11 +5550,11 @@ class _ContextManager(object){
         >>> ExtendedContext.quantize(1, Decimal(2))
         Decimal('1')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.quantize(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.quantize(b, context=this);
 
     }
-    def radix(self){
+    function radix(){
         """Just returns 10, as this is Decimal, :)
 
         >>> ExtendedContext.radix()
@@ -5563,7 +5563,7 @@ class _ContextManager(object){
         return Decimal(10);
 
     }
-    def remainder(self, a, b){
+    function remainder( a, b){
         """Returns the remainder from integer division.
 
         The result is the residue of the dividend after the operation of
@@ -5594,15 +5594,15 @@ class _ContextManager(object){
         >>> ExtendedContext.remainder(22, Decimal(6))
         Decimal('4')
         """;
-        a = _convert_other(a, raiseit=True);
-        r = a.__mod__(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        r = a.__mod__(b, context=this);
         if r is NotImplemented{
             raise TypeError("Unable to convert %s to Decimal" % b);
         } else{
             return r;
 
     }
-    } def remainder_near(self, a, b){
+    } function remainder_near( a, b){
         """Returns to be "a - b * n", where n is the integer nearest the exact
         value of "x / b" (if two integers are equally near then the even one
         is chosen).  If the result is equal to 0 then its sign will be the
@@ -5633,11 +5633,11 @@ class _ContextManager(object){
         >>> ExtendedContext.remainder_near(3, Decimal(11))
         Decimal('3')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.remainder_near(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.remainder_near(b, context=this);
 
     }
-    def rotate(self, a, b){
+    function rotate( a, b){
         """Returns a rotated copy of a, b times.
 
         The coefficient of the result is a rotated copy of the digits in
@@ -5663,11 +5663,11 @@ class _ContextManager(object){
         >>> ExtendedContext.rotate(1333333, Decimal(1))
         Decimal('13333330')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.rotate(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.rotate(b, context=this);
 
     }
-    def same_quantum(self, a, b){
+    function same_quantum( a, b){
         """Returns True if the two operands have the same exponent.
 
         The result is never affected by either the sign or the coefficient of
@@ -5688,11 +5688,11 @@ class _ContextManager(object){
         >>> ExtendedContext.same_quantum(10000, Decimal(-1))
         True
         """;
-        a = _convert_other(a, raiseit=True);
+        a = _convert_other(a, raiseit=true);
         return a.same_quantum(b);
 
     }
-    def scaleb (self, a, b){
+    function scaleb ( a, b){
         """Returns the first operand after adding the second value its exp.
 
         >>> ExtendedContext.scaleb(Decimal('7.50'), Decimal('-2'))
@@ -5708,11 +5708,11 @@ class _ContextManager(object){
         >>> ExtendedContext.scaleb(1, Decimal(4))
         Decimal('1E+4')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.scaleb(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.scaleb(b, context=this);
 
     }
-    def shift(self, a, b){
+    function shift( a, b){
         """Returns a shifted copy of a, b times.
 
         The coefficient of the result is a shifted copy of the digits
@@ -5739,11 +5739,11 @@ class _ContextManager(object){
         >>> ExtendedContext.shift(88888888, Decimal(2))
         Decimal('888888800')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.shift(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.shift(b, context=this);
 
     }
-    def sqrt(self, a){
+    function sqrt( a){
         """Square root of a non-negative number to context precision.
 
         If the result must be inexact, it is rounded using the round-half-even
@@ -5772,11 +5772,11 @@ class _ContextManager(object){
         >>> ExtendedContext.prec
         9
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.sqrt(context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.sqrt(context=this);
 
     }
-    def subtract(self, a, b){
+    function subtract( a, b){
         """Return the difference between the two operands.
 
         >>> ExtendedContext.subtract(Decimal('1.3'), Decimal('1.07'))
@@ -5792,15 +5792,15 @@ class _ContextManager(object){
         >>> ExtendedContext.subtract(8, Decimal(5))
         Decimal('3')
         """;
-        a = _convert_other(a, raiseit=True);
-        r = a.__sub__(b, context=self);
+        a = _convert_other(a, raiseit=true);
+        r = a.__sub__(b, context=this);
         if r is NotImplemented{
             raise TypeError("Unable to convert %s to Decimal" % b);
         } else{
             return r;
 
     }
-    } def to_eng_string(self, a){
+    } function to_eng_string( a){
         """Convert to a string, using engineering notation if an exponent is needed.
 
         Engineering notation has an exponent which is a multiple of 3.  This
@@ -5825,20 +5825,20 @@ class _ContextManager(object){
         '0.00E+3'
 
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.to_eng_string(context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.to_eng_string(context=this);
 
     }
-    def to_sci_string(self, a){
+    function to_sci_string( a){
         """Converts a number to a string, using scientific notation.
 
         The operation is not affected by the context.
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.__str__(context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.__str__(context=this);
 
     }
-    def to_integral_exact(self, a){
+    function to_integral_exact( a){
         """Rounds to an integer.
 
         When the operand has a negative exponent, the result is the same
@@ -5865,11 +5865,11 @@ class _ContextManager(object){
         >>> ExtendedContext.to_integral_exact(Decimal('-Inf'))
         Decimal('-Infinity')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.to_integral_exact(context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.to_integral_exact(context=this);
 
     }
-    def to_integral_value(self, a){
+    function to_integral_value( a){
         """Rounds to an integer.
 
         When the operand has a negative exponent, the result is the same
@@ -5895,8 +5895,8 @@ class _ContextManager(object){
         >>> ExtendedContext.to_integral_value(Decimal('-Inf'))
         Decimal('-Infinity')
         """;
-        a = _convert_other(a, raiseit=True);
-        return a.to_integral_value(context=self);
+        a = _convert_other(a, raiseit=true);
+        return a.to_integral_value(context=this);
 
     # the method name changed, but we provide also the old one, for compatibility
     }
@@ -5909,24 +5909,24 @@ class _WorkRep(object){
     # int:  int or long
     # exp:  None, int, or string
 
-    def __init__(self, value=None){
-        if value is None{
-            self.sign = None;
-            self.int = 0;
-            self.exp = None;
+    function __init__( value=nil){
+        if value is nil{
+            this.sign = nil;
+            this.int = 0;
+            this.exp = nil;
         } elif isinstance(value, Decimal){
-            self.sign = value._sign;
-            self.int = int(value._int);
-            self.exp = value._exp;
+            this.sign = value._sign;
+            this.int = int(value._int);
+            this.exp = value._exp;
         } else{
             # assert isinstance(value, tuple)
-            self.sign = value[0];
-            self.int = value[1];
-            self.exp = value[2];
+            this.sign = value[0];
+            this.int = value[1];
+            this.exp = value[2];
 
     }
-    } def __repr__(self){
-        return "(%r, %r, %r)" % (self.sign, self.int, self.exp);
+    } function __repr__(){
+        return "(%r, %r, %r)" % (this.sign, this.int, this.exp);
 
     }
     __str__ = __repr__;
@@ -5934,7 +5934,7 @@ class _WorkRep(object){
 
 
 }
-def _normalize(op1, op2, prec = 0){
+function _normalize(op1, op2, prec = 0){
     """Normalizes op1, op2 to have the same exp and length of coefficient.
 
     Done during addition.
@@ -5972,7 +5972,7 @@ def _normalize(op1, op2, prec = 0){
 # the whole function is not resolved with math.log because of avoiding
 # the use of floats.
 }
-def _nbits(n, correction = {
+function _nbits(n, correction = {
         '0': 4, '1': 3, '2': 2, '3': 2,
         '4': 1, '5': 1, '6': 1, '7': 1,
         '8': 0, '9': 0, 'a': 0, 'b': 0,
@@ -5986,7 +5986,7 @@ def _nbits(n, correction = {
     return 4*len(hex_n) - correction[hex_n[0]];
 
 }
-def _decimal_lshift_exact(n, e){
+function _decimal_lshift_exact(n, e){
     """ Given integers n and e, return n * 10**e if it's an integer, else None.
 
     The computation is designed to avoid computing large powers of 10
@@ -6005,10 +6005,10 @@ def _decimal_lshift_exact(n, e){
         # val_n = largest power of 10 dividing n.
         str_n = str(abs(n));
         val_n = len(str_n) - len(str_n.rstrip('0'));
-        return None if val_n < -e else n // 10**-e;
+        return nil if val_n < -e else n // 10**-e;
 
 }
-} def _sqrt_nearest(n, a){
+} function _sqrt_nearest(n, a){
     """Closest integer to the square root of the positive integer n.  a is
     an initial approximation to the square root.  Any positive integer
     will do for a, but the closer a is to the square root of n the
@@ -6025,7 +6025,7 @@ def _decimal_lshift_exact(n, e){
     } return a;
 
 }
-def _rshift_nearest(x, shift){
+function _rshift_nearest(x, shift){
     """Given an integer x and a nonnegative integer shift, return closest
     integer to x / 2**shift; use round-to-even in case of a tie.
 
@@ -6034,7 +6034,7 @@ def _rshift_nearest(x, shift){
     return q + (2*(x & (b-1)) + (q&1) > b);
 
 }
-def _div_nearest(a, b){
+function _div_nearest(a, b){
     """Closest integer to a/b, a and b positive integers; rounds to even
     in the case of a tie.
 
@@ -6043,7 +6043,7 @@ def _div_nearest(a, b){
     return q + (2*r + (q&1) > b);
 
 }
-def _ilog(x, M, L = 8){
+function _ilog(x, M, L = 8){
     """Integer approximation to M*log(x/M), with absolute error boundable
     in terms only of x/M.
 
@@ -6094,7 +6094,7 @@ def _ilog(x, M, L = 8){
     return _div_nearest(w*y, M);
 
 }
-def _dlog10(c, e, p){
+function _dlog10(c, e, p){
     """Given integers c, e and p with c > 0, p >= 0, compute an integer
     approximation to 10**p * log10(c*10**e), with an absolute error of
     at most 1.  Assumes that c*10**e is not exactly 1.""";
@@ -6131,7 +6131,7 @@ def _dlog10(c, e, p){
     return _div_nearest(log_tenpower+log_d, 100);
 
 }
-def _dlog(c, e, p){
+function _dlog(c, e, p){
     """Given integers c, e and p with c > 0, compute an integer
     approximation to 10**p * log(c*10**e), with an absolute error of
     at most 1.  Assumes that c*10**e is not exactly 1.""";
@@ -6183,11 +6183,11 @@ class _Log10Memoize(object){
     """Class to compute, store, and allow retrieval of, digits of the
     constant log(10) = 2.302585....  This constant is needed by
     Decimal.ln, Decimal.log10, Decimal.exp and Decimal.__pow__.""";
-    def __init__(self){
-        self.digits = "23025850929940456840179914546843642076011014886";
+    function __init__(){
+        this.digits = "23025850929940456840179914546843642076011014886";
 
     }
-    def getdigits(self, p){
+    function getdigits( p){
         """Given an integer p >= 0, return floor(10**p)*log(10).
 
         For example, self.getdigits(3) returns 2302.
@@ -6200,11 +6200,11 @@ class _Log10Memoize(object){
             raise ValueError("p should be nonnegative");
 
         }
-        if p >= len(self.digits){
+        if p >= len(this.digits){
             # compute p+3, p+6, p+9, ... digits; continue until at
             # least one of the extra digits is nonzero
             extra = 3;
-            while True{
+            while true{
                 # compute p+extra digits, correct to within 1ulp
                 M = 10**(p+extra+2);
                 digits = str(_div_nearest(_ilog(10*M, M), 100));
@@ -6214,13 +6214,13 @@ class _Log10Memoize(object){
             # keep all reliable digits so far; remove trailing zeros
             # and next nonzero digit
             }
-            self.digits = digits.rstrip('0')[:-1];
-        } return int(self.digits[:p+1]);
+            this.digits = digits.rstrip('0')[:-1];
+        } return int(this.digits[:p+1]);
 
 }
 } _log10_digits = _Log10Memoize().getdigits;
 
-def _iexp(x, M, L=8){
+function _iexp(x, M, L=8){
     """Given integers x and M, M > 0, such that x/M is small in absolute
     value, compute an integer approximation to M*exp(x/M).  For 0 <=
     x/M <= 2.4, the absolute error in the result is bounded by 60 (and
@@ -6260,7 +6260,7 @@ def _iexp(x, M, L=8){
     return M+y;
 
 }
-def _dexp(c, e, p){
+function _dexp(c, e, p){
     """Compute an approximation to exp(c*10**e), with p decimal places of
     precision.
 
@@ -6297,7 +6297,7 @@ def _dexp(c, e, p){
     return _div_nearest(_iexp(rem, 10**p), 1000), quot - p + 3;
 
 }
-def _dpower(xc, xe, yc, ye, p){
+function _dpower(xc, xe, yc, ye, p){
     """Given integers xc, xe, yc and ye representing Decimals x = xc*10**xe and
     y = yc*10**ye, compute x**y.  Returns a pair of integers (c, e) such that:
 
@@ -6342,7 +6342,7 @@ def _dpower(xc, xe, yc, ye, p){
     return coeff, exp;
 
 }
-def _log10_lb(c, correction = {
+function _log10_lb(c, correction = {
         '1': 100, '2': 70, '3': 53, '4': 40, '5': 31,
         '6': 23, '7': 16, '8': 10, '9': 5}){
     """Compute a lower bound for 100*log10(c) for a positive integer c.""";
@@ -6354,7 +6354,7 @@ def _log10_lb(c, correction = {
 ##### Helper Functions ####################################################
 
 }
-def _convert_other(other, raiseit=False, allow_float=False){
+function _convert_other(other, raiseit=false, allow_float=false){
     """Convert other to Decimal.
 
     Verifies that it's ok to use in an implicit construction.
@@ -6478,7 +6478,7 @@ try{
     pass;
 
 }
-def _parse_format_specifier(format_spec, _localeconv=None){
+function _parse_format_specifier(format_spec, _localeconv=nil){
     """Parse and validate a format specifier.
 
     Turns a standard numeric format specifier into a dict, with the
@@ -6499,7 +6499,7 @@ def _parse_format_specifier(format_spec, _localeconv=None){
 
     """;
     m = _parse_format_specifier_regex.match(format_spec);
-    if m is None{
+    if m is nil{
         raise ValueError("Invalid format specifier: " + format_spec);
 
     # get the dictionary
@@ -6510,12 +6510,12 @@ def _parse_format_specifier(format_spec, _localeconv=None){
     # is requested, the fill and align fields should be absent.
     fill = format_dict['fill'];
     align = format_dict['align'];
-    format_dict['zeropad'] = (format_dict['zeropad'] is not None);
+    format_dict['zeropad'] = (format_dict['zeropad'] is not nil);
     if format_dict['zeropad']{
-        if fill is not None{
+        if fill is not nil{
             raise ValueError("Fill character conflicts with '0'"
                              " in format specifier: " + format_spec);
-        } if align is not None{
+        } if align is not nil{
             raise ValueError("Alignment conflicts with '0' in "
                              "format specifier: " + format_spec);
     } } format_dict['fill'] = fill or ' ';
@@ -6525,20 +6525,20 @@ def _parse_format_specifier(format_spec, _localeconv=None){
     format_dict['align'] = align or '>';
 
     # default sign handling: '-' for negative, '' for positive
-    if format_dict['sign'] is None{
+    if format_dict['sign'] is nil{
         format_dict['sign'] = '-';
 
     # minimumwidth defaults to 0; precision remains None if not given
     }
     format_dict['minimumwidth'] = int(format_dict['minimumwidth'] or '0');
-    if format_dict['precision'] is not None{
+    if format_dict['precision'] is not nil{
         format_dict['precision'] = int(format_dict['precision']);
 
     # if format type is 'g' or 'G' then a precision of 0 makes little
     # sense; convert it to 1.  Same if format type is unspecified.
     }
     if format_dict['precision'] == 0{
-        if format_dict['type'] is None or format_dict['type'] in 'gG'{
+        if format_dict['type'] is nil or format_dict['type'] in 'gG'{
             format_dict['precision'] = 1;
 
     # determine thousands separator, grouping, and decimal separator, and
@@ -6547,16 +6547,16 @@ def _parse_format_specifier(format_spec, _localeconv=None){
     } if format_dict['type'] == 'n'{
         # apart from separators, 'n' behaves just like 'g'
         format_dict['type'] = 'g';
-        if _localeconv is None{
+        if _localeconv is nil{
             _localeconv = _locale.localeconv();
-        } if format_dict['thousands_sep'] is not None{
+        } if format_dict['thousands_sep'] is not nil{
             raise ValueError("Explicit thousands separator conflicts with "
                              "'n' type in format specifier: " + format_spec);
         } format_dict['thousands_sep'] = _localeconv['thousands_sep'];
         format_dict['grouping'] = _localeconv['grouping'];
         format_dict['decimal_point'] = _localeconv['decimal_point'];
     } else{
-        if format_dict['thousands_sep'] is None{
+        if format_dict['thousands_sep'] is nil{
             format_dict['thousands_sep'] = '';
         } format_dict['grouping'] = [3, 0];
         format_dict['decimal_point'] = '.';
@@ -6566,13 +6566,13 @@ def _parse_format_specifier(format_spec, _localeconv=None){
     try{
         format_dict['unicode'] = isinstance(format_spec, unicode);
     } except NameError{
-        format_dict['unicode'] = False;
+        format_dict['unicode'] = false;
 
     }
     return format_dict;
 
 }
-def _format_align(sign, body, spec){
+function _format_align(sign, body, spec){
     """Given an unpadded, non-aligned numeric string 'body' and sign
     string 'sign', add padding and alignment conforming to the given
     format specifier dictionary 'spec' (as produced by
@@ -6608,7 +6608,7 @@ def _format_align(sign, body, spec){
     return result;
 
 }
-def _group_lengths(grouping){
+function _group_lengths(grouping){
     """Convert a localeconv-style grouping into a (possibly infinite)
     iterable of integers representing group lengths.
 
@@ -6632,7 +6632,7 @@ def _group_lengths(grouping){
         raise ValueError('unrecognised format for grouping');
 
 }
-} def _insert_thousands_sep(digits, spec, min_width=1){
+} function _insert_thousands_sep(digits, spec, min_width=1){
     """Insert thousands separators into a digit string.
 
     spec is a dictionary whose keys should include 'thousands_sep' and
@@ -6671,7 +6671,7 @@ def _group_lengths(grouping){
     } return sep.join(reversed(groups));
 
 }
-def _format_sign(is_negative, spec){
+function _format_sign(is_negative, spec){
     """Determine sign character.""";
 
     if is_negative{
@@ -6682,7 +6682,7 @@ def _format_sign(is_negative, spec){
         return '';
 
 }
-} def _format_number(is_negative, intpart, fracpart, exp, spec){
+} function _format_number(is_negative, intpart, fracpart, exp, spec){
     """Format a number, given the following data:
 
     is_negative: true if the number is negative, else false

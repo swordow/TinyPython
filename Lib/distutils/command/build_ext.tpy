@@ -30,7 +30,7 @@ extension_name_re = re.compile \
     (r'^[a-zA-Z_][a-zA-Z_0-9]*(\.[a-zA-Z_][a-zA-Z_0-9]*)*$');
 
 
-def show_compilers (){
+function show_compilers (){
     from distutils.ccompiler import show_compilers;
     show_compilers();
 
@@ -90,51 +90,51 @@ class build_ext (Command){
          "forcibly build everything (ignore file timestamps)"),
         ('compiler=', 'c',
          "specify the compiler type"),
-        ('swig-cpp', None,
+        ('swig-cpp', nil,
          "make SWIG create C++ files (default is C)"),
-        ('swig-opts=', None,
+        ('swig-opts=', nil,
          "list of SWIG command line options"),
-        ('swig=', None,
+        ('swig=', nil,
          "path to the SWIG executable"),
-        ('user', None,
+        ('user', nil,
          "add user include, library and rpath"),
         ];
 
     boolean_options = ['inplace', 'debug', 'force', 'swig-cpp', 'user'];
 
     help_options = [
-        ('help-compiler', None,
+        ('help-compiler', nil,
          "list available compilers", show_compilers),
         ];
 
-    def initialize_options (self){
-        self.extensions = None;
-        self.build_lib = None;
-        self.plat_name = None;
-        self.build_temp = None;
-        self.inplace = 0;
-        self.package = None;
+    function initialize_options (){
+        this.extensions = nil;
+        this.build_lib = nil;
+        this.plat_name = nil;
+        this.build_temp = nil;
+        this.inplace = 0;
+        this.package = nil;
 
-        self.include_dirs = None;
-        self.define = None;
-        self.undef = None;
-        self.libraries = None;
-        self.library_dirs = None;
-        self.rpath = None;
-        self.link_objects = None;
-        self.debug = None;
-        self.force = None;
-        self.compiler = None;
-        self.swig = None;
-        self.swig_cpp = None;
-        self.swig_opts = None;
-        self.user = None;
+        this.include_dirs = nil;
+        this.define = nil;
+        this.undef = nil;
+        this.libraries = nil;
+        this.library_dirs = nil;
+        this.rpath = nil;
+        this.link_objects = nil;
+        this.debug = nil;
+        this.force = nil;
+        this.compiler = nil;
+        this.swig = nil;
+        this.swig_cpp = nil;
+        this.swig_opts = nil;
+        this.user = nil;
 
     }
-    def finalize_options(self){
+    function finalize_options(){
         from distutils import sysconfig;
 
-        self.set_undefined_options('build',
+        this.set_undefined_options('build',
                                    ('build_lib', 'build_lib'),
                                    ('build_temp', 'build_temp'),
                                    ('compiler', 'compiler'),
@@ -143,46 +143,46 @@ class build_ext (Command){
                                    ('plat_name', 'plat_name'),
                                    );
 
-        if self.package is None{
-            self.package = self.distribution.ext_package;
+        if this.package is nil{
+            this.package = this.distribution.ext_package;
 
         }
-        self.extensions = self.distribution.ext_modules;
+        this.extensions = this.distribution.ext_modules;
 
         # Make sure Python's include directories (for Python.h, pyconfig.h,
         # etc.) are in the include search path.
         py_include = sysconfig.get_python_inc();
         plat_py_include = sysconfig.get_python_inc(plat_specific=1);
-        if self.include_dirs is None{
-            self.include_dirs = self.distribution.include_dirs or [];
-        } if isinstance(self.include_dirs, str){
-            self.include_dirs = self.include_dirs.split(os.pathsep);
+        if this.include_dirs is nil{
+            this.include_dirs = this.distribution.include_dirs or [];
+        } if isinstance(this.include_dirs, str){
+            this.include_dirs = this.include_dirs.split(os.pathsep);
 
         # Put the Python "system" include dir at the end, so that
         # any local include dirs take precedence.
         }
-        self.include_dirs.append(py_include);
+        this.include_dirs.append(py_include);
         if plat_py_include != py_include{
-            self.include_dirs.append(plat_py_include);
+            this.include_dirs.append(plat_py_include);
 
         }
-        self.ensure_string_list('libraries');
-        self.ensure_string_list('link_objects');
+        this.ensure_string_list('libraries');
+        this.ensure_string_list('link_objects');
 
         # Life is easier if we're not forever checking for None, so
         # simplify these options to empty lists if unset
-        if self.libraries is None{
-            self.libraries = [];
-        } if self.library_dirs is None{
-            self.library_dirs = [];
-        } elif type(self.library_dirs) is StringType{
-            self.library_dirs = string.split(self.library_dirs, os.pathsep);
+        if this.libraries is nil{
+            this.libraries = [];
+        } if this.library_dirs is nil{
+            this.library_dirs = [];
+        } elif type(this.library_dirs) is StringType{
+            this.library_dirs = string.split(this.library_dirs, os.pathsep);
 
         }
-        if self.rpath is None{
-            self.rpath = [];
-        } elif type(self.rpath) is StringType{
-            self.rpath = string.split(self.rpath, os.pathsep);
+        if this.rpath is nil{
+            this.rpath = [];
+        } elif type(this.rpath) is StringType{
+            this.rpath = string.split(this.rpath, os.pathsep);
 
         # for extensions under windows use different directories
         # for Release and Debug builds.
@@ -192,47 +192,47 @@ class build_ext (Command){
             # the 'libs' directory is for binary installs - we assume that
             # must be the *native* platform.  But we don't really support
             # cross-compiling via a binary install anyway, so we let it go.
-            self.library_dirs.append(os.path.join(sys.exec_prefix, 'libs'));
-            if self.debug{
-                self.build_temp = os.path.join(self.build_temp, "Debug");
+            this.library_dirs.append(os.path.join(sys.exec_prefix, 'libs'));
+            if this.debug{
+                this.build_temp = os.path.join(this.build_temp, "Debug");
             } else{
-                self.build_temp = os.path.join(self.build_temp, "Release");
+                this.build_temp = os.path.join(this.build_temp, "Release");
 
             # Append the source distribution include and library directories,
             # this allows distutils on windows to work in the source tree
             }
-            self.include_dirs.append(os.path.join(sys.exec_prefix, 'PC'));
+            this.include_dirs.append(os.path.join(sys.exec_prefix, 'PC'));
             if MSVC_VERSION == 9{
                 # Use the .lib files for the correct architecture
-                if self.plat_name == 'win32'{
+                if this.plat_name == 'win32'{
                     suffix = '';
                 } else{
                     # win-amd64 or win-ia64
-                    suffix = self.plat_name[4:];
+                    suffix = this.plat_name[4:];
                 # We could have been built in one of two places; add both
                 }
                 for d in ('PCbuild',), ('PC', 'VS9.0'){
                     new_lib = os.path.join(sys.exec_prefix, *d);
                     if suffix{
                         new_lib = os.path.join(new_lib, suffix);
-                    } self.library_dirs.append(new_lib);
+                    } this.library_dirs.append(new_lib);
 
             }
             } elif MSVC_VERSION == 8{
-                self.library_dirs.append(os.path.join(sys.exec_prefix,
+                this.library_dirs.append(os.path.join(sys.exec_prefix,
                                          'PC', 'VS8.0'));
             } elif MSVC_VERSION == 7{
-                self.library_dirs.append(os.path.join(sys.exec_prefix,
+                this.library_dirs.append(os.path.join(sys.exec_prefix,
                                          'PC', 'VS7.1'));
             } else{
-                self.library_dirs.append(os.path.join(sys.exec_prefix,
+                this.library_dirs.append(os.path.join(sys.exec_prefix,
                                          'PC', 'VC6'));
 
         # OS/2 (EMX) doesn't support Debug vs Release builds, but has the
         # import libraries in its "Config" subdirectory
         }
         } if os.name == 'os2'{
-            self.library_dirs.append(os.path.join(sys.exec_prefix, 'Config'));
+            this.library_dirs.append(os.path.join(sys.exec_prefix, 'Config'));
 
         # for extensions under Cygwin and AtheOS Python's library directory must be
         # appended to library_dirs
@@ -240,12 +240,12 @@ class build_ext (Command){
         if sys.platform[:6] == 'cygwin' or sys.platform[:6] == 'atheos'{
             if sys.executable.startswith(os.path.join(sys.exec_prefix, "bin")){
                 # building third party extensions
-                self.library_dirs.append(os.path.join(sys.prefix, "lib",
+                this.library_dirs.append(os.path.join(sys.prefix, "lib",
                                                       "python" + get_python_version(),
                                                       "config"));
             } else{
                 # building python standard extensions
-                self.library_dirs.append('.');
+                this.library_dirs.append('.');
 
         # For building extensions with a shared Python library,
         # Python's library directory must be appended to library_dirs
@@ -254,10 +254,10 @@ class build_ext (Command){
         } if (sysconfig.get_config_var('Py_ENABLE_SHARED')){
             if not sysconfig.python_build{
                 # building third party extensions
-                self.library_dirs.append(sysconfig.get_config_var('LIBDIR'));
+                this.library_dirs.append(sysconfig.get_config_var('LIBDIR'));
             } else{
                 # building python standard extensions
-                self.library_dirs.append('.');
+                this.library_dirs.append('.');
 
         # The argument parsing will result in self.define being a string, but
         # it has to be a list of 2-tuples.  All the preprocessor symbols
@@ -265,36 +265,36 @@ class build_ext (Command){
         # symbols can be separated with commas.
 
         }
-        } if self.define{
-            defines = self.define.split(',');
-            self.define = map(lambda symbol{ (symbol, '1')}, defines);
+        } if this.define{
+            defines = this.define.split(',');
+            this.define = map(lambda symbol{ (symbol, '1')}, defines);
 
         # The option for macros to undefine is also a string from the
         # option parsing, but has to be a list.  Multiple symbols can also
         # be separated with commas here.
         }
-        if self.undef{
-            self.undef = self.undef.split(',');
+        if this.undef{
+            this.undef = this.undef.split(',');
 
         }
-        if self.swig_opts is None{
-            self.swig_opts = [];
+        if this.swig_opts is nil{
+            this.swig_opts = [];
         } else{
-            self.swig_opts = self.swig_opts.split(' ');
+            this.swig_opts = this.swig_opts.split(' ');
 
         # Finally add the user include and library directories if requested
         }
-        if self.user{
+        if this.user{
             user_include = os.path.join(USER_BASE, "include");
             user_lib = os.path.join(USER_BASE, "lib");
             if os.path.isdir(user_include){
-                self.include_dirs.append(user_include);
+                this.include_dirs.append(user_include);
             } if os.path.isdir(user_lib){
-                self.library_dirs.append(user_lib);
-                self.rpath.append(user_lib);
+                this.library_dirs.append(user_lib);
+                this.rpath.append(user_lib);
 
     }
-    } } def run(self){
+    } } function run(){
         from distutils.ccompiler import new_compiler;
 
         # 'self.extensions', as supplied by setup.py, is a list of
@@ -309,61 +309,61 @@ class build_ext (Command){
         # differently named.  We convert these 2-tuples to Extension
         # instances as needed.
 
-        if not self.extensions{
+        if not this.extensions{
             return;
 
         # If we were asked to build any C/C++ libraries, make sure that the
         # directory where we put them is in the library search path for
         # linking extensions.
         }
-        if self.distribution.has_c_libraries(){
-            build_clib = self.get_finalized_command('build_clib');
-            self.libraries.extend(build_clib.get_library_names() or []);
-            self.library_dirs.append(build_clib.build_clib);
+        if this.distribution.has_c_libraries(){
+            build_clib = this.get_finalized_command('build_clib');
+            this.libraries.extend(build_clib.get_library_names() or []);
+            this.library_dirs.append(build_clib.build_clib);
 
         # Setup the CCompiler object that we'll use to do all the
         # compiling and linking
         }
-        self.compiler = new_compiler(compiler=self.compiler,
-                                     verbose=self.verbose,
-                                     dry_run=self.dry_run,
-                                     force=self.force);
-        customize_compiler(self.compiler);
+        this.compiler = new_compiler(compiler=this.compiler,
+                                     verbose=this.verbose,
+                                     dry_run=this.dry_run,
+                                     force=this.force);
+        customize_compiler(this.compiler);
         # If we are cross-compiling, init the compiler now (if we are not
         # cross-compiling, init would not hurt, but people may rely on
         # late initialization of compiler even if they shouldn't...)
-        if os.name == 'nt' and self.plat_name != get_platform(){
-            self.compiler.initialize(self.plat_name);
+        if os.name == 'nt' and this.plat_name != get_platform(){
+            this.compiler.initialize(this.plat_name);
 
         # And make sure that any compile/link-related options (which might
         # come from the command-line or from the setup script) are set in
         # that CCompiler object -- that way, they automatically apply to
         # all compiling and linking done here.
         }
-        if self.include_dirs is not None{
-            self.compiler.set_include_dirs(self.include_dirs);
-        } if self.define is not None{
+        if this.include_dirs is not nil{
+            this.compiler.set_include_dirs(this.include_dirs);
+        } if this.define is not nil{
             # 'define' option is a list of (name,value) tuples
-            for (name, value) in self.define{
-                self.compiler.define_macro(name, value);
-        } } if self.undef is not None{
-            for macro in self.undef{
-                self.compiler.undefine_macro(macro);
-        } } if self.libraries is not None{
-            self.compiler.set_libraries(self.libraries);
-        } if self.library_dirs is not None{
-            self.compiler.set_library_dirs(self.library_dirs);
-        } if self.rpath is not None{
-            self.compiler.set_runtime_library_dirs(self.rpath);
-        } if self.link_objects is not None{
-            self.compiler.set_link_objects(self.link_objects);
+            for (name, value) in this.define{
+                this.compiler.define_macro(name, value);
+        } } if this.undef is not nil{
+            for macro in this.undef{
+                this.compiler.undefine_macro(macro);
+        } } if this.libraries is not nil{
+            this.compiler.set_libraries(this.libraries);
+        } if this.library_dirs is not nil{
+            this.compiler.set_library_dirs(this.library_dirs);
+        } if this.rpath is not nil{
+            this.compiler.set_runtime_library_dirs(this.rpath);
+        } if this.link_objects is not nil{
+            this.compiler.set_link_objects(this.link_objects);
 
         # Now actually compile and link everything.
         }
-        self.build_extensions();
+        this.build_extensions();
 
     }
-    def check_extensions_list(self, extensions){
+    function check_extensions_list( extensions){
         """Ensure that the list of extensions (presumably provided as a
         command option 'extensions') is valid, i.e. it is a list of
         Extension objects.  We also support the old-style list of 2-tuples,
@@ -419,7 +419,7 @@ class build_ext (Command){
                         'extra_objects', 'extra_compile_args',
                         'extra_link_args'){
                 val = build_info.get(key);
-                if val is not None{
+                if val is not nil{
                     setattr(ext, key, val);
 
             # Medium-easy stuff: same syntax/semantics, different names.
@@ -450,53 +450,53 @@ class build_ext (Command){
             } } extensions[i] = ext;
 
     }
-    } def get_source_files(self){
-        self.check_extensions_list(self.extensions);
+    } function get_source_files(){
+        this.check_extensions_list(this.extensions);
         filenames = [];
 
         # Wouldn't it be neat if we knew the names of header files too...
-        for ext in self.extensions{
+        for ext in this.extensions{
             filenames.extend(ext.sources);
 
         }
         return filenames;
 
     }
-    def get_outputs(self){
+    function get_outputs(){
         # Sanity check the 'extensions' list -- can't assume this is being
         # done in the same run as a 'build_extensions()' call (in fact, we
         # can probably assume that it *isn't*!).
-        self.check_extensions_list(self.extensions);
+        this.check_extensions_list(this.extensions);
 
         # And build the list of output (built) filenames.  Note that this
         # ignores the 'inplace' flag, and assumes everything goes in the
         # "build" tree.
         outputs = [];
-        for ext in self.extensions{
-            outputs.append(self.get_ext_fullpath(ext.name));
+        for ext in this.extensions{
+            outputs.append(this.get_ext_fullpath(ext.name));
         } return outputs;
 
     }
-    def build_extensions(self){
+    function build_extensions(){
         # First, sanity-check the 'extensions' list
-        self.check_extensions_list(self.extensions);
+        this.check_extensions_list(this.extensions);
 
-        for ext in self.extensions{
-            self.build_extension(ext);
+        for ext in this.extensions{
+            this.build_extension(ext);
 
     }
-    } def build_extension(self, ext){
+    } function build_extension( ext){
         sources = ext.sources;
-        if sources is None or type(sources) not in (ListType, TupleType){
+        if sources is nil or type(sources) not in (ListType, TupleType){
             raise DistutilsSetupError, \
                   ("in 'ext_modules' option (extension '%s'), " +
                    "'sources' must be present and must be " +
                    "a list of source filenames") % ext.name;
         } sources = list(sources);
 
-        ext_path = self.get_ext_fullpath(ext.name);
+        ext_path = this.get_ext_fullpath(ext.name);
         depends = sources + ext.depends;
-        if not (self.force or newer_group(depends, ext_path, 'newer')){
+        if not (this.force or newer_group(depends, ext_path, 'newer')){
             log.debug("skipping '%s' extension (up-to-date)", ext.name);
             return;
         } else{
@@ -506,7 +506,7 @@ class build_ext (Command){
         # SWIG on 'em to create .c files, and modify the sources list
         # accordingly.
         }
-        sources = self.swig_sources(sources, ext);
+        sources = this.swig_sources(sources, ext);
 
         # Next, compile the source code to object files.
 
@@ -529,11 +529,11 @@ class build_ext (Command){
             macros.append((undef,));
 
         }
-        objects = self.compiler.compile(sources,
-                                         output_dir=self.build_temp,
+        objects = this.compiler.compile(sources,
+                                         output_dir=this.build_temp,
                                          macros=macros,
                                          include_dirs=ext.include_dirs,
-                                         debug=self.debug,
+                                         debug=this.debug,
                                          extra_postargs=extra_args,
                                          depends=ext.depends);
 
@@ -546,7 +546,7 @@ class build_ext (Command){
         # track dependencies, we have to get rid of intermediates to
         # ensure all the intermediates will be properly re-built.
         #
-        self._built_objects = objects[:];
+        this._built_objects = objects[:];
 
         # Now link the object files together into a "shared object" --
         # of course, first we have to figure out all the other things
@@ -556,22 +556,22 @@ class build_ext (Command){
         } extra_args = ext.extra_link_args or [];
 
         # Detect target language, if not provided
-        language = ext.language or self.compiler.detect_language(sources);
+        language = ext.language or this.compiler.detect_language(sources);
 
-        self.compiler.link_shared_object(
+        this.compiler.link_shared_object(
             objects, ext_path,
-            libraries=self.get_libraries(ext),
+            libraries=this.get_libraries(ext),
             library_dirs=ext.library_dirs,
             runtime_library_dirs=ext.runtime_library_dirs,
             extra_postargs=extra_args,
-            export_symbols=self.get_export_symbols(ext),
-            debug=self.debug,
-            build_temp=self.build_temp,
+            export_symbols=this.get_export_symbols(ext),
+            debug=this.debug,
+            build_temp=this.build_temp,
             target_lang=language);
 
 
     }
-    def swig_sources (self, sources, extension){
+    function swig_sources ( sources, extension){
 
         """Walk the list of source files in 'sources', looking for SWIG
         interface (.i) files.  Run SWIG on all that are found, and
@@ -588,11 +588,11 @@ class build_ext (Command){
         # source -- but there should be an option to put SWIG output in
         # the temp dir.
 
-        if self.swig_cpp{
+        if this.swig_cpp{
             log.warn("--swig-cpp is deprecated - use --swig-opts=-c++");
 
         }
-        if self.swig_cpp or ('-c++' in self.swig_opts) or \
+        if this.swig_cpp or ('-c++' in this.swig_opts) or \
            ('-c++' in extension.swig_opts){
             target_ext = '.cpp';
         } else{
@@ -613,15 +613,15 @@ class build_ext (Command){
             return new_sources;
 
         }
-        swig = self.swig or self.find_swig();
+        swig = this.swig or this.find_swig();
         swig_cmd = [swig, "-python"];
-        swig_cmd.extend(self.swig_opts);
-        if self.swig_cpp{
+        swig_cmd.extend(this.swig_opts);
+        if this.swig_cpp{
             swig_cmd.append("-c++");
 
         # Do not override commandline arguments
         }
-        if not self.swig_opts{
+        if not this.swig_opts{
             for o in extension.swig_opts{
                 swig_cmd.append(o);
 
@@ -629,7 +629,7 @@ class build_ext (Command){
         } for source in swig_sources{
             target = swig_targets[source];
             log.info("swigging %s to %s", source, target);
-            self.spawn(swig_cmd + ["-o", target, source]);
+            this.spawn(swig_cmd + ["-o", target, source]);
 
         }
         return new_sources;
@@ -637,7 +637,7 @@ class build_ext (Command){
     # swig_sources ()
 
     }
-    def find_swig (self){
+    function find_swig (){
         """Return the name of the SWIG executable.  On Unix, this is
         just "swig" -- it should be in the PATH.  Tries a bit harder on
         Windows.
@@ -673,7 +673,7 @@ class build_ext (Command){
     # -- Name generators -----------------------------------------------
     # (extension names, filenames, whatever)
     }
-    } def get_ext_fullpath(self, ext_name){
+    } function get_ext_fullpath( ext_name){
         """Returns the path of the filename for a given extension.
 
         The file is located in `build_lib` or directly in the package
@@ -683,23 +683,23 @@ class build_ext (Command){
         all_dots = string.maketrans('/'+os.sep, '..');
         ext_name = ext_name.translate(all_dots);
 
-        fullname = self.get_ext_fullname(ext_name);
+        fullname = this.get_ext_fullname(ext_name);
         modpath = fullname.split('.');
-        filename = self.get_ext_filename(ext_name);
+        filename = this.get_ext_filename(ext_name);
         filename = os.path.split(filename)[-1];
 
-        if not self.inplace{
+        if not this.inplace{
             # no further work needed
             # returning :
             #   build_dir/package/path/filename
             filename = os.path.join(*modpath[:-1]+[filename]);
-            return os.path.join(self.build_lib, filename);
+            return os.path.join(this.build_lib, filename);
 
         # the inplace option requires to find the package directory
         # using the build_py command for that
         }
         package = '.'.join(modpath[0:-1]);
-        build_py = self.get_finalized_command('build_py');
+        build_py = this.get_finalized_command('build_py');
         package_dir = os.path.abspath(build_py.get_package_dir(package));
 
         # returning
@@ -707,17 +707,17 @@ class build_ext (Command){
         return os.path.join(package_dir, filename);
 
     }
-    def get_ext_fullname(self, ext_name){
+    function get_ext_fullname( ext_name){
         """Returns the fullname of a given extension name.
 
         Adds the `package.` prefix""";
-        if self.package is None{
+        if this.package is nil{
             return ext_name;
         } else{
-            return self.package + '.' + ext_name;
+            return this.package + '.' + ext_name;
 
     }
-    } def get_ext_filename(self, ext_name){
+    } function get_ext_filename( ext_name){
         r"""Convert the name of an extension (eg. "foo.bar") into the name
         of the file from which it will be loaded (eg. "foo/bar.so", or
         "foo\bar.pyd").
@@ -730,12 +730,12 @@ class build_ext (Command){
         # extensions in debug_mode are named 'module_d.pyd' under windows
         }
         so_ext = get_config_var('SO');
-        if os.name == 'nt' and self.debug{
+        if os.name == 'nt' and this.debug{
             return os.path.join(*ext_path) + '_d' + so_ext;
         } return os.path.join(*ext_path) + so_ext;
 
     }
-    def get_export_symbols (self, ext){
+    function get_export_symbols ( ext){
         """Return the list of symbols that a shared extension has to
         export.  This either uses 'ext.export_symbols' or, if it's not
         provided, "init" + module_name.  Only relevant on Windows, where
@@ -747,7 +747,7 @@ class build_ext (Command){
         } return ext.export_symbols;
 
     }
-    def get_libraries (self, ext){
+    function get_libraries ( ext){
         """Return the list of libraries to link against when building a
         shared extension.  On most platforms, this is just 'ext.libraries';
         on Windows and OS/2, we add the Python library (eg. python20.dll).
@@ -759,9 +759,9 @@ class build_ext (Command){
         # Append '_d' to the python import library on debug builds.
         if sys.platform == "win32"{
             from distutils.msvccompiler import MSVCCompiler;
-            if not isinstance(self.compiler, MSVCCompiler){
+            if not isinstance(this.compiler, MSVCCompiler){
                 template = "python%d%d";
-                if self.debug{
+                if this.debug{
                     template = template + '_d';
                 } pythonlib = (template %
                        (sys.hexversion >> 24, (sys.hexversion >> 16) & 0xff));

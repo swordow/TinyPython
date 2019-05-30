@@ -18,8 +18,8 @@ PyCF_CF2Python(CFTypeRef src) {
     CFTypeID typeid;
 
     if( src == NULL ) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     typeid = CFGetTypeID(src);
     if (typeid == CFArrayGetTypeID())

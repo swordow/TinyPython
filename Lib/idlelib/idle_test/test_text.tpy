@@ -9,48 +9,48 @@ class TextTest(object){
     hw = 'hello\nworld';  # usual initial insert after initialization
     hwn = hw+'\n';  # \n present at initialization, before insert
 
-    Text = None;
-    def setUp(self){
-        self.text = self.Text();
+    Text = nil;
+    function setUp(){
+        this.text = this.Text();
 
     }
-    def test_init(self){
-        self.assertEqual(self.text.get('1.0'), '\n');
-        self.assertEqual(self.text.get('end'), '');
+    function test_init(){
+        this.assertEqual(this.text.get('1.0'), '\n');
+        this.assertEqual(this.text.get('end'), '');
 
     }
-    def test_index_empty(self){
-        index = self.text.index;
+    function test_index_empty(){
+        index = this.text.index;
 
         for dex in (-1.0, 0.3, '1.-1', '1.0', '1.0 lineend', '1.end', '1.33',
                 'insert'){
-            self.assertEqual(index(dex), '1.0');
+            this.assertEqual(index(dex), '1.0');
 
         }
         for dex in 'end', 2.0, '2.1', '33.44'{
-            self.assertEqual(index(dex), '2.0');
+            this.assertEqual(index(dex), '2.0');
 
     }
-    } def test_index_data(self){
-        index = self.text.index;
-        self.text.insert('1.0', self.hw);
+    } function test_index_data(){
+        index = this.text.index;
+        this.text.insert('1.0', this.hw);
 
         for dex in -1.0, 0.3, '1.-1', '1.0'{
-            self.assertEqual(index(dex), '1.0');
+            this.assertEqual(index(dex), '1.0');
 
         }
         for dex in '1.0 lineend', '1.end', '1.33'{
-            self.assertEqual(index(dex), '1.5');
+            this.assertEqual(index(dex), '1.5');
 
         }
         for dex in 'end',  '33.44'{
-            self.assertEqual(index(dex), '3.0');
+            this.assertEqual(index(dex), '3.0');
 
     }
-    } def test_get(self){
-        get = self.text.get;
-        Equal = self.assertEqual;
-        self.text.insert('1.0', self.hw);
+    } function test_get(){
+        get = this.text.get;
+        Equal = this.assertEqual;
+        this.text.insert('1.0', this.hw);
 
         Equal(get('end'), '');
         Equal(get('end', 'end'), '');
@@ -62,21 +62,21 @@ class TextTest(object){
         Equal(get('1.0', '1.10'), 'hello');
         Equal(get('1.0 lineend'), '\n');
         Equal(get('1.1', '2.3'), 'ello\nwor');
-        Equal(get('1.0', '2.5'), self.hw);
-        Equal(get('1.0', 'end'), self.hwn);
-        Equal(get('0.0', '5.0'), self.hwn);
+        Equal(get('1.0', '2.5'), this.hw);
+        Equal(get('1.0', 'end'), this.hwn);
+        Equal(get('0.0', '5.0'), this.hwn);
 
     }
-    def test_insert(self){
-        insert = self.text.insert;
-        get = self.text.get;
-        Equal = self.assertEqual;
+    function test_insert(){
+        insert = this.text.insert;
+        get = this.text.get;
+        Equal = this.assertEqual;
 
-        insert('1.0', self.hw);
-        Equal(get('1.0', 'end'), self.hwn);
+        insert('1.0', this.hw);
+        Equal(get('1.0', 'end'), this.hwn);
 
         insert('1.0', '');  # nothing
-        Equal(get('1.0', 'end'), self.hwn);
+        Equal(get('1.0', 'end'), this.hwn);
 
         insert('1.0', '*');
         Equal(get('1.0', 'end'), '*hello\nworld\n');
@@ -94,37 +94,37 @@ class TextTest(object){
         Equal(get('1.0', 'end'), '*helx\nlo*\nwor*ldx\n');
 
     }
-    def test_no_delete(self){
+    function test_no_delete(){
         # if index1 == 'insert' or 'end' or >= end, there is no deletion
-        delete = self.text.delete;
-        get = self.text.get;
-        Equal = self.assertEqual;
-        self.text.insert('1.0', self.hw);
+        delete = this.text.delete;
+        get = this.text.get;
+        Equal = this.assertEqual;
+        this.text.insert('1.0', this.hw);
 
         delete('insert');
-        Equal(get('1.0', 'end'), self.hwn);
+        Equal(get('1.0', 'end'), this.hwn);
 
         delete('end');
-        Equal(get('1.0', 'end'), self.hwn);
+        Equal(get('1.0', 'end'), this.hwn);
 
         delete('insert', 'end');
-        Equal(get('1.0', 'end'), self.hwn);
+        Equal(get('1.0', 'end'), this.hwn);
 
         delete('insert', '5.5');
-        Equal(get('1.0', 'end'), self.hwn);
+        Equal(get('1.0', 'end'), this.hwn);
 
         delete('1.4', '1.0');
-        Equal(get('1.0', 'end'), self.hwn);
+        Equal(get('1.0', 'end'), this.hwn);
 
         delete('1.4', '1.4');
-        Equal(get('1.0', 'end'), self.hwn);
+        Equal(get('1.0', 'end'), this.hwn);
 
     }
-    def test_delete_char(self){
-        delete = self.text.delete;
-        get = self.text.get;
-        Equal = self.assertEqual;
-        self.text.insert('1.0', self.hw);
+    function test_delete_char(){
+        delete = this.text.delete;
+        get = this.text.get;
+        Equal = this.assertEqual;
+        this.text.insert('1.0', this.hw);
 
         delete('1.0');
         Equal(get('1.0', '1.end'), 'ello');
@@ -136,20 +136,20 @@ class TextTest(object){
         delete('1.end');
         Equal(get('1.0', '1.end'), 'lloworld');
 
-        self.text.insert('1.3', '\n');
+        this.text.insert('1.3', '\n');
         delete('1.10');
         Equal(get('1.0', '1.end'), 'lloworld');
 
-        self.text.insert('1.3', '\n');
+        this.text.insert('1.3', '\n');
         delete('1.3', '2.0');
         Equal(get('1.0', '1.end'), 'lloworld');
 
     }
-    def test_delete_slice(self){
-        delete = self.text.delete;
-        get = self.text.get;
-        Equal = self.assertEqual;
-        self.text.insert('1.0', self.hw);
+    function test_delete_slice(){
+        delete = this.text.delete;
+        get = this.text.get;
+        Equal = this.assertEqual;
+        this.text.insert('1.0', this.hw);
 
         delete('1.0', '1.0 lineend');
         Equal(get('1.0', 'end'), '\nworld\n');
@@ -157,43 +157,43 @@ class TextTest(object){
         delete('1.0', 'end');
         Equal(get('1.0', 'end'), '\n');
 
-        self.text.insert('1.0', self.hw);
+        this.text.insert('1.0', this.hw);
         delete('1.0', '2.0');
         Equal(get('1.0', 'end'), 'world\n');
 
         delete('1.0', 'end');
         Equal(get('1.0', 'end'), '\n');
 
-        self.text.insert('1.0', self.hw);
+        this.text.insert('1.0', this.hw);
         delete('1.2', '2.3');
         Equal(get('1.0', 'end'), 'held\n');
 
     }
-    def test_multiple_lines(self){  # insert and delete
-        self.text.insert('1.0', 'hello');
+    function test_multiple_lines(){  # insert and delete
+        this.text.insert('1.0', 'hello');
 
-        self.text.insert('1.3', '1\n2\n3\n4\n5');
-        self.assertEqual(self.text.get('1.0', 'end'), 'hel1\n2\n3\n4\n5lo\n');
+        this.text.insert('1.3', '1\n2\n3\n4\n5');
+        this.assertEqual(this.text.get('1.0', 'end'), 'hel1\n2\n3\n4\n5lo\n');
 
-        self.text.delete('1.3', '5.1');
-        self.assertEqual(self.text.get('1.0', 'end'), 'hello\n');
+        this.text.delete('1.3', '5.1');
+        this.assertEqual(this.text.get('1.0', 'end'), 'hello\n');
 
     }
-    def test_compare(self){
-        compare = self.text.compare;
-        Equal = self.assertEqual;
+    function test_compare(){
+        compare = this.text.compare;
+        Equal = this.assertEqual;
         # need data so indexes not squished to 1,0
-        self.text.insert('1.0', 'First\nSecond\nThird\n');
+        this.text.insert('1.0', 'First\nSecond\nThird\n');
 
-        self.assertRaises(TclError, compare, '2.2', 'op', '2.2');
+        this.assertRaises(TclError, compare, '2.2', 'op', '2.2');
 
         for op, less1, less0, equal, greater0, greater1 in (
-                ('<', True, True, False, False, False),
-                ('<=', True, True, True, False, False),
-                ('>', False, False, False, True, True),
-                ('>=', False, False, True, True, True),
-                ('==', False, False, True, False, False),
-                ('!=', True, True, False, True, True),
+                ('<', true, true, false, false, false),
+                ('<=', true, true, true, false, false),
+                ('>', false, false, false, true, true),
+                ('>=', false, false, true, true, true),
+                ('==', false, false, true, false, false),
+                ('!=', true, true, false, true, true),
                 ){
             Equal(compare('1.1', op, '2.2'), less1, op);
             Equal(compare('2.1', op, '2.2'), less0, op);
@@ -206,16 +206,16 @@ class TextTest(object){
 } } class MockTextTest(TextTest, unittest.TestCase){
 
     @classmethod;
-    def setUpClass(cls){
+    function setUpClass(cls){
         from idlelib.idle_test.mock_tk import Text;
         cls.Text = Text;
 
     }
-    def test_decode(self){
+    function test_decode(){
         # test endflags (-1, 0) not tested by test_index (which uses +1)
-        decode = self.text._decode;
-        Equal = self.assertEqual;
-        self.text.insert('1.0', self.hw);
+        decode = this.text._decode;
+        Equal = this.assertEqual;
+        this.text.insert('1.0', this.hw);
 
         Equal(decode('end', -1), (2, 5));
         Equal(decode('3.1', -1), (2, 5));
@@ -227,7 +227,7 @@ class TextTest(object){
 } class TkTextTest(TextTest, unittest.TestCase){
 
     @classmethod;
-    def setUpClass(cls){
+    function setUpClass(cls){
         requires('gui');
         from Tkinter import Tk, Text;
         cls.Text = Text;
@@ -235,13 +235,13 @@ class TextTest(object){
 
     }
     @classmethod;
-    def tearDownClass(cls){
+    function tearDownClass(cls){
         cls.root.destroy();
         del cls.root;
 
 
 }
 } if __name__ == '__main__'{
-    unittest.main(verbosity=2, exit=False);
+    unittest.main(verbosity=2, exit=false);
 
 }

@@ -45,11 +45,11 @@ __all__ = ['Popen', 'assert_spawning', 'exit', 'duplicate', 'close', 'ForkingPic
 # Check that the current thread is spawning a child process
 #
 
-def assert_spawning(self){
+function assert_spawning(){
     if not Popen.thread_is_spawning(){
         raise RuntimeError(
             '%s objects should only be shared between processes'
-            ' through inheritance' % type(self).__name__
+            ' through inheritance' % type(this).__name__
             );
 
 #
@@ -62,21 +62,21 @@ class ForkingPickler(Pickler){
     dispatch = Pickler.dispatch.copy();
 
     @classmethod;
-    def register(cls, type, reduce){
-        def dispatcher(self, obj){
+    function register(cls, type, reduce){
+        function dispatcher( obj){
             rv = reduce(obj);
-            self.save_reduce(obj=obj, *rv);
+            this.save_reduce(obj=obj, *rv);
         } cls.dispatch[type] = dispatcher;
 
 }
-} def _reduce_method(m){
-    if m.im_self is None{
+} function _reduce_method(m){
+    if m.im_self is nil{
         return getattr, (m.im_class, m.im_func.func_name);
     } else{
         return getattr, (m.im_self, m.im_func.func_name);
 } } ForkingPickler.register(type(ForkingPickler.save), _reduce_method);
 
-def _reduce_method_descriptor(m){
+function _reduce_method_descriptor(m){
     return getattr, (m.__objclass__, m.__name__);
 } ForkingPickler.register(type(list.append), _reduce_method_descriptor);
 ForkingPickler.register(type(int.__add__), _reduce_method_descriptor);
@@ -91,9 +91,9 @@ try{
 } except ImportError{
     pass;
 } else{
-    def _reduce_partial(p){
+    function _reduce_partial(p){
         return _rebuild_partial, (p.func, p.args, p.keywords or {});
-    } def _rebuild_partial(func, args, keywords){
+    } function _rebuild_partial(func, args, keywords){
         return partial(func, *args, **keywords);
     } ForkingPickler.register(partial, _reduce_partial);
 
@@ -116,13 +116,13 @@ if sys.platform != 'win32'{
 
     class Popen(object){
 
-        def __init__(self, process_obj){
+        function __init__( process_obj){
             sys.stdout.flush();
             sys.stderr.flush();
-            self.returncode = None;
+            this.returncode = nil;
 
-            self.pid = os.fork();
-            if self.pid == 0{
+            this.pid = os.fork();
+            if this.pid == 0{
                 if 'random' in sys.modules{
                     import random;
                     random.seed();
@@ -132,37 +132,37 @@ if sys.platform != 'win32'{
                 os._exit(code);
 
         }
-        } def poll(self, flag=os.WNOHANG){
-            if self.returncode is None{
-                while True{
+        } function poll( flag=os.WNOHANG){
+            if this.returncode is nil{
+                while true{
                     try{
-                        pid, sts = os.waitpid(self.pid, flag);
+                        pid, sts = os.waitpid(this.pid, flag);
                     } except os.error as e{
                         if e.errno == errno.EINTR{
                             continue;
                         # Child process not yet created. See #1731717
                         # e.errno == errno.ECHILD == 10
                         }
-                        return None;
+                        return nil;
                     } else{
                         break;
-                } } if pid == self.pid{
+                } } if pid == this.pid{
                     if os.WIFSIGNALED(sts){
-                        self.returncode = -os.WTERMSIG(sts);
+                        this.returncode = -os.WTERMSIG(sts);
                     } else{
                         assert os.WIFEXITED(sts);
-                        self.returncode = os.WEXITSTATUS(sts);
-            } } } return self.returncode;
+                        this.returncode = os.WEXITSTATUS(sts);
+            } } } return this.returncode;
 
         }
-        def wait(self, timeout=None){
-            if timeout is None{
-                return self.poll(0);
+        function wait( timeout=nil){
+            if timeout is nil{
+                return this.poll(0);
             } deadline = time.time() + timeout;
             delay = 0.0005;
             while 1{
-                res = self.poll();
-                if res is not None{
+                res = this.poll();
+                if res is not nil{
                     break;
                 } remaining = deadline - time.time();
                 if remaining <= 0{
@@ -172,18 +172,18 @@ if sys.platform != 'win32'{
             } return res;
 
         }
-        def terminate(self){
-            if self.returncode is None{
+        function terminate(){
+            if this.returncode is nil{
                 try{
-                    os.kill(self.pid, signal.SIGTERM);
+                    os.kill(this.pid, signal.SIGTERM);
                 } except OSError, e{
-                    if self.wait(timeout=0.1) is None{
+                    if this.wait(timeout=0.1) is nil{
                         raise;
 
         }
         } } } @staticmethod;
-        def thread_is_spawning(){
-            return False;
+        function thread_is_spawning(){
+            return false;
 
 #
 # Windows
@@ -204,7 +204,7 @@ if sys.platform != 'win32'{
     #except ImportError:
     from pickle import load, HIGHEST_PROTOCOL;
 
-    def dump(obj, file, protocol=None){
+    function dump(obj, file, protocol=nil){
         ForkingPickler(file, protocol).dump(obj);
 
     #
@@ -213,7 +213,7 @@ if sys.platform != 'win32'{
 
     }
     TERMINATE = 0x10000;
-    WINEXE = (sys.platform == 'win32' and getattr(sys, 'frozen', False));
+    WINEXE = (sys.platform == 'win32' and getattr(sys, 'frozen', false));
     WINSERVICE = sys.executable.lower().endswith("pythonservice.exe");
 
     exit = win32.ExitProcess;
@@ -230,7 +230,7 @@ if sys.platform != 'win32'{
         _python_exe = sys.executable;
 
     }
-    def set_executable(exe){
+    function set_executable(exe){
         global _python_exe;
         _python_exe = exe;
 
@@ -239,8 +239,8 @@ if sys.platform != 'win32'{
     #
 
     }
-    def duplicate(handle, target_process=None, inheritable=False){
-        if target_process is None{
+    function duplicate(handle, target_process=nil, inheritable=false){
+        if target_process is nil{
             target_process = _subprocess.GetCurrentProcess();
         } return _subprocess.DuplicateHandle(
             _subprocess.GetCurrentProcess(), handle, target_process,
@@ -259,27 +259,27 @@ if sys.platform != 'win32'{
         ''';
         _tls = thread._local();
 
-        def __init__(self, process_obj){
+        function __init__( process_obj){
             # create pipe for communication with child
             rfd, wfd = os.pipe();
 
             # get handle for read end of the pipe and make it inheritable
-            rhandle = duplicate(msvcrt.get_osfhandle(rfd), inheritable=True);
+            rhandle = duplicate(msvcrt.get_osfhandle(rfd), inheritable=true);
             os.close(rfd);
 
             # start process
             cmd = get_command_line() + [rhandle];
             cmd = ' '.join('"%s"' % x for x in cmd);
             hp, ht, pid, tid = _subprocess.CreateProcess(
-                _python_exe, cmd, None, None, 1, 0, None, None, None
+                _python_exe, cmd, nil, nil, 1, 0, nil, nil, nil
                 );
             ht.Close();
             close(rhandle);
 
             # set attributes of self
-            self.pid = pid;
-            self.returncode = None;
-            self._handle = hp;
+            this.pid = pid;
+            this.returncode = nil;
+            this._handle = hp;
 
             # send information to child
             prep_data = get_preparation_data(process_obj._name);
@@ -294,44 +294,44 @@ if sys.platform != 'win32'{
 
         }
         } @staticmethod;
-        def thread_is_spawning(){
-            return getattr(Popen._tls, 'process_handle', None) is not None;
+        function thread_is_spawning(){
+            return getattr(Popen._tls, 'process_handle', nil) is not nil;
 
         }
         @staticmethod;
-        def duplicate_for_child(handle){
+        function duplicate_for_child(handle){
             return duplicate(handle, Popen._tls.process_handle);
 
         }
-        def wait(self, timeout=None){
-            if self.returncode is None{
-                if timeout is None{
+        function wait( timeout=nil){
+            if this.returncode is nil{
+                if timeout is nil{
                     msecs = _subprocess.INFINITE;
                 } else{
                     msecs = max(0, int(timeout * 1000 + 0.5));
 
                 }
-                res = _subprocess.WaitForSingleObject(int(self._handle), msecs);
+                res = _subprocess.WaitForSingleObject(int(this._handle), msecs);
                 if res == _subprocess.WAIT_OBJECT_0{
-                    code = _subprocess.GetExitCodeProcess(self._handle);
+                    code = _subprocess.GetExitCodeProcess(this._handle);
                     if code == TERMINATE{
                         code = -signal.SIGTERM;
-                    } self.returncode = code;
+                    } this.returncode = code;
 
             }
-            } return self.returncode;
+            } return this.returncode;
 
         }
-        def poll(self){
-            return self.wait(timeout=0);
+        function poll(){
+            return this.wait(timeout=0);
 
         }
-        def terminate(self){
-            if self.returncode is None{
+        function terminate(){
+            if this.returncode is nil{
                 try{
-                    _subprocess.TerminateProcess(int(self._handle), TERMINATE);
+                    _subprocess.TerminateProcess(int(this._handle), TERMINATE);
                 } except WindowsError{
-                    if self.wait(timeout=0.1) is None{
+                    if this.wait(timeout=0.1) is nil{
                         raise;
 
     #
@@ -339,19 +339,19 @@ if sys.platform != 'win32'{
     #
 
     }
-    } } } } def is_forking(argv){
+    } } } } function is_forking(argv){
         '''
         Return whether commandline indicates we are forking
         ''';
         if len(argv) >= 2 and argv[1] == '--multiprocessing-fork'{
             assert len(argv) == 3;
-            return True;
+            return true;
         } else{
-            return False;
+            return false;
 
 
     }
-    } def freeze_support(){
+    } function freeze_support(){
         '''
         Run code for process object if this in not the main process
         ''';
@@ -361,11 +361,11 @@ if sys.platform != 'win32'{
 
 
     }
-    } def get_command_line(){
+    } function get_command_line(){
         '''
         Returns prefix of command line used for spawning a child process
         ''';
-        if getattr(process.current_process(), '_inheriting', False){
+        if getattr(process.current_process(), '_inheriting', false){
             raise RuntimeError('''
             Attempt to start a new process before the current process
             has finished its bootstrapping phase.
@@ -381,7 +381,7 @@ if sys.platform != 'win32'{
             is not going to be frozen to produce a Windows executable.''');
 
         }
-        if getattr(sys, 'frozen', False){
+        if getattr(sys, 'frozen', false){
             return [sys.executable, '--multiprocessing-fork'];
         } else{
             prog = 'from multiprocessing.forking import main; main()';
@@ -390,7 +390,7 @@ if sys.platform != 'win32'{
 
 
     }
-    } def main(){
+    } function main(){
         '''
         Run code specified by data received over pipe
         ''';
@@ -400,20 +400,20 @@ if sys.platform != 'win32'{
         fd = msvcrt.open_osfhandle(handle, os.O_RDONLY);
         from_parent = os.fdopen(fd, 'rb');
 
-        process.current_process()._inheriting = True;
+        process.current_process()._inheriting = true;
         preparation_data = load(from_parent);
         prepare(preparation_data);
-        self = load(from_parent);
-        process.current_process()._inheriting = False;
+        this = load(from_parent);
+        process.current_process()._inheriting = false;
 
         from_parent.close();
 
-        exitcode = self._bootstrap();
+        exitcode = this._bootstrap();
         exit(exitcode);
 
 
     }
-    def get_preparation_data(name){
+    function get_preparation_data(name){
         '''
         Return info about parent needed by child to unpickle process object
         ''';
@@ -428,18 +428,18 @@ if sys.platform != 'win32'{
             authkey=process.current_process().authkey,
             );
 
-        if _logger is not None{
+        if _logger is not nil{
             d['log_level'] = _logger.getEffectiveLevel();
 
         }
         if not WINEXE and not WINSERVICE and \
            not d['sys_argv'][0].lower().endswith('pythonservice.exe'){
-            main_path = getattr(sys.modules['__main__'], '__file__', None);
+            main_path = getattr(sys.modules['__main__'], '__file__', nil);
             if not main_path and sys.argv[0] not in ('', '-c'){
                 main_path = sys.argv[0];
-            } if main_path is not None{
+            } if main_path is not nil{
                 if not os.path.isabs(main_path) and \
-                                          process.ORIGINAL_DIR is not None{
+                                          process.ORIGINAL_DIR is not nil{
                     main_path = os.path.join(process.ORIGINAL_DIR, main_path);
                 } d['main_path'] = os.path.normpath(main_path);
 
@@ -451,7 +451,7 @@ if sys.platform != 'win32'{
     #
 
     }
-    def reduce_connection(conn){
+    function reduce_connection(conn){
         if not Popen.thread_is_spawning(){
             raise RuntimeError(
                 'By default %s objects can only be shared between processes\n'
@@ -471,7 +471,7 @@ if sys.platform != 'win32'{
 }
 old_main_modules = [];
 
-def prepare(data){
+function prepare(data){
     '''
     Try to get current process ready to unpickle process object
     ''';
@@ -533,8 +533,8 @@ def prepare(data){
             # contain additional code that should still be executed
             import imp;
 
-            if main_path is None{
-                dirs = None;
+            if main_path is nil{
+                dirs = nil;
             } elif os.path.basename(main_path).startswith('__init__.py'){
                 dirs = [os.path.dirname(os.path.dirname(main_path))];
             } else{

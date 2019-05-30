@@ -44,7 +44,7 @@ import __builtin__;
 
 _builtin_open = globals().get('_builtin_open', __builtin__.open);
 
-def _open_with_typer(*args){
+function _open_with_typer(*args){
     file = _builtin_open(*args);
     filename = args[0];
     mode = 'r';

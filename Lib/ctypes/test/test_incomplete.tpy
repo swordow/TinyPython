@@ -8,7 +8,7 @@ from ctypes import *;
 
 class MyTestCase(unittest.TestCase){
 
-    def test_incomplete_example(self){
+    function test_incomplete_example(){
         lpcell = POINTER("cell");
         class cell(Structure){
             _fields_ = [("name", c_char_p),
@@ -31,7 +31,7 @@ class MyTestCase(unittest.TestCase){
         for i in range(8){
             result.append(p.name);
             p = p.next[0];
-        } self.assertEqual(result, ["foo", "bar"] * 4);
+        } this.assertEqual(result, ["foo", "bar"] * 4);
 
         # to not leak references, we must clean _pointer_type_cache
         from ctypes import _pointer_type_cache;

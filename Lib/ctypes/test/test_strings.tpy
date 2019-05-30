@@ -4,172 +4,172 @@ from ctypes.test import need_symbol;
 from test import test_support;
 
 class StringArrayTestCase(unittest.TestCase){
-    def test(self){
+    function test(){
         BUF = c_char * 4;
 
         buf = BUF("a", "b", "c");
-        self.assertEqual(buf.value, "abc");
-        self.assertEqual(buf.raw, "abc\000");
+        this.assertEqual(buf.value, "abc");
+        this.assertEqual(buf.raw, "abc\000");
 
         buf.value = "ABCD";
-        self.assertEqual(buf.value, "ABCD");
-        self.assertEqual(buf.raw, "ABCD");
+        this.assertEqual(buf.value, "ABCD");
+        this.assertEqual(buf.raw, "ABCD");
 
         buf.value = "x";
-        self.assertEqual(buf.value, "x");
-        self.assertEqual(buf.raw, "x\000CD");
+        this.assertEqual(buf.value, "x");
+        this.assertEqual(buf.raw, "x\000CD");
 
         buf[1] = "Z";
-        self.assertEqual(buf.value, "xZCD");
-        self.assertEqual(buf.raw, "xZCD");
+        this.assertEqual(buf.value, "xZCD");
+        this.assertEqual(buf.raw, "xZCD");
 
-        self.assertRaises(ValueError, setattr, buf, "value", "aaaaaaaa");
-        self.assertRaises(TypeError, setattr, buf, "value", 42);
+        this.assertRaises(ValueError, setattr, buf, "value", "aaaaaaaa");
+        this.assertRaises(TypeError, setattr, buf, "value", 42);
 
     }
-    def test_c_buffer_value(self, memoryview=memoryview){
+    function test_c_buffer_value( memoryview=memoryview){
         buf = c_buffer(32);
 
         buf.value = "Hello, World";
-        self.assertEqual(buf.value, "Hello, World");
+        this.assertEqual(buf.value, "Hello, World");
 
-        self.assertRaises(TypeError, setattr, buf, "value", memoryview("Hello, World"));
-        self.assertRaises(TypeError, setattr, buf, "value", memoryview("abc"));
-        self.assertRaises(ValueError, setattr, buf, "raw", memoryview("x" * 100));
+        this.assertRaises(TypeError, setattr, buf, "value", memoryview("Hello, World"));
+        this.assertRaises(TypeError, setattr, buf, "value", memoryview("abc"));
+        this.assertRaises(ValueError, setattr, buf, "raw", memoryview("x" * 100));
 
     }
-    def test_c_buffer_raw(self, memoryview=memoryview){
+    function test_c_buffer_raw( memoryview=memoryview){
         buf = c_buffer(32);
 
         buf.raw = memoryview("Hello, World");
-        self.assertEqual(buf.value, "Hello, World");
-        self.assertRaises(TypeError, setattr, buf, "value", memoryview("abc"));
-        self.assertRaises(ValueError, setattr, buf, "raw", memoryview("x" * 100));
+        this.assertEqual(buf.value, "Hello, World");
+        this.assertRaises(TypeError, setattr, buf, "value", memoryview("abc"));
+        this.assertRaises(ValueError, setattr, buf, "raw", memoryview("x" * 100));
 
     }
-    def test_c_buffer_deprecated(self){
+    function test_c_buffer_deprecated(){
         # Compatibility with 2.x
         with test_support.check_py3k_warnings(){
-            self.test_c_buffer_value(buffer);
-            self.test_c_buffer_raw(buffer);
+            this.test_c_buffer_value(buffer);
+            this.test_c_buffer_raw(buffer);
 
     }
-    } def test_param_1(self){
+    } function test_param_1(){
         BUF = c_char * 4;
         buf = BUF();
 ##        print c_char_p.from_param(buf)
 
     }
-    def test_param_2(self){
+    function test_param_2(){
         BUF = c_char * 4;
         buf = BUF();
 ##        print BUF.from_param(c_char_p("python"))
 ##        print BUF.from_param(BUF(*"pyth"))
 
     }
-    def test_del_segfault(self){
+    function test_del_segfault(){
         BUF = c_char * 4;
         buf = BUF();
-        with self.assertRaises(AttributeError){
+        with this.assertRaises(AttributeError){
             del buf.raw;
 
 
 }
 } } @need_symbol('c_wchar');
 class WStringArrayTestCase(unittest.TestCase){
-    def test(self){
+    function test(){
         BUF = c_wchar * 4;
 
         buf = BUF(u"a", u"b", u"c");
-        self.assertEqual(buf.value, u"abc");
+        this.assertEqual(buf.value, u"abc");
 
         buf.value = u"ABCD";
-        self.assertEqual(buf.value, u"ABCD");
+        this.assertEqual(buf.value, u"ABCD");
 
         buf.value = u"x";
-        self.assertEqual(buf.value, u"x");
+        this.assertEqual(buf.value, u"x");
 
         buf[1] = u"Z";
-        self.assertEqual(buf.value, u"xZCD");
+        this.assertEqual(buf.value, u"xZCD");
 
 }
 } class StringTestCase(unittest.TestCase){
     @unittest.skip('test disabled');
-    def test_basic_strings(self){
+    function test_basic_strings(){
         cs = c_string("abcdef");
 
         # Cannot call len on a c_string any longer
-        self.assertRaises(TypeError, len, cs);
-        self.assertEqual(sizeof(cs), 7);
+        this.assertRaises(TypeError, len, cs);
+        this.assertEqual(sizeof(cs), 7);
 
         # The value property is the string up to the first terminating NUL.
-        self.assertEqual(cs.value, "abcdef");
-        self.assertEqual(c_string("abc\000def").value, "abc");
+        this.assertEqual(cs.value, "abcdef");
+        this.assertEqual(c_string("abc\000def").value, "abc");
 
         # The raw property is the total buffer contents:
-        self.assertEqual(cs.raw, "abcdef\000");
-        self.assertEqual(c_string("abc\000def").raw, "abc\000def\000");
+        this.assertEqual(cs.raw, "abcdef\000");
+        this.assertEqual(c_string("abc\000def").raw, "abc\000def\000");
 
         # We can change the value:
         cs.value = "ab";
-        self.assertEqual(cs.value, "ab");
-        self.assertEqual(cs.raw, "ab\000\000\000\000\000");
+        this.assertEqual(cs.value, "ab");
+        this.assertEqual(cs.raw, "ab\000\000\000\000\000");
 
         cs.raw = "XY";
-        self.assertEqual(cs.value, "XY");
-        self.assertEqual(cs.raw, "XY\000\000\000\000\000");
+        this.assertEqual(cs.value, "XY");
+        this.assertEqual(cs.raw, "XY\000\000\000\000\000");
 
-        self.assertRaises(TypeError, c_string, u"123");
+        this.assertRaises(TypeError, c_string, u"123");
 
     }
     @unittest.skip('test disabled');
-    def test_sized_strings(self){
+    function test_sized_strings(){
 
         # New in releases later than 0.4.0:
-        self.assertRaises(TypeError, c_string, None);
+        this.assertRaises(TypeError, c_string, nil);
 
         # New in releases later than 0.4.0:
         # c_string(number) returns an empty string of size number
-        self.assertEqual(len(c_string(32).raw), 32);
-        self.assertRaises(ValueError, c_string, -1);
-        self.assertRaises(ValueError, c_string, 0);
+        this.assertEqual(len(c_string(32).raw), 32);
+        this.assertRaises(ValueError, c_string, -1);
+        this.assertRaises(ValueError, c_string, 0);
 
         # These tests fail, because it is no longer initialized
 ##        self.assertEqual(c_string(2).value, "")
 ##        self.assertEqual(c_string(2).raw, "\000\000")
-        self.assertEqual(c_string(2).raw[-1], "\000");
-        self.assertEqual(len(c_string(2).raw), 2);
+        this.assertEqual(c_string(2).raw[-1], "\000");
+        this.assertEqual(len(c_string(2).raw), 2);
 
     }
     @unittest.skip('test disabled');
-    def test_initialized_strings(self){
+    function test_initialized_strings(){
 
-        self.assertEqual(c_string("ab", 4).raw[:2], "ab");
-        self.assertEqual(c_string("ab", 4).raw[:2:], "ab");
-        self.assertEqual(c_string("ab", 4).raw[:2:-1], "ba");
-        self.assertEqual(c_string("ab", 4).raw[:2:2], "a");
-        self.assertEqual(c_string("ab", 4).raw[-1], "\000");
-        self.assertEqual(c_string("ab", 2).raw, "a\000");
+        this.assertEqual(c_string("ab", 4).raw[:2], "ab");
+        this.assertEqual(c_string("ab", 4).raw[:2:], "ab");
+        this.assertEqual(c_string("ab", 4).raw[:2:-1], "ba");
+        this.assertEqual(c_string("ab", 4).raw[:2:2], "a");
+        this.assertEqual(c_string("ab", 4).raw[-1], "\000");
+        this.assertEqual(c_string("ab", 2).raw, "a\000");
 
     }
     @unittest.skip('test disabled');
-    def test_toolong(self){
+    function test_toolong(){
         cs = c_string("abcdef");
         # Much too long string:
-        self.assertRaises(ValueError, setattr, cs, "value", "123456789012345");
+        this.assertRaises(ValueError, setattr, cs, "value", "123456789012345");
 
         # One char too long values:
-        self.assertRaises(ValueError, setattr, cs, "value", "1234567");
+        this.assertRaises(ValueError, setattr, cs, "value", "1234567");
 
     }
     @unittest.skip('test disabled');
-    def test_perf(self){
+    function test_perf(){
         check_perf();
 
 }
 } @need_symbol('c_wchar');
 class WStringTestCase(unittest.TestCase){
-    def test_wchar(self){
+    function test_wchar(){
         c_wchar(u"x");
         repr(byref(c_wchar(u"x")));
         c_wchar("x");
@@ -177,45 +177,45 @@ class WStringTestCase(unittest.TestCase){
 
     }
     @unittest.skip('test disabled');
-    def test_basic_wstrings(self){
+    function test_basic_wstrings(){
         cs = c_wstring(u"abcdef");
 
         # XXX This behaviour is about to change:
         # len returns the size of the internal buffer in bytes.
         # This includes the terminating NUL character.
-        self.assertEqual(sizeof(cs), 14);
+        this.assertEqual(sizeof(cs), 14);
 
         # The value property is the string up to the first terminating NUL.
-        self.assertEqual(cs.value, u"abcdef");
-        self.assertEqual(c_wstring(u"abc\000def").value, u"abc");
+        this.assertEqual(cs.value, u"abcdef");
+        this.assertEqual(c_wstring(u"abc\000def").value, u"abc");
 
-        self.assertEqual(c_wstring(u"abc\000def").value, u"abc");
+        this.assertEqual(c_wstring(u"abc\000def").value, u"abc");
 
         # The raw property is the total buffer contents:
-        self.assertEqual(cs.raw, u"abcdef\000");
-        self.assertEqual(c_wstring(u"abc\000def").raw, u"abc\000def\000");
+        this.assertEqual(cs.raw, u"abcdef\000");
+        this.assertEqual(c_wstring(u"abc\000def").raw, u"abc\000def\000");
 
         # We can change the value:
         cs.value = u"ab";
-        self.assertEqual(cs.value, u"ab");
-        self.assertEqual(cs.raw, u"ab\000\000\000\000\000");
+        this.assertEqual(cs.value, u"ab");
+        this.assertEqual(cs.raw, u"ab\000\000\000\000\000");
 
-        self.assertRaises(TypeError, c_wstring, "123");
-        self.assertRaises(ValueError, c_wstring, 0);
+        this.assertRaises(TypeError, c_wstring, "123");
+        this.assertRaises(ValueError, c_wstring, 0);
 
     }
     @unittest.skip('test disabled');
-    def test_toolong(self){
+    function test_toolong(){
         cs = c_wstring(u"abcdef");
         # Much too long string:
-        self.assertRaises(ValueError, setattr, cs, "value", u"123456789012345");
+        this.assertRaises(ValueError, setattr, cs, "value", u"123456789012345");
 
         # One char too long values:
-        self.assertRaises(ValueError, setattr, cs, "value", u"1234567");
+        this.assertRaises(ValueError, setattr, cs, "value", u"1234567");
 
 
 }
-} def run_test(rep, msg, func, arg){
+} function run_test(rep, msg, func, arg){
     items = range(rep);
     from time import clock;
     start = clock();
@@ -225,12 +225,12 @@ class WStringTestCase(unittest.TestCase){
     print "%20s: %.2f us" % (msg, ((stop-start)*1e6/5/rep));
 
 }
-def check_perf(){
+function check_perf(){
     # Construct 5 objects
 
     REP = 200000;
 
-    run_test(REP, "c_string(None)", c_string, None);
+    run_test(REP, "c_string(None)", c_string, nil);
     run_test(REP, "c_string('abc')", c_string, 'abc');
 
 # Python 2.3 -OO, win2k, P4 700 MHz:

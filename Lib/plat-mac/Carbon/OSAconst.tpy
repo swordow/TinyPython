@@ -1,6 +1,6 @@
 # Generated from 'OSA.h'
 
-def FOUR_CHAR_CODE(x){ return x;
+function FOUR_CHAR_CODE(x){ return x;}
 from Carbon.AppleEvents import *;
 kAEUseStandardDispatch = -1;
 kOSAComponentType = FOUR_CHAR_CODE('osa ');

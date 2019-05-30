@@ -1479,7 +1479,7 @@ bytearray_translate(PyByteArrayObject *self, PyObject *args)
                            &tableobj, &delobj))
           return NULL;
 
-    if (tableobj == Py_None) {
+    if (tableobj == Py_Nil) {
         table = NULL;
         tableobj = NULL;
     } else if (_getbuffer(tableobj, &vtable) < 0) {
@@ -2086,7 +2086,7 @@ bytearray_split(PyByteArrayObject *self, PyObject *args)
     Py_ssize_t len = PyByteArray_GET_SIZE(self), n;
     Py_ssize_t maxsplit = -1;
     const char *s = PyByteArray_AS_STRING(self), *sub;
-    PyObject *list, *subobj = Py_None;
+    PyObject *list, *subobj = Py_Nil;
     Py_buffer vsub;
 
     if (!PyArg_ParseTuple(args, "|On:split", &subobj, &maxsplit))
@@ -2094,7 +2094,7 @@ bytearray_split(PyByteArrayObject *self, PyObject *args)
     if (maxsplit < 0)
         maxsplit = PY_SSIZE_T_MAX;
 
-    if (subobj == Py_None)
+    if (subobj == Py_Nil)
         return stringlib_split_whitespace((PyObject*) self, s, len, maxsplit);
 
     if (_getbuffer(subobj, &vsub) < 0)
@@ -2179,7 +2179,7 @@ bytearray_rsplit(PyByteArrayObject *self, PyObject *args)
     Py_ssize_t len = PyByteArray_GET_SIZE(self), n;
     Py_ssize_t maxsplit = -1;
     const char *s = PyByteArray_AS_STRING(self), *sub;
-    PyObject *list, *subobj = Py_None;
+    PyObject *list, *subobj = Py_Nil;
     Py_buffer vsub;
 
     if (!PyArg_ParseTuple(args, "|On:rsplit", &subobj, &maxsplit))
@@ -2187,7 +2187,7 @@ bytearray_rsplit(PyByteArrayObject *self, PyObject *args)
     if (maxsplit < 0)
         maxsplit = PY_SSIZE_T_MAX;
 
-    if (subobj == Py_None)
+    if (subobj == Py_Nil)
         return stringlib_rsplit_whitespace((PyObject*) self, s, len, maxsplit);
 
     if (_getbuffer(subobj, &vsub) < 0)
@@ -2221,7 +2221,7 @@ bytearray_reverse(PyByteArrayObject *self, PyObject *unused)
         *tail-- = swap;
     }
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(insert__doc__,
@@ -2258,7 +2258,7 @@ bytearray_insert(PyByteArrayObject *self, PyObject *args)
     memmove(self->ob_bytes + where + 1, self->ob_bytes + where, n - where);
     self->ob_bytes[where] = ival;
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(append__doc__,
@@ -2283,7 +2283,7 @@ bytearray_append(PyByteArrayObject *self, PyObject *arg)
 
     self->ob_bytes[n] = value;
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(extend__doc__,
@@ -2304,7 +2304,7 @@ bytearray_extend(PyByteArrayObject *self, PyObject *arg)
         if (bytearray_setslice(self, Py_SIZE(self), Py_SIZE(self), arg) == -1)
             return NULL;
 
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     }
 
     it = PyObject_GetIter(arg);
@@ -2371,7 +2371,7 @@ bytearray_extend(PyByteArrayObject *self, PyObject *arg)
     }
     Py_DECREF(bytearray_obj);
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(pop__doc__,
@@ -2436,7 +2436,7 @@ bytearray_remove(PyByteArrayObject *self, PyObject *arg)
     if (PyByteArray_Resize((PyObject *)self, n - 1) < 0)
         return NULL;
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 /* XXX These two helpers could be optimized if argsize == 1 */
@@ -2471,11 +2471,11 @@ bytearray_strip(PyByteArrayObject *self, PyObject *args)
 {
     Py_ssize_t left, right, mysize, argsize;
     void *myptr, *argptr;
-    PyObject *arg = Py_None;
+    PyObject *arg = Py_Nil;
     Py_buffer varg;
     if (!PyArg_ParseTuple(args, "|O:strip", &arg))
         return NULL;
-    if (arg == Py_None) {
+    if (arg == Py_Nil) {
         argptr = "\t\n\r\f\v ";
         argsize = 6;
     }
@@ -2492,7 +2492,7 @@ bytearray_strip(PyByteArrayObject *self, PyObject *args)
         right = left;
     else
         right = rstrip_helper(myptr, mysize, argptr, argsize);
-    if (arg != Py_None)
+    if (arg != Py_Nil)
         PyBuffer_Release(&varg);
     return PyByteArray_FromStringAndSize(self->ob_bytes + left, right - left);
 }
@@ -2507,11 +2507,11 @@ bytearray_lstrip(PyByteArrayObject *self, PyObject *args)
 {
     Py_ssize_t left, right, mysize, argsize;
     void *myptr, *argptr;
-    PyObject *arg = Py_None;
+    PyObject *arg = Py_Nil;
     Py_buffer varg;
     if (!PyArg_ParseTuple(args, "|O:lstrip", &arg))
         return NULL;
-    if (arg == Py_None) {
+    if (arg == Py_Nil) {
         argptr = "\t\n\r\f\v ";
         argsize = 6;
     }
@@ -2525,7 +2525,7 @@ bytearray_lstrip(PyByteArrayObject *self, PyObject *args)
     mysize = Py_SIZE(self);
     left = lstrip_helper(myptr, mysize, argptr, argsize);
     right = mysize;
-    if (arg != Py_None)
+    if (arg != Py_Nil)
         PyBuffer_Release(&varg);
     return PyByteArray_FromStringAndSize(self->ob_bytes + left, right - left);
 }
@@ -2540,11 +2540,11 @@ bytearray_rstrip(PyByteArrayObject *self, PyObject *args)
 {
     Py_ssize_t left, right, mysize, argsize;
     void *myptr, *argptr;
-    PyObject *arg = Py_None;
+    PyObject *arg = Py_Nil;
     Py_buffer varg;
     if (!PyArg_ParseTuple(args, "|O:rstrip", &arg))
         return NULL;
-    if (arg == Py_None) {
+    if (arg == Py_Nil) {
         argptr = "\t\n\r\f\v ";
         argsize = 6;
     }
@@ -2558,7 +2558,7 @@ bytearray_rstrip(PyByteArrayObject *self, PyObject *args)
     mysize = Py_SIZE(self);
     left = 0;
     right = rstrip_helper(myptr, mysize, argptr, argsize);
-    if (arg != Py_None)
+    if (arg != Py_Nil)
         PyBuffer_Release(&varg);
     return PyByteArray_FromStringAndSize(self->ob_bytes + left, right - left);
 }
@@ -2785,7 +2785,7 @@ bytearray_reduce(PyByteArrayObject *self)
     dict = PyObject_GetAttrString((PyObject *)self, "__dict__");
     if (dict == NULL) {
         PyErr_Clear();
-        dict = Py_None;
+        dict = Py_Nil;
         Py_INCREF(dict);
     }
 

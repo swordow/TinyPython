@@ -2,26 +2,26 @@ from Tkinter import *;
 
 class MultiStatusBar(Frame){
 
-    def __init__(self, master=None, **kw){
-        if master is None{
+    function __init__( master=nil, **kw){
+        if master is nil{
             master = Tk();
-        } Frame.__init__(self, master, **kw);
-        self.labels = {};
+        } Frame.__init__(this, master, **kw);
+        this.labels = {};
 
     }
-    def set_label(self, name, text='', side=LEFT, width=0){
-        if name not in self.labels{
-            label = Label(self, borderwidth=0, anchor=W);
+    function set_label( name, text='', side=LEFT, width=0){
+        if name not in this.labels{
+            label = Label(this, borderwidth=0, anchor=W);
             label.pack(side=side, pady=0, padx=4);
-            self.labels[name] = label;
+            this.labels[name] = label;
         } else{
-            label = self.labels[name];
+            label = this.labels[name];
         } if width != 0{
             label.config(width=width);
         } label.config(text=text);
 
 }
-} def _multistatus_bar(parent){
+} function _multistatus_bar(parent){
     root = Tk();
     width, height, x, y = list(map(int, re.split('[x+]', parent.geometry())));
     root.geometry("+%d+%d" %(x, y + 150));
@@ -34,7 +34,7 @@ class MultiStatusBar(Frame){
     msb.set_label("two", "world");
     msb.pack(side=BOTTOM, fill=X);
 
-    def change(){
+    function change(){
         msb.set_label("one", "foo");
         msb.set_label("two", "bar");
 

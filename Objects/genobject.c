@@ -61,7 +61,7 @@ gen_send_ex(PyGenObject *gen, PyObject *arg, int exc)
     }
 
     if (f->f_lasti == -1) {
-        if (arg && arg != Py_None) {
+        if (arg && arg != Py_Nil) {
             PyErr_SetString(PyExc_TypeError,
                             "can't send non-None value to a "
                             "just-started generator");
@@ -69,7 +69,7 @@ gen_send_ex(PyGenObject *gen, PyObject *arg, int exc)
         }
     } else {
         /* Push arg onto the frame's value stack */
-        result = arg ? arg : Py_None;
+        result = arg ? arg : Py_Nil;
         Py_INCREF(result);
         *(f->f_stacktop++) = result;
     }
@@ -95,7 +95,7 @@ gen_send_ex(PyGenObject *gen, PyObject *arg, int exc)
 
     /* If the generator just returned (as opposed to yielding), signal
      * that the generator is exhausted. */
-    if (result == Py_None && f->f_stacktop == NULL) {
+    if (result == Py_Nil && f->f_stacktop == NULL) {
         Py_DECREF(result);
         result = NULL;
         /* Set exception if not called by gen_iternext() */
@@ -130,7 +130,7 @@ gen_close(PyGenObject *gen, PyObject *args)
 {
     PyObject *retval;
     PyErr_SetNone(PyExc_GeneratorExit);
-    retval = gen_send_ex(gen, Py_None, 1);
+    retval = gen_send_ex(gen, Py_Nil, 1);
     if (retval) {
         Py_DECREF(retval);
         PyErr_SetString(PyExc_RuntimeError,
@@ -141,8 +141,8 @@ gen_close(PyGenObject *gen, PyObject *args)
         || PyErr_ExceptionMatches(PyExc_GeneratorExit))
     {
         PyErr_Clear();          /* ignore these errors */
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     return NULL;
 }
@@ -226,7 +226,7 @@ gen_throw(PyGenObject *gen, PyObject *args)
 
     /* First, check the traceback argument, replacing None with
        NULL. */
-    if (tb == Py_None)
+    if (tb == Py_Nil)
         tb = NULL;
     else if (tb != NULL && !PyTraceBack_Check(tb)) {
         PyErr_SetString(PyExc_TypeError,
@@ -244,7 +244,7 @@ gen_throw(PyGenObject *gen, PyObject *args)
 
     else if (PyExceptionInstance_Check(typ)) {
         /* Raising an instance.  The value should be a dummy. */
-        if (val && val != Py_None) {
+        if (val && val != Py_Nil) {
             PyErr_SetString(PyExc_TypeError,
               "instance exception may not have a separate value");
             goto failed_throw;
@@ -266,7 +266,7 @@ gen_throw(PyGenObject *gen, PyObject *args)
     }
 
     PyErr_Restore(typ, val, tb);
-    return gen_send_ex(gen, Py_None, 1);
+    return gen_send_ex(gen, Py_Nil, 1);
 
 failed_throw:
     /* Didn't use our arguments, so restore their original refcounts */

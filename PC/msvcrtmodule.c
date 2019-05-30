@@ -39,8 +39,8 @@ msvcrt_heapmin(PyObject *self, PyObject *args)
     if (_heapmin() != 0)
         return PyErr_SetFromErrno(PyExc_IOError);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(heapmin_doc,
@@ -67,8 +67,8 @@ msvcrt_locking(PyObject *self, PyObject *args)
     if (err != 0)
         return PyErr_SetFromErrno(PyExc_IOError);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(locking_doc,
@@ -282,8 +282,8 @@ msvcrt_putch(PyObject *self, PyObject *args)
         return NULL;
 
     _putch(ch);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(putch_doc,
@@ -307,7 +307,7 @@ msvcrt_putwch(PyObject *self, PyObject *args)
         return NULL;
     }
     _putwch(*ch);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 
 }
 
@@ -327,8 +327,8 @@ msvcrt_ungetch(PyObject *self, PyObject *args)
 
     if (_ungetch(ch) == EOF)
         return PyErr_SetFromErrno(PyExc_IOError);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(ungetch_doc,
@@ -348,8 +348,8 @@ msvcrt_ungetwch(PyObject *self, PyObject *args)
 
     if (_ungetch(ch) == EOF)
         return PyErr_SetFromErrno(PyExc_IOError);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(ungetwch_doc,

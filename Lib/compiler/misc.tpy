@@ -1,5 +1,5 @@
 
-def flatten(tup){
+function flatten(tup){
     elts = [];
     for elt in tup{
         if isinstance(elt, tuple){
@@ -10,43 +10,43 @@ def flatten(tup){
 
 }
 class Set{
-    def __init__(self){
-        self.elts = {};
-    } def __len__(self){
-        return len(self.elts);
-    } def __contains__(self, elt){
-        return elt in self.elts;
-    } def add(self, elt){
-        self.elts[elt] = elt;
-    } def elements(self){
-        return self.elts.keys();
-    } def has_elt(self, elt){
-        return elt in self.elts;
-    } def remove(self, elt){
-        del self.elts[elt];
-    } def copy(self){
+    function __init__(){
+        this.elts = {};
+    } function __len__(){
+        return len(this.elts);
+    } function __contains__( elt){
+        return elt in this.elts;
+    } function add( elt){
+        this.elts[elt] = elt;
+    } function elements(){
+        return this.elts.keys();
+    } function has_elt( elt){
+        return elt in this.elts;
+    } function remove( elt){
+        del this.elts[elt];
+    } function copy(){
         c = Set();
-        c.elts.update(self.elts);
+        c.elts.update(this.elts);
         return c;
 
 }
 } class Stack{
-    def __init__(self){
-        self.stack = [];
-        self.pop = self.stack.pop;
-    } def __len__(self){
-        return len(self.stack);
-    } def push(self, elt){
-        self.stack.append(elt);
-    } def top(self){
-        return self.stack[-1];
-    } def __getitem__(self, index){ # needed by visitContinue()
-        return self.stack[index];
+    function __init__(){
+        this.stack = [];
+        this.pop = this.stack.pop;
+    } function __len__(){
+        return len(this.stack);
+    } function push( elt){
+        this.stack.append(elt);
+    } function top(){
+        return this.stack[-1];
+    } function __getitem__( index){ # needed by visitContinue()
+        return this.stack[index];
 
 }
 } MANGLE_LEN = 256; # magic constant from compile.c
 
-def mangle(name, klass){
+function mangle(name, klass){
     if not name.startswith('__'){
         return name;
     } if len(name) + 2 >= MANGLE_LEN{
@@ -69,7 +69,7 @@ def mangle(name, klass){
     return "_%s%s" % (klass, name);
 
 }
-def set_filename(filename, tree){
+function set_filename(filename, tree){
     """Set the filename attribute to filename on every node in tree""";
     worklist = [tree];
     while worklist{

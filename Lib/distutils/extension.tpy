@@ -11,7 +11,7 @@ from types import *;
 try{
     import warnings;
 } except ImportError{
-    warnings = None;
+    warnings = nil;
 
 # This class is really only used by the "build_ext" command, so it might
 # make sense to put it in distutils.command.build_ext.  However, that
@@ -88,20 +88,20 @@ class Extension{
 
     # When adding arguments to this constructor, be sure to update
     # setup_keywords in core.py.
-    def __init__ (self, name, sources,
-                  include_dirs=None,
-                  define_macros=None,
-                  undef_macros=None,
-                  library_dirs=None,
-                  libraries=None,
-                  runtime_library_dirs=None,
-                  extra_objects=None,
-                  extra_compile_args=None,
-                  extra_link_args=None,
-                  export_symbols=None,
-                  swig_opts = None,
-                  depends=None,
-                  language=None,
+    function __init__ ( name, sources,
+                  include_dirs=nil,
+                  define_macros=nil,
+                  undef_macros=nil,
+                  library_dirs=nil,
+                  libraries=nil,
+                  runtime_library_dirs=nil,
+                  extra_objects=nil,
+                  extra_compile_args=nil,
+                  extra_link_args=nil,
+                  export_symbols=nil,
+                  swig_opts = nil,
+                  depends=nil,
+                  language=nil,
                   **kw                      # To catch unknown keywords
                  ){
         assert type(name) is StringType, "'name' must be a string";
@@ -109,28 +109,28 @@ class Extension{
                 map(type, sources) == [StringType]*len(sources)), \
                 "'sources' must be a list of strings";
 
-        self.name = name;
-        self.sources = sources;
-        self.include_dirs = include_dirs or [];
-        self.define_macros = define_macros or [];
-        self.undef_macros = undef_macros or [];
-        self.library_dirs = library_dirs or [];
-        self.libraries = libraries or [];
-        self.runtime_library_dirs = runtime_library_dirs or [];
-        self.extra_objects = extra_objects or [];
-        self.extra_compile_args = extra_compile_args or [];
-        self.extra_link_args = extra_link_args or [];
-        self.export_symbols = export_symbols or [];
-        self.swig_opts = swig_opts or [];
-        self.depends = depends or [];
-        self.language = language;
+        this.name = name;
+        this.sources = sources;
+        this.include_dirs = include_dirs or [];
+        this.define_macros = define_macros or [];
+        this.undef_macros = undef_macros or [];
+        this.library_dirs = library_dirs or [];
+        this.libraries = libraries or [];
+        this.runtime_library_dirs = runtime_library_dirs or [];
+        this.extra_objects = extra_objects or [];
+        this.extra_compile_args = extra_compile_args or [];
+        this.extra_link_args = extra_link_args or [];
+        this.export_symbols = export_symbols or [];
+        this.swig_opts = swig_opts or [];
+        this.depends = depends or [];
+        this.language = language;
 
         # If there are unknown keyword options, warn about them
         if len(kw){
             L = kw.keys() ; L.sort();
             L = map(repr, L);
             msg = "Unknown Extension options: " + string.join(L, ', ');
-            if warnings is not None{
+            if warnings is not nil{
                 warnings.warn(msg);
             } else{
                 sys.stderr.write(msg + '\n');
@@ -138,7 +138,7 @@ class Extension{
 
 
 }
-} } } def read_setup_file (filename){
+} } } function read_setup_file (filename){
     from distutils.sysconfig import \
          parse_makefile, expand_makefile_vars, _variable_rx;
     from distutils.text_file import TextFile;
@@ -157,7 +157,7 @@ class Extension{
 
         while 1{
             line = file.readline();
-            if line is None{                # eof
+            if line is nil{                # eof
                 break;
             } if _variable_rx.match(line){    # VAR=VALUE, handled in first pass
                 continue;
@@ -180,12 +180,12 @@ class Extension{
 
             module = words[0];
             ext = Extension(module, []);
-            append_next_word = None;
+            append_next_word = nil;
 
             for word in words[1:]{
-                if append_next_word is not None{
+                if append_next_word is not nil{
                     append_next_word.append(word);
-                    append_next_word = None;
+                    append_next_word = nil;
                     continue;
 
                 }
@@ -202,7 +202,7 @@ class Extension{
                 } elif switch == "-D"{
                     equals = string.find(value, "=");
                     if equals == -1{        # bare "-DFOO" -- no value
-                        ext.define_macros.append((value, None));
+                        ext.define_macros.append((value, nil));
                     } else{                   # "-DFOO=blah"
                         ext.define_macros.append((value[0:equals],
                                                   value[equals+2:]));

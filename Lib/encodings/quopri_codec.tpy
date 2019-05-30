@@ -10,7 +10,7 @@ try{
     from StringIO import StringIO;
 
 }
-def quopri_encode(input, errors='strict'){
+function quopri_encode(input, errors='strict'){
     """Encode the input, returning a tuple (output object, length consumed).
 
     errors defines the error handling to apply. It defaults to
@@ -22,12 +22,12 @@ def quopri_encode(input, errors='strict'){
     # using str() because of cStringIO's Unicode undesired Unicode behavior.
     f = StringIO(str(input));
     g = StringIO();
-    quopri.encode(f, g, quotetabs=True);
+    quopri.encode(f, g, quotetabs=true);
     output = g.getvalue();
     return (output, len(input));
 
 }
-def quopri_decode(input, errors='strict'){
+function quopri_decode(input, errors='strict'){
     """Decode the input, returning a tuple (output object, length consumed).
 
     errors defines the error handling to apply. It defaults to
@@ -45,20 +45,20 @@ def quopri_decode(input, errors='strict'){
 }
 class Codec(codecs.Codec){
 
-    def encode(self, input,errors='strict'){
+    function encode( input,errors='strict'){
         return quopri_encode(input,errors);
-    } def decode(self, input,errors='strict'){
+    } function decode( input,errors='strict'){
         return quopri_decode(input,errors);
 
 }
 } class IncrementalEncoder(codecs.IncrementalEncoder){
-    def encode(self, input, final=False){
-        return quopri_encode(input, self.errors)[0];
+    function encode( input, final=false){
+        return quopri_encode(input, this.errors)[0];
 
 }
 } class IncrementalDecoder(codecs.IncrementalDecoder){
-    def decode(self, input, final=False){
-        return quopri_decode(input, self.errors)[0];
+    function decode( input, final=false){
+        return quopri_decode(input, this.errors)[0];
 
 }
 } class StreamWriter(Codec, codecs.StreamWriter){
@@ -71,7 +71,7 @@ class StreamReader(Codec,codecs.StreamReader){
 # encodings module API
 
 }
-def getregentry(){
+function getregentry(){
     return codecs.CodecInfo(
         name='quopri',
         encode=quopri_encode,
@@ -80,7 +80,7 @@ def getregentry(){
         incrementaldecoder=IncrementalDecoder,
         streamwriter=StreamWriter,
         streamreader=StreamReader,
-        _is_text_encoding=False,
+        _is_text_encoding=false,
     );
 
 }

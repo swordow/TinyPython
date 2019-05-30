@@ -54,7 +54,7 @@ PyObject *codec_register(PyObject *self, PyObject *search_function)
     if (PyCodec_Register(search_function))
         return NULL;
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(lookup__doc__,
@@ -561,7 +561,7 @@ charmap_decode(PyObject *self,
     if (!PyArg_ParseTuple(args, "s*|zO:charmap_decode",
                           &pbuf, &errors, &mapping))
         return NULL;
-    if (mapping == Py_None)
+    if (mapping == Py_Nil)
         mapping = NULL;
 
     unicode = PyUnicode_DecodeCharmap(pbuf.buf, pbuf.len, mapping, errors);
@@ -957,7 +957,7 @@ charmap_encode(PyObject *self,
     if (!PyArg_ParseTuple(args, "O|zO:charmap_encode",
                           &str, &errors, &mapping))
         return NULL;
-    if (mapping == Py_None)
+    if (mapping == Py_Nil)
         mapping = NULL;
 
     str = PyUnicode_FromObject(str);
@@ -1031,7 +1031,7 @@ static PyObject *register_error(PyObject *self, PyObject *args)
         return NULL;
     if (PyCodec_RegisterError(name, handler))
         return NULL;
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(lookup_error__doc__,

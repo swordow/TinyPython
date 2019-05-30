@@ -3,7 +3,7 @@
 import curses;
 import curses.ascii;
 
-def rectangle(win, uly, ulx, lry, lrx){
+function rectangle(win, uly, ulx, lry, lrx){
     """Draw a rectangle with corners at the provided upper-left
     and lower-right coordinates.
     """;
@@ -41,29 +41,29 @@ class Textbox{
     KEY_LEFT = Ctrl-B, KEY_RIGHT = Ctrl-F, KEY_UP = Ctrl-P, KEY_DOWN = Ctrl-N
     KEY_BACKSPACE = Ctrl-h
     """;
-    def __init__(self, win, insert_mode=False){
-        self.win = win;
-        self.insert_mode = insert_mode;
-        self._update_max_yx();
-        self.stripspaces = 1;
-        self.lastcmd = None;
+    function __init__( win, insert_mode=false){
+        this.win = win;
+        this.insert_mode = insert_mode;
+        this._update_max_yx();
+        this.stripspaces = 1;
+        this.lastcmd = nil;
         win.keypad(1);
 
     }
-    def _update_max_yx(self){
-        maxy, maxx = self.win.getmaxyx();
-        self.maxy = maxy - 1;
-        self.maxx = maxx - 1;
+    function _update_max_yx(){
+        maxy, maxx = this.win.getmaxyx();
+        this.maxy = maxy - 1;
+        this.maxx = maxx - 1;
 
     }
-    def _end_of_line(self, y){
+    function _end_of_line( y){
         """Go to the location of the first blank on the given line,
         returning the index of the last non-blank character.""";
-        self._update_max_yx();
-        last = self.maxx;
-        while True{
-            if curses.ascii.ascii(self.win.inch(y, last)) != curses.ascii.SP{
-                last = min(self.maxx, last+1);
+        this._update_max_yx();
+        last = this.maxx;
+        while true{
+            if curses.ascii.ascii(this.win.inch(y, last)) != curses.ascii.SP{
+                last = min(this.maxx, last+1);
                 break;
             } elif last == 0{
                 break;
@@ -71,134 +71,134 @@ class Textbox{
         } return last;
 
     }
-    def _insert_printable_char(self, ch){
-        self._update_max_yx();
-        (y, x) = self.win.getyx();
-        backyx = None;
-        while y < self.maxy or x < self.maxx{
-            if self.insert_mode{
-                oldch = self.win.inch();
+    function _insert_printable_char( ch){
+        this._update_max_yx();
+        (y, x) = this.win.getyx();
+        backyx = nil;
+        while y < this.maxy or x < this.maxx{
+            if this.insert_mode{
+                oldch = this.win.inch();
             # The try-catch ignores the error we trigger from some curses
             # versions by trying to write into the lowest-rightmost spot
             # in the window.
             }
             try{
-                self.win.addch(ch);
+                this.win.addch(ch);
             } except curses.error{
                 pass;
-            } if not self.insert_mode or not curses.ascii.isprint(oldch){
+            } if not this.insert_mode or not curses.ascii.isprint(oldch){
                 break;
             } ch = oldch;
-            (y, x) = self.win.getyx();
+            (y, x) = this.win.getyx();
             # Remember where to put the cursor back since we are in insert_mode
-            if backyx is None{
+            if backyx is nil{
                 backyx = y, x;
 
         }
-        } if backyx is not None{
-            self.win.move(*backyx);
+        } if backyx is not nil{
+            this.win.move(*backyx);
 
     }
-    } def do_command(self, ch){
+    } function do_command( ch){
         "Process a single editing command.";
-        self._update_max_yx();
-        (y, x) = self.win.getyx();
-        self.lastcmd = ch;
+        this._update_max_yx();
+        (y, x) = this.win.getyx();
+        this.lastcmd = ch;
         if curses.ascii.isprint(ch){
-            if y < self.maxy or x < self.maxx{
-                self._insert_printable_char(ch);
+            if y < this.maxy or x < this.maxx{
+                this._insert_printable_char(ch);
         } } elif ch == curses.ascii.SOH{                           # ^a
-            self.win.move(y, 0);
+            this.win.move(y, 0);
         } elif ch in (curses.ascii.STX,curses.KEY_LEFT, curses.ascii.BS,curses.KEY_BACKSPACE){
             if x > 0{
-                self.win.move(y, x-1);
+                this.win.move(y, x-1);
             } elif y == 0{
                 pass;
-            } elif self.stripspaces{
-                self.win.move(y-1, self._end_of_line(y-1));
+            } elif this.stripspaces{
+                this.win.move(y-1, this._end_of_line(y-1));
             } else{
-                self.win.move(y-1, self.maxx);
+                this.win.move(y-1, this.maxx);
             } if ch in (curses.ascii.BS, curses.KEY_BACKSPACE){
-                self.win.delch();
+                this.win.delch();
         } } elif ch == curses.ascii.EOT{                           # ^d
-            self.win.delch();
+            this.win.delch();
         } elif ch == curses.ascii.ENQ{                           # ^e
-            if self.stripspaces{
-                self.win.move(y, self._end_of_line(y));
+            if this.stripspaces{
+                this.win.move(y, this._end_of_line(y));
             } else{
-                self.win.move(y, self.maxx);
+                this.win.move(y, this.maxx);
         } } elif ch in (curses.ascii.ACK, curses.KEY_RIGHT){       # ^f
-            if x < self.maxx{
-                self.win.move(y, x+1);
-            } elif y == self.maxy{
+            if x < this.maxx{
+                this.win.move(y, x+1);
+            } elif y == this.maxy{
                 pass;
             } else{
-                self.win.move(y+1, 0);
+                this.win.move(y+1, 0);
         } } elif ch == curses.ascii.BEL{                           # ^g
             return 0;
         } elif ch == curses.ascii.NL{                            # ^j
-            if self.maxy == 0{
+            if this.maxy == 0{
                 return 0;
-            } elif y < self.maxy{
-                self.win.move(y+1, 0);
+            } elif y < this.maxy{
+                this.win.move(y+1, 0);
         } } elif ch == curses.ascii.VT{                            # ^k
-            if x == 0 and self._end_of_line(y) == 0{
-                self.win.deleteln();
+            if x == 0 and this._end_of_line(y) == 0{
+                this.win.deleteln();
             } else{
                 # first undo the effect of self._end_of_line
-                self.win.move(y, x);
-                self.win.clrtoeol();
+                this.win.move(y, x);
+                this.win.clrtoeol();
         } } elif ch == curses.ascii.FF{                            # ^l
-            self.win.refresh();
+            this.win.refresh();
         } elif ch in (curses.ascii.SO, curses.KEY_DOWN){         # ^n
-            if y < self.maxy{
-                self.win.move(y+1, x);
-                if x > self._end_of_line(y+1){
-                    self.win.move(y+1, self._end_of_line(y+1));
+            if y < this.maxy{
+                this.win.move(y+1, x);
+                if x > this._end_of_line(y+1){
+                    this.win.move(y+1, this._end_of_line(y+1));
         } } } elif ch == curses.ascii.SI{                            # ^o
-            self.win.insertln();
+            this.win.insertln();
         } elif ch in (curses.ascii.DLE, curses.KEY_UP){          # ^p
             if y > 0{
-                self.win.move(y-1, x);
-                if x > self._end_of_line(y-1){
-                    self.win.move(y-1, self._end_of_line(y-1));
+                this.win.move(y-1, x);
+                if x > this._end_of_line(y-1){
+                    this.win.move(y-1, this._end_of_line(y-1));
         } } } return 1;
 
     }
-    def gather(self){
+    function gather(){
         "Collect and return the contents of the window.";
         result = "";
-        self._update_max_yx();
-        for y in range(self.maxy+1){
-            self.win.move(y, 0);
-            stop = self._end_of_line(y);
-            if stop == 0 and self.stripspaces{
+        this._update_max_yx();
+        for y in range(this.maxy+1){
+            this.win.move(y, 0);
+            stop = this._end_of_line(y);
+            if stop == 0 and this.stripspaces{
                 continue;
-            } for x in range(self.maxx+1){
-                if self.stripspaces and x > stop{
+            } for x in range(this.maxx+1){
+                if this.stripspaces and x > stop{
                     break;
-                } result = result + chr(curses.ascii.ascii(self.win.inch(y, x)));
-            } if self.maxy > 0{
+                } result = result + chr(curses.ascii.ascii(this.win.inch(y, x)));
+            } if this.maxy > 0{
                 result = result + "\n";
         } } return result;
 
     }
-    def edit(self, validate=None){
+    function edit( validate=nil){
         "Edit in the widget window and collect the results.";
         while 1{
-            ch = self.win.getch();
+            ch = this.win.getch();
             if validate{
                 ch = validate(ch);
             } if not ch{
                 continue;
-            } if not self.do_command(ch){
+            } if not this.do_command(ch){
                 break;
-            } self.win.refresh();
-        } return self.gather();
+            } this.win.refresh();
+        } return this.gather();
 
 }
 } if __name__ == '__main__'{
-    def test_editbox(stdscr){
+    function test_editbox(stdscr){
         ncols, nlines = 9, 4;
         uly, ulx = 15, 20;
         stdscr.addstr(uly-2, ulx, "Use Ctrl-G to end editing.");

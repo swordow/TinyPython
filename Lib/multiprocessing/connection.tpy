@@ -72,11 +72,11 @@ if sys.platform == 'win32'{
 
 
 }
-def _init_timeout(timeout=CONNECTION_TIMEOUT){
+function _init_timeout(timeout=CONNECTION_TIMEOUT){
     return time.time() + timeout;
 
 }
-def _check_timeout(t){
+function _check_timeout(t){
     return time.time() > t;
 
 #
@@ -84,7 +84,7 @@ def _check_timeout(t){
 #
 
 }
-def arbitrary_address(family){
+function arbitrary_address(family){
     '''
     Return an arbitrary free address for the given family
     ''';
@@ -100,7 +100,7 @@ def arbitrary_address(family){
 
 
 }
-} def address_type(address){
+} function address_type(address){
     '''
     Return the types of the address
 
@@ -127,50 +127,50 @@ def arbitrary_address(family){
     This is a wrapper for a bound socket which is 'listening' for
     connections, or for a Windows named pipe.
     ''';
-    def __init__(self, address=None, family=None, backlog=1, authkey=None){
+    function __init__( address=nil, family=nil, backlog=1, authkey=nil){
         family = family or (address and address_type(address)) \
                  or default_family;
         address = address or arbitrary_address(family);
 
         if family == 'AF_PIPE'{
-            self._listener = PipeListener(address, backlog);
+            this._listener = PipeListener(address, backlog);
         } else{
-            self._listener = SocketListener(address, family, backlog);
+            this._listener = SocketListener(address, family, backlog);
 
         }
-        if authkey is not None and not isinstance(authkey, bytes){
+        if authkey is not nil and not isinstance(authkey, bytes){
             raise TypeError, 'authkey should be a byte string';
 
         }
-        self._authkey = authkey;
+        this._authkey = authkey;
 
     }
-    def accept(self){
+    function accept(){
         '''
         Accept a connection on the bound socket or named pipe of `self`.
 
         Returns a `Connection` object.
         ''';
-        c = self._listener.accept();
-        if self._authkey{
-            deliver_challenge(c, self._authkey);
-            answer_challenge(c, self._authkey);
+        c = this._listener.accept();
+        if this._authkey{
+            deliver_challenge(c, this._authkey);
+            answer_challenge(c, this._authkey);
         } return c;
 
     }
-    def close(self){
+    function close(){
         '''
         Close the bound socket or named pipe of `self`.
         ''';
-        return self._listener.close();
+        return this._listener.close();
 
     }
-    address = property(lambda self{ self._listener._address});
-    last_accepted = property(lambda self{ self._listener._last_accepted});
+    address = property(lambda this{ this._listener._address});
+    last_accepted = property(lambda this{ this._listener._last_accepted});
 
 
 }
-def Client(address, family=None, authkey=None){
+function Client(address, family=nil, authkey=nil){
     '''
     Returns a connection to the address of a `Listener`
     ''';
@@ -181,11 +181,11 @@ def Client(address, family=None, authkey=None){
         c = SocketClient(address);
 
     }
-    if authkey is not None and not isinstance(authkey, bytes){
+    if authkey is not nil and not isinstance(authkey, bytes){
         raise TypeError, 'authkey should be a byte string';
 
     }
-    if authkey is not None{
+    if authkey is not nil{
         answer_challenge(c, authkey);
         deliver_challenge(c, authkey);
 
@@ -196,22 +196,22 @@ def Client(address, family=None, authkey=None){
 }
 if sys.platform != 'win32'{
 
-    def Pipe(duplex=True){
+    function Pipe(duplex=true){
         '''
         Returns pair of connection objects at either end of a pipe
         ''';
         if duplex{
             s1, s2 = socket.socketpair();
-            s1.setblocking(True);
-            s2.setblocking(True);
+            s1.setblocking(true);
+            s2.setblocking(true);
             c1 = _multiprocessing.Connection(os.dup(s1.fileno()));
             c2 = _multiprocessing.Connection(os.dup(s2.fileno()));
             s1.close();
             s2.close();
         } else{
             fd1, fd2 = os.pipe();
-            c1 = _multiprocessing.Connection(fd1, writable=False);
-            c2 = _multiprocessing.Connection(fd2, readable=False);
+            c1 = _multiprocessing.Connection(fd1, writable=false);
+            c2 = _multiprocessing.Connection(fd2, readable=false);
 
         }
         return c1, c2;
@@ -220,7 +220,7 @@ if sys.platform != 'win32'{
 } else{
     from _multiprocessing import win32;
 
-    def Pipe(duplex=True){
+    function Pipe(duplex=true){
         '''
         Returns pair of connection objects at either end of a pipe
         ''';
@@ -245,7 +245,7 @@ if sys.platform != 'win32'{
             address, access, 0, win32.NULL, win32.OPEN_EXISTING, 0, win32.NULL
             );
         win32.SetNamedPipeHandleState(
-            h2, win32.PIPE_READMODE_MESSAGE, None, None
+            h2, win32.PIPE_READMODE_MESSAGE, nil, nil
             );
 
         try{
@@ -269,56 +269,56 @@ if sys.platform != 'win32'{
     '''
     Representation of a socket which is bound to an address and listening
     ''';
-    def __init__(self, address, family, backlog=1){
-        self._socket = socket.socket(getattr(socket, family));
+    function __init__( address, family, backlog=1){
+        this._socket = socket.socket(getattr(socket, family));
         try{
-            self._socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1);
-            self._socket.setblocking(True);
-            self._socket.bind(address);
-            self._socket.listen(backlog);
-            self._address = self._socket.getsockname();
+            this._socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1);
+            this._socket.setblocking(true);
+            this._socket.bind(address);
+            this._socket.listen(backlog);
+            this._address = this._socket.getsockname();
         } except socket.error{
-            self._socket.close();
+            this._socket.close();
             raise;
-        } self._family = family;
-        self._last_accepted = None;
+        } this._family = family;
+        this._last_accepted = nil;
 
         if family == 'AF_UNIX'{
-            self._unlink = Finalize(
-                self, os.unlink, args=(address,), exitpriority=0
+            this._unlink = Finalize(
+                this, os.unlink, args=(address,), exitpriority=0
                 );
         } else{
-            self._unlink = None;
+            this._unlink = nil;
 
     }
-    } def accept(self){
-        while True{
+    } function accept(){
+        while true{
             try{
-                s, self._last_accepted = self._socket.accept();
+                s, this._last_accepted = this._socket.accept();
             } except socket.error as e{
                 if e.args[0] != errno.EINTR{
                     raise;
             } } else{
                 break;
-        } } s.setblocking(True);
+        } } s.setblocking(true);
         fd = duplicate(s.fileno());
         conn = _multiprocessing.Connection(fd);
         s.close();
         return conn;
 
     }
-    def close(self){
+    function close(){
         try{
-            self._socket.close();
+            this._socket.close();
         } finally{
-            unlink = self._unlink;
-            if unlink is not None{
-                self._unlink = None;
+            unlink = this._unlink;
+            if unlink is not nil{
+                this._unlink = nil;
                 unlink();
 
 
 }
-} } } def SocketClient(address){
+} } } function SocketClient(address){
     '''
     Return a connection object connected to the socket given by `address`
     ''';
@@ -327,7 +327,7 @@ if sys.platform != 'win32'{
 
     while 1{
         s = socket.socket(family);
-        s.setblocking(True);
+        s.setblocking(true);
         try{
             s.connect(address);
         } except socket.error, e{
@@ -358,8 +358,8 @@ if sys.platform == 'win32'{
         '''
         Representation of a named pipe
         ''';
-        def __init__(self, address, backlog=None){
-            self._address = address;
+        function __init__( address, backlog=nil){
+            this._address = address;
             handle = win32.CreateNamedPipe(
                 address, win32.PIPE_ACCESS_DUPLEX,
                 win32.PIPE_TYPE_MESSAGE | win32.PIPE_READMODE_MESSAGE |
@@ -367,27 +367,27 @@ if sys.platform == 'win32'{
                 win32.PIPE_UNLIMITED_INSTANCES, BUFSIZE, BUFSIZE,
                 win32.NMPWAIT_WAIT_FOREVER, win32.NULL
                 );
-            self._handle_queue = [handle];
-            self._last_accepted = None;
+            this._handle_queue = [handle];
+            this._last_accepted = nil;
 
-            sub_debug('listener created with address=%r', self._address);
+            sub_debug('listener created with address=%r', this._address);
 
-            self.close = Finalize(
-                self, PipeListener._finalize_pipe_listener,
-                args=(self._handle_queue, self._address), exitpriority=0
+            this.close = Finalize(
+                this, PipeListener._finalize_pipe_listener,
+                args=(this._handle_queue, this._address), exitpriority=0
                 );
 
         }
-        def accept(self){
+        function accept(){
             newhandle = win32.CreateNamedPipe(
-                self._address, win32.PIPE_ACCESS_DUPLEX,
+                this._address, win32.PIPE_ACCESS_DUPLEX,
                 win32.PIPE_TYPE_MESSAGE | win32.PIPE_READMODE_MESSAGE |
                 win32.PIPE_WAIT,
                 win32.PIPE_UNLIMITED_INSTANCES, BUFSIZE, BUFSIZE,
                 win32.NMPWAIT_WAIT_FOREVER, win32.NULL
                 );
-            self._handle_queue.append(newhandle);
-            handle = self._handle_queue.pop(0);
+            this._handle_queue.append(newhandle);
+            handle = this._handle_queue.pop(0);
             try{
                 win32.ConnectNamedPipe(handle, win32.NULL);
             } except WindowsError, e{
@@ -400,13 +400,13 @@ if sys.platform == 'win32'{
 
         }
         @staticmethod;
-        def _finalize_pipe_listener(queue, address){
+        function _finalize_pipe_listener(queue, address){
             sub_debug('closing listener with address=%r', address);
             for handle in queue{
                 close(handle);
 
     }
-    } } def PipeClient(address){
+    } } function PipeClient(address){
         '''
         Return a connection object connected to the pipe given by `address`
         ''';
@@ -429,7 +429,7 @@ if sys.platform == 'win32'{
 
         }
         win32.SetNamedPipeHandleState(
-            h, win32.PIPE_READMODE_MESSAGE, None, None
+            h, win32.PIPE_READMODE_MESSAGE, nil, nil
             );
         return _multiprocessing.PipeConnection(h);
 
@@ -444,7 +444,7 @@ CHALLENGE = b'#CHALLENGE#';
 WELCOME = b'#WELCOME#';
 FAILURE = b'#FAILURE#';
 
-def deliver_challenge(connection, authkey){
+function deliver_challenge(connection, authkey){
     import hmac;
     assert isinstance(authkey, bytes);
     message = os.urandom(MESSAGE_LENGTH);
@@ -458,7 +458,7 @@ def deliver_challenge(connection, authkey){
         raise AuthenticationError('digest received was wrong');
 
 }
-} def answer_challenge(connection, authkey){
+} function answer_challenge(connection, authkey){
     import hmac;
     assert isinstance(authkey, bytes);
     message = connection.recv_bytes(256);         # reject large message
@@ -476,39 +476,39 @@ def deliver_challenge(connection, authkey){
 
 }
 } class ConnectionWrapper(object){
-    def __init__(self, conn, dumps, loads){
-        self._conn = conn;
-        self._dumps = dumps;
-        self._loads = loads;
+    function __init__( conn, dumps, loads){
+        this._conn = conn;
+        this._dumps = dumps;
+        this._loads = loads;
         for attr in ('fileno', 'close', 'poll', 'recv_bytes', 'send_bytes'){
             obj = getattr(conn, attr);
-            setattr(self, attr, obj);
-    } } def send(self, obj){
-        s = self._dumps(obj);
-        self._conn.send_bytes(s);
-    } def recv(self){
-        s = self._conn.recv_bytes();
-        return self._loads(s);
+            setattr(this, attr, obj);
+    } } function send( obj){
+        s = this._dumps(obj);
+        this._conn.send_bytes(s);
+    } function recv(){
+        s = this._conn.recv_bytes();
+        return this._loads(s);
 
 }
-} def _xml_dumps(obj){
-    return xmlrpclib.dumps((obj,), None, None, None, 1);
+} function _xml_dumps(obj){
+    return xmlrpclib.dumps((obj,), nil, nil, nil, 1);
 
 }
-def _xml_loads(s){
+function _xml_loads(s){
     (obj,), method = xmlrpclib.loads(s);
     return obj;
 
 }
 class XmlListener(Listener){
-    def accept(self){
+    function accept(){
         global xmlrpclib;
         import xmlrpclib;
-        obj = Listener.accept(self);
+        obj = Listener.accept(this);
         return ConnectionWrapper(obj, _xml_dumps, _xml_loads);
 
 }
-} def XmlClient(*args, **kwds){
+} function XmlClient(*args, **kwds){
     global xmlrpclib;
     import xmlrpclib;
     return ConnectionWrapper(Client(*args, **kwds), _xml_dumps, _xml_loads);

@@ -12,8 +12,8 @@ class cleanTestCase(support.TempdirManager,
                     support.LoggingSilencer,
                     unittest.TestCase){
 
-    def test_simple_run(self){
-        pkg_dir, dist = self.create_dist();
+    function test_simple_run(){
+        pkg_dir, dist = this.create_dist();
         cmd = clean(dist);
 
         # let's add some elements clean should remove
@@ -27,7 +27,7 @@ class cleanTestCase(support.TempdirManager,
             if name == 'build_base'{
                 continue;
             } for f in ('one', 'two', 'three'){
-                self.write_file(os.path.join(path, f));
+                this.write_file(os.path.join(path, f));
 
         # let's run the command
         }
@@ -37,7 +37,7 @@ class cleanTestCase(support.TempdirManager,
 
         # make sure the files where removed
         for name, path in dirs{
-            self.assertFalse(os.path.exists(path),
+            this.assertFalse(os.path.exists(path),
                          '%s was not removed' % path);
 
         # let's run the command again (should spit warnings but succeed)
@@ -47,7 +47,7 @@ class cleanTestCase(support.TempdirManager,
         cmd.run();
 
 }
-} def test_suite(){
+} function test_suite(){
     return unittest.makeSuite(cleanTestCase);
 
 }

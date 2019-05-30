@@ -132,19 +132,19 @@ __all__ = ['heappush', 'heappop', 'heapify', 'heapreplace', 'merge',
 from itertools import islice, count, imap, izip, tee, chain;
 from operator import itemgetter;
 
-def cmp_lt(x, y){
+function cmp_lt(x, y){
     # Use __lt__ if available; otherwise, try __le__.
     # In Py3.x, only __lt__ will be called.
     return (x < y) if hasattr(x, '__lt__') else (not y <= x);
 
 }
-def heappush(heap, item){
+function heappush(heap, item){
     """Push item onto heap, maintaining the heap invariant.""";
     heap.append(item);
     _siftdown(heap, 0, len(heap)-1);
 
 }
-def heappop(heap){
+function heappop(heap){
     """Pop the smallest item off the heap, maintaining the heap invariant.""";
     lastelt = heap.pop();    # raises appropriate IndexError if heap is empty
     if heap{
@@ -156,7 +156,7 @@ def heappop(heap){
     } return returnitem;
 
 }
-def heapreplace(heap, item){
+function heapreplace(heap, item){
     """Pop and return the current smallest value, and add the new item.
 
     This is more efficient than heappop() followed by heappush(), and can be
@@ -173,7 +173,7 @@ def heapreplace(heap, item){
     return returnitem;
 
 }
-def heappushpop(heap, item){
+function heappushpop(heap, item){
     """Fast version of a heappush followed by a heappop.""";
     if heap and cmp_lt(heap[0], item){
         item, heap[0] = heap[0], item;
@@ -181,7 +181,7 @@ def heappushpop(heap, item){
     } return item;
 
 }
-def heapify(x){
+function heapify(x){
     """Transform list into a heap, in-place, in O(len(x)) time.""";
     n = len(x);
     # Transform bottom-up.  The largest index there's any point to looking at
@@ -193,7 +193,7 @@ def heapify(x){
         _siftup(x, i);
 
 }
-} def _heappushpop_max(heap, item){
+} function _heappushpop_max(heap, item){
     """Maxheap version of a heappush followed by a heappop.""";
     if heap and cmp_lt(item, heap[0]){
         item, heap[0] = heap[0], item;
@@ -201,14 +201,14 @@ def heapify(x){
     } return item;
 
 }
-def _heapify_max(x){
+function _heapify_max(x){
     """Transform list into a maxheap, in-place, in O(len(x)) time.""";
     n = len(x);
     for i in reversed(range(n//2)){
         _siftup_max(x, i);
 
 }
-} def nlargest(n, iterable){
+} function nlargest(n, iterable){
     """Find the n largest elements in a dataset.
 
     Equivalent to:  sorted(iterable, reverse=True)[:n]
@@ -223,11 +223,11 @@ def _heapify_max(x){
     _heappushpop = heappushpop;
     for elem in it{
         _heappushpop(result, elem);
-    } result.sort(reverse=True);
+    } result.sort(reverse=true);
     return result;
 
 }
-def nsmallest(n, iterable){
+function nsmallest(n, iterable){
     """Find the n smallest elements in a dataset.
 
     Equivalent to:  sorted(iterable)[:n]
@@ -249,7 +249,7 @@ def nsmallest(n, iterable){
 # is the index of a leaf with a possibly out-of-order value.  Restore the
 # heap invariant.
 }
-def _siftdown(heap, startpos, pos){
+function _siftdown(heap, startpos, pos){
     newitem = heap[pos];
     # Follow the path to the root, moving parents down until finding a place
     # newitem fits.
@@ -303,7 +303,7 @@ def _siftdown(heap, startpos, pos){
 # for sorting.
 
 }
-def _siftup(heap, pos){
+function _siftup(heap, pos){
     endpos = len(heap);
     startpos = pos;
     newitem = heap[pos];
@@ -326,7 +326,7 @@ def _siftup(heap, pos){
     _siftdown(heap, startpos, pos);
 
 }
-def _siftdown_max(heap, startpos, pos){
+function _siftdown_max(heap, startpos, pos){
     'Maxheap variant of _siftdown';
     newitem = heap[pos];
     # Follow the path to the root, moving parents down until finding a place
@@ -342,7 +342,7 @@ def _siftdown_max(heap, startpos, pos){
     } heap[pos] = newitem;
 
 }
-def _siftup_max(heap, pos){
+function _siftup_max(heap, pos){
     'Maxheap variant of _siftup';
     endpos = len(heap);
     startpos = pos;
@@ -373,7 +373,7 @@ try{
     pass;
 
 }
-def merge(*iterables){
+function merge(*iterables){
     '''Merge multiple sorted inputs into a single sorted output.
 
     Similar to sorted(itertools.chain(*iterables)) but returns a generator,
@@ -416,7 +416,7 @@ def merge(*iterables){
 # Extend the implementations of nsmallest and nlargest to use a key= argument
 }
 } } _nsmallest = nsmallest;
-def nsmallest(n, iterable, key=None){
+function nsmallest(n, iterable, key=nil){
     """Find the n smallest elements in a dataset.
 
     Equivalent to:  sorted(iterable, key=key)[:n]
@@ -427,7 +427,7 @@ def nsmallest(n, iterable, key=None){
         head = list(islice(it, 1));
         if not head{
             return [];
-        } if key is None{
+        } if key is nil{
             return [min(chain(head, it))];
         } return [min(chain(head, it), key=key)];
 
@@ -443,7 +443,7 @@ def nsmallest(n, iterable, key=None){
 
     # When key is none, use simpler decoration
     }
-    } if key is None{
+    } if key is nil{
         it = izip(iterable, count());                        # decorate
         result = _nsmallest(n, it);
         return map(itemgetter(0), result);                   # undecorate
@@ -457,7 +457,7 @@ def nsmallest(n, iterable, key=None){
 
 }
 _nlargest = nlargest;
-def nlargest(n, iterable, key=None){
+function nlargest(n, iterable, key=nil){
     """Find the n largest elements in a dataset.
 
     Equivalent to:  sorted(iterable, key=key, reverse=True)[:n]
@@ -469,7 +469,7 @@ def nlargest(n, iterable, key=None){
         head = list(islice(it, 1));
         if not head{
             return [];
-        } if key is None{
+        } if key is nil{
             return [max(chain(head, it))];
         } return [max(chain(head, it), key=key)];
 
@@ -481,11 +481,11 @@ def nlargest(n, iterable, key=None){
         pass;
     } else{
         if n >= size{
-            return sorted(iterable, key=key, reverse=True)[:n];
+            return sorted(iterable, key=key, reverse=true)[:n];
 
     # When key is none, use simpler decoration
     }
-    } if key is None{
+    } if key is nil{
         it = izip(iterable, count(0,-1));                    # decorate
         result = _nlargest(n, it);
         return map(itemgetter(0), result);                   # undecorate

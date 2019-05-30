@@ -1352,11 +1352,11 @@ static int
 compiler_function(struct compiler *c, stmt_ty s)
 {
     PyCodeObject *co;
-    PyObject *first_const = Py_None;
+    PyObject *first_const = Py_Nil;
     arguments_ty args = s->v.FunctionDef.args;
     asdl_seq* decos = s->v.FunctionDef.decorator_list;
-    stmt_ty st;
-    int i, n, docstring;
+    stmt_ty st=0;
+    int i, n, docstring=0;
 
     assert(s->kind == FunctionDef_kind);
 
@@ -1368,8 +1368,15 @@ compiler_function(struct compiler *c, stmt_ty s)
                               s->lineno))
         return 0;
 
-    st = (stmt_ty)asdl_seq_GET(s->v.FunctionDef.body, 0);
-    docstring = compiler_isdocstring(st);
+	// empty function body len is 0
+	if (asdl_seq_LEN(s->v.FunctionDef.body) > 0)
+	{
+		st = (stmt_ty)asdl_seq_GET(s->v.FunctionDef.body, 0);
+	}
+	if (st)
+	{
+		docstring = compiler_isdocstring(st);
+	}
     if (docstring && Py_OptimizeFlag < 2)
         first_const = st->v.Expr.value->v.Str.s;
     if (compiler_add_o(c, c->u->u_consts, first_const) < 0)      {
@@ -1513,7 +1520,7 @@ compiler_lambda(struct compiler *c, expr_ty e)
 
     /* Make None the first constant, so the lambda can't have a
        docstring. */
-    if (compiler_add_o(c, c->u->u_consts, Py_None) < 0)
+    if (compiler_add_o(c, c->u->u_consts, Py_Nil) < 0)
         return 0;
 
     c->u->u_argcount = asdl_seq_LEN(args->args);
@@ -1778,7 +1785,7 @@ compiler_try_finally(struct compiler *c, stmt_ty s)
     ADDOP(c, POP_BLOCK);
     compiler_pop_fblock(c, FINALLY_TRY, body);
 
-    ADDOP_O(c, LOAD_CONST, Py_None, consts);
+    ADDOP_O(c, LOAD_CONST, Py_Nil, consts);
     compiler_use_next_block(c, end);
     if (!compiler_push_fblock(c, FINALLY_END, end))
         return 0;
@@ -1932,7 +1939,7 @@ compiler_import(struct compiler *c, stmt_ty s)
             return 0;
 
         ADDOP_N(c, LOAD_CONST, level, consts);
-        ADDOP_O(c, LOAD_CONST, Py_None, consts);
+        ADDOP_O(c, LOAD_CONST, Py_Nil, consts);
         ADDOP_NAME(c, IMPORT_NAME, alias->name, names);
 
         if (alias->asname) {
@@ -2092,7 +2099,7 @@ compiler_visit_stmt(struct compiler *c, stmt_ty s)
             VISIT(c, expr, s->v.Return.value);
         }
         else
-            ADDOP_O(c, LOAD_CONST, Py_None, consts);
+            ADDOP_O(c, LOAD_CONST, Py_Nil, consts);
         ADDOP(c, RETURN_VALUE);
         break;
     case Delete_kind:
@@ -2154,7 +2161,7 @@ compiler_visit_stmt(struct compiler *c, stmt_ty s)
                 ADDOP(c, DUP_TOP);
             }
         } else {
-            ADDOP_O(c, LOAD_CONST, Py_None, consts);
+            ADDOP_O(c, LOAD_CONST, Py_Nil, consts);
             ADDOP(c, DUP_TOP);
         }
         ADDOP(c, EXEC_STMT);
@@ -2938,7 +2945,7 @@ compiler_with(struct compiler *c, stmt_ty s)
     ADDOP(c, POP_BLOCK);
     compiler_pop_fblock(c, FINALLY_TRY, block);
 
-    ADDOP_O(c, LOAD_CONST, Py_None, consts);
+    ADDOP_O(c, LOAD_CONST, Py_Nil, consts);
     compiler_use_next_block(c, finally);
     if (!compiler_push_fblock(c, FINALLY_END, finally))
         return 0;
@@ -3013,7 +3020,7 @@ compiler_visit_expr(struct compiler *c, expr_ty e)
             VISIT(c, expr, e->v.Yield.value);
         }
         else {
-            ADDOP_O(c, LOAD_CONST, Py_None, consts);
+            ADDOP_O(c, LOAD_CONST, Py_Nil, consts);
         }
         ADDOP(c, YIELD_VALUE);
         break;
@@ -3190,11 +3197,11 @@ compiler_error(struct compiler *c, const char *errstr)
 
     loc = PyErr_ProgramText(c->c_filename, c->u->u_lineno);
     if (!loc) {
-        Py_INCREF(Py_None);
-        loc = Py_None;
+        Py_INCREF(Py_Nil);
+        loc = Py_Nil;
     }
     u = Py_BuildValue("(ziOO)", c->c_filename, c->u->u_lineno,
-                      Py_None, loc);
+                      Py_Nil, loc);
     if (!u)
         goto exit;
     v = Py_BuildValue("(zO)", errstr, u);
@@ -3248,14 +3255,14 @@ compiler_slice(struct compiler *c, slice_ty s, expr_context_ty ctx)
         VISIT(c, expr, s->v.Slice.lower);
     }
     else {
-        ADDOP_O(c, LOAD_CONST, Py_None, consts);
+        ADDOP_O(c, LOAD_CONST, Py_Nil, consts);
     }
 
     if (s->v.Slice.upper) {
         VISIT(c, expr, s->v.Slice.upper);
     }
     else {
-        ADDOP_O(c, LOAD_CONST, Py_None, consts);
+        ADDOP_O(c, LOAD_CONST, Py_Nil, consts);
     }
 
     if (s->v.Slice.step) {
@@ -3920,7 +3927,7 @@ assemble(struct compiler *c, int addNone)
     if (!c->u->u_curblock->b_return) {
         NEXT_BLOCK(c);
         if (addNone)
-            ADDOP_O(c, LOAD_CONST, Py_None, consts);
+            ADDOP_O(c, LOAD_CONST, Py_Nil, consts);
         ADDOP(c, RETURN_VALUE);
     }
 

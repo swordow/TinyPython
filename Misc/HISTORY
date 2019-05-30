@@ -3620,7 +3620,7 @@ C API
   PySequence_Contains() but is specific to dictionaries and executes
   about 10% faster.
 
-- Added three new macros: Py_RETURN_NONE, Py_RETURN_TRUE, and Py_RETURN_FALSE.
+- Added three new macros: Py_RETURN_NIL, Py_RETURN_TRUE, and Py_RETURN_FALSE.
   Each return the singleton they mention after Py_INCREF()ing them.
 
 - Added a new function, PyTuple_Pack(n, ...) for constructing tuples from a

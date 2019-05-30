@@ -22,7 +22,7 @@ _sndhdr_MIMEmap = {'au'  : 'basic',
 
 # There are others in sndhdr that don't have MIME types. :(
 # Additional ones to be added to sndhdr? midi, mp3, realaudio, wma??
-def _whatsnd(data){
+function _whatsnd(data){
     """Try to identify a sound file type.
 
     sndhdr.what() has a pretty cruddy interface, unfortunately.  This is why
@@ -33,9 +33,9 @@ def _whatsnd(data){
     fakefile = StringIO(hdr);
     for testfn in sndhdr.tests{
         res = testfn(hdr, fakefile);
-        if res is not None{
+        if res is not nil{
             return _sndhdr_MIMEmap.get(res[0]);
-    } } return None;
+    } } return nil;
 
 
 
@@ -43,7 +43,7 @@ def _whatsnd(data){
 class MIMEAudio(MIMENonMultipart){
     """Class for generating audio/* MIME documents.""";
 
-    def __init__(self, _audiodata, _subtype=None,
+    function __init__( _audiodata, _subtype=nil,
                  _encoder=encoders.encode_base64, **_params){
         """Create an audio/* type MIME document.
 
@@ -65,13 +65,13 @@ class MIMEAudio(MIMENonMultipart){
         constructor, which turns them into parameters on the Content-Type
         header.
         """;
-        if _subtype is None{
+        if _subtype is nil{
             _subtype = _whatsnd(_audiodata);
-        } if _subtype is None{
+        } if _subtype is nil{
             raise TypeError('Could not find audio MIME subtype');
-        } MIMENonMultipart.__init__(self, 'audio', _subtype, **_params);
-        self.set_payload(_audiodata);
-        _encoder(self);
+        } MIMENonMultipart.__init__(this, 'audio', _subtype, **_params);
+        this.set_payload(_audiodata);
+        _encoder(this);
 
 }
 }

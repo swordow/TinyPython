@@ -28,187 +28,187 @@ from test import test_support;
 try{
     import threading;
 } except ImportError{
-    threading = None;
+    threading = nil;
 
 }
 class ModuleTests(unittest.TestCase){
-    def CheckAPILevel(self){
-        self.assertEqual(sqlite.apilevel, "2.0",
+    function CheckAPILevel(){
+        this.assertEqual(sqlite.apilevel, "2.0",
                          "apilevel is %s, should be 2.0" % sqlite.apilevel);
 
     }
-    def CheckThreadSafety(self){
-        self.assertEqual(sqlite.threadsafety, 1,
+    function CheckThreadSafety(){
+        this.assertEqual(sqlite.threadsafety, 1,
                          "threadsafety is %d, should be 1" % sqlite.threadsafety);
 
     }
-    def CheckParamStyle(self){
-        self.assertEqual(sqlite.paramstyle, "qmark",
+    function CheckParamStyle(){
+        this.assertEqual(sqlite.paramstyle, "qmark",
                          "paramstyle is '%s', should be 'qmark'" %
                          sqlite.paramstyle);
 
     }
-    def CheckWarning(self){
-        self.assertTrue(issubclass(sqlite.Warning, StandardError),
+    function CheckWarning(){
+        this.assertTrue(issubclass(sqlite.Warning, StandardError),
                         "Warning is not a subclass of StandardError");
 
     }
-    def CheckError(self){
-        self.assertTrue(issubclass(sqlite.Error, StandardError),
+    function CheckError(){
+        this.assertTrue(issubclass(sqlite.Error, StandardError),
                         "Error is not a subclass of StandardError");
 
     }
-    def CheckInterfaceError(self){
-        self.assertTrue(issubclass(sqlite.InterfaceError, sqlite.Error),
+    function CheckInterfaceError(){
+        this.assertTrue(issubclass(sqlite.InterfaceError, sqlite.Error),
                         "InterfaceError is not a subclass of Error");
 
     }
-    def CheckDatabaseError(self){
-        self.assertTrue(issubclass(sqlite.DatabaseError, sqlite.Error),
+    function CheckDatabaseError(){
+        this.assertTrue(issubclass(sqlite.DatabaseError, sqlite.Error),
                         "DatabaseError is not a subclass of Error");
 
     }
-    def CheckDataError(self){
-        self.assertTrue(issubclass(sqlite.DataError, sqlite.DatabaseError),
+    function CheckDataError(){
+        this.assertTrue(issubclass(sqlite.DataError, sqlite.DatabaseError),
                         "DataError is not a subclass of DatabaseError");
 
     }
-    def CheckOperationalError(self){
-        self.assertTrue(issubclass(sqlite.OperationalError, sqlite.DatabaseError),
+    function CheckOperationalError(){
+        this.assertTrue(issubclass(sqlite.OperationalError, sqlite.DatabaseError),
                         "OperationalError is not a subclass of DatabaseError");
 
     }
-    def CheckIntegrityError(self){
-        self.assertTrue(issubclass(sqlite.IntegrityError, sqlite.DatabaseError),
+    function CheckIntegrityError(){
+        this.assertTrue(issubclass(sqlite.IntegrityError, sqlite.DatabaseError),
                         "IntegrityError is not a subclass of DatabaseError");
 
     }
-    def CheckInternalError(self){
-        self.assertTrue(issubclass(sqlite.InternalError, sqlite.DatabaseError),
+    function CheckInternalError(){
+        this.assertTrue(issubclass(sqlite.InternalError, sqlite.DatabaseError),
                         "InternalError is not a subclass of DatabaseError");
 
     }
-    def CheckProgrammingError(self){
-        self.assertTrue(issubclass(sqlite.ProgrammingError, sqlite.DatabaseError),
+    function CheckProgrammingError(){
+        this.assertTrue(issubclass(sqlite.ProgrammingError, sqlite.DatabaseError),
                         "ProgrammingError is not a subclass of DatabaseError");
 
     }
-    def CheckNotSupportedError(self){
-        self.assertTrue(issubclass(sqlite.NotSupportedError,
+    function CheckNotSupportedError(){
+        this.assertTrue(issubclass(sqlite.NotSupportedError,
                                    sqlite.DatabaseError),
                         "NotSupportedError is not a subclass of DatabaseError");
 
 }
 } class ConnectionTests(unittest.TestCase){
-    def setUp(self){
-        self.cx = sqlite.connect(":memory:");
-        cu = self.cx.cursor();
+    function setUp(){
+        this.cx = sqlite.connect(":memory:");
+        cu = this.cx.cursor();
         cu.execute("create table test(id integer primary key, name text)");
         cu.execute("insert into test(name) values (?)", ("foo",));
 
     }
-    def tearDown(self){
-        self.cx.close();
+    function tearDown(){
+        this.cx.close();
 
     }
-    def CheckCommit(self){
-        self.cx.commit();
+    function CheckCommit(){
+        this.cx.commit();
 
     }
-    def CheckCommitAfterNoChanges(self){
+    function CheckCommitAfterNoChanges(){
         """
         A commit should also work when no changes were made to the database.
         """;
-        self.cx.commit();
-        self.cx.commit();
+        this.cx.commit();
+        this.cx.commit();
 
     }
-    def CheckRollback(self){
-        self.cx.rollback();
+    function CheckRollback(){
+        this.cx.rollback();
 
     }
-    def CheckRollbackAfterNoChanges(self){
+    function CheckRollbackAfterNoChanges(){
         """
         A rollback should also work when no changes were made to the database.
         """;
-        self.cx.rollback();
-        self.cx.rollback();
+        this.cx.rollback();
+        this.cx.rollback();
 
     }
-    def CheckCursor(self){
-        cu = self.cx.cursor();
+    function CheckCursor(){
+        cu = this.cx.cursor();
 
     }
-    def CheckFailedOpen(self){
+    function CheckFailedOpen(){
         YOU_CANNOT_OPEN_THIS = "/foo/bar/bla/23534/mydb.db";
         try{
             con = sqlite.connect(YOU_CANNOT_OPEN_THIS);
         } except sqlite.OperationalError{
             return;
-        } self.fail("should have raised an OperationalError");
+        } this.fail("should have raised an OperationalError");
 
     }
-    def CheckClose(self){
-        self.cx.close();
+    function CheckClose(){
+        this.cx.close();
 
     }
-    def CheckExceptions(self){
+    function CheckExceptions(){
         # Optional DB-API extension.
-        self.assertEqual(self.cx.Warning, sqlite.Warning);
-        self.assertEqual(self.cx.Error, sqlite.Error);
-        self.assertEqual(self.cx.InterfaceError, sqlite.InterfaceError);
-        self.assertEqual(self.cx.DatabaseError, sqlite.DatabaseError);
-        self.assertEqual(self.cx.DataError, sqlite.DataError);
-        self.assertEqual(self.cx.OperationalError, sqlite.OperationalError);
-        self.assertEqual(self.cx.IntegrityError, sqlite.IntegrityError);
-        self.assertEqual(self.cx.InternalError, sqlite.InternalError);
-        self.assertEqual(self.cx.ProgrammingError, sqlite.ProgrammingError);
-        self.assertEqual(self.cx.NotSupportedError, sqlite.NotSupportedError);
+        this.assertEqual(this.cx.Warning, sqlite.Warning);
+        this.assertEqual(this.cx.Error, sqlite.Error);
+        this.assertEqual(this.cx.InterfaceError, sqlite.InterfaceError);
+        this.assertEqual(this.cx.DatabaseError, sqlite.DatabaseError);
+        this.assertEqual(this.cx.DataError, sqlite.DataError);
+        this.assertEqual(this.cx.OperationalError, sqlite.OperationalError);
+        this.assertEqual(this.cx.IntegrityError, sqlite.IntegrityError);
+        this.assertEqual(this.cx.InternalError, sqlite.InternalError);
+        this.assertEqual(this.cx.ProgrammingError, sqlite.ProgrammingError);
+        this.assertEqual(this.cx.NotSupportedError, sqlite.NotSupportedError);
 
 }
 } class CursorTests(unittest.TestCase){
-    def setUp(self){
-        self.cx = sqlite.connect(":memory:");
-        self.cu = self.cx.cursor();
-        self.cu.execute("create table test(id integer primary key, name text, income number)");
-        self.cu.execute("insert into test(name) values (?)", ("foo",));
+    function setUp(){
+        this.cx = sqlite.connect(":memory:");
+        this.cu = this.cx.cursor();
+        this.cu.execute("create table test(id integer primary key, name text, income number)");
+        this.cu.execute("insert into test(name) values (?)", ("foo",));
 
     }
-    def tearDown(self){
-        self.cu.close();
-        self.cx.close();
+    function tearDown(){
+        this.cu.close();
+        this.cx.close();
 
     }
-    def CheckExecuteNoArgs(self){
-        self.cu.execute("delete from test");
+    function CheckExecuteNoArgs(){
+        this.cu.execute("delete from test");
 
     }
-    def CheckExecuteIllegalSql(self){
+    function CheckExecuteIllegalSql(){
         try{
-            self.cu.execute("select asdf");
-            self.fail("should have raised an OperationalError");
+            this.cu.execute("select asdf");
+            this.fail("should have raised an OperationalError");
         } except sqlite.OperationalError{
             return;
         } except Exception{
-            self.fail("raised wrong exception");
+            this.fail("raised wrong exception");
 
     }
-    } def CheckExecuteTooMuchSql(self){
+    } function CheckExecuteTooMuchSql(){
         try{
-            self.cu.execute("select 5+4; select 4+5");
-            self.fail("should have raised a Warning");
+            this.cu.execute("select 5+4; select 4+5");
+            this.fail("should have raised a Warning");
         } except sqlite.Warning{
             return;
         } except Exception{
-            self.fail("raised wrong exception");
+            this.fail("raised wrong exception");
 
     }
-    } def CheckExecuteTooMuchSql2(self){
-        self.cu.execute("select 5+4; -- foo bar");
+    } function CheckExecuteTooMuchSql2(){
+        this.cu.execute("select 5+4; -- foo bar");
 
     }
-    def CheckExecuteTooMuchSql3(self){
-        self.cu.execute("""
+    function CheckExecuteTooMuchSql3(){
+        this.cu.execute("""
             select 5+4;
 
             /*
@@ -217,356 +217,356 @@ class ModuleTests(unittest.TestCase){
             """);
 
     }
-    def CheckExecuteWrongSqlArg(self){
+    function CheckExecuteWrongSqlArg(){
         try{
-            self.cu.execute(42);
-            self.fail("should have raised a ValueError");
+            this.cu.execute(42);
+            this.fail("should have raised a ValueError");
         } except ValueError{
             return;
         } except Exception{
-            self.fail("raised wrong exception.");
+            this.fail("raised wrong exception.");
 
     }
-    } def CheckExecuteArgInt(self){
-        self.cu.execute("insert into test(id) values (?)", (42,));
+    } function CheckExecuteArgInt(){
+        this.cu.execute("insert into test(id) values (?)", (42,));
 
     }
-    def CheckExecuteArgFloat(self){
-        self.cu.execute("insert into test(income) values (?)", (2500.32,));
+    function CheckExecuteArgFloat(){
+        this.cu.execute("insert into test(income) values (?)", (2500.32,));
 
     }
-    def CheckExecuteArgString(self){
-        self.cu.execute("insert into test(name) values (?)", ("Hugo",));
+    function CheckExecuteArgString(){
+        this.cu.execute("insert into test(name) values (?)", ("Hugo",));
 
     }
-    def CheckExecuteArgStringWithZeroByte(self){
-        self.cu.execute("insert into test(name) values (?)", ("Hu\x00go",));
+    function CheckExecuteArgStringWithZeroByte(){
+        this.cu.execute("insert into test(name) values (?)", ("Hu\x00go",));
 
-        self.cu.execute("select name from test where id=?", (self.cu.lastrowid,));
-        row = self.cu.fetchone();
-        self.assertEqual(row[0], "Hu\x00go");
+        this.cu.execute("select name from test where id=?", (this.cu.lastrowid,));
+        row = this.cu.fetchone();
+        this.assertEqual(row[0], "Hu\x00go");
 
     }
-    def CheckExecuteWrongNoOfArgs1(self){
+    function CheckExecuteWrongNoOfArgs1(){
         # too many parameters
         try{
-            self.cu.execute("insert into test(id) values (?)", (17, "Egon"));
-            self.fail("should have raised ProgrammingError");
+            this.cu.execute("insert into test(id) values (?)", (17, "Egon"));
+            this.fail("should have raised ProgrammingError");
         } except sqlite.ProgrammingError{
             pass;
 
     }
-    } def CheckExecuteWrongNoOfArgs2(self){
+    } function CheckExecuteWrongNoOfArgs2(){
         # too little parameters
         try{
-            self.cu.execute("insert into test(id) values (?)");
-            self.fail("should have raised ProgrammingError");
+            this.cu.execute("insert into test(id) values (?)");
+            this.fail("should have raised ProgrammingError");
         } except sqlite.ProgrammingError{
             pass;
 
     }
-    } def CheckExecuteWrongNoOfArgs3(self){
+    } function CheckExecuteWrongNoOfArgs3(){
         # no parameters, parameters are needed
         try{
-            self.cu.execute("insert into test(id) values (?)");
-            self.fail("should have raised ProgrammingError");
+            this.cu.execute("insert into test(id) values (?)");
+            this.fail("should have raised ProgrammingError");
         } except sqlite.ProgrammingError{
             pass;
 
     }
-    } def CheckExecuteParamList(self){
-        self.cu.execute("insert into test(name) values ('foo')");
-        self.cu.execute("select name from test where name=?", ["foo"]);
-        row = self.cu.fetchone();
-        self.assertEqual(row[0], "foo");
+    } function CheckExecuteParamList(){
+        this.cu.execute("insert into test(name) values ('foo')");
+        this.cu.execute("select name from test where name=?", ["foo"]);
+        row = this.cu.fetchone();
+        this.assertEqual(row[0], "foo");
 
     }
-    def CheckExecuteParamSequence(self){
+    function CheckExecuteParamSequence(){
         class L(object){
-            def __len__(self){
+            function __len__(){
                 return 1;
-            } def __getitem__(self, x){
+            } function __getitem__( x){
                 assert x == 0;
                 return "foo";
 
         }
-        } self.cu.execute("insert into test(name) values ('foo')");
-        self.cu.execute("select name from test where name=?", L());
-        row = self.cu.fetchone();
-        self.assertEqual(row[0], "foo");
+        } this.cu.execute("insert into test(name) values ('foo')");
+        this.cu.execute("select name from test where name=?", L());
+        row = this.cu.fetchone();
+        this.assertEqual(row[0], "foo");
 
     }
-    def CheckExecuteDictMapping(self){
-        self.cu.execute("insert into test(name) values ('foo')");
-        self.cu.execute("select name from test where name=:name", {"name": "foo"});
-        row = self.cu.fetchone();
-        self.assertEqual(row[0], "foo");
+    function CheckExecuteDictMapping(){
+        this.cu.execute("insert into test(name) values ('foo')");
+        this.cu.execute("select name from test where name=:name", {"name": "foo"});
+        row = this.cu.fetchone();
+        this.assertEqual(row[0], "foo");
 
     }
-    def CheckExecuteDictMapping_Mapping(self){
+    function CheckExecuteDictMapping_Mapping(){
         # Test only works with Python 2.5 or later
         if sys.version_info < (2, 5, 0){
             return;
 
         }
         class D(dict){
-            def __missing__(self, key){
+            function __missing__( key){
                 return "foo";
 
         }
-        } self.cu.execute("insert into test(name) values ('foo')");
-        self.cu.execute("select name from test where name=:name", D());
-        row = self.cu.fetchone();
-        self.assertEqual(row[0], "foo");
+        } this.cu.execute("insert into test(name) values ('foo')");
+        this.cu.execute("select name from test where name=:name", D());
+        row = this.cu.fetchone();
+        this.assertEqual(row[0], "foo");
 
     }
-    def CheckExecuteDictMappingTooLittleArgs(self){
-        self.cu.execute("insert into test(name) values ('foo')");
+    function CheckExecuteDictMappingTooLittleArgs(){
+        this.cu.execute("insert into test(name) values ('foo')");
         try{
-            self.cu.execute("select name from test where name=:name and id=:id", {"name": "foo"});
-            self.fail("should have raised ProgrammingError");
+            this.cu.execute("select name from test where name=:name and id=:id", {"name": "foo"});
+            this.fail("should have raised ProgrammingError");
         } except sqlite.ProgrammingError{
             pass;
 
     }
-    } def CheckExecuteDictMappingNoArgs(self){
-        self.cu.execute("insert into test(name) values ('foo')");
+    } function CheckExecuteDictMappingNoArgs(){
+        this.cu.execute("insert into test(name) values ('foo')");
         try{
-            self.cu.execute("select name from test where name=:name");
-            self.fail("should have raised ProgrammingError");
+            this.cu.execute("select name from test where name=:name");
+            this.fail("should have raised ProgrammingError");
         } except sqlite.ProgrammingError{
             pass;
 
     }
-    } def CheckExecuteDictMappingUnnamed(self){
-        self.cu.execute("insert into test(name) values ('foo')");
+    } function CheckExecuteDictMappingUnnamed(){
+        this.cu.execute("insert into test(name) values ('foo')");
         try{
-            self.cu.execute("select name from test where name=?", {"name": "foo"});
-            self.fail("should have raised ProgrammingError");
+            this.cu.execute("select name from test where name=?", {"name": "foo"});
+            this.fail("should have raised ProgrammingError");
         } except sqlite.ProgrammingError{
             pass;
 
     }
-    } def CheckClose(self){
-        self.cu.close();
+    } function CheckClose(){
+        this.cu.close();
 
     }
-    def CheckRowcountExecute(self){
-        self.cu.execute("delete from test");
-        self.cu.execute("insert into test(name) values ('foo')");
-        self.cu.execute("insert into test(name) values ('foo')");
-        self.cu.execute("update test set name='bar'");
-        self.assertEqual(self.cu.rowcount, 2);
+    function CheckRowcountExecute(){
+        this.cu.execute("delete from test");
+        this.cu.execute("insert into test(name) values ('foo')");
+        this.cu.execute("insert into test(name) values ('foo')");
+        this.cu.execute("update test set name='bar'");
+        this.assertEqual(this.cu.rowcount, 2);
 
     }
-    def CheckRowcountSelect(self){
+    function CheckRowcountSelect(){
         """
         pysqlite does not know the rowcount of SELECT statements, because we
         don't fetch all rows after executing the select statement. The rowcount
         has thus to be -1.
         """;
-        self.cu.execute("select 5 union select 6");
-        self.assertEqual(self.cu.rowcount, -1);
+        this.cu.execute("select 5 union select 6");
+        this.assertEqual(this.cu.rowcount, -1);
 
     }
-    def CheckRowcountExecutemany(self){
-        self.cu.execute("delete from test");
-        self.cu.executemany("insert into test(name) values (?)", [(1,), (2,), (3,)]);
-        self.assertEqual(self.cu.rowcount, 3);
+    function CheckRowcountExecutemany(){
+        this.cu.execute("delete from test");
+        this.cu.executemany("insert into test(name) values (?)", [(1,), (2,), (3,)]);
+        this.assertEqual(this.cu.rowcount, 3);
 
     }
-    def CheckTotalChanges(self){
-        self.cu.execute("insert into test(name) values ('foo')");
-        self.cu.execute("insert into test(name) values ('foo')");
-        if self.cx.total_changes < 2{
-            self.fail("total changes reported wrong value");
+    function CheckTotalChanges(){
+        this.cu.execute("insert into test(name) values ('foo')");
+        this.cu.execute("insert into test(name) values ('foo')");
+        if this.cx.total_changes < 2{
+            this.fail("total changes reported wrong value");
 
     # Checks for executemany:
     # Sequences are required by the DB-API, iterators
     # enhancements in pysqlite.
 
     }
-    } def CheckExecuteManySequence(self){
-        self.cu.executemany("insert into test(income) values (?)", [(x,) for x in range(100, 110)]);
+    } function CheckExecuteManySequence(){
+        this.cu.executemany("insert into test(income) values (?)", [(x,) for x in range(100, 110)]);
 
     }
-    def CheckExecuteManyIterator(self){
+    function CheckExecuteManyIterator(){
         class MyIter{
-            def __init__(self){
-                self.value = 5;
+            function __init__(){
+                this.value = 5;
 
             }
-            def next(self){
-                if self.value == 10{
+            function next(){
+                if this.value == 10{
                     raise StopIteration;
                 } else{
-                    self.value += 1;
-                    return (self.value,);
+                    this.value += 1;
+                    return (this.value,);
 
         }
-        } } self.cu.executemany("insert into test(income) values (?)", MyIter());
+        } } this.cu.executemany("insert into test(income) values (?)", MyIter());
 
     }
-    def CheckExecuteManyGenerator(self){
-        def mygen(){
+    function CheckExecuteManyGenerator(){
+        function mygen(){
             for i in range(5){
                 yield (i,);
 
         }
-        } self.cu.executemany("insert into test(income) values (?)", mygen());
+        } this.cu.executemany("insert into test(income) values (?)", mygen());
 
     }
-    def CheckExecuteManyWrongSqlArg(self){
+    function CheckExecuteManyWrongSqlArg(){
         try{
-            self.cu.executemany(42, [(3,)]);
-            self.fail("should have raised a ValueError");
+            this.cu.executemany(42, [(3,)]);
+            this.fail("should have raised a ValueError");
         } except ValueError{
             return;
         } except Exception{
-            self.fail("raised wrong exception.");
+            this.fail("raised wrong exception.");
 
     }
-    } def CheckExecuteManySelect(self){
+    } function CheckExecuteManySelect(){
         try{
-            self.cu.executemany("select ?", [(3,)]);
-            self.fail("should have raised a ProgrammingError");
+            this.cu.executemany("select ?", [(3,)]);
+            this.fail("should have raised a ProgrammingError");
         } except sqlite.ProgrammingError{
             return;
         } except Exception{
-            self.fail("raised wrong exception.");
+            this.fail("raised wrong exception.");
 
     }
-    } def CheckExecuteManyNotIterable(self){
+    } function CheckExecuteManyNotIterable(){
         try{
-            self.cu.executemany("insert into test(income) values (?)", 42);
-            self.fail("should have raised a TypeError");
+            this.cu.executemany("insert into test(income) values (?)", 42);
+            this.fail("should have raised a TypeError");
         } except TypeError{
             return;
         } except Exception, e{
             print "raised", e.__class__;
-            self.fail("raised wrong exception.");
+            this.fail("raised wrong exception.");
 
     }
-    } def CheckFetchIter(self){
+    } function CheckFetchIter(){
         # Optional DB-API extension.
-        self.cu.execute("delete from test");
-        self.cu.execute("insert into test(id) values (?)", (5,));
-        self.cu.execute("insert into test(id) values (?)", (6,));
-        self.cu.execute("select id from test order by id");
+        this.cu.execute("delete from test");
+        this.cu.execute("insert into test(id) values (?)", (5,));
+        this.cu.execute("insert into test(id) values (?)", (6,));
+        this.cu.execute("select id from test order by id");
         lst = [];
-        for row in self.cu{
+        for row in this.cu{
             lst.append(row[0]);
-        } self.assertEqual(lst[0], 5);
-        self.assertEqual(lst[1], 6);
+        } this.assertEqual(lst[0], 5);
+        this.assertEqual(lst[1], 6);
 
     }
-    def CheckFetchone(self){
-        self.cu.execute("select name from test");
-        row = self.cu.fetchone();
-        self.assertEqual(row[0], "foo");
-        row = self.cu.fetchone();
-        self.assertEqual(row, None);
+    function CheckFetchone(){
+        this.cu.execute("select name from test");
+        row = this.cu.fetchone();
+        this.assertEqual(row[0], "foo");
+        row = this.cu.fetchone();
+        this.assertEqual(row, nil);
 
     }
-    def CheckFetchoneNoStatement(self){
-        cur = self.cx.cursor();
+    function CheckFetchoneNoStatement(){
+        cur = this.cx.cursor();
         row = cur.fetchone();
-        self.assertEqual(row, None);
+        this.assertEqual(row, nil);
 
     }
-    def CheckArraySize(self){
+    function CheckArraySize(){
         # must default ot 1
-        self.assertEqual(self.cu.arraysize, 1);
+        this.assertEqual(this.cu.arraysize, 1);
 
         # now set to 2
-        self.cu.arraysize = 2;
+        this.cu.arraysize = 2;
 
         # now make the query return 3 rows
-        self.cu.execute("delete from test");
-        self.cu.execute("insert into test(name) values ('A')");
-        self.cu.execute("insert into test(name) values ('B')");
-        self.cu.execute("insert into test(name) values ('C')");
-        self.cu.execute("select name from test");
-        res = self.cu.fetchmany();
+        this.cu.execute("delete from test");
+        this.cu.execute("insert into test(name) values ('A')");
+        this.cu.execute("insert into test(name) values ('B')");
+        this.cu.execute("insert into test(name) values ('C')");
+        this.cu.execute("select name from test");
+        res = this.cu.fetchmany();
 
-        self.assertEqual(len(res), 2);
-
-    }
-    def CheckFetchmany(self){
-        self.cu.execute("select name from test");
-        res = self.cu.fetchmany(100);
-        self.assertEqual(len(res), 1);
-        res = self.cu.fetchmany(100);
-        self.assertEqual(res, []);
+        this.assertEqual(len(res), 2);
 
     }
-    def CheckFetchmanyKwArg(self){
+    function CheckFetchmany(){
+        this.cu.execute("select name from test");
+        res = this.cu.fetchmany(100);
+        this.assertEqual(len(res), 1);
+        res = this.cu.fetchmany(100);
+        this.assertEqual(res, []);
+
+    }
+    function CheckFetchmanyKwArg(){
         """Checks if fetchmany works with keyword arguments""";
-        self.cu.execute("select name from test");
-        res = self.cu.fetchmany(size=100);
-        self.assertEqual(len(res), 1);
+        this.cu.execute("select name from test");
+        res = this.cu.fetchmany(size=100);
+        this.assertEqual(len(res), 1);
 
     }
-    def CheckFetchall(self){
-        self.cu.execute("select name from test");
-        res = self.cu.fetchall();
-        self.assertEqual(len(res), 1);
-        res = self.cu.fetchall();
-        self.assertEqual(res, []);
+    function CheckFetchall(){
+        this.cu.execute("select name from test");
+        res = this.cu.fetchall();
+        this.assertEqual(len(res), 1);
+        res = this.cu.fetchall();
+        this.assertEqual(res, []);
 
     }
-    def CheckSetinputsizes(self){
-        self.cu.setinputsizes([3, 4, 5]);
+    function CheckSetinputsizes(){
+        this.cu.setinputsizes([3, 4, 5]);
 
     }
-    def CheckSetoutputsize(self){
-        self.cu.setoutputsize(5, 0);
+    function CheckSetoutputsize(){
+        this.cu.setoutputsize(5, 0);
 
     }
-    def CheckSetoutputsizeNoColumn(self){
-        self.cu.setoutputsize(42);
+    function CheckSetoutputsizeNoColumn(){
+        this.cu.setoutputsize(42);
 
     }
-    def CheckCursorConnection(self){
+    function CheckCursorConnection(){
         # Optional DB-API extension.
-        self.assertEqual(self.cu.connection, self.cx);
+        this.assertEqual(this.cu.connection, this.cx);
 
     }
-    def CheckWrongCursorCallable(self){
+    function CheckWrongCursorCallable(){
         try{
-            def f(){ pass;
-            cur = self.cx.cursor(f);
-            self.fail("should have raised a TypeError");
+            function f(){ pass;}
+            cur = this.cx.cursor(f);
+            this.fail("should have raised a TypeError");
         } except TypeError{
             return;
-        } self.fail("should have raised a ValueError");
+        } this.fail("should have raised a ValueError");
 
     }
-    def CheckCursorWrongClass(self){
-        class Foo{ pass;
+    function CheckCursorWrongClass(){
+        class Foo{ pass;}
         foo = Foo();
         try{
             cur = sqlite.Cursor(foo);
-            self.fail("should have raised a ValueError");
+            this.fail("should have raised a ValueError");
         } except TypeError{
             pass;
 
 }
 } } @unittest.skipUnless(threading, 'This test requires threading.');
 class ThreadTests(unittest.TestCase){
-    def setUp(self){
-        self.con = sqlite.connect(":memory:");
-        self.cur = self.con.cursor();
-        self.cur.execute("create table test(id integer primary key, name text, bin binary, ratio number, ts timestamp)");
+    function setUp(){
+        this.con = sqlite.connect(":memory:");
+        this.cur = this.con.cursor();
+        this.cur.execute("create table test(id integer primary key, name text, bin binary, ratio number, ts timestamp)");
 
     }
-    def tearDown(self){
-        self.cur.close();
-        self.con.close();
+    function tearDown(){
+        this.cur.close();
+        this.con.close();
 
     }
-    def CheckConCursor(self){
-        def run(con, errors){
+    function CheckConCursor(){
+        function run(con, errors){
             try{
                 cur = con.cursor();
                 errors.append("did not raise ProgrammingError");
@@ -578,15 +578,15 @@ class ThreadTests(unittest.TestCase){
 
         }
         } errors = [];
-        t = threading.Thread(target=run, kwargs={"con": self.con, "errors": errors});
+        t = threading.Thread(target=run, kwargs={"con": this.con, "errors": errors});
         t.start();
         t.join();
         if len(errors) > 0{
-            self.fail("\n".join(errors));
+            this.fail("\n".join(errors));
 
     }
-    } def CheckConCommit(self){
-        def run(con, errors){
+    } function CheckConCommit(){
+        function run(con, errors){
             try{
                 con.commit();
                 errors.append("did not raise ProgrammingError");
@@ -598,15 +598,15 @@ class ThreadTests(unittest.TestCase){
 
         }
         } errors = [];
-        t = threading.Thread(target=run, kwargs={"con": self.con, "errors": errors});
+        t = threading.Thread(target=run, kwargs={"con": this.con, "errors": errors});
         t.start();
         t.join();
         if len(errors) > 0{
-            self.fail("\n".join(errors));
+            this.fail("\n".join(errors));
 
     }
-    } def CheckConRollback(self){
-        def run(con, errors){
+    } function CheckConRollback(){
+        function run(con, errors){
             try{
                 con.rollback();
                 errors.append("did not raise ProgrammingError");
@@ -618,15 +618,15 @@ class ThreadTests(unittest.TestCase){
 
         }
         } errors = [];
-        t = threading.Thread(target=run, kwargs={"con": self.con, "errors": errors});
+        t = threading.Thread(target=run, kwargs={"con": this.con, "errors": errors});
         t.start();
         t.join();
         if len(errors) > 0{
-            self.fail("\n".join(errors));
+            this.fail("\n".join(errors));
 
     }
-    } def CheckConClose(self){
-        def run(con, errors){
+    } function CheckConClose(){
+        function run(con, errors){
             try{
                 con.close();
                 errors.append("did not raise ProgrammingError");
@@ -638,15 +638,15 @@ class ThreadTests(unittest.TestCase){
 
         }
         } errors = [];
-        t = threading.Thread(target=run, kwargs={"con": self.con, "errors": errors});
+        t = threading.Thread(target=run, kwargs={"con": this.con, "errors": errors});
         t.start();
         t.join();
         if len(errors) > 0{
-            self.fail("\n".join(errors));
+            this.fail("\n".join(errors));
 
     }
-    } def CheckCurImplicitBegin(self){
-        def run(cur, errors){
+    } function CheckCurImplicitBegin(){
+        function run(cur, errors){
             try{
                 cur.execute("insert into test(name) values ('a')");
                 errors.append("did not raise ProgrammingError");
@@ -658,15 +658,15 @@ class ThreadTests(unittest.TestCase){
 
         }
         } errors = [];
-        t = threading.Thread(target=run, kwargs={"cur": self.cur, "errors": errors});
+        t = threading.Thread(target=run, kwargs={"cur": this.cur, "errors": errors});
         t.start();
         t.join();
         if len(errors) > 0{
-            self.fail("\n".join(errors));
+            this.fail("\n".join(errors));
 
     }
-    } def CheckCurClose(self){
-        def run(cur, errors){
+    } function CheckCurClose(){
+        function run(cur, errors){
             try{
                 cur.close();
                 errors.append("did not raise ProgrammingError");
@@ -678,15 +678,15 @@ class ThreadTests(unittest.TestCase){
 
         }
         } errors = [];
-        t = threading.Thread(target=run, kwargs={"cur": self.cur, "errors": errors});
+        t = threading.Thread(target=run, kwargs={"cur": this.cur, "errors": errors});
         t.start();
         t.join();
         if len(errors) > 0{
-            self.fail("\n".join(errors));
+            this.fail("\n".join(errors));
 
     }
-    } def CheckCurExecute(self){
-        def run(cur, errors){
+    } function CheckCurExecute(){
+        function run(cur, errors){
             try{
                 cur.execute("select name from test");
                 errors.append("did not raise ProgrammingError");
@@ -698,16 +698,16 @@ class ThreadTests(unittest.TestCase){
 
         }
         } errors = [];
-        self.cur.execute("insert into test(name) values ('a')");
-        t = threading.Thread(target=run, kwargs={"cur": self.cur, "errors": errors});
+        this.cur.execute("insert into test(name) values ('a')");
+        t = threading.Thread(target=run, kwargs={"cur": this.cur, "errors": errors});
         t.start();
         t.join();
         if len(errors) > 0{
-            self.fail("\n".join(errors));
+            this.fail("\n".join(errors));
 
     }
-    } def CheckCurIterNext(self){
-        def run(cur, errors){
+    } function CheckCurIterNext(){
+        function run(cur, errors){
             try{
                 row = cur.fetchone();
                 errors.append("did not raise ProgrammingError");
@@ -719,47 +719,47 @@ class ThreadTests(unittest.TestCase){
 
         }
         } errors = [];
-        self.cur.execute("insert into test(name) values ('a')");
-        self.cur.execute("select name from test");
-        t = threading.Thread(target=run, kwargs={"cur": self.cur, "errors": errors});
+        this.cur.execute("insert into test(name) values ('a')");
+        this.cur.execute("select name from test");
+        t = threading.Thread(target=run, kwargs={"cur": this.cur, "errors": errors});
         t.start();
         t.join();
         if len(errors) > 0{
-            self.fail("\n".join(errors));
+            this.fail("\n".join(errors));
 
 }
 } } class ConstructorTests(unittest.TestCase){
-    def CheckDate(self){
+    function CheckDate(){
         d = sqlite.Date(2004, 10, 28);
 
     }
-    def CheckTime(self){
+    function CheckTime(){
         t = sqlite.Time(12, 39, 35);
 
     }
-    def CheckTimestamp(self){
+    function CheckTimestamp(){
         ts = sqlite.Timestamp(2004, 10, 28, 12, 39, 35);
 
     }
-    def CheckDateFromTicks(self){
+    function CheckDateFromTicks(){
         d = sqlite.DateFromTicks(42);
 
     }
-    def CheckTimeFromTicks(self){
+    function CheckTimeFromTicks(){
         t = sqlite.TimeFromTicks(42);
 
     }
-    def CheckTimestampFromTicks(self){
+    function CheckTimestampFromTicks(){
         ts = sqlite.TimestampFromTicks(42);
 
     }
-    def CheckBinary(self){
+    function CheckBinary(){
         with test_support.check_py3k_warnings(){
             b = sqlite.Binary(chr(0) + "'");
 
 }
 } } class ExtensionTests(unittest.TestCase){
-    def CheckScriptStringSql(self){
+    function CheckScriptStringSql(){
         con = sqlite.connect(":memory:");
         cur = con.cursor();
         cur.executescript("""
@@ -770,10 +770,10 @@ class ThreadTests(unittest.TestCase){
             """);
         cur.execute("select i from a");
         res = cur.fetchone()[0];
-        self.assertEqual(res, 5);
+        this.assertEqual(res, 5);
 
     }
-    def CheckScriptStringUnicode(self){
+    function CheckScriptStringUnicode(){
         con = sqlite.connect(":memory:");
         cur = con.cursor();
         cur.executescript(u"""
@@ -785,192 +785,192 @@ class ThreadTests(unittest.TestCase){
             """);
         cur.execute("select i from a");
         res = cur.fetchone()[0];
-        self.assertEqual(res, 6);
+        this.assertEqual(res, 6);
 
     }
-    def CheckScriptSyntaxError(self){
+    function CheckScriptSyntaxError(){
         con = sqlite.connect(":memory:");
         cur = con.cursor();
-        raised = False;
+        raised = false;
         try{
             cur.executescript("create table test(x); asdf; create table test2(x)");
         } except sqlite.OperationalError{
-            raised = True;
-        } self.assertEqual(raised, True, "should have raised an exception");
+            raised = true;
+        } this.assertEqual(raised, true, "should have raised an exception");
 
     }
-    def CheckScriptErrorNormal(self){
+    function CheckScriptErrorNormal(){
         con = sqlite.connect(":memory:");
         cur = con.cursor();
-        raised = False;
+        raised = false;
         try{
             cur.executescript("create table test(sadfsadfdsa); select foo from hurz;");
         } except sqlite.OperationalError{
-            raised = True;
-        } self.assertEqual(raised, True, "should have raised an exception");
+            raised = true;
+        } this.assertEqual(raised, true, "should have raised an exception");
 
     }
-    def CheckConnectionExecute(self){
+    function CheckConnectionExecute(){
         con = sqlite.connect(":memory:");
         result = con.execute("select 5").fetchone()[0];
-        self.assertEqual(result, 5, "Basic test of Connection.execute");
+        this.assertEqual(result, 5, "Basic test of Connection.execute");
 
     }
-    def CheckConnectionExecutemany(self){
+    function CheckConnectionExecutemany(){
         con = sqlite.connect(":memory:");
         con.execute("create table test(foo)");
         con.executemany("insert into test(foo) values (?)", [(3,), (4,)]);
         result = con.execute("select foo from test order by foo").fetchall();
-        self.assertEqual(result[0][0], 3, "Basic test of Connection.executemany");
-        self.assertEqual(result[1][0], 4, "Basic test of Connection.executemany");
+        this.assertEqual(result[0][0], 3, "Basic test of Connection.executemany");
+        this.assertEqual(result[1][0], 4, "Basic test of Connection.executemany");
 
     }
-    def CheckConnectionExecutescript(self){
+    function CheckConnectionExecutescript(){
         con = sqlite.connect(":memory:");
         con.executescript("create table test(foo); insert into test(foo) values (5);");
         result = con.execute("select foo from test").fetchone()[0];
-        self.assertEqual(result, 5, "Basic test of Connection.executescript");
+        this.assertEqual(result, 5, "Basic test of Connection.executescript");
 
 }
 } class ClosedConTests(unittest.TestCase){
-    def setUp(self){
+    function setUp(){
         pass;
 
     }
-    def tearDown(self){
+    function tearDown(){
         pass;
 
     }
-    def CheckClosedConCursor(self){
+    function CheckClosedConCursor(){
         con = sqlite.connect(":memory:");
         con.close();
         try{
             cur = con.cursor();
-            self.fail("Should have raised a ProgrammingError");
+            this.fail("Should have raised a ProgrammingError");
         } except sqlite.ProgrammingError{
             pass;
         } except Exception{
-            self.fail("Should have raised a ProgrammingError");
+            this.fail("Should have raised a ProgrammingError");
 
     }
-    } def CheckClosedConCommit(self){
+    } function CheckClosedConCommit(){
         con = sqlite.connect(":memory:");
         con.close();
         try{
             con.commit();
-            self.fail("Should have raised a ProgrammingError");
+            this.fail("Should have raised a ProgrammingError");
         } except sqlite.ProgrammingError{
             pass;
         } except Exception{
-            self.fail("Should have raised a ProgrammingError");
+            this.fail("Should have raised a ProgrammingError");
 
     }
-    } def CheckClosedConRollback(self){
+    } function CheckClosedConRollback(){
         con = sqlite.connect(":memory:");
         con.close();
         try{
             con.rollback();
-            self.fail("Should have raised a ProgrammingError");
+            this.fail("Should have raised a ProgrammingError");
         } except sqlite.ProgrammingError{
             pass;
         } except Exception{
-            self.fail("Should have raised a ProgrammingError");
+            this.fail("Should have raised a ProgrammingError");
 
     }
-    } def CheckClosedCurExecute(self){
+    } function CheckClosedCurExecute(){
         con = sqlite.connect(":memory:");
         cur = con.cursor();
         con.close();
         try{
             cur.execute("select 4");
-            self.fail("Should have raised a ProgrammingError");
+            this.fail("Should have raised a ProgrammingError");
         } except sqlite.ProgrammingError{
             pass;
         } except Exception{
-            self.fail("Should have raised a ProgrammingError");
+            this.fail("Should have raised a ProgrammingError");
 
     }
-    } def CheckClosedCreateFunction(self){
+    } function CheckClosedCreateFunction(){
         con = sqlite.connect(":memory:");
         con.close();
-        def f(x){ return 17;
+        function f(x){ return 17;}
         try{
             con.create_function("foo", 1, f);
-            self.fail("Should have raised a ProgrammingError");
+            this.fail("Should have raised a ProgrammingError");
         } except sqlite.ProgrammingError{
             pass;
         } except Exception{
-            self.fail("Should have raised a ProgrammingError");
+            this.fail("Should have raised a ProgrammingError");
 
     }
-    } def CheckClosedCreateAggregate(self){
+    } function CheckClosedCreateAggregate(){
         con = sqlite.connect(":memory:");
         con.close();
         class Agg{
-            def __init__(self){
+            function __init__(){
                 pass;
-            } def step(self, x){
+            } function step( x){
                 pass;
-            } def finalize(self){
+            } function finalize(){
                 return 17;
         } } try{
             con.create_aggregate("foo", 1, Agg);
-            self.fail("Should have raised a ProgrammingError");
+            this.fail("Should have raised a ProgrammingError");
         } except sqlite.ProgrammingError{
             pass;
         } except Exception{
-            self.fail("Should have raised a ProgrammingError");
+            this.fail("Should have raised a ProgrammingError");
 
     }
-    } def CheckClosedSetAuthorizer(self){
+    } function CheckClosedSetAuthorizer(){
         con = sqlite.connect(":memory:");
         con.close();
-        def authorizer(*args){
+        function authorizer(*args){
             return sqlite.DENY;
         } try{
             con.set_authorizer(authorizer);
-            self.fail("Should have raised a ProgrammingError");
+            this.fail("Should have raised a ProgrammingError");
         } except sqlite.ProgrammingError{
             pass;
         } except Exception{
-            self.fail("Should have raised a ProgrammingError");
+            this.fail("Should have raised a ProgrammingError");
 
     }
-    } def CheckClosedSetProgressCallback(self){
+    } function CheckClosedSetProgressCallback(){
         con = sqlite.connect(":memory:");
         con.close();
-        def progress(){ pass;
+        function progress(){ pass;}
         try{
             con.set_progress_handler(progress, 100);
-            self.fail("Should have raised a ProgrammingError");
+            this.fail("Should have raised a ProgrammingError");
         } except sqlite.ProgrammingError{
             pass;
         } except Exception{
-            self.fail("Should have raised a ProgrammingError");
+            this.fail("Should have raised a ProgrammingError");
 
     }
-    } def CheckClosedCall(self){
+    } function CheckClosedCall(){
         con = sqlite.connect(":memory:");
         con.close();
         try{
             con();
-            self.fail("Should have raised a ProgrammingError");
+            this.fail("Should have raised a ProgrammingError");
         } except sqlite.ProgrammingError{
             pass;
         } except Exception{
-            self.fail("Should have raised a ProgrammingError");
+            this.fail("Should have raised a ProgrammingError");
 
 }
 } } class ClosedCurTests(unittest.TestCase){
-    def setUp(self){
+    function setUp(){
         pass;
 
     }
-    def tearDown(self){
+    function tearDown(){
         pass;
 
     }
-    def CheckClosed(self){
+    function CheckClosed(){
         con = sqlite.connect(":memory:");
         cur = con.cursor();
         cur.close();
@@ -988,14 +988,14 @@ class ThreadTests(unittest.TestCase){
                 method = getattr(cur, method_name);
 
                 method(*params);
-                self.fail("Should have raised a ProgrammingError: method " + method_name);
+                this.fail("Should have raised a ProgrammingError: method " + method_name);
             } except sqlite.ProgrammingError{
                 pass;
             } except Exception{
-                self.fail("Should have raised a ProgrammingError: " + method_name);
+                this.fail("Should have raised a ProgrammingError: " + method_name);
 
 }
-} } } def suite(){
+} } } function suite(){
     module_suite = unittest.makeSuite(ModuleTests, "Check");
     connection_suite = unittest.makeSuite(ConnectionTests, "Check");
     cursor_suite = unittest.makeSuite(CursorTests, "Check");
@@ -1007,7 +1007,7 @@ class ThreadTests(unittest.TestCase){
     return unittest.TestSuite((module_suite, connection_suite, cursor_suite, thread_suite, constructor_suite, ext_suite, closed_con_suite, closed_cur_suite));
 
 }
-def test(){
+function test(){
     runner = unittest.TextTestRunner();
     runner.run(suite());
 

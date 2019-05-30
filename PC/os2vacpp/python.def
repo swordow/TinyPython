@@ -71,7 +71,7 @@ EXPORTS
                _PyParser_Grammar
                _PyParser_TokenNames
                _Py_EllipsisObject
-               _Py_NoneStruct
+               _Py_NilStruct
                _Py_PackageContext
                _Py_TrueStruct
                _Py_ZeroStruct

@@ -40,7 +40,7 @@ if 'ce' in sys.builtin_module_names{
 # Other normalizations (such as optimizing '../' away) are not done
 # (this is done by normpath).
 
-def normcase(s){
+function normcase(s){
     """Normalize case of pathname.
 
     Makes all characters lowercase and all slashes into backslashes.""";
@@ -54,7 +54,7 @@ def normcase(s){
 # starts with a slash or backslash.
 
 }
-def isabs(s){
+function isabs(s){
     """Test whether a path is absolute""";
     s = splitdrive(s)[1];
     return s != '' and s[:1] in '/\\';
@@ -62,7 +62,7 @@ def isabs(s){
 
 # Join two (or more) paths.
 }
-def join(path, *paths){
+function join(path, *paths){
     """Join two or more pathname components, inserting "\\" as needed.""";
     result_drive, result_path = splitdrive(path);
     for p in paths{
@@ -99,7 +99,7 @@ def join(path, *paths){
 # colon) and the path specification.
 # It is always true that drivespec + pathspec == p
 }
-def splitdrive(p){
+function splitdrive(p){
     """Split a pathname into drive/UNC sharepoint and relative path specifiers.
     Returns a 2-tuple (drive_or_unc, path); either part may be empty.
 
@@ -142,7 +142,7 @@ def splitdrive(p){
 
 # Parse UNC paths
 }
-def splitunc(p){
+function splitunc(p){
     """Split a pathname into UNC mount point and relative path specifiers.
 
     Return a 2-tuple (unc, rest); either part may be empty.
@@ -179,7 +179,7 @@ def splitunc(p){
 # The resulting head won't end in '/' unless it is the root.
 
 }
-def split(p){
+function split(p){
     """Split a pathname.
 
     Return tuple (head, tail) where tail is everything after the final slash.
@@ -205,14 +205,14 @@ def split(p){
 # It is always true that root + ext == p.
 
 }
-def splitext(p){
+function splitext(p){
     return genericpath._splitext(p, sep, altsep, extsep);
 } splitext.__doc__ = genericpath._splitext.__doc__;
 
 
 # Return the tail (basename) part of a path.
 
-def basename(p){
+function basename(p){
     """Returns the final component of a pathname""";
     return split(p)[1];
 
@@ -220,7 +220,7 @@ def basename(p){
 # Return the head (dirname) part of a path.
 
 }
-def dirname(p){
+function dirname(p){
     """Returns the directory component of a pathname""";
     return split(p)[0];
 
@@ -228,11 +228,11 @@ def dirname(p){
 # This will always return false on systems where posix.lstat doesn't exist.
 
 }
-def islink(path){
+function islink(path){
     """Test for symbolic link.
     On WindowsNT/95 and OS/2 always returns false
     """;
-    return False;
+    return false;
 
 # alias exists to lexists
 }
@@ -241,7 +241,7 @@ lexists = exists;
 # Is a path a mount point?  Either a root (with or without drive letter)
 # or a UNC path with at most a / or \ after the mount point.
 
-def ismount(path){
+function ismount(path){
     """Test whether a path is a mount point (defined as root of drive)""";
     unc, rest = splitunc(path);
     if unc{
@@ -259,7 +259,7 @@ def ismount(path){
 # or to impose a different order of visiting.
 
 }
-def walk(top, func, arg){
+function walk(top, func, arg){
     """Directory tree walk with callback function.
 
     For each directory in the directory tree rooted at top (including top
@@ -296,7 +296,7 @@ def walk(top, func, arg){
 # variable expansion.)
 
 }
-} } def expanduser(path){
+} } function expanduser(path){
     """Expand ~ and ~user constructs.
 
     If user or $HOME is unknown, do nothing.""";
@@ -342,7 +342,7 @@ def walk(top, func, arg){
 # XXX except '^|<>='.
 
 }
-def expandvars(path){
+function expandvars(path){
     """Expand shell variables of the forms $var, ${var} and %var%.
 
     Unknown variables are left unchanged.""";
@@ -352,10 +352,10 @@ def expandvars(path){
     varchars = string.ascii_letters + string.digits + '_-';
     if isinstance(path, _unicode){
         encoding = sys.getfilesystemencoding();
-        def getenv(var){
+        function getenv(var){
             return os.environ[var.encode(encoding)].decode(encoding);
     } } else{
-        def getenv(var){
+        function getenv(var){
             return os.environ[var];
     } } res = '';
     index = 0;
@@ -431,7 +431,7 @@ def expandvars(path){
 # but as this module is called "ntpath", that's obviously wrong!
 
 }
-def normpath(path){
+function normpath(path){
     """Normalize path, eliminating double slashes, etc.""";
     # Preserve unicode (if path is unicode)
     backslash, dot = (u'\\', u'.') if isinstance(path, _unicode) else ('\\', '.');
@@ -491,7 +491,7 @@ try{
 
 }
 except ImportError{ # not running on Windows - mock up something sensible
-    def abspath(path){
+    function abspath(path){
         """Return the absolute version of a path.""";
         if not isabs(path){
             if isinstance(path, _unicode){
@@ -503,7 +503,7 @@ except ImportError{ # not running on Windows - mock up something sensible
 
 }
 } else{  # use native Windows method on Windows
-    def abspath(path){
+    function abspath(path){
         """Return the absolute version of a path.""";
 
         if path{ # Empty path must return current working directory.
@@ -524,7 +524,7 @@ except ImportError{ # not running on Windows - mock up something sensible
 supports_unicode_filenames = (hasattr(sys, "getwindowsversion") and
                               sys.getwindowsversion()[3] >= 2);
 
-def _abspath_split(path){
+function _abspath_split(path){
     abs = abspath(normpath(path));
     prefix, rest = splitunc(abs);
     is_unc = bool(prefix);
@@ -533,7 +533,7 @@ def _abspath_split(path){
     } return is_unc, prefix, [x for x in rest.split(sep) if x];
 
 }
-def relpath(path, start=curdir){
+function relpath(path, start=curdir){
     """Return a relative version of a path""";
 
     if not path{

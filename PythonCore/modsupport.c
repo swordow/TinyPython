@@ -392,7 +392,7 @@ do_mkvalue(const char **p_format, va_list *p_va, int flags)
             else
                 n = -1;
             if (u == NULL) {
-                v = Py_None;
+                v = Py_Nil;
                 Py_INCREF(v);
             }
             else {
@@ -437,7 +437,7 @@ do_mkvalue(const char **p_format, va_list *p_va, int flags)
             else
                 n = -1;
             if (str == NULL) {
-                v = Py_None;
+                v = Py_Nil;
                 Py_INCREF(v);
             }
             else {
@@ -556,8 +556,8 @@ va_build_value(const char *format, va_list va, int flags)
     if (n < 0)
         return NULL;
     if (n == 0) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     if (n == 1)
         return do_mkvalue(&f, &lva, flags);

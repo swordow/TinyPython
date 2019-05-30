@@ -59,9 +59,9 @@ from TYPES import *;
 # Included from sys/machlock.h
 from TYPES import *;
 LOCK_HELD_VALUE = 0xff;
-def SPIN_LOCK(pl){ return ((pl) > ipltospl(LOCK_LEVEL));
+function SPIN_LOCK(pl){ return ((pl) > ipltospl(LOCK_LEVEL));}
 
-def LOCK_SAMPLE_INTERVAL(i){ return (((i) & 0xff) == 0);
+function LOCK_SAMPLE_INTERVAL(i){ return (((i) & 0xff) == 0);}
 
 CLOCK_LEVEL = 10;
 LOCK_LEVEL = 10;
@@ -121,13 +121,13 @@ MAXOFF_T = 0x7fffffffffffffffl;
 MAXOFFSET_T = 0x7fffffffffffffffl;
 MAXOFF_T = 0x7fffffffl;
 MAXOFFSET_T = 0x7fffffff;
-def btodb(bytes){ return;   \
+function btodb(bytes){ return;}   \
 
-def dbtob(db){ return;   \
+function dbtob(db){ return;}   \
 
-def lbtodb(bytes){ return;   \
+function lbtodb(bytes){ return;}   \
 
-def ldbtob(db){ return;   \
+function ldbtob(db){ return;}   \
 
 NCARGS32 = 0x100000;
 NCARGS64 = 0x200000;
@@ -135,27 +135,27 @@ NCARGS = NCARGS64;
 NCARGS = NCARGS32;
 FSHIFT = 8;
 FSCALE = (1<<FSHIFT);
-def DELAY(n){ return drv_usecwait(n);
+function DELAY(n){ return drv_usecwait(n);}
 
-def mmu_ptob(x){ return ((x) << MMU_PAGESHIFT);
+function mmu_ptob(x){ return ((x) << MMU_PAGESHIFT);}
 
-def mmu_btop(x){ return (((x)) >> MMU_PAGESHIFT);
+function mmu_btop(x){ return (((x)) >> MMU_PAGESHIFT);}
 
-def mmu_btopr(x){ return ((((x) + MMU_PAGEOFFSET) >> MMU_PAGESHIFT));
+function mmu_btopr(x){ return ((((x) + MMU_PAGEOFFSET) >> MMU_PAGESHIFT));}
 
-def mmu_ptod(x){ return ((x) << (MMU_PAGESHIFT - DEV_BSHIFT));
+function mmu_ptod(x){ return ((x) << (MMU_PAGESHIFT - DEV_BSHIFT));}
 
-def ptod(x){ return ((x) << (PAGESHIFT - DEV_BSHIFT));
+function ptod(x){ return ((x) << (PAGESHIFT - DEV_BSHIFT));}
 
-def ptob(x){ return ((x) << PAGESHIFT);
+function ptob(x){ return ((x) << PAGESHIFT);}
 
-def btop(x){ return (((x) >> PAGESHIFT));
+function btop(x){ return (((x) >> PAGESHIFT));}
 
-def btopr(x){ return ((((x) + PAGEOFFSET) >> PAGESHIFT));
+function btopr(x){ return ((((x) + PAGEOFFSET) >> PAGESHIFT));}
 
-def dtop(DD){ return (((DD) + NDPP - 1) >> (PAGESHIFT - DEV_BSHIFT));
+function dtop(DD){ return (((DD) + NDPP - 1) >> (PAGESHIFT - DEV_BSHIFT));}
 
-def dtopt(DD){ return ((DD) >> (PAGESHIFT - DEV_BSHIFT));
+function dtopt(DD){ return ((DD) >> (PAGESHIFT - DEV_BSHIFT));}
 
 _AIO_LISTIO_MAX = (4096);
 _AIO_MAX = (-1);
@@ -328,18 +328,18 @@ _POSIX2_UPE = 1;
 
 # Included from sys/mutex.h
 from TYPES import *;
-def MUTEX_HELD(x){ return (mutex_owned(x));
+function MUTEX_HELD(x){ return (mutex_owned(x));}
 
 
 # Included from sys/rwlock.h
 from TYPES import *;
-def RW_READ_HELD(x){ return (rw_read_held((x)));
+function RW_READ_HELD(x){ return (rw_read_held((x)));}
 
-def RW_WRITE_HELD(x){ return (rw_write_held((x)));
+function RW_WRITE_HELD(x){ return (rw_write_held((x)));}
 
-def RW_LOCK_HELD(x){ return (rw_lock_held((x)));
+function RW_LOCK_HELD(x){ return (rw_lock_held((x)));}
 
-def RW_ISWRITER(x){ return (rw_iswriter(x));
+function RW_ISWRITER(x){ return (rw_iswriter(x));}
 
 
 # Included from sys/semaphore.h
@@ -360,7 +360,7 @@ from TYPES import *;
 # Included from sys/int_types.h
 TIME32_MAX = INT32_MAX;
 TIME32_MIN = INT32_MIN;
-def TIMEVAL_OVERFLOW(tv){ return; \
+function TIMEVAL_OVERFLOW(tv){ return;} \
 
 from TYPES import *;
 DST_NONE = 0;
@@ -378,7 +378,7 @@ ITIMER_REAL = 0;
 ITIMER_VIRTUAL = 1;
 ITIMER_PROF = 2;
 ITIMER_REALPROF = 3;
-def ITIMERVAL_OVERFLOW(itv){ return; \
+function ITIMERVAL_OVERFLOW(itv){ return;} \
 
 SEC = 1;
 MILLISEC = 1000;
@@ -386,9 +386,9 @@ MICROSEC = 1000000;
 NANOSEC = 1000000000;
 
 # Included from sys/time_impl.h
-def TIMESPEC_OVERFLOW(ts){ return; \
+function TIMESPEC_OVERFLOW(ts){ return;} \
 
-def ITIMERSPEC_OVERFLOW(it){ return; \
+function ITIMERSPEC_OVERFLOW(it){ return;} \
 
 __CLOCK_REALTIME0 = 0;
 CLOCK_VIRTUAL = 1;
@@ -400,31 +400,31 @@ CLOCK_REALTIME = __CLOCK_REALTIME3;
 CLOCK_REALTIME = __CLOCK_REALTIME0;
 TIMER_RELTIME = 0x0;
 TIMER_ABSTIME = 0x1;
-def TICK_TO_SEC(tick){ return ((tick) / hz);
+function TICK_TO_SEC(tick){ return ((tick) / hz);}
 
-def SEC_TO_TICK(sec){ return ((sec) * hz);
+function SEC_TO_TICK(sec){ return ((sec) * hz);}
 
-def TICK_TO_MSEC(tick){ return; \
+function TICK_TO_MSEC(tick){ return;} \
 
-def MSEC_TO_TICK(msec){ return; \
+function MSEC_TO_TICK(msec){ return;} \
 
-def MSEC_TO_TICK_ROUNDUP(msec){ return; \
+function MSEC_TO_TICK_ROUNDUP(msec){ return;} \
 
-def TICK_TO_USEC(tick){ return ((tick) * usec_per_tick);
+function TICK_TO_USEC(tick){ return ((tick) * usec_per_tick);}
 
-def USEC_TO_TICK(usec){ return ((usec) / usec_per_tick);
+function USEC_TO_TICK(usec){ return ((usec) / usec_per_tick);}
 
-def USEC_TO_TICK_ROUNDUP(usec){ return; \
+function USEC_TO_TICK_ROUNDUP(usec){ return;} \
 
-def TICK_TO_NSEC(tick){ return ((tick) * nsec_per_tick);
+function TICK_TO_NSEC(tick){ return ((tick) * nsec_per_tick);}
 
-def NSEC_TO_TICK(nsec){ return ((nsec) / nsec_per_tick);
+function NSEC_TO_TICK(nsec){ return ((nsec) / nsec_per_tick);}
 
-def NSEC_TO_TICK_ROUNDUP(nsec){ return; \
+function NSEC_TO_TICK_ROUNDUP(nsec){ return;} \
 
-def TIMEVAL_TO_TICK(tvp){ return; \
+function TIMEVAL_TO_TICK(tvp){ return;} \
 
-def TIMESTRUC_TO_TICK(tsp){ return; \
+function TIMESTRUC_TO_TICK(tsp){ return;} \
 
 
 # Included from time.h
@@ -440,7 +440,7 @@ FD_SETSIZE = 65536;
 FD_SETSIZE = 1024;
 _NBBY = 8;
 NBBY = _NBBY;
-def FD_ZERO(p){ return bzero((p), sizeof (*(p)));
+function FD_ZERO(p){ return bzero((p), sizeof (*(p)));}
 
 
 # Included from sys/signal.h
@@ -568,7 +568,7 @@ SI_MAXSZ = 128;
 # Included from sys/time_std_impl.h
 from TYPES import *;
 SI32_MAXSZ = 128;
-def SI_CANQUEUE(c){ return ((c) <= SI_QUEUE);
+function SI_CANQUEUE(c){ return ((c) <= SI_QUEUE);}
 
 SA_NOCLDSTOP = 0x00020000;
 SA_ONSTACK = 0x00000001;
@@ -654,7 +654,7 @@ PSL_ALLCC = PSR_ICC;
 PSL_USER = (PSR_S);
 PSL_USERMASK = (PSR_ICC);
 PSL_UBITS = (PSR_ICC|PSR_EF);
-def USERMODE(ps){ return (((ps) & PSR_PS) == 0);
+function USERMODE(ps){ return (((ps) & PSR_PS) == 0);}
 
 
 # Included from sys/fsr.h
@@ -713,21 +713,21 @@ FPRS_DL = 0x1;
 FPRS_DU = 0x2;
 FPRS_FEF = 0x4;
 PIL_MAX = 0xf;
-def SAVE_GLOBALS(RP){ return; \
+function SAVE_GLOBALS(RP){ return;} \
 
-def RESTORE_GLOBALS(RP){ return; \
+function RESTORE_GLOBALS(RP){ return;} \
 
-def SAVE_OUTS(RP){ return; \
+function SAVE_OUTS(RP){ return;} \
 
-def RESTORE_OUTS(RP){ return; \
+function RESTORE_OUTS(RP){ return;} \
 
-def SAVE_WINDOW(SBP){ return; \
+function SAVE_WINDOW(SBP){ return;} \
 
-def RESTORE_WINDOW(SBP){ return; \
+function RESTORE_WINDOW(SBP){ return;} \
 
-def STORE_FPREGS(FP){ return; \
+function STORE_FPREGS(FP){ return;} \
 
-def LOAD_FPREGS(FP){ return; \
+function LOAD_FPREGS(FP){ return;} \
 
 _SPARC_MAXREGWINDOW = 31;
 _XRS_ID = 0x78727300;
@@ -837,15 +837,15 @@ TS_RESUME = 0x1000;
 TS_CREATE = 0x2000;
 TS_ALLSTART = \
         (TS_CSTART|TS_UNPAUSE|TS_XSTART|TS_PSTART|TS_RESUME|TS_CREATE);
-def CPR_VSTOPPED(t){ return; \
+function CPR_VSTOPPED(t){ return;} \
 
-def THREAD_TRANSITION(tp){ return thread_transition(tp);;
+function THREAD_TRANSITION(tp){ return thread_transition(tp);;}
 
-def THREAD_STOP(tp){ return; \
+function THREAD_STOP(tp){ return;} \
 
-def THREAD_ZOMB(tp){ return THREAD_SET_STATE(tp, TS_ZOMB, NULL);
+function THREAD_ZOMB(tp){ return THREAD_SET_STATE(tp, TS_ZOMB, NULL);}
 
-def SEMA_HELD(x){ return (sema_held((x)));
+function SEMA_HELD(x){ return (sema_held((x)));}
 
 NO_LOCKS_HELD = 1;
 NO_COMPETING_THREADS = 1;
@@ -882,9 +882,9 @@ RLIM32_SAVED_CUR = 0x7ffffffd;
 # Included from sys/model.h
 
 # Included from sys/debug.h
-def ASSERT64(x){ return ASSERT(x);
+function ASSERT64(x){ return ASSERT(x);}
 
-def ASSERT32(x){ return ASSERT(x);
+function ASSERT32(x){ return ASSERT(x);}
 
 DATAMODEL_MASK = 0x0FF00000;
 DATAMODEL_ILP32 = 0x00100000;
@@ -892,19 +892,19 @@ DATAMODEL_LP64 = 0x00200000;
 DATAMODEL_NONE = 0;
 DATAMODEL_NATIVE = DATAMODEL_LP64;
 DATAMODEL_NATIVE = DATAMODEL_ILP32;
-def STRUCT_SIZE(handle){ return; \
+function STRUCT_SIZE(handle){ return;} \
 
-def STRUCT_BUF(handle){ return ((handle).ptr.m64);
+function STRUCT_BUF(handle){ return ((handle).ptr.m64);}
 
-def SIZEOF_PTR(umodel){ return; \
+function SIZEOF_PTR(umodel){ return;} \
 
-def STRUCT_SIZE(handle){ return (sizeof (*(handle).ptr));
+function STRUCT_SIZE(handle){ return (sizeof (*(handle).ptr));}
 
-def STRUCT_BUF(handle){ return ((handle).ptr);
+function STRUCT_BUF(handle){ return ((handle).ptr);}
 
-def SIZEOF_PTR(umodel){ return sizeof (caddr_t);
+function SIZEOF_PTR(umodel){ return sizeof (caddr_t);}
 
-def lwp_getdatamodel(t){ return DATAMODEL_ILP32;
+function lwp_getdatamodel(t){ return DATAMODEL_ILP32;}
 
 RUSAGE_SELF = 0;
 RUSAGE_CHILDREN = -1;
@@ -916,9 +916,9 @@ RUSAGE_CHILDREN = -1;
 # Included from sys/kstat.h
 from TYPES import *;
 KSTAT_STRLEN = 31;
-def KSTAT_ENTER(k){ return; \
+function KSTAT_ENTER(k){ return;} \
 
-def KSTAT_EXIT(k){ return; \
+function KSTAT_EXIT(k){ return;} \
 
 KSTAT_TYPE_RAW = 0;
 KSTAT_TYPE_NAMED = 1;
@@ -978,11 +978,11 @@ B_NOCACHE = 0x080000;
 B_TRUNC = 0x100000;
 B_SHADOW = 0x200000;
 B_RETRYWRI = 0x400000;
-def notavail(bp){ return; \
+function notavail(bp){ return;} \
 
-def BWRITE(bp){ return; \
+function BWRITE(bp){ return;} \
 
-def BWRITE2(bp){ return; \
+function BWRITE2(bp){ return;} \
 
 VROOT = 0x01;
 VNOCACHE = 0x02;
@@ -1029,7 +1029,7 @@ VWRITE = 00200;
 VEXEC = 00100;
 MODEMASK = 07777;
 PERMMASK = 00777;
-def MANDMODE(mode){ return (((mode) & (VSGID|(VEXEC>>3))) == VSGID);
+function MANDMODE(mode){ return (((mode) & (VSGID|(VEXEC>>3))) == VSGID);}
 
 VSA_ACL = 0x0001;
 VSA_ACLCNT = 0x0002;
@@ -1063,7 +1063,7 @@ POLLNOERR = 0x0400;
 POLLCLOSED = 0x8000;
 
 # Included from sys/strmdep.h
-def str_aligned(X){ return (((ulong_t)(X) & (sizeof (long) - 1)) == 0);
+function str_aligned(X){ return (((ulong_t)(X) & (sizeof (long) - 1)) == 0);}
 
 
 # Included from sys/strft.h
@@ -1099,7 +1099,7 @@ FTEV_PUTNEXT = 0x010D;
 FTEV_RWNEXT = 0x010E;
 FTEV_QWINNER = 0x010F;
 FTEV_GEWRITE = 0x0101;
-def FTFLW_HASH(h){ return (((unsigned)(h))%ftflw_hash_sz);
+function FTFLW_HASH(h){ return (((unsigned)(h))%ftflw_hash_sz);}
 
 FTBLK_EVNTS = 0x9;
 QENAB = 0x00000001;
@@ -1230,19 +1230,19 @@ STRLOW = 1024;
 MAXIOCBSZ = 1024;
 PERIM_INNER = 1;
 PERIM_OUTER = 2;
-def datamsg(type){ return; \
+function datamsg(type){ return;} \
 
-def straln(a){ return (caddr_t)((intptr_t)(a) & ~(sizeof (int)-1));
+function straln(a){ return (caddr_t)((intptr_t)(a) & ~(sizeof (int)-1));}
 
 
 # Included from sys/byteorder.h
-def ntohl(x){ return (x);
+function ntohl(x){ return (x);}
 
-def ntohs(x){ return (x);
+function ntohs(x){ return (x);}
 
-def htonl(x){ return (x);
+function htonl(x){ return (x);}
 
-def htons(x){ return (x);
+function htons(x){ return (x);}
 
 IPPROTO_IP = 0;
 IPPROTO_HOPOPTS = 0;
@@ -1307,64 +1307,64 @@ IN_CLASSB_NSHIFT = 16;
 IN_CLASSB_MAX = 65536;
 IN_CLASSC_NSHIFT = 8;
 IN_CLASSD_NSHIFT = 28;
-def IN_MULTICAST(i){ return IN_CLASSD(i);
+function IN_MULTICAST(i){ return IN_CLASSD(i);}
 
 IN_LOOPBACKNET = 127;
-def IN_SET_LOOPBACK_ADDR(a){ return; \
+function IN_SET_LOOPBACK_ADDR(a){ return;} \
 
-def IN6_IS_ADDR_UNSPECIFIED(addr){ return; \
+function IN6_IS_ADDR_UNSPECIFIED(addr){ return;} \
 
-def IN6_IS_ADDR_LOOPBACK(addr){ return; \
+function IN6_IS_ADDR_LOOPBACK(addr){ return;} \
 
-def IN6_IS_ADDR_LOOPBACK(addr){ return; \
+function IN6_IS_ADDR_LOOPBACK(addr){ return;} \
 
-def IN6_IS_ADDR_MULTICAST(addr){ return; \
+function IN6_IS_ADDR_MULTICAST(addr){ return;} \
 
-def IN6_IS_ADDR_MULTICAST(addr){ return; \
+function IN6_IS_ADDR_MULTICAST(addr){ return;} \
 
-def IN6_IS_ADDR_LINKLOCAL(addr){ return; \
+function IN6_IS_ADDR_LINKLOCAL(addr){ return;} \
 
-def IN6_IS_ADDR_LINKLOCAL(addr){ return; \
+function IN6_IS_ADDR_LINKLOCAL(addr){ return;} \
 
-def IN6_IS_ADDR_SITELOCAL(addr){ return; \
+function IN6_IS_ADDR_SITELOCAL(addr){ return;} \
 
-def IN6_IS_ADDR_SITELOCAL(addr){ return; \
+function IN6_IS_ADDR_SITELOCAL(addr){ return;} \
 
-def IN6_IS_ADDR_V4MAPPED(addr){ return; \
+function IN6_IS_ADDR_V4MAPPED(addr){ return;} \
 
-def IN6_IS_ADDR_V4MAPPED(addr){ return; \
+function IN6_IS_ADDR_V4MAPPED(addr){ return;} \
 
-def IN6_IS_ADDR_V4MAPPED_ANY(addr){ return; \
+function IN6_IS_ADDR_V4MAPPED_ANY(addr){ return;} \
 
-def IN6_IS_ADDR_V4MAPPED_ANY(addr){ return; \
+function IN6_IS_ADDR_V4MAPPED_ANY(addr){ return;} \
 
-def IN6_IS_ADDR_V4COMPAT(addr){ return; \
+function IN6_IS_ADDR_V4COMPAT(addr){ return;} \
 
-def IN6_IS_ADDR_V4COMPAT(addr){ return; \
+function IN6_IS_ADDR_V4COMPAT(addr){ return;} \
 
-def IN6_IS_ADDR_MC_RESERVED(addr){ return; \
+function IN6_IS_ADDR_MC_RESERVED(addr){ return;} \
 
-def IN6_IS_ADDR_MC_RESERVED(addr){ return; \
+function IN6_IS_ADDR_MC_RESERVED(addr){ return;} \
 
-def IN6_IS_ADDR_MC_NODELOCAL(addr){ return; \
+function IN6_IS_ADDR_MC_NODELOCAL(addr){ return;} \
 
-def IN6_IS_ADDR_MC_NODELOCAL(addr){ return; \
+function IN6_IS_ADDR_MC_NODELOCAL(addr){ return;} \
 
-def IN6_IS_ADDR_MC_LINKLOCAL(addr){ return; \
+function IN6_IS_ADDR_MC_LINKLOCAL(addr){ return;} \
 
-def IN6_IS_ADDR_MC_LINKLOCAL(addr){ return; \
+function IN6_IS_ADDR_MC_LINKLOCAL(addr){ return;} \
 
-def IN6_IS_ADDR_MC_SITELOCAL(addr){ return; \
+function IN6_IS_ADDR_MC_SITELOCAL(addr){ return;} \
 
-def IN6_IS_ADDR_MC_SITELOCAL(addr){ return; \
+function IN6_IS_ADDR_MC_SITELOCAL(addr){ return;} \
 
-def IN6_IS_ADDR_MC_ORGLOCAL(addr){ return; \
+function IN6_IS_ADDR_MC_ORGLOCAL(addr){ return;} \
 
-def IN6_IS_ADDR_MC_ORGLOCAL(addr){ return; \
+function IN6_IS_ADDR_MC_ORGLOCAL(addr){ return;} \
 
-def IN6_IS_ADDR_MC_GLOBAL(addr){ return; \
+function IN6_IS_ADDR_MC_GLOBAL(addr){ return;} \
 
-def IN6_IS_ADDR_MC_GLOBAL(addr){ return; \
+function IN6_IS_ADDR_MC_GLOBAL(addr){ return;} \
 
 IP_OPTIONS = 1;
 IP_HDRINCL = 2;

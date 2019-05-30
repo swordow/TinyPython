@@ -293,8 +293,8 @@ fcntl_flock(PyObject *self, PyObject *args)
         PyErr_SetFromErrno(PyExc_IOError);
         return NULL;
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(flock_doc,
@@ -373,8 +373,8 @@ fcntl_lockf(PyObject *self, PyObject *args)
         PyErr_SetFromErrno(PyExc_IOError);
         return NULL;
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 #endif  /* defined(PYOS_OS2) && defined(PYCC_GCC) */
 }
 

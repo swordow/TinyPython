@@ -4,11 +4,11 @@ from Controls import *;
 import struct;
 
 # These needn't go through this module, but are here for completeness
-def SetControlData_Handle(control, part, selector, data){
+function SetControlData_Handle(control, part, selector, data){
     control.SetControlData_Handle(part, selector, data);
 
 }
-def GetControlData_Handle(control, part, selector){
+function GetControlData_Handle(control, part, selector){
     return control.GetControlData_Handle(part, selector);
 
 }
@@ -17,17 +17,17 @@ _accessdict = {
 };
 
 _codingdict = {
-    kControlPushButtonDefaultTag : ("b", None, None),
+    kControlPushButtonDefaultTag : ("b", nil, nil),
 
-    kControlEditTextTextTag: (None, None, None),
-    kControlEditTextPasswordTag: (None, None, None),
+    kControlEditTextTextTag: (nil, nil, nil),
+    kControlEditTextPasswordTag: (nil, nil, nil),
 
-    kControlPopupButtonMenuIDTag: ("h", None, None),
+    kControlPopupButtonMenuIDTag: ("h", nil, nil),
 
-    kControlListBoxDoubleClickTag: ("b", None, None),
+    kControlListBoxDoubleClickTag: ("b", nil, nil),
 };
 
-def SetControlData(control, part, selector, data){
+function SetControlData(control, part, selector, data){
     if _accessdict.has_key(selector){
         setfunc, getfunc = _accessdict[selector];
         setfunc(control, part, selector, data);
@@ -42,7 +42,7 @@ def SetControlData(control, part, selector, data){
     } control.SetControlData(part, selector, data);
 
 }
-def GetControlData(control, part, selector){
+function GetControlData(control, part, selector){
     if _accessdict.has_key(selector){
         setfunc, getfunc = _accessdict[selector];
         return getfunc(control, part, selector, data);

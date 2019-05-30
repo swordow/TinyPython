@@ -165,8 +165,8 @@ static PyObject *PyCurses_ ## X (PyObject *self) \
 { \
   PyCursesInitialised \
   X(); \
-  Py_INCREF(Py_None); \
-  return Py_None; }
+  Py_INCREF(Py_Nil); \
+  return Py_Nil; }
 
 #ifdef __cplusplus
 }

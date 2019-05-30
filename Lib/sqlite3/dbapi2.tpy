@@ -39,15 +39,15 @@ Time = datetime.time;
 
 Timestamp = datetime.datetime;
 
-def DateFromTicks(ticks){
+function DateFromTicks(ticks){
     return Date(*time.localtime(ticks)[:3]);
 
 }
-def TimeFromTicks(ticks){
+function TimeFromTicks(ticks){
     return Time(*time.localtime(ticks)[3:6]);
 
 }
-def TimestampFromTicks(ticks){
+function TimestampFromTicks(ticks){
     return Timestamp(*time.localtime(ticks)[:6]);
 
 }
@@ -57,20 +57,20 @@ sqlite_version_info = tuple([int(x) for x in sqlite_version.split(".")]);
 Binary = buffer;
 collections.Sequence.register(Row);
 
-def register_adapters_and_converters(){
-    def adapt_date(val){
+function register_adapters_and_converters(){
+    function adapt_date(val){
         return val.isoformat();
 
     }
-    def adapt_datetime(val){
+    function adapt_datetime(val){
         return val.isoformat(" ");
 
     }
-    def convert_date(val){
+    function convert_date(val){
         return datetime.date(*map(int, val.split("-")));
 
     }
-    def convert_timestamp(val){
+    function convert_timestamp(val){
         datepart, timepart = val.split(" ");
         year, month, day = map(int, datepart.split("-"));
         timepart_full = timepart.split(".");

@@ -132,7 +132,7 @@ class Error(Exception){
     pass;
 
 }
-def _read_u32(file){
+function _read_u32(file){
     x = 0L;
     for i in range(4){
         byte = file.read(1);
@@ -142,7 +142,7 @@ def _read_u32(file){
     } return x;
 
 }
-def _write_u32(file, x){
+function _write_u32(file, x){
     data = [];
     for i in range(4){
         d, m = divmod(x, 256);
@@ -154,375 +154,375 @@ def _write_u32(file, x){
 }
 } class Au_read{
 
-    def __init__(self, f){
+    function __init__( f){
         if type(f) == type(''){
             import __builtin__;
             f = __builtin__.open(f, 'rb');
-        } self.initfp(f);
+        } this.initfp(f);
 
     }
-    def __del__(self){
-        if self._file{
-            self.close();
+    function __del__(){
+        if this._file{
+            this.close();
 
     }
-    } def initfp(self, file){
-        self._file = file;
-        self._soundpos = 0;
+    } function initfp( file){
+        this._file = file;
+        this._soundpos = 0;
         magic = int(_read_u32(file));
         if magic != AUDIO_FILE_MAGIC{
             raise Error, 'bad magic number';
-        } self._hdr_size = int(_read_u32(file));
-        if self._hdr_size < 24{
+        } this._hdr_size = int(_read_u32(file));
+        if this._hdr_size < 24{
             raise Error, 'header size too small';
-        } if self._hdr_size > 100{
+        } if this._hdr_size > 100{
             raise Error, 'header size ridiculously large';
-        } self._data_size = _read_u32(file);
-        if self._data_size != AUDIO_UNKNOWN_SIZE{
-            self._data_size = int(self._data_size);
-        } self._encoding = int(_read_u32(file));
-        if self._encoding not in _simple_encodings{
+        } this._data_size = _read_u32(file);
+        if this._data_size != AUDIO_UNKNOWN_SIZE{
+            this._data_size = int(this._data_size);
+        } this._encoding = int(_read_u32(file));
+        if this._encoding not in _simple_encodings{
             raise Error, 'encoding not (yet) supported';
-        } if self._encoding in (AUDIO_FILE_ENCODING_MULAW_8,
+        } if this._encoding in (AUDIO_FILE_ENCODING_MULAW_8,
                   AUDIO_FILE_ENCODING_ALAW_8){
-            self._sampwidth = 2;
-            self._framesize = 1;
-        } elif self._encoding == AUDIO_FILE_ENCODING_LINEAR_8{
-            self._framesize = self._sampwidth = 1;
-        } elif self._encoding == AUDIO_FILE_ENCODING_LINEAR_16{
-            self._framesize = self._sampwidth = 2;
-        } elif self._encoding == AUDIO_FILE_ENCODING_LINEAR_24{
-            self._framesize = self._sampwidth = 3;
-        } elif self._encoding == AUDIO_FILE_ENCODING_LINEAR_32{
-            self._framesize = self._sampwidth = 4;
+            this._sampwidth = 2;
+            this._framesize = 1;
+        } elif this._encoding == AUDIO_FILE_ENCODING_LINEAR_8{
+            this._framesize = this._sampwidth = 1;
+        } elif this._encoding == AUDIO_FILE_ENCODING_LINEAR_16{
+            this._framesize = this._sampwidth = 2;
+        } elif this._encoding == AUDIO_FILE_ENCODING_LINEAR_24{
+            this._framesize = this._sampwidth = 3;
+        } elif this._encoding == AUDIO_FILE_ENCODING_LINEAR_32{
+            this._framesize = this._sampwidth = 4;
         } else{
             raise Error, 'unknown encoding';
-        } self._framerate = int(_read_u32(file));
-        self._nchannels = int(_read_u32(file));
-        self._framesize = self._framesize * self._nchannels;
-        if self._hdr_size > 24{
-            self._info = file.read(self._hdr_size - 24);
-            for i in range(len(self._info)){
-                if self._info[i] == '\0'{
-                    self._info = self._info[:i];
+        } this._framerate = int(_read_u32(file));
+        this._nchannels = int(_read_u32(file));
+        this._framesize = this._framesize * this._nchannels;
+        if this._hdr_size > 24{
+            this._info = file.read(this._hdr_size - 24);
+            for i in range(len(this._info)){
+                if this._info[i] == '\0'{
+                    this._info = this._info[:i];
                     break;
         } } } else{
-            self._info = '';
+            this._info = '';
         } try{
-            self._data_pos = file.tell();
+            this._data_pos = file.tell();
         } except (AttributeError, IOError){
-            self._data_pos = None;
+            this._data_pos = nil;
 
     }
-    } def getfp(self){
-        return self._file;
+    } function getfp(){
+        return this._file;
 
     }
-    def getnchannels(self){
-        return self._nchannels;
+    function getnchannels(){
+        return this._nchannels;
 
     }
-    def getsampwidth(self){
-        return self._sampwidth;
+    function getsampwidth(){
+        return this._sampwidth;
 
     }
-    def getframerate(self){
-        return self._framerate;
+    function getframerate(){
+        return this._framerate;
 
     }
-    def getnframes(self){
-        if self._data_size == AUDIO_UNKNOWN_SIZE{
+    function getnframes(){
+        if this._data_size == AUDIO_UNKNOWN_SIZE{
             return AUDIO_UNKNOWN_SIZE;
-        } if self._encoding in _simple_encodings{
-            return self._data_size // self._framesize;
+        } if this._encoding in _simple_encodings{
+            return this._data_size // this._framesize;
         } return 0;                # XXX--must do some arithmetic here
 
     }
-    def getcomptype(self){
-        if self._encoding == AUDIO_FILE_ENCODING_MULAW_8{
+    function getcomptype(){
+        if this._encoding == AUDIO_FILE_ENCODING_MULAW_8{
             return 'ULAW';
-        } elif self._encoding == AUDIO_FILE_ENCODING_ALAW_8{
+        } elif this._encoding == AUDIO_FILE_ENCODING_ALAW_8{
             return 'ALAW';
         } else{
             return 'NONE';
 
     }
-    } def getcompname(self){
-        if self._encoding == AUDIO_FILE_ENCODING_MULAW_8{
+    } function getcompname(){
+        if this._encoding == AUDIO_FILE_ENCODING_MULAW_8{
             return 'CCITT G.711 u-law';
-        } elif self._encoding == AUDIO_FILE_ENCODING_ALAW_8{
+        } elif this._encoding == AUDIO_FILE_ENCODING_ALAW_8{
             return 'CCITT G.711 A-law';
         } else{
             return 'not compressed';
 
     }
-    } def getparams(self){
-        return self.getnchannels(), self.getsampwidth(), \
-                  self.getframerate(), self.getnframes(), \
-                  self.getcomptype(), self.getcompname();
+    } function getparams(){
+        return this.getnchannels(), this.getsampwidth(), \
+                  this.getframerate(), this.getnframes(), \
+                  this.getcomptype(), this.getcompname();
 
     }
-    def getmarkers(self){
-        return None;
+    function getmarkers(){
+        return nil;
 
     }
-    def getmark(self, id){
+    function getmark( id){
         raise Error, 'no marks';
 
     }
-    def readframes(self, nframes){
-        if self._encoding in _simple_encodings{
+    function readframes( nframes){
+        if this._encoding in _simple_encodings{
             if nframes == AUDIO_UNKNOWN_SIZE{
-                data = self._file.read();
+                data = this._file.read();
             } else{
-                data = self._file.read(nframes * self._framesize);
-            } self._soundpos += len(data) // self._framesize;
-            if self._encoding == AUDIO_FILE_ENCODING_MULAW_8{
+                data = this._file.read(nframes * this._framesize);
+            } this._soundpos += len(data) // this._framesize;
+            if this._encoding == AUDIO_FILE_ENCODING_MULAW_8{
                 import audioop;
-                data = audioop.ulaw2lin(data, self._sampwidth);
+                data = audioop.ulaw2lin(data, this._sampwidth);
             } return data;
-        } return None;             # XXX--not implemented yet
+        } return nil;             # XXX--not implemented yet
 
     }
-    def rewind(self){
-        if self._data_pos is None{
+    function rewind(){
+        if this._data_pos is nil{
             raise IOError('cannot seek');
-        } self._file.seek(self._data_pos);
-        self._soundpos = 0;
+        } this._file.seek(this._data_pos);
+        this._soundpos = 0;
 
     }
-    def tell(self){
-        return self._soundpos;
+    function tell(){
+        return this._soundpos;
 
     }
-    def setpos(self, pos){
-        if pos < 0 or pos > self.getnframes(){
+    function setpos( pos){
+        if pos < 0 or pos > this.getnframes(){
             raise Error, 'position not in range';
-        } if self._data_pos is None{
+        } if this._data_pos is nil{
             raise IOError('cannot seek');
-        } self._file.seek(self._data_pos + pos * self._framesize);
-        self._soundpos = pos;
+        } this._file.seek(this._data_pos + pos * this._framesize);
+        this._soundpos = pos;
 
     }
-    def close(self){
-        self._file = None;
+    function close(){
+        this._file = nil;
 
 }
 } class Au_write{
 
-    def __init__(self, f){
+    function __init__( f){
         if type(f) == type(''){
             import __builtin__;
             f = __builtin__.open(f, 'wb');
-        } self.initfp(f);
+        } this.initfp(f);
 
     }
-    def __del__(self){
-        if self._file{
-            self.close();
+    function __del__(){
+        if this._file{
+            this.close();
 
     }
-    } def initfp(self, file){
-        self._file = file;
-        self._framerate = 0;
-        self._nchannels = 0;
-        self._sampwidth = 0;
-        self._framesize = 0;
-        self._nframes = AUDIO_UNKNOWN_SIZE;
-        self._nframeswritten = 0;
-        self._datawritten = 0;
-        self._datalength = 0;
-        self._info = '';
-        self._comptype = 'ULAW'; # default is U-law
+    } function initfp( file){
+        this._file = file;
+        this._framerate = 0;
+        this._nchannels = 0;
+        this._sampwidth = 0;
+        this._framesize = 0;
+        this._nframes = AUDIO_UNKNOWN_SIZE;
+        this._nframeswritten = 0;
+        this._datawritten = 0;
+        this._datalength = 0;
+        this._info = '';
+        this._comptype = 'ULAW'; # default is U-law
 
     }
-    def setnchannels(self, nchannels){
-        if self._nframeswritten{
+    function setnchannels( nchannels){
+        if this._nframeswritten{
             raise Error, 'cannot change parameters after starting to write';
         } if nchannels not in (1, 2, 4){
             raise Error, 'only 1, 2, or 4 channels supported';
-        } self._nchannels = nchannels;
+        } this._nchannels = nchannels;
 
     }
-    def getnchannels(self){
-        if not self._nchannels{
+    function getnchannels(){
+        if not this._nchannels{
             raise Error, 'number of channels not set';
-        } return self._nchannels;
+        } return this._nchannels;
 
     }
-    def setsampwidth(self, sampwidth){
-        if self._nframeswritten{
+    function setsampwidth( sampwidth){
+        if this._nframeswritten{
             raise Error, 'cannot change parameters after starting to write';
         } if sampwidth not in (1, 2, 4){
             raise Error, 'bad sample width';
-        } self._sampwidth = sampwidth;
+        } this._sampwidth = sampwidth;
 
     }
-    def getsampwidth(self){
-        if not self._framerate{
+    function getsampwidth(){
+        if not this._framerate{
             raise Error, 'sample width not specified';
-        } return self._sampwidth;
+        } return this._sampwidth;
 
     }
-    def setframerate(self, framerate){
-        if self._nframeswritten{
+    function setframerate( framerate){
+        if this._nframeswritten{
             raise Error, 'cannot change parameters after starting to write';
-        } self._framerate = framerate;
+        } this._framerate = framerate;
 
     }
-    def getframerate(self){
-        if not self._framerate{
+    function getframerate(){
+        if not this._framerate{
             raise Error, 'frame rate not set';
-        } return self._framerate;
+        } return this._framerate;
 
     }
-    def setnframes(self, nframes){
-        if self._nframeswritten{
+    function setnframes( nframes){
+        if this._nframeswritten{
             raise Error, 'cannot change parameters after starting to write';
         } if nframes < 0{
             raise Error, '# of frames cannot be negative';
-        } self._nframes = nframes;
+        } this._nframes = nframes;
 
     }
-    def getnframes(self){
-        return self._nframeswritten;
+    function getnframes(){
+        return this._nframeswritten;
 
     }
-    def setcomptype(self, type, name){
+    function setcomptype( type, name){
         if type in ('NONE', 'ULAW'){
-            self._comptype = type;
+            this._comptype = type;
         } else{
             raise Error, 'unknown compression type';
 
     }
-    } def getcomptype(self){
-        return self._comptype;
+    } function getcomptype(){
+        return this._comptype;
 
     }
-    def getcompname(self){
-        if self._comptype == 'ULAW'{
+    function getcompname(){
+        if this._comptype == 'ULAW'{
             return 'CCITT G.711 u-law';
-        } elif self._comptype == 'ALAW'{
+        } elif this._comptype == 'ALAW'{
             return 'CCITT G.711 A-law';
         } else{
             return 'not compressed';
 
     }
-    } def setparams(self, params){
+    } function setparams( params){
         nchannels, sampwidth, framerate, nframes, comptype, compname = params;
-        self.setnchannels(nchannels);
-        self.setsampwidth(sampwidth);
-        self.setframerate(framerate);
-        self.setnframes(nframes);
-        self.setcomptype(comptype, compname);
+        this.setnchannels(nchannels);
+        this.setsampwidth(sampwidth);
+        this.setframerate(framerate);
+        this.setnframes(nframes);
+        this.setcomptype(comptype, compname);
 
     }
-    def getparams(self){
-        return self.getnchannels(), self.getsampwidth(), \
-                  self.getframerate(), self.getnframes(), \
-                  self.getcomptype(), self.getcompname();
+    function getparams(){
+        return this.getnchannels(), this.getsampwidth(), \
+                  this.getframerate(), this.getnframes(), \
+                  this.getcomptype(), this.getcompname();
 
     }
-    def tell(self){
-        return self._nframeswritten;
+    function tell(){
+        return this._nframeswritten;
 
     }
-    def writeframesraw(self, data){
-        self._ensure_header_written();
-        if self._comptype == 'ULAW'{
+    function writeframesraw( data){
+        this._ensure_header_written();
+        if this._comptype == 'ULAW'{
             import audioop;
-            data = audioop.lin2ulaw(data, self._sampwidth);
-        } nframes = len(data) // self._framesize;
-        self._file.write(data);
-        self._nframeswritten = self._nframeswritten + nframes;
-        self._datawritten = self._datawritten + len(data);
+            data = audioop.lin2ulaw(data, this._sampwidth);
+        } nframes = len(data) // this._framesize;
+        this._file.write(data);
+        this._nframeswritten = this._nframeswritten + nframes;
+        this._datawritten = this._datawritten + len(data);
 
     }
-    def writeframes(self, data){
-        self.writeframesraw(data);
-        if self._nframeswritten != self._nframes or \
-                  self._datalength != self._datawritten{
-            self._patchheader();
+    function writeframes( data){
+        this.writeframesraw(data);
+        if this._nframeswritten != this._nframes or \
+                  this._datalength != this._datawritten{
+            this._patchheader();
 
     }
-    } def close(self){
-        if self._file{
+    } function close(){
+        if this._file{
             try{
-                self._ensure_header_written();
-                if self._nframeswritten != self._nframes or \
-                        self._datalength != self._datawritten{
-                    self._patchheader();
-                } self._file.flush();
+                this._ensure_header_written();
+                if this._nframeswritten != this._nframes or \
+                        this._datalength != this._datawritten{
+                    this._patchheader();
+                } this._file.flush();
             } finally{
-                self._file = None;
+                this._file = nil;
 
     #
     # private methods
     #
 
     }
-    } } def _ensure_header_written(self){
-        if not self._nframeswritten{
-            if not self._nchannels{
+    } } function _ensure_header_written(){
+        if not this._nframeswritten{
+            if not this._nchannels{
                 raise Error, '# of channels not specified';
-            } if not self._sampwidth{
+            } if not this._sampwidth{
                 raise Error, 'sample width not specified';
-            } if not self._framerate{
+            } if not this._framerate{
                 raise Error, 'frame rate not specified';
-            } self._write_header();
+            } this._write_header();
 
     }
-    } def _write_header(self){
-        if self._comptype == 'NONE'{
-            if self._sampwidth == 1{
+    } function _write_header(){
+        if this._comptype == 'NONE'{
+            if this._sampwidth == 1{
                 encoding = AUDIO_FILE_ENCODING_LINEAR_8;
-                self._framesize = 1;
-            } elif self._sampwidth == 2{
+                this._framesize = 1;
+            } elif this._sampwidth == 2{
                 encoding = AUDIO_FILE_ENCODING_LINEAR_16;
-                self._framesize = 2;
-            } elif self._sampwidth == 4{
+                this._framesize = 2;
+            } elif this._sampwidth == 4{
                 encoding = AUDIO_FILE_ENCODING_LINEAR_32;
-                self._framesize = 4;
+                this._framesize = 4;
             } else{
                 raise Error, 'internal error';
-        } } elif self._comptype == 'ULAW'{
+        } } elif this._comptype == 'ULAW'{
             encoding = AUDIO_FILE_ENCODING_MULAW_8;
-            self._framesize = 1;
+            this._framesize = 1;
         } else{
             raise Error, 'internal error';
-        } self._framesize = self._framesize * self._nchannels;
-        _write_u32(self._file, AUDIO_FILE_MAGIC);
-        header_size = 25 + len(self._info);
+        } this._framesize = this._framesize * this._nchannels;
+        _write_u32(this._file, AUDIO_FILE_MAGIC);
+        header_size = 25 + len(this._info);
         header_size = (header_size + 7) & ~7;
-        _write_u32(self._file, header_size);
-        if self._nframes == AUDIO_UNKNOWN_SIZE{
+        _write_u32(this._file, header_size);
+        if this._nframes == AUDIO_UNKNOWN_SIZE{
             length = AUDIO_UNKNOWN_SIZE;
         } else{
-            length = self._nframes * self._framesize;
+            length = this._nframes * this._framesize;
         } try{
-            self._form_length_pos = self._file.tell();
+            this._form_length_pos = this._file.tell();
         } except (AttributeError, IOError){
-            self._form_length_pos = None;
-        } _write_u32(self._file, length);
-        self._datalength = length;
-        _write_u32(self._file, encoding);
-        _write_u32(self._file, self._framerate);
-        _write_u32(self._file, self._nchannels);
-        self._file.write(self._info);
-        self._file.write('\0'*(header_size - len(self._info) - 24));
+            this._form_length_pos = nil;
+        } _write_u32(this._file, length);
+        this._datalength = length;
+        _write_u32(this._file, encoding);
+        _write_u32(this._file, this._framerate);
+        _write_u32(this._file, this._nchannels);
+        this._file.write(this._info);
+        this._file.write('\0'*(header_size - len(this._info) - 24));
 
     }
-    def _patchheader(self){
-        if self._form_length_pos is None{
+    function _patchheader(){
+        if this._form_length_pos is nil{
             raise IOError('cannot seek');
-        } self._file.seek(self._form_length_pos);
-        _write_u32(self._file, self._datawritten);
-        self._datalength = self._datawritten;
-        self._file.seek(0, 2);
+        } this._file.seek(this._form_length_pos);
+        _write_u32(this._file, this._datawritten);
+        this._datalength = this._datawritten;
+        this._file.seek(0, 2);
 
 }
-} def open(f, mode=None){
-    if mode is None{
+} function open(f, mode=nil){
+    if mode is nil{
         if hasattr(f, 'mode'){
             mode = f.mode;
         } else{

@@ -65,7 +65,7 @@ import re;
 import warnings;
 
 
-def readPlist(pathOrFile){
+function readPlist(pathOrFile){
     """Read a .plist file. 'pathOrFile' may either be a file name or a
     (readable) file object. Return the unpacked root object (which
     usually is a dictionary).
@@ -82,7 +82,7 @@ def readPlist(pathOrFile){
 
 
 }
-def writePlist(rootObject, pathOrFile){
+function writePlist(rootObject, pathOrFile){
     """Write 'rootObject' to a .plist file. 'pathOrFile' may either be a
     file name or a (writable) file object.
     """;
@@ -99,14 +99,14 @@ def writePlist(rootObject, pathOrFile){
 
 
 }
-} def readPlistFromString(data){
+} function readPlistFromString(data){
     """Read a plist data from a string. Return the root object.
     """;
     return readPlist(StringIO(data));
 
 
 }
-def writePlistToString(rootObject){
+function writePlistToString(rootObject){
     """Return 'rootObject' as a plist-formatted string.
     """;
     f = StringIO();
@@ -115,7 +115,7 @@ def writePlistToString(rootObject){
 
 
 }
-def readPlistFromResource(path, restype='plst', resid=0){
+function readPlistFromResource(path, restype='plst', resid=0){
     """Read plst resource from the resource fork of path.
     """;
     warnings.warnpy3k("In 3.x, readPlistFromResource is removed.",
@@ -132,7 +132,7 @@ def readPlistFromResource(path, restype='plst', resid=0){
 
 
 }
-def writePlistToResource(rootObject, path, restype='plst', resid=0){
+function writePlistToResource(rootObject, path, restype='plst', resid=0){
     """Write 'rootObject' as a plst resource to the resource fork of path.
     """;
     warnings.warnpy3k("In 3.x, writePlistToResource is removed.", stacklevel=2);
@@ -156,39 +156,39 @@ def writePlistToResource(rootObject, path, restype='plst', resid=0){
 }
 class DumbXMLWriter{
 
-    def __init__(self, file, indentLevel=0, indent="\t"){
-        self.file = file;
-        self.stack = [];
-        self.indentLevel = indentLevel;
-        self.indent = indent;
+    function __init__( file, indentLevel=0, indent="\t"){
+        this.file = file;
+        this.stack = [];
+        this.indentLevel = indentLevel;
+        this.indent = indent;
 
     }
-    def beginElement(self, element){
-        self.stack.append(element);
-        self.writeln("<%s>" % element);
-        self.indentLevel += 1;
+    function beginElement( element){
+        this.stack.append(element);
+        this.writeln("<%s>" % element);
+        this.indentLevel += 1;
 
     }
-    def endElement(self, element){
-        assert self.indentLevel > 0;
-        assert self.stack.pop() == element;
-        self.indentLevel -= 1;
-        self.writeln("</%s>" % element);
+    function endElement( element){
+        assert this.indentLevel > 0;
+        assert this.stack.pop() == element;
+        this.indentLevel -= 1;
+        this.writeln("</%s>" % element);
 
     }
-    def simpleElement(self, element, value=None){
-        if value is not None{
+    function simpleElement( element, value=nil){
+        if value is not nil{
             value = _escapeAndEncode(value);
-            self.writeln("<%s>%s</%s>" % (element, value, element));
+            this.writeln("<%s>%s</%s>" % (element, value, element));
         } else{
-            self.writeln("<%s/>" % element);
+            this.writeln("<%s/>" % element);
 
     }
-    } def writeln(self, line){
+    } function writeln( line){
         if line{
-            self.file.write(self.indentLevel * self.indent + line + "\n");
+            this.file.write(this.indentLevel * this.indent + line + "\n");
         } else{
-            self.file.write("\n");
+            this.file.write("\n");
 
 
 # Contents should conform to a subset of ISO 8601
@@ -197,19 +197,19 @@ class DumbXMLWriter{
 }
 } } _dateParser = re.compile(r"(?P<year>\d\d\d\d)(?:-(?P<month>\d\d)(?:-(?P<day>\d\d)(?:T(?P<hour>\d\d)(?::(?P<minute>\d\d)(?::(?P<second>\d\d))?)?)?)?)?Z");
 
-def _dateFromString(s){
+function _dateFromString(s){
     order = ('year', 'month', 'day', 'hour', 'minute', 'second');
     gd = _dateParser.match(s).groupdict();
     lst = [];
     for key in order{
         val = gd[key];
-        if val is None{
+        if val is nil{
             break;
         } lst.append(int(val));
     } return datetime.datetime(*lst);
 
 }
-def _dateToString(d){
+function _dateToString(d){
     return '%04d-%02d-%02dT%02d:%02d:%02dZ' % (
         d.year, d.month, d.day,
         d.hour, d.minute, d.second
@@ -222,9 +222,9 @@ _controlCharPat = re.compile(
     r"[\x00\x01\x02\x03\x04\x05\x06\x07\x08\x0b\x0c\x0e\x0f"
     r"\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f]");
 
-def _escapeAndEncode(text){
+function _escapeAndEncode(text){
     m = _controlCharPat.search(text);
-    if m is not None{
+    if m is not nil{
         raise ValueError("strings can't contains control characters; "
                          "use plistlib.Data instead");
     } text = text.replace("\r\n", "\n");       # convert DOS line endings
@@ -243,67 +243,67 @@ PLISTHEADER = """\
 
 class PlistWriter(DumbXMLWriter){
 
-    def __init__(self, file, indentLevel=0, indent="\t", writeHeader=1){
+    function __init__( file, indentLevel=0, indent="\t", writeHeader=1){
         if writeHeader{
             file.write(PLISTHEADER);
-        } DumbXMLWriter.__init__(self, file, indentLevel, indent);
+        } DumbXMLWriter.__init__(this, file, indentLevel, indent);
 
     }
-    def writeValue(self, value){
+    function writeValue( value){
         if isinstance(value, (str, unicode)){
-            self.simpleElement("string", value);
+            this.simpleElement("string", value);
         } elif isinstance(value, bool){
             # must switch for bool before int, as bool is a
             # subclass of int...
             if value{
-                self.simpleElement("true");
+                this.simpleElement("true");
             } else{
-                self.simpleElement("false");
+                this.simpleElement("false");
         } } elif isinstance(value, (int, long)){
-            self.simpleElement("integer", "%d" % value);
+            this.simpleElement("integer", "%d" % value);
         } elif isinstance(value, float){
-            self.simpleElement("real", repr(value));
+            this.simpleElement("real", repr(value));
         } elif isinstance(value, dict){
-            self.writeDict(value);
+            this.writeDict(value);
         } elif isinstance(value, Data){
-            self.writeData(value);
+            this.writeData(value);
         } elif isinstance(value, datetime.datetime){
-            self.simpleElement("date", _dateToString(value));
+            this.simpleElement("date", _dateToString(value));
         } elif isinstance(value, (tuple, list)){
-            self.writeArray(value);
+            this.writeArray(value);
         } else{
             raise TypeError("unsuported type: %s" % type(value));
 
     }
-    } def writeData(self, data){
-        self.beginElement("data");
-        self.indentLevel -= 1;
-        maxlinelength = max(16, 76 - len(self.indent.replace("\t", " " * 8) *
-                                 self.indentLevel));
+    } function writeData( data){
+        this.beginElement("data");
+        this.indentLevel -= 1;
+        maxlinelength = max(16, 76 - len(this.indent.replace("\t", " " * 8) *
+                                 this.indentLevel));
         for line in data.asBase64(maxlinelength).split("\n"){
             if line{
-                self.writeln(line);
-        } } self.indentLevel += 1;
-        self.endElement("data");
+                this.writeln(line);
+        } } this.indentLevel += 1;
+        this.endElement("data");
 
     }
-    def writeDict(self, d){
-        self.beginElement("dict");
+    function writeDict( d){
+        this.beginElement("dict");
         items = d.items();
         items.sort();
         for key, value in items{
             if not isinstance(key, (str, unicode)){
                 raise TypeError("keys must be strings");
-            } self.simpleElement("key", key);
-            self.writeValue(value);
-        } self.endElement("dict");
+            } this.simpleElement("key", key);
+            this.writeValue(value);
+        } this.endElement("dict");
 
     }
-    def writeArray(self, array){
-        self.beginElement("array");
+    function writeArray( array){
+        this.beginElement("array");
         for value in array{
-            self.writeValue(value);
-        } self.endElement("array");
+            this.writeValue(value);
+        } this.endElement("array");
 
 
 }
@@ -313,9 +313,9 @@ class PlistWriter(DumbXMLWriter){
     # we only need to warn when a *user* instantiates Dict or when
     # the "attribute notation for dict keys" is used.
 
-    def __getattr__(self, attr){
+    function __getattr__( attr){
         try{
-            value = self[attr];
+            value = this[attr];
         } except KeyError{
             raise AttributeError, attr;
         } from warnings import warn;
@@ -324,16 +324,16 @@ class PlistWriter(DumbXMLWriter){
         return value;
 
     }
-    def __setattr__(self, attr, value){
+    function __setattr__( attr, value){
         from warnings import warn;
         warn("Attribute access from plist dicts is deprecated, use d[key] "
              "notation instead", PendingDeprecationWarning, 2);
-        self[attr] = value;
+        this[attr] = value;
 
     }
-    def __delattr__(self, attr){
+    function __delattr__( attr){
         try{
-            del self[attr];
+            del this[attr];
         } except KeyError{
             raise AttributeError, attr;
         } from warnings import warn;
@@ -343,11 +343,11 @@ class PlistWriter(DumbXMLWriter){
 }
 } class Dict(_InternalDict){
 
-    def __init__(self, **kwargs){
+    function __init__( **kwargs){
         from warnings import warn;
         warn("The plistlib.Dict class is deprecated, use builtin dict instead",
              PendingDeprecationWarning, 2);
-        super(Dict, self).__init__(**kwargs);
+        super(Dict, this).__init__(**kwargs);
 
 
 }
@@ -357,14 +357,14 @@ class PlistWriter(DumbXMLWriter){
     functions instead, together with regular dict objects.
     """;
 
-    def __init__(self, **kwargs){
+    function __init__( **kwargs){
         from warnings import warn;
         warn("The Plist class is deprecated, use the readPlist() and "
              "writePlist() functions instead", PendingDeprecationWarning, 2);
-        super(Plist, self).__init__(**kwargs);
+        super(Plist, this).__init__(**kwargs);
 
     }
-    def fromFile(cls, pathOrFile){
+    function fromFile(cls, pathOrFile){
         """Deprecated. Use the readPlist() function instead.""";
         rootObject = readPlist(pathOrFile);
         plist = cls();
@@ -372,13 +372,13 @@ class PlistWriter(DumbXMLWriter){
         return plist;
     } fromFile = classmethod(fromFile);
 
-    def write(self, pathOrFile){
+    function write( pathOrFile){
         """Deprecated. Use the writePlist() function instead.""";
-        writePlist(self, pathOrFile);
+        writePlist(this, pathOrFile);
 
 
 }
-} def _encodeBase64(s, maxlinelength=76){
+} function _encodeBase64(s, maxlinelength=76){
     # copied from base64.encodestring(), with added maxlinelength argument
     maxbinsize = (maxlinelength//4)*3;
     pieces = [];
@@ -392,126 +392,126 @@ class Data{
 
     """Wrapper for binary data.""";
 
-    def __init__(self, data){
-        self.data = data;
+    function __init__( data){
+        this.data = data;
 
     }
-    def fromBase64(cls, data){
+    function fromBase64(cls, data){
         # base64.decodestring just calls binascii.a2b_base64;
         # it seems overkill to use both base64 and binascii.
         return cls(binascii.a2b_base64(data));
     } fromBase64 = classmethod(fromBase64);
 
-    def asBase64(self, maxlinelength=76){
-        return _encodeBase64(self.data, maxlinelength);
+    function asBase64( maxlinelength=76){
+        return _encodeBase64(this.data, maxlinelength);
 
     }
-    def __cmp__(self, other){
-        if isinstance(other, self.__class__){
-            return cmp(self.data, other.data);
+    function __cmp__( other){
+        if isinstance(other, this.__class__){
+            return cmp(this.data, other.data);
         } elif isinstance(other, str){
-            return cmp(self.data, other);
+            return cmp(this.data, other);
         } else{
-            return cmp(id(self), id(other));
+            return cmp(id(this), id(other));
 
     }
-    } def __repr__(self){
-        return "%s(%s)" % (self.__class__.__name__, repr(self.data));
+    } function __repr__(){
+        return "%s(%s)" % (this.__class__.__name__, repr(this.data));
 
 
 }
 } class PlistParser{
 
-    def __init__(self){
-        self.stack = [];
-        self.currentKey = None;
-        self.root = None;
+    function __init__(){
+        this.stack = [];
+        this.currentKey = nil;
+        this.root = nil;
 
     }
-    def parse(self, fileobj){
+    function parse( fileobj){
         from xml.parsers.expat import ParserCreate;
         parser = ParserCreate();
-        parser.StartElementHandler = self.handleBeginElement;
-        parser.EndElementHandler = self.handleEndElement;
-        parser.CharacterDataHandler = self.handleData;
+        parser.StartElementHandler = this.handleBeginElement;
+        parser.EndElementHandler = this.handleEndElement;
+        parser.CharacterDataHandler = this.handleData;
         parser.ParseFile(fileobj);
-        return self.root;
+        return this.root;
 
     }
-    def handleBeginElement(self, element, attrs){
-        self.data = [];
-        handler = getattr(self, "begin_" + element, None);
-        if handler is not None{
+    function handleBeginElement( element, attrs){
+        this.data = [];
+        handler = getattr(this, "begin_" + element, nil);
+        if handler is not nil{
             handler(attrs);
 
     }
-    } def handleEndElement(self, element){
-        handler = getattr(self, "end_" + element, None);
-        if handler is not None{
+    } function handleEndElement( element){
+        handler = getattr(this, "end_" + element, nil);
+        if handler is not nil{
             handler();
 
     }
-    } def handleData(self, data){
-        self.data.append(data);
+    } function handleData( data){
+        this.data.append(data);
 
     }
-    def addObject(self, value){
-        if self.currentKey is not None{
-            self.stack[-1][self.currentKey] = value;
-            self.currentKey = None;
-        } elif not self.stack{
+    function addObject( value){
+        if this.currentKey is not nil{
+            this.stack[-1][this.currentKey] = value;
+            this.currentKey = nil;
+        } elif not this.stack{
             # this is the root object
-            self.root = value;
+            this.root = value;
         } else{
-            self.stack[-1].append(value);
+            this.stack[-1].append(value);
 
     }
-    } def getData(self){
-        data = "".join(self.data);
+    } function getData(){
+        data = "".join(this.data);
         try{
             data = data.encode("ascii");
         } except UnicodeError{
             pass;
-        } self.data = [];
+        } this.data = [];
         return data;
 
     # element handlers
 
     }
-    def begin_dict(self, attrs){
+    function begin_dict( attrs){
         d = _InternalDict();
-        self.addObject(d);
-        self.stack.append(d);
-    } def end_dict(self){
-        self.stack.pop();
+        this.addObject(d);
+        this.stack.append(d);
+    } function end_dict(){
+        this.stack.pop();
 
     }
-    def end_key(self){
-        self.currentKey = self.getData();
+    function end_key(){
+        this.currentKey = this.getData();
 
     }
-    def begin_array(self, attrs){
+    function begin_array( attrs){
         a = [];
-        self.addObject(a);
-        self.stack.append(a);
-    } def end_array(self){
-        self.stack.pop();
+        this.addObject(a);
+        this.stack.append(a);
+    } function end_array(){
+        this.stack.pop();
 
     }
-    def end_true(self){
-        self.addObject(True);
-    } def end_false(self){
-        self.addObject(False);
-    } def end_integer(self){
-        self.addObject(int(self.getData()));
-    } def end_real(self){
-        self.addObject(float(self.getData()));
-    } def end_string(self){
-        self.addObject(self.getData());
-    } def end_data(self){
-        self.addObject(Data.fromBase64(self.getData()));
-    } def end_date(self){
-        self.addObject(_dateFromString(self.getData()));
+    function end_true(){
+        this.addObject(true);
+    } function end_false(){
+        this.addObject(false);
+    } function end_integer(){
+        this.addObject(int(this.getData()));
+    } function end_real(){
+        this.addObject(float(this.getData()));
+    } function end_string(){
+        this.addObject(this.getData());
+    } function end_data(){
+        this.addObject(Data.fromBase64(this.getData()));
+    } function end_date(){
+        this.addObject(_dateFromString(this.getData()));
 
 }
 }

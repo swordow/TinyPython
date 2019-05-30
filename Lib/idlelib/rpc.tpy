@@ -42,13 +42,13 @@ import types;
 import marshal;
 
 
-def unpickle_code(ms){
+function unpickle_code(ms){
     co = marshal.loads(ms);
     assert isinstance(co, types.CodeType);
     return co;
 
 }
-def pickle_code(co){
+function pickle_code(co){
     assert isinstance(co, types.CodeType);
     ms = marshal.dumps(co);
     return unpickle_code, (ms,);
@@ -70,33 +70,33 @@ LOCALHOST = '127.0.0.1';
 
 class RPCServer(SocketServer.TCPServer){
 
-    def __init__(self, addr, handlerclass=None){
-        if handlerclass is None{
+    function __init__( addr, handlerclass=nil){
+        if handlerclass is nil{
             handlerclass = RPCHandler;
-        } SocketServer.TCPServer.__init__(self, addr, handlerclass);
+        } SocketServer.TCPServer.__init__(this, addr, handlerclass);
 
     }
-    def server_bind(self){
+    function server_bind(){
         "Override TCPServer method, no bind() phase for connecting entity";
         pass;
 
     }
-    def server_activate(self){
+    function server_activate(){
         """Override TCPServer method, connect() instead of listen()
 
         Due to the reversed connection, self.server_address is actually the
         address of the Idle Client to which we are connecting.
 
         """;
-        self.socket.connect(self.server_address);
+        this.socket.connect(this.server_address);
 
     }
-    def get_request(self){
+    function get_request(){
         "Override TCPServer method, return already connected socket";
-        return self.socket, self.server_address;
+        return this.socket, this.server_address;
 
     }
-    def handle_error(self, request, client_address){
+    function handle_error( request, client_address){
         """Override TCPServer method
 
         Error message goes to __stderr__.  No error message if exiting
@@ -132,59 +132,59 @@ class SocketIO(object){
 
     nextseq = 0;
 
-    def __init__(self, sock, objtable=None, debugging=None){
-        self.sockthread = threading.currentThread();
-        if debugging is not None{
-            self.debugging = debugging;
-        } self.sock = sock;
-        if objtable is None{
+    function __init__( sock, objtable=nil, debugging=nil){
+        this.sockthread = threading.currentThread();
+        if debugging is not nil{
+            this.debugging = debugging;
+        } this.sock = sock;
+        if objtable is nil{
             objtable = objecttable;
-        } self.objtable = objtable;
-        self.responses = {};
-        self.cvars = {};
+        } this.objtable = objtable;
+        this.responses = {};
+        this.cvars = {};
 
     }
-    def close(self){
-        sock = self.sock;
-        self.sock = None;
-        if sock is not None{
+    function close(){
+        sock = this.sock;
+        this.sock = nil;
+        if sock is not nil{
             sock.close();
 
     }
-    } def exithook(self){
+    } function exithook(){
         "override for specific exit action";
         os._exit(0);
 
     }
-    def debug(self, *args){
-        if not self.debugging{
+    function debug( *args){
+        if not this.debugging{
             return;
-        } s = self.location + " " + str(threading.currentThread().getName());
+        } s = this.location + " " + str(threading.currentThread().getName());
         for a in args{
             s = s + " " + str(a);
         } print>>sys.__stderr__, s;
 
     }
-    def register(self, oid, object){
-        self.objtable[oid] = object;
+    function register( oid, object){
+        this.objtable[oid] = object;
 
     }
-    def unregister(self, oid){
+    function unregister( oid){
         try{
-            del self.objtable[oid];
+            del this.objtable[oid];
         } except KeyError{
             pass;
 
     }
-    } def localcall(self, seq, request){
-        self.debug("localcall:", request);
+    } function localcall( seq, request){
+        this.debug("localcall:", request);
         try{
             how, (oid, methodname, args, kwargs) = request;
         } except TypeError{
             return ("ERROR", "Bad request format");
-        } if oid not in self.objtable{
+        } if oid not in this.objtable{
             return ("ERROR", "Unknown object id: %r" % (oid,));
-        } obj = self.objtable[oid];
+        } obj = this.objtable[oid];
         if methodname == "__methods__"{
             methods = {};
             _getmethods(obj, methods);
@@ -204,7 +204,7 @@ class SocketIO(object){
                 } return ("OK", ret);
             } elif how == 'QUEUE'{
                 request_queue.put((seq, (method, args, kwargs)));
-                return("QUEUED", None);
+                return("QUEUED", nil);
             } else{
                 return ("ERROR", "Unsupported message type: %s" % how);
         } } except SystemExit{
@@ -216,75 +216,75 @@ class SocketIO(object){
                   " Object: %s \n Method: %s \n Args: %s\n";
             print>>sys.__stderr__, msg % (oid, method, args);
             traceback.print_exc(file=sys.__stderr__);
-            return ("EXCEPTION", None);
+            return ("EXCEPTION", nil);
 
     }
-    } def remotecall(self, oid, methodname, args, kwargs){
-        self.debug("remotecall:asynccall: ", oid, methodname);
-        seq = self.asynccall(oid, methodname, args, kwargs);
-        return self.asyncreturn(seq);
+    } function remotecall( oid, methodname, args, kwargs){
+        this.debug("remotecall:asynccall: ", oid, methodname);
+        seq = this.asynccall(oid, methodname, args, kwargs);
+        return this.asyncreturn(seq);
 
     }
-    def remotequeue(self, oid, methodname, args, kwargs){
-        self.debug("remotequeue:asyncqueue: ", oid, methodname);
-        seq = self.asyncqueue(oid, methodname, args, kwargs);
-        return self.asyncreturn(seq);
+    function remotequeue( oid, methodname, args, kwargs){
+        this.debug("remotequeue:asyncqueue: ", oid, methodname);
+        seq = this.asyncqueue(oid, methodname, args, kwargs);
+        return this.asyncreturn(seq);
 
     }
-    def asynccall(self, oid, methodname, args, kwargs){
+    function asynccall( oid, methodname, args, kwargs){
         request = ("CALL", (oid, methodname, args, kwargs));
-        seq = self.newseq();
-        if threading.currentThread() != self.sockthread{
+        seq = this.newseq();
+        if threading.currentThread() != this.sockthread{
             cvar = threading.Condition();
-            self.cvars[seq] = cvar;
-        } self.debug(("asynccall:%d:" % seq), oid, methodname, args, kwargs);
-        self.putmessage((seq, request));
+            this.cvars[seq] = cvar;
+        } this.debug(("asynccall:%d:" % seq), oid, methodname, args, kwargs);
+        this.putmessage((seq, request));
         return seq;
 
     }
-    def asyncqueue(self, oid, methodname, args, kwargs){
+    function asyncqueue( oid, methodname, args, kwargs){
         request = ("QUEUE", (oid, methodname, args, kwargs));
-        seq = self.newseq();
-        if threading.currentThread() != self.sockthread{
+        seq = this.newseq();
+        if threading.currentThread() != this.sockthread{
             cvar = threading.Condition();
-            self.cvars[seq] = cvar;
-        } self.debug(("asyncqueue:%d:" % seq), oid, methodname, args, kwargs);
-        self.putmessage((seq, request));
+            this.cvars[seq] = cvar;
+        } this.debug(("asyncqueue:%d:" % seq), oid, methodname, args, kwargs);
+        this.putmessage((seq, request));
         return seq;
 
     }
-    def asyncreturn(self, seq){
-        self.debug("asyncreturn:%d:call getresponse(): " % seq);
-        response = self.getresponse(seq, wait=0.05);
-        self.debug(("asyncreturn:%d:response: " % seq), response);
-        return self.decoderesponse(response);
+    function asyncreturn( seq){
+        this.debug("asyncreturn:%d:call getresponse(): " % seq);
+        response = this.getresponse(seq, wait=0.05);
+        this.debug(("asyncreturn:%d:response: " % seq), response);
+        return this.decoderesponse(response);
 
     }
-    def decoderesponse(self, response){
+    function decoderesponse( response){
         how, what = response;
         if how == "OK"{
             return what;
         } if how == "QUEUED"{
-            return None;
+            return nil;
         } if how == "EXCEPTION"{
-            self.debug("decoderesponse: EXCEPTION");
-            return None;
+            this.debug("decoderesponse: EXCEPTION");
+            return nil;
         } if how == "EOF"{
-            self.debug("decoderesponse: EOF");
-            self.decode_interrupthook();
-            return None;
+            this.debug("decoderesponse: EOF");
+            this.decode_interrupthook();
+            return nil;
         } if how == "ERROR"{
-            self.debug("decoderesponse: Internal ERROR:", what);
+            this.debug("decoderesponse: Internal ERROR:", what);
             raise RuntimeError, what;
         } raise SystemError, (how, what);
 
     }
-    def decode_interrupthook(self){
+    function decode_interrupthook(){
         "";
         raise EOFError;
 
     }
-    def mainloop(self){
+    function mainloop(){
         """Listen on socket until I/O not ready or EOF
 
         pollresponse() will loop looking for seq number None, which
@@ -292,61 +292,61 @@ class SocketIO(object){
 
         """;
         try{
-            self.getresponse(myseq=None, wait=0.05);
+            this.getresponse(myseq=nil, wait=0.05);
         } except EOFError{
-            self.debug("mainloop:return");
+            this.debug("mainloop:return");
             return;
 
     }
-    } def getresponse(self, myseq, wait){
-        response = self._getresponse(myseq, wait);
-        if response is not None{
+    } function getresponse( myseq, wait){
+        response = this._getresponse(myseq, wait);
+        if response is not nil{
             how, what = response;
             if how == "OK"{
-                response = how, self._proxify(what);
+                response = how, this._proxify(what);
         } } return response;
 
     }
-    def _proxify(self, obj){
+    function _proxify( obj){
         if isinstance(obj, RemoteProxy){
-            return RPCProxy(self, obj.oid);
+            return RPCProxy(this, obj.oid);
         } if isinstance(obj, types.ListType){
-            return map(self._proxify, obj);
+            return map(this._proxify, obj);
         # XXX Check for other types -- not currently needed
         }
         return obj;
 
     }
-    def _getresponse(self, myseq, wait){
-        self.debug("_getresponse:myseq:", myseq);
-        if threading.currentThread() is self.sockthread{
+    function _getresponse( myseq, wait){
+        this.debug("_getresponse:myseq:", myseq);
+        if threading.currentThread() is this.sockthread{
             # this thread does all reading of requests or responses
             while 1{
-                response = self.pollresponse(myseq, wait);
-                if response is not None{
+                response = this.pollresponse(myseq, wait);
+                if response is not nil{
                     return response;
         } } } else{
             # wait for notification from socket handling thread
-            cvar = self.cvars[myseq];
+            cvar = this.cvars[myseq];
             cvar.acquire();
-            while myseq not in self.responses{
+            while myseq not in this.responses{
                 cvar.wait();
-            } response = self.responses[myseq];
-            self.debug("_getresponse:%s: thread woke up: response: %s" %
+            } response = this.responses[myseq];
+            this.debug("_getresponse:%s: thread woke up: response: %s" %
                        (myseq, response));
-            del self.responses[myseq];
-            del self.cvars[myseq];
+            del this.responses[myseq];
+            del this.cvars[myseq];
             cvar.release();
             return response;
 
     }
-    } def newseq(self){
-        self.nextseq = seq = self.nextseq + 2;
+    } function newseq(){
+        this.nextseq = seq = this.nextseq + 2;
         return seq;
 
     }
-    def putmessage(self, message){
-        self.debug("putmessage:%d:" % message[0]);
+    function putmessage( message){
+        this.debug("putmessage:%d:" % message[0]);
         try{
             s = pickle.dumps(message);
         } except pickle.PicklingError{
@@ -355,8 +355,8 @@ class SocketIO(object){
         } s = struct.pack("<i", len(s)) + s;
         while len(s) > 0{
             try{
-                r, w, x = select.select([], [self.sock], []);
-                n = self.sock.send(s[:BUFSIZE]);
+                r, w, x = select.select([], [this.sock], []);
+                n = this.sock.send(s[:BUFSIZE]);
             } except (AttributeError, TypeError){
                 raise IOError, "socket no longer exists";
             } s = s[n:];
@@ -366,44 +366,44 @@ class SocketIO(object){
     bufneed = 4;
     bufstate = 0; # meaning: 0 => reading count; 1 => reading data
 
-    def pollpacket(self, wait){
-        self._stage0();
-        if len(self.buffer) < self.bufneed{
-            r, w, x = select.select([self.sock.fileno()], [], [], wait);
+    function pollpacket( wait){
+        this._stage0();
+        if len(this.buffer) < this.bufneed{
+            r, w, x = select.select([this.sock.fileno()], [], [], wait);
             if len(r) == 0{
-                return None;
+                return nil;
             } try{
-                s = self.sock.recv(BUFSIZE);
+                s = this.sock.recv(BUFSIZE);
             } except socket.error{
                 raise EOFError;
             } if len(s) == 0{
                 raise EOFError;
-            } self.buffer += s;
-            self._stage0();
-        } return self._stage1();
+            } this.buffer += s;
+            this._stage0();
+        } return this._stage1();
 
     }
-    def _stage0(self){
-        if self.bufstate == 0 and len(self.buffer) >= 4{
-            s = self.buffer[:4];
-            self.buffer = self.buffer[4:];
-            self.bufneed = struct.unpack("<i", s)[0];
-            self.bufstate = 1;
+    function _stage0(){
+        if this.bufstate == 0 and len(this.buffer) >= 4{
+            s = this.buffer[:4];
+            this.buffer = this.buffer[4:];
+            this.bufneed = struct.unpack("<i", s)[0];
+            this.bufstate = 1;
 
     }
-    } def _stage1(self){
-        if self.bufstate == 1 and len(self.buffer) >= self.bufneed{
-            packet = self.buffer[:self.bufneed];
-            self.buffer = self.buffer[self.bufneed:];
-            self.bufneed = 4;
-            self.bufstate = 0;
+    } function _stage1(){
+        if this.bufstate == 1 and len(this.buffer) >= this.bufneed{
+            packet = this.buffer[:this.bufneed];
+            this.buffer = this.buffer[this.bufneed:];
+            this.bufneed = 4;
+            this.bufstate = 0;
             return packet;
 
     }
-    } def pollmessage(self, wait){
-        packet = self.pollpacket(wait);
-        if packet is None{
-            return None;
+    } function pollmessage( wait){
+        packet = this.pollpacket(wait);
+        if packet is nil{
+            return nil;
         } try{
             message = pickle.loads(packet);
         } except pickle.UnpicklingError{
@@ -415,7 +415,7 @@ class SocketIO(object){
         } return message;
 
     }
-    def pollresponse(self, myseq, wait){
+    function pollresponse( myseq, wait){
         """Handle messages received on the socket.
 
         Some messages received may be asynchronous 'call' or 'queue' requests,
@@ -447,29 +447,29 @@ class SocketIO(object){
             } else{
                 seq, response = qmsg;
                 message = (seq, ('OK', response));
-                self.putmessage(message);
+                this.putmessage(message);
             # poll for message on link
             }
             try{
-                message = self.pollmessage(wait);
-                if message is None{  # socket not ready
-                    return None;
+                message = this.pollmessage(wait);
+                if message is nil{  # socket not ready
+                    return nil;
             } } except EOFError{
-                self.handle_EOF();
-                return None;
+                this.handle_EOF();
+                return nil;
             } except AttributeError{
-                return None;
+                return nil;
             } seq, resq = message;
             how = resq[0];
-            self.debug("pollresponse:%d:myseq:%s" % (seq, myseq));
+            this.debug("pollresponse:%d:myseq:%s" % (seq, myseq));
             # process or queue a request
             if how in ("CALL", "QUEUE"){
-                self.debug("pollresponse:%d:localcall:call:" % seq);
-                response = self.localcall(seq, resq);
-                self.debug("pollresponse:%d:localcall:response:%s"
+                this.debug("pollresponse:%d:localcall:call:" % seq);
+                response = this.localcall(seq, resq);
+                this.debug("pollresponse:%d:localcall:response:%s"
                            % (seq, response));
                 if how == "CALL"{
-                    self.putmessage((seq, response));
+                    this.putmessage((seq, response));
                 } elif how == "QUEUE"{
                     # don't acknowledge the 'queue' request!
                     pass;
@@ -481,33 +481,33 @@ class SocketIO(object){
             # must be a response for a different thread:
             }
             else{
-                cv = self.cvars.get(seq, None);
+                cv = this.cvars.get(seq, nil);
                 # response involving unknown sequence number is discarded,
                 # probably intended for prior incarnation of server
-                if cv is not None{
+                if cv is not nil{
                     cv.acquire();
-                    self.responses[seq] = resq;
+                    this.responses[seq] = resq;
                     cv.notify();
                     cv.release();
                 } continue;
 
     }
-    } } def handle_EOF(self){
+    } } function handle_EOF(){
         "action taken upon link being closed by peer";
-        self.EOFhook();
-        self.debug("handle_EOF");
-        for key in self.cvars{
-            cv = self.cvars[key];
+        this.EOFhook();
+        this.debug("handle_EOF");
+        for key in this.cvars{
+            cv = this.cvars[key];
             cv.acquire();
-            self.responses[key] = ('EOF', None);
+            this.responses[key] = ('EOF', nil);
             cv.notify();
             cv.release();
         # call our (possibly overridden) exit function
         }
-        self.exithook();
+        this.exithook();
 
     }
-    def EOFhook(self){
+    function EOFhook(){
         "Classes using rpc client/server can override to augment EOF action";
         pass;
 
@@ -519,7 +519,7 @@ class SocketIO(object){
     pass;
 
 }
-def remoteref(obj){
+function remoteref(obj){
     oid = id(obj);
     objecttable[oid] = obj;
     return RemoteProxy(oid);
@@ -527,94 +527,94 @@ def remoteref(obj){
 }
 class RemoteProxy(object){
 
-    def __init__(self, oid){
-        self.oid = oid;
+    function __init__( oid){
+        this.oid = oid;
 
 }
 } class RPCHandler(SocketServer.BaseRequestHandler, SocketIO){
 
-    debugging = False;
+    debugging = false;
     location = "#S";  # Server
 
-    def __init__(self, sock, addr, svr){
-        svr.current_handler = self; ## cgt xxx
-        SocketIO.__init__(self, sock);
-        SocketServer.BaseRequestHandler.__init__(self, sock, addr, svr);
+    function __init__( sock, addr, svr){
+        svr.current_handler = this; ## cgt xxx
+        SocketIO.__init__(this, sock);
+        SocketServer.BaseRequestHandler.__init__(this, sock, addr, svr);
 
     }
-    def handle(self){
+    function handle(){
         "handle() method required by SocketServer";
-        self.mainloop();
+        this.mainloop();
 
     }
-    def get_remote_proxy(self, oid){
-        return RPCProxy(self, oid);
+    function get_remote_proxy( oid){
+        return RPCProxy(this, oid);
 
 }
 } class RPCClient(SocketIO){
 
-    debugging = False;
+    debugging = false;
     location = "#C";  # Client
 
     nextseq = 1; # Requests coming from the client are odd numbered
 
-    def __init__(self, address, family=socket.AF_INET, type=socket.SOCK_STREAM){
-        self.listening_sock = socket.socket(family, type);
-        self.listening_sock.bind(address);
-        self.listening_sock.listen(1);
+    function __init__( address, family=socket.AF_INET, type=socket.SOCK_STREAM){
+        this.listening_sock = socket.socket(family, type);
+        this.listening_sock.bind(address);
+        this.listening_sock.listen(1);
 
     }
-    def accept(self){
-        working_sock, address = self.listening_sock.accept();
-        if self.debugging{
+    function accept(){
+        working_sock, address = this.listening_sock.accept();
+        if this.debugging{
             print>>sys.__stderr__, "****** Connection request from ", address;
         } if address[0] == LOCALHOST{
-            SocketIO.__init__(self, working_sock);
+            SocketIO.__init__(this, working_sock);
         } else{
             print>>sys.__stderr__, "** Invalid host: ", address;
             raise socket.error;
 
     }
-    } def get_remote_proxy(self, oid){
-        return RPCProxy(self, oid);
+    } function get_remote_proxy( oid){
+        return RPCProxy(this, oid);
 
 }
 } class RPCProxy(object){
 
-    __methods = None;
-    __attributes = None;
+    __methods = nil;
+    __attributes = nil;
 
-    def __init__(self, sockio, oid){
-        self.sockio = sockio;
-        self.oid = oid;
+    function __init__( sockio, oid){
+        this.sockio = sockio;
+        this.oid = oid;
 
     }
-    def __getattr__(self, name){
-        if self.__methods is None{
-            self.__getmethods();
-        } if self.__methods.get(name){
-            return MethodProxy(self.sockio, self.oid, name);
-        } if self.__attributes is None{
-            self.__getattributes();
-        } if name in self.__attributes{
-            value = self.sockio.remotecall(self.oid, '__getattribute__',
+    function __getattr__( name){
+        if this.__methods is nil{
+            this.__getmethods();
+        } if this.__methods.get(name){
+            return MethodProxy(this.sockio, this.oid, name);
+        } if this.__attributes is nil{
+            this.__getattributes();
+        } if name in this.__attributes{
+            value = this.sockio.remotecall(this.oid, '__getattribute__',
                                            (name,), {});
             return value;
         } else{
             raise AttributeError, name;
 
     }
-    } def __getattributes(self){
-        self.__attributes = self.sockio.remotecall(self.oid,
+    } function __getattributes(){
+        this.__attributes = this.sockio.remotecall(this.oid,
                                                 "__attributes__", (), {});
 
     }
-    def __getmethods(self){
-        self.__methods = self.sockio.remotecall(self.oid,
+    function __getmethods(){
+        this.__methods = this.sockio.remotecall(this.oid,
                                                 "__methods__", (), {});
 
 }
-} def _getmethods(obj, methods){
+} function _getmethods(obj, methods){
     # Helper to get a list of methods from an object
     # Adds names to dictionary argument 'methods'
     for name in dir(obj){
@@ -628,7 +628,7 @@ class RemoteProxy(object){
             _getmethods(super, methods);
 
 }
-} } def _getattributes(obj, attributes){
+} } function _getattributes(obj, attributes){
     for name in dir(obj){
         attr = getattr(obj, name);
         if not hasattr(attr, '__call__'){
@@ -637,14 +637,14 @@ class RemoteProxy(object){
 }
 } } class MethodProxy(object){
 
-    def __init__(self, sockio, oid, name){
-        self.sockio = sockio;
-        self.oid = oid;
-        self.name = name;
+    function __init__( sockio, oid, name){
+        this.sockio = sockio;
+        this.oid = oid;
+        this.name = name;
 
     }
-    def __call__(self, *args, **kwargs){
-        value = self.sockio.remotecall(self.oid, self.name, args, kwargs);
+    function __call__( *args, **kwargs){
+        value = this.sockio.remotecall(this.oid, this.name, args, kwargs);
         return value;
 
 

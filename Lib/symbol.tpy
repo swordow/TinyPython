@@ -104,7 +104,7 @@ for _name, _value in globals().items(){
 
 
 }
-} def main(){
+} function main(){
     import sys;
     import token;
     if len(sys.argv) == 1{

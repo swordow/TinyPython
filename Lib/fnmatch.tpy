@@ -17,12 +17,12 @@ __all__ = ["filter", "fnmatch", "fnmatchcase", "translate"];
 _cache = {};
 _MAXCACHE = 100;
 
-def _purge(){
+function _purge(){
     """Clear the pattern cache""";
     _cache.clear();
 
 }
-def fnmatch(name, pat){
+function fnmatch(name, pat){
     """Test whether FILENAME matches PATTERN.
 
     Patterns are Unix shell style:
@@ -44,7 +44,7 @@ def fnmatch(name, pat){
     return fnmatchcase(name, pat);
 
 }
-def filter(names, pat){
+function filter(names, pat){
     """Return the subset of the list NAMES that match PAT""";
     import os,posixpath;
     result=[];
@@ -69,7 +69,7 @@ def filter(names, pat){
     } } } return result;
 
 }
-def fnmatchcase(name, pat){
+function fnmatchcase(name, pat){
     """Test whether FILENAME matches PATTERN, including case.
 
     This is a version of fnmatch() which doesn't case-normalize
@@ -83,10 +83,10 @@ def fnmatchcase(name, pat){
         if len(_cache) >= _MAXCACHE{
             _cache.clear();
         } _cache[pat] = re_pat = re.compile(res);
-    } return re_pat.match(name) is not None;
+    } return re_pat.match(name) is not nil;
 
 }
-def translate(pat){
+function translate(pat){
     """Translate a shell PATTERN to a regular expression.
 
     There is no way to quote meta-characters.

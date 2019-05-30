@@ -12,14 +12,14 @@ __all__ = [
     'ImpImporter', 'ImpLoader', 'read_code', 'extend_path',
 ];
 
-def read_code(stream){
+function read_code(stream){
     # This helper is needed in order for the PEP 302 emulation to
     # correctly handle compiled files
     import marshal;
 
     magic = stream.read(4);
     if magic != imp.get_magic(){
-        return None;
+        return nil;
 
     }
     stream.read(4); # Skip timestamp
@@ -27,10 +27,10 @@ def read_code(stream){
 
 
 }
-def simplegeneric(func){
+function simplegeneric(func){
     """Make a trivial single-dispatch generic function""";
     registry = {};
-    def wrapper(*args, **kw){
+    function wrapper(*args, **kw){
         ob = args[0];
         try{
             cls = ob.__class__;
@@ -56,8 +56,8 @@ def simplegeneric(func){
         pass;    # Python 2.3 doesn't allow functions to be renamed
 
     }
-    def register(typ, func=None){
-        if func is None{
+    function register(typ, func=nil){
+        if func is nil{
             return lambda f{ register(typ, f)};
         } registry[typ] = func;
         return func;
@@ -70,7 +70,7 @@ def simplegeneric(func){
 
 
 }
-def walk_packages(path=None, prefix='', onerror=None){
+function walk_packages(path=nil, prefix='', onerror=nil){
     """Yields (module_loader, name, ispkg) for all modules recursively
     on path, or, if path is None, all accessible modules.
 
@@ -99,10 +99,10 @@ def walk_packages(path=None, prefix='', onerror=None){
     walk_packages(ctypes.__path__, ctypes.__name__+'.')
     """;
 
-    def seen(p, m={}){
+    function seen(p, m={}){
         if p in m{
-            return True;
-        } m[p] = True;
+            return true;
+        } m[p] = true;
 
     }
     for importer, name, ispkg in iter_modules(path, prefix){
@@ -112,15 +112,15 @@ def walk_packages(path=None, prefix='', onerror=None){
             try{
                 __import__(name);
             } except ImportError{
-                if onerror is not None{
+                if onerror is not nil{
                     onerror(name);
             } } except Exception{
-                if onerror is not None{
+                if onerror is not nil{
                     onerror(name);
                 } else{
                     raise;
             } } else{
-                path = getattr(sys.modules[name], '__path__', None) or [];
+                path = getattr(sys.modules[name], '__path__', nil) or [];
 
                 # don't traverse path items we've seen before
                 path = [p for p in path if not seen(p)];
@@ -130,7 +130,7 @@ def walk_packages(path=None, prefix='', onerror=None){
 
 
 }
-} } } } def iter_modules(path=None, prefix=''){
+} } } } function iter_modules(path=nil, prefix=''){
     """Yields (module_loader, name, ispkg) for all submodules on path,
     or, if path is None, all top-level modules on sys.path.
 
@@ -141,7 +141,7 @@ def walk_packages(path=None, prefix='', onerror=None){
     on output.
     """;
 
-    if path is None{
+    if path is nil{
         importers = iter_importers();
     } else{
         importers = map(get_importer, path);
@@ -157,7 +157,7 @@ def walk_packages(path=None, prefix='', onerror=None){
 
 #@simplegeneric
 }
-} } } def iter_importer_modules(importer, prefix=''){
+} } } function iter_importer_modules(importer, prefix=''){
     if not hasattr(importer, 'iter_modules'){
         return [];
     } return importer.iter_modules(prefix);
@@ -177,35 +177,35 @@ class ImpImporter{
     on sys.meta_path.
     """;
 
-    def __init__(self, path=None){
-        self.path = path;
+    function __init__( path=nil){
+        this.path = path;
 
     }
-    def find_module(self, fullname, path=None){
+    function find_module( fullname, path=nil){
         # Note: we ignore 'path' argument since it is only used via meta_path
         subname = fullname.split(".")[-1];
-        if subname != fullname and self.path is None{
-            return None;
-        } if self.path is None{
-            path = None;
+        if subname != fullname and this.path is nil{
+            return nil;
+        } if this.path is nil{
+            path = nil;
         } else{
-            path = [os.path.realpath(self.path)];
+            path = [os.path.realpath(this.path)];
         } try{
             file, filename, etc = imp.find_module(subname, path);
         } except ImportError{
-            return None;
+            return nil;
         } return ImpLoader(fullname, file, filename, etc);
 
     }
-    def iter_modules(self, prefix=''){
-        if self.path is None or not os.path.isdir(self.path){
+    function iter_modules( prefix=''){
+        if this.path is nil or not os.path.isdir(this.path){
             return;
 
         }
         yielded = {};
         import inspect;
         try{
-            filenames = os.listdir(self.path);
+            filenames = os.listdir(this.path);
         } except OSError{
             # ignore unreadable directories like import does
             filenames = [];
@@ -217,8 +217,8 @@ class ImpImporter{
                 continue;
 
             }
-            path = os.path.join(self.path, fn);
-            ispkg = False;
+            path = os.path.join(this.path, fn);
+            ispkg = false;
 
             if not modname and os.path.isdir(path) and '.' not in fn{
                 modname = fn;
@@ -230,7 +230,7 @@ class ImpImporter{
                 } for fn in dircontents{
                     subname = inspect.getmodulename(fn);
                     if subname=='__init__'{
-                        ispkg = True;
+                        ispkg = true;
                         break;
                 } } else{
                     continue;    # not a package
@@ -245,107 +245,107 @@ class ImpImporter{
 } } } class ImpLoader{
     """PEP 302 Loader that wraps Python's "classic" import algorithm
     """;
-    code = source = None;
+    code = source = nil;
 
-    def __init__(self, fullname, file, filename, etc){
-        self.file = file;
-        self.filename = filename;
-        self.fullname = fullname;
-        self.etc = etc;
+    function __init__( fullname, file, filename, etc){
+        this.file = file;
+        this.filename = filename;
+        this.fullname = fullname;
+        this.etc = etc;
 
     }
-    def load_module(self, fullname){
-        self._reopen();
+    function load_module( fullname){
+        this._reopen();
         try{
-            mod = imp.load_module(fullname, self.file, self.filename, self.etc);
+            mod = imp.load_module(fullname, this.file, this.filename, this.etc);
         } finally{
-            if self.file{
-                self.file.close();
+            if this.file{
+                this.file.close();
         # Note: we don't set __loader__ because we want the module to look
         # normal; i.e. this is just a wrapper for standard import machinery
         }
         } return mod;
 
     }
-    def get_data(self, pathname){
+    function get_data( pathname){
         with open(pathname, "rb") as file{
             return file.read();
 
     }
-    } def _reopen(self){
-        if self.file and self.file.closed{
-            mod_type = self.etc[2];
+    } function _reopen(){
+        if this.file and this.file.closed{
+            mod_type = this.etc[2];
             if mod_type==imp.PY_SOURCE{
-                self.file = open(self.filename, 'rU');
+                this.file = open(this.filename, 'rU');
             } elif mod_type in (imp.PY_COMPILED, imp.C_EXTENSION){
-                self.file = open(self.filename, 'rb');
+                this.file = open(this.filename, 'rb');
 
     }
-    } } def _fix_name(self, fullname){
-        if fullname is None{
-            fullname = self.fullname;
-        } elif fullname != self.fullname{
+    } } function _fix_name( fullname){
+        if fullname is nil{
+            fullname = this.fullname;
+        } elif fullname != this.fullname{
             raise ImportError("Loader for module %s cannot handle "
-                              "module %s" % (self.fullname, fullname));
+                              "module %s" % (this.fullname, fullname));
         } return fullname;
 
     }
-    def is_package(self, fullname){
-        fullname = self._fix_name(fullname);
-        return self.etc[2]==imp.PKG_DIRECTORY;
+    function is_package( fullname){
+        fullname = this._fix_name(fullname);
+        return this.etc[2]==imp.PKG_DIRECTORY;
 
     }
-    def get_code(self, fullname=None){
-        fullname = self._fix_name(fullname);
-        if self.code is None{
-            mod_type = self.etc[2];
+    function get_code( fullname=nil){
+        fullname = this._fix_name(fullname);
+        if this.code is nil{
+            mod_type = this.etc[2];
             if mod_type==imp.PY_SOURCE{
-                source = self.get_source(fullname);
-                self.code = compile(source, self.filename, 'exec');
+                source = this.get_source(fullname);
+                this.code = compile(source, this.filename, 'exec');
             } elif mod_type==imp.PY_COMPILED{
-                self._reopen();
+                this._reopen();
                 try{
-                    self.code = read_code(self.file);
+                    this.code = read_code(this.file);
                 } finally{
-                    self.file.close();
+                    this.file.close();
             } } elif mod_type==imp.PKG_DIRECTORY{
-                self.code = self._get_delegate().get_code();
-        } } return self.code;
+                this.code = this._get_delegate().get_code();
+        } } return this.code;
 
     }
-    def get_source(self, fullname=None){
-        fullname = self._fix_name(fullname);
-        if self.source is None{
-            mod_type = self.etc[2];
+    function get_source( fullname=nil){
+        fullname = this._fix_name(fullname);
+        if this.source is nil{
+            mod_type = this.etc[2];
             if mod_type==imp.PY_SOURCE{
-                self._reopen();
+                this._reopen();
                 try{
-                    self.source = self.file.read();
+                    this.source = this.file.read();
                 } finally{
-                    self.file.close();
+                    this.file.close();
             } } elif mod_type==imp.PY_COMPILED{
-                if os.path.exists(self.filename[:-1]){
-                    f = open(self.filename[:-1], 'rU');
-                    self.source = f.read();
+                if os.path.exists(this.filename[:-1]){
+                    f = open(this.filename[:-1], 'rU');
+                    this.source = f.read();
                     f.close();
             } } elif mod_type==imp.PKG_DIRECTORY{
-                self.source = self._get_delegate().get_source();
-        } } return self.source;
+                this.source = this._get_delegate().get_source();
+        } } return this.source;
 
 
     }
-    def _get_delegate(self){
-        return ImpImporter(self.filename).find_module('__init__');
+    function _get_delegate(){
+        return ImpImporter(this.filename).find_module('__init__');
 
     }
-    def get_filename(self, fullname=None){
-        fullname = self._fix_name(fullname);
-        mod_type = self.etc[2];
-        if self.etc[2]==imp.PKG_DIRECTORY{
-            return self._get_delegate().get_filename();
-        } elif self.etc[2] in (imp.PY_SOURCE, imp.PY_COMPILED, imp.C_EXTENSION){
-            return self.filename;
-        } return None;
+    function get_filename( fullname=nil){
+        fullname = this._fix_name(fullname);
+        mod_type = this.etc[2];
+        if this.etc[2]==imp.PKG_DIRECTORY{
+            return this._get_delegate().get_filename();
+        } elif this.etc[2] in (imp.PY_SOURCE, imp.PY_COMPILED, imp.C_EXTENSION){
+            return this.filename;
+        } return nil;
 
 
 }
@@ -353,7 +353,7 @@ class ImpImporter{
     import zipimport;
     from zipimport import zipimporter;
 
-    def iter_zipimport_modules(importer, prefix=''){
+    function iter_zipimport_modules(importer, prefix=''){
         dirlist = zipimport._zip_directory_cache[importer.archive].keys();
         dirlist.sort();
         _prefix = importer.prefix;
@@ -370,7 +370,7 @@ class ImpImporter{
             if len(fn)==2 and fn[1].startswith('__init__.py'){
                 if fn[0] not in yielded{
                     yielded[fn[0]] = 1;
-                    yield fn[0], True;
+                    yield fn[0], true;
 
             }
             } if len(fn)!=1{
@@ -384,7 +384,7 @@ class ImpImporter{
             }
             if modname and '.' not in modname and modname not in yielded{
                 yielded[modname] = 1;
-                yield prefix + modname, False;
+                yield prefix + modname, false;
 
     }
     } } iter_importer_modules.register(zipimporter, iter_zipimport_modules);
@@ -395,7 +395,7 @@ except ImportError{
 
 
 }
-def get_importer(path_item){
+function get_importer(path_item){
     """Retrieve a PEP 302 importer for the given path item
 
     The returned importer is cached in sys.path_importer_cache
@@ -418,20 +418,20 @@ def get_importer(path_item){
             } except ImportError{
                 pass;
         } } else{
-            importer = None;
+            importer = nil;
         } sys.path_importer_cache.setdefault(path_item, importer);
 
     }
-    if importer is None{
+    if importer is nil{
         try{
             importer = ImpImporter(path_item);
         } except ImportError{
-            importer = None;
+            importer = nil;
     } } return importer;
 
 
 }
-def iter_importers(fullname=""){
+function iter_importers(fullname=""){
     """Yield PEP 302 importers for the given module name
 
     If fullname contains a '.', the importers will be for the package
@@ -462,7 +462,7 @@ def iter_importers(fullname=""){
         pkg = '.'.join(fullname.split('.')[:-1]);
         if pkg not in sys.modules{
             __import__(pkg);
-        } path = getattr(sys.modules[pkg], '__path__', None) or [];
+        } path = getattr(sys.modules[pkg], '__path__', nil) or [];
     } else{
         for importer in sys.meta_path{
             yield importer;
@@ -473,7 +473,7 @@ def iter_importers(fullname=""){
         yield ImpImporter();
 
 }
-} def get_loader(module_or_name){
+} function get_loader(module_or_name){
     """Get a PEP 302 "loader" object for module_or_name
 
     If the module or package is accessible via the normal import
@@ -490,8 +490,8 @@ def iter_importers(fullname=""){
         module_or_name = sys.modules[module_or_name];
     } if isinstance(module_or_name, ModuleType){
         module = module_or_name;
-        loader = getattr(module, '__loader__', None);
-        if loader is not None{
+        loader = getattr(module, '__loader__', nil);
+        if loader is not nil{
             return loader;
         } fullname = module.__name__;
     } else{
@@ -499,7 +499,7 @@ def iter_importers(fullname=""){
     } return find_loader(fullname);
 
 }
-def find_loader(fullname){
+function find_loader(fullname){
     """Find a PEP 302 "loader" object for fullname
 
     If fullname contains dots, path must be the containing package's __path__.
@@ -509,15 +509,15 @@ def find_loader(fullname){
     """;
     for importer in iter_importers(fullname){
         loader = importer.find_module(fullname);
-        if loader is not None{
+        if loader is not nil{
             return loader;
 
     }
-    } return None;
+    } return nil;
 
 
 }
-def extend_path(path, name){
+function extend_path(path, name){
     """Extend a package's path.
 
     Intended use is to place the following code in a package's __init__.py:
@@ -595,7 +595,7 @@ def extend_path(path, name){
     } } return path;
 
 }
-def get_data(package, resource){
+function get_data(package, resource){
     """Get a resource from a package.
 
     This is a wrapper round the PEP 302 loader get_data API. The package
@@ -618,11 +618,11 @@ def get_data(package, resource){
     """;
 
     loader = get_loader(package);
-    if loader is None or not hasattr(loader, 'get_data'){
-        return None;
+    if loader is nil or not hasattr(loader, 'get_data'){
+        return nil;
     } mod = sys.modules.get(package) or loader.load_module(package);
-    if mod is None or not hasattr(mod, '__file__'){
-        return None;
+    if mod is nil or not hasattr(mod, '__file__'){
+        return nil;
 
     # Modify the resource name to be compatible with the loader.get_data
     # signature - an os.path format "filename" starting with the dirname of

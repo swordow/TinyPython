@@ -11,7 +11,7 @@ try{
     import Carbon.File;
 } except Exception{
     class MacOS{
-        def openrf(path, mode){
+        function openrf(path, mode){
             return open(path + '.rsrc', mode);
         } openrf = classmethod(openrf);
     } class Carbon{
@@ -47,10 +47,10 @@ AS_RESOURCEFORK=2;
 AS_IGNORE=(3,4,5,6,8,9,10,11,12,13,14,15);
 
 class AppleSingle(object){
-    datafork = None;
-    resourcefork = None;
+    datafork = nil;
+    resourcefork = nil;
 
-    def __init__(self, fileobj, verbose=False){
+    function __init__( fileobj, verbose=false){
         header = fileobj.read(AS_HEADER_LENGTH);
         try{
             magic, version, ig, nentry = struct.unpack(AS_HEADER_FORMAT, header);
@@ -67,7 +67,7 @@ class AppleSingle(object){
         } if nentry <= 0{
             raise Error, "AppleSingle file contains no forks";
         } headers = [fileobj.read(AS_ENTRY_LENGTH) for i in xrange(nentry)];
-        self.forks = [];
+        this.forks = [];
         for hdr in headers{
             try{
                 restype, offset, length = struct.unpack(AS_ENTRY_FORMAT, hdr);
@@ -79,36 +79,36 @@ class AppleSingle(object){
             data = fileobj.read(length);
             if len(data) != length{
                 raise Error, "Short read: expected %d bytes got %d" % (length, len(data));
-            } self.forks.append((restype, data));
+            } this.forks.append((restype, data));
             if restype == AS_DATAFORK{
-                self.datafork = data;
+                this.datafork = data;
             } elif restype == AS_RESOURCEFORK{
-                self.resourcefork = data;
+                this.resourcefork = data;
 
     }
-    } } def tofile(self, path, resonly=False){
+    } } function tofile( path, resonly=false){
         outfile = open(path, 'wb');
-        data = False;
+        data = false;
         if resonly{
-            if self.resourcefork is None{
+            if this.resourcefork is nil{
                 raise Error, "No resource fork found";
             } fp = open(path, 'wb');
-            fp.write(self.resourcefork);
+            fp.write(this.resourcefork);
             fp.close();
-        } elif (self.resourcefork is None and self.datafork is None){
+        } elif (this.resourcefork is nil and this.datafork is nil){
             raise Error, "No useful forks found";
         } else{
-            if self.datafork is not None{
+            if this.datafork is not nil{
                 fp = open(path, 'wb');
-                fp.write(self.datafork);
+                fp.write(this.datafork);
                 fp.close();
-            } if self.resourcefork is not None{
+            } if this.resourcefork is not nil{
                 fp = MacOS.openrf(path, '*wb');
-                fp.write(self.resourcefork);
+                fp.write(this.resourcefork);
                 fp.close();
 
 }
-} } } def decode(infile, outpath, resonly=False, verbose=False){
+} } } function decode(infile, outpath, resonly=false, verbose=false){
     """decode(infile, outpath [, resonly=False, verbose=False])
 
     Creates a decoded file from an AppleSingle encoded file.
@@ -138,15 +138,15 @@ class AppleSingle(object){
     asfile.tofile(outpath, resonly=resonly);
 
 }
-def _test(){
+function _test(){
     if len(sys.argv) < 3 or sys.argv[1] == '-r' and len(sys.argv) != 4{
         print 'Usage: applesingle.py [-r] applesinglefile decodedfile';
         sys.exit(1);
     } if sys.argv[1] == '-r'{
-        resonly = True;
+        resonly = true;
         del sys.argv[1];
     } else{
-        resonly = False;
+        resonly = false;
     } decode(sys.argv[1], sys.argv[2], resonly=resonly);
 
 }

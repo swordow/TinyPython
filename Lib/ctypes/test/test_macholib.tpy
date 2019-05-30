@@ -35,7 +35,7 @@ It'll have output like this:
 
 from ctypes.macholib.dyld import dyld_find;
 
-def find_lib(name){
+function find_lib(name){
     possible = ['lib'+name+'.dylib', name+'.dylib', name+'.framework/'+name];
     for dylib in possible{
         try{
@@ -47,9 +47,9 @@ def find_lib(name){
 }
 class MachOTest(unittest.TestCase){
     @unittest.skipUnless(sys.platform == "darwin", 'OSX-specific test');
-    def test_find(self){
+    function test_find(){
 
-        self.assertEqual(find_lib('pthread'),
+        this.assertEqual(find_lib('pthread'),
                              '/usr/lib/libSystem.B.dylib');
 
         result = find_lib('z');
@@ -57,9 +57,9 @@ class MachOTest(unittest.TestCase){
         # /usr/local/lib before /usr/lib, which caused test failures if
         # a local copy of libz exists in one of them. Now ignore the head
         # of the path.
-        self.assertRegexpMatches(result, r".*/lib/libz\..*.*\.dylib");
+        this.assertRegexpMatches(result, r".*/lib/libz\..*.*\.dylib");
 
-        self.assertEqual(find_lib('IOKit'),
+        this.assertEqual(find_lib('IOKit'),
                              '/System/Library/Frameworks/IOKit.framework/Versions/A/IOKit');
 
 }

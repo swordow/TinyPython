@@ -83,22 +83,22 @@ class UnpicklingError(PickleError){
 # the STOP opcode, passing the object that is the result of unpickling.
 }
 class _Stop(Exception){
-    def __init__(self, value){
-        self.value = value;
+    function __init__( value){
+        this.value = value;
 
 # Jython has PyStringMap; it's a dict subclass with string keys
 }
 } try{
     from org.python.core import PyStringMap;
 } except ImportError{
-    PyStringMap = None;
+    PyStringMap = nil;
 
 # UnicodeType may or may not be exported (normally imported from types)
 }
 try{
     UnicodeType;
 } except NameError{
-    UnicodeType = None;
+    UnicodeType = nil;
 
 # Pickle opcodes.  See pickletools.py for extensive docs.  The listing
 # here is in kind-of alphabetical order of 1-character pickle code.
@@ -176,7 +176,7 @@ del x;
 
 class Pickler{
 
-    def __init__(self, file, protocol=None){
+    function __init__( file, protocol=nil){
         """This takes a file-like object for writing a pickle data stream.
 
         The optional protocol argument tells the pickler to use the
@@ -200,20 +200,20 @@ class Pickler{
         object, or any other custom object that meets this interface.
 
         """;
-        if protocol is None{
+        if protocol is nil{
             protocol = 0;
         } if protocol < 0{
             protocol = HIGHEST_PROTOCOL;
         } elif not 0 <= protocol <= HIGHEST_PROTOCOL{
             raise ValueError("pickle protocol must be <= %d" % HIGHEST_PROTOCOL);
-        } self.write = file.write;
-        self.memo = {};
-        self.proto = int(protocol);
-        self.bin = protocol >= 1;
-        self.fast = 0;
+        } this.write = file.write;
+        this.memo = {};
+        this.proto = int(protocol);
+        this.bin = protocol >= 1;
+        this.fast = 0;
 
     }
-    def clear_memo(self){
+    function clear_memo(){
         """Clears the pickler's "memo".
 
         The memo is the data structure that remembers which objects the
@@ -222,18 +222,18 @@ class Pickler{
         re-using picklers.
 
         """;
-        self.memo.clear();
+        this.memo.clear();
 
     }
-    def dump(self, obj){
+    function dump( obj){
         """Write a pickled representation of obj to the open file.""";
-        if self.proto >= 2{
-            self.write(PROTO + chr(self.proto));
-        } self.save(obj);
-        self.write(STOP);
+        if this.proto >= 2{
+            this.write(PROTO + chr(this.proto));
+        } this.save(obj);
+        this.write(STOP);
 
     }
-    def memoize(self, obj){
+    function memoize( obj){
         """Store an object in the memo.""";
 
         # The Pickler memo is a dictionary mapping object ids to 2-tuples
@@ -248,17 +248,17 @@ class Pickler{
         # But there appears no advantage to any other scheme, and this
         # scheme allows the Unpickler memo to be implemented as a plain (but
         # growable) array, indexed by memo key.
-        if self.fast{
+        if this.fast{
             return;
-        } assert id(obj) not in self.memo;
-        memo_len = len(self.memo);
-        self.write(self.put(memo_len));
-        self.memo[id(obj)] = memo_len, obj;
+        } assert id(obj) not in this.memo;
+        memo_len = len(this.memo);
+        this.write(this.put(memo_len));
+        this.memo[id(obj)] = memo_len, obj;
 
     # Return a PUT (BINPUT, LONG_BINPUT) opcode string, with argument i.
     }
-    def put(self, i, pack=struct.pack){
-        if self.bin{
+    function put( i, pack=struct.pack){
+        if this.bin{
             if i < 256{
                 return BINPUT + chr(i);
             } else{
@@ -269,8 +269,8 @@ class Pickler{
 
     # Return a GET (BINGET, LONG_BINGET) opcode string, with argument i.
     }
-    def get(self, i, pack=struct.pack){
-        if self.bin{
+    function get( i, pack=struct.pack){
+        if this.bin{
             if i < 256{
                 return BINGET + chr(i);
             } else{
@@ -280,26 +280,26 @@ class Pickler{
         } return GET + repr(i) + '\n';
 
     }
-    def save(self, obj){
+    function save( obj){
         # Check for persistent id (defined by a subclass)
-        pid = self.persistent_id(obj);
-        if pid is not None{
-            self.save_pers(pid);
+        pid = this.persistent_id(obj);
+        if pid is not nil{
+            this.save_pers(pid);
             return;
 
         # Check the memo
         }
-        x = self.memo.get(id(obj));
+        x = this.memo.get(id(obj));
         if x{
-            self.write(self.get(x[0]));
+            this.write(this.get(x[0]));
             return;
 
         # Check the type dispatch table
         }
         t = type(obj);
-        f = self.dispatch.get(t);
+        f = this.dispatch.get(t);
         if f{
-            f(self, obj); # Call unbound method with explicit self
+            f(this, obj); # Call unbound method with explicit self
             return;
 
         # Check copy_reg.dispatch_table
@@ -314,16 +314,16 @@ class Pickler{
             } except TypeError{ # t is not a class (old Boost; see SF #502085)
                 issc = 0;
             } if issc{
-                self.save_global(obj);
+                this.save_global(obj);
                 return;
 
             # Check for a __reduce_ex__ method, fall back to __reduce__
             }
-            reduce = getattr(obj, "__reduce_ex__", None);
+            reduce = getattr(obj, "__reduce_ex__", nil);
             if reduce{
-                rv = reduce(self.proto);
+                rv = reduce(this.proto);
             } else{
-                reduce = getattr(obj, "__reduce__", None);
+                reduce = getattr(obj, "__reduce__", nil);
                 if reduce{
                     rv = reduce();
                 } else{
@@ -333,7 +333,7 @@ class Pickler{
         # Check for string returned by reduce(), meaning "save as global"
         }
         } } if type(rv) is StringType{
-            self.save_global(obj, rv);
+            this.save_global(obj, rv);
             return;
 
         # Assert that reduce() returned a tuple
@@ -350,25 +350,25 @@ class Pickler{
 
         # Save the reduce() output and finally memoize the object
         }
-        self.save_reduce(obj=obj, *rv);
+        this.save_reduce(obj=obj, *rv);
 
     }
-    def persistent_id(self, obj){
+    function persistent_id( obj){
         # This exists so a subclass can override it
-        return None;
+        return nil;
 
     }
-    def save_pers(self, pid){
+    function save_pers( pid){
         # Save a persistent id reference
-        if self.bin{
-            self.save(pid);
-            self.write(BINPERSID);
+        if this.bin{
+            this.save(pid);
+            this.write(BINPERSID);
         } else{
-            self.write(PERSID + str(pid) + '\n');
+            this.write(PERSID + str(pid) + '\n');
 
     }
-    } def save_reduce(self, func, args, state=None,
-                    listitems=None, dictitems=None, obj=None){
+    } function save_reduce( func, args, state=nil,
+                    listitems=nil, dictitems=nil, obj=nil){
         # This API is called by some subclasses
 
         # Assert that args is a tuple or None
@@ -381,11 +381,11 @@ class Pickler{
             raise PicklingError("func from reduce should be callable");
 
         }
-        save = self.save;
-        write = self.write;
+        save = this.save;
+        write = this.write;
 
         # Protocol 2 special case: if func's name is __newobj__, use NEWOBJ
-        if self.proto >= 2 and getattr(func, "__name__", "") == "__newobj__"{
+        if this.proto >= 2 and getattr(func, "__name__", "") == "__newobj__"{
             # A __reduce__ implementation can direct protocol 2 to
             # use the more efficient NEWOBJ opcode, while still
             # allowing protocol 0 and 1 to work normally.  For this to
@@ -416,7 +416,7 @@ class Pickler{
             if not hasattr(cls, "__new__"){
                 raise PicklingError(
                     "args[0] from __newobj__ args has no __new__");
-            } if obj is not None and cls is not obj.__class__{
+            } if obj is not nil and cls is not obj.__class__{
                 raise PicklingError(
                     "args[0] from __newobj__ args has the wrong class");
             } args = args[1:];
@@ -429,14 +429,14 @@ class Pickler{
             write(REDUCE);
 
         }
-        if obj is not None{
+        if obj is not nil{
             # If the object is already in the memo, this means it is
             # recursive. In this case, throw away everything we put on the
             # stack, and fetch the object back from the memo.
-            if id(obj) in self.memo{
-                write(POP + self.get(self.memo[id(obj)][0]));
+            if id(obj) in this.memo{
+                write(POP + this.get(this.memo[id(obj)][0]));
             } else{
-                self.memoize(obj);
+                this.memoize(obj);
 
         # More new special cases (that work with older protocols as
         # well): when __reduce__ returns a tuple with 4 or 5 items,
@@ -444,15 +444,15 @@ class Pickler{
         # items and dict items (as (key, value) tuples), or None.
 
         }
-        } if listitems is not None{
-            self._batch_appends(listitems);
+        } if listitems is not nil{
+            this._batch_appends(listitems);
 
         }
-        if dictitems is not None{
-            self._batch_setitems(dictitems);
+        if dictitems is not nil{
+            this._batch_setitems(dictitems);
 
         }
-        if state is not None{
+        if state is not nil{
             save(state);
             write(BUILD);
 
@@ -461,29 +461,29 @@ class Pickler{
     }
     } dispatch = {};
 
-    def save_none(self, obj){
-        self.write(NONE);
+    function save_none( obj){
+        this.write(NONE);
     } dispatch[NoneType] = save_none;
 
-    def save_bool(self, obj){
-        if self.proto >= 2{
-            self.write(obj and NEWTRUE or NEWFALSE);
+    function save_bool( obj){
+        if this.proto >= 2{
+            this.write(obj and NEWTRUE or NEWFALSE);
         } else{
-            self.write(obj and TRUE or FALSE);
+            this.write(obj and TRUE or FALSE);
     } } dispatch[bool] = save_bool;
 
-    def save_int(self, obj, pack=struct.pack){
-        if self.bin{
+    function save_int( obj, pack=struct.pack){
+        if this.bin{
             # If the int is small enough to fit in a signed 4-byte 2's-comp
             # format, we can store it more efficiently than the general
             # case.
             # First one- and two-byte unsigned ints:
             if obj >= 0{
                 if obj <= 0xff{
-                    self.write(BININT1 + chr(obj));
+                    this.write(BININT1 + chr(obj));
                     return;
                 } if obj <= 0xffff{
-                    self.write("%c%c%c" % (BININT2, obj&0xff, obj>>8));
+                    this.write("%c%c%c" % (BININT2, obj&0xff, obj>>8));
                     return;
             # Next check for 4-byte signed ints:
             }
@@ -491,88 +491,88 @@ class Pickler{
             if high_bits == 0 or high_bits == -1{
                 # All high bits are copies of bit 2**31, so the value
                 # fits in a 4-byte signed int.
-                self.write(BININT + pack("<i", obj));
+                this.write(BININT + pack("<i", obj));
                 return;
         # Text pickle, or int too big to fit in signed 4-byte format.
         }
-        } self.write(INT + repr(obj) + '\n');
+        } this.write(INT + repr(obj) + '\n');
     } dispatch[IntType] = save_int;
 
-    def save_long(self, obj, pack=struct.pack){
-        if self.proto >= 2{
+    function save_long( obj, pack=struct.pack){
+        if this.proto >= 2{
             bytes = encode_long(obj);
             n = len(bytes);
             if n < 256{
-                self.write(LONG1 + chr(n) + bytes);
+                this.write(LONG1 + chr(n) + bytes);
             } else{
-                self.write(LONG4 + pack("<i", n) + bytes);
+                this.write(LONG4 + pack("<i", n) + bytes);
             } return;
-        } self.write(LONG + repr(obj) + '\n');
+        } this.write(LONG + repr(obj) + '\n');
     } dispatch[LongType] = save_long;
 
-    def save_float(self, obj, pack=struct.pack){
-        if self.bin{
-            self.write(BINFLOAT + pack('>d', obj));
+    function save_float( obj, pack=struct.pack){
+        if this.bin{
+            this.write(BINFLOAT + pack('>d', obj));
         } else{
-            self.write(FLOAT + repr(obj) + '\n');
+            this.write(FLOAT + repr(obj) + '\n');
     } } dispatch[FloatType] = save_float;
 
-    def save_string(self, obj, pack=struct.pack){
-        if self.bin{
+    function save_string( obj, pack=struct.pack){
+        if this.bin{
             n = len(obj);
             if n < 256{
-                self.write(SHORT_BINSTRING + chr(n) + obj);
+                this.write(SHORT_BINSTRING + chr(n) + obj);
             } else{
-                self.write(BINSTRING + pack("<i", n) + obj);
+                this.write(BINSTRING + pack("<i", n) + obj);
         } } else{
-            self.write(STRING + repr(obj) + '\n');
-        } self.memoize(obj);
+            this.write(STRING + repr(obj) + '\n');
+        } this.memoize(obj);
     } dispatch[StringType] = save_string;
 
-    def save_unicode(self, obj, pack=struct.pack){
-        if self.bin{
+    function save_unicode( obj, pack=struct.pack){
+        if this.bin{
             encoding = obj.encode('utf-8');
             n = len(encoding);
-            self.write(BINUNICODE + pack("<i", n) + encoding);
+            this.write(BINUNICODE + pack("<i", n) + encoding);
         } else{
             obj = obj.replace("\\", "\\u005c");
             obj = obj.replace("\n", "\\u000a");
-            self.write(UNICODE + obj.encode('raw-unicode-escape') + '\n');
-        } self.memoize(obj);
+            this.write(UNICODE + obj.encode('raw-unicode-escape') + '\n');
+        } this.memoize(obj);
     } dispatch[UnicodeType] = save_unicode;
 
     if StringType is UnicodeType{
         # This is true for Jython
-        def save_string(self, obj, pack=struct.pack){
+        function save_string( obj, pack=struct.pack){
             unicode = obj.isunicode();
 
-            if self.bin{
+            if this.bin{
                 if unicode{
                     obj = obj.encode("utf-8");
                 } l = len(obj);
                 if l < 256 and not unicode{
-                    self.write(SHORT_BINSTRING + chr(l) + obj);
+                    this.write(SHORT_BINSTRING + chr(l) + obj);
                 } else{
                     s = pack("<i", l);
                     if unicode{
-                        self.write(BINUNICODE + s + obj);
+                        this.write(BINUNICODE + s + obj);
                     } else{
-                        self.write(BINSTRING + s + obj);
+                        this.write(BINSTRING + s + obj);
             } } } else{
                 if unicode{
                     obj = obj.replace("\\", "\\u005c");
                     obj = obj.replace("\n", "\\u000a");
                     obj = obj.encode('raw-unicode-escape');
-                    self.write(UNICODE + obj + '\n');
+                    this.write(UNICODE + obj + '\n');
                 } else{
-                    self.write(STRING + repr(obj) + '\n');
-            } } self.memoize(obj);
+                    this.write(STRING + repr(obj) + '\n');
+            } } this.memoize(obj);
         } dispatch[StringType] = save_string;
 
     }
-    def save_tuple(self, obj){
-        write = self.write;
-        proto = self.proto;
+    function save_tuple( obj){
+        write = this.write;
+        proto = this.proto;
 
         n = len(obj);
         if n == 0{
@@ -583,19 +583,19 @@ class Pickler{
             } return;
 
         }
-        save = self.save;
-        memo = self.memo;
+        save = this.save;
+        memo = this.memo;
         if n <= 3 and proto >= 2{
             for element in obj{
                 save(element);
             # Subtle.  Same as in the big comment below.
             }
             if id(obj) in memo{
-                get = self.get(memo[id(obj)][0]);
+                get = this.get(memo[id(obj)][0]);
                 write(POP * n + get);
             } else{
                 write(_tuplesize2code[n]);
-                self.memoize(obj);
+                this.memoize(obj);
             } return;
 
         # proto 0 or proto 1 and tuple isn't empty, or proto > 1 and tuple
@@ -614,7 +614,7 @@ class Pickler{
             # simply GET the tuple (it's already constructed).  This check
             # could have been done in the "for element" loop instead, but
             # recursive tuples are a rare thing.
-            get = self.get(memo[id(obj)][0]);
+            get = this.get(memo[id(obj)][0]);
             if proto{
                 write(POP_MARK + get);
             } else{   # proto 0 -- POP_MARK not available
@@ -623,8 +623,8 @@ class Pickler{
 
         # No recursion.
         }
-        self.write(TUPLE);
-        self.memoize(obj);
+        this.write(TUPLE);
+        this.memoize(obj);
 
     }
     dispatch[TupleType] = save_tuple;
@@ -632,21 +632,21 @@ class Pickler{
     # save_empty_tuple() isn't used by anything in Python 2.3.  However, I
     # found a Pickler subclass in Zope3 that calls it, so it's not harmless
     # to remove it.
-    def save_empty_tuple(self, obj){
-        self.write(EMPTY_TUPLE);
+    function save_empty_tuple( obj){
+        this.write(EMPTY_TUPLE);
 
     }
-    def save_list(self, obj){
-        write = self.write;
+    function save_list( obj){
+        write = this.write;
 
-        if self.bin{
+        if this.bin{
             write(EMPTY_LIST);
         } else{   # proto 0 -- can't use EMPTY_LIST
             write(MARK + LIST);
 
         }
-        self.memoize(obj);
-        self._batch_appends(iter(obj));
+        this.memoize(obj);
+        this._batch_appends(iter(obj));
 
     }
     dispatch[ListType] = save_list;
@@ -655,27 +655,27 @@ class Pickler{
     # out of synch, though.
     _BATCHSIZE = 1000;
 
-    def _batch_appends(self, items){
+    function _batch_appends( items){
         # Helper to batch up APPENDS sequences
-        save = self.save;
-        write = self.write;
+        save = this.save;
+        write = this.write;
 
-        if not self.bin{
+        if not this.bin{
             for x in items{
                 save(x);
                 write(APPEND);
             } return;
 
         }
-        r = xrange(self._BATCHSIZE);
-        while items is not None{
+        r = xrange(this._BATCHSIZE);
+        while items is not nil{
             tmp = [];
             for i in r{
                 try{
                     x = items.next();
                     tmp.append(x);
                 } except StopIteration{
-                    items = None;
+                    items = nil;
                     break;
             } } n = len(tmp);
             if n > 1{
@@ -689,30 +689,30 @@ class Pickler{
             # else tmp is empty, and we're done
 
     }
-    } } def save_dict(self, obj){
-        write = self.write;
+    } } function save_dict( obj){
+        write = this.write;
 
-        if self.bin{
+        if this.bin{
             write(EMPTY_DICT);
         } else{   # proto 0 -- can't use EMPTY_DICT
             write(MARK + DICT);
 
         }
-        self.memoize(obj);
-        self._batch_setitems(obj.iteritems());
+        this.memoize(obj);
+        this._batch_setitems(obj.iteritems());
 
     }
     dispatch[DictionaryType] = save_dict;
-    if not PyStringMap is None{
+    if not PyStringMap is nil{
         dispatch[PyStringMap] = save_dict;
 
     }
-    def _batch_setitems(self, items){
+    function _batch_setitems( items){
         # Helper to batch up SETITEMS sequences; proto >= 1 only
-        save = self.save;
-        write = self.write;
+        save = this.save;
+        write = this.write;
 
-        if not self.bin{
+        if not this.bin{
             for k, v in items{
                 save(k);
                 save(v);
@@ -720,14 +720,14 @@ class Pickler{
             } return;
 
         }
-        r = xrange(self._BATCHSIZE);
-        while items is not None{
+        r = xrange(this._BATCHSIZE);
+        while items is not nil{
             tmp = [];
             for i in r{
                 try{
                     tmp.append(items.next());
                 } except StopIteration{
-                    items = None;
+                    items = nil;
                     break;
             } } n = len(tmp);
             if n > 1{
@@ -744,12 +744,12 @@ class Pickler{
             # else tmp is empty, and we're done
 
     }
-    } } def save_inst(self, obj){
+    } } function save_inst( obj){
         cls = obj.__class__;
 
-        memo  = self.memo;
-        write = self.write;
-        save  = self.save;
+        memo  = this.memo;
+        write = this.write;
+        save  = this.save;
 
         if hasattr(obj, '__getinitargs__'){
             args = obj.__getinitargs__();
@@ -761,7 +761,7 @@ class Pickler{
         }
         write(MARK);
 
-        if self.bin{
+        if this.bin{
             save(cls);
             for arg in args{
                 save(arg);
@@ -772,7 +772,7 @@ class Pickler{
             } write(INST + cls.__module__ + '\n' + cls.__name__ + '\n');
 
         }
-        self.memoize(obj);
+        this.memoize(obj);
 
         try{
             getstate = obj.__getstate__;
@@ -787,16 +787,16 @@ class Pickler{
     }
     dispatch[InstanceType] = save_inst;
 
-    def save_global(self, obj, name=None, pack=struct.pack){
-        write = self.write;
-        memo = self.memo;
+    function save_global( obj, name=nil, pack=struct.pack){
+        write = this.write;
+        memo = this.memo;
 
-        if name is None{
+        if name is nil{
             name = obj.__name__;
 
         }
-        module = getattr(obj, "__module__", None);
-        if module is None{
+        module = getattr(obj, "__module__", nil);
+        if module is nil{
             module = whichmodule(obj, name);
 
         }
@@ -815,7 +815,7 @@ class Pickler{
                     (obj, module, name));
 
         }
-        } if self.proto >= 2{
+        } if this.proto >= 2{
             code = _extension_registry.get((module, name));
             if code{
                 assert code > 0;
@@ -829,7 +829,7 @@ class Pickler{
 
         }
         } write(GLOBAL + module + '\n' + name + '\n');
-        self.memoize(obj);
+        this.memoize(obj);
 
     }
     dispatch[ClassType] = save_global;
@@ -840,7 +840,7 @@ class Pickler{
 # Pickling helpers
 
 }
-def _keep_alive(x, memo){
+function _keep_alive(x, memo){
     """Keeps a reference to the object x in the memo.
 
     Because we remember objects by their id, we have
@@ -863,7 +863,7 @@ def _keep_alive(x, memo){
 }
 } classmap = {}; # called classmap for backwards compatibility
 
-def whichmodule(func, funcname){
+function whichmodule(func, funcname){
     """Figure out the module in which a function occurs.
 
     Search sys.modules for the module.
@@ -872,17 +872,17 @@ def whichmodule(func, funcname){
     If the function cannot be found, return "__main__".
     """;
     # Python functions should always get an __module__ from their globals.
-    mod = getattr(func, "__module__", None);
-    if mod is not None{
+    mod = getattr(func, "__module__", nil);
+    if mod is not nil{
         return mod;
     } if func in classmap{
         return classmap[func];
 
     }
     for name, module in sys.modules.items(){
-        if module is None{
+        if module is nil{
             continue; # skip dummy package entries
-        } if name != '__main__' and getattr(module, funcname, None) is func{
+        } if name != '__main__' and getattr(module, funcname, nil) is func{
             break;
     } } else{
         name = '__main__';
@@ -895,7 +895,7 @@ def whichmodule(func, funcname){
 }
 class Unpickler{
 
-    def __init__(self, file){
+    function __init__( file){
         """This takes a file-like object for reading a pickle data stream.
 
         The protocol version of the pickle is detected automatically, so no
@@ -907,25 +907,25 @@ class Unpickler{
         object can be a file object opened for reading, a StringIO object,
         or any other custom object that meets this interface.
         """;
-        self.readline = file.readline;
-        self.read = file.read;
-        self.memo = {};
+        this.readline = file.readline;
+        this.read = file.read;
+        this.memo = {};
 
     }
-    def load(self){
+    function load(){
         """Read a pickled object representation from the open file.
 
         Return the reconstituted object hierarchy specified in the file.
         """;
-        self.mark = object(); # any new unique object
-        self.stack = [];
-        self.append = self.stack.append;
-        read = self.read;
-        dispatch = self.dispatch;
+        this.mark = object(); # any new unique object
+        this.stack = [];
+        this.append = this.stack.append;
+        read = this.read;
+        dispatch = this.dispatch;
         try{
             while 1{
                 key = read(1);
-                dispatch[key](self);
+                dispatch[key](this);
         } } except _Stop, stopinst{
             return stopinst.value;
 
@@ -938,9 +938,9 @@ class Unpickler{
     # corrupt (or hostile) we may get a clue from finding self.mark embedded
     # in unpickled objects.
     }
-    } def marker(self){
-        stack = self.stack;
-        mark = self.mark;
+    } function marker(){
+        stack = this.stack;
+        mark = this.mark;
         k = len(stack)-1;
         while stack[k] is not mark{ k = k-1;}
         return k;
@@ -948,90 +948,90 @@ class Unpickler{
     }
     dispatch = {};
 
-    def load_eof(self){
+    function load_eof(){
         raise EOFError;
     } dispatch[''] = load_eof;
 
-    def load_proto(self){
-        proto = ord(self.read(1));
+    function load_proto(){
+        proto = ord(this.read(1));
         if not 0 <= proto <= 2{
             raise ValueError, "unsupported pickle protocol: %d" % proto;
     } } dispatch[PROTO] = load_proto;
 
-    def load_persid(self){
-        pid = self.readline()[:-1];
-        self.append(self.persistent_load(pid));
+    function load_persid(){
+        pid = this.readline()[:-1];
+        this.append(this.persistent_load(pid));
     } dispatch[PERSID] = load_persid;
 
-    def load_binpersid(self){
-        pid = self.stack.pop();
-        self.append(self.persistent_load(pid));
+    function load_binpersid(){
+        pid = this.stack.pop();
+        this.append(this.persistent_load(pid));
     } dispatch[BINPERSID] = load_binpersid;
 
-    def load_none(self){
-        self.append(None);
+    function load_none(){
+        this.append(nil);
     } dispatch[NONE] = load_none;
 
-    def load_false(self){
-        self.append(False);
+    function load_false(){
+        this.append(false);
     } dispatch[NEWFALSE] = load_false;
 
-    def load_true(self){
-        self.append(True);
+    function load_true(){
+        this.append(true);
     } dispatch[NEWTRUE] = load_true;
 
-    def load_int(self){
-        data = self.readline();
+    function load_int(){
+        data = this.readline();
         if data == FALSE[1:]{
-            val = False;
+            val = false;
         } elif data == TRUE[1:]{
-            val = True;
+            val = true;
         } else{
             try{
                 val = int(data);
             } except ValueError{
                 val = long(data);
-        } } self.append(val);
+        } } this.append(val);
     } dispatch[INT] = load_int;
 
-    def load_binint(self){
-        self.append(mloads('i' + self.read(4)));
+    function load_binint(){
+        this.append(mloads('i' + this.read(4)));
     } dispatch[BININT] = load_binint;
 
-    def load_binint1(self){
-        self.append(ord(self.read(1)));
+    function load_binint1(){
+        this.append(ord(this.read(1)));
     } dispatch[BININT1] = load_binint1;
 
-    def load_binint2(self){
-        self.append(mloads('i' + self.read(2) + '\000\000'));
+    function load_binint2(){
+        this.append(mloads('i' + this.read(2) + '\000\000'));
     } dispatch[BININT2] = load_binint2;
 
-    def load_long(self){
-        self.append(long(self.readline()[:-1], 0));
+    function load_long(){
+        this.append(long(this.readline()[:-1], 0));
     } dispatch[LONG] = load_long;
 
-    def load_long1(self){
-        n = ord(self.read(1));
-        bytes = self.read(n);
-        self.append(decode_long(bytes));
+    function load_long1(){
+        n = ord(this.read(1));
+        bytes = this.read(n);
+        this.append(decode_long(bytes));
     } dispatch[LONG1] = load_long1;
 
-    def load_long4(self){
-        n = mloads('i' + self.read(4));
-        bytes = self.read(n);
-        self.append(decode_long(bytes));
+    function load_long4(){
+        n = mloads('i' + this.read(4));
+        bytes = this.read(n);
+        this.append(decode_long(bytes));
     } dispatch[LONG4] = load_long4;
 
-    def load_float(self){
-        self.append(float(self.readline()[:-1]));
+    function load_float(){
+        this.append(float(this.readline()[:-1]));
     } dispatch[FLOAT] = load_float;
 
-    def load_binfloat(self, unpack=struct.unpack){
-        self.append(unpack('>d', self.read(8))[0]);
+    function load_binfloat( unpack=struct.unpack){
+        this.append(unpack('>d', this.read(8))[0]);
     } dispatch[BINFLOAT] = load_binfloat;
 
-    def load_string(self){
-        rep = self.readline()[:-1];
+    function load_string(){
+        rep = this.readline()[:-1];
         for q in "\"'"{ # double or single quote
             if rep.startswith(q){
                 if len(rep) < 2 or not rep.endswith(q){
@@ -1040,71 +1040,71 @@ class Unpickler{
                 break;
         } } else{
             raise ValueError, "insecure string pickle";
-        } self.append(rep.decode("string-escape"));
+        } this.append(rep.decode("string-escape"));
     } dispatch[STRING] = load_string;
 
-    def load_binstring(self){
-        len = mloads('i' + self.read(4));
-        self.append(self.read(len));
+    function load_binstring(){
+        len = mloads('i' + this.read(4));
+        this.append(this.read(len));
     } dispatch[BINSTRING] = load_binstring;
 
-    def load_unicode(self){
-        self.append(unicode(self.readline()[:-1],'raw-unicode-escape'));
+    function load_unicode(){
+        this.append(unicode(this.readline()[:-1],'raw-unicode-escape'));
     } dispatch[UNICODE] = load_unicode;
 
-    def load_binunicode(self){
-        len = mloads('i' + self.read(4));
-        self.append(unicode(self.read(len),'utf-8'));
+    function load_binunicode(){
+        len = mloads('i' + this.read(4));
+        this.append(unicode(this.read(len),'utf-8'));
     } dispatch[BINUNICODE] = load_binunicode;
 
-    def load_short_binstring(self){
-        len = ord(self.read(1));
-        self.append(self.read(len));
+    function load_short_binstring(){
+        len = ord(this.read(1));
+        this.append(this.read(len));
     } dispatch[SHORT_BINSTRING] = load_short_binstring;
 
-    def load_tuple(self){
-        k = self.marker();
-        self.stack[k:] = [tuple(self.stack[k+1:])];
+    function load_tuple(){
+        k = this.marker();
+        this.stack[k:] = [tuple(this.stack[k+1:])];
     } dispatch[TUPLE] = load_tuple;
 
-    def load_empty_tuple(self){
-        self.stack.append(());
+    function load_empty_tuple(){
+        this.stack.append(());
     } dispatch[EMPTY_TUPLE] = load_empty_tuple;
 
-    def load_tuple1(self){
-        self.stack[-1] = (self.stack[-1],);
+    function load_tuple1(){
+        this.stack[-1] = (this.stack[-1],);
     } dispatch[TUPLE1] = load_tuple1;
 
-    def load_tuple2(self){
-        self.stack[-2:] = [(self.stack[-2], self.stack[-1])];
+    function load_tuple2(){
+        this.stack[-2:] = [(this.stack[-2], this.stack[-1])];
     } dispatch[TUPLE2] = load_tuple2;
 
-    def load_tuple3(self){
-        self.stack[-3:] = [(self.stack[-3], self.stack[-2], self.stack[-1])];
+    function load_tuple3(){
+        this.stack[-3:] = [(this.stack[-3], this.stack[-2], this.stack[-1])];
     } dispatch[TUPLE3] = load_tuple3;
 
-    def load_empty_list(self){
-        self.stack.append([]);
+    function load_empty_list(){
+        this.stack.append([]);
     } dispatch[EMPTY_LIST] = load_empty_list;
 
-    def load_empty_dictionary(self){
-        self.stack.append({});
+    function load_empty_dictionary(){
+        this.stack.append({});
     } dispatch[EMPTY_DICT] = load_empty_dictionary;
 
-    def load_list(self){
-        k = self.marker();
-        self.stack[k:] = [self.stack[k+1:]];
+    function load_list(){
+        k = this.marker();
+        this.stack[k:] = [this.stack[k+1:]];
     } dispatch[LIST] = load_list;
 
-    def load_dict(self){
-        k = self.marker();
+    function load_dict(){
+        k = this.marker();
         d = {};
-        items = self.stack[k+1:];
+        items = this.stack[k+1:];
         for i in range(0, len(items), 2){
             key = items[i];
             value = items[i+1];
             d[key] = value;
-        } self.stack[k:] = [d];
+        } this.stack[k:] = [d];
     } dispatch[DICT] = load_dict;
 
     # INST and OBJ differ only in how they get a class object.  It's not
@@ -1112,9 +1112,9 @@ class Unpickler{
     # previously diverged and grew different bugs.
     # klass is the class to instantiate, and k points to the topmost mark
     # object, following which are the arguments for klass.__init__.
-    def _instantiate(self, klass, k){
-        args = tuple(self.stack[k+1:]);
-        del self.stack[k:];
+    function _instantiate( klass, k){
+        args = tuple(this.stack[k+1:]);
+        del this.stack[k:];
         instantiated = 0;
         if (not args and
                 type(klass) is ClassType and
@@ -1133,67 +1133,67 @@ class Unpickler{
             } except TypeError, err{
                 raise TypeError, "in constructor for %s: %s" % (
                     klass.__name__, str(err)), sys.exc_info()[2];
-        } } self.append(value);
+        } } this.append(value);
 
     }
-    def load_inst(self){
-        module = self.readline()[:-1];
-        name = self.readline()[:-1];
-        klass = self.find_class(module, name);
-        self._instantiate(klass, self.marker());
+    function load_inst(){
+        module = this.readline()[:-1];
+        name = this.readline()[:-1];
+        klass = this.find_class(module, name);
+        this._instantiate(klass, this.marker());
     } dispatch[INST] = load_inst;
 
-    def load_obj(self){
+    function load_obj(){
         # Stack is ... markobject classobject arg1 arg2 ...
-        k = self.marker();
-        klass = self.stack.pop(k+1);
-        self._instantiate(klass, k);
+        k = this.marker();
+        klass = this.stack.pop(k+1);
+        this._instantiate(klass, k);
     } dispatch[OBJ] = load_obj;
 
-    def load_newobj(self){
-        args = self.stack.pop();
-        cls = self.stack[-1];
+    function load_newobj(){
+        args = this.stack.pop();
+        cls = this.stack[-1];
         obj = cls.__new__(cls, *args);
-        self.stack[-1] = obj;
+        this.stack[-1] = obj;
     } dispatch[NEWOBJ] = load_newobj;
 
-    def load_global(self){
-        module = self.readline()[:-1];
-        name = self.readline()[:-1];
-        klass = self.find_class(module, name);
-        self.append(klass);
+    function load_global(){
+        module = this.readline()[:-1];
+        name = this.readline()[:-1];
+        klass = this.find_class(module, name);
+        this.append(klass);
     } dispatch[GLOBAL] = load_global;
 
-    def load_ext1(self){
-        code = ord(self.read(1));
-        self.get_extension(code);
+    function load_ext1(){
+        code = ord(this.read(1));
+        this.get_extension(code);
     } dispatch[EXT1] = load_ext1;
 
-    def load_ext2(self){
-        code = mloads('i' + self.read(2) + '\000\000');
-        self.get_extension(code);
+    function load_ext2(){
+        code = mloads('i' + this.read(2) + '\000\000');
+        this.get_extension(code);
     } dispatch[EXT2] = load_ext2;
 
-    def load_ext4(self){
-        code = mloads('i' + self.read(4));
-        self.get_extension(code);
+    function load_ext4(){
+        code = mloads('i' + this.read(4));
+        this.get_extension(code);
     } dispatch[EXT4] = load_ext4;
 
-    def get_extension(self, code){
-        nil = [];
+    function get_extension( code){
+        #nil = [];
         obj = _extension_cache.get(code, nil);
         if obj is not nil{
-            self.append(obj);
+            this.append(obj);
             return;
         } key = _inverted_registry.get(code);
         if not key{
             raise ValueError("unregistered extension code %d" % code);
-        } obj = self.find_class(*key);
+        } obj = this.find_class(*key);
         _extension_cache[code] = obj;
-        self.append(obj);
+        this.append(obj);
 
     }
-    def find_class(self, module, name){
+    function find_class( module, name){
         # Subclasses may override this
         __import__(module);
         mod = sys.modules[module];
@@ -1201,81 +1201,81 @@ class Unpickler{
         return klass;
 
     }
-    def load_reduce(self){
-        stack = self.stack;
+    function load_reduce(){
+        stack = this.stack;
         args = stack.pop();
         func = stack[-1];
         value = func(*args);
         stack[-1] = value;
     } dispatch[REDUCE] = load_reduce;
 
-    def load_pop(self){
-        del self.stack[-1];
+    function load_pop(){
+        del this.stack[-1];
     } dispatch[POP] = load_pop;
 
-    def load_pop_mark(self){
-        k = self.marker();
-        del self.stack[k:];
+    function load_pop_mark(){
+        k = this.marker();
+        del this.stack[k:];
     } dispatch[POP_MARK] = load_pop_mark;
 
-    def load_dup(self){
-        self.append(self.stack[-1]);
+    function load_dup(){
+        this.append(this.stack[-1]);
     } dispatch[DUP] = load_dup;
 
-    def load_get(self){
-        self.append(self.memo[self.readline()[:-1]]);
+    function load_get(){
+        this.append(this.memo[this.readline()[:-1]]);
     } dispatch[GET] = load_get;
 
-    def load_binget(self){
-        i = ord(self.read(1));
-        self.append(self.memo[repr(i)]);
+    function load_binget(){
+        i = ord(this.read(1));
+        this.append(this.memo[repr(i)]);
     } dispatch[BINGET] = load_binget;
 
-    def load_long_binget(self){
-        i = mloads('i' + self.read(4));
-        self.append(self.memo[repr(i)]);
+    function load_long_binget(){
+        i = mloads('i' + this.read(4));
+        this.append(this.memo[repr(i)]);
     } dispatch[LONG_BINGET] = load_long_binget;
 
-    def load_put(self){
-        self.memo[self.readline()[:-1]] = self.stack[-1];
+    function load_put(){
+        this.memo[this.readline()[:-1]] = this.stack[-1];
     } dispatch[PUT] = load_put;
 
-    def load_binput(self){
-        i = ord(self.read(1));
-        self.memo[repr(i)] = self.stack[-1];
+    function load_binput(){
+        i = ord(this.read(1));
+        this.memo[repr(i)] = this.stack[-1];
     } dispatch[BINPUT] = load_binput;
 
-    def load_long_binput(self){
-        i = mloads('i' + self.read(4));
-        self.memo[repr(i)] = self.stack[-1];
+    function load_long_binput(){
+        i = mloads('i' + this.read(4));
+        this.memo[repr(i)] = this.stack[-1];
     } dispatch[LONG_BINPUT] = load_long_binput;
 
-    def load_append(self){
-        stack = self.stack;
+    function load_append(){
+        stack = this.stack;
         value = stack.pop();
         list = stack[-1];
         list.append(value);
     } dispatch[APPEND] = load_append;
 
-    def load_appends(self){
-        stack = self.stack;
-        mark = self.marker();
+    function load_appends(){
+        stack = this.stack;
+        mark = this.marker();
         list = stack[mark - 1];
         list.extend(stack[mark + 1:]);
         del stack[mark:];
     } dispatch[APPENDS] = load_appends;
 
-    def load_setitem(self){
-        stack = self.stack;
+    function load_setitem(){
+        stack = this.stack;
         value = stack.pop();
         key = stack.pop();
         dict = stack[-1];
         dict[key] = value;
     } dispatch[SETITEM] = load_setitem;
 
-    def load_setitems(self){
-        stack = self.stack;
-        mark = self.marker();
+    function load_setitems(){
+        stack = this.stack;
+        mark = this.marker();
         dict = stack[mark - 1];
         for i in range(mark + 1, len(stack), 2){
             dict[stack[i]] = stack[i + 1];
@@ -1284,15 +1284,15 @@ class Unpickler{
         del stack[mark:];
     } dispatch[SETITEMS] = load_setitems;
 
-    def load_build(self){
-        stack = self.stack;
+    function load_build(){
+        stack = this.stack;
         state = stack.pop();
         inst = stack[-1];
-        setstate = getattr(inst, "__setstate__", None);
+        setstate = getattr(inst, "__setstate__", nil);
         if setstate{
             setstate(state);
             return;
-        } slotstate = None;
+        } slotstate = nil;
         if isinstance(state, tuple) and len(state) == 2{
             state, slotstate = state;
         } if state{
@@ -1325,12 +1325,12 @@ class Unpickler{
                 setattr(inst, k, v);
     } } } dispatch[BUILD] = load_build;
 
-    def load_mark(self){
-        self.append(self.mark);
+    function load_mark(){
+        this.append(this.mark);
     } dispatch[MARK] = load_mark;
 
-    def load_stop(self){
-        value = self.stack.pop();
+    function load_stop(){
+        value = this.stack.pop();
         raise _Stop(value);
     } dispatch[STOP] = load_stop;
 
@@ -1345,7 +1345,7 @@ class _EmptyClass{
 }
 import binascii as _binascii;
 
-def encode_long(x){
+function encode_long(x){
     r"""Encode a long to a two's complement little-endian binary string.
     Note that 0L is a special case, returning an empty string, to save a
     byte in the LONG1 pickling context.
@@ -1413,7 +1413,7 @@ def encode_long(x){
     return binary[::-1];
 
 }
-def decode_long(data){
+function decode_long(data){
     r"""Decode a long from a two's complement little-endian binary string.
 
     >>> decode_long('')
@@ -1450,28 +1450,28 @@ try{
     from StringIO import StringIO;
 
 }
-def dump(obj, file, protocol=None){
+function dump(obj, file, protocol=nil){
     Pickler(file, protocol).dump(obj);
 
 }
-def dumps(obj, protocol=None){
+function dumps(obj, protocol=nil){
     file = StringIO();
     Pickler(file, protocol).dump(obj);
     return file.getvalue();
 
 }
-def load(file){
+function load(file){
     return Unpickler(file).load();
 
 }
-def loads(str){
+function loads(str){
     file = StringIO(str);
     return Unpickler(file).load();
 
 # Doctest
 
 }
-def _test(){
+function _test(){
     import doctest;
     return doctest.testmod();
 

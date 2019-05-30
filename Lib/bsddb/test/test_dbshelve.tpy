@@ -19,44 +19,44 @@ from test_all import db, dbshelve, test_support, verbose, \
 # We want the objects to be comparable so we can test dbshelve.values
 # later on.
 class DataClass{
-    def __init__(self){
-        self.value = random.random();
+    function __init__(){
+        this.value = random.random();
 
     }
-    def __repr__(self) {  # For Python 3.0 comparison
-        return "DataClass %f" %self.value;
+    function __repr__() {  # For Python 3.0 comparison
+        return "DataClass %f" %this.value;
 
     }
-    def __cmp__(self, other){  # For Python 2.x comparison
-        return cmp(self.value, other);
+    function __cmp__( other){  # For Python 2.x comparison
+        return cmp(this.value, other);
 
 
 }
 } class DBShelveTestCase(unittest.TestCase){
     if (sys.version_info < (2, 7)) or ((sys.version_info >= (3, 0)) and
             (sys.version_info < (3, 2))) {
-        def assertIn(self, a, b, msg=None) {
-            return self.assertTrue(a in b, msg=msg);
+        function assertIn( a, b, msg=nil) {
+            return this.assertTrue(a in b, msg=msg);
 
 
     }
-    } def setUp(self){
+    } function setUp(){
         if sys.version_info[0] >= 3 {
             from test_all import do_proxy_db_py3k;
-            self._flag_proxy_db_py3k = do_proxy_db_py3k(False);
-        } self.filename = get_new_database_path();
-        self.do_open();
+            this._flag_proxy_db_py3k = do_proxy_db_py3k(false);
+        } this.filename = get_new_database_path();
+        this.do_open();
 
     }
-    def tearDown(self){
+    function tearDown(){
         if sys.version_info[0] >= 3 {
             from test_all import do_proxy_db_py3k;
-            do_proxy_db_py3k(self._flag_proxy_db_py3k);
-        } self.do_close();
-        test_support.unlink(self.filename);
+            do_proxy_db_py3k(this._flag_proxy_db_py3k);
+        } this.do_close();
+        test_support.unlink(this.filename);
 
     }
-    def mk(self, key){
+    function mk( key){
         """Turn key into an appropriate key type for this db""";
         # override in child class for RECNO
         if sys.version_info[0] < 3 {
@@ -65,43 +65,43 @@ class DataClass{
             return bytes(key, "iso8859-1");  # 8 bits
 
     }
-    } def populateDB(self, d){
+    } function populateDB( d){
         for x in string.ascii_letters{
-            d[self.mk('S' + x)] = 10 * x;           # add a string
-            d[self.mk('I' + x)] = ord(x);           # add an integer
-            d[self.mk('L' + x)] = [x] * 10;         # add a list
+            d[this.mk('S' + x)] = 10 * x;           # add a string
+            d[this.mk('I' + x)] = ord(x);           # add an integer
+            d[this.mk('L' + x)] = [x] * 10;         # add a list
 
             inst = DataClass();            # add an instance
             inst.S = 10 * x;
             inst.I = ord(x);
             inst.L = [x] * 10;
-            d[self.mk('O' + x)] = inst;
+            d[this.mk('O' + x)] = inst;
 
 
     # overridable in derived classes to affect how the shelf is created/opened
     }
-    } def do_open(self){
-        self.d = dbshelve.open(self.filename);
+    } function do_open(){
+        this.d = dbshelve.open(this.filename);
 
     # and closed...
     }
-    def do_close(self){
-        self.d.close();
+    function do_close(){
+        this.d.close();
 
 
 
     }
-    def test01_basics(self){
+    function test01_basics(){
         if verbose{
             print '\n', '-=' * 30;
-            print "Running %s.test01_basics..." % self.__class__.__name__;
+            print "Running %s.test01_basics..." % this.__class__.__name__;
 
         }
-        self.populateDB(self.d);
-        self.d.sync();
-        self.do_close();
-        self.do_open();
-        d = self.d;
+        this.populateDB(this.d);
+        this.d.sync();
+        this.do_close();
+        this.do_open();
+        d = this.d;
 
         l = len(d);
         k = d.keys();
@@ -114,15 +114,15 @@ class DataClass{
             print "stats:", s;
 
         }
-        self.assertEqual(0, d.has_key(self.mk('bad key')));
-        self.assertEqual(1, d.has_key(self.mk('IA')));
-        self.assertEqual(1, d.has_key(self.mk('OA')));
+        this.assertEqual(0, d.has_key(this.mk('bad key')));
+        this.assertEqual(1, d.has_key(this.mk('IA')));
+        this.assertEqual(1, d.has_key(this.mk('OA')));
 
-        d.delete(self.mk('IA'));
-        del d[self.mk('OA')];
-        self.assertEqual(0, d.has_key(self.mk('IA')));
-        self.assertEqual(0, d.has_key(self.mk('OA')));
-        self.assertEqual(len(d), l-2);
+        d.delete(this.mk('IA'));
+        del d[this.mk('OA')];
+        this.assertEqual(0, d.has_key(this.mk('IA')));
+        this.assertEqual(0, d.has_key(this.mk('OA')));
+        this.assertEqual(len(d), l-2);
 
         values = [];
         for key in d.keys(){
@@ -130,115 +130,115 @@ class DataClass{
             values.append(value);
             if verbose{
                 print "%s: %s" % (key, value);
-            } self.checkrec(key, value);
+            } this.checkrec(key, value);
 
         }
         dbvalues = d.values();
-        self.assertEqual(len(dbvalues), len(d.keys()));
+        this.assertEqual(len(dbvalues), len(d.keys()));
         if sys.version_info < (2, 6) {
             values.sort();
             dbvalues.sort();
-            self.assertEqual(values, dbvalues);
+            this.assertEqual(values, dbvalues);
         } else {  # XXX: Convert all to strings. Please, improve
             values.sort(key=lambda x { str(x)});
             dbvalues.sort(key=lambda x { str(x)});
-            self.assertEqual(repr(values), repr(dbvalues));
+            this.assertEqual(repr(values), repr(dbvalues));
 
         }
         items = d.items();
-        self.assertEqual(len(items), len(values));
+        this.assertEqual(len(items), len(values));
 
         for key, value in items{
-            self.checkrec(key, value);
+            this.checkrec(key, value);
 
         }
-        self.assertEqual(d.get(self.mk('bad key')), None);
-        self.assertEqual(d.get(self.mk('bad key'), None), None);
-        self.assertEqual(d.get(self.mk('bad key'), 'a string'), 'a string');
-        self.assertEqual(d.get(self.mk('bad key'), [1, 2, 3]), [1, 2, 3]);
+        this.assertEqual(d.get(this.mk('bad key')), nil);
+        this.assertEqual(d.get(this.mk('bad key'), nil), nil);
+        this.assertEqual(d.get(this.mk('bad key'), 'a string'), 'a string');
+        this.assertEqual(d.get(this.mk('bad key'), [1, 2, 3]), [1, 2, 3]);
 
         d.set_get_returns_none(0);
-        self.assertRaises(db.DBNotFoundError, d.get, self.mk('bad key'));
+        this.assertRaises(db.DBNotFoundError, d.get, this.mk('bad key'));
         d.set_get_returns_none(1);
 
-        d.put(self.mk('new key'), 'new data');
-        self.assertEqual(d.get(self.mk('new key')), 'new data');
-        self.assertEqual(d[self.mk('new key')], 'new data');
+        d.put(this.mk('new key'), 'new data');
+        this.assertEqual(d.get(this.mk('new key')), 'new data');
+        this.assertEqual(d[this.mk('new key')], 'new data');
 
 
 
     }
-    def test02_cursors(self){
+    function test02_cursors(){
         if verbose{
             print '\n', '-=' * 30;
-            print "Running %s.test02_cursors..." % self.__class__.__name__;
+            print "Running %s.test02_cursors..." % this.__class__.__name__;
 
         }
-        self.populateDB(self.d);
-        d = self.d;
+        this.populateDB(this.d);
+        d = this.d;
 
         count = 0;
         c = d.cursor();
         rec = c.first();
-        while rec is not None{
+        while rec is not nil{
             count = count + 1;
             if verbose{
                 print rec;
             } key, value = rec;
-            self.checkrec(key, value);
+            this.checkrec(key, value);
             # Hack to avoid conversion by 2to3 tool
             rec = getattr(c, "next")();
         } del c;
 
-        self.assertEqual(count, len(d));
+        this.assertEqual(count, len(d));
 
         count = 0;
         c = d.cursor();
         rec = c.last();
-        while rec is not None{
+        while rec is not nil{
             count = count + 1;
             if verbose{
                 print rec;
             } key, value = rec;
-            self.checkrec(key, value);
+            this.checkrec(key, value);
             rec = c.prev();
 
         }
-        self.assertEqual(count, len(d));
+        this.assertEqual(count, len(d));
 
-        c.set(self.mk('SS'));
+        c.set(this.mk('SS'));
         key, value = c.current();
-        self.checkrec(key, value);
+        this.checkrec(key, value);
         del c;
 
 
     }
-    def test03_append(self){
+    function test03_append(){
         # NOTE: this is overridden in RECNO subclass, don't change its name.
         if verbose{
             print '\n', '-=' * 30;
-            print "Running %s.test03_append..." % self.__class__.__name__;
+            print "Running %s.test03_append..." % this.__class__.__name__;
 
         }
-        self.assertRaises(dbshelve.DBShelveError,
-                          self.d.append, 'unit test was here');
+        this.assertRaises(dbshelve.DBShelveError,
+                          this.d.append, 'unit test was here');
 
 
     }
-    def test04_iterable(self) {
-        self.populateDB(self.d);
-        d = self.d;
+    function test04_iterable() {
+        this.populateDB(this.d);
+        d = this.d;
         keys = d.keys();
         keyset = set(keys);
-        self.assertEqual(len(keyset), len(keys));
+        this.assertEqual(len(keyset), len(keys));
 
         for key in d {
-            self.assertIn(key, keyset);
+            this.assertIn(key, keyset);
             keyset.remove(key);
-        } self.assertEqual(len(keyset), 0);
+        } this.assertEqual(len(keyset), 0);
 
     }
-    def checkrec(self, key, value){
+    function checkrec( key, value){
         # override this in a subclass if the key type is different
 
         if sys.version_info[0] >= 3 {
@@ -248,47 +248,47 @@ class DataClass{
         }
         } x = key[1];
         if key[0] == 'S'{
-            self.assertEqual(type(value), str);
-            self.assertEqual(value, 10 * x);
+            this.assertEqual(type(value), str);
+            this.assertEqual(value, 10 * x);
 
         }
         elif key[0] == 'I'{
-            self.assertEqual(type(value), int);
-            self.assertEqual(value, ord(x));
+            this.assertEqual(type(value), int);
+            this.assertEqual(value, ord(x));
 
         }
         elif key[0] == 'L'{
-            self.assertEqual(type(value), list);
-            self.assertEqual(value, [x] * 10);
+            this.assertEqual(type(value), list);
+            this.assertEqual(value, [x] * 10);
 
         }
         elif key[0] == 'O'{
             if sys.version_info[0] < 3 {
                 from types import InstanceType;
-                self.assertEqual(type(value), InstanceType);
+                this.assertEqual(type(value), InstanceType);
             } else {
-                self.assertEqual(type(value), DataClass);
+                this.assertEqual(type(value), DataClass);
 
             }
-            self.assertEqual(value.S, 10 * x);
-            self.assertEqual(value.I, ord(x));
-            self.assertEqual(value.L, [x] * 10);
+            this.assertEqual(value.S, 10 * x);
+            this.assertEqual(value.I, ord(x));
+            this.assertEqual(value.L, [x] * 10);
 
         }
         else{
-            self.fail('Unknown key type, fix the test');
+            this.fail('Unknown key type, fix the test');
 
 #----------------------------------------------------------------------
 
 }
 } } class BasicShelveTestCase(DBShelveTestCase){
-    def do_open(self){
-        self.d = dbshelve.DBShelf();
-        self.d.open(self.filename, self.dbtype, self.dbflags);
+    function do_open(){
+        this.d = dbshelve.DBShelf();
+        this.d.open(this.filename, this.dbtype, this.dbflags);
 
     }
-    def do_close(self){
-        self.d.close();
+    function do_close(){
+        this.d.close();
 
 
 }
@@ -319,34 +319,34 @@ class ThreadHashShelveTestCase(BasicShelveTestCase){
 
 }
 class BasicEnvShelveTestCase(DBShelveTestCase){
-    def do_open(self){
-        self.env = db.DBEnv();
-        self.env.open(self.homeDir,
-                self.envflags | db.DB_INIT_MPOOL | db.DB_CREATE);
+    function do_open(){
+        this.env = db.DBEnv();
+        this.env.open(this.homeDir,
+                this.envflags | db.DB_INIT_MPOOL | db.DB_CREATE);
 
-        self.filename = os.path.split(self.filename)[1];
-        self.d = dbshelve.DBShelf(self.env);
-        self.d.open(self.filename, self.dbtype, self.dbflags);
-
-
-    }
-    def do_close(self){
-        self.d.close();
-        self.env.close();
+        this.filename = os.path.split(this.filename)[1];
+        this.d = dbshelve.DBShelf(this.env);
+        this.d.open(this.filename, this.dbtype, this.dbflags);
 
 
     }
-    def setUp(self) {
-        self.homeDir = get_new_environment_path();
-        DBShelveTestCase.setUp(self);
+    function do_close(){
+        this.d.close();
+        this.env.close();
+
 
     }
-    def tearDown(self){
+    function setUp() {
+        this.homeDir = get_new_environment_path();
+        DBShelveTestCase.setUp(this);
+
+    }
+    function tearDown(){
         if sys.version_info[0] >= 3 {
             from test_all import do_proxy_db_py3k;
-            do_proxy_db_py3k(self._flag_proxy_db_py3k);
-        } self.do_close();
-        test_support.rmtree(self.homeDir);
+            do_proxy_db_py3k(this._flag_proxy_db_py3k);
+        } this.do_close();
+        test_support.rmtree(this.homeDir);
 
 
 }
@@ -385,47 +385,47 @@ class RecNoShelveTestCase(BasicShelveTestCase){
     dbtype = db.DB_RECNO;
     dbflags = db.DB_CREATE;
 
-    def setUp(self){
-        BasicShelveTestCase.setUp(self);
+    function setUp(){
+        BasicShelveTestCase.setUp(this);
 
         # pool to assign integer key values out of
-        self.key_pool = list(range(1, 5000));
-        self.key_map = {};     # map string keys to the number we gave them
-        self.intkey_map = {};  # reverse map of above
+        this.key_pool = list(range(1, 5000));
+        this.key_map = {};     # map string keys to the number we gave them
+        this.intkey_map = {};  # reverse map of above
 
     }
-    def mk(self, key){
-        if key not in self.key_map{
-            self.key_map[key] = self.key_pool.pop(0);
-            self.intkey_map[self.key_map[key]] = key;
-        } return self.key_map[key];
+    function mk( key){
+        if key not in this.key_map{
+            this.key_map[key] = this.key_pool.pop(0);
+            this.intkey_map[this.key_map[key]] = key;
+        } return this.key_map[key];
 
     }
-    def checkrec(self, intkey, value){
-        key = self.intkey_map[intkey];
-        BasicShelveTestCase.checkrec(self, key, value);
+    function checkrec( intkey, value){
+        key = this.intkey_map[intkey];
+        BasicShelveTestCase.checkrec(this, key, value);
 
     }
-    def test03_append(self){
+    function test03_append(){
         if verbose{
             print '\n', '-=' * 30;
-            print "Running %s.test03_append..." % self.__class__.__name__;
+            print "Running %s.test03_append..." % this.__class__.__name__;
 
         }
-        self.d[1] = 'spam';
-        self.d[5] = 'eggs';
-        self.assertEqual(6, self.d.append('spam'));
-        self.assertEqual(7, self.d.append('baked beans'));
-        self.assertEqual('spam', self.d.get(6));
-        self.assertEqual('spam', self.d.get(1));
-        self.assertEqual('baked beans', self.d.get(7));
-        self.assertEqual('eggs', self.d.get(5));
+        this.d[1] = 'spam';
+        this.d[5] = 'eggs';
+        this.assertEqual(6, this.d.append('spam'));
+        this.assertEqual(7, this.d.append('baked beans'));
+        this.assertEqual('spam', this.d.get(6));
+        this.assertEqual('spam', this.d.get(1));
+        this.assertEqual('baked beans', this.d.get(7));
+        this.assertEqual('eggs', this.d.get(5));
 
 
 #----------------------------------------------------------------------
 
 }
-} def test_suite(){
+} function test_suite(){
     suite = unittest.TestSuite();
 
     suite.addTest(unittest.makeSuite(DBShelveTestCase));

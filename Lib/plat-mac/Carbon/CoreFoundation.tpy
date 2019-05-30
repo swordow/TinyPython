@@ -1,6 +1,6 @@
 # Generated from 'CFBase.h'
 
-def FOUR_CHAR_CODE(x){ return x;
+function FOUR_CHAR_CODE(x){ return x;}
 kCFCompareLessThan = -1;
 kCFCompareEqualTo = 0;
 kCFCompareGreaterThan = 1;

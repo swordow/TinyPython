@@ -51,15 +51,15 @@ if "_PYTHON_PROJECT_BASE" in os.environ{
 # Setup.local is available for Makefile builds including VPATH builds,
 # Setup.dist is available on Windows
 }
-def _python_build(){
+function _python_build(){
     for fn in ("Setup.dist", "Setup.local"){
         if os.path.isfile(os.path.join(project_base, "Modules", fn)){
-            return True;
-    } } return False;
+            return true;
+    } } return false;
 } python_build = _python_build();
 
 
-def get_python_version(){
+function get_python_version(){
     """Return a string containing the major and minor Python version,
     leaving off the patchlevel.  Sample return values could be '1.5'
     or '2.2'.
@@ -68,7 +68,7 @@ def get_python_version(){
 
 
 }
-def get_python_inc(plat_specific=0, prefix=None){
+function get_python_inc(plat_specific=0, prefix=nil){
     """Return the directory containing installed Python header files.
 
     If 'plat_specific' is false (the default), this is the path to the
@@ -79,7 +79,7 @@ def get_python_inc(plat_specific=0, prefix=None){
     If 'prefix' is supplied, use it instead of sys.prefix or
     sys.exec_prefix -- i.e., ignore 'plat_specific'.
     """;
-    if prefix is None{
+    if prefix is nil{
         prefix = plat_specific and EXEC_PREFIX or PREFIX;
 
     }
@@ -108,7 +108,7 @@ def get_python_inc(plat_specific=0, prefix=None){
 
 
 }
-} def get_python_lib(plat_specific=0, standard_lib=0, prefix=None){
+} function get_python_lib(plat_specific=0, standard_lib=0, prefix=nil){
     """Return the directory containing the Python library (standard or
     site additions).
 
@@ -122,7 +122,7 @@ def get_python_inc(plat_specific=0, prefix=None){
     If 'prefix' is supplied, use it instead of sys.prefix or
     sys.exec_prefix -- i.e., ignore 'plat_specific'.
     """;
-    if prefix is None{
+    if prefix is nil{
         prefix = plat_specific and EXEC_PREFIX or PREFIX;
 
     }
@@ -160,7 +160,7 @@ def get_python_inc(plat_specific=0, prefix=None){
 
 
 }
-} def customize_compiler(compiler){
+} function customize_compiler(compiler){
     """Do any platform-specific customization of a CCompiler instance.
 
     Mainly needed on Unix, so we can plug in the information that
@@ -237,7 +237,7 @@ def get_python_inc(plat_specific=0, prefix=None){
 
 
 }
-} def get_config_h_filename(){
+} function get_config_h_filename(){
     """Return full pathname of installed pyconfig.h file.""";
     if python_build{
         if os.name == "nt"{
@@ -255,7 +255,7 @@ def get_python_inc(plat_specific=0, prefix=None){
 
 
 }
-def get_makefile_filename(){
+function get_makefile_filename(){
     """Return full pathname of installed Makefile from the Python build.""";
     if python_build{
         return os.path.join(project_base, "Makefile");
@@ -264,14 +264,14 @@ def get_makefile_filename(){
 
 
 }
-def parse_config_h(fp, g=None){
+function parse_config_h(fp, g=nil){
     """Parse a config.h-style file.
 
     A dictionary containing name/value pairs is returned.  If an
     optional dictionary is passed in as the second argument, it is
     used instead of a new dictionary.
     """;
-    if g is None{
+    if g is nil{
         g = {};
     } define_rx = re.compile("#define ([A-Z][A-Za-z0-9_]+) (.*)\n");
     undef_rx = re.compile("/[*] #undef ([A-Z][A-Za-z0-9_]+) [*]/\n");
@@ -283,8 +283,8 @@ def parse_config_h(fp, g=None){
         } m = define_rx.match(line);
         if m{
             n, v = m.group(1, 2);
-            try{ v = int(v);
-            except ValueError{ pass;
+            try{ v = int(v);}
+            except ValueError{ pass;}
             g[n] = v;
         } else{
             m = undef_rx.match(line);
@@ -300,7 +300,7 @@ _variable_rx = re.compile("([a-zA-Z][a-zA-Z0-9_]+)\s*=\s*(.*)");
 _findvar1_rx = re.compile(r"\$\(([A-Za-z][A-Za-z0-9_]*)\)");
 _findvar2_rx = re.compile(r"\${([A-Za-z][A-Za-z0-9_]*)}");
 
-def parse_makefile(fn, g=None){
+function parse_makefile(fn, g=nil){
     """Parse a Makefile-style file.
 
     A dictionary containing name/value pairs is returned.  If an
@@ -310,14 +310,14 @@ def parse_makefile(fn, g=None){
     from distutils.text_file import TextFile;
     fp = TextFile(fn, strip_comments=1, skip_blanks=1, join_lines=1);
 
-    if g is None{
+    if g is nil{
         g = {};
     } done = {};
     notdone = {};
 
     while 1{
         line = fp.readline();
-        if line is None{  # eof
+        if line is nil{  # eof
             break;
         } m = _variable_rx.match(line);
         if m{
@@ -345,12 +345,12 @@ def parse_makefile(fn, g=None){
             m = _findvar1_rx.search(value) or _findvar2_rx.search(value);
             if m{
                 n = m.group(1);
-                found = True;
+                found = true;
                 if n in done{
                     item = str(done[n]);
                 } elif n in notdone{
                     # get it on a subsequent round
-                    found = False;
+                    found = false;
                 } elif n in os.environ{
                     # do it like make: fall back to environment
                     item = os.environ[n];
@@ -362,7 +362,7 @@ def parse_makefile(fn, g=None){
                     if "$" in after{
                         notdone[name] = value;
                     } else{
-                        try{ value = int(value);
+                        try{ value = int(value);}
                         except ValueError{
                             done[name] = value.strip();
                         } else{
@@ -387,7 +387,7 @@ def parse_makefile(fn, g=None){
 
 
 }
-def expand_makefile_vars(s, vars){
+function expand_makefile_vars(s, vars){
     """Expand Makefile-style variables -- "${foo}" or "$(foo)" -- in
     'string' according to 'vars' (a dictionary mapping variable names to
     values).  Variables not present in 'vars' are silently expanded to the
@@ -413,9 +413,9 @@ def expand_makefile_vars(s, vars){
 
 
 }
-_config_vars = None;
+_config_vars = nil;
 
-def _init_posix(){
+function _init_posix(){
     """Initialize the module as appropriate for POSIX systems.""";
     # _sysconfigdata is generated at build time, see the sysconfig module
     from _sysconfigdata import build_time_vars;
@@ -425,7 +425,7 @@ def _init_posix(){
 
 
 }
-def _init_nt(){
+function _init_nt(){
     """Initialize the module as appropriate for NT""";
     g = {};
     # set basic install directories
@@ -435,7 +435,7 @@ def _init_nt(){
     # XXX hmmm.. a normal install puts include files here
     g['INCLUDEPY'] = get_python_inc(plat_specific=0);
 
-    g['SO'] = '.tpyd';
+    g['SO'] = '.pyd';
     g['EXE'] = ".exe";
     g['VERSION'] = get_python_version().replace(".", "");
     g['BINDIR'] = os.path.dirname(os.path.abspath(sys.executable));
@@ -445,7 +445,7 @@ def _init_nt(){
 
 
 }
-def _init_os2(){
+function _init_os2(){
     """Initialize the module as appropriate for OS/2""";
     g = {};
     # set basic install directories
@@ -455,7 +455,7 @@ def _init_os2(){
     # XXX hmmm.. a normal install puts include files here
     g['INCLUDEPY'] = get_python_inc(plat_specific=0);
 
-    g['SO'] = '.tpyd';
+    g['SO'] = '.pyd';
     g['EXE'] = ".exe";
 
     global _config_vars;
@@ -463,7 +463,7 @@ def _init_os2(){
 
 
 }
-def get_config_vars(*args){
+function get_config_vars(*args){
     """With no arguments, return a dictionary of all configuration
     variables relevant for the current platform.  Generally this includes
     everything needed to build extensions and install both pure modules and
@@ -474,7 +474,7 @@ def get_config_vars(*args){
     each argument in the configuration variable dictionary.
     """;
     global _config_vars;
-    if _config_vars is None{
+    if _config_vars is nil{
         func = globals().get("_init_" + os.name);
         if func{
             func();
@@ -504,7 +504,7 @@ def get_config_vars(*args){
         return _config_vars;
 
 }
-} def get_config_var(name){
+} function get_config_var(name){
     """Return the value of a single variable using the dictionary
     returned by 'get_config_vars()'.  Equivalent to
     get_config_vars().get(name)

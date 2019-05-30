@@ -96,8 +96,8 @@ sound_playsound(PyObject *s, PyObject *args)
         return NULL;
     }
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -124,8 +124,8 @@ sound_beep(PyObject *self, PyObject *args)
         return NULL;
     }
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -135,8 +135,8 @@ sound_msgbeep(PyObject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, "|i:MessageBeep", &x))
         return NULL;
     MessageBeep(x);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static struct PyMethodDef sound_methods[] =

@@ -11,127 +11,127 @@ import collections;
 __all__ = ["UserString","MutableString"];
 
 class UserString(collections.Sequence){
-    def __init__(self, seq){
+    function __init__( seq){
         if isinstance(seq, basestring){
-            self.data = seq;
+            this.data = seq;
         } elif isinstance(seq, UserString){
-            self.data = seq.data[:];
+            this.data = seq.data[:];
         } else{
-            self.data = str(seq);
-    } } def __str__(self){ return str(self.data);
-    def __repr__(self){ return repr(self.data);
-    def __int__(self){ return int(self.data);
-    def __long__(self){ return long(self.data);
-    def __float__(self){ return float(self.data);
-    def __complex__(self){ return complex(self.data);
-    def __hash__(self){ return hash(self.data);
+            this.data = str(seq);
+    } } function __str__(){ return str(this.data);}
+    function __repr__(){ return repr(this.data);}
+    function __int__(){ return int(this.data);}
+    function __long__(){ return long(this.data);}
+    function __float__(){ return float(this.data);}
+    function __complex__(){ return complex(this.data);}
+    function __hash__(){ return hash(this.data);}
 
-    def __cmp__(self, string){
+    function __cmp__( string){
         if isinstance(string, UserString){
-            return cmp(self.data, string.data);
+            return cmp(this.data, string.data);
         } else{
-            return cmp(self.data, string);
-    } } def __contains__(self, char){
-        return char in self.data;
+            return cmp(this.data, string);
+    } } function __contains__( char){
+        return char in this.data;
 
     }
-    def __len__(self){ return len(self.data);
-    def __getitem__(self, index){ return self.__class__(self.data[index]);
-    def __getslice__(self, start, end){
+    function __len__(){ return len(this.data);}
+    function __getitem__( index){ return this.__class__(this.data[index]);}
+    function __getslice__( start, end){
         start = max(start, 0); end = max(end, 0);
-        return self.__class__(self.data[start:end]);
+        return this.__class__(this.data[start:end]);
 
     }
-    def __add__(self, other){
+    function __add__( other){
         if isinstance(other, UserString){
-            return self.__class__(self.data + other.data);
+            return this.__class__(this.data + other.data);
         } elif isinstance(other, basestring){
-            return self.__class__(self.data + other);
+            return this.__class__(this.data + other);
         } else{
-            return self.__class__(self.data + str(other));
-    } } def __radd__(self, other){
+            return this.__class__(this.data + str(other));
+    } } function __radd__( other){
         if isinstance(other, basestring){
-            return self.__class__(other + self.data);
+            return this.__class__(other + this.data);
         } else{
-            return self.__class__(str(other) + self.data);
-    } } def __mul__(self, n){
-        return self.__class__(self.data*n);
+            return this.__class__(str(other) + this.data);
+    } } function __mul__( n){
+        return this.__class__(this.data*n);
     } __rmul__ = __mul__;
-    def __mod__(self, args){
-        return self.__class__(self.data % args);
+    function __mod__( args){
+        return this.__class__(this.data % args);
 
     # the following methods are defined in alphabetical order:
     }
-    def capitalize(self){ return self.__class__(self.data.capitalize());
-    def center(self, width, *args){
-        return self.__class__(self.data.center(width, *args));
-    } def count(self, sub, start=0, end=sys.maxint){
-        return self.data.count(sub, start, end);
-    } def decode(self, encoding=None, errors=None){ # XXX improve this?
+    function capitalize(){ return this.__class__(this.data.capitalize());}
+    function center( width, *args){
+        return this.__class__(this.data.center(width, *args));
+    } function count( sub, start=0, end=sys.maxint){
+        return this.data.count(sub, start, end);
+    } function decode( encoding=nil, errors=nil){ # XXX improve this?
         if encoding{
             if errors{
-                return self.__class__(self.data.decode(encoding, errors));
+                return this.__class__(this.data.decode(encoding, errors));
             } else{
-                return self.__class__(self.data.decode(encoding));
+                return this.__class__(this.data.decode(encoding));
         } } else{
-            return self.__class__(self.data.decode());
-    } } def encode(self, encoding=None, errors=None){ # XXX improve this?
+            return this.__class__(this.data.decode());
+    } } function encode( encoding=nil, errors=nil){ # XXX improve this?
         if encoding{
             if errors{
-                return self.__class__(self.data.encode(encoding, errors));
+                return this.__class__(this.data.encode(encoding, errors));
             } else{
-                return self.__class__(self.data.encode(encoding));
+                return this.__class__(this.data.encode(encoding));
         } } else{
-            return self.__class__(self.data.encode());
-    } } def endswith(self, suffix, start=0, end=sys.maxint){
-        return self.data.endswith(suffix, start, end);
-    } def expandtabs(self, tabsize=8){
-        return self.__class__(self.data.expandtabs(tabsize));
-    } def find(self, sub, start=0, end=sys.maxint){
-        return self.data.find(sub, start, end);
-    } def index(self, sub, start=0, end=sys.maxint){
-        return self.data.index(sub, start, end);
-    } def isalpha(self){ return self.data.isalpha();
-    def isalnum(self){ return self.data.isalnum();
-    def isdecimal(self){ return self.data.isdecimal();
-    def isdigit(self){ return self.data.isdigit();
-    def islower(self){ return self.data.islower();
-    def isnumeric(self){ return self.data.isnumeric();
-    def isspace(self){ return self.data.isspace();
-    def istitle(self){ return self.data.istitle();
-    def isupper(self){ return self.data.isupper();
-    def join(self, seq){ return self.data.join(seq);
-    def ljust(self, width, *args){
-        return self.__class__(self.data.ljust(width, *args));
-    } def lower(self){ return self.__class__(self.data.lower());
-    def lstrip(self, chars=None){ return self.__class__(self.data.lstrip(chars));
-    def partition(self, sep){
-        return self.data.partition(sep);
-    } def replace(self, old, new, maxsplit=-1){
-        return self.__class__(self.data.replace(old, new, maxsplit));
-    } def rfind(self, sub, start=0, end=sys.maxint){
-        return self.data.rfind(sub, start, end);
-    } def rindex(self, sub, start=0, end=sys.maxint){
-        return self.data.rindex(sub, start, end);
-    } def rjust(self, width, *args){
-        return self.__class__(self.data.rjust(width, *args));
-    } def rpartition(self, sep){
-        return self.data.rpartition(sep);
-    } def rstrip(self, chars=None){ return self.__class__(self.data.rstrip(chars));
-    def split(self, sep=None, maxsplit=-1){
-        return self.data.split(sep, maxsplit);
-    } def rsplit(self, sep=None, maxsplit=-1){
-        return self.data.rsplit(sep, maxsplit);
-    } def splitlines(self, keepends=0){ return self.data.splitlines(keepends);
-    def startswith(self, prefix, start=0, end=sys.maxint){
-        return self.data.startswith(prefix, start, end);
-    } def strip(self, chars=None){ return self.__class__(self.data.strip(chars));
-    def swapcase(self){ return self.__class__(self.data.swapcase());
-    def title(self){ return self.__class__(self.data.title());
-    def translate(self, *args){
-        return self.__class__(self.data.translate(*args));
-    } def upper(self){ return self.__class__(self.data.upper());
-    def zfill(self, width){ return self.__class__(self.data.zfill(width));
+            return this.__class__(this.data.encode());
+    } } function endswith( suffix, start=0, end=sys.maxint){
+        return this.data.endswith(suffix, start, end);
+    } function expandtabs( tabsize=8){
+        return this.__class__(this.data.expandtabs(tabsize));
+    } function find( sub, start=0, end=sys.maxint){
+        return this.data.find(sub, start, end);
+    } function index( sub, start=0, end=sys.maxint){
+        return this.data.index(sub, start, end);
+    } function isalpha(){ return this.data.isalpha();}
+    function isalnum(){ return this.data.isalnum();}
+    function isdecimal(){ return this.data.isdecimal();}
+    function isdigit(){ return this.data.isdigit();}
+    function islower(){ return this.data.islower();}
+    function isnumeric(){ return this.data.isnumeric();}
+    function isspace(){ return this.data.isspace();}
+    function istitle(){ return this.data.istitle();}
+    function isupper(){ return this.data.isupper();}
+    function join( seq){ return this.data.join(seq);}
+    function ljust( width, *args){
+        return this.__class__(this.data.ljust(width, *args));
+    } function lower(){ return this.__class__(this.data.lower());}
+    function lstrip( chars=nil){ return this.__class__(this.data.lstrip(chars));}
+    function partition( sep){
+        return this.data.partition(sep);
+    } function replace( old, new, maxsplit=-1){
+        return this.__class__(this.data.replace(old, new, maxsplit));
+    } function rfind( sub, start=0, end=sys.maxint){
+        return this.data.rfind(sub, start, end);
+    } function rindex( sub, start=0, end=sys.maxint){
+        return this.data.rindex(sub, start, end);
+    } function rjust( width, *args){
+        return this.__class__(this.data.rjust(width, *args));
+    } function rpartition( sep){
+        return this.data.rpartition(sep);
+    } function rstrip( chars=nil){ return this.__class__(this.data.rstrip(chars));}
+    function split( sep=nil, maxsplit=-1){
+        return this.data.split(sep, maxsplit);
+    } function rsplit( sep=nil, maxsplit=-1){
+        return this.data.rsplit(sep, maxsplit);
+    } function splitlines( keepends=0){ return this.data.splitlines(keepends);}
+    function startswith( prefix, start=0, end=sys.maxint){
+        return this.data.startswith(prefix, start, end);
+    } function strip( chars=nil){ return this.__class__(this.data.strip(chars));}
+    function swapcase(){ return this.__class__(this.data.swapcase());}
+    function title(){ return this.__class__(this.data.title());}
+    function translate( *args){
+        return this.__class__(this.data.translate(*args));
+    } function upper(){ return this.__class__(this.data.upper());}
+    function zfill( width){ return this.__class__(this.data.zfill(width));}
 
 }
 class MutableString(UserString, collections.MutableSequence){
@@ -149,23 +149,23 @@ class MutableString(UserString, collections.MutableSequence){
     errors that would be very hard to track down.
 
     A faster and better solution is to rewrite your program using lists.""";
-    def __init__(self, string=""){
+    function __init__( string=""){
         from warnings import warnpy3k;
         warnpy3k('the class UserString.MutableString has been removed in '
                     'Python 3.0', stacklevel=2);
-        self.data = string;
+        this.data = string;
 
     # We inherit object.__hash__, so we must deny this explicitly
     }
-    __hash__ = None;
+    __hash__ = nil;
 
-    def __setitem__(self, index, sub){
+    function __setitem__( index, sub){
         if isinstance(index, slice){
             if isinstance(sub, UserString){
                 sub = sub.data;
             } elif not isinstance(sub, basestring){
                 sub = str(sub);
-            } start, stop, step = index.indices(len(self.data));
+            } start, stop, step = index.indices(len(this.data));
             if step == -1{
                 start, stop = stop+1, start+1;
                 sub = sub[::-1];
@@ -174,53 +174,53 @@ class MutableString(UserString, collections.MutableSequence){
                 # the extended slice assignment/deletion algorithm here...
                 raise TypeError, "invalid step in slicing assignment";
             } start = min(start, stop);
-            self.data = self.data[:start] + sub + self.data[stop:];
+            this.data = this.data[:start] + sub + this.data[stop:];
         } else{
             if index < 0{
-                index += len(self.data);
-            } if index < 0 or index >= len(self.data){ raise IndexError;
-            self.data = self.data[:index] + sub + self.data[index+1:];
-    } } def __delitem__(self, index){
+                index += len(this.data);
+            } if index < 0 or index >= len(this.data){ raise IndexError;}
+            this.data = this.data[:index] + sub + this.data[index+1:];
+    } } function __delitem__( index){
         if isinstance(index, slice){
-            start, stop, step = index.indices(len(self.data));
+            start, stop, step = index.indices(len(this.data));
             if step == -1{
                 start, stop = stop+1, start+1;
             } elif step != 1{
                 # XXX(twouters): see same block in __setitem__
                 raise TypeError, "invalid step in slicing deletion";
             } start = min(start, stop);
-            self.data = self.data[:start] + self.data[stop:];
+            this.data = this.data[:start] + this.data[stop:];
         } else{
             if index < 0{
-                index += len(self.data);
-            } if index < 0 or index >= len(self.data){ raise IndexError;
-            self.data = self.data[:index] + self.data[index+1:];
-    } } def __setslice__(self, start, end, sub){
+                index += len(this.data);
+            } if index < 0 or index >= len(this.data){ raise IndexError;}
+            this.data = this.data[:index] + this.data[index+1:];
+    } } function __setslice__( start, end, sub){
         start = max(start, 0); end = max(end, 0);
         if isinstance(sub, UserString){
-            self.data = self.data[:start]+sub.data+self.data[end:];
+            this.data = this.data[:start]+sub.data+this.data[end:];
         } elif isinstance(sub, basestring){
-            self.data = self.data[:start]+sub+self.data[end:];
+            this.data = this.data[:start]+sub+this.data[end:];
         } else{
-            self.data =  self.data[:start]+str(sub)+self.data[end:];
-    } } def __delslice__(self, start, end){
+            this.data =  this.data[:start]+str(sub)+this.data[end:];
+    } } function __delslice__( start, end){
         start = max(start, 0); end = max(end, 0);
-        self.data = self.data[:start] + self.data[end:];
-    } def immutable(self){
-        return UserString(self.data);
-    } def __iadd__(self, other){
+        this.data = this.data[:start] + this.data[end:];
+    } function immutable(){
+        return UserString(this.data);
+    } function __iadd__( other){
         if isinstance(other, UserString){
-            self.data += other.data;
+            this.data += other.data;
         } elif isinstance(other, basestring){
-            self.data += other;
+            this.data += other;
         } else{
-            self.data += str(other);
-        } return self;
-    } def __imul__(self, n){
-        self.data *= n;
-        return self;
-    } def insert(self, index, value){
-        self[index:index] = value;
+            this.data += str(other);
+        } return this;
+    } function __imul__( n){
+        this.data *= n;
+        return this;
+    } function insert( index, value){
+        this[index:index] = value;
 
 }
 } if __name__ == "__main__"{

@@ -37,16 +37,16 @@ dicttable = {};
 codetable = {};
 tracebacktable = {};
 
-def wrap_frame(frame){
+function wrap_frame(frame){
     fid = id(frame);
     frametable[fid] = frame;
     return fid;
 
 }
-def wrap_info(info){
+function wrap_info(info){
     "replace info[2], a traceback instance, by its ID";
-    if info is None{
-        return None;
+    if info is nil{
+        return nil;
     } else{
         traceback = info[2];
         assert isinstance(traceback, types.TracebackType);
@@ -58,91 +58,91 @@ def wrap_info(info){
 }
 } class GUIProxy{
 
-    def __init__(self, conn, gui_adap_oid){
-        self.conn = conn;
-        self.oid = gui_adap_oid;
+    function __init__( conn, gui_adap_oid){
+        this.conn = conn;
+        this.oid = gui_adap_oid;
 
     }
-    def interaction(self, message, frame, info=None){
+    function interaction( message, frame, info=nil){
         # calls rpc.SocketIO.remotecall() via run.MyHandler instance
         # pass frame and traceback object IDs instead of the objects themselves
-        self.conn.remotecall(self.oid, "interaction",
+        this.conn.remotecall(this.oid, "interaction",
                              (message, wrap_frame(frame), wrap_info(info)),
                              {});
 
 }
 } class IdbAdapter{
 
-    def __init__(self, idb){
-        self.idb = idb;
+    function __init__( idb){
+        this.idb = idb;
 
     #----------called by an IdbProxy----------
 
     }
-    def set_step(self){
-        self.idb.set_step();
+    function set_step(){
+        this.idb.set_step();
 
     }
-    def set_quit(self){
-        self.idb.set_quit();
+    function set_quit(){
+        this.idb.set_quit();
 
     }
-    def set_continue(self){
-        self.idb.set_continue();
+    function set_continue(){
+        this.idb.set_continue();
 
     }
-    def set_next(self, fid){
+    function set_next( fid){
         frame = frametable[fid];
-        self.idb.set_next(frame);
+        this.idb.set_next(frame);
 
     }
-    def set_return(self, fid){
+    function set_return( fid){
         frame = frametable[fid];
-        self.idb.set_return(frame);
+        this.idb.set_return(frame);
 
     }
-    def get_stack(self, fid, tbid){
+    function get_stack( fid, tbid){
         ##print >>sys.__stderr__, "get_stack(%r, %r)" % (fid, tbid)
         frame = frametable[fid];
-        if tbid is None{
-            tb = None;
+        if tbid is nil{
+            tb = nil;
         } else{
             tb = tracebacktable[tbid];
-        } stack, i = self.idb.get_stack(frame, tb);
+        } stack, i = this.idb.get_stack(frame, tb);
         ##print >>sys.__stderr__, "get_stack() ->", stack
         stack = [(wrap_frame(frame2), k) for frame2, k in stack];
         ##print >>sys.__stderr__, "get_stack() ->", stack
         return stack, i;
 
     }
-    def run(self, cmd){
+    function run( cmd){
         import __main__;
-        self.idb.run(cmd, __main__.__dict__);
+        this.idb.run(cmd, __main__.__dict__);
 
     }
-    def set_break(self, filename, lineno){
-        msg = self.idb.set_break(filename, lineno);
+    function set_break( filename, lineno){
+        msg = this.idb.set_break(filename, lineno);
         return msg;
 
     }
-    def clear_break(self, filename, lineno){
-        msg = self.idb.clear_break(filename, lineno);
+    function clear_break( filename, lineno){
+        msg = this.idb.clear_break(filename, lineno);
         return msg;
 
     }
-    def clear_all_file_breaks(self, filename){
-        msg = self.idb.clear_all_file_breaks(filename);
+    function clear_all_file_breaks( filename){
+        msg = this.idb.clear_all_file_breaks(filename);
         return msg;
 
     #----------called by a FrameProxy----------
 
     }
-    def frame_attr(self, fid, name){
+    function frame_attr( fid, name){
         frame = frametable[fid];
         return getattr(frame, name);
 
     }
-    def frame_globals(self, fid){
+    function frame_globals( fid){
         frame = frametable[fid];
         dict = frame.f_globals;
         did = id(dict);
@@ -150,7 +150,7 @@ def wrap_info(info){
         return did;
 
     }
-    def frame_locals(self, fid){
+    function frame_locals( fid){
         frame = frametable[fid];
         dict = frame.f_locals;
         did = id(dict);
@@ -158,7 +158,7 @@ def wrap_info(info){
         return did;
 
     }
-    def frame_code(self, fid){
+    function frame_code( fid){
         frame = frametable[fid];
         code = frame.f_code;
         cid = id(code);
@@ -168,24 +168,24 @@ def wrap_info(info){
     #----------called by a CodeProxy----------
 
     }
-    def code_name(self, cid){
+    function code_name( cid){
         code = codetable[cid];
         return code.co_name;
 
     }
-    def code_filename(self, cid){
+    function code_filename( cid){
         code = codetable[cid];
         return code.co_filename;
 
     #----------called by a DictProxy----------
 
     }
-    def dict_keys(self, did){
+    function dict_keys( did){
         dict = dicttable[did];
         return dict.keys();
 
     }
-    def dict_item(self, did, key){
+    function dict_item( did, key){
         dict = dicttable[did];
         value = dict[key];
         value = repr(value);
@@ -195,7 +195,7 @@ def wrap_info(info){
 
 
 }
-} def start_debugger(rpchandler, gui_adap_oid){
+} function start_debugger(rpchandler, gui_adap_oid){
     """Start the debugger and its RPC link in the Python subprocess
 
     Start the subprocess side of the split debugger and set up that side of the
@@ -220,88 +220,88 @@ def wrap_info(info){
 }
 class FrameProxy{
 
-    def __init__(self, conn, fid){
-        self._conn = conn;
-        self._fid = fid;
-        self._oid = "idb_adapter";
-        self._dictcache = {};
+    function __init__( conn, fid){
+        this._conn = conn;
+        this._fid = fid;
+        this._oid = "idb_adapter";
+        this._dictcache = {};
 
     }
-    def __getattr__(self, name){
+    function __getattr__( name){
         if name[:1] == "_"{
             raise AttributeError, name;
         } if name == "f_code"{
-            return self._get_f_code();
+            return this._get_f_code();
         } if name == "f_globals"{
-            return self._get_f_globals();
+            return this._get_f_globals();
         } if name == "f_locals"{
-            return self._get_f_locals();
-        } return self._conn.remotecall(self._oid, "frame_attr",
-                                     (self._fid, name), {});
+            return this._get_f_locals();
+        } return this._conn.remotecall(this._oid, "frame_attr",
+                                     (this._fid, name), {});
 
     }
-    def _get_f_code(self){
-        cid = self._conn.remotecall(self._oid, "frame_code", (self._fid,), {});
-        return CodeProxy(self._conn, self._oid, cid);
+    function _get_f_code(){
+        cid = this._conn.remotecall(this._oid, "frame_code", (this._fid,), {});
+        return CodeProxy(this._conn, this._oid, cid);
 
     }
-    def _get_f_globals(self){
-        did = self._conn.remotecall(self._oid, "frame_globals",
-                                    (self._fid,), {});
-        return self._get_dict_proxy(did);
+    function _get_f_globals(){
+        did = this._conn.remotecall(this._oid, "frame_globals",
+                                    (this._fid,), {});
+        return this._get_dict_proxy(did);
 
     }
-    def _get_f_locals(self){
-        did = self._conn.remotecall(self._oid, "frame_locals",
-                                    (self._fid,), {});
-        return self._get_dict_proxy(did);
+    function _get_f_locals(){
+        did = this._conn.remotecall(this._oid, "frame_locals",
+                                    (this._fid,), {});
+        return this._get_dict_proxy(did);
 
     }
-    def _get_dict_proxy(self, did){
-        if did in self._dictcache{
-            return self._dictcache[did];
-        } dp = DictProxy(self._conn, self._oid, did);
-        self._dictcache[did] = dp;
+    function _get_dict_proxy( did){
+        if did in this._dictcache{
+            return this._dictcache[did];
+        } dp = DictProxy(this._conn, this._oid, did);
+        this._dictcache[did] = dp;
         return dp;
 
 
 }
 } class CodeProxy{
 
-    def __init__(self, conn, oid, cid){
-        self._conn = conn;
-        self._oid = oid;
-        self._cid = cid;
+    function __init__( conn, oid, cid){
+        this._conn = conn;
+        this._oid = oid;
+        this._cid = cid;
 
     }
-    def __getattr__(self, name){
+    function __getattr__( name){
         if name == "co_name"{
-            return self._conn.remotecall(self._oid, "code_name",
-                                         (self._cid,), {});
+            return this._conn.remotecall(this._oid, "code_name",
+                                         (this._cid,), {});
         } if name == "co_filename"{
-            return self._conn.remotecall(self._oid, "code_filename",
-                                         (self._cid,), {});
+            return this._conn.remotecall(this._oid, "code_filename",
+                                         (this._cid,), {});
 
 
 }
 } } class DictProxy{
 
-    def __init__(self, conn, oid, did){
-        self._conn = conn;
-        self._oid = oid;
-        self._did = did;
+    function __init__( conn, oid, did){
+        this._conn = conn;
+        this._oid = oid;
+        this._did = did;
 
     }
-    def keys(self){
-        return self._conn.remotecall(self._oid, "dict_keys", (self._did,), {});
+    function keys(){
+        return this._conn.remotecall(this._oid, "dict_keys", (this._did,), {});
 
     }
-    def __getitem__(self, key){
-        return self._conn.remotecall(self._oid, "dict_item",
-                                     (self._did, key), {});
+    function __getitem__( key){
+        return this._conn.remotecall(this._oid, "dict_item",
+                                     (this._did, key), {});
 
     }
-    def __getattr__(self, name){
+    function __getattr__( name){
         ##print >>sys.__stderr__, "failed DictProxy.__getattr__:", name
         raise AttributeError, name;
 
@@ -309,82 +309,82 @@ class FrameProxy{
 }
 } class GUIAdapter{
 
-    def __init__(self, conn, gui){
-        self.conn = conn;
-        self.gui = gui;
+    function __init__( conn, gui){
+        this.conn = conn;
+        this.gui = gui;
 
     }
-    def interaction(self, message, fid, modified_info){
+    function interaction( message, fid, modified_info){
         ##print "interaction: (%s, %s, %s)" % (message, fid, modified_info)
-        frame = FrameProxy(self.conn, fid);
-        self.gui.interaction(message, frame, modified_info);
+        frame = FrameProxy(this.conn, fid);
+        this.gui.interaction(message, frame, modified_info);
 
 
 }
 } class IdbProxy{
 
-    def __init__(self, conn, shell, oid){
-        self.oid = oid;
-        self.conn = conn;
-        self.shell = shell;
+    function __init__( conn, shell, oid){
+        this.oid = oid;
+        this.conn = conn;
+        this.shell = shell;
 
     }
-    def call(self, methodname, *args, **kwargs){
+    function call( methodname, *args, **kwargs){
         ##print "**IdbProxy.call %s %s %s" % (methodname, args, kwargs)
-        value = self.conn.remotecall(self.oid, methodname, args, kwargs);
+        value = this.conn.remotecall(this.oid, methodname, args, kwargs);
         ##print "**IdbProxy.call %s returns %r" % (methodname, value)
         return value;
 
     }
-    def run(self, cmd, locals){
+    function run( cmd, locals){
         # Ignores locals on purpose!
-        seq = self.conn.asyncqueue(self.oid, "run", (cmd,), {});
-        self.shell.interp.active_seq = seq;
+        seq = this.conn.asyncqueue(this.oid, "run", (cmd,), {});
+        this.shell.interp.active_seq = seq;
 
     }
-    def get_stack(self, frame, tbid){
+    function get_stack( frame, tbid){
         # passing frame and traceback IDs, not the objects themselves
-        stack, i = self.call("get_stack", frame._fid, tbid);
-        stack = [(FrameProxy(self.conn, fid), k) for fid, k in stack];
+        stack, i = this.call("get_stack", frame._fid, tbid);
+        stack = [(FrameProxy(this.conn, fid), k) for fid, k in stack];
         return stack, i;
 
     }
-    def set_continue(self){
-        self.call("set_continue");
+    function set_continue(){
+        this.call("set_continue");
 
     }
-    def set_step(self){
-        self.call("set_step");
+    function set_step(){
+        this.call("set_step");
 
     }
-    def set_next(self, frame){
-        self.call("set_next", frame._fid);
+    function set_next( frame){
+        this.call("set_next", frame._fid);
 
     }
-    def set_return(self, frame){
-        self.call("set_return", frame._fid);
+    function set_return( frame){
+        this.call("set_return", frame._fid);
 
     }
-    def set_quit(self){
-        self.call("set_quit");
+    function set_quit(){
+        this.call("set_quit");
 
     }
-    def set_break(self, filename, lineno){
-        msg = self.call("set_break", filename, lineno);
+    function set_break( filename, lineno){
+        msg = this.call("set_break", filename, lineno);
         return msg;
 
     }
-    def clear_break(self, filename, lineno){
-        msg = self.call("clear_break", filename, lineno);
+    function clear_break( filename, lineno){
+        msg = this.call("clear_break", filename, lineno);
         return msg;
 
     }
-    def clear_all_file_breaks(self, filename){
-        msg = self.call("clear_all_file_breaks", filename);
+    function clear_all_file_breaks( filename){
+        msg = this.call("clear_all_file_breaks", filename);
         return msg;
 
 }
-} def start_remote_debugger(rpcclt, pyshell){
+} function start_remote_debugger(rpcclt, pyshell){
     """Start the subprocess debugger, initialize the debugger GUI and RPC link
 
     Request the RPCServer start the Python subprocess debugger and link.  Set
@@ -409,7 +409,7 @@ class FrameProxy{
     return gui;
 
 }
-def close_remote_debugger(rpcclt){
+function close_remote_debugger(rpcclt){
     """Shut down subprocess debugger and Idle side of debugger RPC link
 
     Request that the RPCServer shut down the subprocess debugger and link.
@@ -422,11 +422,11 @@ def close_remote_debugger(rpcclt){
     rpcclt.unregister(gui_adap_oid);
 
 }
-def close_subprocess_debugger(rpcclt){
+function close_subprocess_debugger(rpcclt){
     rpcclt.remotecall("exec", "stop_the_debugger", (idb_adap_oid,), {});
 
 }
-def restart_subprocess_debugger(rpcclt){
+function restart_subprocess_debugger(rpcclt){
     idb_adap_oid_ret = rpcclt.remotecall("exec", "start_the_debugger",\
                                          (gui_adap_oid,), {});
     assert idb_adap_oid_ret == idb_adap_oid, 'Idb restarted with different oid';

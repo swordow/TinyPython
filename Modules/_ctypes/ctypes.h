@@ -90,7 +90,7 @@ struct tagCDataObject {
     Py_ssize_t b_length;        /* number of references we need */
     Py_ssize_t b_index;         /* index of this object into base's
                                b_object list */
-    PyObject *b_objects;        /* dictionary of references we need to keep, or Py_None */
+    PyObject *b_objects;        /* dictionary of references we need to keep, or Py_Nil */
     union value b_value;
 };
 

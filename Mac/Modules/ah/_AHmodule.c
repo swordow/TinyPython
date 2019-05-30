@@ -33,8 +33,8 @@ static PyObject *Ah_AHSearch(PyObject *_self, PyObject *_args)
     _err = AHSearch(bookname,
                     query);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -48,8 +48,8 @@ static PyObject *Ah_AHGotoMainTOC(PyObject *_self, PyObject *_args)
         return NULL;
     _err = AHGotoMainTOC(toctype);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -69,8 +69,8 @@ static PyObject *Ah_AHGotoPage(PyObject *_self, PyObject *_args)
                       path,
                       anchor);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -87,8 +87,8 @@ static PyObject *Ah_AHLookupAnchor(PyObject *_self, PyObject *_args)
     _err = AHLookupAnchor(bookname,
                           anchor);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -102,8 +102,8 @@ static PyObject *Ah_AHRegisterHelpBook(PyObject *_self, PyObject *_args)
         return NULL;
     _err = AHRegisterHelpBook(&appBundleRef);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 

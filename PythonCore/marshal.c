@@ -221,7 +221,7 @@ w_object(PyObject *v, WFILE *p)
     else if (v == NULL) {
         w_byte(TYPE_NULL, p);
     }
-    else if (v == Py_None) {
+    else if (v == Py_Nil) {
         w_byte(TYPE_NONE, p);
     }
     else if (v == PyExc_StopIteration) {
@@ -667,8 +667,8 @@ r_object(RFILE *p)
         break;
 
     case TYPE_NONE:
-        Py_INCREF(Py_None);
-        retval = Py_None;
+        Py_INCREF(Py_Nil);
+        retval = Py_Nil;
         break;
 
     case TYPE_STOPITER:
@@ -1278,8 +1278,8 @@ marshal_dump(PyObject *self, PyObject *args)
         set_error(wf.error);
         return NULL;
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(dump_doc,

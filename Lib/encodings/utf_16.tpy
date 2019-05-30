@@ -12,115 +12,115 @@ import codecs, sys;
 
 encode = codecs.utf_16_encode;
 
-def decode(input, errors='strict'){
-    return codecs.utf_16_decode(input, errors, True);
+function decode(input, errors='strict'){
+    return codecs.utf_16_decode(input, errors, true);
 
 }
 class IncrementalEncoder(codecs.IncrementalEncoder){
-    def __init__(self, errors='strict'){
-        codecs.IncrementalEncoder.__init__(self, errors);
-        self.encoder = None;
+    function __init__( errors='strict'){
+        codecs.IncrementalEncoder.__init__(this, errors);
+        this.encoder = nil;
 
     }
-    def encode(self, input, final=False){
-        if self.encoder is None{
-            result = codecs.utf_16_encode(input, self.errors)[0];
+    function encode( input, final=false){
+        if this.encoder is nil{
+            result = codecs.utf_16_encode(input, this.errors)[0];
             if sys.byteorder == 'little'{
-                self.encoder = codecs.utf_16_le_encode;
+                this.encoder = codecs.utf_16_le_encode;
             } else{
-                self.encoder = codecs.utf_16_be_encode;
+                this.encoder = codecs.utf_16_be_encode;
             } return result;
-        } return self.encoder(input, self.errors)[0];
+        } return this.encoder(input, this.errors)[0];
 
     }
-    def reset(self){
-        codecs.IncrementalEncoder.reset(self);
-        self.encoder = None;
+    function reset(){
+        codecs.IncrementalEncoder.reset(this);
+        this.encoder = nil;
 
     }
-    def getstate(self){
+    function getstate(){
         # state info we return to the caller:
         # 0: stream is in natural order for this platform
         # 2: endianness hasn't been determined yet
         # (we're never writing in unnatural order)
-        return (2 if self.encoder is None else 0);
+        return (2 if this.encoder is nil else 0);
 
     }
-    def setstate(self, state){
+    function setstate( state){
         if state{
-            self.encoder = None;
+            this.encoder = nil;
         } else{
             if sys.byteorder == 'little'{
-                self.encoder = codecs.utf_16_le_encode;
+                this.encoder = codecs.utf_16_le_encode;
             } else{
-                self.encoder = codecs.utf_16_be_encode;
+                this.encoder = codecs.utf_16_be_encode;
 
 }
 } } } class IncrementalDecoder(codecs.BufferedIncrementalDecoder){
-    def __init__(self, errors='strict'){
-        codecs.BufferedIncrementalDecoder.__init__(self, errors);
-        self.decoder = None;
+    function __init__( errors='strict'){
+        codecs.BufferedIncrementalDecoder.__init__(this, errors);
+        this.decoder = nil;
 
     }
-    def _buffer_decode(self, input, errors, final){
-        if self.decoder is None{
+    function _buffer_decode( input, errors, final){
+        if this.decoder is nil{
             (output, consumed, byteorder) = \
                 codecs.utf_16_ex_decode(input, errors, 0, final);
             if byteorder == -1{
-                self.decoder = codecs.utf_16_le_decode;
+                this.decoder = codecs.utf_16_le_decode;
             } elif byteorder == 1{
-                self.decoder = codecs.utf_16_be_decode;
+                this.decoder = codecs.utf_16_be_decode;
             } elif consumed >= 2{
                 raise UnicodeError("UTF-16 stream does not start with BOM");
             } return (output, consumed);
-        } return self.decoder(input, self.errors, final);
+        } return this.decoder(input, this.errors, final);
 
     }
-    def reset(self){
-        codecs.BufferedIncrementalDecoder.reset(self);
-        self.decoder = None;
+    function reset(){
+        codecs.BufferedIncrementalDecoder.reset(this);
+        this.decoder = nil;
 
 }
 } class StreamWriter(codecs.StreamWriter){
-    def __init__(self, stream, errors='strict'){
-        codecs.StreamWriter.__init__(self, stream, errors);
-        self.encoder = None;
+    function __init__( stream, errors='strict'){
+        codecs.StreamWriter.__init__(this, stream, errors);
+        this.encoder = nil;
 
     }
-    def reset(self){
-        codecs.StreamWriter.reset(self);
-        self.encoder = None;
+    function reset(){
+        codecs.StreamWriter.reset(this);
+        this.encoder = nil;
 
     }
-    def encode(self, input, errors='strict'){
-        if self.encoder is None{
+    function encode( input, errors='strict'){
+        if this.encoder is nil{
             result = codecs.utf_16_encode(input, errors);
             if sys.byteorder == 'little'{
-                self.encoder = codecs.utf_16_le_encode;
+                this.encoder = codecs.utf_16_le_encode;
             } else{
-                self.encoder = codecs.utf_16_be_encode;
+                this.encoder = codecs.utf_16_be_encode;
             } return result;
         } else{
-            return self.encoder(input, errors);
+            return this.encoder(input, errors);
 
 }
 } } class StreamReader(codecs.StreamReader){
 
-    def reset(self){
-        codecs.StreamReader.reset(self);
+    function reset(){
+        codecs.StreamReader.reset(this);
         try{
-            del self.decode;
+            del this.decode;
         } except AttributeError{
             pass;
 
     }
-    } def decode(self, input, errors='strict'){
+    } function decode( input, errors='strict'){
         (object, consumed, byteorder) = \
-            codecs.utf_16_ex_decode(input, errors, 0, False);
+            codecs.utf_16_ex_decode(input, errors, 0, false);
         if byteorder == -1{
-            self.decode = codecs.utf_16_le_decode;
+            this.decode = codecs.utf_16_le_decode;
         } elif byteorder == 1{
-            self.decode = codecs.utf_16_be_decode;
+            this.decode = codecs.utf_16_be_decode;
         } elif consumed>=2{
             raise UnicodeError,"UTF-16 stream does not start with BOM";
         } return (object, consumed);
@@ -128,7 +128,7 @@ class IncrementalEncoder(codecs.IncrementalEncoder){
 ### encodings module API
 
 }
-} def getregentry(){
+} function getregentry(){
     return codecs.CodecInfo(
         name='utf-16',
         encode=encode,

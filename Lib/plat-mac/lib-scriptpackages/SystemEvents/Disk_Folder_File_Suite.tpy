@@ -16,7 +16,7 @@ class Disk_Folder_File_Suite_Events{
         'to' : 'insh',
     };
 
-    def move(self, _object, _attributes={}, **_arguments){
+    function move( _object, _attributes={}, **_arguments){
         """move: Move disk item(s) to a new location.
         Required argument: the object for the command
         Keyword argument to: The new location for the disk item(s).
@@ -26,11 +26,11 @@ class Disk_Folder_File_Suite_Events{
         _code = 'core';
         _subcode = 'move';
 
-        aetools.keysubst(_arguments, self._argmap_move);
+        aetools.keysubst(_arguments, this._argmap_move);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);

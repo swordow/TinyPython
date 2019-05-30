@@ -659,7 +659,7 @@ complex_pow(PyObject *v, PyObject *w, PyObject *z)
     Py_complex a, b;
     TO_COMPLEX(v, a);
     TO_COMPLEX(w, b);
-    if (z!=Py_None) {
+    if (z!=Py_Nil) {
         PyErr_SetString(PyExc_ValueError, "complex modulo");
         return NULL;
     }

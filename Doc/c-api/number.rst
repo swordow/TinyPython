@@ -75,7 +75,7 @@ Number Protocol
 
    See the built-in function :func:`pow`. Returns *NULL* on failure.  This is the
    equivalent of the Python expression ``pow(o1, o2, o3)``, where *o3* is optional.
-   If *o3* is to be ignored, pass :c:data:`Py_None` in its place (passing *NULL* for
+   If *o3* is to be ignored, pass :c:data:`Py_Nil` in its place (passing *NULL* for
    *o3* would cause an illegal memory access).
 
 
@@ -196,8 +196,8 @@ Number Protocol
 
    See the built-in function :func:`pow`. Returns *NULL* on failure.  The operation
    is done *in-place* when *o1* supports it.  This is the equivalent of the Python
-   statement ``o1 **= o2`` when o3 is :c:data:`Py_None`, or an in-place variant of
-   ``pow(o1, o2, o3)`` otherwise. If *o3* is to be ignored, pass :c:data:`Py_None`
+   statement ``o1 **= o2`` when o3 is :c:data:`Py_Nil`, or an in-place variant of
+   ``pow(o1, o2, o3)`` otherwise. If *o3* is to be ignored, pass :c:data:`Py_Nil`
    in its place (passing *NULL* for *o3* would cause an illegal memory access).
 
 

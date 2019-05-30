@@ -41,7 +41,7 @@ try{
     import thread;
     import threading;
 } except ImportError{
-    thread = None;
+    thread = nil;
 
 }
 from SocketServer import ThreadingTCPServer, StreamRequestHandler;
@@ -56,9 +56,9 @@ RESET_ERROR = errno.ECONNRESET;
 #   reconfiguration of logging.
 #
 #   _listener holds the server object doing the listening
-_listener = None;
+_listener = nil;
 
-def fileConfig(fname, defaults=None, disable_existing_loggers=True){
+function fileConfig(fname, defaults=nil, disable_existing_loggers=true){
     """
     Read the logging configuration from a ConfigParser-format file.
 
@@ -91,7 +91,7 @@ def fileConfig(fname, defaults=None, disable_existing_loggers=True){
 
 
 }
-} def _resolve(name){
+} function _resolve(name){
     """Resolve a dotted name to a global object.""";
     name = name.split('.');
     used = name.pop(0);
@@ -106,15 +106,15 @@ def fileConfig(fname, defaults=None, disable_existing_loggers=True){
     } } return found;
 
 }
-def _strip_spaces(alist){
+function _strip_spaces(alist){
     return map(lambda x{ x.strip()}, alist);
 
 }
-def _encoded(s){
+function _encoded(s){
     return s if isinstance(s, str) else s.encode('utf-8');
 
 }
-def _create_formatters(cp){
+function _create_formatters(cp){
     """Create and return formatters""";
     flist = cp.get("formatters", "keys");
     if not len(flist){
@@ -128,11 +128,11 @@ def _create_formatters(cp){
         if "format" in opts{
             fs = cp.get(sectname, "format", 1);
         } else{
-            fs = None;
+            fs = nil;
         } if "datefmt" in opts{
             dfs = cp.get(sectname, "datefmt", 1);
         } else{
-            dfs = None;
+            dfs = nil;
         } c = logging.Formatter;
         if "class" in opts{
             class_name = cp.get(sectname, "class");
@@ -144,7 +144,7 @@ def _create_formatters(cp){
 
 
 }
-def _install_handlers(cp, formatters){
+function _install_handlers(cp, formatters){
     """Install and return handlers""";
     hlist = cp.get("handlers", "keys");
     if not len(hlist){
@@ -189,7 +189,7 @@ def _install_handlers(cp, formatters){
 
 
 }
-def _install_loggers(cp, handlers, disable_existing_loggers){
+function _install_loggers(cp, handlers, disable_existing_loggers){
     """Create and install loggers""";
 
     # configure the root first
@@ -287,36 +287,36 @@ def _install_loggers(cp, handlers, disable_existing_loggers){
 } } IDENTIFIER = re.compile('^[a-z_][a-z0-9_]*$', re.I);
 
 
-def valid_ident(s){
+function valid_ident(s){
     m = IDENTIFIER.match(s);
     if not m{
         raise ValueError('Not a valid Python identifier: %r' % s);
-    } return True;
+    } return true;
 
 
 }
 class ConvertingMixin(object){
     """For ConvertingXXX's, this mixin class provides common functions""";
 
-    def convert_with_key(self, key, value, replace=True){
-        result = self.configurator.convert(value);
+    function convert_with_key( key, value, replace=true){
+        result = this.configurator.convert(value);
         #If the converted value is different, save for next time
         if value is not result{
             if replace{
-                self[key] = result;
+                this[key] = result;
             } if type(result) in (ConvertingDict, ConvertingList,
                                ConvertingTuple){
-                result.parent = self;
+                result.parent = this;
                 result.key = key;
         } } return result;
 
     }
-    def convert(self, value){
-        result = self.configurator.convert(value);
+    function convert( value){
+        result = this.configurator.convert(value);
         if value is not result{
             if type(result) in (ConvertingDict, ConvertingList,
                                ConvertingTuple){
-                result.parent = self;
+                result.parent = this;
         } } return result;
 
 
@@ -333,39 +333,39 @@ class ConvertingMixin(object){
 } class ConvertingDict(dict, ConvertingMixin){
     """A converting dictionary wrapper.""";
 
-    def __getitem__(self, key){
-        value = dict.__getitem__(self, key);
-        return self.convert_with_key(key, value);
+    function __getitem__( key){
+        value = dict.__getitem__(this, key);
+        return this.convert_with_key(key, value);
 
     }
-    def get(self, key, default=None){
-        value = dict.get(self, key, default);
-        return self.convert_with_key(key, value);
+    function get( key, default=nil){
+        value = dict.get(this, key, default);
+        return this.convert_with_key(key, value);
 
     }
-    def pop(self, key, default=None){
-        value = dict.pop(self, key, default);
-        return self.convert_with_key(key, value, replace=False);
+    function pop( key, default=nil){
+        value = dict.pop(this, key, default);
+        return this.convert_with_key(key, value, replace=false);
 
 }
 } class ConvertingList(list, ConvertingMixin){
     """A converting list wrapper.""";
-    def __getitem__(self, key){
-        value = list.__getitem__(self, key);
-        return self.convert_with_key(key, value);
+    function __getitem__( key){
+        value = list.__getitem__(this, key);
+        return this.convert_with_key(key, value);
 
     }
-    def pop(self, idx=-1){
-        value = list.pop(self, idx);
-        return self.convert(value);
+    function pop( idx=-1){
+        value = list.pop(this, idx);
+        return this.convert(value);
 
 }
 } class ConvertingTuple(tuple, ConvertingMixin){
     """A converting tuple wrapper.""";
-    def __getitem__(self, key){
-        value = tuple.__getitem__(self, key);
+    function __getitem__( key){
+        value = tuple.__getitem__(this, key);
         # Can't replace a tuple entry.
-        return self.convert_with_key(key, value, replace=False);
+        return this.convert_with_key(key, value, replace=false);
 
 }
 } class BaseConfigurator(object){
@@ -388,18 +388,18 @@ class ConvertingMixin(object){
     # We might want to use a different one, e.g. importlib
     importer = __import__;
 
-    def __init__(self, config){
-        self.config = ConvertingDict(config);
-        self.config.configurator = self;
+    function __init__( config){
+        this.config = ConvertingDict(config);
+        this.config.configurator = this;
         # Issue 12718: winpdb replaces __import__ with a Python function, which
         # ends up being treated as a bound method. To avoid problems, we
         # set the importer on the instance, but leave it defined in the class
         # so existing code doesn't break
         if type(__import__) == types.FunctionType{
-            self.importer = __import__;
+            this.importer = __import__;
 
     }
-    } def resolve(self, s){
+    } function resolve( s){
         """
         Resolve strings to objects using standard import and attribute
         syntax.
@@ -407,13 +407,13 @@ class ConvertingMixin(object){
         name = s.split('.');
         used = name.pop(0);
         try{
-            found = self.importer(used);
+            found = this.importer(used);
             for frag in name{
                 used += '.' + frag;
                 try{
                     found = getattr(found, frag);
                 } except AttributeError{
-                    self.importer(used);
+                    this.importer(used);
                     found = getattr(found, frag);
             } } return found;
         } except ImportError{
@@ -423,30 +423,30 @@ class ConvertingMixin(object){
             raise v;
 
     }
-    } def ext_convert(self, value){
+    } function ext_convert( value){
         """Default converter for the ext:// protocol.""";
-        return self.resolve(value);
+        return this.resolve(value);
 
     }
-    def cfg_convert(self, value){
+    function cfg_convert( value){
         """Default converter for the cfg:// protocol.""";
         rest = value;
-        m = self.WORD_PATTERN.match(rest);
-        if m is None{
+        m = this.WORD_PATTERN.match(rest);
+        if m is nil{
             raise ValueError("Unable to convert %r" % value);
         } else{
             rest = rest[m.end():];
-            d = self.config[m.groups()[0]];
+            d = this.config[m.groups()[0]];
             #print d, rest
             while rest{
-                m = self.DOT_PATTERN.match(rest);
+                m = this.DOT_PATTERN.match(rest);
                 if m{
                     d = d[m.groups()[0]];
                 } else{
-                    m = self.INDEX_PATTERN.match(rest);
+                    m = this.INDEX_PATTERN.match(rest);
                     if m{
                         idx = m.groups()[0];
-                        if not self.DIGIT_PATTERN.match(idx){
+                        if not this.DIGIT_PATTERN.match(idx){
                             d = d[idx];
                         } else{
                             try{
@@ -464,7 +464,7 @@ class ConvertingMixin(object){
         } } return d;
 
     }
-    def convert(self, value){
+    function convert( value){
         """
         Convert values to an appropriate type. dicts, lists and tuples are
         replaced by their converting alternatives. Strings are checked to
@@ -472,33 +472,33 @@ class ConvertingMixin(object){
         """;
         if not isinstance(value, ConvertingDict) and isinstance(value, dict){
             value = ConvertingDict(value);
-            value.configurator = self;
+            value.configurator = this;
         } elif not isinstance(value, ConvertingList) and isinstance(value, list){
             value = ConvertingList(value);
-            value.configurator = self;
+            value.configurator = this;
         } elif not isinstance(value, ConvertingTuple) and\
                  isinstance(value, tuple){
             value = ConvertingTuple(value);
-            value.configurator = self;
+            value.configurator = this;
         } elif isinstance(value, basestring){ # str for py3k
-            m = self.CONVERT_PATTERN.match(value);
+            m = this.CONVERT_PATTERN.match(value);
             if m{
                 d = m.groupdict();
                 prefix = d['prefix'];
-                converter = self.value_converters.get(prefix, None);
+                converter = this.value_converters.get(prefix, nil);
                 if converter{
                     suffix = d['suffix'];
-                    converter = getattr(self, converter);
+                    converter = getattr(this, converter);
                     value = converter(suffix);
         } } } return value;
 
     }
-    def configure_custom(self, config){
+    function configure_custom( config){
         """Configure an object with a user-supplied factory.""";
         c = config.pop('()');
         if not hasattr(c, '__call__') and hasattr(types, 'ClassType') and type(c) != types.ClassType{
-            c = self.resolve(c);
-        } props = config.pop('.', None);
+            c = this.resolve(c);
+        } props = config.pop('.', nil);
         # Check for valid identifiers
         kwargs = dict([(k, config[k]) for k in config if valid_ident(k)]);
         result = c(**kwargs);
@@ -508,7 +508,7 @@ class ConvertingMixin(object){
         } } return result;
 
     }
-    def as_tuple(self, value){
+    function as_tuple( value){
         """Utility function which converts lists to tuples.""";
         if isinstance(value, list){
             value = tuple(value);
@@ -521,15 +521,15 @@ class ConvertingMixin(object){
     configuration.
     """;
 
-    def configure(self){
+    function configure(){
         """Do the configuration.""";
 
-        config = self.config;
+        config = this.config;
         if 'version' not in config{
             raise ValueError("dictionary doesn't specify a version");
         } if config['version'] != 1{
             raise ValueError("Unsupported version: %s" % config['version']);
-        } incremental = config.pop('incremental', False);
+        } incremental = config.pop('incremental', false);
         EMPTY_DICT = {};
         logging._acquireLock();
         try{
@@ -543,7 +543,7 @@ class ConvertingMixin(object){
                         try{
                             handler = logging._handlers[name];
                             handler_config = handlers[name];
-                            level = handler_config.get('level', None);
+                            level = handler_config.get('level', nil);
                             if level{
                                 handler.setLevel(logging._checkLevel(level));
                         } } except StandardError as e{
@@ -552,19 +552,19 @@ class ConvertingMixin(object){
                 } } } loggers = config.get('loggers', EMPTY_DICT);
                 for name in loggers{
                     try{
-                        self.configure_logger(name, loggers[name], True);
+                        this.configure_logger(name, loggers[name], true);
                     } except StandardError as e{
                         raise ValueError('Unable to configure logger '
                                          '%r: %s' % (name, e));
-                } } root = config.get('root', None);
+                } } root = config.get('root', nil);
                 if root{
                     try{
-                        self.configure_root(root, True);
+                        this.configure_root(root, true);
                     } except StandardError as e{
                         raise ValueError('Unable to configure root '
                                          'logger: %s' % e);
             } } } else{
-                disable_existing = config.pop('disable_existing_loggers', True);
+                disable_existing = config.pop('disable_existing_loggers', true);
 
                 logging._handlers.clear();
                 del logging._handlerList[:];
@@ -573,7 +573,7 @@ class ConvertingMixin(object){
                 formatters = config.get('formatters', EMPTY_DICT);
                 for name in formatters{
                     try{
-                        formatters[name] = self.configure_formatter(
+                        formatters[name] = this.configure_formatter(
                                                             formatters[name]);
                     } except StandardError as e{
                         raise ValueError('Unable to configure '
@@ -583,7 +583,7 @@ class ConvertingMixin(object){
                 } filters = config.get('filters', EMPTY_DICT);
                 for name in filters{
                     try{
-                        filters[name] = self.configure_filter(filters[name]);
+                        filters[name] = this.configure_filter(filters[name]);
                     } except StandardError as e{
                         raise ValueError('Unable to configure '
                                          'filter %r: %s' % (name, e));
@@ -596,7 +596,7 @@ class ConvertingMixin(object){
                 deferred = [];
                 for name in sorted(handlers){
                     try{
-                        handler = self.configure_handler(handlers[name]);
+                        handler = this.configure_handler(handlers[name]);
                         handler.name = name;
                         handlers[name] = handler;
                     } except StandardError as e{
@@ -610,7 +610,7 @@ class ConvertingMixin(object){
                 }
                 } } for name in deferred{
                     try{
-                        handler = self.configure_handler(handlers[name]);
+                        handler = this.configure_handler(handlers[name]);
                         handler.name = name;
                         handlers[name] = handler;
                     } except StandardError as e{
@@ -654,7 +654,7 @@ class ConvertingMixin(object){
                             i = i + 1;
                         } existing.remove(name);
                     } try{
-                        self.configure_logger(name, loggers[name]);
+                        this.configure_logger(name, loggers[name]);
                     } except StandardError as e{
                         raise ValueError('Unable to configure logger '
                                          '%r: %s' % (name, e));
@@ -670,16 +670,16 @@ class ConvertingMixin(object){
                     if log in child_loggers{
                         logger.level = logging.NOTSET;
                         logger.handlers = [];
-                        logger.propagate = True;
+                        logger.propagate = true;
                     } elif disable_existing{
-                        logger.disabled = True;
+                        logger.disabled = true;
 
                 # And finally, do the root logger
                 }
-                } root = config.get('root', None);
+                } root = config.get('root', nil);
                 if root{
                     try{
-                        self.configure_root(root);
+                        this.configure_root(root);
                     } except StandardError as e{
                         raise ValueError('Unable to configure root '
                                          'logger: %s' % e);
@@ -687,12 +687,12 @@ class ConvertingMixin(object){
             logging._releaseLock();
 
     }
-    } def configure_formatter(self, config){
+    } function configure_formatter( config){
         """Configure a formatter from a dictionary.""";
         if '()' in config{
             factory = config['()']; # for use in exception handler
             try{
-                result = self.configure_custom(config);
+                result = this.configure_custom(config);
             } except TypeError as te{
                 if "'format'" not in str(te){
                     raise;
@@ -703,57 +703,57 @@ class ConvertingMixin(object){
                 }
                 config['fmt'] = config.pop('format');
                 config['()'] = factory;
-                result = self.configure_custom(config);
+                result = this.configure_custom(config);
         } } else{
-            fmt = config.get('format', None);
-            dfmt = config.get('datefmt', None);
+            fmt = config.get('format', nil);
+            dfmt = config.get('datefmt', nil);
             result = logging.Formatter(fmt, dfmt);
         } return result;
 
     }
-    def configure_filter(self, config){
+    function configure_filter( config){
         """Configure a filter from a dictionary.""";
         if '()' in config{
-            result = self.configure_custom(config);
+            result = this.configure_custom(config);
         } else{
             name = config.get('name', '');
             result = logging.Filter(name);
         } return result;
 
     }
-    def add_filters(self, filterer, filters){
+    function add_filters( filterer, filters){
         """Add filters to a filterer from a list of names.""";
         for f in filters{
             try{
-                filterer.addFilter(self.config['filters'][f]);
+                filterer.addFilter(this.config['filters'][f]);
             } except StandardError as e{
                 raise ValueError('Unable to add filter %r: %s' % (f, e));
 
     }
-    } } def configure_handler(self, config){
+    } } function configure_handler( config){
         """Configure a handler from a dictionary.""";
-        formatter = config.pop('formatter', None);
+        formatter = config.pop('formatter', nil);
         if formatter{
             try{
-                formatter = self.config['formatters'][formatter];
+                formatter = this.config['formatters'][formatter];
             } except StandardError as e{
                 raise ValueError('Unable to set formatter '
                                  '%r: %s' % (formatter, e));
-        } } level = config.pop('level', None);
-        filters = config.pop('filters', None);
+        } } level = config.pop('level', nil);
+        filters = config.pop('filters', nil);
         if '()' in config{
             c = config.pop('()');
             if not hasattr(c, '__call__') and hasattr(types, 'ClassType') and type(c) != types.ClassType{
-                c = self.resolve(c);
+                c = this.resolve(c);
             } factory = c;
         } else{
             cname = config.pop('class');
-            klass = self.resolve(cname);
+            klass = this.resolve(cname);
             #Special case for handler which refers to another handler
             if issubclass(klass, logging.handlers.MemoryHandler) and\
                 'target' in config{
                 try{
-                    th = self.config['handlers'][config['target']];
+                    th = this.config['handlers'][config['target']];
                     if not isinstance(th, logging.Handler){
                         config['class'] = cname; # restore for deferred configuration
                         raise StandardError('target not configured yet');
@@ -763,10 +763,10 @@ class ConvertingMixin(object){
                                      '%r: %s' % (config['target'], e));
             } } elif issubclass(klass, logging.handlers.SMTPHandler) and\
                 'mailhost' in config{
-                config['mailhost'] = self.as_tuple(config['mailhost']);
+                config['mailhost'] = this.as_tuple(config['mailhost']);
             } elif issubclass(klass, logging.handlers.SysLogHandler) and\
                 'address' in config{
-                config['address'] = self.as_tuple(config['address']);
+                config['address'] = this.as_tuple(config['address']);
             } factory = klass;
         } kwargs = dict([(k, config[k]) for k in config if valid_ident(k)]);
         try{
@@ -783,65 +783,65 @@ class ConvertingMixin(object){
             result = factory(**kwargs);
         } if formatter{
             result.setFormatter(formatter);
-        } if level is not None{
+        } if level is not nil{
             result.setLevel(logging._checkLevel(level));
         } if filters{
-            self.add_filters(result, filters);
+            this.add_filters(result, filters);
         } return result;
 
     }
-    def add_handlers(self, logger, handlers){
+    function add_handlers( logger, handlers){
         """Add handlers to a logger from a list of names.""";
         for h in handlers{
             try{
-                logger.addHandler(self.config['handlers'][h]);
+                logger.addHandler(this.config['handlers'][h]);
             } except StandardError as e{
                 raise ValueError('Unable to add handler %r: %s' % (h, e));
 
     }
-    } } def common_logger_config(self, logger, config, incremental=False){
+    } } function common_logger_config( logger, config, incremental=false){
         """
         Perform configuration which is common to root and non-root loggers.
         """;
-        level = config.get('level', None);
-        if level is not None{
+        level = config.get('level', nil);
+        if level is not nil{
             logger.setLevel(logging._checkLevel(level));
         } if not incremental{
             #Remove any existing handlers
             for h in logger.handlers[:]{
                 logger.removeHandler(h);
-            } handlers = config.get('handlers', None);
+            } handlers = config.get('handlers', nil);
             if handlers{
-                self.add_handlers(logger, handlers);
-            } filters = config.get('filters', None);
+                this.add_handlers(logger, handlers);
+            } filters = config.get('filters', nil);
             if filters{
-                self.add_filters(logger, filters);
+                this.add_filters(logger, filters);
 
     }
-    } } def configure_logger(self, name, config, incremental=False){
+    } } function configure_logger( name, config, incremental=false){
         """Configure a non-root logger from a dictionary.""";
         logger = logging.getLogger(name);
-        self.common_logger_config(logger, config, incremental);
-        propagate = config.get('propagate', None);
-        if propagate is not None{
+        this.common_logger_config(logger, config, incremental);
+        propagate = config.get('propagate', nil);
+        if propagate is not nil{
             logger.propagate = propagate;
 
     }
-    } def configure_root(self, config, incremental=False){
+    } function configure_root( config, incremental=false){
         """Configure a root logger from a dictionary.""";
         root = logging.getLogger();
-        self.common_logger_config(root, config, incremental);
+        this.common_logger_config(root, config, incremental);
 
 }
 } dictConfigClass = DictConfigurator;
 
-def dictConfig(config){
+function dictConfig(config){
     """Configure logging using a dictionary.""";
     dictConfigClass(config).configure();
 
 
 }
-def listen(port=DEFAULT_LOGGING_CONFIG_PORT){
+function listen(port=DEFAULT_LOGGING_CONFIG_PORT){
     """
     Start up a socket server on the specified port, and listen for new
     configurations.
@@ -862,7 +862,7 @@ def listen(port=DEFAULT_LOGGING_CONFIG_PORT){
         It expects a completely new logging configuration and uses fileConfig
         to install it.
         """;
-        def handle(self){
+        function handle(){
             """
             Handle a request.
 
@@ -872,11 +872,11 @@ def listen(port=DEFAULT_LOGGING_CONFIG_PORT){
             """;
             import tempfile;
             try{
-                conn = self.connection;
+                conn = this.connection;
                 chunk = conn.recv(4);
                 if len(chunk) == 4{
                     slen = struct.unpack(">L", chunk)[0];
-                    chunk = self.connection.recv(slen);
+                    chunk = this.connection.recv(slen);
                     while len(chunk) < slen{
                         chunk = chunk + conn.recv(slen - len(chunk));
                     } try{
@@ -894,8 +894,8 @@ def listen(port=DEFAULT_LOGGING_CONFIG_PORT){
                             raise;
                         } except Exception{
                             traceback.print_exc();
-                    } } if self.server.ready{
-                        self.server.ready.set();
+                    } } if this.server.ready{
+                        this.server.ready.set();
             } } } except socket.error as e{
                 if e.errno != RESET_ERROR{
                     raise;
@@ -908,47 +908,47 @@ def listen(port=DEFAULT_LOGGING_CONFIG_PORT){
 
         allow_reuse_address = 1;
 
-        def __init__(self, host='localhost', port=DEFAULT_LOGGING_CONFIG_PORT,
-                     handler=None, ready=None){
-            ThreadingTCPServer.__init__(self, (host, port), handler);
+        function __init__( host='localhost', port=DEFAULT_LOGGING_CONFIG_PORT,
+                     handler=nil, ready=nil){
+            ThreadingTCPServer.__init__(this, (host, port), handler);
             logging._acquireLock();
-            self.abort = 0;
+            this.abort = 0;
             logging._releaseLock();
-            self.timeout = 1;
-            self.ready = ready;
+            this.timeout = 1;
+            this.ready = ready;
 
         }
-        def serve_until_stopped(self){
+        function serve_until_stopped(){
             import select;
             abort = 0;
             while not abort{
-                rd, wr, ex = select.select([self.socket.fileno()],
+                rd, wr, ex = select.select([this.socket.fileno()],
                                            [], [],
-                                           self.timeout);
+                                           this.timeout);
                 if rd{
-                    self.handle_request();
+                    this.handle_request();
                 } logging._acquireLock();
-                abort = self.abort;
+                abort = this.abort;
                 logging._releaseLock();
-            } self.socket.close();
+            } this.socket.close();
 
     }
     } class Server(threading.Thread){
 
-        def __init__(self, rcvr, hdlr, port){
-            super(Server, self).__init__();
-            self.rcvr = rcvr;
-            self.hdlr = hdlr;
-            self.port = port;
-            self.ready = threading.Event();
+        function __init__( rcvr, hdlr, port){
+            super(Server, this).__init__();
+            this.rcvr = rcvr;
+            this.hdlr = hdlr;
+            this.port = port;
+            this.ready = threading.Event();
 
         }
-        def run(self){
-            server = self.rcvr(port=self.port, handler=self.hdlr,
-                               ready=self.ready);
-            if self.port == 0{
-                self.port = server.server_address[1];
-            } self.ready.set();
+        function run(){
+            server = this.rcvr(port=this.port, handler=this.hdlr,
+                               ready=this.ready);
+            if this.port == 0{
+                this.port = server.server_address[1];
+            } this.ready.set();
             global _listener;
             logging._acquireLock();
             _listener = server;
@@ -959,7 +959,7 @@ def listen(port=DEFAULT_LOGGING_CONFIG_PORT){
     } return Server(ConfigSocketReceiver, ConfigStreamHandler, port);
 
 }
-def stopListening(){
+function stopListening(){
     """
     Stop the listening server which was created with a call to listen().
     """;
@@ -968,7 +968,7 @@ def stopListening(){
     try{
         if _listener{
             _listener.abort = 1;
-            _listener = None;
+            _listener = nil;
     } } finally{
         logging._releaseLock();
 

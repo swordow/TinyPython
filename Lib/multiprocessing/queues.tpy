@@ -55,184 +55,184 @@ from .forking import assert_spawning;
 
 class Queue(object){
 
-    def __init__(self, maxsize=0){
+    function __init__( maxsize=0){
         if maxsize <= 0{
             maxsize = _multiprocessing.SemLock.SEM_VALUE_MAX;
-        } self._maxsize = maxsize;
-        self._reader, self._writer = Pipe(duplex=False);
-        self._rlock = Lock();
-        self._opid = os.getpid();
+        } this._maxsize = maxsize;
+        this._reader, this._writer = Pipe(duplex=false);
+        this._rlock = Lock();
+        this._opid = os.getpid();
         if sys.platform == 'win32'{
-            self._wlock = None;
+            this._wlock = nil;
         } else{
-            self._wlock = Lock();
-        } self._sem = BoundedSemaphore(maxsize);
+            this._wlock = Lock();
+        } this._sem = BoundedSemaphore(maxsize);
 
-        self._after_fork();
+        this._after_fork();
 
         if sys.platform != 'win32'{
-            register_after_fork(self, Queue._after_fork);
+            register_after_fork(this, Queue._after_fork);
 
     }
-    } def __getstate__(self){
-        assert_spawning(self);
-        return (self._maxsize, self._reader, self._writer,
-                self._rlock, self._wlock, self._sem, self._opid);
+    } function __getstate__(){
+        assert_spawning(this);
+        return (this._maxsize, this._reader, this._writer,
+                this._rlock, this._wlock, this._sem, this._opid);
 
     }
-    def __setstate__(self, state){
-        (self._maxsize, self._reader, self._writer,
-         self._rlock, self._wlock, self._sem, self._opid) = state;
-        self._after_fork();
+    function __setstate__( state){
+        (this._maxsize, this._reader, this._writer,
+         this._rlock, this._wlock, this._sem, this._opid) = state;
+        this._after_fork();
 
     }
-    def _after_fork(self){
+    function _after_fork(){
         debug('Queue._after_fork()');
-        self._notempty = threading.Condition(threading.Lock());
-        self._buffer = collections.deque();
-        self._thread = None;
-        self._jointhread = None;
-        self._joincancelled = False;
-        self._closed = False;
-        self._close = None;
-        self._send = self._writer.send;
-        self._recv = self._reader.recv;
-        self._poll = self._reader.poll;
+        this._notempty = threading.Condition(threading.Lock());
+        this._buffer = collections.deque();
+        this._thread = nil;
+        this._jointhread = nil;
+        this._joincancelled = false;
+        this._closed = false;
+        this._close = nil;
+        this._send = this._writer.send;
+        this._recv = this._reader.recv;
+        this._poll = this._reader.poll;
 
     }
-    def put(self, obj, block=True, timeout=None){
-        assert not self._closed;
-        if not self._sem.acquire(block, timeout){
+    function put( obj, block=true, timeout=nil){
+        assert not this._closed;
+        if not this._sem.acquire(block, timeout){
             raise Full;
 
         }
-        self._notempty.acquire();
+        this._notempty.acquire();
         try{
-            if self._thread is None{
-                self._start_thread();
-            } self._buffer.append(obj);
-            self._notempty.notify();
+            if this._thread is nil{
+                this._start_thread();
+            } this._buffer.append(obj);
+            this._notempty.notify();
         } finally{
-            self._notempty.release();
+            this._notempty.release();
 
     }
-    } def get(self, block=True, timeout=None){
-        if block and timeout is None{
-            self._rlock.acquire();
+    } function get( block=true, timeout=nil){
+        if block and timeout is nil{
+            this._rlock.acquire();
             try{
-                res = self._recv();
-                self._sem.release();
+                res = this._recv();
+                this._sem.release();
                 return res;
             } finally{
-                self._rlock.release();
+                this._rlock.release();
 
         }
         } else{
             if block{
                 deadline = time.time() + timeout;
-            } if not self._rlock.acquire(block, timeout){
+            } if not this._rlock.acquire(block, timeout){
                 raise Empty;
             } try{
                 if block{
                     timeout = deadline - time.time();
-                    if not self._poll(timeout){
+                    if not this._poll(timeout){
                         raise Empty;
-                } } elif not self._poll(){
+                } } elif not this._poll(){
                     raise Empty;
-                } res = self._recv();
-                self._sem.release();
+                } res = this._recv();
+                this._sem.release();
                 return res;
             } finally{
-                self._rlock.release();
+                this._rlock.release();
 
     }
-    } } def qsize(self){
+    } } function qsize(){
         # Raises NotImplementedError on Mac OSX because of broken sem_getvalue()
-        return self._maxsize - self._sem._semlock._get_value();
+        return this._maxsize - this._sem._semlock._get_value();
 
     }
-    def empty(self){
-        return not self._poll();
+    function empty(){
+        return not this._poll();
 
     }
-    def full(self){
-        return self._sem._semlock._is_zero();
+    function full(){
+        return this._sem._semlock._is_zero();
 
     }
-    def get_nowait(self){
-        return self.get(False);
+    function get_nowait(){
+        return this.get(false);
 
     }
-    def put_nowait(self, obj){
-        return self.put(obj, False);
+    function put_nowait( obj){
+        return this.put(obj, false);
 
     }
-    def close(self){
-        self._closed = True;
+    function close(){
+        this._closed = true;
         try{
-            self._reader.close();
+            this._reader.close();
         } finally{
-            close = self._close;
+            close = this._close;
             if close{
-                self._close = None;
+                this._close = nil;
                 close();
 
     }
-    } } def join_thread(self){
+    } } function join_thread(){
         debug('Queue.join_thread()');
-        assert self._closed;
-        if self._jointhread{
-            self._jointhread();
+        assert this._closed;
+        if this._jointhread{
+            this._jointhread();
 
     }
-    } def cancel_join_thread(self){
+    } function cancel_join_thread(){
         debug('Queue.cancel_join_thread()');
-        self._joincancelled = True;
+        this._joincancelled = true;
         try{
-            self._jointhread.cancel();
+            this._jointhread.cancel();
         } except AttributeError{
             pass;
 
     }
-    } def _start_thread(self){
+    } function _start_thread(){
         debug('Queue._start_thread()');
 
         # Start thread which transfers data from buffer to pipe
-        self._buffer.clear();
-        self._thread = threading.Thread(
+        this._buffer.clear();
+        this._thread = threading.Thread(
             target=Queue._feed,
-            args=(self._buffer, self._notempty, self._send,
-                  self._wlock, self._writer.close),
+            args=(this._buffer, this._notempty, this._send,
+                  this._wlock, this._writer.close),
             name='QueueFeederThread'
             );
-        self._thread.daemon = True;
+        this._thread.daemon = true;
 
         debug('doing self._thread.start()');
-        self._thread.start();
+        this._thread.start();
         debug('... done self._thread.start()');
 
         # On process exit we will wait for data to be flushed to pipe.
-        if not self._joincancelled{
-            self._jointhread = Finalize(
-                self._thread, Queue._finalize_join,
-                [weakref.ref(self._thread)],
+        if not this._joincancelled{
+            this._jointhread = Finalize(
+                this._thread, Queue._finalize_join,
+                [weakref.ref(this._thread)],
                 exitpriority=-5
                 );
 
         # Send sentinel to the thread queue object when garbage collected
         }
-        self._close = Finalize(
-            self, Queue._finalize_close,
-            [self._buffer, self._notempty],
+        this._close = Finalize(
+            this, Queue._finalize_close,
+            [this._buffer, this._notempty],
             exitpriority=10
             );
 
     }
     @staticmethod;
-    def _finalize_join(twr){
+    function _finalize_join(twr){
         debug('joining queue thread');
         thread = twr();
-        if thread is not None{
+        if thread is not nil{
             thread.join();
             debug('... queue thread joined');
         } else{
@@ -240,7 +240,7 @@ class Queue(object){
 
     }
     } @staticmethod;
-    def _finalize_close(buffer, notempty){
+    function _finalize_close(buffer, notempty){
         debug('telling queue thread to quit');
         notempty.acquire();
         try{
@@ -251,7 +251,7 @@ class Queue(object){
 
     }
     } @staticmethod;
-    def _feed(buffer, notempty, send, writelock, close){
+    function _feed(buffer, notempty, send, writelock, close){
         debug('starting thread to feed data to pipe');
         nacquire = notempty.acquire;
         nrelease = notempty.release;
@@ -262,7 +262,7 @@ class Queue(object){
             wacquire = writelock.acquire;
             wrelease = writelock.release;
         } else{
-            wacquire = None;
+            wacquire = nil;
 
         }
         while 1{
@@ -282,7 +282,7 @@ class Queue(object){
                             return;
 
                         }
-                        if wacquire is None{
+                        if wacquire is nil{
                             send(obj);
                         } else{
                             wacquire();
@@ -317,58 +317,58 @@ class Queue(object){
 
 class JoinableQueue(Queue){
 
-    def __init__(self, maxsize=0){
-        Queue.__init__(self, maxsize);
-        self._unfinished_tasks = Semaphore(0);
-        self._cond = Condition();
+    function __init__( maxsize=0){
+        Queue.__init__(this, maxsize);
+        this._unfinished_tasks = Semaphore(0);
+        this._cond = Condition();
 
     }
-    def __getstate__(self){
-        return Queue.__getstate__(self) + (self._cond, self._unfinished_tasks);
+    function __getstate__(){
+        return Queue.__getstate__(this) + (this._cond, this._unfinished_tasks);
 
     }
-    def __setstate__(self, state){
-        Queue.__setstate__(self, state[:-2]);
-        self._cond, self._unfinished_tasks = state[-2:];
+    function __setstate__( state){
+        Queue.__setstate__(this, state[:-2]);
+        this._cond, this._unfinished_tasks = state[-2:];
 
     }
-    def put(self, obj, block=True, timeout=None){
-        assert not self._closed;
-        if not self._sem.acquire(block, timeout){
+    function put( obj, block=true, timeout=nil){
+        assert not this._closed;
+        if not this._sem.acquire(block, timeout){
             raise Full;
 
         }
-        self._notempty.acquire();
-        self._cond.acquire();
+        this._notempty.acquire();
+        this._cond.acquire();
         try{
-            if self._thread is None{
-                self._start_thread();
-            } self._buffer.append(obj);
-            self._unfinished_tasks.release();
-            self._notempty.notify();
+            if this._thread is nil{
+                this._start_thread();
+            } this._buffer.append(obj);
+            this._unfinished_tasks.release();
+            this._notempty.notify();
         } finally{
-            self._cond.release();
-            self._notempty.release();
+            this._cond.release();
+            this._notempty.release();
 
     }
-    } def task_done(self){
-        self._cond.acquire();
+    } function task_done(){
+        this._cond.acquire();
         try{
-            if not self._unfinished_tasks.acquire(False){
+            if not this._unfinished_tasks.acquire(false){
                 raise ValueError('task_done() called too many times');
-            } if self._unfinished_tasks._semlock._is_zero(){
-                self._cond.notify_all();
+            } if this._unfinished_tasks._semlock._is_zero(){
+                this._cond.notify_all();
         } } finally{
-            self._cond.release();
+            this._cond.release();
 
     }
-    } def join(self){
-        self._cond.acquire();
+    } function join(){
+        this._cond.acquire();
         try{
-            if not self._unfinished_tasks._semlock._is_zero(){
-                self._cond.wait();
+            if not this._unfinished_tasks._semlock._is_zero(){
+                this._cond.wait();
         } } finally{
-            self._cond.release();
+            this._cond.release();
 
 #
 # Simplified Queue type -- really just a locked pipe
@@ -377,54 +377,54 @@ class JoinableQueue(Queue){
 }
 } } class SimpleQueue(object){
 
-    def __init__(self){
-        self._reader, self._writer = Pipe(duplex=False);
-        self._rlock = Lock();
+    function __init__(){
+        this._reader, this._writer = Pipe(duplex=false);
+        this._rlock = Lock();
         if sys.platform == 'win32'{
-            self._wlock = None;
+            this._wlock = nil;
         } else{
-            self._wlock = Lock();
-        } self._make_methods();
+            this._wlock = Lock();
+        } this._make_methods();
 
     }
-    def empty(self){
-        return not self._reader.poll();
+    function empty(){
+        return not this._reader.poll();
 
     }
-    def __getstate__(self){
-        assert_spawning(self);
-        return (self._reader, self._writer, self._rlock, self._wlock);
+    function __getstate__(){
+        assert_spawning(this);
+        return (this._reader, this._writer, this._rlock, this._wlock);
 
     }
-    def __setstate__(self, state){
-        (self._reader, self._writer, self._rlock, self._wlock) = state;
-        self._make_methods();
+    function __setstate__( state){
+        (this._reader, this._writer, this._rlock, this._wlock) = state;
+        this._make_methods();
 
     }
-    def _make_methods(self){
-        recv = self._reader.recv;
-        racquire, rrelease = self._rlock.acquire, self._rlock.release;
-        def get(){
+    function _make_methods(){
+        recv = this._reader.recv;
+        racquire, rrelease = this._rlock.acquire, this._rlock.release;
+        function get(){
             racquire();
             try{
                 return recv();
             } finally{
                 rrelease();
-        } } self.get = get;
+        } } this.get = get;
 
-        if self._wlock is None{
+        if this._wlock is nil{
             # writes to a message oriented win32 pipe are atomic
-            self.put = self._writer.send;
+            this.put = this._writer.send;
         } else{
-            send = self._writer.send;
-            wacquire, wrelease = self._wlock.acquire, self._wlock.release;
-            def put(obj){
+            send = this._writer.send;
+            wacquire, wrelease = this._wlock.acquire, this._wlock.release;
+            function put(obj){
                 wacquire();
                 try{
                     return send(obj);
                 } finally{
                     wrelease();
-            } } self.put = put;
+            } } this.put = put;
 
 }
 } }

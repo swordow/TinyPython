@@ -194,8 +194,8 @@ init_by_array(RandomObject *self, unsigned long init_key[], unsigned long key_le
     }
 
     mt[0] = 0x80000000UL; /* MSB is 1; assuring non-zero initial array */
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 /*
@@ -220,13 +220,13 @@ random_seed(RandomObject *self, PyObject *args)
     if (!PyArg_UnpackTuple(args, "seed", 0, 1, &arg))
         return NULL;
 
-    if (arg == NULL || arg == Py_None) {
+    if (arg == NULL || arg == Py_Nil) {
         time_t now;
 
         time(&now);
         init_genrand(self, (unsigned long)now);
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     /* If the arg is an int or long, use its absolute value; else use
      * the absolute value of its hash code.
@@ -378,8 +378,8 @@ random_setstate(RandomObject *self, PyObject *state)
     for (i = 0; i < N; i++)
         self->state[i] = new_state[i];
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 /*
@@ -459,8 +459,8 @@ random_jumpahead(RandomObject *self, PyObject *n)
     }
 
     self->index = N;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *

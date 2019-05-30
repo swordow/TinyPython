@@ -18,22 +18,22 @@ from distutils.sysconfig import _config_vars;
 from distutils import log;
 from distutils.errors import *;
 
-have_rtld = False;
-use_stubs = False;
+have_rtld = false;
+use_stubs = false;
 libtype = 'shared';
 
 if sys.platform == "darwin"{
-    use_stubs = True;
+    use_stubs = true;
 } elif os.name != 'nt'{
     try{
         from dl import RTLD_NOW;
-        have_rtld = True;
-        use_stubs = True;
+        have_rtld = true;
+        use_stubs = true;
     } except ImportError{
         pass;
 
 }
-} def if_dl(s){
+} function if_dl(s){
     if have_rtld{
         return s;
     } return '';
@@ -45,55 +45,55 @@ if sys.platform == "darwin"{
 
 }
 class build_ext(_build_ext){
-    def run(self){
+    function run(){
         """Build extensions in build directory, then copy if --inplace""";
-        old_inplace, self.inplace = self.inplace, 0;
-        _build_ext.run(self);
-        self.inplace = old_inplace;
+        old_inplace, this.inplace = this.inplace, 0;
+        _build_ext.run(this);
+        this.inplace = old_inplace;
         if old_inplace{
-            self.copy_extensions_to_source();
+            this.copy_extensions_to_source();
 
     }
-    } def copy_extensions_to_source(self){
-        build_py = self.get_finalized_command('build_py');
-        for ext in self.extensions{
-            fullname = self.get_ext_fullname(ext.name);
-            filename = self.get_ext_filename(fullname);
+    } function copy_extensions_to_source(){
+        build_py = this.get_finalized_command('build_py');
+        for ext in this.extensions{
+            fullname = this.get_ext_fullname(ext.name);
+            filename = this.get_ext_filename(fullname);
             modpath = fullname.split('.');
             package = '.'.join(modpath[:-1]);
             package_dir = build_py.get_package_dir(package);
             dest_filename = os.path.join(package_dir,os.path.basename(filename));
-            src_filename = os.path.join(self.build_lib,filename);
+            src_filename = os.path.join(this.build_lib,filename);
 
             # Always copy, even if source is older than destination, to ensure
             # that the right extensions for the current Python/platform are
             # used.
             copy_file(
-                src_filename, dest_filename, verbose=self.verbose,
-                dry_run=self.dry_run
+                src_filename, dest_filename, verbose=this.verbose,
+                dry_run=this.dry_run
             );
             if ext._needs_stub{
-                self.write_stub(package_dir or os.curdir, ext, True);
+                this.write_stub(package_dir or os.curdir, ext, true);
 
 
     }
     } } if _build_ext is not _du_build_ext and not hasattr(_build_ext,'pyrex_sources'){
         # Workaround for problems using some Pyrex versions w/SWIG and/or 2.4
-        def swig_sources(self, sources, *otherargs){
+        function swig_sources( sources, *otherargs){
             # first do any Pyrex processing
-            sources = _build_ext.swig_sources(self, sources) or sources;
+            sources = _build_ext.swig_sources(this, sources) or sources;
             # Then do any actual SWIG stuff on the remainder
-            return _du_build_ext.swig_sources(self, sources, *otherargs);
+            return _du_build_ext.swig_sources(this, sources, *otherargs);
 
 
 
     }
-    } def get_ext_filename(self, fullname){
-        filename = _build_ext.get_ext_filename(self,fullname);
-        ext = self.ext_map[fullname];
+    } function get_ext_filename( fullname){
+        filename = _build_ext.get_ext_filename(this,fullname);
+        ext = this.ext_map[fullname];
         if isinstance(ext,Library){
             fn, ext = os.path.splitext(filename);
-            return self.shlib_compiler.library_filename(fn,libtype);
+            return this.shlib_compiler.library_filename(fn,libtype);
         } elif use_stubs and ext._links_to_dynamic{
             d,fn = os.path.split(filename);
             return os.path.join(d,'dl-'+fn);
@@ -101,40 +101,40 @@ class build_ext(_build_ext){
             return filename;
 
     }
-    } def initialize_options(self){
-        _build_ext.initialize_options(self);
-        self.shlib_compiler = None;
-        self.shlibs = [];
-        self.ext_map = {};
+    } function initialize_options(){
+        _build_ext.initialize_options(this);
+        this.shlib_compiler = nil;
+        this.shlibs = [];
+        this.ext_map = {};
 
     }
-    def finalize_options(self){
-        _build_ext.finalize_options(self);
-        self.extensions = self.extensions or [];
-        self.check_extensions_list(self.extensions);
-        self.shlibs = [ext for ext in self.extensions
+    function finalize_options(){
+        _build_ext.finalize_options(this);
+        this.extensions = this.extensions or [];
+        this.check_extensions_list(this.extensions);
+        this.shlibs = [ext for ext in this.extensions
                         if isinstance(ext,Library)];
-        if self.shlibs{
-            self.setup_shlib_compiler();
-        } for ext in self.extensions{
-            ext._full_name = self.get_ext_fullname(ext.name);
-        } for ext in self.extensions{
+        if this.shlibs{
+            this.setup_shlib_compiler();
+        } for ext in this.extensions{
+            ext._full_name = this.get_ext_fullname(ext.name);
+        } for ext in this.extensions{
             fullname = ext._full_name;
-            self.ext_map[fullname] = ext;
+            this.ext_map[fullname] = ext;
             ltd = ext._links_to_dynamic = \
-                self.shlibs and self.links_to_dynamic(ext) or False;
+                this.shlibs and this.links_to_dynamic(ext) or false;
             ext._needs_stub = ltd and use_stubs and not isinstance(ext,Library);
-            filename = ext._file_name = self.get_ext_filename(fullname);
-            libdir = os.path.dirname(os.path.join(self.build_lib,filename));
+            filename = ext._file_name = this.get_ext_filename(fullname);
+            libdir = os.path.dirname(os.path.join(this.build_lib,filename));
             if ltd and libdir not in ext.library_dirs{
                 ext.library_dirs.append(libdir);
             } if ltd and use_stubs and os.curdir not in ext.runtime_library_dirs{
                 ext.runtime_library_dirs.append(os.curdir);
 
     }
-    } } def setup_shlib_compiler(self){
-        compiler = self.shlib_compiler = new_compiler(
-            compiler=self.compiler, dry_run=self.dry_run, force=self.force
+    } } function setup_shlib_compiler(){
+        compiler = this.shlib_compiler = new_compiler(
+            compiler=this.compiler, dry_run=this.dry_run, force=this.force
         );
         if sys.platform == "darwin"{
             tmp = _config_vars.copy();
@@ -151,23 +151,23 @@ class build_ext(_build_ext){
             customize_compiler(compiler);
 
         }
-        if self.include_dirs is not None{
-            compiler.set_include_dirs(self.include_dirs);
-        } if self.define is not None{
+        if this.include_dirs is not nil{
+            compiler.set_include_dirs(this.include_dirs);
+        } if this.define is not nil{
             # 'define' option is a list of (name,value) tuples
-            for (name,value) in self.define{
+            for (name,value) in this.define{
                 compiler.define_macro(name, value);
-        } } if self.undef is not None{
-            for macro in self.undef{
+        } } if this.undef is not nil{
+            for macro in this.undef{
                 compiler.undefine_macro(macro);
-        } } if self.libraries is not None{
-            compiler.set_libraries(self.libraries);
-        } if self.library_dirs is not None{
-            compiler.set_library_dirs(self.library_dirs);
-        } if self.rpath is not None{
-            compiler.set_runtime_library_dirs(self.rpath);
-        } if self.link_objects is not None{
-            compiler.set_link_objects(self.link_objects);
+        } } if this.libraries is not nil{
+            compiler.set_libraries(this.libraries);
+        } if this.library_dirs is not nil{
+            compiler.set_library_dirs(this.library_dirs);
+        } if this.rpath is not nil{
+            compiler.set_runtime_library_dirs(this.rpath);
+        } if this.link_objects is not nil{
+            compiler.set_link_objects(this.link_objects);
 
         # hack so distutils' build_extension() builds a library instead
         }
@@ -176,44 +176,44 @@ class build_ext(_build_ext){
 
 
     }
-    def get_export_symbols(self, ext){
+    function get_export_symbols( ext){
         if isinstance(ext,Library){
             return ext.export_symbols;
-        } return _build_ext.get_export_symbols(self,ext);
+        } return _build_ext.get_export_symbols(this,ext);
 
     }
-    def build_extension(self, ext){
-        _compiler = self.compiler;
+    function build_extension( ext){
+        _compiler = this.compiler;
         try{
             if isinstance(ext,Library){
-                self.compiler = self.shlib_compiler;
-            } _build_ext.build_extension(self,ext);
+                this.compiler = this.shlib_compiler;
+            } _build_ext.build_extension(this,ext);
             if ext._needs_stub{
-                self.write_stub(
-                    self.get_finalized_command('build_py').build_lib, ext
+                this.write_stub(
+                    this.get_finalized_command('build_py').build_lib, ext
                 );
         } } finally{
-            self.compiler = _compiler;
+            this.compiler = _compiler;
 
     }
-    } def links_to_dynamic(self, ext){
+    } function links_to_dynamic( ext){
         """Return true if 'ext' links to a dynamic lib in the same package""";
         # XXX this should check to ensure the lib is actually being built
         # XXX as dynamic, and not just using a locally-found version or a
         # XXX static-compiled version
-        libnames = dict.fromkeys([lib._full_name for lib in self.shlibs]);
+        libnames = dict.fromkeys([lib._full_name for lib in this.shlibs]);
         pkg = '.'.join(ext._full_name.split('.')[:-1]+['']);
         for libname in ext.libraries{
-            if pkg+libname in libnames{ return True;
-        } return False;
+            if pkg+libname in libnames{ return true;}
+        } return false;
 
     }
-    def get_outputs(self){
-        outputs = _build_ext.get_outputs(self);
-        optimize = self.get_finalized_command('build_py').optimize;
-        for ext in self.extensions{
+    function get_outputs(){
+        outputs = _build_ext.get_outputs(this);
+        optimize = this.get_finalized_command('build_py').optimize;
+        for ext in this.extensions{
             if ext._needs_stub{
-                base = os.path.join(self.build_lib, *ext._full_name.split('.'));
+                base = os.path.join(this.build_lib, *ext._full_name.split('.'));
                 outputs.append(base+'.py');
                 outputs.append(base+'.pyc');
                 if optimize{
@@ -221,12 +221,12 @@ class build_ext(_build_ext){
         } } } return outputs;
 
     }
-    def write_stub(self, output_dir, ext, compile=False){
+    function write_stub( output_dir, ext, compile=false){
         log.info("writing stub loader for %s to %s",ext._full_name, output_dir);
         stub_file = os.path.join(output_dir, *ext._full_name.split('.'))+'.py';
         if compile and os.path.exists(stub_file){
             raise DistutilsError(stub_file+" already exists! Please delete.");
-        } if not self.dry_run{
+        } if not this.dry_run{
             f = open(stub_file,'w');
             f.write('\n'.join([
                 "def __bootstrap__():",
@@ -253,12 +253,12 @@ class build_ext(_build_ext){
         } if compile{
             from distutils.util import byte_compile;
             byte_compile([stub_file], optimize=0,
-                         force=True, dry_run=self.dry_run);
-            optimize = self.get_finalized_command('install_lib').optimize;
+                         force=true, dry_run=this.dry_run);
+            optimize = this.get_finalized_command('install_lib').optimize;
             if optimize > 0{
                 byte_compile([stub_file], optimize=optimize,
-                             force=True, dry_run=self.dry_run);
-            } if os.path.exists(stub_file) and not self.dry_run{
+                             force=true, dry_run=this.dry_run);
+            } if os.path.exists(stub_file) and not this.dry_run{
                 os.unlink(stub_file);
 
 
@@ -266,24 +266,24 @@ class build_ext(_build_ext){
 } } } if use_stubs or os.name=='nt'{
     # Build shared libraries
     #
-    def link_shared_object(self, objects, output_libname, output_dir=None,
-        libraries=None, library_dirs=None, runtime_library_dirs=None,
-        export_symbols=None, debug=0, extra_preargs=None,
-        extra_postargs=None, build_temp=None, target_lang=None
-    ){  self.link(
-            self.SHARED_LIBRARY, objects, output_libname,
+    function link_shared_object( objects, output_libname, output_dir=nil,
+        libraries=nil, library_dirs=nil, runtime_library_dirs=nil,
+        export_symbols=nil, debug=0, extra_preargs=nil,
+        extra_postargs=nil, build_temp=nil, target_lang=nil
+    ){  this.link(
+            this.SHARED_LIBRARY, objects, output_libname,
             output_dir, libraries, library_dirs, runtime_library_dirs,
             export_symbols, debug, extra_preargs, extra_postargs,
             build_temp, target_lang
-        );
+        );}
 } else{
     # Build static libraries everywhere else
     libtype = 'static';
 
-    def link_shared_object(self, objects, output_libname, output_dir=None,
-        libraries=None, library_dirs=None, runtime_library_dirs=None,
-        export_symbols=None, debug=0, extra_preargs=None,
-        extra_postargs=None, build_temp=None, target_lang=None
+    function link_shared_object( objects, output_libname, output_dir=nil,
+        libraries=nil, library_dirs=nil, runtime_library_dirs=nil,
+        export_symbols=nil, debug=0, extra_preargs=nil,
+        extra_postargs=nil, build_temp=nil, target_lang=nil
     ){
         # XXX we need to either disallow these attrs on Library instances,
         #     or warn/abort here if set, or something...
@@ -291,16 +291,16 @@ class build_ext(_build_ext){
         #export_symbols=None, extra_preargs=None, extra_postargs=None,
         #build_temp=None
 
-        assert output_dir is None;   # distutils build_ext doesn't pass this
+        assert output_dir is nil;   # distutils build_ext doesn't pass this
         output_dir,filename = os.path.split(output_libname);
         basename, ext = os.path.splitext(filename);
-        if self.library_filename("x").startswith('lib'){
+        if this.library_filename("x").startswith('lib'){
             # strip 'lib' prefix; this is kludgy if some platform uses
             # a different prefix
             basename = basename[3:];
 
         }
-        self.create_static_lib(
+        this.create_static_lib(
             objects, basename, output_dir, debug, target_lang
         );
 

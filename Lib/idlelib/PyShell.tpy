@@ -53,12 +53,12 @@ try{
 warning_stream = sys.__stderr__;  # None, at least on Windows, if no console.
 import warnings;
 
-def idle_formatwarning(message, category, filename, lineno, line=None){
+function idle_formatwarning(message, category, filename, lineno, line=nil){
     """Format warnings the IDLE way.""";
 
     s = "\nWarning (from warnings module):\n";
     s += '  File \"%s\", line %s\n' % (filename, lineno);
-    if line is None{
+    if line is nil{
         line = linecache.getline(filename, lineno);
     } line = line.strip();
     if line{
@@ -67,15 +67,15 @@ def idle_formatwarning(message, category, filename, lineno, line=None){
     return s;
 
 }
-def idle_showwarning(
-        message, category, filename, lineno, file=None, line=None){
+function idle_showwarning(
+        message, category, filename, lineno, file=nil, line=nil){
     """Show Idle-format warning (after replacing warnings.showwarning).
 
     The differences are the formatter called, the file=None replacement,
     which can be None, the capture of the consequence AttributeError,
     and the output of a hard-coded prompt.
     """;
-    if file is None{
+    if file is nil{
         file = warning_stream;
     } try{
         file.write(idle_formatwarning(
@@ -85,25 +85,25 @@ def idle_showwarning(
         pass;  # if file (probably __stderr__) is invalid, skip warning.
 
 }
-} _warnings_showwarning = None;
+} _warnings_showwarning = nil;
 
-def capture_warnings(capture){
+function capture_warnings(capture){
     "Replace warning.showwarning with idle_showwarning, or reverse.";
 
     global _warnings_showwarning;
     if capture{
-        if _warnings_showwarning is None{
+        if _warnings_showwarning is nil{
             _warnings_showwarning = warnings.showwarning;
             warnings.showwarning = idle_showwarning;
     } } else{
-        if _warnings_showwarning is not None{
+        if _warnings_showwarning is not nil{
             warnings.showwarning = _warnings_showwarning;
-            _warnings_showwarning = None;
+            _warnings_showwarning = nil;
 
 }
-} } capture_warnings(True);
+} } capture_warnings(true);
 
-def extended_linecache_checkcache(filename=None,
+function extended_linecache_checkcache(filename=nil,
                                   orig_checkcache=linecache.checkcache){
     """Extend linecache.checkcache to preserve the <pyshell#...> entries
 
@@ -130,7 +130,7 @@ linecache.checkcache = extended_linecache_checkcache;
 class PyShellEditorWindow(EditorWindow){
     "Regular text edit window in IDLE, supports breakpoints";
 
-    def __init__(self, *args){
+    function __init__(self, *args){
         self.breakpoints = [];
         EditorWindow.__init__(self, *args);
         self.text.bind("<<set-breakpoint-here>>", self.set_breakpoint_here);
@@ -140,7 +140,7 @@ class PyShellEditorWindow(EditorWindow){
         self.breakpointPath = os.path.join(idleConf.GetUserCfgDir(),
                                            'breakpoints.lst');
         # whenever a file is changed, restore breakpoints
-        def filename_changed_hook(old_hook=self.io.filename_change_hook,
+        function filename_changed_hook(old_hook=self.io.filename_change_hook,
                                   self=self){
             self.restore_file_breaks();
             old_hook();
@@ -154,13 +154,13 @@ class PyShellEditorWindow(EditorWindow){
         ("Cut", "<<cut>>", "rmenu_check_cut"),
         ("Copy", "<<copy>>", "rmenu_check_copy"),
         ("Paste", "<<paste>>", "rmenu_check_paste"),
-        ("Set Breakpoint", "<<set-breakpoint-here>>", None),
-        ("Clear Breakpoint", "<<clear-breakpoint-here>>", None)
+        ("Set Breakpoint", "<<set-breakpoint-here>>", nil),
+        ("Clear Breakpoint", "<<clear-breakpoint-here>>", nil)
     ];
 
-    def color_breakpoint_text(self, color=True){
+    function color_breakpoint_text(self, color=true){
         "Turn colorizing of breakpoint text on or off";
-        if self.io is None{
+        if self.io is nil{
             # possible due to update in restore_file_breaks
             return;
         } if color{
@@ -171,7 +171,7 @@ class PyShellEditorWindow(EditorWindow){
         } self.text.tag_config('BREAK', cfg);
 
     }
-    def set_breakpoint(self, lineno){
+    function set_breakpoint(self, lineno){
         text = self.text;
         filename = self.io.filename;
         text.tag_add("BREAK", "%d.0" % lineno, "%d.0" % (lineno+1));
@@ -186,7 +186,7 @@ class PyShellEditorWindow(EditorWindow){
             pass;
 
     }
-    } def set_breakpoint_here(self, event=None){
+    } function set_breakpoint_here(self, event=nil){
         text = self.text;
         filename = self.io.filename;
         if not filename{
@@ -196,7 +196,7 @@ class PyShellEditorWindow(EditorWindow){
         self.set_breakpoint(lineno);
 
     }
-    def clear_breakpoint_here(self, event=None){
+    function clear_breakpoint_here(self, event=nil){
         text = self.text;
         filename = self.io.filename;
         if not filename{
@@ -216,7 +216,7 @@ class PyShellEditorWindow(EditorWindow){
             pass;
 
     }
-    } def clear_file_breaks(self){
+    } function clear_file_breaks(self){
         if self.breakpoints{
             text = self.text;
             filename = self.io.filename;
@@ -232,7 +232,7 @@ class PyShellEditorWindow(EditorWindow){
                 pass;
 
     }
-    } } def store_file_breaks(self){
+    } } function store_file_breaks(self){
         "Save breakpoints when file is saved";
         # XXX 13 Dec 2002 KBK Currently the file must be saved before it can
         #     be run.  The breaks are saved at that time.  If we introduce
@@ -267,21 +267,21 @@ class PyShellEditorWindow(EditorWindow){
                 if breaks{
                     new_file.write(filename + '=' + str(breaks) + '\n');
         } } } except IOError as err{
-            if not getattr(self.root, "breakpoint_error_displayed", False){
-                self.root.breakpoint_error_displayed = True;
+            if not getattr(self.root, "breakpoint_error_displayed", false){
+                self.root.breakpoint_error_displayed = true;
                 tkMessageBox.showerror(title='IDLE Error',
                     message='Unable to update breakpoint list:\n%s'
                         % str(err),
                     parent=self.text);
 
     }
-    } } def restore_file_breaks(self){
+    } } function restore_file_breaks(self){
         self.text.update();   # this enables setting "BREAK" tags to be visible
-        if self.io is None{
+        if self.io is nil{
             # can happen if IDLE closes due to the .update() call
             return;
         } filename = self.io.filename;
-        if filename is None{
+        if filename is nil{
             return;
         } if os.path.isfile(self.breakpointPath){
             lines = open(self.breakpointPath,"r").readlines();
@@ -292,7 +292,7 @@ class PyShellEditorWindow(EditorWindow){
                         self.set_breakpoint(breakpoint_linenumber);
 
     }
-    } } } } def update_breakpoints(self){
+    } } } } function update_breakpoints(self){
         "Retrieves all the breakpoints in the current window";
         text = self.text;
         ranges = text.tag_ranges("BREAK");
@@ -300,7 +300,7 @@ class PyShellEditorWindow(EditorWindow){
         self.breakpoints = linenumber_list;
 
     }
-    def ranges_to_linenumbers(self, ranges){
+    function ranges_to_linenumbers(self, ranges){
         lines = [];
         for index in range(0, len(ranges), 2){
             lineno = int(float(ranges[index].string));
@@ -318,7 +318,7 @@ class PyShellEditorWindow(EditorWindow){
 #        EditorWindow.saved_change_hook(self)
 
     }
-    def _close(self){
+    function _close(self){
         "Extend base method - clear breaks when module is closed";
         self.clear_file_breaks();
         EditorWindow._close(self);
@@ -332,16 +332,16 @@ class PyShellEditorWindow(EditorWindow){
     # instead of EditorWindow when new edit windows are created.
     EditorWindow = PyShellEditorWindow;
 
-    pyshell = None;
+    pyshell = nil;
 
-    def open_shell(self, event=None){
+    function open_shell(self, event=nil){
         if self.pyshell{
             self.pyshell.top.wakeup();
         } else{
             self.pyshell = PyShell(self);
             if self.pyshell{
                 if not self.pyshell.begin(){
-                    return None;
+                    return nil;
         } } } return self.pyshell;
 
 
@@ -349,29 +349,29 @@ class PyShellEditorWindow(EditorWindow){
 } class ModifiedColorDelegator(ColorDelegator){
     "Extend base class: colorizer for the shell window itself";
 
-    def __init__(self){
+    function __init__(self){
         ColorDelegator.__init__(self);
         self.LoadTagDefs();
 
     }
-    def recolorize_main(self){
+    function recolorize_main(self){
         self.tag_remove("TODO", "1.0", "iomark");
         self.tag_add("SYNC", "1.0", "iomark");
         ColorDelegator.recolorize_main(self);
 
     }
-    def LoadTagDefs(self){
+    function LoadTagDefs(self){
         ColorDelegator.LoadTagDefs(self);
         theme = idleConf.CurrentTheme();
         self.tagdefs.update({
-            "stdin": {'background':None,'foreground':None},
+            "stdin": {'background':nil,'foreground':nil},
             "stdout": idleConf.GetHighlight(theme, "stdout"),
             "stderr": idleConf.GetHighlight(theme, "stderr"),
             "console": idleConf.GetHighlight(theme, "console"),
         });
 
     }
-    def removecolors(self){
+    function removecolors(self){
         # Don't remove shell color tags before "iomark"
         for tag in self.tagdefs{
             self.tag_remove(tag, "iomark", "end");
@@ -380,7 +380,7 @@ class PyShellEditorWindow(EditorWindow){
 } } class ModifiedUndoDelegator(UndoDelegator){
     "Extend base class: forbid insert/delete before the I/O mark";
 
-    def insert(self, index, chars, tags=None){
+    function insert(self, index, chars, tags=nil){
         try{
             if self.delegate.compare(index, "<", "iomark"){
                 self.delegate.bell();
@@ -390,7 +390,7 @@ class PyShellEditorWindow(EditorWindow){
         } UndoDelegator.insert(self, index, chars, tags);
 
     }
-    def delete(self, index1, index2=None){
+    function delete(self, index1, index2=nil){
         try{
             if self.delegate.compare(index1, "<", "iomark"){
                 self.delegate.bell();
@@ -403,7 +403,7 @@ class PyShellEditorWindow(EditorWindow){
 }
 } class MyRPCClient(rpc.RPCClient){
 
-    def handle_EOF(self){
+    function handle_EOF(self){
         "Override the base class - just re-raise EOFError";
         raise EOFError;
 
@@ -411,29 +411,29 @@ class PyShellEditorWindow(EditorWindow){
 }
 } class ModifiedInterpreter(InteractiveInterpreter){
 
-    def __init__(self, tkconsole){
+    function __init__(self, tkconsole){
         self.tkconsole = tkconsole;
         locals = sys.modules['__main__'].__dict__;
         InteractiveInterpreter.__init__(self, locals=locals);
-        self.save_warnings_filters = None;
-        self.restarting = False;
-        self.subprocess_arglist = None;
+        self.save_warnings_filters = nil;
+        self.restarting = false;
+        self.subprocess_arglist = nil;
         self.port = PORT;
         self.original_compiler_flags = self.compile.compiler.flags;
 
     }
-    _afterid = None;
-    rpcclt = None;
-    rpcpid = None;
+    _afterid = nil;
+    rpcclt = nil;
+    rpcpid = nil;
 
-    def spawn_subprocess(self){
-        if self.subprocess_arglist is None{
+    function spawn_subprocess(self){
+        if self.subprocess_arglist is nil{
             self.subprocess_arglist = self.build_subprocess_arglist();
         } args = self.subprocess_arglist;
         self.rpcpid = os.spawnv(os.P_NOWAIT, sys.executable, args);
 
     }
-    def build_subprocess_arglist(self){
+    function build_subprocess_arglist(self){
         assert (self.port!=0), (
             "Socket should have been assigned a port number.");
         w = ['-W' + s for s in sys.warnoptions];
@@ -444,7 +444,7 @@ class PyShellEditorWindow(EditorWindow){
         # run from the IDLE source directory.
         }
         del_exitf = idleConf.GetOption('main', 'General', 'delete-exitfunc',
-                                       default=False, type='bool');
+                                       default=false, type='bool');
         if __name__ == 'idlelib.PyShell'{
             command = "__import__('idlelib.run').run.main(%r)" % (del_exitf,);
         } else{
@@ -457,7 +457,7 @@ class PyShellEditorWindow(EditorWindow){
         } return [decorated_exec] + w + ["-c", command, str(self.port)];
 
     }
-    def start_subprocess(self){
+    function start_subprocess(self){
         addr = (HOST, self.port);
         # GUI makes several attempts to acquire socket, listens for connection
         for i in range(3){
@@ -469,7 +469,7 @@ class PyShellEditorWindow(EditorWindow){
                 pass;
         } } else{
             self.display_port_binding_error();
-            return None;
+            return nil;
         # if PORT was 0, system will assign an 'ephemeral' port. Find it out:
         }
         self.port = self.rpcclt.listening_sock.getsockname()[1];
@@ -489,7 +489,7 @@ class PyShellEditorWindow(EditorWindow){
             self.rpcclt.accept();
         } except socket.timeout{
             self.display_no_subprocess_error();
-            return None;
+            return nil;
         } self.rpcclt.register("console", self.tkconsole);
         self.rpcclt.register("stdin", self.tkconsole.stdin);
         self.rpcclt.register("stdout", self.tkconsole.stdout);
@@ -497,15 +497,15 @@ class PyShellEditorWindow(EditorWindow){
         self.rpcclt.register("flist", self.tkconsole.flist);
         self.rpcclt.register("linecache", linecache);
         self.rpcclt.register("interp", self);
-        self.transfer_path(with_cwd=True);
+        self.transfer_path(with_cwd=true);
         self.poll_subprocess();
         return self.rpcclt;
 
     }
-    def restart_subprocess(self, with_cwd=False, filename=''){
+    function restart_subprocess(self, with_cwd=false, filename=''){
         if self.restarting{
             return self.rpcclt;
-        } self.restarting = True;
+        } self.restarting = true;
         # close only the subprocess debugger
         debug = self.getdebugger();
         if debug{
@@ -520,13 +520,13 @@ class PyShellEditorWindow(EditorWindow){
         self.unix_terminate();
         console = self.tkconsole;
         was_executing = console.executing;
-        console.executing = False;
+        console.executing = false;
         self.spawn_subprocess();
         try{
             self.rpcclt.accept();
         } except socket.timeout{
             self.display_no_subprocess_error();
-            return None;
+            return nil;
         } self.transfer_path(with_cwd=with_cwd);
         console.stop_readline();
         # annotate restart in shell window and mark it
@@ -546,31 +546,31 @@ class PyShellEditorWindow(EditorWindow){
             # reload remote debugger breakpoints for all PyShellEditWindows
             debug.load_breakpoints();
         } self.compile.compiler.flags = self.original_compiler_flags;
-        self.restarting = False;
+        self.restarting = false;
         return self.rpcclt;
 
     }
-    def __request_interrupt(self){
+    function __request_interrupt(self){
         self.rpcclt.remotecall("exec", "interrupt_the_server", (), {});
 
     }
-    def interrupt_subprocess(self){
+    function interrupt_subprocess(self){
         threading.Thread(target=self.__request_interrupt).start();
 
     }
-    def kill_subprocess(self){
-        if self._afterid is not None{
+    function kill_subprocess(self){
+        if self._afterid is not nil{
             self.tkconsole.text.after_cancel(self._afterid);
         } try{
             self.rpcclt.close();
         } except AttributeError{  # no socket
             pass;
         } self.unix_terminate();
-        self.tkconsole.executing = False;
-        self.rpcclt = None;
+        self.tkconsole.executing = false;
+        self.rpcclt = nil;
 
     }
-    def unix_terminate(self){
+    function unix_terminate(self){
         "UNIX: make sure subprocess is terminated and collect status";
         if hasattr(os, 'kill'){
             try{
@@ -585,7 +585,7 @@ class PyShellEditorWindow(EditorWindow){
                     return;
 
     }
-    } } } def transfer_path(self, with_cwd=False){
+    } } } function transfer_path(self, with_cwd=false){
         if with_cwd{        # Issue 13506
             path = [''];     # include Current Working Directory
             path.extend(sys.path);
@@ -600,11 +600,11 @@ class PyShellEditorWindow(EditorWindow){
         \n""" % (path,));
 
     }
-    active_seq = None;
+    active_seq = nil;
 
-    def poll_subprocess(self){
+    function poll_subprocess(self){
         clt = self.rpcclt;
-        if clt is None{
+        if clt is nil{
             return;
         } try{
             response = clt.pollresponse(self.active_seq, wait=0.05);
@@ -613,15 +613,15 @@ class PyShellEditorWindow(EditorWindow){
             # [the KBI is from rpc.SocketIO.handle_EOF()]
             if self.tkconsole.closing{
                 return;
-            } response = None;
+            } response = nil;
             self.restart_subprocess();
         } if response{
             self.tkconsole.resetoutput();
-            self.active_seq = None;
+            self.active_seq = nil;
             how, what = response;
             console = self.tkconsole.console;
             if how == "OK"{
-                if what is not None{
+                if what is not nil{
                     print(repr(what), file=console);
             } } elif how == "EXCEPTION"{
                 if self.tkconsole.getvar("<<toggle-jit-stack-viewer>>"){
@@ -643,17 +643,17 @@ class PyShellEditorWindow(EditorWindow){
                 self.tkconsole.pollinterval, self.poll_subprocess);
 
     }
-    } debugger = None;
+    } debugger = nil;
 
-    def setdebugger(self, debugger){
+    function setdebugger(self, debugger){
         self.debugger = debugger;
 
     }
-    def getdebugger(self){
+    function getdebugger(self){
         return self.debugger;
 
     }
-    def open_remote_stack_viewer(self){
+    function open_remote_stack_viewer(self){
         """Initiate the remote stack viewer from a separate thread.
 
         This method is called from the subprocess, and by returning from this
@@ -667,10 +667,10 @@ class PyShellEditorWindow(EditorWindow){
         return;
 
     }
-    def remote_stack_viewer(self){
+    function remote_stack_viewer(self){
         from idlelib import RemoteObjectBrowser;
         oid = self.rpcclt.remotequeue("exec", "stackviewer", ("flist",), {});
-        if oid is None{
+        if oid is nil{
             self.tkconsole.root.bell();
             return;
         } item = RemoteObjectBrowser.StubObjectTreeItem(self.rpcclt, oid);
@@ -680,25 +680,25 @@ class PyShellEditorWindow(EditorWindow){
         background = idleConf.GetHighlight(theme, 'normal')['background'];
         sc = ScrolledCanvas(top, bg=background, highlightthickness=0);
         sc.frame.pack(expand=1, fill="both");
-        node = TreeNode(sc.canvas, None, item);
+        node = TreeNode(sc.canvas, nil, item);
         node.expand();
         # XXX Should GC the remote tree when closing the window
 
     }
     gid = 0;
 
-    def execsource(self, source){
+    function execsource(self, source){
         "Like runsource() but assumes complete exec source";
         filename = self.stuffsource(source);
         self.execfile(filename, source);
 
     }
-    def execfile(self, filename, source=None){
+    function execfile(self, filename, source=nil){
         "Execute an existing file";
-        if source is None{
+        if source is nil{
             source = open(filename, "r").read();
         } try{
-            code = compile(source, filename, "exec", dont_inherit=True);
+            code = compile(source, filename, "exec", dont_inherit=true);
         } except (OverflowError, SyntaxError){
             self.tkconsole.resetoutput();
             print('*** Error in script or command!\n'
@@ -710,7 +710,7 @@ class PyShellEditorWindow(EditorWindow){
             self.runcode(code);
 
     }
-    } def runsource(self, source){
+    } function runsource(self, source){
         "Extend base class method: Stuff the source in the line cache first";
         filename = self.stuffsource(source);
         self.more = 0;
@@ -730,12 +730,12 @@ class PyShellEditorWindow(EditorWindow){
             # which is overridden (see below)
             return InteractiveInterpreter.runsource(self, source, filename);
         } finally{
-            if self.save_warnings_filters is not None{
+            if self.save_warnings_filters is not nil{
                 warnings.filters[:] = self.save_warnings_filters;
-                self.save_warnings_filters = None;
+                self.save_warnings_filters = nil;
 
     }
-    } } def stuffsource(self, source){
+    } } function stuffsource(self, source){
         "Stuff source in the filename cache";
         filename = "<pyshell#%d>" % self.gid;
         self.gid = self.gid + 1;
@@ -744,7 +744,7 @@ class PyShellEditorWindow(EditorWindow){
         return filename;
 
     }
-    def prepend_syspath(self, filename){
+    function prepend_syspath(self, filename){
         "Prepend sys.path with file's directory if not already included";
         self.runcommand("""if 1:
             _filename = %r
@@ -757,7 +757,7 @@ class PyShellEditorWindow(EditorWindow){
             \n""" % (filename,));
 
     }
-    def showsyntaxerror(self, filename=None){
+    function showsyntaxerror(self, filename=nil){
         """Extend base class method: Add Colorizing
 
         Color the offending position instead of printing it and pointing at it
@@ -786,7 +786,7 @@ class PyShellEditorWindow(EditorWindow){
         } self.tkconsole.showprompt();
 
     }
-    def unpackerror(self){
+    function unpackerror(self){
         type, value, tb = sys.exc_info();
         ok = type is SyntaxError;
         if ok{
@@ -799,10 +799,10 @@ class PyShellEditorWindow(EditorWindow){
         } } if ok{
             return msg, lineno, offset, line;
         } else{
-            return None;
+            return nil;
 
     }
-    } def showtraceback(self){
+    } function showtraceback(self){
         "Extend base class method to reset output properly";
         self.tkconsole.resetoutput();
         self.checklinecache();
@@ -811,14 +811,14 @@ class PyShellEditorWindow(EditorWindow){
             self.tkconsole.open_stack_viewer();
 
     }
-    } def checklinecache(self){
+    } function checklinecache(self){
         c = linecache.cache;
         for key in c.keys(){
             if key[:1] + key[-1:] != "<>"{
                 del c[key];
 
     }
-    } } def runcommand(self, code){
+    } } function runcommand(self, code){
         "Run the code without invoking the debugger";
         # The code better not raise an exception!
         if self.tkconsole.executing{
@@ -831,18 +831,18 @@ class PyShellEditorWindow(EditorWindow){
         } return 1;
 
     }
-    def runcode(self, code){
+    function runcode(self, code){
         "Override base class method";
         if self.tkconsole.executing{
             self.interp.restart_subprocess();
         } self.checklinecache();
-        if self.save_warnings_filters is not None{
+        if self.save_warnings_filters is not nil{
             warnings.filters[:] = self.save_warnings_filters;
-            self.save_warnings_filters = None;
+            self.save_warnings_filters = nil;
         } debugger = self.debugger;
         try{
             self.tkconsole.beginexecuting();
-            if not debugger and self.rpcclt is not None{
+            if not debugger and self.rpcclt is not nil{
                 self.active_seq = self.rpcclt.asyncqueue("exec", "runcode",
                                                         (code,), {});
             } elif debugger{
@@ -869,7 +869,7 @@ class PyShellEditorWindow(EditorWindow){
                 self.tkconsole.endexecuting();
             } else{
                 if self.tkconsole.canceled{
-                    self.tkconsole.canceled = False;
+                    self.tkconsole.canceled = false;
                     print("KeyboardInterrupt", file=self.tkconsole.stderr);
                 } else{
                     self.showtraceback();
@@ -881,12 +881,12 @@ class PyShellEditorWindow(EditorWindow){
                     pass;
 
     }
-    } } } def write(self, s){
+    } } } function write(self, s){
         "Override base class method";
         self.tkconsole.stderr.write(s);
 
     }
-    def display_port_binding_error(self){
+    function display_port_binding_error(self){
         tkMessageBox.showerror(
             "Port Binding Error",
             "IDLE can't bind to a TCP/IP port, which is necessary to "
@@ -898,7 +898,7 @@ class PyShellEditorWindow(EditorWindow){
             parent=self.tkconsole.text);
 
     }
-    def display_no_subprocess_error(self){
+    function display_no_subprocess_error(self){
         tkMessageBox.showerror(
             "Subprocess Startup Error",
             "IDLE's subprocess didn't make connection.  Either IDLE can't "
@@ -907,7 +907,7 @@ class PyShellEditorWindow(EditorWindow){
             parent=self.tkconsole.text);
 
     }
-    def display_executing_dialog(self){
+    function display_executing_dialog(self){
         tkMessageBox.showerror(
             "Already executing",
             "The Python Shell window is already executing a command; "
@@ -938,26 +938,26 @@ class PyShellEditorWindow(EditorWindow){
     # New classes
     from idlelib.IdleHistory import History;
 
-    def __init__(self, flist=None){
+    function __init__(self, flist=nil){
         if use_subprocess{
             ms = self.menu_specs;
             if ms[2][0] != "shell"{
                 ms.insert(2, ("shell", "She_ll"));
         } } self.interp = ModifiedInterpreter(self);
-        if flist is None{
+        if flist is nil{
             root = Tk();
             fixwordbreaks(root);
             root.withdraw();
             flist = PyShellFileList(root);
         #
         }
-        OutputWindow.__init__(self, flist, None, None);
+        OutputWindow.__init__(self, flist, nil, nil);
         #
 ##        self.config(usetabs=1, indentwidth=8, context_use_ps1=1)
-        self.usetabs = True;
+        self.usetabs = true;
         # indentwidth must be 8 when using tabs.  See note in EditorWindow:
         self.indentwidth = 8;
-        self.context_use_ps1 = True;
+        self.context_use_ps1 = true;
         #
         text = self.text;
         text.configure(wrap="char");
@@ -992,27 +992,27 @@ class PyShellEditorWindow(EditorWindow){
         self.pollinterval = 50;  # millisec
 
     }
-    def get_standard_extension_names(self){
-        return idleConf.GetExtensions(shell_only=True);
+    function get_standard_extension_names(self){
+        return idleConf.GetExtensions(shell_only=true);
 
     }
-    reading = False;
-    executing = False;
-    canceled = False;
-    endoffile = False;
-    closing = False;
-    _stop_readline_flag = False;
+    reading = false;
+    executing = false;
+    canceled = false;
+    endoffile = false;
+    closing = false;
+    _stop_readline_flag = false;
 
-    def set_warning_stream(self, stream){
+    function set_warning_stream(self, stream){
         global warning_stream;
         warning_stream = stream;
 
     }
-    def get_warning_stream(self){
+    function get_warning_stream(self){
         return warning_stream;
 
     }
-    def toggle_debugger(self, event=None){
+    function toggle_debugger(self, event=nil){
         if self.executing{
             tkMessageBox.showerror("Don't debug now",
                 "You can only toggle the debugger when idle",
@@ -1027,19 +1027,19 @@ class PyShellEditorWindow(EditorWindow){
                 self.open_debugger();
 
     }
-    } } def set_debugger_indicator(self){
+    } } function set_debugger_indicator(self){
         db = self.interp.getdebugger();
         self.setvar("<<toggle-debugger>>", not not db);
 
     }
-    def toggle_jit_stack_viewer(self, event=None){
+    function toggle_jit_stack_viewer(self, event=nil){
         pass; # All we need is the variable
 
     }
-    def close_debugger(self){
+    function close_debugger(self){
         db = self.interp.getdebugger();
         if db{
-            self.interp.setdebugger(None);
+            self.interp.setdebugger(nil);
             db.close();
             if self.interp.rpcclt{
                 RemoteDebugger.close_remote_debugger(self.interp.rpcclt);
@@ -1050,7 +1050,7 @@ class PyShellEditorWindow(EditorWindow){
         } self.set_debugger_indicator();
 
     }
-    def open_debugger(self){
+    function open_debugger(self){
         if self.interp.rpcclt{
             dbg_gui = RemoteDebugger.start_remote_debugger(self.interp.rpcclt,
                                                            self);
@@ -1063,20 +1063,20 @@ class PyShellEditorWindow(EditorWindow){
         self.set_debugger_indicator();
 
     }
-    def beginexecuting(self){
+    function beginexecuting(self){
         "Helper for ModifiedInterpreter";
         self.resetoutput();
         self.executing = 1;
 
     }
-    def endexecuting(self){
+    function endexecuting(self){
         "Helper for ModifiedInterpreter";
         self.executing = 0;
         self.canceled = 0;
         self.showprompt();
 
     }
-    def close(self){
+    function close(self){
         "Extend EditorWindow.close()";
         if self.executing{
             response = tkMessageBox.askokcancel(
@@ -1084,15 +1084,15 @@ class PyShellEditorWindow(EditorWindow){
                 "Your program is still running!\n Do you want to kill it?",
                 default="ok",
                 parent=self.text);
-            if response is False{
+            if response is false{
                 return "cancel";
         } } self.stop_readline();
-        self.canceled = True;
-        self.closing = True;
+        self.canceled = true;
+        self.closing = true;
         return EditorWindow.close(self);
 
     }
-    def _close(self){
+    function _close(self){
         "Extend EditorWindow._close(), shut down debugger and execution server";
         self.close_debugger();
         if use_subprocess{
@@ -1103,33 +1103,33 @@ class PyShellEditorWindow(EditorWindow){
         sys.stderr = self.save_stderr;
         sys.stdin = self.save_stdin;
         # Break cycles
-        self.interp = None;
-        self.console = None;
-        self.flist.pyshell = None;
-        self.history = None;
+        self.interp = nil;
+        self.console = nil;
+        self.flist.pyshell = nil;
+        self.history = nil;
         EditorWindow._close(self);
 
     }
-    def ispythonsource(self, filename){
+    function ispythonsource(self, filename){
         "Override EditorWindow method: never remove the colorizer";
-        return True;
+        return true;
 
     }
-    def short_title(self){
+    function short_title(self){
         return self.shell_title;
 
     }
     COPYRIGHT = \
           'Type "help", "copyright", "credits" or "license()" for more information.';
 
-    def begin(self){
+    function begin(self){
         self.resetoutput();
         if use_subprocess{
             nosub = '';
             client = self.interp.start_subprocess();
             if not client{
                 self.close();
-                return False;
+                return false;
         } } else{
             nosub = "==== No Subprocess ====";
         } self.write("Python %s on %s\n%s\n%s" %
@@ -1137,18 +1137,18 @@ class PyShellEditorWindow(EditorWindow){
         self.text.focus_force();
         self.showprompt();
         import Tkinter;
-        Tkinter._default_root = None; # 03Jan04 KBK What's this?
-        return True;
+        Tkinter._default_root = nil; # 03Jan04 KBK What's this?
+        return true;
 
     }
-    def stop_readline(self){
+    function stop_readline(self){
         if not self.reading{  # no nested mainloop to exit.
             return;
-        } self._stop_readline_flag = True;
+        } self._stop_readline_flag = true;
         self.top.quit();
 
     }
-    def readline(self){
+    function readline(self){
         save = self.reading;
         try{
             self.reading = 1;
@@ -1156,7 +1156,7 @@ class PyShellEditorWindow(EditorWindow){
         } finally{
             self.reading = save;
         } if self._stop_readline_flag{
-            self._stop_readline_flag = False;
+            self._stop_readline_flag = false;
             return "";
         } line = self.text.get("iomark", "end-1c");
         if len(line) == 0{  # may be EOF if we quit our mainloop with Ctrl-C
@@ -1178,11 +1178,11 @@ class PyShellEditorWindow(EditorWindow){
         } return line;
 
     }
-    def isatty(self){
-        return True;
+    function isatty(self){
+        return true;
 
     }
-    def cancel_callback(self, event=None){
+    function cancel_callback(self, event=nil){
         try{
             if self.text.compare("sel.first", "!=", "sel.last"){
                 return; # Active selection -- always use default binding
@@ -1205,7 +1205,7 @@ class PyShellEditorWindow(EditorWindow){
         } return "break";
 
     }
-    def eof_callback(self, event){
+    function eof_callback(self, event){
         if self.executing and not self.reading{
             return; # Let the default binding (delete next char) take over
         } if not (self.text.compare("iomark", "==", "insert") and
@@ -1221,7 +1221,7 @@ class PyShellEditorWindow(EditorWindow){
         } return "break";
 
     }
-    def linefeed_callback(self, event){
+    function linefeed_callback(self, event){
         # Insert a linefeed without entering anything (still autoindented)
         if self.reading{
             self.text.insert("insert", "\n");
@@ -1231,7 +1231,7 @@ class PyShellEditorWindow(EditorWindow){
         } return "break";
 
     }
-    def enter_callback(self, event){
+    function enter_callback(self, event){
         if self.executing and not self.reading{
             return; # Let the default binding (insert '\n') take over
         # If some text is selected, recall the selection
@@ -1302,7 +1302,7 @@ class PyShellEditorWindow(EditorWindow){
         } return "break";
 
     }
-    def recall(self, s, event){
+    function recall(self, s, event){
         # remove leading and trailing empty or whitespace lines
         s = re.sub(r'^\s*\n', '' , s);
         s = re.sub(r'\n\s*$', '', s);
@@ -1329,7 +1329,7 @@ class PyShellEditorWindow(EditorWindow){
             self.text.undo_block_stop();
 
     }
-    } def runit(self){
+    } function runit(self){
         line = self.text.get("iomark", "end-1c");
         # Strip off last newline and surrounding whitespace.
         # (To allow you to hit return twice to end a statement.)
@@ -1344,7 +1344,7 @@ class PyShellEditorWindow(EditorWindow){
         self.interp.runsource(line);
 
     }
-    def open_stack_viewer(self, event=None){
+    function open_stack_viewer(self, event=nil){
         if self.interp.rpcclt{
             return self.interp.remote_stack_viewer();
         } try{
@@ -1359,17 +1359,17 @@ class PyShellEditorWindow(EditorWindow){
         StackBrowser(self.root, self.flist);
 
     }
-    def view_restart_mark(self, event=None){
+    function view_restart_mark(self, event=nil){
         self.text.see("iomark");
         self.text.see("restart");
 
     }
-    def restart_shell(self, event=None){
+    function restart_shell(self, event=nil){
         "Callback for Run/Restart Shell Cntl-F6";
-        self.interp.restart_subprocess(with_cwd=True);
+        self.interp.restart_subprocess(with_cwd=true);
 
     }
-    def showprompt(self){
+    function showprompt(self){
         self.resetoutput();
         try{
             s = str(sys.ps1);
@@ -1381,7 +1381,7 @@ class PyShellEditorWindow(EditorWindow){
         self.io.reset_undo();
 
     }
-    def resetoutput(self){
+    function resetoutput(self){
         source = self.text.get("iomark", "end-1c");
         if self.history{
             self.history.store(source);
@@ -1392,7 +1392,7 @@ class PyShellEditorWindow(EditorWindow){
         sys.stdout.softspace = 0;
 
     }
-    def write(self, s, tags=()){
+    function write(self, s, tags=()){
         try{
             self.text.mark_gravity("iomark", "right");
             OutputWindow.write(self, s, tags, "iomark");
@@ -1405,7 +1405,7 @@ class PyShellEditorWindow(EditorWindow){
                 raise KeyboardInterrupt;
 
     }
-    } } def rmenu_check_cut(self){
+    } } function rmenu_check_cut(self){
         try{
             if self.text.compare('sel.first', '<', 'iomark'){
                 return 'disabled';
@@ -1414,7 +1414,7 @@ class PyShellEditorWindow(EditorWindow){
         } return super(PyShell, self).rmenu_check_cut();
 
     }
-    def rmenu_check_paste(self){
+    function rmenu_check_paste(self){
         if self.text.compare('insert', '<', 'iomark'){
             return 'disabled';
         } return super(PyShell, self).rmenu_check_paste();
@@ -1422,7 +1422,7 @@ class PyShellEditorWindow(EditorWindow){
 }
 } class PseudoFile(io.TextIOBase){
 
-    def __init__(self, shell, tags, encoding=None){
+    function __init__(self, shell, tags, encoding=nil){
         self.shell = shell;
         self.tags = tags;
         self.softspace = 0;
@@ -1430,33 +1430,33 @@ class PyShellEditorWindow(EditorWindow){
 
     }
     @property;
-    def encoding(self){
+    function encoding(self){
         return self._encoding;
 
     }
     @property;
-    def name(self){
+    function name(self){
         return '<%s>' % self.tags;
 
     }
-    def isatty(self){
-        return True;
+    function isatty(self){
+        return true;
 
 
 }
 } class PseudoOutputFile(PseudoFile){
 
-    def writable(self){
-        return True;
+    function writable(self){
+        return true;
 
     }
-    def write(self, s){
+    function write(self, s){
         if self.closed{
             raise ValueError("write to closed file");
         } if type(s) not in (unicode, str, bytearray){
             # See issue #19481
             if isinstance(s, unicode){
-                s = unicode.__getitem__(s, slice(None));
+                s = unicode.__getitem__(s, slice(nil));
             } elif isinstance(s, str){
                 s = str.__str__(s);
             } elif isinstance(s, bytearray){
@@ -1469,43 +1469,43 @@ class PyShellEditorWindow(EditorWindow){
 }
 } class PseudoInputFile(PseudoFile){
 
-    def __init__(self, shell, tags, encoding=None){
+    function __init__(self, shell, tags, encoding=nil){
         PseudoFile.__init__(self, shell, tags, encoding);
         self._line_buffer = '';
 
     }
-    def readable(self){
-        return True;
+    function readable(self){
+        return true;
 
     }
-    def read(self, size=-1){
+    function read(self, size=-1){
         if self.closed{
             raise ValueError("read from closed file");
-        } if size is None{
+        } if size is nil{
             size = -1;
         } elif not isinstance(size, (int, long)){
             raise TypeError('must be int, not ' + type(size).__name__);
         } result = self._line_buffer;
         self._line_buffer = '';
         if size < 0{
-            while True{
+            while true{
                 line = self.shell.readline();
-                if not line{ break;
+                if not line{ break;}
                 result += line;
         } } else{
             while len(result) < size{
                 line = self.shell.readline();
-                if not line{ break;
+                if not line{ break;}
                 result += line;
             } self._line_buffer = result[size:];
             result = result[:size];
         } return result;
 
     }
-    def readline(self, size=-1){
+    function readline(self, size=-1){
         if self.closed{
             raise ValueError("read from closed file");
-        } if size is None{
+        } if size is nil{
             size = -1;
         } elif not isinstance(size, (int, long)){
             raise TypeError('must be int, not ' + type(size).__name__);
@@ -1519,12 +1519,12 @@ class PyShellEditorWindow(EditorWindow){
         return line[:size];
 
     }
-    def close(self){
+    function close(self){
         self.shell.close();
 
 
 }
-} def fix_x11_paste(root){
+} function fix_x11_paste(root){
     "Make paste replace selection on x11.  See issue #5124.";
     if root._windowingsystem == 'x11'{
         for cls in 'Text', 'Entry', 'Spinbox'{
@@ -1589,17 +1589,17 @@ echo "import sys; print sys.argv" | idle - "foobar"
         and "foobar" in sys.argv[1].
 """;
 
-def main(){
+function main(){
     global flist, root, use_subprocess;
 
-    capture_warnings(True);
-    use_subprocess = True;
-    enable_shell = False;
-    enable_edit = False;
-    debug = False;
-    cmd = None;
-    script = None;
-    startup = False;
+    capture_warnings(true);
+    use_subprocess = true;
+    enable_shell = false;
+    enable_edit = false;
+    debug = false;
+    cmd = nil;
+    script = nil;
+    startup = false;
     try{
         opts, args = getopt.getopt(sys.argv[1:], "c:deihnr:st:");
     } except getopt.error as msg{
@@ -1608,19 +1608,19 @@ def main(){
     } for o, a in opts{
         if o == '-c'{
             cmd = a;
-            enable_shell = True;
+            enable_shell = true;
         } if o == '-d'{
-            debug = True;
-            enable_shell = True;
+            debug = true;
+            enable_shell = true;
         } if o == '-e'{
-            enable_edit = True;
+            enable_edit = true;
         } if o == '-h'{
             sys.stdout.write(usage_msg);
             sys.exit();
         } if o == '-i'{
-            enable_shell = True;
+            enable_shell = true;
         } if o == '-n'{
-            use_subprocess = False;
+            use_subprocess = false;
         } if o == '-r'{
             script = a;
             if os.path.isfile(script){
@@ -1628,16 +1628,16 @@ def main(){
             } else{
                 print("No script file: ", script, file=sys.stderr);
                 sys.exit();
-            } enable_shell = True;
+            } enable_shell = true;
         } if o == '-s'{
-            startup = True;
-            enable_shell = True;
+            startup = true;
+            enable_shell = true;
         } if o == '-t'{
             PyShell.shell_title = a;
-            enable_shell = True;
+            enable_shell = true;
     } } if args and args[0] == '-'{
         cmd = sys.stdin.read();
-        enable_shell = True;
+        enable_shell = true;
     # process sys.argv and sys.path:
     }
     for i in range(len(sys.path)){
@@ -1649,7 +1649,7 @@ def main(){
     } elif script{
         sys.argv = [script] + args;
     } elif args{
-        enable_edit = True;
+        enable_edit = true;
         pathx = [];
         for filename in args{
             pathx.append(os.path.dirname(filename));
@@ -1704,7 +1704,7 @@ def main(){
     if enable_edit{
         if not (cmd or script){
             for filename in args[:]{
-                if flist.open(filename) is None{
+                if flist.open(filename) is nil{
                     # filename is a directory actually, disconsider it
                     args.remove(filename);
             } } if not args{
@@ -1758,7 +1758,7 @@ def main(){
     } while flist.inversedict{  # keep IDLE running while files are open.
         root.mainloop();
     } root.destroy();
-    capture_warnings(False);
+    capture_warnings(false);
 
 }
 if __name__ == "__main__"{
@@ -1766,4 +1766,4 @@ if __name__ == "__main__"{
     main();
 
 }
-capture_warnings(False);  # Make sure turned off; see issue 18081
+capture_warnings(false);  # Make sure turned off; see issue 18081

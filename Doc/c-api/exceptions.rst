@@ -159,7 +159,7 @@ is a separate error indicator for each thread.
 
 .. c:function:: void PyErr_SetNone(PyObject *type)
 
-   This is a shorthand for ``PyErr_SetObject(type, Py_None)``.
+   This is a shorthand for ``PyErr_SetObject(type, Py_Nil)``.
 
 
 .. c:function:: int PyErr_BadArgument()

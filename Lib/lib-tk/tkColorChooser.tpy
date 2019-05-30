@@ -30,22 +30,22 @@ class Chooser(Dialog){
 
     command = "tk_chooseColor";
 
-    def _fixoptions(self){
+    function _fixoptions(){
         try{
             # make sure initialcolor is a tk color string
-            color = self.options["initialcolor"];
+            color = this.options["initialcolor"];
             if isinstance(color, tuple){
                 # assume an RGB triplet
-                self.options["initialcolor"] = "#%02x%02x%02x" % color;
+                this.options["initialcolor"] = "#%02x%02x%02x" % color;
         } } except KeyError{
             pass;
 
     }
-    } def _fixresult(self, widget, result){
+    } function _fixresult( widget, result){
         # result can be somethings: an empty tuple, an empty string or
         # a Tcl_Obj, so this somewhat weird check handles that
         if not result or not str(result){
-            return None, None; # canceled
+            return nil, nil; # canceled
 
         # to simplify application code, the color chooser returns
         # an RGB tuple together with the Tk color string
@@ -58,7 +58,7 @@ class Chooser(Dialog){
 # convenience stuff
 
 }
-} def askcolor(color = None, **options){
+} function askcolor(color = nil, **options){
     "Ask for a color";
 
     if color{

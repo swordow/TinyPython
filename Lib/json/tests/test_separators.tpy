@@ -3,9 +3,9 @@ from json.tests import PyTest, CTest;
 
 
 class TestSeparators(object){
-    def test_separators(self){
+    function test_separators(){
         h = [['blorpie'], ['whoops'], [], 'd-shtaeou', 'd-nthiouh', 'i-vhbjkhnth',
-             {'nifty': 87}, {'field': 'yes', 'morefield': False} ];
+             {'nifty': 87}, {'field': 'yes', 'morefield': false} ];
 
         expect = textwrap.dedent("""\
         [
@@ -29,17 +29,17 @@ class TestSeparators(object){
         ]""");
 
 
-        d1 = self.dumps(h);
-        d2 = self.dumps(h, indent=2, sort_keys=True, separators=(' ,', ' : '));
+        d1 = this.dumps(h);
+        d2 = this.dumps(h, indent=2, sort_keys=true, separators=(' ,', ' : '));
 
-        h1 = self.loads(d1);
-        h2 = self.loads(d2);
+        h1 = this.loads(d1);
+        h2 = this.loads(d2);
 
-        self.assertEqual(h1, h);
-        self.assertEqual(h2, h);
-        self.assertEqual(d2, expect);
+        this.assertEqual(h1, h);
+        this.assertEqual(h2, h);
+        this.assertEqual(d2, expect);
 
 
 }
-} class TestPySeparators(TestSeparators, PyTest){ pass;
-class TestCSeparators(TestSeparators, CTest){ pass;
+} class TestPySeparators(TestSeparators, PyTest){ pass;}
+class TestCSeparators(TestSeparators, CTest){ pass;}

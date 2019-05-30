@@ -1,6 +1,6 @@
 # Generated from 'Sound.h'
 
-def FOUR_CHAR_CODE(x){ return x;
+function FOUR_CHAR_CODE(x){ return x;}
 soundListRsrc = FOUR_CHAR_CODE('snd ');
 kSimpleBeepID = 1;
 # rate48khz = (long)0xBB800000

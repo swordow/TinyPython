@@ -54,8 +54,8 @@ from Window_classes import *;
 from Type_Definitions import *;
 from Enumerations import *;
 
-def getbaseclasses(v){
-    if not getattr(v, '_propdict', None){
+function getbaseclasses(v){
+    if not getattr(v, '_propdict', nil){
         v._propdict = {};
         v._elemdict = {};
         for superclassname in getattr(v, '_superclassnames', []){

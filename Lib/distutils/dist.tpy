@@ -12,7 +12,7 @@ from email import message_from_file;
 try{
     import warnings;
 } except ImportError{
-    warnings = None;
+    warnings = nil;
 
 }
 from distutils.errors import (DistutilsOptionError, DistutilsArgError,
@@ -59,7 +59,7 @@ class Distribution{
                       ('quiet', 'q', "run quietly (turns verbosity off)"),
                       ('dry-run', 'n', "don't actually do anything"),
                       ('help', 'h', "show detailed help message"),
-                      ('no-user-cfg', None,
+                      ('no-user-cfg', nil,
                        'ignore pydistutils.cfg in your home directory'),
     ];
 
@@ -74,47 +74,47 @@ Common commands: (see '--help-commands' for more)
 
     # options that are not propagated to the commands
     display_options = [
-        ('help-commands', None,
+        ('help-commands', nil,
          "list all available commands"),
-        ('name', None,
+        ('name', nil,
          "print package name"),
         ('version', 'V',
          "print package version"),
-        ('fullname', None,
+        ('fullname', nil,
          "print <package name>-<version>"),
-        ('author', None,
+        ('author', nil,
          "print the author's name"),
-        ('author-email', None,
+        ('author-email', nil,
          "print the author's email address"),
-        ('maintainer', None,
+        ('maintainer', nil,
          "print the maintainer's name"),
-        ('maintainer-email', None,
+        ('maintainer-email', nil,
          "print the maintainer's email address"),
-        ('contact', None,
+        ('contact', nil,
          "print the maintainer's name if known, else the author's"),
-        ('contact-email', None,
+        ('contact-email', nil,
          "print the maintainer's email address if known, else the author's"),
-        ('url', None,
+        ('url', nil,
          "print the URL for this package"),
-        ('license', None,
+        ('license', nil,
          "print the license of the package"),
-        ('licence', None,
+        ('licence', nil,
          "alias for --license"),
-        ('description', None,
+        ('description', nil,
          "print the package description"),
-        ('long-description', None,
+        ('long-description', nil,
          "print the long package description"),
-        ('platforms', None,
+        ('platforms', nil,
          "print the list of platforms"),
-        ('classifiers', None,
+        ('classifiers', nil,
          "print the list of classifiers"),
-        ('keywords', None,
+        ('keywords', nil,
          "print the list of keywords"),
-        ('provides', None,
+        ('provides', nil,
          "print the list of packages/modules provided"),
-        ('requires', None,
+        ('requires', nil,
          "print the list of packages/modules required"),
-        ('obsoletes', None,
+        ('obsoletes', nil,
          "print the list of packages/modules made obsolete")
         ];
     display_option_names = map(lambda x{ translate_longopt(x[0])},
@@ -126,7 +126,7 @@ Common commands: (see '--help-commands' for more)
 
     # -- Creation/initialization methods -------------------------------
 
-    def __init__ (self, attrs=None){
+    function __init__ ( attrs=nil){
         """Construct a new Distribution instance: initialize all the
         attributes of a Distribution, and then use 'attrs' (a dictionary
         mapping attribute names to values) to assign some of those
@@ -138,11 +138,11 @@ Common commands: (see '--help-commands' for more)
         """;
 
         # Default values for our command-line options
-        self.verbose = 1;
-        self.dry_run = 0;
-        self.help = 0;
-        for attr in self.display_option_names{
-            setattr(self, attr, 0);
+        this.verbose = 1;
+        this.dry_run = 0;
+        this.help = 0;
+        for attr in this.display_option_names{
+            setattr(this, attr, 0);
 
         # Store the distribution meta-data (name, version, author, and so
         # forth) in a separate object -- we're getting to have enough
@@ -150,17 +150,17 @@ Common commands: (see '--help-commands' for more)
         # worth it.  Also delegate 'get_XXX()' methods to the 'metadata'
         # object in a sneaky and underhanded (but efficient!) way.
         }
-        self.metadata = DistributionMetadata();
-        for basename in self.metadata._METHOD_BASENAMES{
+        this.metadata = DistributionMetadata();
+        for basename in this.metadata._METHOD_BASENAMES{
             method_name = "get_" + basename;
-            setattr(self, method_name, getattr(self.metadata, method_name));
+            setattr(this, method_name, getattr(this.metadata, method_name));
 
         # 'cmdclass' maps command names to class objects, so we
         # can 1) quickly figure out which class to instantiate when
         # we need to create a new command object, and 2) have a way
         # for the setup script to override command classes
         }
-        self.cmdclass = {};
+        this.cmdclass = {};
 
         # 'command_packages' is a list of packages in which commands
         # are searched for.  The factory for command 'foo' is expected
@@ -168,20 +168,20 @@ Common commands: (see '--help-commands' for more)
         # named here.  This list is searched from the left; an error
         # is raised if no named package provides the command being
         # searched for.  (Always access using get_command_packages().)
-        self.command_packages = None;
+        this.command_packages = nil;
 
         # 'script_name' and 'script_args' are usually set to sys.argv[0]
         # and sys.argv[1:], but they can be overridden when the caller is
         # not necessarily a setup script run from the command-line.
-        self.script_name = None;
-        self.script_args = None;
+        this.script_name = nil;
+        this.script_args = nil;
 
         # 'command_options' is where we store command options between
         # parsing them (from config files, the command-line, etc.) and when
         # they are actually needed -- ie. when the command in question is
         # instantiated.  It is a dictionary of dictionaries of 2-tuples:
         #   command_options = { command_name : { option : (source, value) } }
-        self.command_options = {};
+        this.command_options = {};
 
         # 'dist_files' is the list of (command, pyversion, file) that
         # have been created by any dist commands run so far. This is
@@ -192,30 +192,30 @@ Common commands: (see '--help-commands' for more)
         # file. pyversion should not be used to specify minimum or
         # maximum required Python versions; use the metainfo for that
         # instead.
-        self.dist_files = [];
+        this.dist_files = [];
 
         # These options are really the business of various commands, rather
         # than of the Distribution itself.  We provide aliases for them in
         # Distribution as a convenience to the developer.
-        self.packages = None;
-        self.package_data = {};
-        self.package_dir = None;
-        self.py_modules = None;
-        self.libraries = None;
-        self.headers = None;
-        self.ext_modules = None;
-        self.ext_package = None;
-        self.include_dirs = None;
-        self.extra_path = None;
-        self.scripts = None;
-        self.data_files = None;
-        self.password = '';
+        this.packages = nil;
+        this.package_data = {};
+        this.package_dir = nil;
+        this.py_modules = nil;
+        this.libraries = nil;
+        this.headers = nil;
+        this.ext_modules = nil;
+        this.ext_package = nil;
+        this.include_dirs = nil;
+        this.extra_path = nil;
+        this.scripts = nil;
+        this.data_files = nil;
+        this.password = '';
 
         # And now initialize bookkeeping stuff that can't be supplied by
         # the caller at all.  'command_obj' maps command names to
         # Command instances -- that's how we enforce that every command
         # class is a singleton.
-        self.command_obj = {};
+        this.command_obj = {};
 
         # 'have_run' maps command names to boolean values; it keeps track
         # of whether we have actually run a particular command, to make it
@@ -227,7 +227,7 @@ Common commands: (see '--help-commands' for more)
         # command object is created, and replaced with a true value when
         # the command is successfully run.  Thus it's probably best to use
         # '.get()' rather than a straight lookup.
-        self.have_run = {};
+        this.have_run = {};
 
         # Now we'll use the attrs dictionary (ultimately, keyword args from
         # the setup script) to possibly override any or all of these
@@ -239,10 +239,10 @@ Common commands: (see '--help-commands' for more)
             # command options will override any supplied redundantly
             # through the general options dictionary.
             options = attrs.get('options');
-            if options is not None{
+            if options is not nil{
                 del attrs['options'];
                 for (command, cmd_options) in options.items(){
-                    opt_dict = self.get_option_dict(command);
+                    opt_dict = this.get_option_dict(command);
                     for (opt, val) in cmd_options.items(){
                         opt_dict[opt] = ("setup script", val);
 
@@ -251,7 +251,7 @@ Common commands: (see '--help-commands' for more)
                 attrs['license'] = attrs['licence'];
                 del attrs['licence'];
                 msg = "'licence' distribution option is deprecated; use 'license'";
-                if warnings is not None{
+                if warnings is not nil{
                     warnings.warn(msg);
                 } else{
                     sys.stderr.write(msg + "\n");
@@ -260,15 +260,15 @@ Common commands: (see '--help-commands' for more)
             # not already defined is invalid!
             }
             } for (key, val) in attrs.items(){
-                if hasattr(self.metadata, "set_" + key){
-                    getattr(self.metadata, "set_" + key)(val);
-                } elif hasattr(self.metadata, key){
-                    setattr(self.metadata, key, val);
-                } elif hasattr(self, key){
-                    setattr(self, key, val);
+                if hasattr(this.metadata, "set_" + key){
+                    getattr(this.metadata, "set_" + key)(val);
+                } elif hasattr(this.metadata, key){
+                    setattr(this.metadata, key, val);
+                } elif hasattr(this, key){
+                    setattr(this, key, val);
                 } else{
                     msg = "Unknown distribution option: %s" % repr(key);
-                    if warnings is not None{
+                    if warnings is not nil{
                         warnings.warn(msg);
                     } else{
                         sys.stderr.write(msg + "\n");
@@ -280,66 +280,66 @@ Common commands: (see '--help-commands' for more)
         #
         # This also make sure we just look at the global options
         }
-        } } } self.want_user_cfg = True;
+        } } } this.want_user_cfg = true;
 
-        if self.script_args is not None{
-            for arg in self.script_args{
+        if this.script_args is not nil{
+            for arg in this.script_args{
                 if not arg.startswith('-'){
                     break;
                 } if arg == '--no-user-cfg'{
-                    self.want_user_cfg = False;
+                    this.want_user_cfg = false;
                     break;
 
         }
-        } } self.finalize_options();
+        } } this.finalize_options();
 
     }
-    def get_option_dict(self, command){
+    function get_option_dict( command){
         """Get the option dictionary for a given command.  If that
         command's option dictionary hasn't been created yet, then create it
         and return the new dictionary; otherwise, return the existing
         option dictionary.
         """;
-        dict = self.command_options.get(command);
-        if dict is None{
-            dict = self.command_options[command] = {};
+        dict = this.command_options.get(command);
+        if dict is nil{
+            dict = this.command_options[command] = {};
         } return dict;
 
     }
-    def dump_option_dicts(self, header=None, commands=None, indent=""){
+    function dump_option_dicts( header=nil, commands=nil, indent=""){
         from pprint import pformat;
 
-        if commands is None{             # dump all command option dicts
-            commands = self.command_options.keys();
+        if commands is nil{             # dump all command option dicts
+            commands = this.command_options.keys();
             commands.sort();
 
         }
-        if header is not None{
-            self.announce(indent + header);
+        if header is not nil{
+            this.announce(indent + header);
             indent = indent + "  ";
 
         }
         if not commands{
-            self.announce(indent + "no commands known yet");
+            this.announce(indent + "no commands known yet");
             return;
 
         }
         for cmd_name in commands{
-            opt_dict = self.command_options.get(cmd_name);
-            if opt_dict is None{
-                self.announce(indent +
+            opt_dict = this.command_options.get(cmd_name);
+            if opt_dict is nil{
+                this.announce(indent +
                               "no option dict for '%s' command" % cmd_name);
             } else{
-                self.announce(indent +
+                this.announce(indent +
                               "option dict for '%s' command:" % cmd_name);
                 out = pformat(opt_dict);
                 for line in out.split('\n'){
-                    self.announce(indent + "  " + line);
+                    this.announce(indent + "  " + line);
 
     # -- Config file finding/parsing methods ---------------------------
 
     }
-    } } } def find_config_files(self){
+    } } } function find_config_files(){
         """Find as many configuration files as should be processed for this
         platform, and return a list of filenames in the order in which they
         should be parsed.  The filenames returned are guaranteed to exist
@@ -374,7 +374,7 @@ Common commands: (see '--help-commands' for more)
 
         # And look for the user config file
         }
-        if self.want_user_cfg{
+        if this.want_user_cfg{
             user_file = os.path.join(os.path.expanduser('~'), user_filename);
             if os.path.isfile(user_file){
                 files.append(user_file);
@@ -387,31 +387,31 @@ Common commands: (see '--help-commands' for more)
 
         }
         if DEBUG{
-            self.announce("using config files: %s" % ', '.join(files));
+            this.announce("using config files: %s" % ', '.join(files));
 
         }
         return files;
 
     }
-    def parse_config_files(self, filenames=None){
+    function parse_config_files( filenames=nil){
         from ConfigParser import ConfigParser;
 
-        if filenames is None{
-            filenames = self.find_config_files();
+        if filenames is nil{
+            filenames = this.find_config_files();
 
         }
         if DEBUG{
-            self.announce("Distribution.parse_config_files():");
+            this.announce("Distribution.parse_config_files():");
 
         }
         parser = ConfigParser();
         for filename in filenames{
             if DEBUG{
-                self.announce("  reading %s" % filename);
+                this.announce("  reading %s" % filename);
             } parser.read(filename);
             for section in parser.sections(){
                 options = parser.options(section);
-                opt_dict = self.get_option_dict(section);
+                opt_dict = this.get_option_dict(section);
 
                 for opt in options{
                     if opt != '__name__'{
@@ -428,23 +428,23 @@ Common commands: (see '--help-commands' for more)
         # to set Distribution options.
 
         }
-        if 'global' in self.command_options{
-            for (opt, (src, val)) in self.command_options['global'].items(){
-                alias = self.negative_opt.get(opt);
+        if 'global' in this.command_options{
+            for (opt, (src, val)) in this.command_options['global'].items(){
+                alias = this.negative_opt.get(opt);
                 try{
                     if alias{
-                        setattr(self, alias, not strtobool(val));
+                        setattr(this, alias, not strtobool(val));
                     } elif opt in ('verbose', 'dry_run'){ # ugh!
-                        setattr(self, opt, strtobool(val));
+                        setattr(this, opt, strtobool(val));
                     } else{
-                        setattr(self, opt, val);
+                        setattr(this, opt, val);
                 } } except ValueError, msg{
                     raise DistutilsOptionError, msg;
 
     # -- Command-line parsing methods ----------------------------------
 
     }
-    } } } def parse_command_line(self){
+    } } } function parse_command_line(){
         """Parse the setup script's command line, taken from the
         'script_args' instance attribute (which defaults to 'sys.argv[1:]'
         -- see 'setup()' in core.py).  This list is first processed for
@@ -467,7 +467,7 @@ Common commands: (see '--help-commands' for more)
         # We now have enough information to show the Macintosh dialog
         # that allows the user to interactively specify the "command line".
         #
-        toplevel_options = self._get_toplevel_options();
+        toplevel_options = this._get_toplevel_options();
 
         # We have to parse the command line a bit at a time -- global
         # options, then the first command, then its options, and so on --
@@ -476,20 +476,20 @@ Common commands: (see '--help-commands' for more)
         # until we have loaded the command class, which doesn't happen
         # until we know what the command is.
 
-        self.commands = [];
-        parser = FancyGetopt(toplevel_options + self.display_options);
-        parser.set_negative_aliases(self.negative_opt);
+        this.commands = [];
+        parser = FancyGetopt(toplevel_options + this.display_options);
+        parser.set_negative_aliases(this.negative_opt);
         parser.set_aliases({'licence': 'license'});
-        args = parser.getopt(args=self.script_args, object=self);
+        args = parser.getopt(args=this.script_args, object=this);
         option_order = parser.get_option_order();
-        log.set_verbosity(self.verbose);
+        log.set_verbosity(this.verbose);
 
         # for display options we return immediately
-        if self.handle_display_options(option_order){
+        if this.handle_display_options(option_order){
             return;
         } while args{
-            args = self._parse_command_opts(parser, args);
-            if args is None{            # user asked for help (and got it)
+            args = this._parse_command_opts(parser, args);
+            if args is nil{            # user asked for help (and got it)
                 return;
 
         # Handle the cases of --help as a "global" option, ie.
@@ -499,15 +499,15 @@ Common commands: (see '--help-commands' for more)
         # latter, we omit the display-only options and show help for
         # each command listed on the command line.
         }
-        } if self.help{
-            self._show_help(parser,
-                            display_options=len(self.commands) == 0,
-                            commands=self.commands);
+        } if this.help{
+            this._show_help(parser,
+                            display_options=len(this.commands) == 0,
+                            commands=this.commands);
             return;
 
         # Oops, no commands found -- an end-user error
         }
-        if not self.commands{
+        if not this.commands{
             raise DistutilsArgError, "no commands supplied";
 
         # All is well: return true
@@ -515,19 +515,19 @@ Common commands: (see '--help-commands' for more)
         return 1;
 
     }
-    def _get_toplevel_options(self){
+    function _get_toplevel_options(){
         """Return the non-display options recognized at the top level.
 
         This includes options that are recognized *only* at the top
         level as well as options recognized for commands.
         """;
-        return self.global_options + [
-            ("command-packages=", None,
+        return this.global_options + [
+            ("command-packages=", nil,
              "list of packages that provide distutils commands"),
             ];
 
     }
-    def _parse_command_opts(self, parser, args){
+    function _parse_command_opts( parser, args){
         """Parse the command-line options for a single command.
         'parser' must be a FancyGetopt instance; 'args' must be the list
         of arguments, starting with the current command (whose options
@@ -543,13 +543,13 @@ Common commands: (see '--help-commands' for more)
         command = args[0];
         if not command_re.match(command){
             raise SystemExit, "invalid command name '%s'" % command;
-        } self.commands.append(command);
+        } this.commands.append(command);
 
         # Dig up the command class that implements this command, so we
         # 1) know that it's a valid command, and 2) know which options
         # it takes.
         try{
-            cmd_class = self.get_command_class(command);
+            cmd_class = this.get_command_class(command);
         } except DistutilsModuleError, msg{
             raise DistutilsArgError, msg;
 
@@ -573,7 +573,7 @@ Common commands: (see '--help-commands' for more)
         # If the command class has a list of negative alias options,
         # merge it in with the global negative aliases.
         }
-        negative_opt = self.negative_opt;
+        negative_opt = this.negative_opt;
         if hasattr(cmd_class, 'negative_opt'){
             negative_opt = negative_opt.copy();
             negative_opt.update(cmd_class.negative_opt);
@@ -591,13 +591,13 @@ Common commands: (see '--help-commands' for more)
         # All commands support the global options too, just by adding
         # in 'global_options'.
         }
-        parser.set_option_table(self.global_options +
+        parser.set_option_table(this.global_options +
                                 cmd_class.user_options +
                                 help_options);
         parser.set_negative_aliases(negative_opt);
         (args, opts) = parser.getopt(args[1:]);
         if hasattr(opts, 'help') and opts.help{
-            self._show_help(parser, display_options=0, commands=[cmd_class]);
+            this._show_help(parser, display_options=0, commands=[cmd_class]);
             return;
 
         }
@@ -622,7 +622,7 @@ Common commands: (see '--help-commands' for more)
         # Put the options from the command-line into their official
         # holding pen, the 'command_options' dictionary.
         }
-        } opt_dict = self.get_option_dict(command);
+        } opt_dict = this.get_option_dict(command);
         for (name, value) in vars(opts).items(){
             opt_dict[name] = ("command line", value);
 
@@ -630,21 +630,21 @@ Common commands: (see '--help-commands' for more)
         return args;
 
     }
-    def finalize_options(self){
+    function finalize_options(){
         """Set final values for all the options on the Distribution
         instance, analogous to the .finalize_options() method of Command
         objects.
         """;
         for attr in ('keywords', 'platforms'){
-            value = getattr(self.metadata, attr);
-            if value is None{
+            value = getattr(this.metadata, attr);
+            if value is nil{
                 continue;
             } if isinstance(value, str){
                 value = [elm.strip() for elm in value.split(',')];
-                setattr(self.metadata, attr, value);
+                setattr(this.metadata, attr, value);
 
     }
-    } } def _show_help(self, parser, global_options=1, display_options=1,
+    } } function _show_help( parser, global_options=1, display_options=1,
                    commands=[]){
         """Show help for the setup script command-line in the form of
         several lists of command-line options.  'parser' should be a
@@ -664,27 +664,27 @@ Common commands: (see '--help-commands' for more)
 
         if global_options{
             if display_options{
-                options = self._get_toplevel_options();
+                options = this._get_toplevel_options();
             } else{
-                options = self.global_options;
+                options = this.global_options;
             } parser.set_option_table(options);
-            parser.print_help(self.common_usage + "\nGlobal options:");
+            parser.print_help(this.common_usage + "\nGlobal options:");
             print('');
 
         }
         if display_options{
-            parser.set_option_table(self.display_options);
+            parser.set_option_table(this.display_options);
             parser.print_help(
                 "Information display options (just display " +
                 "information, ignore any commands)");
             print('');
 
         }
-        for command in self.commands{
+        for command in this.commands{
             if isinstance(command, type) and issubclass(command, Command){
                 klass = command;
             } else{
-                klass = self.get_command_class(command);
+                klass = this.get_command_class(command);
             } if (hasattr(klass, 'help_options') and
                 isinstance(klass.help_options, list)){
                 parser.set_option_table(klass.user_options +
@@ -695,10 +695,10 @@ Common commands: (see '--help-commands' for more)
             print('');
 
         }
-        print(gen_usage(self.script_name));
+        print(gen_usage(this.script_name));
 
     }
-    def handle_display_options(self, option_order){
+    function handle_display_options( option_order){
         """If there were any non-global "display-only" options
         (--help-commands or the metadata display options) on the command
         line, display the requested info and return true; else return
@@ -709,10 +709,10 @@ Common commands: (see '--help-commands' for more)
         # User just wants a list of commands -- we'll print it out and stop
         # processing now (ie. if they ran "setup --help-commands foo bar",
         # we ignore "foo bar").
-        if self.help_commands{
-            self.print_commands();
+        if this.help_commands{
+            this.print_commands();
             print('');
-            print(gen_usage(self.script_name));
+            print(gen_usage(this.script_name));
             return 1;
 
         # If user supplied any of the "display metadata" options, then
@@ -721,14 +721,14 @@ Common commands: (see '--help-commands' for more)
         }
         any_display_options = 0;
         is_display_option = {};
-        for option in self.display_options{
+        for option in this.display_options{
             is_display_option[option[0]] = 1;
 
         }
         for (opt, val) in option_order{
             if val and is_display_option.get(opt){
                 opt = translate_longopt(opt);
-                value = getattr(self.metadata, "get_"+opt)();
+                value = getattr(this.metadata, "get_"+opt)();
                 if opt in ['keywords', 'platforms']{
                     print(','.join(value));
                 } elif opt in ('classifiers', 'provides', 'requires',
@@ -742,16 +742,16 @@ Common commands: (see '--help-commands' for more)
         } return any_display_options;
 
     }
-    def print_command_list(self, commands, header, max_length){
+    function print_command_list( commands, header, max_length){
         """Print a subset of the list of all commands -- used by
         'print_commands()'.
         """;
         print(header + ":");
 
         for cmd in commands{
-            klass = self.cmdclass.get(cmd);
+            klass = this.cmdclass.get(cmd);
             if not klass{
-                klass = self.get_command_class(cmd);
+                klass = this.get_command_class(cmd);
             } try{
                 description = klass.description;
             } except AttributeError{
@@ -761,7 +761,7 @@ Common commands: (see '--help-commands' for more)
             print("  %-*s  %s" % (max_length, cmd, description));
 
     }
-    } def print_commands(self){
+    } function print_commands(){
         """Print out a help message listing all available commands with a
         description of each.  The list is divided into "standard commands"
         (listed in distutils.command.__all__) and "extra commands"
@@ -777,7 +777,7 @@ Common commands: (see '--help-commands' for more)
 
         }
         extra_commands = [];
-        for cmd in self.cmdclass.keys(){
+        for cmd in this.cmdclass.keys(){
             if not is_std.get(cmd){
                 extra_commands.append(cmd);
 
@@ -788,17 +788,17 @@ Common commands: (see '--help-commands' for more)
                 max_length = len(cmd);
 
         }
-        } self.print_command_list(std_commands,
+        } this.print_command_list(std_commands,
                                 "Standard commands",
                                 max_length);
         if extra_commands{
             print;
-            self.print_command_list(extra_commands,
+            this.print_command_list(extra_commands,
                                     "Extra commands",
                                     max_length);
 
     }
-    } def get_command_list(self){
+    } function get_command_list(){
         """Get a list of (command, description) tuples.
         The list is divided into "standard commands" (listed in
         distutils.command.__all__) and "extra commands" (mentioned in
@@ -816,16 +816,16 @@ Common commands: (see '--help-commands' for more)
 
         }
         extra_commands = [];
-        for cmd in self.cmdclass.keys(){
+        for cmd in this.cmdclass.keys(){
             if not is_std.get(cmd){
                 extra_commands.append(cmd);
 
         }
         } rv = [];
         for cmd in (std_commands + extra_commands){
-            klass = self.cmdclass.get(cmd);
+            klass = this.cmdclass.get(cmd);
             if not klass{
-                klass = self.get_command_class(cmd);
+                klass = this.get_command_class(cmd);
             } try{
                 description = klass.description;
             } except AttributeError{
@@ -836,20 +836,20 @@ Common commands: (see '--help-commands' for more)
     # -- Command class/object methods ----------------------------------
 
     }
-    def get_command_packages(self){
+    function get_command_packages(){
         """Return a list of packages from which commands are loaded.""";
-        pkgs = self.command_packages;
+        pkgs = this.command_packages;
         if not isinstance(pkgs, list){
-            if pkgs is None{
+            if pkgs is nil{
                 pkgs = '';
             } pkgs = [pkg.strip() for pkg in pkgs.split(',') if pkg != ''];
             if "distutils.command" not in pkgs{
                 pkgs.insert(0, "distutils.command");
-            } self.command_packages = pkgs;
+            } this.command_packages = pkgs;
         } return pkgs;
 
     }
-    def get_command_class(self, command){
+    function get_command_class( command){
         """Return the class that implements the Distutils command named by
         'command'.  First we check the 'cmdclass' dictionary; if the
         command is mentioned there, we fetch the class object from the
@@ -861,12 +861,12 @@ Common commands: (see '--help-commands' for more)
         Raises DistutilsModuleError if the expected module could not be
         found, or if that module does not define the expected class.
         """;
-        klass = self.cmdclass.get(command);
+        klass = this.cmdclass.get(command);
         if klass{
             return klass;
 
         }
-        for pkgname in self.get_command_packages(){
+        for pkgname in this.get_command_packages(){
             module_name = "%s.%s" % (pkgname, command);
             klass_name = command;
 
@@ -885,7 +885,7 @@ Common commands: (see '--help-commands' for more)
                       % (command, klass_name, module_name);
 
             }
-            self.cmdclass[command] = klass;
+            this.cmdclass[command] = klass;
             return klass;
 
         }
@@ -893,37 +893,37 @@ Common commands: (see '--help-commands' for more)
 
 
     }
-    def get_command_obj(self, command, create=1){
+    function get_command_obj( command, create=1){
         """Return the command object for 'command'.  Normally this object
         is cached on a previous call to 'get_command_obj()'; if no command
         object for 'command' is in the cache, then we either create and
         return it (if 'create' is true) or return None.
         """;
-        cmd_obj = self.command_obj.get(command);
+        cmd_obj = this.command_obj.get(command);
         if not cmd_obj and create{
             if DEBUG{
-                self.announce("Distribution.get_command_obj(): " \
+                this.announce("Distribution.get_command_obj(): " \
                               "creating '%s' command object" % command);
 
             }
-            klass = self.get_command_class(command);
-            cmd_obj = self.command_obj[command] = klass(self);
-            self.have_run[command] = 0;
+            klass = this.get_command_class(command);
+            cmd_obj = this.command_obj[command] = klass(this);
+            this.have_run[command] = 0;
 
             # Set any options that were supplied in config files
             # or on the command line.  (NB. support for error
             # reporting is lame here: any errors aren't reported
             # until 'finalize_options()' is called, which means
             # we won't report the source of the error.)
-            options = self.command_options.get(command);
+            options = this.command_options.get(command);
             if options{
-                self._set_command_options(cmd_obj, options);
+                this._set_command_options(cmd_obj, options);
 
         }
         } return cmd_obj;
 
     }
-    def _set_command_options(self, command_obj, option_dict=None){
+    function _set_command_options( command_obj, option_dict=nil){
         """Set the options for 'command_obj' from 'option_dict'.  Basically
         this means copying elements of a dictionary ('option_dict') to
         attributes of an instance ('command').
@@ -933,15 +933,15 @@ Common commands: (see '--help-commands' for more)
         (from 'self.command_options').
         """;
         command_name = command_obj.get_command_name();
-        if option_dict is None{
-            option_dict = self.get_option_dict(command_name);
+        if option_dict is nil{
+            option_dict = this.get_option_dict(command_name);
 
         }
         if DEBUG{
-            self.announce("  setting options for '%s' command:" % command_name);
+            this.announce("  setting options for '%s' command:" % command_name);
         } for (option, (source, value)) in option_dict.items(){
             if DEBUG{
-                self.announce("    %s = %s (from %s)" % (option, value,
+                this.announce("    %s = %s (from %s)" % (option, value,
                                                          source));
             } try{
                 bool_opts = map(translate_longopt, command_obj.boolean_options);
@@ -969,7 +969,7 @@ Common commands: (see '--help-commands' for more)
                 raise DistutilsOptionError, msg;
 
     }
-    } } def reinitialize_command(self, command, reinit_subcommands=0){
+    } } function reinitialize_command( command, reinit_subcommands=0){
         """Reinitializes a command to the state it was in when first
         returned by 'get_command_obj()': ie., initialized but not yet
         finalized.  This provides the opportunity to sneak option
@@ -991,7 +991,7 @@ Common commands: (see '--help-commands' for more)
         from distutils.cmd import Command;
         if not isinstance(command, Command){
             command_name = command;
-            command = self.get_command_obj(command_name);
+            command = this.get_command_obj(command_name);
         } else{
             command_name = command.get_command_name();
 
@@ -1000,12 +1000,12 @@ Common commands: (see '--help-commands' for more)
             return command;
         } command.initialize_options();
         command.finalized = 0;
-        self.have_run[command_name] = 0;
-        self._set_command_options(command);
+        this.have_run[command_name] = 0;
+        this._set_command_options(command);
 
         if reinit_subcommands{
             for sub in command.get_sub_commands(){
-                self.reinitialize_command(sub, reinit_subcommands);
+                this.reinitialize_command(sub, reinit_subcommands);
 
         }
         } return command;
@@ -1013,22 +1013,22 @@ Common commands: (see '--help-commands' for more)
     # -- Methods that operate on the Distribution ----------------------
 
     }
-    def announce(self, msg, level=log.INFO){
+    function announce( msg, level=log.INFO){
         log.log(level, msg);
 
     }
-    def run_commands(self){
+    function run_commands(){
         """Run each command that was seen on the setup script command line.
         Uses the list of commands found and cache of command objects
         created by 'get_command_obj()'.
         """;
-        for cmd in self.commands{
-            self.run_command(cmd);
+        for cmd in this.commands{
+            this.run_command(cmd);
 
     # -- Methods that operate on its Commands --------------------------
 
     }
-    } def run_command(self, command){
+    } function run_command( command){
         """Do whatever it takes to run a command (including nothing at all,
         if the command has already been run).  Specifically: if we have
         already created and run the command named by 'command', return
@@ -1037,52 +1037,52 @@ Common commands: (see '--help-commands' for more)
         'run()' on that command object (or an existing one).
         """;
         # Already been here, done that? then return silently.
-        if self.have_run.get(command){
+        if this.have_run.get(command){
             return;
 
         }
         log.info("running %s", command);
-        cmd_obj = self.get_command_obj(command);
+        cmd_obj = this.get_command_obj(command);
         cmd_obj.ensure_finalized();
         cmd_obj.run();
-        self.have_run[command] = 1;
+        this.have_run[command] = 1;
 
 
     # -- Distribution query methods ------------------------------------
 
     }
-    def has_pure_modules(self){
-        return len(self.packages or self.py_modules or []) > 0;
+    function has_pure_modules(){
+        return len(this.packages or this.py_modules or []) > 0;
 
     }
-    def has_ext_modules(self){
-        return self.ext_modules and len(self.ext_modules) > 0;
+    function has_ext_modules(){
+        return this.ext_modules and len(this.ext_modules) > 0;
 
     }
-    def has_c_libraries(self){
-        return self.libraries and len(self.libraries) > 0;
+    function has_c_libraries(){
+        return this.libraries and len(this.libraries) > 0;
 
     }
-    def has_modules(self){
-        return self.has_pure_modules() or self.has_ext_modules();
+    function has_modules(){
+        return this.has_pure_modules() or this.has_ext_modules();
 
     }
-    def has_headers(self){
-        return self.headers and len(self.headers) > 0;
+    function has_headers(){
+        return this.headers and len(this.headers) > 0;
 
     }
-    def has_scripts(self){
-        return self.scripts and len(self.scripts) > 0;
+    function has_scripts(){
+        return this.scripts and len(this.scripts) > 0;
 
     }
-    def has_data_files(self){
-        return self.data_files and len(self.data_files) > 0;
+    function has_data_files(){
+        return this.data_files and len(this.data_files) > 0;
 
     }
-    def is_pure(self){
-        return (self.has_pure_modules() and
-                not self.has_ext_modules() and
-                not self.has_c_libraries());
+    function is_pure(){
+        return (this.has_pure_modules() and
+                not this.has_ext_modules() and
+                not this.has_c_libraries());
 
     # -- Metadata query methods ----------------------------------------
 
@@ -1107,147 +1107,147 @@ Common commands: (see '--help-commands' for more)
                          "provides", "requires", "obsoletes",
                          );
 
-    def __init__(self, path=None){
-        if path is not None{
-            self.read_pkg_file(open(path));
+    function __init__( path=nil){
+        if path is not nil{
+            this.read_pkg_file(open(path));
         } else{
-            self.name = None;
-            self.version = None;
-            self.author = None;
-            self.author_email = None;
-            self.maintainer = None;
-            self.maintainer_email = None;
-            self.url = None;
-            self.license = None;
-            self.description = None;
-            self.long_description = None;
-            self.keywords = None;
-            self.platforms = None;
-            self.classifiers = None;
-            self.download_url = None;
+            this.name = nil;
+            this.version = nil;
+            this.author = nil;
+            this.author_email = nil;
+            this.maintainer = nil;
+            this.maintainer_email = nil;
+            this.url = nil;
+            this.license = nil;
+            this.description = nil;
+            this.long_description = nil;
+            this.keywords = nil;
+            this.platforms = nil;
+            this.classifiers = nil;
+            this.download_url = nil;
             # PEP 314
-            self.provides = None;
-            self.requires = None;
-            self.obsoletes = None;
+            this.provides = nil;
+            this.requires = nil;
+            this.obsoletes = nil;
 
     }
-    } def read_pkg_file(self, file){
+    } function read_pkg_file( file){
         """Reads the metadata values from a file object.""";
         msg = message_from_file(file);
 
-        def _read_field(name){
+        function _read_field(name){
             value = msg[name];
             if value == 'UNKNOWN'{
-                return None;
+                return nil;
             } return value;
 
         }
-        def _read_list(name){
-            values = msg.get_all(name, None);
+        function _read_list(name){
+            values = msg.get_all(name, nil);
             if values == []{
-                return None;
+                return nil;
             } return values;
 
         }
         metadata_version = msg['metadata-version'];
-        self.name = _read_field('name');
-        self.version = _read_field('version');
-        self.description = _read_field('summary');
+        this.name = _read_field('name');
+        this.version = _read_field('version');
+        this.description = _read_field('summary');
         # we are filling author only.
-        self.author = _read_field('author');
-        self.maintainer = None;
-        self.author_email = _read_field('author-email');
-        self.maintainer_email = None;
-        self.url = _read_field('home-page');
-        self.license = _read_field('license');
+        this.author = _read_field('author');
+        this.maintainer = nil;
+        this.author_email = _read_field('author-email');
+        this.maintainer_email = nil;
+        this.url = _read_field('home-page');
+        this.license = _read_field('license');
 
         if 'download-url' in msg{
-            self.download_url = _read_field('download-url');
+            this.download_url = _read_field('download-url');
         } else{
-            self.download_url = None;
+            this.download_url = nil;
 
         }
-        self.long_description = _read_field('description');
-        self.description = _read_field('summary');
+        this.long_description = _read_field('description');
+        this.description = _read_field('summary');
 
         if 'keywords' in msg{
-            self.keywords = _read_field('keywords').split(',');
+            this.keywords = _read_field('keywords').split(',');
 
         }
-        self.platforms = _read_list('platform');
-        self.classifiers = _read_list('classifier');
+        this.platforms = _read_list('platform');
+        this.classifiers = _read_list('classifier');
 
         # PEP 314 - these fields only exist in 1.1
         if metadata_version == '1.1'{
-            self.requires = _read_list('requires');
-            self.provides = _read_list('provides');
-            self.obsoletes = _read_list('obsoletes');
+            this.requires = _read_list('requires');
+            this.provides = _read_list('provides');
+            this.obsoletes = _read_list('obsoletes');
         } else{
-            self.requires = None;
-            self.provides = None;
-            self.obsoletes = None;
+            this.requires = nil;
+            this.provides = nil;
+            this.obsoletes = nil;
 
     }
-    } def write_pkg_info(self, base_dir){
+    } function write_pkg_info( base_dir){
         """Write the PKG-INFO file into the release tree.
         """;
         pkg_info = open(os.path.join(base_dir, 'PKG-INFO'), 'w');
         try{
-            self.write_pkg_file(pkg_info);
+            this.write_pkg_file(pkg_info);
         } finally{
             pkg_info.close();
 
     }
-    } def write_pkg_file(self, file){
+    } function write_pkg_file( file){
         """Write the PKG-INFO format data to a file object.
         """;
         version = '1.0';
-        if (self.provides or self.requires or self.obsoletes or
-            self.classifiers or self.download_url){
+        if (this.provides or this.requires or this.obsoletes or
+            this.classifiers or this.download_url){
             version = '1.1';
 
         }
-        self._write_field(file, 'Metadata-Version', version);
-        self._write_field(file, 'Name', self.get_name());
-        self._write_field(file, 'Version', self.get_version());
-        self._write_field(file, 'Summary', self.get_description());
-        self._write_field(file, 'Home-page', self.get_url());
-        self._write_field(file, 'Author', self.get_contact());
-        self._write_field(file, 'Author-email', self.get_contact_email());
-        self._write_field(file, 'License', self.get_license());
-        if self.download_url{
-            self._write_field(file, 'Download-URL', self.download_url);
+        this._write_field(file, 'Metadata-Version', version);
+        this._write_field(file, 'Name', this.get_name());
+        this._write_field(file, 'Version', this.get_version());
+        this._write_field(file, 'Summary', this.get_description());
+        this._write_field(file, 'Home-page', this.get_url());
+        this._write_field(file, 'Author', this.get_contact());
+        this._write_field(file, 'Author-email', this.get_contact_email());
+        this._write_field(file, 'License', this.get_license());
+        if this.download_url{
+            this._write_field(file, 'Download-URL', this.download_url);
 
         }
-        long_desc = rfc822_escape(self.get_long_description());
-        self._write_field(file, 'Description', long_desc);
+        long_desc = rfc822_escape(this.get_long_description());
+        this._write_field(file, 'Description', long_desc);
 
-        keywords = ','.join(self.get_keywords());
+        keywords = ','.join(this.get_keywords());
         if keywords{
-            self._write_field(file, 'Keywords', keywords);
+            this._write_field(file, 'Keywords', keywords);
 
         }
-        self._write_list(file, 'Platform', self.get_platforms());
-        self._write_list(file, 'Classifier', self.get_classifiers());
+        this._write_list(file, 'Platform', this.get_platforms());
+        this._write_list(file, 'Classifier', this.get_classifiers());
 
         # PEP 314
-        self._write_list(file, 'Requires', self.get_requires());
-        self._write_list(file, 'Provides', self.get_provides());
-        self._write_list(file, 'Obsoletes', self.get_obsoletes());
+        this._write_list(file, 'Requires', this.get_requires());
+        this._write_list(file, 'Provides', this.get_provides());
+        this._write_list(file, 'Obsoletes', this.get_obsoletes());
 
     }
-    def _write_field(self, file, name, value){
-        file.write('%s: %s\n' % (name, self._encode_field(value)));
+    function _write_field( file, name, value){
+        file.write('%s: %s\n' % (name, this._encode_field(value)));
 
     }
-    def _write_list (self, file, name, values){
+    function _write_list ( file, name, values){
         for value in values{
-            self._write_field(file, name, value);
+            this._write_field(file, name, value);
 
     }
-    } def _encode_field(self, value){
-        if value is None{
-            return None;
+    } function _encode_field( value){
+        if value is nil{
+            return nil;
         } if isinstance(value, unicode){
             return value.encode(PKG_INFO_ENCODING);
         } return str(value);
@@ -1255,111 +1255,111 @@ Common commands: (see '--help-commands' for more)
     # -- Metadata query methods ----------------------------------------
 
     }
-    def get_name(self){
-        return self.name or "UNKNOWN";
+    function get_name(){
+        return this.name or "UNKNOWN";
 
     }
-    def get_version(self){
-        return self.version or "0.0.0";
+    function get_version(){
+        return this.version or "0.0.0";
 
     }
-    def get_fullname(self){
-        return "%s-%s" % (self.get_name(), self.get_version());
+    function get_fullname(){
+        return "%s-%s" % (this.get_name(), this.get_version());
 
     }
-    def get_author(self){
-        return self._encode_field(self.author) or "UNKNOWN";
+    function get_author(){
+        return this._encode_field(this.author) or "UNKNOWN";
 
     }
-    def get_author_email(self){
-        return self.author_email or "UNKNOWN";
+    function get_author_email(){
+        return this.author_email or "UNKNOWN";
 
     }
-    def get_maintainer(self){
-        return self._encode_field(self.maintainer) or "UNKNOWN";
+    function get_maintainer(){
+        return this._encode_field(this.maintainer) or "UNKNOWN";
 
     }
-    def get_maintainer_email(self){
-        return self.maintainer_email or "UNKNOWN";
+    function get_maintainer_email(){
+        return this.maintainer_email or "UNKNOWN";
 
     }
-    def get_contact(self){
-        return (self._encode_field(self.maintainer) or
-                self._encode_field(self.author) or "UNKNOWN");
+    function get_contact(){
+        return (this._encode_field(this.maintainer) or
+                this._encode_field(this.author) or "UNKNOWN");
 
     }
-    def get_contact_email(self){
-        return self.maintainer_email or self.author_email or "UNKNOWN";
+    function get_contact_email(){
+        return this.maintainer_email or this.author_email or "UNKNOWN";
 
     }
-    def get_url(self){
-        return self.url or "UNKNOWN";
+    function get_url(){
+        return this.url or "UNKNOWN";
 
     }
-    def get_license(self){
-        return self.license or "UNKNOWN";
+    function get_license(){
+        return this.license or "UNKNOWN";
     } get_licence = get_license;
 
-    def get_description(self){
-        return self._encode_field(self.description) or "UNKNOWN";
+    function get_description(){
+        return this._encode_field(this.description) or "UNKNOWN";
 
     }
-    def get_long_description(self){
-        return self._encode_field(self.long_description) or "UNKNOWN";
+    function get_long_description(){
+        return this._encode_field(this.long_description) or "UNKNOWN";
 
     }
-    def get_keywords(self){
-        return self.keywords or [];
+    function get_keywords(){
+        return this.keywords or [];
 
     }
-    def get_platforms(self){
-        return self.platforms or ["UNKNOWN"];
+    function get_platforms(){
+        return this.platforms or ["UNKNOWN"];
 
     }
-    def get_classifiers(self){
-        return self.classifiers or [];
+    function get_classifiers(){
+        return this.classifiers or [];
 
     }
-    def get_download_url(self){
-        return self.download_url or "UNKNOWN";
+    function get_download_url(){
+        return this.download_url or "UNKNOWN";
 
     # PEP 314
     }
-    def get_requires(self){
-        return self.requires or [];
+    function get_requires(){
+        return this.requires or [];
 
     }
-    def set_requires(self, value){
+    function set_requires( value){
         import distutils.versionpredicate;
         for v in value{
             distutils.versionpredicate.VersionPredicate(v);
-        } self.requires = value;
+        } this.requires = value;
 
     }
-    def get_provides(self){
-        return self.provides or [];
+    function get_provides(){
+        return this.provides or [];
 
     }
-    def set_provides(self, value){
+    function set_provides( value){
         value = [v.strip() for v in value];
         for v in value{
             import distutils.versionpredicate;
             distutils.versionpredicate.split_provision(v);
-        } self.provides = value;
+        } this.provides = value;
 
     }
-    def get_obsoletes(self){
-        return self.obsoletes or [];
+    function get_obsoletes(){
+        return this.obsoletes or [];
 
     }
-    def set_obsoletes(self, value){
+    function set_obsoletes( value){
         import distutils.versionpredicate;
         for v in value{
             distutils.versionpredicate.VersionPredicate(v);
-        } self.obsoletes = value;
+        } this.obsoletes = value;
 
 }
-} def fix_help_options(options){
+} function fix_help_options(options){
     """Convert a 4-tuple 'help_options' list as found in various command
     classes to the 3-tuple form required by FancyGetopt.
     """;

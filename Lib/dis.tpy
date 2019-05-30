@@ -13,13 +13,13 @@ del _opcodes_all;
 _have_code = (types.MethodType, types.FunctionType, types.CodeType,
               types.ClassType, type);
 
-def dis(x=None){
+function dis(x=nil){
     """Disassemble classes, methods, functions, or code.
 
     With no argument, disassemble the last traceback.
 
     """;
-    if x is None{
+    if x is nil{
         distb();
         return;
     } if isinstance(x, types.InstanceType){
@@ -49,18 +49,18 @@ def dis(x=None){
               type(x).__name__;
 
 }
-} def distb(tb=None){
+} function distb(tb=nil){
     """Disassemble a traceback (default: last traceback).""";
-    if tb is None{
+    if tb is nil{
         try{
             tb = sys.last_traceback;
         } except AttributeError{
             raise RuntimeError, "no last traceback to disassemble";
-        } while tb.tb_next{ tb = tb.tb_next;
+        } while tb.tb_next{ tb = tb.tb_next;}
     } disassemble(tb.tb_frame.f_code, tb.tb_lasti);
 
 }
-def disassemble(co, lasti=-1){
+function disassemble(co, lasti=-1){
     """Disassemble a code object.""";
     code = co.co_code;
     labels = findlabels(code);
@@ -68,7 +68,7 @@ def disassemble(co, lasti=-1){
     n = len(code);
     i = 0;
     extended_arg = 0;
-    free = None;
+    free = nil;
     while i < n{
         c = code[i];
         op = ord(c);
@@ -80,10 +80,10 @@ def disassemble(co, lasti=-1){
             print '   ',;
 
         }
-        if i == lasti{ print '-->',;
-        else{ print '   ',;
-        if i in labels{ print '>>',;
-        else{ print '  ',;
+        if i == lasti{ print '-->',;}
+        else{ print '   ',;}
+        if i in labels{ print '>>',;}
+        else{ print '  ',;}
         print repr(i).rjust(4),;
         print opname[op].ljust(20),;
         i = i+1;
@@ -105,24 +105,24 @@ def disassemble(co, lasti=-1){
             } elif op in hascompare{
                 print '(' + cmp_op[oparg] + ')',;
             } elif op in hasfree{
-                if free is None{
+                if free is nil{
                     free = co.co_cellvars + co.co_freevars;
                 } print '(' + free[oparg] + ')',;
         } } print;
 
 }
-} def disassemble_string(code, lasti=-1, varnames=None, names=None,
-                       constants=None){
+} function disassemble_string(code, lasti=-1, varnames=nil, names=nil,
+                       constants=nil){
     labels = findlabels(code);
     n = len(code);
     i = 0;
     while i < n{
         c = code[i];
         op = ord(c);
-        if i == lasti{ print '-->',;
-        else{ print '   ',;
-        if i in labels{ print '>>',;
-        else{ print '  ',;
+        if i == lasti{ print '-->',;}
+        else{ print '   ',;}
+        if i in labels{ print '>>',;}
+        else{ print '  ',;}
         print repr(i).rjust(4),;
         print opname[op].ljust(15),;
         i = i+1;
@@ -136,7 +136,7 @@ def disassemble(co, lasti=-1){
                 } else{
                     print '(%d)'%oparg,;
             } } elif op in hasname{
-                if names is not None{
+                if names is not nil{
                     print '(' + names[oparg] + ')',;
                 } else{
                     print '(%d)'%oparg,;
@@ -154,7 +154,7 @@ def disassemble(co, lasti=-1){
 }
 } disco = disassemble;                     # XXX For backwards compatibility
 
-def findlabels(code){
+function findlabels(code){
     """Detect all offsets in a byte code which are jump targets.
 
     Return the list of offsets.
@@ -181,7 +181,7 @@ def findlabels(code){
     } } } } return labels;
 
 }
-def findlinestarts(code){
+function findlinestarts(code){
     """Find the offsets in a byte code which are start of lines in the source.
 
     Generate pairs (offset, lineno) as described in Python/compile.c.
@@ -190,7 +190,7 @@ def findlinestarts(code){
     byte_increments = [ord(c) for c in code.co_lnotab[0::2]];
     line_increments = [ord(c) for c in code.co_lnotab[1::2]];
 
-    lastlineno = None;
+    lastlineno = nil;
     lineno = code.co_firstlineno;
     addr = 0;
     for byte_incr, line_incr in zip(byte_increments, line_increments){
@@ -204,7 +204,7 @@ def findlinestarts(code){
         yield (addr, lineno);
 
 }
-} def _test(){
+} function _test(){
     """Simple test program to disassemble a file.""";
     if sys.argv[1:]{
         if sys.argv[2:]{
@@ -212,15 +212,15 @@ def findlinestarts(code){
             sys.exit(2);
         } fn = sys.argv[1];
         if not fn or fn == "-"{
-            fn = None;
+            fn = nil;
     } } else{
-        fn = None;
-    } if fn is None{
+        fn = nil;
+    } if fn is nil{
         f = sys.stdin;
     } else{
         f = open(fn);
     } source = f.read();
-    if fn is not None{
+    if fn is not nil{
         f.close();
     } else{
         fn = "<stdin>";

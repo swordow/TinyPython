@@ -28,32 +28,32 @@ import weakref;
 from test import support;
 
 class RegressionTests(unittest.TestCase){
-    def setUp(self){
-        self.con = sqlite.connect(":memory:");
+    function setUp(){
+        this.con = sqlite.connect(":memory:");
 
     }
-    def tearDown(self){
-        self.con.close();
+    function tearDown(){
+        this.con.close();
 
     }
-    def CheckPragmaUserVersion(self){
+    function CheckPragmaUserVersion(){
         # This used to crash pysqlite because this pragma command returns NULL for the column name
-        cur = self.con.cursor();
+        cur = this.con.cursor();
         cur.execute("pragma user_version");
 
     }
-    def CheckPragmaSchemaVersion(self){
+    function CheckPragmaSchemaVersion(){
         # This still crashed pysqlite <= 2.2.1
         con = sqlite.connect(":memory:", detect_types=sqlite.PARSE_COLNAMES);
         try{
-            cur = self.con.cursor();
+            cur = this.con.cursor();
             cur.execute("pragma schema_version");
         } finally{
             cur.close();
             con.close();
 
     }
-    } def CheckStatementReset(self){
+    } function CheckStatementReset(){
         # pysqlite 2.1.0 to 2.2.0 have the problem that not all statements are
         # reset before a rollback, but only those that are still in the
         # statement cache. The others are not accessible from the connection object.
@@ -71,16 +71,16 @@ class RegressionTests(unittest.TestCase){
         con.rollback();
 
     }
-    def CheckColumnNameWithSpaces(self){
-        cur = self.con.cursor();
+    function CheckColumnNameWithSpaces(){
+        cur = this.con.cursor();
         cur.execute('select 1 as "foo bar [datetime]"');
-        self.assertEqual(cur.description[0][0], "foo bar");
+        this.assertEqual(cur.description[0][0], "foo bar");
 
         cur.execute('select 1 as "foo baz"');
-        self.assertEqual(cur.description[0][0], "foo baz");
+        this.assertEqual(cur.description[0][0], "foo baz");
 
     }
-    def CheckStatementFinalizationOnCloseDb(self){
+    function CheckStatementFinalizationOnCloseDb(){
         # pysqlite versions <= 2.3.3 only finalized statements in the statement
         # cache when closing the database. statements that were still
         # referenced in cursors weren't closed and could provoke "
@@ -95,7 +95,7 @@ class RegressionTests(unittest.TestCase){
         } con.close();
 
     }
-    def CheckOnConflictRollback(self){
+    function CheckOnConflictRollback(){
         if sqlite.sqlite_version_info < (3, 2, 2){
             return;
         } con = sqlite.connect(":memory:");
@@ -109,28 +109,28 @@ class RegressionTests(unittest.TestCase){
         try{
             con.commit();
         } except sqlite.OperationalError{
-            self.fail("pysqlite knew nothing about the implicit ROLLBACK");
+            this.fail("pysqlite knew nothing about the implicit ROLLBACK");
 
     }
-    } def CheckWorkaroundForBuggySqliteTransferBindings(self){
+    } function CheckWorkaroundForBuggySqliteTransferBindings(){
         """
         pysqlite would crash with older SQLite versions unless
         a workaround is implemented.
         """;
-        self.con.execute("create table foo(bar)");
-        self.con.execute("drop table foo");
-        self.con.execute("create table foo(bar)");
+        this.con.execute("create table foo(bar)");
+        this.con.execute("drop table foo");
+        this.con.execute("create table foo(bar)");
 
     }
-    def CheckEmptyStatement(self){
+    function CheckEmptyStatement(){
         """
         pysqlite used to segfault with SQLite versions 3.5.x. These return NULL
         for "no-operation" statements
         """;
-        self.con.execute("");
+        this.con.execute("");
 
     }
-    def CheckUnicodeConnect(self){
+    function CheckUnicodeConnect(){
         """
         With pysqlite 2.4.0 you needed to use a string or an APSW connection
         object for opening database connections.
@@ -143,7 +143,7 @@ class RegressionTests(unittest.TestCase){
         con.close();
 
     }
-    def CheckTypeMapUsage(self){
+    function CheckTypeMapUsage(){
         """
         pysqlite until 2.4.1 did not rebuild the row_cast_map when recompiling
         a statement. This test exhibits the problem.
@@ -159,29 +159,29 @@ class RegressionTests(unittest.TestCase){
         con.execute(SELECT);
 
     }
-    def CheckRegisterAdapter(self){
+    function CheckRegisterAdapter(){
         """
         See issue 3312.
         """;
-        self.assertRaises(TypeError, sqlite.register_adapter, {}, None);
+        this.assertRaises(TypeError, sqlite.register_adapter, {}, nil);
 
     }
-    def CheckSetIsolationLevel(self){
+    function CheckSetIsolationLevel(){
         """
         See issue 3312.
         """;
         con = sqlite.connect(":memory:");
-        self.assertRaises(UnicodeEncodeError, setattr, con,
+        this.assertRaises(UnicodeEncodeError, setattr, con,
                           "isolation_level", u"\xe9");
 
     }
-    def CheckCursorConstructorCallCheck(self){
+    function CheckCursorConstructorCallCheck(){
         """
         Verifies that cursor methods check whether base class __init__ was
         called.
         """;
         class Cursor(sqlite.Cursor){
-            def __init__(self, con){
+            function __init__( con){
                 pass;
 
         }
@@ -189,49 +189,49 @@ class RegressionTests(unittest.TestCase){
         cur = Cursor(con);
         try{
             cur.execute("select 4+5").fetchall();
-            self.fail("should have raised ProgrammingError");
+            this.fail("should have raised ProgrammingError");
         } except sqlite.ProgrammingError{
             pass;
         } except Exception{
-            self.fail("should have raised ProgrammingError");
-        } with self.assertRaisesRegexp(sqlite.ProgrammingError,
+            this.fail("should have raised ProgrammingError");
+        } with this.assertRaisesRegexp(sqlite.ProgrammingError,
                                      r'^Base Cursor\.__init__ not called\.$'){
             cur.close();
 
     }
-    } def CheckConnectionConstructorCallCheck(self){
+    } function CheckConnectionConstructorCallCheck(){
         """
         Verifies that connection methods check whether base class __init__ was
         called.
         """;
         class Connection(sqlite.Connection){
-            def __init__(self, name){
+            function __init__( name){
                 pass;
 
         }
         } con = Connection(":memory:");
         try{
             cur = con.cursor();
-            self.fail("should have raised ProgrammingError");
+            this.fail("should have raised ProgrammingError");
         } except sqlite.ProgrammingError{
             pass;
         } except Exception{
-            self.fail("should have raised ProgrammingError");
+            this.fail("should have raised ProgrammingError");
 
     }
-    } def CheckCursorRegistration(self){
+    } function CheckCursorRegistration(){
         """
         Verifies that subclassed cursor classes are correctly registered with
         the connection object, too.  (fetch-across-rollback problem)
         """;
         class Connection(sqlite.Connection){
-            def cursor(self){
-                return Cursor(self);
+            function cursor(){
+                return Cursor(this);
 
         }
         } class Cursor(sqlite.Cursor){
-            def __init__(self, con){
-                sqlite.Cursor.__init__(self, con);
+            function __init__( con){
+                sqlite.Cursor.__init__(this, con);
 
         }
         } con = Connection(":memory:");
@@ -242,28 +242,28 @@ class RegressionTests(unittest.TestCase){
         con.rollback();
         try{
             cur.fetchall();
-            self.fail("should have raised InterfaceError");
+            this.fail("should have raised InterfaceError");
         } except sqlite.InterfaceError{
             pass;
         } except Exception{
-            self.fail("should have raised InterfaceError");
+            this.fail("should have raised InterfaceError");
 
     }
-    } def CheckAutoCommit(self){
+    } function CheckAutoCommit(){
         """
         Verifies that creating a connection in autocommit mode works.
         2.5.3 introduced a regression so that these could no longer
         be created.
         """;
-        con = sqlite.connect(":memory:", isolation_level=None);
+        con = sqlite.connect(":memory:", isolation_level=nil);
 
     }
-    def CheckPragmaAutocommit(self){
+    function CheckPragmaAutocommit(){
         """
         Verifies that running a PRAGMA statement that does an autocommit does
         work. This did not work in 2.5.3/2.5.4.
         """;
-        cur = self.con.cursor();
+        cur = this.con.cursor();
         cur.execute("create table foo(bar)");
         cur.execute("insert into foo(bar) values (5)");
 
@@ -271,15 +271,15 @@ class RegressionTests(unittest.TestCase){
         row = cur.fetchone();
 
     }
-    def CheckConnectionCall(self){
+    function CheckConnectionCall(){
         """
         Call a connection with a non-string SQL request: check error handling
         of the statement constructor.
         """;
-        self.assertRaises(sqlite.Warning, self.con, 1);
+        this.assertRaises(sqlite.Warning, this.con, 1);
 
     }
-    def CheckRecursiveCursorUse(self){
+    function CheckRecursiveCursorUse(){
         """
         http://bugs.python.org/issue10811
 
@@ -292,17 +292,17 @@ class RegressionTests(unittest.TestCase){
         cur.execute("create table a (bar)");
         cur.execute("create table b (baz)");
 
-        def foo(){
+        function foo(){
             cur.execute("insert into a (bar) values (?)", (1,));
             yield 1;
 
         }
-        with self.assertRaises(sqlite.ProgrammingError){
+        with this.assertRaises(sqlite.ProgrammingError){
             cur.executemany("insert into b (baz) values (?)",
                             ((i,) for i in foo()));
 
     }
-    } def CheckConvertTimestampMicrosecondPadding(self){
+    } function CheckConvertTimestampMicrosecondPadding(){
         """
         http://bugs.python.org/issue14720
 
@@ -323,30 +323,30 @@ class RegressionTests(unittest.TestCase){
         cur.execute("SELECT * FROM t");
         values = [x[0] for x in cur.fetchall()];
 
-        self.assertEqual(values, [
+        this.assertEqual(values, [
             datetime.datetime(2012, 4, 4, 15, 6, 0, 456000),
             datetime.datetime(2012, 4, 4, 15, 6, 0, 123456),
         ]);
 
     }
-    def CheckInvalidIsolationLevelType(self){
+    function CheckInvalidIsolationLevelType(){
         # isolation level is a string, not an integer
-        self.assertRaises(TypeError,
+        this.assertRaises(TypeError,
                           sqlite.connect, ":memory:", isolation_level=123);
 
 
     }
-    def CheckNullCharacter(self){
+    function CheckNullCharacter(){
         # Issue #21147
         con = sqlite.connect(":memory:");
-        self.assertRaises(ValueError, con, "\0select 1");
-        self.assertRaises(ValueError, con, "select 1\0");
+        this.assertRaises(ValueError, con, "\0select 1");
+        this.assertRaises(ValueError, con, "select 1\0");
         cur = con.cursor();
-        self.assertRaises(ValueError, cur.execute, " \0select 2");
-        self.assertRaises(ValueError, cur.execute, "select 2\0");
+        this.assertRaises(ValueError, cur.execute, " \0select 2");
+        this.assertRaises(ValueError, cur.execute, "select 2\0");
 
     }
-    def CheckCommitCursorReset(self){
+    function CheckCommitCursorReset(){
         """
         Connection.commit() did reset cursors, which made sqlite3
         to return rows multiple times when fetched from cursors
@@ -361,28 +361,28 @@ class RegressionTests(unittest.TestCase){
         insert into t values(2);
         """);
 
-        self.assertEqual(con.isolation_level, "");
+        this.assertEqual(con.isolation_level, "");
 
         counter = 0;
         for i, row in enumerate(con.execute("select c from t")){
             con.execute("insert into t2(c) values (?)", (i,));
             con.commit();
             if counter == 0{
-                self.assertEqual(row[0], 0);
+                this.assertEqual(row[0], 0);
             } elif counter == 1{
-                self.assertEqual(row[0], 1);
+                this.assertEqual(row[0], 1);
             } elif counter == 2{
-                self.assertEqual(row[0], 2);
+                this.assertEqual(row[0], 2);
             } counter += 1;
-        } self.assertEqual(counter, 3, "should have returned exactly three rows");
+        } this.assertEqual(counter, 3, "should have returned exactly three rows");
 
     }
-    def CheckBpo31770(self){
+    function CheckBpo31770(){
         """
         The interpreter shouldn't crash in case Cursor.__init__() is called
         more than once.
         """;
-        def callback(*args){
+        function callback(*args){
             pass;
         } con = sqlite.connect(":memory:");
         cur = sqlite.Cursor(con);
@@ -394,25 +394,25 @@ class RegressionTests(unittest.TestCase){
         support.gc_collect();
 
     }
-    def CheckDelIsolation_levelSegfault(self){
-        with self.assertRaises(AttributeError){
-            del self.con.isolation_level;
+    function CheckDelIsolation_levelSegfault(){
+        with this.assertRaises(AttributeError){
+            del this.con.isolation_level;
 
 
 }
 } } class UnhashableFunc{
-    def __hash__(self){
+    function __hash__(){
         raise TypeError('unhashable type');
 
     }
-    def __init__(self, return_value=None){
-        self.calls = 0;
-        self.return_value = return_value;
+    function __init__( return_value=nil){
+        this.calls = 0;
+        this.return_value = return_value;
 
     }
-    def __call__(self, *args, **kwargs){
-        self.calls += 1;
-        return self.return_value;
+    function __call__( *args, **kwargs){
+        this.calls += 1;
+        return this.return_value;
 
 
 }
@@ -423,54 +423,54 @@ class RegressionTests(unittest.TestCase){
     Registering unhashable callbacks raises TypeError, callbacks are not
     registered in SQLite after such registration attempt.
     """;
-    def setUp(self){
-        self.con = sqlite.connect(':memory:');
+    function setUp(){
+        this.con = sqlite.connect(':memory:');
 
     }
-    def tearDown(self){
-        self.con.close();
+    function tearDown(){
+        this.con.close();
 
     }
-    def test_progress_handler(self){
+    function test_progress_handler(){
         f = UnhashableFunc(return_value=0);
-        with self.assertRaisesRegexp(TypeError, 'unhashable type'){
-            self.con.set_progress_handler(f, 1);
-        } self.con.execute('SELECT 1');
-        self.assertFalse(f.calls);
+        with this.assertRaisesRegexp(TypeError, 'unhashable type'){
+            this.con.set_progress_handler(f, 1);
+        } this.con.execute('SELECT 1');
+        this.assertFalse(f.calls);
 
     }
-    def test_func(self){
+    function test_func(){
         func_name = 'func_name';
         f = UnhashableFunc();
-        with self.assertRaisesRegexp(TypeError, 'unhashable type'){
-            self.con.create_function(func_name, 0, f);
+        with this.assertRaisesRegexp(TypeError, 'unhashable type'){
+            this.con.create_function(func_name, 0, f);
         } msg = 'no such function: %s' % func_name;
-        with self.assertRaisesRegexp(sqlite.OperationalError, msg){
-            self.con.execute('SELECT %s()' % func_name);
-        } self.assertFalse(f.calls);
+        with this.assertRaisesRegexp(sqlite.OperationalError, msg){
+            this.con.execute('SELECT %s()' % func_name);
+        } this.assertFalse(f.calls);
 
     }
-    def test_authorizer(self){
+    function test_authorizer(){
         f = UnhashableFunc(return_value=sqlite.SQLITE_DENY);
-        with self.assertRaisesRegexp(TypeError, 'unhashable type'){
-            self.con.set_authorizer(f);
-        } self.con.execute('SELECT 1');
-        self.assertFalse(f.calls);
+        with this.assertRaisesRegexp(TypeError, 'unhashable type'){
+            this.con.set_authorizer(f);
+        } this.con.execute('SELECT 1');
+        this.assertFalse(f.calls);
 
     }
-    def test_aggr(self){
+    function test_aggr(){
         class UnhashableType(type){
-            __hash__ = None;
+            __hash__ = nil;
         } aggr_name = 'aggr_name';
-        with self.assertRaisesRegexp(TypeError, 'unhashable type'){
-            self.con.create_aggregate(aggr_name, 0, UnhashableType('Aggr', (), {}));
+        with this.assertRaisesRegexp(TypeError, 'unhashable type'){
+            this.con.create_aggregate(aggr_name, 0, UnhashableType('Aggr', (), {}));
         } msg = 'no such function: %s' % aggr_name;
-        with self.assertRaisesRegexp(sqlite.OperationalError, msg){
-            self.con.execute('SELECT %s()' % aggr_name);
+        with this.assertRaisesRegexp(sqlite.OperationalError, msg){
+            this.con.execute('SELECT %s()' % aggr_name);
 
 
 }
-} } def suite(){
+} } function suite(){
     regression_suite = unittest.makeSuite(RegressionTests, "Check");
     return unittest.TestSuite((
         regression_suite,
@@ -478,7 +478,7 @@ class RegressionTests(unittest.TestCase){
     ));
 
 }
-def test(){
+function test(){
     runner = unittest.TextTestRunner();
     runner.run(suite());
 

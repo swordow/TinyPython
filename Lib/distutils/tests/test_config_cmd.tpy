@@ -12,24 +12,24 @@ class ConfigTestCase(support.LoggingSilencer,
                      support.TempdirManager,
                      unittest.TestCase){
 
-    def _info(self, msg, *args){
+    function _info( msg, *args){
         for line in msg.splitlines(){
-            self._logs.append(line);
+            this._logs.append(line);
 
     }
-    } def setUp(self){
-        super(ConfigTestCase, self).setUp();
-        self._logs = [];
-        self.old_log = log.info;
-        log.info = self._info;
+    } function setUp(){
+        super(ConfigTestCase, this).setUp();
+        this._logs = [];
+        this.old_log = log.info;
+        log.info = this._info;
 
     }
-    def tearDown(self){
-        log.info = self.old_log;
-        super(ConfigTestCase, self).tearDown();
+    function tearDown(){
+        log.info = this.old_log;
+        super(ConfigTestCase, this).tearDown();
 
     }
-    def test_dump_file(self){
+    function test_dump_file(){
         this_file = os.path.splitext(__file__)[0] + '.py';
         f = open(this_file);
         try{
@@ -39,59 +39,59 @@ class ConfigTestCase(support.LoggingSilencer,
 
         }
         dump_file(this_file, 'I am the header');
-        self.assertEqual(len(self._logs), numlines+1);
+        this.assertEqual(len(this._logs), numlines+1);
 
     }
     @unittest.skipIf(sys.platform == 'win32', "can't test on Windows");
-    def test_search_cpp(self){
-        pkg_dir, dist = self.create_dist();
+    function test_search_cpp(){
+        pkg_dir, dist = this.create_dist();
         cmd = config(dist);
 
         # simple pattern searches
         match = cmd.search_cpp(pattern='xxx', body='/* xxx */');
-        self.assertEqual(match, 0);
+        this.assertEqual(match, 0);
 
         match = cmd.search_cpp(pattern='_configtest', body='/* xxx */');
-        self.assertEqual(match, 1);
+        this.assertEqual(match, 1);
 
     }
-    def test_finalize_options(self){
+    function test_finalize_options(){
         # finalize_options does a bit of transformation
         # on options
-        pkg_dir, dist = self.create_dist();
+        pkg_dir, dist = this.create_dist();
         cmd = config(dist);
         cmd.include_dirs = 'one%stwo' % os.pathsep;
         cmd.libraries = 'one';
         cmd.library_dirs = 'three%sfour' % os.pathsep;
         cmd.ensure_finalized();
 
-        self.assertEqual(cmd.include_dirs, ['one', 'two']);
-        self.assertEqual(cmd.libraries, ['one']);
-        self.assertEqual(cmd.library_dirs, ['three', 'four']);
+        this.assertEqual(cmd.include_dirs, ['one', 'two']);
+        this.assertEqual(cmd.libraries, ['one']);
+        this.assertEqual(cmd.library_dirs, ['three', 'four']);
 
     }
-    def test_clean(self){
+    function test_clean(){
         # _clean removes files
-        tmp_dir = self.mkdtemp();
+        tmp_dir = this.mkdtemp();
         f1 = os.path.join(tmp_dir, 'one');
         f2 = os.path.join(tmp_dir, 'two');
 
-        self.write_file(f1, 'xxx');
-        self.write_file(f2, 'xxx');
+        this.write_file(f1, 'xxx');
+        this.write_file(f2, 'xxx');
 
         for f in (f1, f2){
-            self.assertTrue(os.path.exists(f));
+            this.assertTrue(os.path.exists(f));
 
         }
-        pkg_dir, dist = self.create_dist();
+        pkg_dir, dist = this.create_dist();
         cmd = config(dist);
         cmd._clean(f1, f2);
 
         for f in (f1, f2){
-            self.assertFalse(os.path.exists(f));
+            this.assertFalse(os.path.exists(f));
 
 }
-} } def test_suite(){
+} } function test_suite(){
     return unittest.makeSuite(ConfigTestCase);
 
 }

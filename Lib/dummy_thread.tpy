@@ -21,11 +21,11 @@ import traceback as _traceback;
 class error(Exception){
     """Dummy implementation of thread.error.""";
 
-    def __init__(self, *args){
-        self.args = args;
+    function __init__( *args){
+        this.args = args;
 
 }
-} def start_new_thread(function, args, kwargs={}){
+} function start_new_thread(arg_function, args, kwargs={}){
     """Dummy implementation of thread.start_new_thread().
 
     Compatibility is maintained by making sure that ``args`` is a
@@ -43,26 +43,26 @@ class error(Exception){
     } if type(kwargs) != type(dict()){
         raise TypeError("3rd arg must be a dict");
     } global _main;
-    _main = False;
+    _main = false;
     try{
-        function(*args, **kwargs);
+        arg_function(*args, **kwargs);
     } except SystemExit{
         pass;
     } except Exception{
         _traceback.print_exc();
-    } _main = True;
+    } _main = true;
     global _interrupt;
     if _interrupt{
-        _interrupt = False;
+        _interrupt = false;
         raise KeyboardInterrupt;
 
 }
-} def exit(){
+} function exit(){
     """Dummy implementation of thread.exit().""";
     raise SystemExit;
 
 }
-def get_ident(){
+function get_ident(){
     """Dummy implementation of thread.get_ident().
 
     Since this module should only be used when threadmodule is not
@@ -72,14 +72,14 @@ def get_ident(){
     return -1;
 
 }
-def allocate_lock(){
+function allocate_lock(){
     """Dummy implementation of thread.allocate_lock().""";
     return LockType();
 
 }
-def stack_size(size=None){
+function stack_size(size=nil){
     """Dummy implementation of thread.stack_size().""";
-    if size is not None{
+    if size is not nil{
         raise error("setting thread stack size not supported");
     } return 0;
 
@@ -95,11 +95,11 @@ class LockType(object){
 
     """;
 
-    def __init__(self){
-        self.locked_status = False;
+    function __init__(){
+        this.locked_status = false;
 
     }
-    def acquire(self, waitflag=None){
+    function acquire( waitflag=nil){
         """Dummy implementation of acquire().
 
         For blocking calls, self.locked_status is automatically set to
@@ -110,50 +110,50 @@ class LockType(object){
         aren't triggered and throw a little fit.
 
         """;
-        if waitflag is None or waitflag{
-            self.locked_status = True;
-            return True;
+        if waitflag is nil or waitflag{
+            this.locked_status = true;
+            return true;
         } else{
-            if not self.locked_status{
-                self.locked_status = True;
-                return True;
+            if not this.locked_status{
+                this.locked_status = true;
+                return true;
             } else{
-                return False;
+                return false;
 
     }
     } } __enter__ = acquire;
 
-    def __exit__(self, typ, val, tb){
-        self.release();
+    function __exit__( typ, val, tb){
+        this.release();
 
     }
-    def release(self){
+    function release(){
         """Release the dummy lock.""";
         # XXX Perhaps shouldn't actually bother to test?  Could lead
         #     to problems for complex, threaded code.
-        if not self.locked_status{
+        if not this.locked_status{
             raise error;
-        } self.locked_status = False;
-        return True;
+        } this.locked_status = false;
+        return true;
 
     }
-    def locked(self){
-        return self.locked_status;
+    function locked(){
+        return this.locked_status;
 
 # Used to signal that interrupt_main was called in a "thread"
 }
-} _interrupt = False;
+} _interrupt = false;
 # True when not executing in a "thread"
-_main = True;
+_main = true;
 
-def interrupt_main(){
+function interrupt_main(){
     """Set _interrupt flag to True to have start_new_thread raise
     KeyboardInterrupt upon exiting.""";
     if _main{
         raise KeyboardInterrupt;
     } else{
         global _interrupt;
-        _interrupt = True;
+        _interrupt = true;
 
 }
 }

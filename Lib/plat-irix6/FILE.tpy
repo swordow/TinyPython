@@ -34,11 +34,11 @@ MAXMIN = 0x3ffff;
 OLDDEV = 0;
 NEWDEV = 1;
 MKDEV_VER = NEWDEV;
-def IS_STRING_SPEC_DEV(x){ return ((dev_t)(x)==__makedev(MKDEV_VER, 0, 0));
+function IS_STRING_SPEC_DEV(x){ return ((dev_t)(x)==__makedev(MKDEV_VER, 0, 0));}
 
-def major(dev){ return __major(MKDEV_VER, dev);
+function major(dev){ return __major(MKDEV_VER, dev);}
 
-def minor(dev){ return __minor(MKDEV_VER, dev);
+function minor(dev){ return __minor(MKDEV_VER, dev);}
 
 
 # Included from sys/select.h
@@ -51,19 +51,19 @@ NBBY = 8;
 
 # Included from sys/cpumask.h
 MAXCPU = 128;
-def CPUMASK_INDEX(bit){ return ((bit) >> 6);
+function CPUMASK_INDEX(bit){ return ((bit) >> 6);}
 
-def CPUMASK_SHFT(bit){ return ((bit) & 0x3f);
+function CPUMASK_SHFT(bit){ return ((bit) & 0x3f);}
 
-def CPUMASK_IS_ZERO(p){ return ((p) == 0);
+function CPUMASK_IS_ZERO(p){ return ((p) == 0);}
 
-def CPUMASK_IS_NONZERO(p){ return ((p) != 0);
+function CPUMASK_IS_NONZERO(p){ return ((p) != 0);}
 
 
 # Included from sys/nodemask.h
-def CNODEMASK_IS_ZERO(p){ return ((p) == 0);
+function CNODEMASK_IS_ZERO(p){ return ((p) == 0);}
 
-def CNODEMASK_IS_NONZERO(p){ return ((p) != 0);
+function CNODEMASK_IS_NONZERO(p){ return ((p) != 0);}
 
 
 # Included from sys/sema.h
@@ -335,9 +335,9 @@ CTX_FS5 = 30;
 SV_ONSTACK = 0x0001;
 SV_INTERRUPT = 0x0002;
 NUMBSDSIGS = (32);
-def sigmask(sig){ return (1L << ((sig)-1));
+function sigmask(sig){ return (1L << ((sig)-1));}
 
-def sigmask(sig){ return (1L << ((sig)-1));
+function sigmask(sig){ return (1L << ((sig)-1));}
 
 SIG_ERR = (-1);
 SIG_IGN = (1);
@@ -423,11 +423,11 @@ NODEV = (-1);
 NOPAGE = (-1);
 NBPSCTR = 512;
 SCTRSHFT = 9;
-def BASEPRI(psw){ return (((psw) & SR_IMASK) == SR_IMASK0);
+function BASEPRI(psw){ return (((psw) & SR_IMASK) == SR_IMASK0);}
 
-def BASEPRI(psw){ return (((psw) & SR_IMASK) == SR_IMASK);
+function BASEPRI(psw){ return (((psw) & SR_IMASK) == SR_IMASK);}
 
-def USERMODE(psw){ return (((psw) & SR_KSU_MSK) == SR_KSU_USR);
+function USERMODE(psw){ return (((psw) & SR_KSU_MSK) == SR_KSU_USR);}
 
 MAXPATHLEN = 1024;
 MAXSYMLINKS = 30;
@@ -438,44 +438,44 @@ NBBY = 8;
 BBSHIFT = 9;
 BBSIZE = (1<<BBSHIFT);
 BBMASK = (BBSIZE-1);
-def BBTOB(bbs){ return ((bbs) << BBSHIFT);
+function BBTOB(bbs){ return ((bbs) << BBSHIFT);}
 
-def OFFTOBB(bytes){ return (((__uint64_t)(bytes) + BBSIZE - 1) >> BBSHIFT);
+function OFFTOBB(bytes){ return (((__uint64_t)(bytes) + BBSIZE - 1) >> BBSHIFT);}
 
-def OFFTOBBT(bytes){ return ((off_t)(bytes) >> BBSHIFT);
+function OFFTOBBT(bytes){ return ((off_t)(bytes) >> BBSHIFT);}
 
-def BBTOOFF(bbs){ return ((off_t)(bbs) << BBSHIFT);
+function BBTOOFF(bbs){ return ((off_t)(bbs) << BBSHIFT);}
 
 SEEKLIMIT32 = 0x7fffffff;
 MAXBSIZE = 8192;
 DEV_BSIZE = BBSIZE;
 DEV_BSHIFT = BBSHIFT;
-def btodb(bytes){ return;   \
+function btodb(bytes){ return;}   \
 
-def dbtob(db){ return;   \
+function dbtob(db){ return;}   \
 
 BLKDEV_IOSHIFT = BPCSHIFT;
 BLKDEV_IOSIZE = (1<<BLKDEV_IOSHIFT);
-def BLKDEV_OFF(off){ return ((off) & (BLKDEV_IOSIZE - 1));
+function BLKDEV_OFF(off){ return ((off) & (BLKDEV_IOSIZE - 1));}
 
-def BLKDEV_LBN(off){ return ((off) >> BLKDEV_IOSHIFT);
+function BLKDEV_LBN(off){ return ((off) >> BLKDEV_IOSHIFT);}
 
-def BLKDEV_LTOP(bn){ return ((bn) * BLKDEV_BB);
+function BLKDEV_LTOP(bn){ return ((bn) * BLKDEV_BB);}
 
 MAXHOSTNAMELEN = 256;
-def DELAY(n){ return us_delay(n);
+function DELAY(n){ return us_delay(n);}
 
-def DELAYBUS(n){ return us_delaybus(n);
+function DELAYBUS(n){ return us_delaybus(n);}
 
 TIMEPOKE_NOW = -100L;
 MUTEX_DEFAULT = 0x0;
 METER_NAMSZ = 16;
 METER_NO_SEQ = -1;
-def mutex_spinlock(l){ return splhi();
+function mutex_spinlock(l){ return splhi();}
 
-def mutex_spintrylock(l){ return splhi();
+function mutex_spintrylock(l){ return splhi();}
 
-def spinlock_initialized(l){ return 1;
+function spinlock_initialized(l){ return 1;}
 
 SV_FIFO = 0x0;
 SV_LIFO = 0x2;
@@ -492,15 +492,15 @@ MRLOCK_BEHAVIOR = 0x2;
 MRLOCK_DBLTRIPPABLE = 0x4;
 MRLOCK_ALLOW_EQUAL_PRI = 0x8;
 MRLOCK_DEFAULT = MRLOCK_BARRIER;
-def mraccess(mrp){ return mraccessf(mrp, 0);
+function mraccess(mrp){ return mraccessf(mrp, 0);}
 
-def mrupdate(mrp){ return mrupdatef(mrp, 0);
+function mrupdate(mrp){ return mrupdatef(mrp, 0);}
 
-def mp_mutex_unlock(m){ return mutex_unlock(m);
+function mp_mutex_unlock(m){ return mutex_unlock(m);}
 
-def mp_mutex_trylock(m){ return mutex_trylock(m);
+function mp_mutex_trylock(m){ return mutex_trylock(m);}
 
-def mp_mutex_spinlock(m){ return mutex_spinlock(m);
+function mp_mutex_spinlock(m){ return mutex_spinlock(m);}
 
 
 # Included from sys/mon.h
@@ -510,35 +510,35 @@ MON_TIMEOUT = 0x04;
 MON_DOSRV = 0x08;
 MON_RUN = 0x10;
 MR_READER_BUCKETS = 13;
-def initlock(l){ return spinlock_init(l,0);
+function initlock(l){ return spinlock_init(l,0);}
 
-def ownlock(x){ return 1;
+function ownlock(x){ return 1;}
 
-def mutex_enter(m){ return mutex_lock(m, PZERO);
+function mutex_enter(m){ return mutex_lock(m, PZERO);}
 
-def mutex_tryenter(m){ return mutex_trylock(m);
+function mutex_tryenter(m){ return mutex_trylock(m);}
 
-def mutex_exit(m){ return mutex_unlock(m);
+function mutex_exit(m){ return mutex_unlock(m);}
 
-def cv_signal(cv){ return sv_signal(cv);
+function cv_signal(cv){ return sv_signal(cv);}
 
-def cv_broadcast(cv){ return sv_broadcast(cv);
+function cv_broadcast(cv){ return sv_broadcast(cv);}
 
-def cv_destroy(cv){ return sv_destroy(cv);
+function cv_destroy(cv){ return sv_destroy(cv);}
 
 RW_READER = MR_ACCESS;
 RW_WRITER = MR_UPDATE;
-def rw_exit(r){ return mrunlock(r);
+function rw_exit(r){ return mrunlock(r);}
 
-def rw_tryupgrade(r){ return mrtrypromote(r);
+function rw_tryupgrade(r){ return mrtrypromote(r);}
 
-def rw_downgrade(r){ return mrdemote(r);
+function rw_downgrade(r){ return mrdemote(r);}
 
-def rw_destroy(r){ return mrfree(r);
+function rw_destroy(r){ return mrfree(r);}
 
-def RW_WRITE_HELD(r){ return ismrlocked(r, MR_UPDATE);
+function RW_WRITE_HELD(r){ return ismrlocked(r, MR_UPDATE);}
 
-def RW_READ_HELD(r){ return ismrlocked(r, MR_ACCESS);
+function RW_READ_HELD(r){ return ismrlocked(r, MR_ACCESS);}
 
 MS_FREE = 0;
 MS_UPD = 1;

@@ -85,10 +85,10 @@ class SMTPResponseException(SMTPException){
     is set to the error message.
     """;
 
-    def __init__(self, code, msg){
-        self.smtp_code = code;
-        self.smtp_error = msg;
-        self.args = (code, msg);
+    function __init__( code, msg){
+        this.smtp_code = code;
+        this.smtp_error = msg;
+        this.args = (code, msg);
 
 }
 } class SMTPSenderRefused(SMTPResponseException){
@@ -98,11 +98,11 @@ class SMTPResponseException(SMTPException){
     exceptions, this sets `sender' to the string that the SMTP refused.
     """;
 
-    def __init__(self, code, msg, sender){
-        self.smtp_code = code;
-        self.smtp_error = msg;
-        self.sender = sender;
-        self.args = (code, msg, sender);
+    function __init__( code, msg, sender){
+        this.smtp_code = code;
+        this.smtp_error = msg;
+        this.sender = sender;
+        this.args = (code, msg, sender);
 
 }
 } class SMTPRecipientsRefused(SMTPException){
@@ -113,9 +113,9 @@ class SMTPResponseException(SMTPException){
     SMTP.sendmail() returns.
     """;
 
-    def __init__(self, recipients){
-        self.recipients = recipients;
-        self.args = (recipients,);
+    function __init__( recipients){
+        this.recipients = recipients;
+        this.args = (recipients,);
 
 
 }
@@ -140,27 +140,27 @@ class SMTPAuthenticationError(SMTPResponseException){
 
 
 }
-def quoteaddr(addr){
+function quoteaddr(addr){
     """Quote a subset of the email addresses defined by RFC 821.
 
     Should be able to handle anything rfc822.parseaddr can handle.
     """;
-    m = (None, None);
+    m = (nil, nil);
     try{
         m = email.utils.parseaddr(addr)[1];
     } except AttributeError{
         pass;
-    } if m == (None, None){  # Indicates parse failure or AttributeError
+    } if m == (nil, nil){  # Indicates parse failure or AttributeError
         # something weird here.. punt -ddm
         return "<%s>" % addr;
-    } elif m is None{
+    } elif m is nil{
         # the sender wants an empty return address
         return "<>";
     } else{
         return "<%s>" % m;
 
 }
-} def _addr_only(addrstring){
+} function _addr_only(addrstring){
     displayname, addr = email.utils.parseaddr(addrstring);
     if (displayname, addr) == ('', ''){
         # parseaddr couldn't parse it, so use it as is.
@@ -168,7 +168,7 @@ def quoteaddr(addr){
     } return addr;
 
 }
-def quotedata(data){
+function quotedata(data){
     """Quote data for email.
 
     Double leading '.', and change Unix newline '\\n', or Mac '\\r' into
@@ -182,37 +182,37 @@ def quotedata(data){
 try{
     import ssl;
 } except ImportError{
-    _have_ssl = False;
+    _have_ssl = false;
 } else{
     class SSLFakeFile{
         """A fake file like object that really wraps a SSLObject.
 
         It only supports what is needed in smtplib.
         """;
-        def __init__(self, sslobj){
-            self.sslobj = sslobj;
+        function __init__( sslobj){
+            this.sslobj = sslobj;
 
         }
-        def readline(self, size=-1){
+        function readline( size=-1){
             if size < 0{
-                size = None;
+                size = nil;
             } str = "";
-            chr = None;
+            chr = nil;
             while chr != "\n"{
-                if size is not None and len(str) >= size{
+                if size is not nil and len(str) >= size{
                     break;
-                } chr = self.sslobj.read(1);
+                } chr = this.sslobj.read(1);
                 if not chr{
                     break;
                 } str += chr;
             } return str;
 
         }
-        def close(self){
+        function close(){
             pass;
 
     }
-    } _have_ssl = True;
+    } _have_ssl = true;
 
 }
 class SMTP{
@@ -245,14 +245,14 @@ class SMTP{
         method called 'sendmail' that will do an entire mail transaction.
         """;
     debuglevel = 0;
-    file = None;
-    helo_resp = None;
+    file = nil;
+    helo_resp = nil;
     ehlo_msg = "ehlo";
-    ehlo_resp = None;
+    ehlo_resp = nil;
     does_esmtp = 0;
     default_port = SMTP_PORT;
 
-    def __init__(self, host='', port=0, local_hostname=None,
+    function __init__( host='', port=0, local_hostname=nil,
                  timeout=socket._GLOBAL_DEFAULT_TIMEOUT){
         """Initialize a new instance.
 
@@ -266,22 +266,22 @@ class SMTP{
         socket.getfqdn().
 
         """;
-        self.timeout = timeout;
-        self.esmtp_features = {};
+        this.timeout = timeout;
+        this.esmtp_features = {};
         if host{
-            (code, msg) = self.connect(host, port);
+            (code, msg) = this.connect(host, port);
             if code != 220{
-                self.close();
+                this.close();
                 raise SMTPConnectError(code, msg);
-        } } if local_hostname is not None{
-            self.local_hostname = local_hostname;
+        } } if local_hostname is not nil{
+            this.local_hostname = local_hostname;
         } else{
             # RFC 2821 says we should use the fqdn in the EHLO/HELO verb, and
             # if that can't be calculated, that we should use a domain literal
             # instead (essentially an encoded IP address like [A.B.C.D]).
             fqdn = socket.getfqdn();
             if '.' in fqdn{
-                self.local_hostname = fqdn;
+                this.local_hostname = fqdn;
             } else{
                 # We can't find an fqdn hostname, so use a domain literal
                 addr = '127.0.0.1';
@@ -289,28 +289,28 @@ class SMTP{
                     addr = socket.gethostbyname(socket.gethostname());
                 } except socket.gaierror{
                     pass;
-                } self.local_hostname = '[%s]' % addr;
+                } this.local_hostname = '[%s]' % addr;
 
     }
-    } } def set_debuglevel(self, debuglevel){
+    } } function set_debuglevel( debuglevel){
         """Set the debug output level.
 
         A non-false value results in debug messages for connection and for all
         messages sent to and received from the server.
 
         """;
-        self.debuglevel = debuglevel;
+        this.debuglevel = debuglevel;
 
     }
-    def _get_socket(self, host, port, timeout){
+    function _get_socket( host, port, timeout){
         # This makes it simpler for SMTP_SSL to use the SMTP connect code
         # and just alter the socket connection bit.
-        if self.debuglevel > 0{
+        if this.debuglevel > 0{
             print>>stderr, 'connect:', (host, port);
         } return socket.create_connection((host, port), timeout);
 
     }
-    def connect(self, host='localhost', port=0){
+    function connect( host='localhost', port=0){
         """Connect to a host on a given port.
 
         If the hostname ends with a colon (`:') followed by a number, and
@@ -330,40 +330,40 @@ class SMTP{
                 } except ValueError{
                     raise socket.error, "nonnumeric port";
         } } } if not port{
-            port = self.default_port;
-        } if self.debuglevel > 0{
+            port = this.default_port;
+        } if this.debuglevel > 0{
             print>>stderr, 'connect:', (host, port);
-        } self.sock = self._get_socket(host, port, self.timeout);
-        (code, msg) = self.getreply();
-        if self.debuglevel > 0{
+        } this.sock = this._get_socket(host, port, this.timeout);
+        (code, msg) = this.getreply();
+        if this.debuglevel > 0{
             print>>stderr, "connect:", msg;
         } return (code, msg);
 
     }
-    def send(self, str){
+    function send( str){
         """Send `str' to the server.""";
-        if self.debuglevel > 0{
+        if this.debuglevel > 0{
             print>>stderr, 'send:', repr(str);
-        } if hasattr(self, 'sock') and self.sock{
+        } if hasattr(this, 'sock') and this.sock{
             try{
-                self.sock.sendall(str);
+                this.sock.sendall(str);
             } except socket.error{
-                self.close();
+                this.close();
                 raise SMTPServerDisconnected('Server not connected');
         } } else{
             raise SMTPServerDisconnected('please run connect() first');
 
     }
-    } def putcmd(self, cmd, args=""){
+    } function putcmd( cmd, args=""){
         """Send a command to the server.""";
         if args == ""{
             str = '%s%s' % (cmd, CRLF);
         } else{
             str = '%s %s%s' % (cmd, args, CRLF);
-        } self.send(str);
+        } this.send(str);
 
     }
-    def getreply(self){
+    function getreply(){
         """Get a reply from the server.
 
         Returns a tuple consisting of:
@@ -377,19 +377,19 @@ class SMTP{
         Raises SMTPServerDisconnected if end-of-file is reached.
         """;
         resp = [];
-        if self.file is None{
-            self.file = self.sock.makefile('rb');
+        if this.file is nil{
+            this.file = this.sock.makefile('rb');
         } while 1{
             try{
-                line = self.file.readline(_MAXLINE + 1);
+                line = this.file.readline(_MAXLINE + 1);
             } except socket.error as e{
-                self.close();
+                this.close();
                 raise SMTPServerDisconnected("Connection unexpectedly closed: "
                                              + str(e));
             } if line == ''{
-                self.close();
+                this.close();
                 raise SMTPServerDisconnected("Connection unexpectedly closed");
-            } if self.debuglevel > 0{
+            } if this.debuglevel > 0{
                 print>>stderr, 'reply:', repr(line);
             } if len(line) > _MAXLINE{
                 raise SMTPResponseException(500, "Line too long.");
@@ -409,49 +409,49 @@ class SMTP{
 
         }
         } errmsg = "\n".join(resp);
-        if self.debuglevel > 0{
+        if this.debuglevel > 0{
             print>>stderr, 'reply: retcode (%s); Msg: %s' % (errcode, errmsg);
         } return errcode, errmsg;
 
     }
-    def docmd(self, cmd, args=""){
+    function docmd( cmd, args=""){
         """Send a command, and return its response code.""";
-        self.putcmd(cmd, args);
-        return self.getreply();
+        this.putcmd(cmd, args);
+        return this.getreply();
 
     # std smtp commands
     }
-    def helo(self, name=''){
+    function helo( name=''){
         """SMTP 'helo' command.
         Hostname to send for this command defaults to the FQDN of the local
         host.
         """;
-        self.putcmd("helo", name or self.local_hostname);
-        (code, msg) = self.getreply();
-        self.helo_resp = msg;
+        this.putcmd("helo", name or this.local_hostname);
+        (code, msg) = this.getreply();
+        this.helo_resp = msg;
         return (code, msg);
 
     }
-    def ehlo(self, name=''){
+    function ehlo( name=''){
         """ SMTP 'ehlo' command.
         Hostname to send for this command defaults to the FQDN of the local
         host.
         """;
-        self.esmtp_features = {};
-        self.putcmd(self.ehlo_msg, name or self.local_hostname);
-        (code, msg) = self.getreply();
+        this.esmtp_features = {};
+        this.putcmd(this.ehlo_msg, name or this.local_hostname);
+        (code, msg) = this.getreply();
         # According to RFC1869 some (badly written)
         # MTA's will disconnect on an ehlo. Toss an exception if
         # that happens -ddm
         if code == -1 and len(msg) == 0{
-            self.close();
+            this.close();
             raise SMTPServerDisconnected("Server not connected");
-        } self.ehlo_resp = msg;
+        } this.ehlo_resp = msg;
         if code != 250{
             return (code, msg);
-        } self.does_esmtp = 1;
+        } this.does_esmtp = 1;
         #parse the ehlo response -ddm
-        resp = self.ehlo_resp.split('\n');
+        resp = this.ehlo_resp.split('\n');
         del resp[0];
         for each in resp{
             # To be able to communicate with as many SMTP servers as possible,
@@ -463,7 +463,7 @@ class SMTP{
             auth_match = OLDSTYLE_AUTH.match(each);
             if auth_match{
                 # This doesn't remove duplicates, but that's no problem
-                self.esmtp_features["auth"] = self.esmtp_features.get("auth", "") \
+                this.esmtp_features["auth"] = this.esmtp_features.get("auth", "") \
                         + " " + auth_match.groups(0)[0];
                 continue;
 
@@ -477,54 +477,54 @@ class SMTP{
                 feature = m.group("feature").lower();
                 params = m.string[m.end("feature"):].strip();
                 if feature == "auth"{
-                    self.esmtp_features[feature] = self.esmtp_features.get(feature, "") \
+                    this.esmtp_features[feature] = this.esmtp_features.get(feature, "") \
                             + " " + params;
                 } else{
-                    self.esmtp_features[feature] = params;
+                    this.esmtp_features[feature] = params;
         } } } return (code, msg);
 
     }
-    def has_extn(self, opt){
+    function has_extn( opt){
         """Does the server support a given SMTP service extension?""";
-        return opt.lower() in self.esmtp_features;
+        return opt.lower() in this.esmtp_features;
 
     }
-    def help(self, args=''){
+    function help( args=''){
         """SMTP 'help' command.
         Returns help text from server.""";
-        self.putcmd("help", args);
-        return self.getreply()[1];
+        this.putcmd("help", args);
+        return this.getreply()[1];
 
     }
-    def rset(self){
+    function rset(){
         """SMTP 'rset' command -- resets session.""";
-        return self.docmd("rset");
+        return this.docmd("rset");
 
     }
-    def noop(self){
+    function noop(){
         """SMTP 'noop' command -- doesn't do anything :>""";
-        return self.docmd("noop");
+        return this.docmd("noop");
 
     }
-    def mail(self, sender, options=[]){
+    function mail( sender, options=[]){
         """SMTP 'mail' command -- begins mail xfer session.""";
         optionlist = '';
-        if options and self.does_esmtp{
+        if options and this.does_esmtp{
             optionlist = ' ' + ' '.join(options);
-        } self.putcmd("mail", "FROM:%s%s" % (quoteaddr(sender), optionlist));
-        return self.getreply();
+        } this.putcmd("mail", "FROM:%s%s" % (quoteaddr(sender), optionlist));
+        return this.getreply();
 
     }
-    def rcpt(self, recip, options=[]){
+    function rcpt( recip, options=[]){
         """SMTP 'rcpt' command -- indicates 1 recipient for this mail.""";
         optionlist = '';
-        if options and self.does_esmtp{
+        if options and this.does_esmtp{
             optionlist = ' ' + ' '.join(options);
-        } self.putcmd("rcpt", "TO:%s%s" % (quoteaddr(recip), optionlist));
-        return self.getreply();
+        } this.putcmd("rcpt", "TO:%s%s" % (quoteaddr(recip), optionlist));
+        return this.getreply();
 
     }
-    def data(self, msg){
+    function data( msg){
         """SMTP 'DATA' command -- sends message data to server.
 
         Automatically quotes lines beginning with a period per rfc821.
@@ -532,9 +532,9 @@ class SMTP{
         DATA command; the return value from this method is the final
         response code received when the all data is sent.
         """;
-        self.putcmd("data");
-        (code, repl) = self.getreply();
-        if self.debuglevel > 0{
+        this.putcmd("data");
+        (code, repl) = this.getreply();
+        if this.debuglevel > 0{
             print>>stderr, "data:", (code, repl);
         } if code != 354{
             raise SMTPDataError(code, repl);
@@ -543,30 +543,30 @@ class SMTP{
             if q[-2:] != CRLF{
                 q = q + CRLF;
             } q = q + "." + CRLF;
-            self.send(q);
-            (code, msg) = self.getreply();
-            if self.debuglevel > 0{
+            this.send(q);
+            (code, msg) = this.getreply();
+            if this.debuglevel > 0{
                 print>>stderr, "data:", (code, msg);
             } return (code, msg);
 
     }
-    } def verify(self, address){
+    } function verify( address){
         """SMTP 'verify' command -- checks for address validity.""";
-        self.putcmd("vrfy", _addr_only(address));
-        return self.getreply();
+        this.putcmd("vrfy", _addr_only(address));
+        return this.getreply();
     # a.k.a.
     }
     vrfy = verify;
 
-    def expn(self, address){
+    function expn( address){
         """SMTP 'expn' command -- expands a mailing list.""";
-        self.putcmd("expn", _addr_only(address));
-        return self.getreply();
+        this.putcmd("expn", _addr_only(address));
+        return this.getreply();
 
     # some useful methods
 
     }
-    def ehlo_or_helo_if_needed(self){
+    function ehlo_or_helo_if_needed(){
         """Call self.ehlo() and/or self.helo() if needed.
 
         If there has been no previous EHLO or HELO command this session, this
@@ -577,14 +577,14 @@ class SMTP{
          SMTPHeloError            The server didn't reply properly to
                                   the helo greeting.
         """;
-        if self.helo_resp is None and self.ehlo_resp is None{
-            if not (200 <= self.ehlo()[0] <= 299){
-                (code, resp) = self.helo();
+        if this.helo_resp is nil and this.ehlo_resp is nil{
+            if not (200 <= this.ehlo()[0] <= 299){
+                (code, resp) = this.helo();
                 if not (200 <= code <= 299){
                     raise SMTPHeloError(code, resp);
 
     }
-    } } } def login(self, user, password){
+    } } } function login( user, password){
         """Log in on an SMTP server that requires authentication.
 
         The arguments are:
@@ -606,13 +606,13 @@ class SMTP{
                                   found.
         """;
 
-        def encode_cram_md5(challenge, user, password){
+        function encode_cram_md5(challenge, user, password){
             challenge = base64.decodestring(challenge);
             response = user + " " + hmac.HMAC(password, challenge).hexdigest();
             return encode_base64(response, eol="");
 
         }
-        def encode_plain(user, password){
+        function encode_plain(user, password){
             return encode_base64("\0%s\0%s" % (user, password), eol="");
 
 
@@ -621,14 +621,14 @@ class SMTP{
         AUTH_CRAM_MD5 = "CRAM-MD5";
         AUTH_LOGIN = "LOGIN";
 
-        self.ehlo_or_helo_if_needed();
+        this.ehlo_or_helo_if_needed();
 
-        if not self.has_extn("auth"){
+        if not this.has_extn("auth"){
             raise SMTPException("SMTP AUTH extension not supported by server.");
 
         # Authentication methods the server supports:
         }
-        authlist = self.esmtp_features["auth"].split();
+        authlist = this.esmtp_features["auth"].split();
 
         # List of authentication methods we support: from preferred to
         # less preferred methods. Except for the purpose of testing the weaker
@@ -636,7 +636,7 @@ class SMTP{
         preferred_auths = [AUTH_CRAM_MD5, AUTH_PLAIN, AUTH_LOGIN];
 
         # Determine the authentication method we'll use
-        authmethod = None;
+        authmethod = nil;
         for method in preferred_auths{
             if method in authlist{
                 authmethod = method;
@@ -644,21 +644,21 @@ class SMTP{
 
         }
         } if authmethod == AUTH_CRAM_MD5{
-            (code, resp) = self.docmd("AUTH", AUTH_CRAM_MD5);
+            (code, resp) = this.docmd("AUTH", AUTH_CRAM_MD5);
             if code == 503{
                 # 503 == 'Error: already authenticated'
                 return (code, resp);
-            } (code, resp) = self.docmd(encode_cram_md5(resp, user, password));
+            } (code, resp) = this.docmd(encode_cram_md5(resp, user, password));
         } elif authmethod == AUTH_PLAIN{
-            (code, resp) = self.docmd("AUTH",
+            (code, resp) = this.docmd("AUTH",
                 AUTH_PLAIN + " " + encode_plain(user, password));
         } elif authmethod == AUTH_LOGIN{
-            (code, resp) = self.docmd("AUTH",
+            (code, resp) = this.docmd("AUTH",
                 "%s %s" % (AUTH_LOGIN, encode_base64(user, eol="")));
             if code != 334{
                 raise SMTPAuthenticationError(code, resp);
-            } (code, resp) = self.docmd(encode_base64(password, eol=""));
-        } elif authmethod is None{
+            } (code, resp) = this.docmd(encode_base64(password, eol=""));
+        } elif authmethod is nil{
             raise SMTPException("No suitable authentication method found.");
         } if code not in (235, 503){
             # 235 == 'Authentication successful'
@@ -667,7 +667,7 @@ class SMTP{
         } return (code, resp);
 
     }
-    def starttls(self, keyfile=None, certfile=None){
+    function starttls( keyfile=nil, certfile=nil){
         """Puts the connection to the SMTP server into TLS mode.
 
         If there has been no previous EHLO or HELO command this session, this
@@ -684,23 +684,23 @@ class SMTP{
          SMTPHeloError            The server didn't reply properly to
                                   the helo greeting.
         """;
-        self.ehlo_or_helo_if_needed();
-        if not self.has_extn("starttls"){
+        this.ehlo_or_helo_if_needed();
+        if not this.has_extn("starttls"){
             raise SMTPException("STARTTLS extension not supported by server.");
-        } (resp, reply) = self.docmd("STARTTLS");
+        } (resp, reply) = this.docmd("STARTTLS");
         if resp == 220{
             if not _have_ssl{
                 raise RuntimeError("No SSL support included in this Python");
-            } self.sock = ssl.wrap_socket(self.sock, keyfile, certfile);
-            self.file = SSLFakeFile(self.sock);
+            } this.sock = ssl.wrap_socket(this.sock, keyfile, certfile);
+            this.file = SSLFakeFile(this.sock);
             # RFC 3207:
             # The client MUST discard any knowledge obtained from
             # the server, such as the list of SMTP service extensions,
             # which was not obtained from the TLS negotiation itself.
-            self.helo_resp = None;
-            self.ehlo_resp = None;
-            self.esmtp_features = {};
-            self.does_esmtp = 0;
+            this.helo_resp = nil;
+            this.ehlo_resp = nil;
+            this.esmtp_features = {};
+            this.does_esmtp = 0;
         } else{
             # RFC 3207:
             # 501 Syntax error (no parameters allowed)
@@ -709,7 +709,7 @@ class SMTP{
         } return (resp, reply);
 
     }
-    def sendmail(self, from_addr, to_addrs, msg, mail_options=[],
+    function sendmail( from_addr, to_addrs, msg, mail_options=[],
                  rcpt_options=[]){
         """This command performs an entire mail transaction.
 
@@ -766,35 +766,35 @@ class SMTP{
         empty dictionary.
 
         """;
-        self.ehlo_or_helo_if_needed();
+        this.ehlo_or_helo_if_needed();
         esmtp_opts = [];
-        if self.does_esmtp{
+        if this.does_esmtp{
             # Hmmm? what's this? -ddm
             # self.esmtp_features['7bit']=""
-            if self.has_extn('size'){
+            if this.has_extn('size'){
                 esmtp_opts.append("size=%d" % len(msg));
             } for option in mail_options{
                 esmtp_opts.append(option);
 
         }
-        } (code, resp) = self.mail(from_addr, esmtp_opts);
+        } (code, resp) = this.mail(from_addr, esmtp_opts);
         if code != 250{
-            self.rset();
+            this.rset();
             raise SMTPSenderRefused(code, resp, from_addr);
         } senderrs = {};
         if isinstance(to_addrs, basestring){
             to_addrs = [to_addrs];
         } for each in to_addrs{
-            (code, resp) = self.rcpt(each, rcpt_options);
+            (code, resp) = this.rcpt(each, rcpt_options);
             if (code != 250) and (code != 251){
                 senderrs[each] = (code, resp);
         } } if len(senderrs) == len(to_addrs){
             # the server refused all our recipients
-            self.rset();
+            this.rset();
             raise SMTPRecipientsRefused(senderrs);
-        } (code, resp) = self.data(msg);
+        } (code, resp) = this.data(msg);
         if code != 250{
-            self.rset();
+            this.rset();
             raise SMTPDataError(code, resp);
         #if we got here then somebody got our mail
         }
@@ -802,29 +802,29 @@ class SMTP{
 
 
     }
-    def close(self){
+    function close(){
         """Close the connection to the SMTP server.""";
         try{
-            file = self.file;
-            self.file = None;
+            file = this.file;
+            this.file = nil;
             if file{
                 file.close();
         } } finally{
-            sock = self.sock;
-            self.sock = None;
+            sock = this.sock;
+            this.sock = nil;
             if sock{
                 sock.close();
 
 
     }
-    } } def quit(self){
+    } } function quit(){
         """Terminate the SMTP session.""";
-        res = self.docmd("quit");
+        res = this.docmd("quit");
         # A new EHLO is required after reconnecting with connect()
-        self.ehlo_resp = self.helo_resp = None;
-        self.esmtp_features = {};
-        self.does_esmtp = False;
-        self.close();
+        this.ehlo_resp = this.helo_resp = nil;
+        this.esmtp_features = {};
+        this.does_esmtp = false;
+        this.close();
         return res;
 
 }
@@ -844,20 +844,20 @@ class SMTP{
 
         default_port = SMTP_SSL_PORT;
 
-        def __init__(self, host='', port=0, local_hostname=None,
-                     keyfile=None, certfile=None,
+        function __init__( host='', port=0, local_hostname=nil,
+                     keyfile=nil, certfile=nil,
                      timeout=socket._GLOBAL_DEFAULT_TIMEOUT){
-            self.keyfile = keyfile;
-            self.certfile = certfile;
-            SMTP.__init__(self, host, port, local_hostname, timeout);
+            this.keyfile = keyfile;
+            this.certfile = certfile;
+            SMTP.__init__(this, host, port, local_hostname, timeout);
 
         }
-        def _get_socket(self, host, port, timeout){
-            if self.debuglevel > 0{
+        function _get_socket( host, port, timeout){
+            if this.debuglevel > 0{
                 print>>stderr, 'connect:', (host, port);
             } new_socket = socket.create_connection((host, port), timeout);
-            new_socket = ssl.wrap_socket(new_socket, self.keyfile, self.certfile);
-            self.file = SSLFakeFile(new_socket);
+            new_socket = ssl.wrap_socket(new_socket, this.keyfile, this.certfile);
+            this.file = SSLFakeFile(new_socket);
             return new_socket;
 
     }
@@ -885,30 +885,30 @@ class LMTP(SMTP){
 
     ehlo_msg = "lhlo";
 
-    def __init__(self, host='', port=LMTP_PORT, local_hostname=None){
+    function __init__( host='', port=LMTP_PORT, local_hostname=nil){
         """Initialize a new instance.""";
-        SMTP.__init__(self, host, port, local_hostname);
+        SMTP.__init__(this, host, port, local_hostname);
 
     }
-    def connect(self, host='localhost', port=0){
+    function connect( host='localhost', port=0){
         """Connect to the LMTP daemon, on either a Unix or a TCP socket.""";
         if host[0] != '/'{
-            return SMTP.connect(self, host, port);
+            return SMTP.connect(this, host, port);
 
         # Handle Unix-domain sockets.
         }
         try{
-            self.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM);
-            self.sock.connect(host);
+            this.sock = socket.socket(socket.AF_UNIX, socket.SOCK_STREAM);
+            this.sock.connect(host);
         } except socket.error{
-            if self.debuglevel > 0{
+            if this.debuglevel > 0{
                 print>>stderr, 'connect fail:', host;
-            } if self.sock{
-                self.sock.close();
-            } self.sock = None;
+            } if this.sock{
+                this.sock.close();
+            } this.sock = nil;
             raise;
-        } (code, msg) = self.getreply();
-        if self.debuglevel > 0{
+        } (code, msg) = this.getreply();
+        if this.debuglevel > 0{
             print>>stderr, "connect:", msg;
         } return (code, msg);
 
@@ -919,7 +919,7 @@ class LMTP(SMTP){
 } if __name__ == '__main__'{
     import sys;
 
-    def prompt(prompt){
+    function prompt(prompt){
         sys.stdout.write(prompt + ": ");
         return sys.stdin.readline().strip();
 

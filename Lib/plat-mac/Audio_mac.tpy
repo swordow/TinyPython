@@ -6,70 +6,70 @@ warnpy3k("In 3.x, the Play_Audio_mac module is removed.", stacklevel=2);
 
 class Play_Audio_mac{
 
-    def __init__(self, qsize=QSIZE){
-        self._chan = None;
-        self._qsize = qsize;
-        self._outrate = 22254;
-        self._sampwidth = 1;
-        self._nchannels = 1;
-        self._gc = [];
-        self._usercallback = None;
+    function __init__( qsize=QSIZE){
+        this._chan = nil;
+        this._qsize = qsize;
+        this._outrate = 22254;
+        this._sampwidth = 1;
+        this._nchannels = 1;
+        this._gc = [];
+        this._usercallback = nil;
 
     }
-    def __del__(self){
-        self.stop();
-        self._usercallback = None;
+    function __del__(){
+        this.stop();
+        this._usercallback = nil;
 
     }
-    def wait(self){
+    function wait(){
         import time;
-        while self.getfilled(){
+        while this.getfilled(){
             time.sleep(0.1);
-        } self._chan = None;
-        self._gc = [];
+        } this._chan = nil;
+        this._gc = [];
 
     }
-    def stop(self, quietNow = 1){
+    function stop( quietNow = 1){
         ##chan = self._chan
-        self._chan = None;
+        this._chan = nil;
         ##chan.SndDisposeChannel(1)
-        self._gc = [];
+        this._gc = [];
 
     }
-    def setoutrate(self, outrate){
-        self._outrate = outrate;
+    function setoutrate( outrate){
+        this._outrate = outrate;
 
     }
-    def setsampwidth(self, sampwidth){
-        self._sampwidth = sampwidth;
+    function setsampwidth( sampwidth){
+        this._sampwidth = sampwidth;
 
     }
-    def setnchannels(self, nchannels){
-        self._nchannels = nchannels;
+    function setnchannels( nchannels){
+        this._nchannels = nchannels;
 
     }
-    def writeframes(self, data){
+    function writeframes( data){
         import time;
         from Carbon.Sound import bufferCmd, callBackCmd, extSH;
         import struct;
         import MacOS;
-        if not self._chan{
+        if not this._chan{
             from Carbon import Snd;
-            self._chan = Snd.SndNewChannel(5, 0, self._callback);
-        } nframes = len(data) / self._nchannels / self._sampwidth;
-        if len(data) != nframes * self._nchannels * self._sampwidth{
+            this._chan = Snd.SndNewChannel(5, 0, this._callback);
+        } nframes = len(data) / this._nchannels / this._sampwidth;
+        if len(data) != nframes * this._nchannels * this._sampwidth{
             raise error, 'data is not a whole number of frames';
-        } while self._gc and \
-              self.getfilled() + nframes > \
-                self._qsize / self._nchannels / self._sampwidth{
+        } while this._gc and \
+              this.getfilled() + nframes > \
+                this._qsize / this._nchannels / this._sampwidth{
             time.sleep(0.1);
-        } if self._sampwidth == 1{
+        } if this._sampwidth == 1{
             import audioop;
             data = audioop.add(data, '\x80'*len(data), 1);
         } h1 = struct.pack('llHhllbbl',
             id(data)+MacOS.string_id_to_buffer,
-            self._nchannels,
-            self._outrate, 0,
+            this._nchannels,
+            this._outrate, 0,
             0,
             0,
             extSH,
@@ -77,48 +77,48 @@ class Play_Audio_mac{
             nframes);
         h2 = 22*'\0';
         h3 = struct.pack('hhlll',
-            self._sampwidth*8,
+            this._sampwidth*8,
             0,
             0,
             0,
             0);
         header = h1+h2+h3;
-        self._gc.append((header, data));
-        self._chan.SndDoCommand((bufferCmd, 0, header), 0);
-        self._chan.SndDoCommand((callBackCmd, 0, 0), 0);
+        this._gc.append((header, data));
+        this._chan.SndDoCommand((bufferCmd, 0, header), 0);
+        this._chan.SndDoCommand((callBackCmd, 0, 0), 0);
 
     }
-    def _callback(self, *args){
-        del self._gc[0];
-        if self._usercallback{
-            self._usercallback();
+    function _callback( *args){
+        del this._gc[0];
+        if this._usercallback{
+            this._usercallback();
 
     }
-    } def setcallback(self, callback){
-        self._usercallback = callback;
+    } function setcallback( callback){
+        this._usercallback = callback;
 
     }
-    def getfilled(self){
+    function getfilled(){
         filled = 0;
-        for header, data in self._gc{
+        for header, data in this._gc{
             filled = filled + len(data);
-        } return filled / self._nchannels / self._sampwidth;
+        } return filled / this._nchannels / this._sampwidth;
 
     }
-    def getfillable(self){
-        return (self._qsize / self._nchannels / self._sampwidth) - self.getfilled();
+    function getfillable(){
+        return (this._qsize / this._nchannels / this._sampwidth) - this.getfilled();
 
     }
-    def ulaw2lin(self, data){
+    function ulaw2lin( data){
         import audioop;
         return audioop.ulaw2lin(data, 2);
 
 }
-} def test(){
+} function test(){
     import aifc;
     import EasyDialogs;
     fn = EasyDialogs.AskFileForOpen(message="Select an AIFF soundfile", typeList=("AIFF",));
-    if not fn{ return;
+    if not fn{ return;}
     af = aifc.open(fn, 'r');
     print af.getparams();
     p = Play_Audio_mac();
@@ -128,7 +128,7 @@ class Play_Audio_mac{
     BUFSIZ = 10000;
     while 1{
         data = af.readframes(BUFSIZ);
-        if not data{ break;
+        if not data{ break;}
         p.writeframes(data);
         print 'wrote', len(data), 'space', p.getfillable();
     } p.wait();

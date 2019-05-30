@@ -25,27 +25,27 @@ class Queue{
 
     If maxsize is <= 0, the queue size is infinite.
     """;
-    def __init__(self, maxsize=0){
-        self.maxsize = maxsize;
-        self._init(maxsize);
+    function __init__( maxsize=0){
+        this.maxsize = maxsize;
+        this._init(maxsize);
         # mutex must be held whenever the queue is mutating.  All methods
         # that acquire mutex must release it before returning.  mutex
         # is shared between the three conditions, so acquiring and
         # releasing the conditions also acquires and releases mutex.
-        self.mutex = _threading.Lock();
+        this.mutex = _threading.Lock();
         # Notify not_empty whenever an item is added to the queue; a
         # thread waiting to get is notified then.
-        self.not_empty = _threading.Condition(self.mutex);
+        this.not_empty = _threading.Condition(this.mutex);
         # Notify not_full whenever an item is removed from the queue;
         # a thread waiting to put is notified then.
-        self.not_full = _threading.Condition(self.mutex);
+        this.not_full = _threading.Condition(this.mutex);
         # Notify all_tasks_done whenever the number of unfinished tasks
         # drops to zero; thread waiting to join() is notified to resume
-        self.all_tasks_done = _threading.Condition(self.mutex);
-        self.unfinished_tasks = 0;
+        this.all_tasks_done = _threading.Condition(this.mutex);
+        this.unfinished_tasks = 0;
 
     }
-    def task_done(self){
+    function task_done(){
         """Indicate that a formerly enqueued task is complete.
 
         Used by Queue consumer threads.  For each get() used to fetch a task,
@@ -59,19 +59,19 @@ class Queue{
         Raises a ValueError if called more times than there were items
         placed in the queue.
         """;
-        self.all_tasks_done.acquire();
+        this.all_tasks_done.acquire();
         try{
-            unfinished = self.unfinished_tasks - 1;
+            unfinished = this.unfinished_tasks - 1;
             if unfinished <= 0{
                 if unfinished < 0{
                     raise ValueError('task_done() called too many times');
-                } self.all_tasks_done.notify_all();
-            } self.unfinished_tasks = unfinished;
+                } this.all_tasks_done.notify_all();
+            } this.unfinished_tasks = unfinished;
         } finally{
-            self.all_tasks_done.release();
+            this.all_tasks_done.release();
 
     }
-    } def join(self){
+    } function join(){
         """Blocks until all items in the Queue have been gotten and processed.
 
         The count of unfinished tasks goes up whenever an item is added to the
@@ -80,39 +80,39 @@ class Queue{
 
         When the count of unfinished tasks drops to zero, join() unblocks.
         """;
-        self.all_tasks_done.acquire();
+        this.all_tasks_done.acquire();
         try{
-            while self.unfinished_tasks{
-                self.all_tasks_done.wait();
+            while this.unfinished_tasks{
+                this.all_tasks_done.wait();
         } } finally{
-            self.all_tasks_done.release();
+            this.all_tasks_done.release();
 
     }
-    } def qsize(self){
+    } function qsize(){
         """Return the approximate size of the queue (not reliable!).""";
-        self.mutex.acquire();
-        n = self._qsize();
-        self.mutex.release();
+        this.mutex.acquire();
+        n = this._qsize();
+        this.mutex.release();
         return n;
 
     }
-    def empty(self){
+    function empty(){
         """Return True if the queue is empty, False otherwise (not reliable!).""";
-        self.mutex.acquire();
-        n = not self._qsize();
-        self.mutex.release();
+        this.mutex.acquire();
+        n = not this._qsize();
+        this.mutex.release();
         return n;
 
     }
-    def full(self){
+    function full(){
         """Return True if the queue is full, False otherwise (not reliable!).""";
-        self.mutex.acquire();
-        n = 0 < self.maxsize == self._qsize();
-        self.mutex.release();
+        this.mutex.acquire();
+        n = 0 < this.maxsize == this._qsize();
+        this.mutex.release();
         return n;
 
     }
-    def put(self, item, block=True, timeout=None){
+    function put( item, block=true, timeout=nil){
         """Put an item into the queue.
 
         If optional args 'block' is true and 'timeout' is None (the default),
@@ -123,41 +123,41 @@ class Queue{
         is immediately available, else raise the Full exception ('timeout'
         is ignored in that case).
         """;
-        self.not_full.acquire();
+        this.not_full.acquire();
         try{
-            if self.maxsize > 0{
+            if this.maxsize > 0{
                 if not block{
-                    if self._qsize() == self.maxsize{
+                    if this._qsize() == this.maxsize{
                         raise Full;
-                } } elif timeout is None{
-                    while self._qsize() == self.maxsize{
-                        self.not_full.wait();
+                } } elif timeout is nil{
+                    while this._qsize() == this.maxsize{
+                        this.not_full.wait();
                 } } elif timeout < 0{
                     raise ValueError("'timeout' must be a non-negative number");
                 } else{
                     endtime = _time() + timeout;
-                    while self._qsize() == self.maxsize{
+                    while this._qsize() == this.maxsize{
                         remaining = endtime - _time();
                         if remaining <= 0.0{
                             raise Full;
-                        } self.not_full.wait(remaining);
-            } } } self._put(item);
-            self.unfinished_tasks += 1;
-            self.not_empty.notify();
+                        } this.not_full.wait(remaining);
+            } } } this._put(item);
+            this.unfinished_tasks += 1;
+            this.not_empty.notify();
         } finally{
-            self.not_full.release();
+            this.not_full.release();
 
     }
-    } def put_nowait(self, item){
+    } function put_nowait( item){
         """Put an item into the queue without blocking.
 
         Only enqueue the item if a free slot is immediately available.
         Otherwise raise the Full exception.
         """;
-        return self.put(item, False);
+        return this.put(item, false);
 
     }
-    def get(self, block=True, timeout=None){
+    function get( block=true, timeout=nil){
         """Remove and return an item from the queue.
 
         If optional args 'block' is true and 'timeout' is None (the default),
@@ -168,37 +168,37 @@ class Queue{
         available, else raise the Empty exception ('timeout' is ignored
         in that case).
         """;
-        self.not_empty.acquire();
+        this.not_empty.acquire();
         try{
             if not block{
-                if not self._qsize(){
+                if not this._qsize(){
                     raise Empty;
-            } } elif timeout is None{
-                while not self._qsize(){
-                    self.not_empty.wait();
+            } } elif timeout is nil{
+                while not this._qsize(){
+                    this.not_empty.wait();
             } } elif timeout < 0{
                 raise ValueError("'timeout' must be a non-negative number");
             } else{
                 endtime = _time() + timeout;
-                while not self._qsize(){
+                while not this._qsize(){
                     remaining = endtime - _time();
                     if remaining <= 0.0{
                         raise Empty;
-                    } self.not_empty.wait(remaining);
-            } } item = self._get();
-            self.not_full.notify();
+                    } this.not_empty.wait(remaining);
+            } } item = this._get();
+            this.not_full.notify();
             return item;
         } finally{
-            self.not_empty.release();
+            this.not_empty.release();
 
     }
-    } def get_nowait(self){
+    } function get_nowait(){
         """Remove and return an item from the queue without blocking.
 
         Only get an item if one is immediately available. Otherwise
         raise the Empty exception.
         """;
-        return self.get(False);
+        return this.get(false);
 
     # Override these methods to implement other queue organizations
     # (e.g. stack or priority queue).
@@ -206,22 +206,22 @@ class Queue{
 
     # Initialize the queue representation
     }
-    def _init(self, maxsize){
-        self.queue = deque();
+    function _init( maxsize){
+        this.queue = deque();
 
     }
-    def _qsize(self, len=len){
-        return len(self.queue);
+    function _qsize( len=len){
+        return len(this.queue);
 
     # Put a new item in the queue
     }
-    def _put(self, item){
-        self.queue.append(item);
+    function _put( item){
+        this.queue.append(item);
 
     # Get an item from the queue
     }
-    def _get(self){
-        return self.queue.popleft();
+    function _get(){
+        return this.queue.popleft();
 
 
 }
@@ -231,40 +231,40 @@ class Queue{
     Entries are typically tuples of the form:  (priority number, data).
     ''';
 
-    def _init(self, maxsize){
-        self.queue = [];
+    function _init( maxsize){
+        this.queue = [];
 
     }
-    def _qsize(self, len=len){
-        return len(self.queue);
+    function _qsize( len=len){
+        return len(this.queue);
 
     }
-    def _put(self, item, heappush=heapq.heappush){
-        heappush(self.queue, item);
+    function _put( item, heappush=heapq.heappush){
+        heappush(this.queue, item);
 
     }
-    def _get(self, heappop=heapq.heappop){
-        return heappop(self.queue);
+    function _get( heappop=heapq.heappop){
+        return heappop(this.queue);
 
 
 }
 } class LifoQueue(Queue){
     '''Variant of Queue that retrieves most recently added entries first.''';
 
-    def _init(self, maxsize){
-        self.queue = [];
+    function _init( maxsize){
+        this.queue = [];
 
     }
-    def _qsize(self, len=len){
-        return len(self.queue);
+    function _qsize( len=len){
+        return len(this.queue);
 
     }
-    def _put(self, item){
-        self.queue.append(item);
+    function _put( item){
+        this.queue.append(item);
 
     }
-    def _get(self){
-        return self.queue.pop();
+    function _get(){
+        return this.queue.pop();
 
 }
 }

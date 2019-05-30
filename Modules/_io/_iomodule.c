@@ -596,7 +596,7 @@ PyNumber_AsOff_t(PyObject *item, PyObject *err)
 int 
 _PyIO_ConvertSsize_t(PyObject *obj, void *result) {
     Py_ssize_t limit;
-    if (obj == Py_None) {
+    if (obj == Py_Nil) {
         limit = -1;
     }
     else if (PyNumber_Check(obj)) {

@@ -297,8 +297,8 @@ zipimporter_find_module(PyObject *obj, PyObject *args)
     if (mi == MI_ERROR)
         return NULL;
     if (mi == MI_NOT_FOUND) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     Py_INCREF(self);
     return (PyObject *)self;
@@ -506,8 +506,8 @@ zipimporter_get_source(PyObject *obj, PyObject *args)
         return get_data(PyString_AsString(self->archive), toc_entry);
 
     /* we have the module, but no source */
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(doc_find_module,
@@ -1069,8 +1069,8 @@ unmarshal_code(const char *pathname, PyObject *data, time_t mtime)
             PySys_WriteStderr("# %s has bad magic\n",
                               pathname);
         }
-        Py_INCREF(Py_None);
-        return Py_None;  /* signal caller to try alternative */
+        Py_INCREF(Py_Nil);
+        return Py_Nil;  /* signal caller to try alternative */
     }
 
     if (mtime != 0 && !eq_mtime(get_uint32(buf + 4), mtime)) {
@@ -1078,8 +1078,8 @@ unmarshal_code(const char *pathname, PyObject *data, time_t mtime)
             PySys_WriteStderr("# %s has bad mtime\n",
                               pathname);
         }
-        Py_INCREF(Py_None);
-        return Py_None;  /* signal caller to try alternative */
+        Py_INCREF(Py_Nil);
+        return Py_Nil;  /* signal caller to try alternative */
     }
 
     code = PyMarshal_ReadObjectFromString((char *)buf + 8, size - 8);
@@ -1263,7 +1263,7 @@ get_module_code(ZipImporter *self, char *fullname,
             code = get_code_from_data(self, ispackage,
                                       isbytecode, mtime,
                                       toc_entry);
-            if (code == Py_None) {
+            if (code == Py_Nil) {
                 /* bad magic number or non-matching mtime
                    in byte code, try next */
                 Py_DECREF(code);

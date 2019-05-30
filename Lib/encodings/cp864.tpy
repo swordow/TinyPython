@@ -8,22 +8,22 @@ import codecs;
 
 class Codec(codecs.Codec){
 
-    def encode(self,input,errors='strict'){
+    function encode(input,errors='strict'){
         return codecs.charmap_encode(input,errors,encoding_map);
 
     }
-    def decode(self,input,errors='strict'){
+    function decode(input,errors='strict'){
         return codecs.charmap_decode(input,errors,decoding_table);
 
 }
 } class IncrementalEncoder(codecs.IncrementalEncoder){
-    def encode(self, input, final=False){
-        return codecs.charmap_encode(input,self.errors,encoding_map)[0];
+    function encode( input, final=false){
+        return codecs.charmap_encode(input,this.errors,encoding_map)[0];
 
 }
 } class IncrementalDecoder(codecs.IncrementalDecoder){
-    def decode(self, input, final=False){
-        return codecs.charmap_decode(input,self.errors,decoding_table)[0];
+    function decode( input, final=false){
+        return codecs.charmap_decode(input,this.errors,decoding_table)[0];
 
 }
 } class StreamWriter(Codec,codecs.StreamWriter){
@@ -36,7 +36,7 @@ class StreamReader(Codec,codecs.StreamReader){
 ### encodings module API
 
 }
-def getregentry(){
+function getregentry(){
     return codecs.CodecInfo(
         name='cp864',
         encode=Codec().encode,
@@ -80,16 +80,16 @@ decoding_map.update({
     0x0098: 0x00bb,     #  RIGHT POINTING GUILLEMET
     0x0099: 0xfef7,     #  ARABIC LIGATURE LAM WITH ALEF WITH HAMZA ABOVE ISOLATED FORM
     0x009a: 0xfef8,     #  ARABIC LIGATURE LAM WITH ALEF WITH HAMZA ABOVE FINAL FORM
-    0x009b: None,       #  UNDEFINED
-    0x009c: None,       #  UNDEFINED
+    0x009b: nil,       #  UNDEFINED
+    0x009c: nil,       #  UNDEFINED
     0x009d: 0xfefb,     #  ARABIC LIGATURE LAM WITH ALEF ISOLATED FORM
     0x009e: 0xfefc,     #  ARABIC LIGATURE LAM WITH ALEF FINAL FORM
-    0x009f: None,       #  UNDEFINED
+    0x009f: nil,       #  UNDEFINED
     0x00a1: 0x00ad,     #  SOFT HYPHEN
     0x00a2: 0xfe82,     #  ARABIC LETTER ALEF WITH MADDA ABOVE FINAL FORM
     0x00a5: 0xfe84,     #  ARABIC LETTER ALEF WITH HAMZA ABOVE FINAL FORM
-    0x00a6: None,       #  UNDEFINED
-    0x00a7: None,       #  UNDEFINED
+    0x00a6: nil,       #  UNDEFINED
+    0x00a7: nil,       #  UNDEFINED
     0x00a8: 0xfe8e,     #  ARABIC LETTER ALEF FINAL FORM
     0x00a9: 0xfe8f,     #  ARABIC LETTER BEH ISOLATED FORM
     0x00aa: 0xfe95,     #  ARABIC LETTER TEH ISOLATED FORM
@@ -177,7 +177,7 @@ decoding_map.update({
     0x00fc: 0xfed9,     #  ARABIC LETTER KAF ISOLATED FORM
     0x00fd: 0xfef1,     #  ARABIC LETTER YEH ISOLATED FORM
     0x00fe: 0x25a0,     #  BLACK SQUARE
-    0x00ff: None,       #  UNDEFINED
+    0x00ff: nil,       #  UNDEFINED
 });
 
 ### Decoding Table

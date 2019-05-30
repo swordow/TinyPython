@@ -299,7 +299,7 @@ builtin_filter(PyObject *self, PyObject *args)
             break;
         }
 
-        if (func == (PyObject *)&PyBool_Type || func == Py_None) {
+        if (func == (PyObject *)&PyBool_Type || func == Py_Nil) {
             ok = PyObject_IsTrue(item);
         }
         else {
@@ -633,28 +633,28 @@ static PyObject *
 builtin_eval(PyObject *self, PyObject *args)
 {
     PyObject *cmd, *result, *tmp = NULL;
-    PyObject *globals = Py_None, *locals = Py_None;
+    PyObject *globals = Py_Nil, *locals = Py_Nil;
     char *str;
     PyCompilerFlags cf;
 
     if (!PyArg_UnpackTuple(args, "eval", 1, 3, &cmd, &globals, &locals))
         return NULL;
-    if (locals != Py_None && !PyMapping_Check(locals)) {
+    if (locals != Py_Nil && !PyMapping_Check(locals)) {
         PyErr_SetString(PyExc_TypeError, "locals must be a mapping");
         return NULL;
     }
-    if (globals != Py_None && !PyDict_Check(globals)) {
+    if (globals != Py_Nil && !PyDict_Check(globals)) {
         PyErr_SetString(PyExc_TypeError, PyMapping_Check(globals) ?
             "globals must be a real dict; try eval(expr, {}, mapping)"
             : "globals must be a dict");
         return NULL;
     }
-    if (globals == Py_None) {
+    if (globals == Py_Nil) {
         globals = PyEval_GetGlobals();
-        if (locals == Py_None)
+        if (locals == Py_Nil)
             locals = PyEval_GetLocals();
     }
-    else if (locals == Py_None)
+    else if (locals == Py_Nil)
         locals = globals;
 
     if (globals == NULL || locals == NULL) {
@@ -724,7 +724,7 @@ static PyObject *
 builtin_execfile(PyObject *self, PyObject *args)
 {
     char *filename;
-    PyObject *globals = Py_None, *locals = Py_None;
+    PyObject *globals = Py_Nil, *locals = Py_Nil;
     PyObject *res;
     FILE* fp = NULL;
     PyCompilerFlags cf;
@@ -739,16 +739,16 @@ builtin_execfile(PyObject *self, PyObject *args)
                     &PyDict_Type, &globals,
                     &locals))
         return NULL;
-    if (locals != Py_None && !PyMapping_Check(locals)) {
+    if (locals != Py_Nil && !PyMapping_Check(locals)) {
         PyErr_SetString(PyExc_TypeError, "locals must be a mapping");
         return NULL;
     }
-    if (globals == Py_None) {
+    if (globals == Py_Nil) {
         globals = PyEval_GetGlobals();
-        if (locals == Py_None)
+        if (locals == Py_Nil)
             locals = PyEval_GetLocals();
     }
-    else if (locals == Py_None)
+    else if (locals == Py_Nil)
         locals = globals;
     if (PyDict_GetItemString(globals, "__builtins__") == NULL) {
         if (PyDict_SetItemString(globals, "__builtins__",
@@ -960,7 +960,7 @@ builtin_map(PyObject *self, PyObject *args)
     func = PyTuple_GetItem(args, 0);
     n--;
 
-    if (func == Py_None) {
+    if (func == Py_Nil) {
         if (PyErr_WarnPy3k("map(None, ...) not supported in 3.x; "
                            "use list(...)", 1) < 0)
             return NULL;
@@ -1017,15 +1017,15 @@ builtin_map(PyObject *self, PyObject *args)
         PyObject *alist, *item=NULL, *value;
         int numactive = 0;
 
-        if (func == Py_None && n == 1)
+        if (func == Py_Nil && n == 1)
             alist = NULL;
         else if ((alist = PyTuple_New(n)) == NULL)
             goto Fail_1;
 
         for (j = 0, sqp = seqs; j < n; ++j, ++sqp) {
             if (sqp->saw_StopIteration) {
-                Py_INCREF(Py_None);
-                item = Py_None;
+                Py_INCREF(Py_Nil);
+                item = Py_Nil;
             }
             else {
                 item = PyIter_Next(sqp->it);
@@ -1036,8 +1036,8 @@ builtin_map(PyObject *self, PyObject *args)
                         Py_XDECREF(alist);
                         goto Fail_1;
                     }
-                    Py_INCREF(Py_None);
-                    item = Py_None;
+                    Py_INCREF(Py_Nil);
+                    item = Py_Nil;
                     sqp->saw_StopIteration = 1;
                 }
             }
@@ -1055,7 +1055,7 @@ builtin_map(PyObject *self, PyObject *args)
             break;
         }
 
-        if (func == Py_None)
+        if (func == Py_Nil)
             value = alist;
         else {
             value = PyEval_CallObject(func, alist);
@@ -1153,8 +1153,8 @@ builtin_setattr(PyObject *self, PyObject *args)
         return NULL;
     if (PyObject_SetAttr(v, name, value) != 0)
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(setattr_doc,
@@ -1174,8 +1174,8 @@ builtin_delattr(PyObject *self, PyObject *args)
         return NULL;
     if (PyObject_SetAttr(v, name, (PyObject *)NULL) != 0)
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(delattr_doc,
@@ -1563,7 +1563,7 @@ Return the integer ordinal of a one-character string.");
 static PyObject *
 builtin_pow(PyObject *self, PyObject *args)
 {
-    PyObject *v, *w, *z = Py_None;
+    PyObject *v, *w, *z = Py_Nil;
 
     if (!PyArg_UnpackTuple(args, "pow", 2, 3, &v, &w, &z))
         return NULL;
@@ -1620,13 +1620,13 @@ builtin_print(PyObject *self, PyObject *args, PyObject *kwds)
     if (!PyArg_ParseTupleAndKeywords(dummy_args, kwds, "|OOO:print",
                                      kwlist, &sep, &end, &file))
         return NULL;
-    if (file == NULL || file == Py_None) {
+    if (file == NULL || file == Py_Nil) {
         file = PySys_GetObject("stdout");
         /* sys.stdout may be None when FILE* stdout isn't connected */
-        if (file == Py_None)
-            Py_RETURN_NONE;
+        if (file == Py_Nil)
+            Py_RETURN_NIL;
     }
-    if (sep == Py_None) {
+    if (sep == Py_Nil) {
         sep = NULL;
     }
     else if (sep) {
@@ -1640,7 +1640,7 @@ builtin_print(PyObject *self, PyObject *args, PyObject *kwds)
             return NULL;
         }
     }
-    if (end == Py_None)
+    if (end == Py_Nil)
         end = NULL;
     else if (end) {
         if (PyUnicode_Check(end)) {
@@ -1695,7 +1695,7 @@ builtin_print(PyObject *self, PyObject *args, PyObject *kwds)
     if (err)
         return NULL;
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(print_doc,
@@ -2713,11 +2713,11 @@ _PyBuiltin_Init(void)
         return NULL;                                                    \
     ADD_TO_ALL(OBJECT)
 
-    SETBUILTIN("None",                  Py_None);
+    SETBUILTIN("nil",                   Py_Nil);
     SETBUILTIN("Ellipsis",              Py_Ellipsis);
     SETBUILTIN("NotImplemented",        Py_NotImplemented);
-    SETBUILTIN("False",                 Py_False);
-    SETBUILTIN("True",                  Py_True);
+    SETBUILTIN("false",                 Py_False);
+    SETBUILTIN("true",                  Py_True);
     SETBUILTIN("basestring",            &PyBaseString_Type);
     SETBUILTIN("bool",                  &PyBool_Type);
     SETBUILTIN("memoryview",        &PyMemoryView_Type);
@@ -2795,7 +2795,7 @@ filtertuple(PyObject *func, PyObject *tuple)
             PyErr_SetString(PyExc_TypeError, "filter(): unsubscriptable tuple");
             goto Fail_1;
         }
-        if (func == Py_None) {
+        if (func == Py_Nil) {
             Py_INCREF(item);
             good = item;
         }
@@ -2846,7 +2846,7 @@ filterstring(PyObject *func, PyObject *strobj)
     Py_ssize_t len = PyString_Size(strobj);
     Py_ssize_t outlen = len;
 
-    if (func == Py_None) {
+    if (func == Py_Nil) {
         /* If it's a real string we can return the original,
          * as no character is ever false and __getitem__
          * does return this character. If it's a subclass
@@ -2866,7 +2866,7 @@ filterstring(PyObject *func, PyObject *strobj)
         item = (*strobj->ob_type->tp_as_sequence->sq_item)(strobj, i);
         if (item == NULL)
             goto Fail_1;
-        if (func==Py_None) {
+        if (func==Py_Nil) {
             ok = 1;
         } else {
             PyObject *arg, *good;
@@ -2975,7 +2975,7 @@ filterunicode(PyObject *func, PyObject *strobj)
     Py_ssize_t len = PyUnicode_GetSize(strobj);
     Py_ssize_t outlen = len;
 
-    if (func == Py_None) {
+    if (func == Py_Nil) {
         /* If it's a real string we can return the original,
          * as no character is ever false and __getitem__
          * does return this character. If it's a subclass
@@ -2995,7 +2995,7 @@ filterunicode(PyObject *func, PyObject *strobj)
         item = (*strobj->ob_type->tp_as_sequence->sq_item)(strobj, i);
         if (item == NULL)
             goto Fail_1;
-        if (func == Py_None) {
+        if (func == Py_Nil) {
             ok = 1;
         } else {
             arg = PyTuple_Pack(1, item);

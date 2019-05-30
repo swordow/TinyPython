@@ -85,7 +85,7 @@ UTCDateTime_New(UTCDateTime *ptr)
 static int
 myPyMac_GetOptFSSpecPtr(PyObject *v, FSSpec **spec)
 {
-    if (v == Py_None) {
+    if (v == Py_Nil) {
         *spec = NULL;
         return 1;
     }
@@ -96,7 +96,7 @@ myPyMac_GetOptFSSpecPtr(PyObject *v, FSSpec **spec)
 static int
 myPyMac_GetOptFSRefPtr(PyObject *v, FSRef **ref)
 {
-    if (v == Py_None) {
+    if (v == Py_Nil) {
         *ref = NULL;
         return 1;
     }
@@ -176,7 +176,7 @@ typedef struct FSCatalogInfoObject {
 static PyObject *FSCatalogInfo_New(FSCatalogInfo *itself)
 {
     FSCatalogInfoObject *it;
-    if (itself == NULL) { Py_INCREF(Py_None); return Py_None; }
+    if (itself == NULL) { Py_INCREF(Py_Nil); return Py_Nil; }
     it = PyObject_NEW(FSCatalogInfoObject, &FSCatalogInfo_Type);
     if (it == NULL) return NULL;
     it->ob_itself = *itself;
@@ -1159,8 +1159,8 @@ static PyObject *FSSpec_FSpCreate(FSSpecObject *_self, PyObject *_args)
                      fileType,
                      scriptTag);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1190,8 +1190,8 @@ static PyObject *FSSpec_FSpDelete(FSSpecObject *_self, PyObject *_args)
         return NULL;
     _err = FSpDelete(&_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1221,8 +1221,8 @@ static PyObject *FSSpec_FSpSetFInfo(FSSpecObject *_self, PyObject *_args)
     _err = FSpSetFInfo(&_self->ob_itself,
                        &fndrInfo);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1234,8 +1234,8 @@ static PyObject *FSSpec_FSpSetFLock(FSSpecObject *_self, PyObject *_args)
         return NULL;
     _err = FSpSetFLock(&_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1247,8 +1247,8 @@ static PyObject *FSSpec_FSpRstFLock(FSSpecObject *_self, PyObject *_args)
         return NULL;
     _err = FSpRstFLock(&_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1263,8 +1263,8 @@ static PyObject *FSSpec_FSpRename(FSSpecObject *_self, PyObject *_args)
     _err = FSpRename(&_self->ob_itself,
                      newName);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1279,8 +1279,8 @@ static PyObject *FSSpec_FSpCatMove(FSSpecObject *_self, PyObject *_args)
     _err = FSpCatMove(&_self->ob_itself,
                       &dest);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1295,8 +1295,8 @@ static PyObject *FSSpec_FSpExchangeFiles(FSSpecObject *_self, PyObject *_args)
     _err = FSpExchangeFiles(&_self->ob_itself,
                             &dest);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1601,8 +1601,8 @@ static PyObject *FSRef_FSCompareFSRefs(FSRefObject *_self, PyObject *_args)
     _err = FSCompareFSRefs(&_self->ob_itself,
                            &ref2);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1643,7 +1643,7 @@ static PyObject *FSRef_FSCreateFileUnicode(FSRefObject *_self, PyObject *_args)
                          FSRef_New, &newRef,
                          FSSpec_New, &newSpec);
 #else /* __LP64__ */
-    _res = Py_BuildValue("O&O", FSRef_New, &newRef, Py_None);
+    _res = Py_BuildValue("O&O", FSRef_New, &newRef, Py_Nil);
 #endif /* __LP64__ */
 
     return _res;
@@ -1690,7 +1690,7 @@ static PyObject *FSRef_FSCreateDirectoryUnicode(FSRefObject *_self, PyObject *_a
 #else   /* __LP64__ */
     _res = Py_BuildValue("O&Ol",
                          FSRef_New, &newRef,
-                         Py_None,
+                         Py_Nil,
                          newDirID);
 #endif /* __LP64__ */
     return _res;
@@ -1704,8 +1704,8 @@ static PyObject *FSRef_FSDeleteObject(FSRefObject *_self, PyObject *_args)
         return NULL;
     _err = FSDeleteObject(&_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1738,8 +1738,8 @@ static PyObject *FSRef_FSExchangeObjects(FSRefObject *_self, PyObject *_args)
     _err = FSExchangeObjects(&_self->ob_itself,
                              &destRef);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1803,7 +1803,7 @@ static PyObject *FSRef_FSGetCatalogInfo(FSRefObject *_self, PyObject *_args)
     _res = Py_BuildValue("O&O&OO&",
                          FSCatalogInfo_New, &catalogInfo,
                          PyMac_BuildHFSUniStr255, &outName,
-                         Py_None,
+                         Py_Nil,
                          FSRef_New, &parentRef);
 #endif /* __LP64__ */
     return _res;
@@ -1823,8 +1823,8 @@ static PyObject *FSRef_FSSetCatalogInfo(FSRefObject *_self, PyObject *_args)
                             whichInfo,
                             &catalogInfo);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1842,8 +1842,8 @@ static PyObject *FSRef_FSCreateFork(FSRefObject *_self, PyObject *_args)
     _err = FSCreateFork(&_self->ob_itself,
                         forkNameLength__len__, forkNameLength__in__);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1861,8 +1861,8 @@ static PyObject *FSRef_FSDeleteFork(FSRefObject *_self, PyObject *_args)
     _err = FSDeleteFork(&_self->ob_itself,
                         forkNameLength__len__, forkNameLength__in__);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1904,8 +1904,8 @@ static PyObject *FSRef_FNNotify(FSRefObject *_self, PyObject *_args)
                     message,
                     flags);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2138,8 +2138,8 @@ static PyObject *File_UnmountVol(PyObject *_self, PyObject *_args)
     _err = UnmountVol(volName,
                       vRefNum);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2156,8 +2156,8 @@ static PyObject *File_FlushVol(PyObject *_self, PyObject *_args)
     _err = FlushVol(volName,
                     vRefNum);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2177,8 +2177,8 @@ static PyObject *File_HSetVol(PyObject *_self, PyObject *_args)
                    vRefNum,
                    dirID);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2192,8 +2192,8 @@ static PyObject *File_FSClose(PyObject *_self, PyObject *_args)
         return NULL;
     _err = FSClose(refNum);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2244,8 +2244,8 @@ static PyObject *File_SetEOF(PyObject *_self, PyObject *_args)
     _err = SetEOF(refNum,
                   logEOF);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2282,8 +2282,8 @@ static PyObject *File_SetFPos(PyObject *_self, PyObject *_args)
                    posMode,
                    posOff);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2441,8 +2441,8 @@ static PyObject *File_HCreate(PyObject *_self, PyObject *_args)
                    creator,
                    fileType);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2485,8 +2485,8 @@ static PyObject *File_HDelete(PyObject *_self, PyObject *_args)
                    dirID,
                    fileName);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2532,8 +2532,8 @@ static PyObject *File_HSetFInfo(PyObject *_self, PyObject *_args)
                      fileName,
                      &fndrInfo);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2553,8 +2553,8 @@ static PyObject *File_HSetFLock(PyObject *_self, PyObject *_args)
                      dirID,
                      fileName);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2574,8 +2574,8 @@ static PyObject *File_HRstFLock(PyObject *_self, PyObject *_args)
                      dirID,
                      fileName);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2598,8 +2598,8 @@ static PyObject *File_HRename(PyObject *_self, PyObject *_args)
                    oldName,
                    newName);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2625,8 +2625,8 @@ static PyObject *File_CatMove(PyObject *_self, PyObject *_args)
                    newDirID,
                    newName);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2687,8 +2687,8 @@ static PyObject *File_FSSetForkPosition(PyObject *_self, PyObject *_args)
                              positionMode,
                              positionOffset);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2725,8 +2725,8 @@ static PyObject *File_FSSetForkSize(PyObject *_self, PyObject *_args)
                          positionMode,
                          positionOffset);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2769,8 +2769,8 @@ static PyObject *File_FSFlushFork(PyObject *_self, PyObject *_args)
         return NULL;
     _err = FSFlushFork(forkRefNum);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2784,8 +2784,8 @@ static PyObject *File_FSCloseFork(PyObject *_self, PyObject *_args)
         return NULL;
     _err = FSCloseFork(forkRefNum);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2853,8 +2853,8 @@ static PyObject *File_FNNotifyByPath(PyObject *_self, PyObject *_args)
                           message,
                           flags);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2871,8 +2871,8 @@ static PyObject *File_FNNotifyAll(PyObject *_self, PyObject *_args)
     _err = FNNotifyAll(message,
                        flags);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 

@@ -17,7 +17,7 @@ class Standard_Suite_Events(builtin_Suite_Events){
         'in_' : 'wrcd',
     };
 
-    def class_info(self, _object=None, _attributes={}, **_arguments){
+    function class_info( _object=nil, _attributes={}, **_arguments){
         """class info: (optional) Get information about an object class
         Required argument: the object class about which information is requested
         Keyword argument in_: the human language and script system in which to return information
@@ -27,11 +27,11 @@ class Standard_Suite_Events(builtin_Suite_Events){
         _code = 'core';
         _subcode = 'qobj';
 
-        aetools.keysubst(_arguments, self._argmap_class_info);
+        aetools.keysubst(_arguments, this._argmap_class_info);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -46,7 +46,7 @@ class Standard_Suite_Events(builtin_Suite_Events){
         'saving_in' : 'kfil',
     };
 
-    def close(self, _object, _attributes={}, **_arguments){
+    function close( _object, _attributes={}, **_arguments){
         """close: Close an object
         Required argument: the object to close
         Keyword argument saving: specifies whether changes should be saved before closing
@@ -56,12 +56,12 @@ class Standard_Suite_Events(builtin_Suite_Events){
         _code = 'core';
         _subcode = 'clos';
 
-        aetools.keysubst(_arguments, self._argmap_close);
+        aetools.keysubst(_arguments, this._argmap_close);
         _arguments['----'] = _object;
 
         aetools.enumsubst(_arguments, 'savo', _Enum_savo);
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -75,7 +75,7 @@ class Standard_Suite_Events(builtin_Suite_Events){
         'each' : 'kocl',
     };
 
-    def count(self, _object, _attributes={}, **_arguments){
+    function count( _object, _attributes={}, **_arguments){
         """count: Return the number of elements of an object
         Required argument: the object whose elements are to be counted
         Keyword argument each: if specified, restricts counting to objects of this class
@@ -85,11 +85,11 @@ class Standard_Suite_Events(builtin_Suite_Events){
         _code = 'core';
         _subcode = 'cnte';
 
-        aetools.keysubst(_arguments, self._argmap_count);
+        aetools.keysubst(_arguments, this._argmap_count);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -103,7 +103,7 @@ class Standard_Suite_Events(builtin_Suite_Events){
         'as' : 'rtyp',
     };
 
-    def data_size(self, _object, _attributes={}, **_arguments){
+    function data_size( _object, _attributes={}, **_arguments){
         """data size: (optional) Return the size in bytes of an object
         Required argument: the object whose data size is to be returned
         Keyword argument as: the data type for which the size is calculated
@@ -113,11 +113,11 @@ class Standard_Suite_Events(builtin_Suite_Events){
         _code = 'core';
         _subcode = 'dsiz';
 
-        aetools.keysubst(_arguments, self._argmap_data_size);
+        aetools.keysubst(_arguments, this._argmap_data_size);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -127,7 +127,7 @@ class Standard_Suite_Events(builtin_Suite_Events){
             return _arguments['----'];
 
     }
-    } def delete(self, _object, _attributes={}, **_arguments){
+    } function delete( _object, _attributes={}, **_arguments){
         """delete: Delete an object from its container. Note this does not work on script variables, only on elements of application classes.
         Required argument: the element to delete
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -135,11 +135,11 @@ class Standard_Suite_Events(builtin_Suite_Events){
         _code = 'core';
         _subcode = 'delo';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -154,7 +154,7 @@ class Standard_Suite_Events(builtin_Suite_Events){
         'with_properties' : 'prdt',
     };
 
-    def duplicate(self, _object, _attributes={}, **_arguments){
+    function duplicate( _object, _attributes={}, **_arguments){
         """duplicate: Duplicate one or more objects
         Required argument: the object(s) to duplicate
         Keyword argument to: the new location for the object(s)
@@ -165,11 +165,11 @@ class Standard_Suite_Events(builtin_Suite_Events){
         _code = 'core';
         _subcode = 'clon';
 
-        aetools.keysubst(_arguments, self._argmap_duplicate);
+        aetools.keysubst(_arguments, this._argmap_duplicate);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -183,7 +183,7 @@ class Standard_Suite_Events(builtin_Suite_Events){
         'in_' : 'wrcd',
     };
 
-    def event_info(self, _object, _attributes={}, **_arguments){
+    function event_info( _object, _attributes={}, **_arguments){
         """event info: (optional) Get information about the Apple events in a suite
         Required argument: the event class of the Apple events for which to return information
         Keyword argument in_: the human language and script system in which to return information
@@ -193,11 +193,11 @@ class Standard_Suite_Events(builtin_Suite_Events){
         _code = 'core';
         _subcode = 'gtei';
 
-        aetools.keysubst(_arguments, self._argmap_event_info);
+        aetools.keysubst(_arguments, this._argmap_event_info);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -207,7 +207,7 @@ class Standard_Suite_Events(builtin_Suite_Events){
             return _arguments['----'];
 
     }
-    } def exists(self, _object, _attributes={}, **_arguments){
+    } function exists( _object, _attributes={}, **_arguments){
         """exists: Verify if an object exists
         Required argument: the object in question
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -216,11 +216,11 @@ class Standard_Suite_Events(builtin_Suite_Events){
         _code = 'core';
         _subcode = 'doex';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -230,7 +230,7 @@ class Standard_Suite_Events(builtin_Suite_Events){
             return _arguments['----'];
 
     }
-    } def handleBreakpoint(self, _object, _attributes={}, **_arguments){
+    } function handleBreakpoint( _object, _attributes={}, **_arguments){
         """handleBreakpoint: return true to stop at a breakpoint
         Required argument: the call frame of the breakpoint
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -239,11 +239,11 @@ class Standard_Suite_Events(builtin_Suite_Events){
         _code = 'core';
         _subcode = 'brak';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -260,7 +260,7 @@ class Standard_Suite_Events(builtin_Suite_Events){
         'with_properties' : 'prdt',
     };
 
-    def make(self, _no_object=None, _attributes={}, **_arguments){
+    function make( _no_object=nil, _attributes={}, **_arguments){
         """make: Make a new element
         Keyword argument new: the class of the new element
         Keyword argument at: the location at which to insert the element
@@ -272,11 +272,11 @@ class Standard_Suite_Events(builtin_Suite_Events){
         _code = 'core';
         _subcode = 'crel';
 
-        aetools.keysubst(_arguments, self._argmap_make);
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        aetools.keysubst(_arguments, this._argmap_make);
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -290,7 +290,7 @@ class Standard_Suite_Events(builtin_Suite_Events){
         'to' : 'insh',
     };
 
-    def move(self, _object, _attributes={}, **_arguments){
+    function move( _object, _attributes={}, **_arguments){
         """move: Move object(s) to a new location
         Required argument: the object(s) to move
         Keyword argument to: the new location for the object(s)
@@ -300,11 +300,11 @@ class Standard_Suite_Events(builtin_Suite_Events){
         _code = 'core';
         _subcode = 'move';
 
-        aetools.keysubst(_arguments, self._argmap_move);
+        aetools.keysubst(_arguments, this._argmap_move);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -314,7 +314,7 @@ class Standard_Suite_Events(builtin_Suite_Events){
             return _arguments['----'];
 
     }
-    } def open(self, _object, _attributes={}, **_arguments){
+    } function open( _object, _attributes={}, **_arguments){
         """open: Open the specified object(s)
         Required argument: list of objects to open
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -322,11 +322,11 @@ class Standard_Suite_Events(builtin_Suite_Events){
         _code = 'aevt';
         _subcode = 'odoc';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -336,7 +336,7 @@ class Standard_Suite_Events(builtin_Suite_Events){
             return _arguments['----'];
 
     }
-    } def print_(self, _object, _attributes={}, **_arguments){
+    } function print_( _object, _attributes={}, **_arguments){
         """print: Print the specified object(s)
         Required argument: list of objects to print
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -344,11 +344,11 @@ class Standard_Suite_Events(builtin_Suite_Events){
         _code = 'aevt';
         _subcode = 'pdoc';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -362,7 +362,7 @@ class Standard_Suite_Events(builtin_Suite_Events){
         'saving' : 'savo',
     };
 
-    def quit(self, _no_object=None, _attributes={}, **_arguments){
+    function quit( _no_object=nil, _attributes={}, **_arguments){
         """quit: Quit an application
         Keyword argument saving: specifies whether to save currently open documents
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -370,12 +370,12 @@ class Standard_Suite_Events(builtin_Suite_Events){
         _code = 'aevt';
         _subcode = 'quit';
 
-        aetools.keysubst(_arguments, self._argmap_quit);
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        aetools.keysubst(_arguments, this._argmap_quit);
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
         aetools.enumsubst(_arguments, 'savo', _Enum_savo);
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -385,18 +385,18 @@ class Standard_Suite_Events(builtin_Suite_Events){
             return _arguments['----'];
 
     }
-    } def reopen(self, _no_object=None, _attributes={}, **_arguments){
+    } function reopen( _no_object=nil, _attributes={}, **_arguments){
         """reopen: Reactivate a running application.  Some applications will open a new untitled window if no window is open.
         Keyword argument _attributes: AppleEvent attribute dictionary
         """;
         _code = 'aevt';
         _subcode = 'rapp';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -406,18 +406,18 @@ class Standard_Suite_Events(builtin_Suite_Events){
             return _arguments['----'];
 
     }
-    } def run(self, _no_object=None, _attributes={}, **_arguments){
+    } function run( _no_object=nil, _attributes={}, **_arguments){
         """run: Run an application.  Most applications will open an empty, untitled window.
         Keyword argument _attributes: AppleEvent attribute dictionary
         """;
         _code = 'aevt';
         _subcode = 'oapp';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -432,7 +432,7 @@ class Standard_Suite_Events(builtin_Suite_Events){
         'as' : 'fltp',
     };
 
-    def save(self, _object, _attributes={}, **_arguments){
+    function save( _object, _attributes={}, **_arguments){
         """save: Save an object
         Required argument: the object to save, usually a document or window
         Keyword argument in_: the file or alias in which to save the object
@@ -442,11 +442,11 @@ class Standard_Suite_Events(builtin_Suite_Events){
         _code = 'core';
         _subcode = 'save';
 
-        aetools.keysubst(_arguments, self._argmap_save);
+        aetools.keysubst(_arguments, this._argmap_save);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -456,7 +456,7 @@ class Standard_Suite_Events(builtin_Suite_Events){
             return _arguments['----'];
 
     }
-    } def select(self, _object, _attributes={}, **_arguments){
+    } function select( _object, _attributes={}, **_arguments){
         """select: Make a selection
         Required argument: the object to select
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -464,11 +464,11 @@ class Standard_Suite_Events(builtin_Suite_Events){
         _code = 'misc';
         _subcode = 'slct';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -482,7 +482,7 @@ class Standard_Suite_Events(builtin_Suite_Events){
         'in_' : 'wrcd',
     };
 
-    def suite_info(self, _object, _attributes={}, **_arguments){
+    function suite_info( _object, _attributes={}, **_arguments){
         """suite info: (optional) Get information about event suite(s)
         Required argument: the suite for which to return information
         Keyword argument in_: the human language and script system in which to return information
@@ -492,11 +492,11 @@ class Standard_Suite_Events(builtin_Suite_Events){
         _code = 'core';
         _subcode = 'gtsi';
 
-        aetools.keysubst(_arguments, self._argmap_suite_info);
+        aetools.keysubst(_arguments, this._argmap_suite_info);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);

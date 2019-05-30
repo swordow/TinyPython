@@ -172,8 +172,8 @@ static PyObject *
 get_nullchar_as_None(char c)
 {
     if (c == '\0') {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     else
         return PyString_FromStringAndSize((char*)&c, 1);
@@ -244,7 +244,7 @@ _set_char(const char *name, char *target, PyObject *src, char dflt)
         *target = dflt;
     else {
         *target = '\0';
-        if (src != Py_None) {
+        if (src != Py_Nil) {
             Py_ssize_t len;
             if (!PyString_Check(src)) {
                 PyErr_Format(PyExc_TypeError,
@@ -272,7 +272,7 @@ _set_str(const char *name, PyObject **target, PyObject *src, const char *dflt)
     if (src == NULL)
         *target = PyString_FromString(dflt);
     else {
-        if (src == Py_None)
+        if (src == Py_Nil)
             *target = NULL;
         else if (!IS_BASESTRING(src)) {
             PyErr_Format(PyExc_TypeError,
@@ -438,7 +438,7 @@ dialect_new(PyTypeObject *type, PyObject *args, PyObject *kwargs)
                         "\"delimiter\" must be an 1-character string");
         goto err;
     }
-    if (quotechar == Py_None && quoting == NULL)
+    if (quotechar == Py_Nil && quoting == NULL)
         self->quoting = QUOTE_NONE;
     if (self->quoting != QUOTE_NONE && self->quotechar == 0) {
         PyErr_SetString(PyExc_TypeError,
@@ -1200,7 +1200,7 @@ csv_writerow(WriterObj *self, PyObject *seq)
                                     &quoted, len == 1);
             Py_DECREF(field);
         }
-        else if (field == Py_None) {
+        else if (field == Py_Nil) {
             append_ok = join_append(self, "", &quoted, len == 1);
             Py_DECREF(field);
         }
@@ -1263,8 +1263,8 @@ csv_writerows(WriterObj *self, PyObject *seqseq)
     Py_DECREF(row_iter);
     if (PyErr_Occurred())
         return NULL;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static struct PyMethodDef Writer_methods[] = {
@@ -1416,8 +1416,8 @@ csv_register_dialect(PyObject *module, PyObject *args, PyObject *kwargs)
         return NULL;
     }
     Py_DECREF(dialect);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -1425,8 +1425,8 @@ csv_unregister_dialect(PyObject *module, PyObject *name_obj)
 {
     if (PyDict_DelItem(dialects, name_obj) < 0)
         return PyErr_Format(error_obj, "unknown dialect");
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *

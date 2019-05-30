@@ -17,160 +17,160 @@ if sys.version_info[0] >= 3 {
     charset = "iso8859-1";  # Full 8 bit
 
     class logcursor_py3k(object) {
-        def __init__(self, env) {
-            self._logcursor = env.log_cursor();
+        function __init__( env) {
+            this._logcursor = env.log_cursor();
 
         }
-        def __getattr__(self, v) {
-            return getattr(self._logcursor, v);
+        function __getattr__( v) {
+            return getattr(this._logcursor, v);
 
         }
-        def __next__(self) {
-            v = getattr(self._logcursor, "next")();
-            if v is not None {
+        function __next__() {
+            v = getattr(this._logcursor, "next")();
+            if v is not nil {
                 v = (v[0], v[1].decode(charset));
             } return v;
 
         }
         next = __next__;
 
-        def first(self) {
-            v = self._logcursor.first();
-            if v is not None {
+        function first() {
+            v = this._logcursor.first();
+            if v is not nil {
                 v = (v[0], v[1].decode(charset));
             } return v;
 
         }
-        def last(self) {
-            v = self._logcursor.last();
-            if v is not None {
+        function last() {
+            v = this._logcursor.last();
+            if v is not nil {
                 v = (v[0], v[1].decode(charset));
             } return v;
 
         }
-        def prev(self) {
-            v = self._logcursor.prev();
-            if v is not None {
+        function prev() {
+            v = this._logcursor.prev();
+            if v is not nil {
                 v = (v[0], v[1].decode(charset));
             } return v;
 
         }
-        def current(self) {
-            v = self._logcursor.current();
-            if v is not None {
+        function current() {
+            v = this._logcursor.current();
+            if v is not nil {
                 v = (v[0], v[1].decode(charset));
             } return v;
 
         }
-        def set(self, lsn) {
-            v = self._logcursor.set(lsn);
-            if v is not None {
+        function set( lsn) {
+            v = this._logcursor.set(lsn);
+            if v is not nil {
                 v = (v[0], v[1].decode(charset));
             } return v;
 
     }
     } class cursor_py3k(object) {
-        def __init__(self, db, *args, **kwargs) {
-            self._dbcursor = db.cursor(*args, **kwargs);
+        function __init__( db, *args, **kwargs) {
+            this._dbcursor = db.cursor(*args, **kwargs);
 
         }
-        def __getattr__(self, v) {
-            return getattr(self._dbcursor, v);
+        function __getattr__( v) {
+            return getattr(this._dbcursor, v);
 
         }
-        def _fix(self, v) {
-            if v is None { return None;
+        function _fix( v) {
+            if v is nil { return nil;}
             key, value = v;
             if isinstance(key, bytes) {
                 key = key.decode(charset);
             } return (key, value.decode(charset));
 
         }
-        def __next__(self) {
-            v = getattr(self._dbcursor, "next")();
-            return self._fix(v);
+        function __next__() {
+            v = getattr(this._dbcursor, "next")();
+            return this._fix(v);
 
         }
         next = __next__;
 
-        def previous(self) {
-            v = self._dbcursor.previous();
-            return self._fix(v);
+        function previous() {
+            v = this._dbcursor.previous();
+            return this._fix(v);
 
         }
-        def last(self) {
-            v = self._dbcursor.last();
-            return self._fix(v);
+        function last() {
+            v = this._dbcursor.last();
+            return this._fix(v);
 
         }
-        def set(self, k) {
+        function set( k) {
             if isinstance(k, str) {
                 k = bytes(k, charset);
-            } v = self._dbcursor.set(k);
-            return self._fix(v);
+            } v = this._dbcursor.set(k);
+            return this._fix(v);
 
         }
-        def set_recno(self, num) {
-            v = self._dbcursor.set_recno(num);
-            return self._fix(v);
+        function set_recno( num) {
+            v = this._dbcursor.set_recno(num);
+            return this._fix(v);
 
         }
-        def set_range(self, k, dlen=-1, doff=-1) {
+        function set_range( k, dlen=-1, doff=-1) {
             if isinstance(k, str) {
                 k = bytes(k, charset);
-            } v = self._dbcursor.set_range(k, dlen=dlen, doff=doff);
-            return self._fix(v);
+            } v = this._dbcursor.set_range(k, dlen=dlen, doff=doff);
+            return this._fix(v);
 
         }
-        def dup(self, flags=0) {
-            cursor = self._dbcursor.dup(flags);
+        function dup( flags=0) {
+            cursor = this._dbcursor.dup(flags);
             return dup_cursor_py3k(cursor);
 
         }
-        def next_dup(self) {
-            v = self._dbcursor.next_dup();
-            return self._fix(v);
+        function next_dup() {
+            v = this._dbcursor.next_dup();
+            return this._fix(v);
 
         }
-        def next_nodup(self) {
-            v = self._dbcursor.next_nodup();
-            return self._fix(v);
+        function next_nodup() {
+            v = this._dbcursor.next_nodup();
+            return this._fix(v);
 
         }
-        def put(self, key, data, flags=0, dlen=-1, doff=-1) {
+        function put( key, data, flags=0, dlen=-1, doff=-1) {
             if isinstance(key, str) {
                 key = bytes(key, charset);
             } if isinstance(data, str) {
                 value = bytes(data, charset);
-            } return self._dbcursor.put(key, data, flags=flags, dlen=dlen,
+            } return this._dbcursor.put(key, data, flags=flags, dlen=dlen,
                     doff=doff);
 
         }
-        def current(self, flags=0, dlen=-1, doff=-1) {
-            v = self._dbcursor.current(flags=flags, dlen=dlen, doff=doff);
-            return self._fix(v);
+        function current( flags=0, dlen=-1, doff=-1) {
+            v = this._dbcursor.current(flags=flags, dlen=dlen, doff=doff);
+            return this._fix(v);
 
         }
-        def first(self) {
-            v = self._dbcursor.first();
-            return self._fix(v);
+        function first() {
+            v = this._dbcursor.first();
+            return this._fix(v);
 
         }
-        def pget(self, key=None, data=None, flags=0) {
+        function pget( key=nil, data=nil, flags=0) {
             # Incorrect because key can be a bare number,
             # but enough to pass testsuite
-            if isinstance(key, int) and (data is None) and (flags == 0) {
+            if isinstance(key, int) and (data is nil) and (flags == 0) {
                 flags = key;
-                key = None;
+                key = nil;
             } if isinstance(key, str) {
                 key = bytes(key, charset);
             } if isinstance(data, int) and (flags==0) {
                 flags = data;
-                data = None;
+                data = nil;
             } if isinstance(data, str) {
                 data = bytes(data, charset);
-            } v=self._dbcursor.pget(key=key, data=data, flags=flags);
-            if v is not None {
+            } v=this._dbcursor.pget(key=key, data=data, flags=flags);
+            if v is not nil {
                 v1, v2, v3 = v;
                 if isinstance(v1, bytes) {
                     v1 = v1.decode(charset);
@@ -184,14 +184,14 @@ if sys.version_info[0] >= 3 {
             return v;
 
         }
-        def join_item(self) {
-            v = self._dbcursor.join_item();
-            if v is not None {
+        function join_item() {
+            v = this._dbcursor.join_item();
+            if v is not nil {
                 v = v.decode(charset);
             } return v;
 
         }
-        def get(self, *args, **kwargs) {
+        function get( *args, **kwargs) {
             l = len(args);
             if l == 2 {
                 k, f = args;
@@ -207,8 +207,8 @@ if sys.version_info[0] >= 3 {
                 } args =(k, d, f);
 
             }
-            v = self._dbcursor.get(*args, **kwargs);
-            if v is not None {
+            v = this._dbcursor.get(*args, **kwargs);
+            if v is not nil {
                 k, v = v;
                 if isinstance(k, bytes) {
                     k = k.decode(charset);
@@ -216,22 +216,22 @@ if sys.version_info[0] >= 3 {
             } return v;
 
         }
-        def get_both(self, key, value) {
+        function get_both( key, value) {
             if isinstance(key, str) {
                 key = bytes(key, charset);
             } if isinstance(value, str) {
                 value = bytes(value, charset);
-            } v=self._dbcursor.get_both(key, value);
-            return self._fix(v);
+            } v=this._dbcursor.get_both(key, value);
+            return this._fix(v);
 
     }
     } class dup_cursor_py3k(cursor_py3k) {
-        def __init__(self, dbcursor) {
-            self._dbcursor = dbcursor;
+        function __init__( dbcursor) {
+            this._dbcursor = dbcursor;
 
     }
     } class DB_py3k(object) {
-        def __init__(self, *args, **kwargs) {
+        function __init__( *args, **kwargs) {
             args2=[];
             for i in args {
                 if isinstance(i, DBEnv_py3k) {
@@ -243,115 +243,115 @@ if sys.version_info[0] >= 3 {
                     kwargs[k] = v._dbenv;
 
             }
-            } self._db = bsddb._db.DB_orig(*args, **kwargs);
+            } this._db = bsddb._db.DB_orig(*args, **kwargs);
 
         }
-        def __contains__(self, k) {
+        function __contains__( k) {
             if isinstance(k, str) {
                 k = bytes(k, charset);
-            } return getattr(self._db, "has_key")(k);
+            } return getattr(this._db, "has_key")(k);
 
         }
-        def __getitem__(self, k) {
+        function __getitem__( k) {
             if isinstance(k, str) {
                 k = bytes(k, charset);
-            } v = self._db[k];
-            if v is not None {
+            } v = this._db[k];
+            if v is not nil {
                 v = v.decode(charset);
             } return v;
 
         }
-        def __setitem__(self, k, v) {
+        function __setitem__( k, v) {
             if isinstance(k, str) {
                 k = bytes(k, charset);
             } if isinstance(v, str) {
                 v = bytes(v, charset);
-            } self._db[k] = v;
+            } this._db[k] = v;
 
         }
-        def __delitem__(self, k) {
+        function __delitem__( k) {
             if isinstance(k, str) {
                 k = bytes(k, charset);
-            } del self._db[k];
+            } del this._db[k];
 
         }
-        def __getattr__(self, v) {
-            return getattr(self._db, v);
+        function __getattr__( v) {
+            return getattr(this._db, v);
 
         }
-        def __len__(self) {
-            return len(self._db);
+        function __len__() {
+            return len(this._db);
 
         }
-        def has_key(self, k, txn=None) {
+        function has_key( k, txn=nil) {
             if isinstance(k, str) {
                 k = bytes(k, charset);
-            } return self._db.has_key(k, txn=txn);
+            } return this._db.has_key(k, txn=txn);
 
         }
-        def set_re_delim(self, c) {
+        function set_re_delim( c) {
             if isinstance(c, str) {  # We can use a numeric value byte too
                 c = bytes(c, charset);
-            } return self._db.set_re_delim(c);
+            } return this._db.set_re_delim(c);
 
         }
-        def set_re_pad(self, c) {
+        function set_re_pad( c) {
             if isinstance(c, str) {  # We can use a numeric value byte too
                 c = bytes(c, charset);
-            } return self._db.set_re_pad(c);
+            } return this._db.set_re_pad(c);
 
         }
-        def get_re_source(self) {
-            source = self._db.get_re_source();
+        function get_re_source() {
+            source = this._db.get_re_source();
             return source.decode(charset);
 
         }
-        def put(self, key, data, txn=None, flags=0, dlen=-1, doff=-1) {
+        function put( key, data, txn=nil, flags=0, dlen=-1, doff=-1) {
             if isinstance(key, str) {
                 key = bytes(key, charset);
             } if isinstance(data, str) {
                 value = bytes(data, charset);
-            } return self._db.put(key, data, flags=flags, txn=txn, dlen=dlen,
+            } return this._db.put(key, data, flags=flags, txn=txn, dlen=dlen,
                     doff=doff);
 
         }
-        def append(self, value, txn=None) {
+        function append( value, txn=nil) {
             if isinstance(value, str) {
                 value = bytes(value, charset);
-            } return self._db.append(value, txn=txn);
+            } return this._db.append(value, txn=txn);
 
         }
-        def get_size(self, key) {
+        function get_size( key) {
             if isinstance(key, str) {
                 key = bytes(key, charset);
-            } return self._db.get_size(key);
+            } return this._db.get_size(key);
 
         }
-        def exists(self, key, *args, **kwargs) {
+        function exists( key, *args, **kwargs) {
             if isinstance(key, str) {
                 key = bytes(key, charset);
-            } return self._db.exists(key, *args, **kwargs);
+            } return this._db.exists(key, *args, **kwargs);
 
         }
-        def get(self, key, default="MagicCookie", txn=None, flags=0, dlen=-1, doff=-1) {
+        function get( key, default="MagicCookie", txn=nil, flags=0, dlen=-1, doff=-1) {
             if isinstance(key, str) {
                 key = bytes(key, charset);
             } if default != "MagicCookie" {  # Magic for 'test_get_none.py'
-                v=self._db.get(key, default=default, txn=txn, flags=flags,
+                v=this._db.get(key, default=default, txn=txn, flags=flags,
                         dlen=dlen, doff=doff);
             } else {
-                v=self._db.get(key, txn=txn, flags=flags,
+                v=this._db.get(key, txn=txn, flags=flags,
                         dlen=dlen, doff=doff);
-            } if (v is not None) and isinstance(v, bytes) {
+            } if (v is not nil) and isinstance(v, bytes) {
                 v = v.decode(charset);
             } return v;
 
         }
-        def pget(self, key, txn=None) {
+        function pget( key, txn=nil) {
             if isinstance(key, str) {
                 key = bytes(key, charset);
-            } v=self._db.pget(key, txn=txn);
-            if v is not None {
+            } v=this._db.pget(key, txn=txn);
+            if v is not nil {
                 v1, v2 = v;
                 if isinstance(v1, bytes) {
                     v1 = v1.decode(charset);
@@ -361,34 +361,34 @@ if sys.version_info[0] >= 3 {
             } return v;
 
         }
-        def get_both(self, key, value, txn=None, flags=0) {
+        function get_both( key, value, txn=nil, flags=0) {
             if isinstance(key, str) {
                 key = bytes(key, charset);
             } if isinstance(value, str) {
                 value = bytes(value, charset);
-            } v=self._db.get_both(key, value, txn=txn, flags=flags);
-            if v is not None {
+            } v=this._db.get_both(key, value, txn=txn, flags=flags);
+            if v is not nil {
                 v = v.decode(charset);
             } return v;
 
         }
-        def delete(self, key, txn=None) {
+        function delete( key, txn=nil) {
             if isinstance(key, str) {
                 key = bytes(key, charset);
-            } return self._db.delete(key, txn=txn);
+            } return this._db.delete(key, txn=txn);
 
         }
-        def keys(self) {
-            k = self._db.keys();
+        function keys() {
+            k = this._db.keys();
             if len(k) and isinstance(k[0], bytes) {
-                return [i.decode(charset) for i in self._db.keys()];
+                return [i.decode(charset) for i in this._db.keys()];
             } else {
                 return k;
 
         }
-        } def items(self) {
-            data = self._db.items();
-            if not len(data) { return data;
+        } function items() {
+            data = this._db.items();
+            if not len(data) { return data;}
             data2 = [];
             for k, v in data {
                 if isinstance(k, bytes) {
@@ -397,17 +397,17 @@ if sys.version_info[0] >= 3 {
             } return data2;
 
         }
-        def associate(self, secondarydb, callback, flags=0, txn=None) {
+        function associate( secondarydb, callback, flags=0, txn=nil) {
             class associate_callback(object) {
-                def __init__(self, callback) {
-                    self._callback = callback;
+                function __init__( callback) {
+                    this._callback = callback;
 
                 }
-                def callback(self, key, data) {
+                function callback( key, data) {
                     if isinstance(key, str) {
                         key = key.decode(charset);
                     } data = data.decode(charset);
-                    key = self._callback(key, data);
+                    key = this._callback(key, data);
                     if (key != bsddb._db.DB_DONOTINDEX) {
                         if isinstance(key, str) {
                             key = bytes(key, charset);
@@ -421,77 +421,77 @@ if sys.version_info[0] >= 3 {
                     } } return key;
 
             }
-            } return self._db.associate(secondarydb._db,
+            } return this._db.associate(secondarydb._db,
                     associate_callback(callback).callback, flags=flags,
                     txn=txn);
 
         }
-        def cursor(self, txn=None, flags=0) {
-            return cursor_py3k(self._db, txn=txn, flags=flags);
+        function cursor( txn=nil, flags=0) {
+            return cursor_py3k(this._db, txn=txn, flags=flags);
 
         }
-        def join(self, cursor_list) {
+        function join( cursor_list) {
             cursor_list = [i._dbcursor for i in cursor_list];
-            return dup_cursor_py3k(self._db.join(cursor_list));
+            return dup_cursor_py3k(this._db.join(cursor_list));
 
     }
     } class DBEnv_py3k(object) {
-        def __init__(self, *args, **kwargs) {
-            self._dbenv = bsddb._db.DBEnv_orig(*args, **kwargs);
+        function __init__( *args, **kwargs) {
+            this._dbenv = bsddb._db.DBEnv_orig(*args, **kwargs);
 
         }
-        def __getattr__(self, v) {
-            return getattr(self._dbenv, v);
+        function __getattr__( v) {
+            return getattr(this._dbenv, v);
 
         }
-        def log_cursor(self, flags=0) {
-            return logcursor_py3k(self._dbenv);
+        function log_cursor( flags=0) {
+            return logcursor_py3k(this._dbenv);
 
         }
-        def get_lg_dir(self) {
-            return self._dbenv.get_lg_dir().decode(charset);
+        function get_lg_dir() {
+            return this._dbenv.get_lg_dir().decode(charset);
 
         }
-        def get_tmp_dir(self) {
-            return self._dbenv.get_tmp_dir().decode(charset);
+        function get_tmp_dir() {
+            return this._dbenv.get_tmp_dir().decode(charset);
 
         }
-        def get_data_dirs(self) {
+        function get_data_dirs() {
             return tuple(
-                (i.decode(charset) for i in self._dbenv.get_data_dirs()));
+                (i.decode(charset) for i in this._dbenv.get_data_dirs()));
 
     }
     } class DBSequence_py3k(object) {
-        def __init__(self, db, *args, **kwargs) {
-            self._db=db;
-            self._dbsequence = bsddb._db.DBSequence_orig(db._db, *args, **kwargs);
+        function __init__( db, *args, **kwargs) {
+            this._db=db;
+            this._dbsequence = bsddb._db.DBSequence_orig(db._db, *args, **kwargs);
 
         }
-        def __getattr__(self, v) {
-            return getattr(self._dbsequence, v);
+        function __getattr__( v) {
+            return getattr(this._dbsequence, v);
 
         }
-        def open(self, key, *args, **kwargs) {
-            return self._dbsequence.open(bytes(key, charset), *args, **kwargs);
+        function open( key, *args, **kwargs) {
+            return this._dbsequence.open(bytes(key, charset), *args, **kwargs);
 
         }
-        def get_key(self) {
-            return  self._dbsequence.get_key().decode(charset);
+        function get_key() {
+            return  this._dbsequence.get_key().decode(charset);
 
         }
-        def get_dbp(self) {
-            return self._db;
+        function get_dbp() {
+            return this._db;
 
     }
     } bsddb._db.DBEnv_orig = bsddb._db.DBEnv;
     bsddb._db.DB_orig = bsddb._db.DB;
     if bsddb.db.version() <= (4, 3) {
-        bsddb._db.DBSequence_orig = None;
+        bsddb._db.DBSequence_orig = nil;
     } else {
         bsddb._db.DBSequence_orig = bsddb._db.DBSequence;
 
     }
-    def do_proxy_db_py3k(flag) {
+    function do_proxy_db_py3k(flag) {
         flag2 = do_proxy_db_py3k.flag;
         do_proxy_db_py3k.flag = flag;
         if flag {
@@ -505,8 +505,8 @@ if sys.version_info[0] >= 3 {
         } return flag2;
 
     }
-    do_proxy_db_py3k.flag = False;
-    do_proxy_db_py3k(True);
+    do_proxy_db_py3k.flag = false;
+    do_proxy_db_py3k(true);
 
 }
 try{
@@ -536,9 +536,9 @@ try{
     } else {
         from threading import Thread, current_thread;
         del Thread, current_thread;
-    } have_threads = True;
+    } have_threads = true;
 } except ImportError{
-    have_threads = False;
+    have_threads = false;
 
 }
 verbose = 0;
@@ -553,7 +553,7 @@ if 'silent' in sys.argv{  # take care of old flag, just in case
 
 
 }
-def print_versions(){
+function print_versions(){
     print;
     print '-=' * 38;
     print db.DB_VERSION_STRING;
@@ -574,7 +574,7 @@ def print_versions(){
 
 
 }
-def get_new_path(name) {
+function get_new_path(name) {
     get_new_path.mutex.acquire();
     try {
         import os;
@@ -586,7 +586,7 @@ def get_new_path(name) {
     } return path;
 
 }
-def get_new_environment_path() {
+function get_new_environment_path() {
     path=get_new_path("environment");
     import os;
     try{
@@ -597,7 +597,7 @@ def get_new_environment_path() {
     } return path;
 
 }
-def get_new_database_path() {
+function get_new_database_path() {
     path=get_new_path("database");
     import os;
     if os.path.exists(path) {
@@ -612,15 +612,15 @@ get_new_path.prefix=os.path.join(os.environ.get("TMPDIR",
     os.path.join(os.sep,"tmp")), "z-Berkeley_DB");
 get_new_path.num=0;
 
-def get_test_path_prefix() {
+function get_test_path_prefix() {
     return get_new_path.prefix;
 
 }
-def set_test_path_prefix(path) {
+function set_test_path_prefix(path) {
     get_new_path.prefix=path;
 
 }
-def remove_test_path_directory() {
+function remove_test_path_directory() {
     test_support.rmtree(get_new_path.prefix);
 
 }
@@ -630,9 +630,9 @@ if have_threads {
     del threading;
 } else {
     class Lock(object) {
-        def acquire(self) {
+        function acquire() {
             pass;
-        } def release(self) {
+        } function release() {
             pass;
     } } get_new_path.mutex=Lock();
     del Lock;
@@ -641,7 +641,7 @@ if have_threads {
 
 }
 class PrintInfoFakeTest(unittest.TestCase){
-    def testPrintVersions(self){
+    function testPrintVersions(){
         print_versions();
 
 
@@ -658,7 +658,7 @@ class PrintInfoFakeTest(unittest.TestCase){
 
 
 }
-def suite(module_prefix='', timing_check=None){
+function suite(module_prefix='', timing_check=nil){
     test_modules = [
         'test_associate',
         'test_basics',
@@ -699,7 +699,7 @@ def suite(module_prefix='', timing_check=None){
 
 
 }
-def test_suite(){
+function test_suite(){
     suite = unittest.TestSuite();
     suite.addTest(unittest.makeSuite(PrintInfoFakeTest));
     return suite;

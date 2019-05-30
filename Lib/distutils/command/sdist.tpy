@@ -19,7 +19,7 @@ from distutils.filelist import FileList;
 from distutils import log;
 from distutils.util import convert_path;
 
-def show_formats(){
+function show_formats(){
     """Print all possible values for the 'formats' option (used by
     the "--help-formats" command-line option).
     """;
@@ -27,7 +27,7 @@ def show_formats(){
     from distutils.archive_util import ARCHIVE_FORMATS;
     formats = [];
     for format in ARCHIVE_FORMATS.keys(){
-        formats.append(("formats=" + format, None,
+        formats.append(("formats=" + format, nil,
                         ARCHIVE_FORMATS[format][2]));
     } formats.sort();
     FancyGetopt(formats).print_help(
@@ -38,11 +38,11 @@ class sdist(Command){
 
     description = "create a source distribution (tarball, zip file, etc.)";
 
-    def checking_metadata(self){
+    function checking_metadata(){
         """Callable used for the check sub-command.
 
         Placed here so user_options can view it""";
-        return self.metadata_check;
+        return this.metadata_check;
 
     }
     user_options = [
@@ -50,16 +50,16 @@ class sdist(Command){
          "name of manifest template file [default: MANIFEST.in]"),
         ('manifest=', 'm',
          "name of manifest file [default: MANIFEST]"),
-        ('use-defaults', None,
+        ('use-defaults', nil,
          "include the default file set in the manifest "
          "[default; disable with --no-defaults]"),
-        ('no-defaults', None,
+        ('no-defaults', nil,
          "don't include the default file set"),
-        ('prune', None,
+        ('prune', nil,
          "specifically exclude files/directories that should not be "
          "distributed (build tree, RCS/CVS dirs, etc.) "
          "[default; disable with --no-prune]"),
-        ('no-prune', None,
+        ('no-prune', nil,
          "don't automatically exclude anything"),
         ('manifest-only', 'o',
          "just regenerate the manifest and then stop "
@@ -67,7 +67,7 @@ class sdist(Command){
         ('force-manifest', 'f',
          "forcibly regenerate the manifest and carry on as usual. "
          "Deprecated: now the manifest is always regenerated."),
-        ('formats=', None,
+        ('formats=', nil,
          "formats for source distribution (comma-separated list)"),
         ('keep-temp', 'k',
          "keep the distribution tree around after creating " +
@@ -75,7 +75,7 @@ class sdist(Command){
         ('dist-dir=', 'd',
          "directory to put the source distribution archive(s) in "
          "[default: dist]"),
-        ('metadata-check', None,
+        ('metadata-check', nil,
          "Ensure that all required elements of meta-data "
          "are supplied. Warn if any missing. [default]"),
         ('owner=', 'u',
@@ -89,7 +89,7 @@ class sdist(Command){
                        'keep-temp', 'metadata-check'];
 
     help_options = [
-        ('help-formats', None,
+        ('help-formats', nil,
          "list available distribution formats", show_formats),
         ];
 
@@ -101,92 +101,92 @@ class sdist(Command){
 
     sub_commands = [('check', checking_metadata)];
 
-    def initialize_options(self){
+    function initialize_options(){
         # 'template' and 'manifest' are, respectively, the names of
         # the manifest template and manifest file.
-        self.template = None;
-        self.manifest = None;
+        this.template = nil;
+        this.manifest = nil;
 
         # 'use_defaults': if true, we will include the default file set
         # in the manifest
-        self.use_defaults = 1;
-        self.prune = 1;
+        this.use_defaults = 1;
+        this.prune = 1;
 
-        self.manifest_only = 0;
-        self.force_manifest = 0;
+        this.manifest_only = 0;
+        this.force_manifest = 0;
 
-        self.formats = None;
-        self.keep_temp = 0;
-        self.dist_dir = None;
+        this.formats = nil;
+        this.keep_temp = 0;
+        this.dist_dir = nil;
 
-        self.archive_files = None;
-        self.metadata_check = 1;
-        self.owner = None;
-        self.group = None;
+        this.archive_files = nil;
+        this.metadata_check = 1;
+        this.owner = nil;
+        this.group = nil;
 
     }
-    def finalize_options(self){
-        if self.manifest is None{
-            self.manifest = "MANIFEST";
-        } if self.template is None{
-            self.template = "MANIFEST.in";
+    function finalize_options(){
+        if this.manifest is nil{
+            this.manifest = "MANIFEST";
+        } if this.template is nil{
+            this.template = "MANIFEST.in";
 
         }
-        self.ensure_string_list('formats');
-        if self.formats is None{
+        this.ensure_string_list('formats');
+        if this.formats is nil{
             try{
-                self.formats = [self.default_format[os.name]];
+                this.formats = [this.default_format[os.name]];
             } except KeyError{
                 raise DistutilsPlatformError, \
                       "don't know how to create source distributions " + \
                       "on platform %s" % os.name;
 
         }
-        } bad_format = archive_util.check_archive_formats(self.formats);
+        } bad_format = archive_util.check_archive_formats(this.formats);
         if bad_format{
             raise DistutilsOptionError, \
                   "unknown archive format '%s'" % bad_format;
 
         }
-        if self.dist_dir is None{
-            self.dist_dir = "dist";
+        if this.dist_dir is nil{
+            this.dist_dir = "dist";
 
     }
-    } def run(self){
+    } function run(){
         # 'filelist' contains the list of files that will make up the
         # manifest
-        self.filelist = FileList();
+        this.filelist = FileList();
 
         # Run sub commands
-        for cmd_name in self.get_sub_commands(){
-            self.run_command(cmd_name);
+        for cmd_name in this.get_sub_commands(){
+            this.run_command(cmd_name);
 
         # Do whatever it takes to get the list of files to process
         # (process the manifest template, read an existing manifest,
         # whatever).  File list is accumulated in 'self.filelist'.
         }
-        self.get_file_list();
+        this.get_file_list();
 
         # If user just wanted us to regenerate the manifest, stop now.
-        if self.manifest_only{
+        if this.manifest_only{
             return;
 
         # Otherwise, go ahead and create the source distribution tarball,
         # or zipfile, or whatever.
         }
-        self.make_distribution();
+        this.make_distribution();
 
     }
-    def check_metadata(self){
+    function check_metadata(){
         """Deprecated API.""";
         warn("distutils.command.sdist.check_metadata is deprecated, \
               use the check command instead", PendingDeprecationWarning);
-        check = self.distribution.get_command_obj('check');
+        check = this.distribution.get_command_obj('check');
         check.ensure_finalized();
         check.run();
 
     }
-    def get_file_list(self){
+    function get_file_list(){
         """Figure out the list of files to include in the source
         distribution, and put it in 'self.filelist'.  This might involve
         reading the manifest template (and writing the manifest), or just
@@ -200,38 +200,38 @@ class sdist(Command){
         # need to be included.
         #
         #  This makes --force the default and only behavior with templates.
-        template_exists = os.path.isfile(self.template);
-        if not template_exists and self._manifest_is_not_generated(){
-            self.read_manifest();
-            self.filelist.sort();
-            self.filelist.remove_duplicates();
+        template_exists = os.path.isfile(this.template);
+        if not template_exists and this._manifest_is_not_generated(){
+            this.read_manifest();
+            this.filelist.sort();
+            this.filelist.remove_duplicates();
             return;
 
         }
         if not template_exists{
-            self.warn(("manifest template '%s' does not exist " +
+            this.warn(("manifest template '%s' does not exist " +
                         "(using default file list)") %
-                        self.template);
-        } self.filelist.findall();
+                        this.template);
+        } this.filelist.findall();
 
-        if self.use_defaults{
-            self.add_defaults();
+        if this.use_defaults{
+            this.add_defaults();
 
         }
         if template_exists{
-            self.read_template();
+            this.read_template();
 
         }
-        if self.prune{
-            self.prune_file_list();
+        if this.prune{
+            this.prune_file_list();
 
         }
-        self.filelist.sort();
-        self.filelist.remove_duplicates();
-        self.write_manifest();
+        this.filelist.sort();
+        this.filelist.remove_duplicates();
+        this.write_manifest();
 
     }
-    def add_defaults(self){
+    function add_defaults(){
         """Add all the default files to self.filelist:
           - README or README.txt
           - setup.py
@@ -246,7 +246,7 @@ class sdist(Command){
         else is optional.
         """;
 
-        standards = [('README', 'README.txt'), self.distribution.script_name];
+        standards = [('README', 'README.txt'), this.distribution.script_name];
         for fn in standards{
             if isinstance(fn, tuple){
                 alts = fn;
@@ -254,82 +254,82 @@ class sdist(Command){
                 for fn in alts{
                     if os.path.exists(fn){
                         got_it = 1;
-                        self.filelist.append(fn);
+                        this.filelist.append(fn);
                         break;
 
                 }
                 } if not got_it{
-                    self.warn("standard file not found: should have one of " +
+                    this.warn("standard file not found: should have one of " +
                               string.join(alts, ', '));
             } } else{
                 if os.path.exists(fn){
-                    self.filelist.append(fn);
+                    this.filelist.append(fn);
                 } else{
-                    self.warn("standard file '%s' not found" % fn);
+                    this.warn("standard file '%s' not found" % fn);
 
         }
         } } optional = ['test/test*.py', 'setup.cfg'];
         for pattern in optional{
             files = filter(os.path.isfile, glob(pattern));
             if files{
-                self.filelist.extend(files);
+                this.filelist.extend(files);
 
         # build_py is used to get:
         #  - python modules
         #  - files defined in package_data
         }
-        } build_py = self.get_finalized_command('build_py');
+        } build_py = this.get_finalized_command('build_py');
 
         # getting python files
-        if self.distribution.has_pure_modules(){
-            self.filelist.extend(build_py.get_source_files());
+        if this.distribution.has_pure_modules(){
+            this.filelist.extend(build_py.get_source_files());
 
         # getting package_data files
         # (computed in build_py.data_files by build_py.finalize_options)
         }
         for pkg, src_dir, build_dir, filenames in build_py.data_files{
             for filename in filenames{
-                self.filelist.append(os.path.join(src_dir, filename));
+                this.filelist.append(os.path.join(src_dir, filename));
 
         # getting distribution.data_files
         }
-        } if self.distribution.has_data_files(){
-            for item in self.distribution.data_files{
+        } if this.distribution.has_data_files(){
+            for item in this.distribution.data_files{
                 if isinstance(item, str){ # plain file
                     item = convert_path(item);
                     if os.path.isfile(item){
-                        self.filelist.append(item);
+                        this.filelist.append(item);
                 } } else{    # a (dirname, filenames) tuple
                     dirname, filenames = item;
                     for f in filenames{
                         f = convert_path(f);
                         if os.path.isfile(f){
-                            self.filelist.append(f);
+                            this.filelist.append(f);
 
         }
-        } } } } if self.distribution.has_ext_modules(){
-            build_ext = self.get_finalized_command('build_ext');
-            self.filelist.extend(build_ext.get_source_files());
+        } } } } if this.distribution.has_ext_modules(){
+            build_ext = this.get_finalized_command('build_ext');
+            this.filelist.extend(build_ext.get_source_files());
 
         }
-        if self.distribution.has_c_libraries(){
-            build_clib = self.get_finalized_command('build_clib');
-            self.filelist.extend(build_clib.get_source_files());
+        if this.distribution.has_c_libraries(){
+            build_clib = this.get_finalized_command('build_clib');
+            this.filelist.extend(build_clib.get_source_files());
 
         }
-        if self.distribution.has_scripts(){
-            build_scripts = self.get_finalized_command('build_scripts');
-            self.filelist.extend(build_scripts.get_source_files());
+        if this.distribution.has_scripts(){
+            build_scripts = this.get_finalized_command('build_scripts');
+            this.filelist.extend(build_scripts.get_source_files());
 
     }
-    } def read_template(self){
+    } function read_template(){
         """Read and parse manifest template file named by self.template.
 
         (usually "MANIFEST.in") The parsing and processing is done by
         'self.filelist', which updates itself accordingly.
         """;
-        log.info("reading manifest template '%s'", self.template);
-        template = TextFile(self.template,
+        log.info("reading manifest template '%s'", this.template);
+        template = TextFile(this.template,
                             strip_comments=1,
                             skip_blanks=1,
                             join_lines=1,
@@ -340,25 +340,25 @@ class sdist(Command){
         try{
             while 1{
                 line = template.readline();
-                if line is None{            # end of file
+                if line is nil{            # end of file
                     break;
 
                 }
                 try{
-                    self.filelist.process_template_line(line);
+                    this.filelist.process_template_line(line);
                 # the call above can raise a DistutilsTemplateError for
                 # malformed lines, or a ValueError from the lower-level
                 # convert_path function
                 }
                 except (DistutilsTemplateError, ValueError) as msg{
-                    self.warn("%s, line %d: %s" % (template.filename,
+                    this.warn("%s, line %d: %s" % (template.filename,
                                                    template.current_line,
                                                    msg));
         } } } finally{
             template.close();
 
     }
-    } def prune_file_list(self){
+    } function prune_file_list(){
         """Prune off branches that might slip into the file list as created
         by 'read_template()', but really don't belong there:
           * the build tree (typically "build")
@@ -366,11 +366,11 @@ class sdist(Command){
             previously with --keep-temp, or it aborted)
           * any RCS, CVS, .svn, .hg, .git, .bzr, _darcs directories
         """;
-        build = self.get_finalized_command('build');
-        base_dir = self.distribution.get_fullname();
+        build = this.get_finalized_command('build');
+        base_dir = this.distribution.get_fullname();
 
-        self.filelist.exclude_pattern(None, prefix=build.build_base);
-        self.filelist.exclude_pattern(None, prefix=base_dir);
+        this.filelist.exclude_pattern(nil, prefix=build.build_base);
+        this.filelist.exclude_pattern(nil, prefix=base_dir);
 
         # pruning out vcs directories
         # both separators are used under win32
@@ -383,33 +383,33 @@ class sdist(Command){
         vcs_dirs = ['RCS', 'CVS', r'\.svn', r'\.hg', r'\.git', r'\.bzr',
                     '_darcs'];
         vcs_ptrn = r'(^|%s)(%s)(%s).*' % (seps, '|'.join(vcs_dirs), seps);
-        self.filelist.exclude_pattern(vcs_ptrn, is_regex=1);
+        this.filelist.exclude_pattern(vcs_ptrn, is_regex=1);
 
     }
-    def write_manifest(self){
+    function write_manifest(){
         """Write the file list in 'self.filelist' (presumably as filled in
         by 'add_defaults()' and 'read_template()') to the manifest file
         named by 'self.manifest'.
         """;
-        if self._manifest_is_not_generated(){
+        if this._manifest_is_not_generated(){
             log.info("not writing to manually maintained "
-                     "manifest file '%s'" % self.manifest);
+                     "manifest file '%s'" % this.manifest);
             return;
 
         }
-        content = self.filelist.files[:];
+        content = this.filelist.files[:];
         content.insert(0, '# file GENERATED by distutils, do NOT edit');
-        self.execute(file_util.write_file, (self.manifest, content),
-                     "writing manifest file '%s'" % self.manifest);
+        this.execute(file_util.write_file, (this.manifest, content),
+                     "writing manifest file '%s'" % this.manifest);
 
     }
-    def _manifest_is_not_generated(self){
+    function _manifest_is_not_generated(){
         # check for special comment used in 2.7.1 and higher
-        if not os.path.isfile(self.manifest){
-            return False;
+        if not os.path.isfile(this.manifest){
+            return false;
 
         }
-        fp = open(self.manifest, 'rU');
+        fp = open(this.manifest, 'rU');
         try{
             first_line = fp.readline();
         } finally{
@@ -417,23 +417,23 @@ class sdist(Command){
         } return first_line != '# file GENERATED by distutils, do NOT edit\n';
 
     }
-    def read_manifest(self){
+    function read_manifest(){
         """Read the manifest file (named by 'self.manifest') and use it to
         fill in 'self.filelist', the list of files to include in the source
         distribution.
         """;
-        log.info("reading manifest file '%s'", self.manifest);
-        manifest = open(self.manifest);
+        log.info("reading manifest file '%s'", this.manifest);
+        manifest = open(this.manifest);
         for line in manifest{
             # ignore comments and blank lines
             line = line.strip();
             if line.startswith('#') or not line{
                 continue;
-            } self.filelist.append(line);
+            } this.filelist.append(line);
         } manifest.close();
 
     }
-    def make_release_tree(self, base_dir, files){
+    function make_release_tree( base_dir, files){
         """Create the directory tree that will become the source
         distribution archive.  All directories implied by the filenames in
         'files' are created under 'base_dir', and then we hard link or copy
@@ -445,8 +445,8 @@ class sdist(Command){
         # Create all the directories under 'base_dir' necessary to
         # put 'files' there; the 'mkpath()' is just so we don't die
         # if the manifest happens to be empty.
-        self.mkpath(base_dir);
-        dir_util.create_tree(base_dir, files, dry_run=self.dry_run);
+        this.mkpath(base_dir);
+        dir_util.create_tree(base_dir, files, dry_run=this.dry_run);
 
         # And walk over the list of files, either making a hard link (if
         # os.link exists) to each one that doesn't already exist in its
@@ -459,7 +459,7 @@ class sdist(Command){
             link = 'hard';
             msg = "making hard links in %s..." % base_dir;
         } else{                           # nope, have to copy
-            link = None;
+            link = nil;
             msg = "copying files to %s..." % base_dir;
 
         }
@@ -472,13 +472,13 @@ class sdist(Command){
                 log.warn("'%s' not a regular file -- skipping" % file);
             } else{
                 dest = os.path.join(base_dir, file);
-                self.copy_file(file, dest, link=link);
+                this.copy_file(file, dest, link=link);
 
         }
-        } self.distribution.metadata.write_pkg_info(base_dir);
+        } this.distribution.metadata.write_pkg_info(base_dir);
 
     }
-    def make_distribution(self){
+    function make_distribution(){
         """Create the source distribution(s).  First, we create the release
         tree with 'make_release_tree()'; then, we create all required
         archive files (according to 'self.formats') from the release tree.
@@ -488,34 +488,34 @@ class sdist(Command){
         """;
         # Don't warn about missing meta-data here -- should be (and is!)
         # done elsewhere.
-        base_dir = self.distribution.get_fullname();
-        base_name = os.path.join(self.dist_dir, base_dir);
+        base_dir = this.distribution.get_fullname();
+        base_name = os.path.join(this.dist_dir, base_dir);
 
-        self.make_release_tree(base_dir, self.filelist.files);
+        this.make_release_tree(base_dir, this.filelist.files);
         archive_files = [];              # remember names of files we create
         # tar archive must be created last to avoid overwrite and remove
-        if 'tar' in self.formats{
-            self.formats.append(self.formats.pop(self.formats.index('tar')));
+        if 'tar' in this.formats{
+            this.formats.append(this.formats.pop(this.formats.index('tar')));
 
         }
-        for fmt in self.formats{
-            file = self.make_archive(base_name, fmt, base_dir=base_dir,
-                                     owner=self.owner, group=self.group);
+        for fmt in this.formats{
+            file = this.make_archive(base_name, fmt, base_dir=base_dir,
+                                     owner=this.owner, group=this.group);
             archive_files.append(file);
-            self.distribution.dist_files.append(('sdist', '', file));
+            this.distribution.dist_files.append(('sdist', '', file));
 
         }
-        self.archive_files = archive_files;
+        this.archive_files = archive_files;
 
-        if not self.keep_temp{
-            dir_util.remove_tree(base_dir, dry_run=self.dry_run);
+        if not this.keep_temp{
+            dir_util.remove_tree(base_dir, dry_run=this.dry_run);
 
     }
-    } def get_archive_files(self){
+    } function get_archive_files(){
         """Return the list of archive files created when the command
         was run, or None if the command hasn't run yet.
         """;
-        return self.archive_files;
+        return this.archive_files;
 
 }
 }

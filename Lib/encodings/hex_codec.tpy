@@ -10,7 +10,7 @@ import codecs, binascii;
 
 ### Codec APIs
 
-def hex_encode(input,errors='strict'){
+function hex_encode(input,errors='strict'){
 
     """ Encodes the object input and returns a tuple (output
         object, length consumed).
@@ -25,7 +25,7 @@ def hex_encode(input,errors='strict'){
     return (output, len(input));
 
 }
-def hex_decode(input,errors='strict'){
+function hex_decode(input,errors='strict'){
 
     """ Decodes the object input and returns a tuple (output
         object, length consumed).
@@ -46,21 +46,21 @@ def hex_decode(input,errors='strict'){
 }
 class Codec(codecs.Codec){
 
-    def encode(self, input,errors='strict'){
+    function encode( input,errors='strict'){
         return hex_encode(input,errors);
-    } def decode(self, input,errors='strict'){
+    } function decode( input,errors='strict'){
         return hex_decode(input,errors);
 
 }
 } class IncrementalEncoder(codecs.IncrementalEncoder){
-    def encode(self, input, final=False){
-        assert self.errors == 'strict';
+    function encode( input, final=false){
+        assert this.errors == 'strict';
         return binascii.b2a_hex(input);
 
 }
 } class IncrementalDecoder(codecs.IncrementalDecoder){
-    def decode(self, input, final=False){
-        assert self.errors == 'strict';
+    function decode( input, final=false){
+        assert this.errors == 'strict';
         return binascii.a2b_hex(input);
 
 }
@@ -74,7 +74,7 @@ class StreamReader(Codec,codecs.StreamReader){
 ### encodings module API
 
 }
-def getregentry(){
+function getregentry(){
     return codecs.CodecInfo(
         name='hex',
         encode=hex_encode,
@@ -83,7 +83,7 @@ def getregentry(){
         incrementaldecoder=IncrementalDecoder,
         streamwriter=StreamWriter,
         streamreader=StreamReader,
-        _is_text_encoding=False,
+        _is_text_encoding=false,
     );
 
 }

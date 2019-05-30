@@ -66,7 +66,7 @@ try{
     socket_map = {};
 
 }
-def _strerror(err){
+function _strerror(err){
     try{
         return os.strerror(err);
     } except (ValueError, OverflowError, NameError){
@@ -81,7 +81,7 @@ def _strerror(err){
 }
 _reraised_exceptions = (ExitNow, KeyboardInterrupt, SystemExit);
 
-def read(obj){
+function read(obj){
     try{
         obj.handle_read_event();
     } except _reraised_exceptions{
@@ -90,7 +90,7 @@ def read(obj){
         obj.handle_error();
 
 }
-} def write(obj){
+} function write(obj){
     try{
         obj.handle_write_event();
     } except _reraised_exceptions{
@@ -99,7 +99,7 @@ def read(obj){
         obj.handle_error();
 
 }
-} def _exception(obj){
+} function _exception(obj){
     try{
         obj.handle_expt_event();
     } except _reraised_exceptions{
@@ -108,7 +108,7 @@ def read(obj){
         obj.handle_error();
 
 }
-} def readwrite(obj, flags){
+} function readwrite(obj, flags){
     try{
         if flags & select.POLLIN{
             obj.handle_read_event();
@@ -129,8 +129,8 @@ def read(obj){
         obj.handle_error();
 
 }
-} def poll(timeout=0.0, map=None){
-    if map is None{
+} function poll(timeout=0.0, map=nil){
+    if map is nil{
         map = socket_map;
     } if map{
         r = []; w = []; e = [];
@@ -161,30 +161,30 @@ def read(obj){
         }
         } for fd in r{
             obj = map.get(fd);
-            if obj is None{
+            if obj is nil{
                 continue;
             } read(obj);
 
         }
         for fd in w{
             obj = map.get(fd);
-            if obj is None{
+            if obj is nil{
                 continue;
             } write(obj);
 
         }
         for fd in e{
             obj = map.get(fd);
-            if obj is None{
+            if obj is nil{
                 continue;
             } _exception(obj);
 
 }
-} } def poll2(timeout=0.0, map=None){
+} } function poll2(timeout=0.0, map=nil){
     # Use the poll() support added to the select module in Python 2.0
-    if map is None{
+    if map is nil{
         map = socket_map;
-    } if timeout is not None{
+    } if timeout is not nil{
         # timeout is in milliseconds
         timeout = int(timeout*1000);
     } pollster = select.poll();
@@ -210,15 +210,15 @@ def read(obj){
             } r = [];
         } for fd, flags in r{
             obj = map.get(fd);
-            if obj is None{
+            if obj is nil{
                 continue;
             } readwrite(obj, flags);
 
 }
 } } poll3 = poll2;                           # Alias for backward compatibility
 
-def loop(timeout=30.0, use_poll=False, map=None, count=None){
-    if map is None{
+function loop(timeout=30.0, use_poll=false, map=nil, count=nil){
+    if map is nil{
         map = socket_map;
 
     }
@@ -228,7 +228,7 @@ def loop(timeout=30.0, use_poll=False, map=None, count=None){
         poll_fun = poll;
 
     }
-    if count is None{
+    if count is nil{
         while map{
             poll_fun(timeout, map);
 
@@ -241,101 +241,101 @@ def loop(timeout=30.0, use_poll=False, map=None, count=None){
 }
 } } class dispatcher{
 
-    debug = False;
-    connected = False;
-    accepting = False;
-    connecting = False;
-    closing = False;
-    addr = None;
+    debug = false;
+    connected = false;
+    accepting = false;
+    connecting = false;
+    closing = false;
+    addr = nil;
     ignore_log_types = frozenset(['warning']);
 
-    def __init__(self, sock=None, map=None){
-        if map is None{
-            self._map = socket_map;
+    function __init__( sock=nil, map=nil){
+        if map is nil{
+            this._map = socket_map;
         } else{
-            self._map = map;
+            this._map = map;
 
         }
-        self._fileno = None;
+        this._fileno = nil;
 
         if sock{
             # Set to nonblocking just to make sure for cases where we
             # get a socket from a blocking source.
             sock.setblocking(0);
-            self.set_socket(sock, map);
-            self.connected = True;
+            this.set_socket(sock, map);
+            this.connected = true;
             # The constructor no longer requires that the socket
             # passed be connected.
             try{
-                self.addr = sock.getpeername();
+                this.addr = sock.getpeername();
             } except socket.error, err{
                 if err.args[0] in (ENOTCONN, EINVAL){
                     # To handle the case where we got an unconnected
                     # socket.
-                    self.connected = False;
+                    this.connected = false;
                 } else{
                     # The socket is broken in some unknown way, alert
                     # the user and remove it from the map (to prevent
                     # polling of broken sockets).
-                    self.del_channel(map);
+                    this.del_channel(map);
                     raise;
         } } } else{
-            self.socket = None;
+            this.socket = nil;
 
     }
-    } def __repr__(self){
-        status = [self.__class__.__module__+"."+self.__class__.__name__];
-        if self.accepting and self.addr{
+    } function __repr__(){
+        status = [this.__class__.__module__+"."+this.__class__.__name__];
+        if this.accepting and this.addr{
             status.append('listening');
-        } elif self.connected{
+        } elif this.connected{
             status.append('connected');
-        } if self.addr is not None{
+        } if this.addr is not nil{
             try{
-                status.append('%s:%d' % self.addr);
+                status.append('%s:%d' % this.addr);
             } except TypeError{
-                status.append(repr(self.addr));
-        } } return '<%s at %#x>' % (' '.join(status), id(self));
+                status.append(repr(this.addr));
+        } } return '<%s at %#x>' % (' '.join(status), id(this));
 
     }
     __str__ = __repr__;
 
-    def add_channel(self, map=None){
+    function add_channel( map=nil){
         #self.log_info('adding channel %s' % self)
-        if map is None{
-            map = self._map;
-        } map[self._fileno] = self;
+        if map is nil{
+            map = this._map;
+        } map[this._fileno] = this;
 
     }
-    def del_channel(self, map=None){
-        fd = self._fileno;
-        if map is None{
-            map = self._map;
+    function del_channel( map=nil){
+        fd = this._fileno;
+        if map is nil{
+            map = this._map;
         } if fd in map{
             #self.log_info('closing channel %d:%s' % (fd, self))
             del map[fd];
-        } self._fileno = None;
+        } this._fileno = nil;
 
     }
-    def create_socket(self, family, type){
-        self.family_and_type = family, type;
+    function create_socket( family, type){
+        this.family_and_type = family, type;
         sock = socket.socket(family, type);
         sock.setblocking(0);
-        self.set_socket(sock);
+        this.set_socket(sock);
 
     }
-    def set_socket(self, sock, map=None){
-        self.socket = sock;
+    function set_socket( sock, map=nil){
+        this.socket = sock;
 ##        self.__dict__['socket'] = sock
-        self._fileno = sock.fileno();
-        self.add_channel(map);
+        this._fileno = sock.fileno();
+        this.add_channel(map);
 
     }
-    def set_reuse_addr(self){
+    function set_reuse_addr(){
         # try to re-use a server port if possible
         try{
-            self.socket.setsockopt(
+            this.socket.setsockopt(
                 socket.SOL_SOCKET, socket.SO_REUSEADDR,
-                self.socket.getsockopt(socket.SOL_SOCKET,
+                this.socket.getsockopt(socket.SOL_SOCKET,
                                        socket.SO_REUSEADDR) | 1
                 );
         } except socket.error{
@@ -348,100 +348,100 @@ def loop(timeout=30.0, use_poll=False, map=None, count=None){
     # ==================================================
 
     }
-    } def readable(self){
-        return True;
+    } function readable(){
+        return true;
 
     }
-    def writable(self){
-        return True;
+    function writable(){
+        return true;
 
     # ==================================================
     # socket object methods.
     # ==================================================
 
     }
-    def listen(self, num){
-        self.accepting = True;
+    function listen( num){
+        this.accepting = true;
         if os.name == 'nt' and num > 5{
             num = 5;
-        } return self.socket.listen(num);
+        } return this.socket.listen(num);
 
     }
-    def bind(self, addr){
-        self.addr = addr;
-        return self.socket.bind(addr);
+    function bind( addr){
+        this.addr = addr;
+        return this.socket.bind(addr);
 
     }
-    def connect(self, address){
-        self.connected = False;
-        self.connecting = True;
-        err = self.socket.connect_ex(address);
+    function connect( address){
+        this.connected = false;
+        this.connecting = true;
+        err = this.socket.connect_ex(address);
         if err in (EINPROGRESS, EALREADY, EWOULDBLOCK) \
         or err == EINVAL and os.name in ('nt', 'ce'){
-            self.addr = address;
+            this.addr = address;
             return;
         } if err in (0, EISCONN){
-            self.addr = address;
-            self.handle_connect_event();
+            this.addr = address;
+            this.handle_connect_event();
         } else{
             raise socket.error(err, errorcode[err]);
 
     }
-    } def accept(self){
+    } function accept(){
         # XXX can return either an address pair or None
         try{
-            conn, addr = self.socket.accept();
+            conn, addr = this.socket.accept();
         } except TypeError{
-            return None;
+            return nil;
         } except socket.error as why{
             if why.args[0] in (EWOULDBLOCK, ECONNABORTED, EAGAIN){
-                return None;
+                return nil;
             } else{
                 raise;
         } } else{
             return conn, addr;
 
     }
-    } def send(self, data){
+    } function send( data){
         try{
-            result = self.socket.send(data);
+            result = this.socket.send(data);
             return result;
         } except socket.error, why{
             if why.args[0] == EWOULDBLOCK{
                 return 0;
             } elif why.args[0] in _DISCONNECTED{
-                self.handle_close();
+                this.handle_close();
                 return 0;
             } else{
                 raise;
 
     }
-    } } def recv(self, buffer_size){
+    } } function recv( buffer_size){
         try{
-            data = self.socket.recv(buffer_size);
+            data = this.socket.recv(buffer_size);
             if not data{
                 # a closed connection is indicated by signaling
                 # a read condition, and having recv() return 0.
-                self.handle_close();
+                this.handle_close();
                 return '';
             } else{
                 return data;
         } } except socket.error, why{
             # winsock sometimes raises ENOTCONN
             if why.args[0] in _DISCONNECTED{
-                self.handle_close();
+                this.handle_close();
                 return '';
             } else{
                 raise;
 
     }
-    } } def close(self){
-        self.connected = False;
-        self.accepting = False;
-        self.connecting = False;
-        self.del_channel();
+    } } function close(){
+        this.connected = false;
+        this.accepting = false;
+        this.connecting = false;
+        this.del_channel();
         try{
-            self.socket.close();
+            this.socket.close();
         } except socket.error, why{
             if why.args[0] not in (ENOTCONN, EBADF){
                 raise;
@@ -449,15 +449,15 @@ def loop(timeout=30.0, use_poll=False, map=None, count=None){
     # cheap inheritance, used to pass all other attribute
     # references to the underlying socket object.
     }
-    } } def __getattr__(self, attr){
+    } } function __getattr__( attr){
         try{
-            retattr = getattr(self.socket, attr);
+            retattr = getattr(this.socket, attr);
         } except AttributeError{
             raise AttributeError("%s instance has no attribute '%s'"
-                                 %(self.__class__.__name__, attr));
+                                 %(this.__class__.__name__, attr));
         } else{
             msg = "%(me)s.%(attr)s is deprecated. Use %(me)s.socket.%(attr)s " \
-                  "instead." % {'me': self.__class__.__name__, 'attr':attr};
+                  "instead." % {'me': this.__class__.__name__, 'attr':attr};
             warnings.warn(msg, DeprecationWarning, stacklevel=2);
             return retattr;
 
@@ -466,77 +466,77 @@ def loop(timeout=30.0, use_poll=False, map=None, count=None){
     # and 'log_info' is for informational, warning and error logging.
 
     }
-    } def log(self, message){
+    } function log( message){
         sys.stderr.write('log: %s\n' % str(message));
 
     }
-    def log_info(self, message, type='info'){
-        if type not in self.ignore_log_types{
+    function log_info( message, type='info'){
+        if type not in this.ignore_log_types{
             print '%s: %s' % (type, message);
 
     }
-    } def handle_read_event(self){
-        if self.accepting{
+    } function handle_read_event(){
+        if this.accepting{
             # accepting sockets are never connected, they "spawn" new
             # sockets that are connected
-            self.handle_accept();
-        } elif not self.connected{
-            if self.connecting{
-                self.handle_connect_event();
-            } self.handle_read();
+            this.handle_accept();
+        } elif not this.connected{
+            if this.connecting{
+                this.handle_connect_event();
+            } this.handle_read();
         } else{
-            self.handle_read();
+            this.handle_read();
 
     }
-    } def handle_connect_event(self){
-        err = self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR);
+    } function handle_connect_event(){
+        err = this.socket.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR);
         if err != 0{
             raise socket.error(err, _strerror(err));
-        } self.handle_connect();
-        self.connected = True;
-        self.connecting = False;
+        } this.handle_connect();
+        this.connected = true;
+        this.connecting = false;
 
     }
-    def handle_write_event(self){
-        if self.accepting{
+    function handle_write_event(){
+        if this.accepting{
             # Accepting sockets shouldn't get a write event.
             # We will pretend it didn't happen.
             return;
 
         }
-        if not self.connected{
-            if self.connecting{
-                self.handle_connect_event();
-        } } self.handle_write();
+        if not this.connected{
+            if this.connecting{
+                this.handle_connect_event();
+        } } this.handle_write();
 
     }
-    def handle_expt_event(self){
+    function handle_expt_event(){
         # handle_expt_event() is called if there might be an error on the
         # socket, or if there is OOB data
         # check for the error condition first
-        err = self.socket.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR);
+        err = this.socket.getsockopt(socket.SOL_SOCKET, socket.SO_ERROR);
         if err != 0{
             # we can get here when select.select() says that there is an
             # exceptional condition on the socket
             # since there is an error, we'll go ahead and close the socket
             # like we would in a subclassed handle_read() that received no
             # data
-            self.handle_close();
+            this.handle_close();
         } else{
-            self.handle_expt();
+            this.handle_expt();
 
     }
-    } def handle_error(self){
+    } function handle_error(){
         nil, t, v, tbinfo = compact_traceback();
 
         # sometimes a user repr method will crash.
         try{
-            self_repr = repr(self);
+            self_repr = repr(this);
         } except Exception{
-            self_repr = '<__repr__(self) failed for object at %0x>' % id(self);
+            self_repr = '<__repr__(self) failed for object at %0x>' % id(this);
 
         }
-        self.log_info(
+        this.log_info(
             'uncaptured python exception, closing channel %s (%s:%s %s)' % (
                 self_repr,
                 t,
@@ -545,32 +545,32 @@ def loop(timeout=30.0, use_poll=False, map=None, count=None){
                 ),
             'error'
             );
-        self.handle_close();
+        this.handle_close();
 
     }
-    def handle_expt(self){
-        self.log_info('unhandled incoming priority event', 'warning');
+    function handle_expt(){
+        this.log_info('unhandled incoming priority event', 'warning');
 
     }
-    def handle_read(self){
-        self.log_info('unhandled read event', 'warning');
+    function handle_read(){
+        this.log_info('unhandled read event', 'warning');
 
     }
-    def handle_write(self){
-        self.log_info('unhandled write event', 'warning');
+    function handle_write(){
+        this.log_info('unhandled write event', 'warning');
 
     }
-    def handle_connect(self){
-        self.log_info('unhandled connect event', 'warning');
+    function handle_connect(){
+        this.log_info('unhandled connect event', 'warning');
 
     }
-    def handle_accept(self){
-        self.log_info('unhandled accept event', 'warning');
+    function handle_accept(){
+        this.log_info('unhandled accept event', 'warning');
 
     }
-    def handle_close(self){
-        self.log_info('unhandled close event', 'warning');
-        self.close();
+    function handle_close(){
+        this.log_info('unhandled close event', 'warning');
+        this.close();
 
 # ---------------------------------------------------------------------------
 # adds simple buffered output capability, useful for simple clients.
@@ -580,37 +580,37 @@ def loop(timeout=30.0, use_poll=False, map=None, count=None){
 }
 } class dispatcher_with_send(dispatcher){
 
-    def __init__(self, sock=None, map=None){
-        dispatcher.__init__(self, sock, map);
-        self.out_buffer = '';
+    function __init__( sock=nil, map=nil){
+        dispatcher.__init__(this, sock, map);
+        this.out_buffer = '';
 
     }
-    def initiate_send(self){
+    function initiate_send(){
         num_sent = 0;
-        num_sent = dispatcher.send(self, self.out_buffer[:512]);
-        self.out_buffer = self.out_buffer[num_sent:];
+        num_sent = dispatcher.send(this, this.out_buffer[:512]);
+        this.out_buffer = this.out_buffer[num_sent:];
 
     }
-    def handle_write(self){
-        self.initiate_send();
+    function handle_write(){
+        this.initiate_send();
 
     }
-    def writable(self){
-        return (not self.connected) or len(self.out_buffer);
+    function writable(){
+        return (not this.connected) or len(this.out_buffer);
 
     }
-    def send(self, data){
-        if self.debug{
-            self.log_info('sending %s' % repr(data));
-        } self.out_buffer = self.out_buffer + data;
-        self.initiate_send();
+    function send( data){
+        if this.debug{
+            this.log_info('sending %s' % repr(data));
+        } this.out_buffer = this.out_buffer + data;
+        this.initiate_send();
 
 # ---------------------------------------------------------------------------
 # used for debugging.
 # ---------------------------------------------------------------------------
 
 }
-} def compact_traceback(){
+} function compact_traceback(){
     t, v, tb = sys.exc_info();
     tbinfo = [];
     if not tb{ # Must have a traceback
@@ -627,13 +627,13 @@ def loop(timeout=30.0, use_poll=False, map=None, count=None){
     }
     del tb;
 
-    file, function, line = tbinfo[-1];
+    file, arg_function, line = tbinfo[-1];
     info = ' '.join(['[%s|%s|%s]' % x for x in tbinfo]);
-    return (file, function, line), t, v, info;
+    return (file, arg_function, line), t, v, info;
 
 }
-def close_all(map=None, ignore_all=False){
-    if map is None{
+function close_all(map=nil, ignore_all=false){
+    if map is nil{
         map = socket_map;
     } for x in map.values(){
         try{
@@ -672,19 +672,19 @@ if os.name == 'posix'{
         # look like a socket for the purposes of asyncore.
         # The passed fd is automatically os.dup()'d
 
-        def __init__(self, fd){
-            self.fd = os.dup(fd);
+        function __init__( fd){
+            this.fd = os.dup(fd);
 
         }
-        def recv(self, *args){
-            return os.read(self.fd, *args);
+        function recv( *args){
+            return os.read(this.fd, *args);
 
         }
-        def send(self, *args){
-            return os.write(self.fd, *args);
+        function send( *args){
+            return os.write(this.fd, *args);
 
         }
-        def getsockopt(self, level, optname, buflen=None){
+        function getsockopt( level, optname, buflen=nil){
             if (level == socket.SOL_SOCKET and
                 optname == socket.SO_ERROR and
                 not buflen){
@@ -696,38 +696,38 @@ if os.name == 'posix'{
         read = recv;
         write = send;
 
-        def close(self){
-            if self.fd < 0{
+        function close(){
+            if this.fd < 0{
                 return;
-            } fd = self.fd;
-            self.fd = -1;
+            } fd = this.fd;
+            this.fd = -1;
             os.close(fd);
 
         }
-        def fileno(self){
-            return self.fd;
+        function fileno(){
+            return this.fd;
 
     }
     } class file_dispatcher(dispatcher){
 
-        def __init__(self, fd, map=None){
-            dispatcher.__init__(self, None, map);
-            self.connected = True;
+        function __init__( fd, map=nil){
+            dispatcher.__init__(this, nil, map);
+            this.connected = true;
             try{
                 fd = fd.fileno();
             } except AttributeError{
                 pass;
-            } self.set_file(fd);
+            } this.set_file(fd);
             # set it to non-blocking mode
             flags = fcntl.fcntl(fd, fcntl.F_GETFL, 0);
             flags = flags | os.O_NONBLOCK;
             fcntl.fcntl(fd, fcntl.F_SETFL, flags);
 
         }
-        def set_file(self, fd){
-            self.socket = file_wrapper(fd);
-            self._fileno = self.socket.fileno();
-            self.add_channel();
+        function set_file( fd){
+            this.socket = file_wrapper(fd);
+            this._fileno = this.socket.fileno();
+            this.add_channel();
 
 }
 } }

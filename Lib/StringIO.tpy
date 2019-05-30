@@ -36,7 +36,7 @@ try{
 }
 __all__ = ["StringIO"];
 
-def _complain_ifclosed(closed){
+function _complain_ifclosed(closed){
     if closed{
         raise ValueError, "I/O operation on closed file";
 
@@ -53,53 +53,53 @@ def _complain_ifclosed(closed){
     cannot be interpreted as 7-bit ASCII (that use the 8th bit) will cause
     a UnicodeError to be raised when getvalue() is called.
     """;
-    def __init__(self, buf = ''){
+    function __init__( buf = ''){
         # Force self.buf to be a string or unicode
         if not isinstance(buf, basestring){
             buf = str(buf);
-        } self.buf = buf;
-        self.len = len(buf);
-        self.buflist = [];
-        self.pos = 0;
-        self.closed = False;
-        self.softspace = 0;
+        } this.buf = buf;
+        this.len = len(buf);
+        this.buflist = [];
+        this.pos = 0;
+        this.closed = false;
+        this.softspace = 0;
 
     }
-    def __iter__(self){
-        return self;
+    function __iter__(){
+        return this;
 
     }
-    def next(self){
+    function next(){
         """A file object is its own iterator, for example iter(f) returns f
         (unless f is closed). When a file is used as an iterator, typically
         in a for loop (for example, for line in f: print line), the next()
         method is called repeatedly. This method returns the next input line,
         or raises StopIteration when EOF is hit.
         """;
-        _complain_ifclosed(self.closed);
-        r = self.readline();
+        _complain_ifclosed(this.closed);
+        r = this.readline();
         if not r{
             raise StopIteration;
         } return r;
 
     }
-    def close(self){
+    function close(){
         """Free the memory buffer.
         """;
-        if not self.closed{
-            self.closed = True;
-            del self.buf, self.pos;
+        if not this.closed{
+            this.closed = true;
+            del this.buf, this.pos;
 
     }
-    } def isatty(self){
+    } function isatty(){
         """Returns False because StringIO objects are not connected to a
         tty-like device.
         """;
-        _complain_ifclosed(self.closed);
-        return False;
+        _complain_ifclosed(this.closed);
+        return false;
 
     }
-    def seek(self, pos, mode = 0){
+    function seek( pos, mode = 0){
         """Set the file's current position.
 
         The mode argument is optional and defaults to 0 (absolute file
@@ -108,24 +108,24 @@ def _complain_ifclosed(closed){
 
         There is no return value.
         """;
-        _complain_ifclosed(self.closed);
-        if self.buflist{
-            self.buf += ''.join(self.buflist);
-            self.buflist = [];
+        _complain_ifclosed(this.closed);
+        if this.buflist{
+            this.buf += ''.join(this.buflist);
+            this.buflist = [];
         } if mode == 1{
-            pos += self.pos;
+            pos += this.pos;
         } elif mode == 2{
-            pos += self.len;
-        } self.pos = max(0, pos);
+            pos += this.len;
+        } this.pos = max(0, pos);
 
     }
-    def tell(self){
+    function tell(){
         """Return the file's current position.""";
-        _complain_ifclosed(self.closed);
-        return self.pos;
+        _complain_ifclosed(this.closed);
+        return this.pos;
 
     }
-    def read(self, n = -1){
+    function read( n = -1){
         """Read at most size bytes from the file
         (less if the read hits EOF before obtaining size bytes).
 
@@ -133,20 +133,20 @@ def _complain_ifclosed(closed){
         is reached. The bytes are returned as a string object. An empty
         string is returned when EOF is encountered immediately.
         """;
-        _complain_ifclosed(self.closed);
-        if self.buflist{
-            self.buf += ''.join(self.buflist);
-            self.buflist = [];
-        } if n is None or n < 0{
-            newpos = self.len;
+        _complain_ifclosed(this.closed);
+        if this.buflist{
+            this.buf += ''.join(this.buflist);
+            this.buflist = [];
+        } if n is nil or n < 0{
+            newpos = this.len;
         } else{
-            newpos = min(self.pos+n, self.len);
-        } r = self.buf[self.pos:newpos];
-        self.pos = newpos;
+            newpos = min(this.pos+n, this.len);
+        } r = this.buf[this.pos:newpos];
+        this.pos = newpos;
         return r;
 
     }
-    def readline(self, length=None){
+    function readline( length=nil){
         r"""Read one entire line from the file.
 
         A trailing newline character is kept in the string (but may be absent
@@ -159,24 +159,24 @@ def _complain_ifclosed(closed){
         Note: Unlike stdio's fgets(), the returned string contains null
         characters ('\0') if they occurred in the input.
         """;
-        _complain_ifclosed(self.closed);
-        if self.buflist{
-            self.buf += ''.join(self.buflist);
-            self.buflist = [];
-        } i = self.buf.find('\n', self.pos);
+        _complain_ifclosed(this.closed);
+        if this.buflist{
+            this.buf += ''.join(this.buflist);
+            this.buflist = [];
+        } i = this.buf.find('\n', this.pos);
         if i < 0{
-            newpos = self.len;
+            newpos = this.len;
         } else{
             newpos = i+1;
-        } if length is not None and length >= 0{
-            if self.pos + length < newpos{
-                newpos = self.pos + length;
-        } } r = self.buf[self.pos:newpos];
-        self.pos = newpos;
+        } if length is not nil and length >= 0{
+            if this.pos + length < newpos{
+                newpos = this.pos + length;
+        } } r = this.buf[this.pos:newpos];
+        this.pos = newpos;
         return r;
 
     }
-    def readlines(self, sizehint = 0){
+    function readlines( sizehint = 0){
         """Read until EOF using readline() and return a list containing the
         lines thus read.
 
@@ -186,17 +186,17 @@ def _complain_ifclosed(closed){
         """;
         total = 0;
         lines = [];
-        line = self.readline();
+        line = this.readline();
         while line{
             lines.append(line);
             total += len(line);
             if 0 < sizehint <= total{
                 break;
-            } line = self.readline();
+            } line = this.readline();
         } return lines;
 
     }
-    def truncate(self, size=None){
+    function truncate( size=nil){
         """Truncate the file's size.
 
         If the optional size argument is present, the file is truncated to
@@ -207,52 +207,52 @@ def _complain_ifclosed(closed){
         If the specified size exceeds the file's current size, the
         file remains unchanged.
         """;
-        _complain_ifclosed(self.closed);
-        if size is None{
-            size = self.pos;
+        _complain_ifclosed(this.closed);
+        if size is nil{
+            size = this.pos;
         } elif size < 0{
             raise IOError(EINVAL, "Negative size not allowed");
-        } elif size < self.pos{
-            self.pos = size;
-        } self.buf = self.getvalue()[:size];
-        self.len = size;
+        } elif size < this.pos{
+            this.pos = size;
+        } this.buf = this.getvalue()[:size];
+        this.len = size;
 
     }
-    def write(self, s){
+    function write( s){
         """Write a string to the file.
 
         There is no return value.
         """;
-        _complain_ifclosed(self.closed);
+        _complain_ifclosed(this.closed);
         if not s{ return;}
         # Force s to be a string or unicode
         if not isinstance(s, basestring){
             s = str(s);
-        } spos = self.pos;
-        slen = self.len;
+        } spos = this.pos;
+        slen = this.len;
         if spos == slen{
-            self.buflist.append(s);
-            self.len = self.pos = spos + len(s);
+            this.buflist.append(s);
+            this.len = this.pos = spos + len(s);
             return;
         } if spos > slen{
-            self.buflist.append('\0'*(spos - slen));
+            this.buflist.append('\0'*(spos - slen));
             slen = spos;
         } newpos = spos + len(s);
         if spos < slen{
-            if self.buflist{
-                self.buf += ''.join(self.buflist);
-            } self.buflist = [self.buf[:spos], s, self.buf[newpos:]];
-            self.buf = '';
+            if this.buflist{
+                this.buf += ''.join(this.buflist);
+            } this.buflist = [this.buf[:spos], s, this.buf[newpos:]];
+            this.buf = '';
             if newpos > slen{
                 slen = newpos;
         } } else{
-            self.buflist.append(s);
+            this.buflist.append(s);
             slen = newpos;
-        } self.len = slen;
-        self.pos = newpos;
+        } this.len = slen;
+        this.pos = newpos;
 
     }
-    def writelines(self, iterable){
+    function writelines( iterable){
         """Write a sequence of strings to the file. The sequence can be any
         iterable object producing strings, typically a list of strings. There
         is no return value.
@@ -260,18 +260,18 @@ def _complain_ifclosed(closed){
         (The name is intended to match readlines(); writelines() does not add
         line separators.)
         """;
-        write = self.write;
+        write = this.write;
         for line in iterable{
             write(line);
 
     }
-    } def flush(self){
+    } function flush(){
         """Flush the internal buffer
         """;
-        _complain_ifclosed(self.closed);
+        _complain_ifclosed(this.closed);
 
     }
-    def getvalue(self){
+    function getvalue(){
         """
         Retrieve the entire contents of the "file" at any time before
         the StringIO object's close() method is called.
@@ -282,17 +282,17 @@ def _complain_ifclosed(closed){
         8th bit) will cause a UnicodeError to be raised when getvalue()
         is called.
         """;
-        _complain_ifclosed(self.closed);
-        if self.buflist{
-            self.buf += ''.join(self.buflist);
-            self.buflist = [];
-        } return self.buf;
+        _complain_ifclosed(this.closed);
+        if this.buflist{
+            this.buf += ''.join(this.buflist);
+            this.buflist = [];
+        } return this.buf;
 
 
 # A little test suite
 
 }
-} def test(){
+} function test(){
     import sys;
     if sys.argv[1:]{
         file = sys.argv[1];

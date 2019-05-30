@@ -204,8 +204,8 @@ termios_tcsetattr(PyObject *self, PyObject *args)
     if (tcsetattr(fd, when, &mode) == -1)
         return PyErr_SetFromErrno(TermiosError);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(termios_tcsendbreak__doc__,
@@ -226,8 +226,8 @@ termios_tcsendbreak(PyObject *self, PyObject *args)
     if (tcsendbreak(fd, duration) == -1)
         return PyErr_SetFromErrno(TermiosError);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(termios_tcdrain__doc__,
@@ -246,8 +246,8 @@ termios_tcdrain(PyObject *self, PyObject *args)
     if (tcdrain(fd) == -1)
         return PyErr_SetFromErrno(TermiosError);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(termios_tcflush__doc__,
@@ -269,8 +269,8 @@ termios_tcflush(PyObject *self, PyObject *args)
     if (tcflush(fd, queue) == -1)
         return PyErr_SetFromErrno(TermiosError);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(termios_tcflow__doc__,
@@ -292,8 +292,8 @@ termios_tcflow(PyObject *self, PyObject *args)
     if (tcflow(fd, action) == -1)
         return PyErr_SetFromErrno(TermiosError);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyMethodDef termios_methods[] =

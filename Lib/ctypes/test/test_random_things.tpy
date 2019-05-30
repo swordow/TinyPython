@@ -1,7 +1,7 @@
 from ctypes import *;
 import unittest, sys;
 
-def callback_func(arg){
+function callback_func(arg){
     42 // arg;
     raise ValueError(arg);
 
@@ -11,7 +11,7 @@ class call_function_TestCase(unittest.TestCase){
     # _ctypes.call_function is deprecated and private, but used by
     # Gary Bishp's readline module.  If we have it, we must test it as well.
 
-    def test(self){
+    function test(){
         from _ctypes import call_function;
         windll.kernel32.LoadLibraryA.restype = c_void_p;
         windll.kernel32.GetProcAddress.argtypes = c_void_p, c_char_p;
@@ -20,8 +20,8 @@ class call_function_TestCase(unittest.TestCase){
         hdll = windll.kernel32.LoadLibraryA("kernel32");
         funcaddr = windll.kernel32.GetProcAddress(hdll, "GetModuleHandleA");
 
-        self.assertEqual(call_function(funcaddr, (None,)),
-                             windll.kernel32.GetModuleHandleA(None));
+        this.assertEqual(call_function(funcaddr, (nil,)),
+                             windll.kernel32.GetModuleHandleA(nil));
 
 }
 } class CallbackTracbackTestCase(unittest.TestCase){
@@ -36,7 +36,7 @@ class call_function_TestCase(unittest.TestCase){
     # created, then a full traceback printed.  When SystemExit is
     # raised in a callback function, the interpreter exits.
 
-    def capture_stderr(self, func, *args, **kw){
+    function capture_stderr( func, *args, **kw){
         # helper - call function 'func', and return the captured stderr
         import StringIO;
         old_stderr = sys.stderr;
@@ -48,31 +48,31 @@ class call_function_TestCase(unittest.TestCase){
         } return logger.getvalue();
 
     }
-    def test_ValueError(self){
+    function test_ValueError(){
         cb = CFUNCTYPE(c_int, c_int)(callback_func);
-        out = self.capture_stderr(cb, 42);
-        self.assertEqual(out.splitlines()[-1],
+        out = this.capture_stderr(cb, 42);
+        this.assertEqual(out.splitlines()[-1],
                              "ValueError: 42");
 
     }
-    def test_IntegerDivisionError(self){
+    function test_IntegerDivisionError(){
         cb = CFUNCTYPE(c_int, c_int)(callback_func);
-        out = self.capture_stderr(cb, 0);
-        self.assertEqual(out.splitlines()[-1][:19],
+        out = this.capture_stderr(cb, 0);
+        this.assertEqual(out.splitlines()[-1][:19],
                              "ZeroDivisionError: ");
 
     }
-    def test_FloatDivisionError(self){
+    function test_FloatDivisionError(){
         cb = CFUNCTYPE(c_int, c_double)(callback_func);
-        out = self.capture_stderr(cb, 0.0);
-        self.assertEqual(out.splitlines()[-1][:19],
+        out = this.capture_stderr(cb, 0.0);
+        this.assertEqual(out.splitlines()[-1][:19],
                              "ZeroDivisionError: ");
 
     }
-    def test_TypeErrorDivisionError(self){
+    function test_TypeErrorDivisionError(){
         cb = CFUNCTYPE(c_int, c_char_p)(callback_func);
-        out = self.capture_stderr(cb, "spam");
-        self.assertEqual(out.splitlines()[-1],
+        out = this.capture_stderr(cb, "spam");
+        this.assertEqual(out.splitlines()[-1],
                              "TypeError: "
                              "unsupported operand type(s) for //: 'int' and 'str'");
 

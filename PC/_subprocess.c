@@ -103,8 +103,8 @@ sp_handle_close(sp_handle_object* self, PyObject* args)
         CloseHandle(self->handle);
         self->handle = INVALID_HANDLE_VALUE;
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static void
@@ -178,8 +178,8 @@ sp_GetStdHandle(PyObject* self, PyObject* args)
         return PyErr_SetFromWindowsErr(GetLastError());
 
     if (! handle) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
 
     /* note: returns integer, not handle object */
@@ -468,7 +468,7 @@ sp_CreateProcess(PyObject* self, PyObject* args)
     if (PyErr_Occurred())
         return NULL;
 
-    if (env_mapping == Py_None)
+    if (env_mapping == Py_Nil)
         environment = NULL;
     else {
         environment = getenvironment(env_mapping);
@@ -522,8 +522,8 @@ sp_TerminateProcess(PyObject* self, PyObject* args)
     if (! result)
         return PyErr_SetFromWindowsErr(GetLastError());
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(GetExitCodeProcess_doc,

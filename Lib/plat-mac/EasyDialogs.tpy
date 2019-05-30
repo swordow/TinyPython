@@ -46,24 +46,24 @@ __all__ = ['Message', 'AskString', 'AskPassword', 'AskYesNoCancel',
 
 _initialized = 0;
 
-def _initialize(){
+function _initialize(){
     global _initialized;
-    if _initialized{ return;
+    if _initialized{ return;}
     macresource.need("DLOG", 260, "dialogs.rsrc", __name__);
 
 }
-def _interact(){
+function _interact(){
     """Make sure the application is in the foreground""";
     AE.AEInteractWithUser(50000000);
 
 }
-def cr2lf(text){
+function cr2lf(text){
     if '\r' in text{
         text = string.join(string.split(text, '\r'), '\n');
     } return text;
 
 }
-def lf2cr(text){
+function lf2cr(text){
     if '\n' in text{
         text = string.join(string.split(text, '\n'), '\r');
     } if len(text) > 253{
@@ -71,7 +71,7 @@ def lf2cr(text){
     } return text;
 
 }
-def Message(msg, id=260, ok=None){
+function Message(msg, id=260, ok=nil){
     """Display a MESSAGE string.
 
     Return when the user clicks the OK button or presses Return.
@@ -86,20 +86,20 @@ def Message(msg, id=260, ok=None){
         return;
     } h = d.GetDialogItemAsControl(2);
     SetDialogItemText(h, lf2cr(msg));
-    if ok is not None{
+    if ok is not nil{
         h = d.GetDialogItemAsControl(1);
         h.SetControlTitle(ok);
     } d.SetDialogDefaultItem(1);
     d.AutoSizeDialog();
     d.GetDialogWindow().ShowWindow();
     while 1{
-        n = ModalDialog(None);
+        n = ModalDialog(nil);
         if n == 1{
             return;
 
 
 }
-} } def AskString(prompt, default = "", id=261, ok=None, cancel=None){
+} } function AskString(prompt, default = "", id=261, ok=nil, cancel=nil){
     """Display a PROMPT string and a text entry field with a DEFAULT string.
 
     Return the contents of the text entry field when the user clicks the
@@ -124,10 +124,10 @@ def Message(msg, id=260, ok=None){
     SetDialogItemText(h, lf2cr(default));
     d.SelectDialogItemText(4, 0, 999);
 #       d.SetDialogItem(4, 0, 255)
-    if ok is not None{
+    if ok is not nil{
         h = d.GetDialogItemAsControl(1);
         h.SetControlTitle(ok);
-    } if cancel is not None{
+    } if cancel is not nil{
         h = d.GetDialogItemAsControl(2);
         h.SetControlTitle(cancel);
     } d.SetDialogDefaultItem(1);
@@ -135,14 +135,14 @@ def Message(msg, id=260, ok=None){
     d.AutoSizeDialog();
     d.GetDialogWindow().ShowWindow();
     while 1{
-        n = ModalDialog(None);
+        n = ModalDialog(nil);
         if n == 1{
             h = d.GetDialogItemAsControl(4);
             return cr2lf(GetDialogItemText(h));
-        } if n == 2{ return None;
+        } if n == 2{ return nil;}
 
 }
-} def AskPassword(prompt,  default='', id=264, ok=None, cancel=None){
+} function AskPassword(prompt,  default='', id=264, ok=nil, cancel=nil){
     """Display a PROMPT string and a text entry field with a DEFAULT string.
     The string is displayed as bullets only.
 
@@ -169,10 +169,10 @@ def Message(msg, id=260, ok=None){
     SetControlData(pwd, kControlEditTextPart, kControlEditTextPasswordTag, default);
     d.SelectDialogItemText(4, 0, 999);
     Ctl.SetKeyboardFocus(d.GetDialogWindow(), pwd, kControlEditTextPart);
-    if ok is not None{
+    if ok is not nil{
         h = d.GetDialogItemAsControl(1);
         h.SetControlTitle(ok);
-    } if cancel is not None{
+    } if cancel is not nil{
         h = d.GetDialogItemAsControl(2);
         h.SetControlTitle(cancel);
     } d.SetDialogDefaultItem(Dialogs.ok);
@@ -180,14 +180,14 @@ def Message(msg, id=260, ok=None){
     d.AutoSizeDialog();
     d.GetDialogWindow().ShowWindow();
     while 1{
-        n = ModalDialog(None);
+        n = ModalDialog(nil);
         if n == 1{
             h = d.GetDialogItemAsControl(4);
             return cr2lf(GetControlData(pwd, kControlEditTextPart, kControlEditTextPasswordTag));
-        } if n == 2{ return None;
+        } if n == 2{ return nil;}
 
 }
-} def AskYesNoCancel(question, default = 0, yes=None, no=None, cancel=None, id=262){
+} function AskYesNoCancel(question, default = 0, yes=nil, no=nil, cancel=nil, id=262){
     """Display a QUESTION string which can be answered with Yes or No.
 
     Return 1 when the user clicks the Yes button.
@@ -215,19 +215,19 @@ def Message(msg, id=260, ok=None){
     }
     h = d.GetDialogItemAsControl(5);
     SetDialogItemText(h, lf2cr(question));
-    if yes is not None{
+    if yes is not nil{
         if yes == ''{
             d.HideDialogItem(2);
         } else{
             h = d.GetDialogItemAsControl(2);
             h.SetControlTitle(yes);
-    } } if no is not None{
+    } } if no is not nil{
         if no == ''{
             d.HideDialogItem(3);
         } else{
             h = d.GetDialogItemAsControl(3);
             h.SetControlTitle(no);
-    } } if cancel is not None{
+    } } if cancel is not nil{
         if cancel == ''{
             d.HideDialogItem(4);
         } else{
@@ -243,11 +243,11 @@ def Message(msg, id=260, ok=None){
     } d.AutoSizeDialog();
     d.GetDialogWindow().ShowWindow();
     while 1{
-        n = ModalDialog(None);
-        if n == 1{ return default;
-        if n == 2{ return 1;
-        if n == 3{ return 0;
-        if n == 4{ return -1;
+        n = ModalDialog(nil);
+        if n == 1{ return default;}
+        if n == 2{ return 1;}
+        if n == 3{ return 0;}
+        if n == 4{ return -1;}
 
 
 
@@ -269,54 +269,54 @@ kControlProgressBarIndeterminateTag = 'inde';    # from Controls.py
 
 
 class ProgressBar{
-    def __init__(self, title="Working...", maxval=0, label="", id=263){
-        self.w = None;
-        self.d = None;
+    function __init__( title="Working...", maxval=0, label="", id=263){
+        this.w = nil;
+        this.d = nil;
         _initialize();
-        self.d = GetNewDialog(id, -1);
-        self.w = self.d.GetDialogWindow();
-        self.label(label);
-        self.title(title);
-        self.set(0, maxval);
-        self.d.AutoSizeDialog();
-        self.w.ShowWindow();
-        self.d.DrawDialog();
+        this.d = GetNewDialog(id, -1);
+        this.w = this.d.GetDialogWindow();
+        this.label(label);
+        this.title(title);
+        this.set(0, maxval);
+        this.d.AutoSizeDialog();
+        this.w.ShowWindow();
+        this.d.DrawDialog();
 
     }
-    def __del__(self){
-        if self.w{
-            self.w.BringToFront();
-            self.w.HideWindow();
-        } del self.w;
-        del self.d;
+    function __del__(){
+        if this.w{
+            this.w.BringToFront();
+            this.w.HideWindow();
+        } del this.w;
+        del this.d;
 
     }
-    def title(self, newstr=""){
+    function title( newstr=""){
         """title(text) - Set title of progress window""";
-        self.w.BringToFront();
-        self.w.SetWTitle(newstr);
+        this.w.BringToFront();
+        this.w.SetWTitle(newstr);
 
     }
-    def label(self, *newstr){
+    function label( *newstr){
         """label(text) - Set text in progress box""";
-        self.w.BringToFront();
+        this.w.BringToFront();
         if newstr{
-            self._label = lf2cr(newstr[0]);
-        } text_h = self.d.GetDialogItemAsControl(2);
-        SetDialogItemText(text_h, self._label);
+            this._label = lf2cr(newstr[0]);
+        } text_h = this.d.GetDialogItemAsControl(2);
+        SetDialogItemText(text_h, this._label);
 
     }
-    def _update(self, value){
-        maxval = self.maxval;
+    function _update( value){
+        maxval = this.maxval;
         if maxval == 0{     # an indeterminate bar
-            Ctl.IdleControls(self.w);    # spin the barber pole
+            Ctl.IdleControls(this.w);    # spin the barber pole
         } else{               # a determinate bar
             if maxval > 32767{
                 value = int(value/(maxval/32767.0));
                 maxval = 32767;
             } maxval = int(maxval);
             value = int(value);
-            progbar = self.d.GetDialogItemAsControl(3);
+            progbar = this.d.GetDialogItemAsControl(3);
             progbar.SetControlMaximum(maxval);
             progbar.SetControlValue(value);  # set the bar length
 
@@ -328,39 +328,39 @@ class ProgressBar{
             part = Win.FindWindow(where)[0];
             if Dlg.IsDialogEvent(ev){
                 ds = Dlg.DialogSelect(ev);
-                if ds[0] and ds[1] == self.d and ds[-1] == 1{
-                    self.w.HideWindow();
-                    self.w = None;
-                    self.d = None;
+                if ds[0] and ds[1] == this.d and ds[-1] == 1{
+                    this.w.HideWindow();
+                    this.w = nil;
+                    this.d = nil;
                     raise KeyboardInterrupt, ev;
             } } else{
                 if part == 4{   # inDrag
-                    self.w.DragWindow(where, screenbounds);
+                    this.w.DragWindow(where, screenbounds);
                 } else{
                     MacOS.HandleEvent(ev);
 
 
     }
-    } } } def set(self, value, max=None){
+    } } } function set( value, max=nil){
         """set(value) - Set progress bar position""";
-        if max is not None{
-            self.maxval = max;
-            bar = self.d.GetDialogItemAsControl(3);
+        if max is not nil{
+            this.maxval = max;
+            bar = this.d.GetDialogItemAsControl(3);
             if max <= 0{    # indeterminate bar
                 bar.SetControlData(0,kControlProgressBarIndeterminateTag,'\x01');
             } else{           # determinate bar
                 bar.SetControlData(0,kControlProgressBarIndeterminateTag,'\x00');
         } } if value < 0{
             value = 0;
-        } elif value > self.maxval{
-            value = self.maxval;
-        } self.curval = value;
-        self._update(value);
+        } elif value > this.maxval{
+            value = this.maxval;
+        } this.curval = value;
+        this._update(value);
 
     }
-    def inc(self, n=1){
+    function inc( n=1){
         """inc(amt) - Increment progress bar position""";
-        self.set(self.curval + n);
+        this.set(this.curval + n);
 
 }
 } ARGV_ID=265;
@@ -400,7 +400,7 @@ ARGV_CMDLINE_DATA=14;
 ##              else:
 ##                  MacOS.HandleEvent(ev)
 ##
-def _setmenu(control, items){
+function _setmenu(control, items){
     mhandle = control.GetControlData_Handle(Controls.kControlMenuPart,
             Controls.kControlPopupButtonMenuHandleTag);
     menu = Menu.as_Menu(mhandle);
@@ -420,7 +420,7 @@ def _setmenu(control, items){
     control.SetControlMaximum(len(items)+1);
 
 }
-def _selectoption(d, optionlist, idx){
+function _selectoption(d, optionlist, idx){
     if idx < 0 or idx >= len(optionlist){
         MacOS.SysBeep();
         return;
@@ -455,7 +455,7 @@ def _selectoption(d, optionlist, idx){
 
 
 }
-} def GetArgv(optionlist=None, commandlist=None, addoldfile=1, addnewfile=1, addfolder=1, id=ARGV_ID){
+} function GetArgv(optionlist=nil, commandlist=nil, addoldfile=1, addnewfile=1, addfolder=1, id=ARGV_ID){
     _initialize();
     _interact();
     d = GetNewDialog(id, -1);
@@ -497,7 +497,7 @@ def _selectoption(d, optionlist, idx){
     } try{
         while 1{
             stringstoadd = [];
-            n = ModalDialog(None);
+            n = ModalDialog(nil);
             if n == ARGV_ITEM_OK{
                 break;
             } elif n == ARGV_ITEM_CANCEL{
@@ -603,12 +603,12 @@ def _selectoption(d, optionlist, idx){
         } del d;
 
 }
-} def _process_Nav_args(dftflags, **args){
+} function _process_Nav_args(dftflags, **args){
     import Carbon.AppleEvents;
     import Carbon.AE;
     import Carbon.File;
     for k in args.keys(){
-        if args[k] is None{
+        if args[k] is nil{
             del args[k];
     # Set some defaults, and modify some arguments
     }
@@ -641,40 +641,40 @@ def _selectoption(d, optionlist, idx){
     } return args, tpwanted;
 
 }
-def _dummy_Nav_eventproc(msg, data){
+function _dummy_Nav_eventproc(msg, data){
     pass;
 
 }
 _default_Nav_eventproc = _dummy_Nav_eventproc;
 
-def SetDefaultEventProc(proc){
+function SetDefaultEventProc(proc){
     global _default_Nav_eventproc;
     rv = _default_Nav_eventproc;
-    if proc is None{
+    if proc is nil{
         proc = _dummy_Nav_eventproc;
     } _default_Nav_eventproc = proc;
     return rv;
 
 }
-def AskFileForOpen(
-        message=None,
-        typeList=None,
+function AskFileForOpen(
+        message=nil,
+        typeList=nil,
         # From here on the order is not documented
-        version=None,
-        defaultLocation=None,
-        dialogOptionFlags=None,
-        location=None,
-        clientName=None,
-        windowTitle=None,
-        actionButtonLabel=None,
-        cancelButtonLabel=None,
-        preferenceKey=None,
-        popupExtension=None,
+        version=nil,
+        defaultLocation=nil,
+        dialogOptionFlags=nil,
+        location=nil,
+        clientName=nil,
+        windowTitle=nil,
+        actionButtonLabel=nil,
+        cancelButtonLabel=nil,
+        preferenceKey=nil,
+        popupExtension=nil,
         eventProc=_dummy_Nav_eventproc,
-        previewProc=None,
-        filterProc=None,
-        wanted=None,
-        multiple=None){
+        previewProc=nil,
+        filterProc=nil,
+        wanted=nil,
+        multiple=nil){
     """Display a dialog asking the user for a file to open.
 
     wanted is the return type wanted: FSSpec, FSRef, unicode or string (default)
@@ -695,9 +695,9 @@ def AskFileForOpen(
     } except Nav.error, arg{
         if arg[0] != -128{ # userCancelledErr
             raise Nav.error, arg;
-        } return None;
+        } return nil;
     } if not rr.validRecord or not rr.selection{
-        return None;
+        return nil;
     } if issubclass(tpwanted, Carbon.File.FSRef){
         return tpwanted(rr.selection_fsr[0]);
     } if issubclass(tpwanted, Carbon.File.FSSpec){
@@ -709,25 +709,25 @@ def AskFileForOpen(
     } raise TypeError, "Unknown value for argument 'wanted': %s" % repr(tpwanted);
 
 }
-def AskFileForSave(
-        message=None,
-        savedFileName=None,
+function AskFileForSave(
+        message=nil,
+        savedFileName=nil,
         # From here on the order is not documented
-        version=None,
-        defaultLocation=None,
-        dialogOptionFlags=None,
-        location=None,
-        clientName=None,
-        windowTitle=None,
-        actionButtonLabel=None,
-        cancelButtonLabel=None,
-        preferenceKey=None,
-        popupExtension=None,
+        version=nil,
+        defaultLocation=nil,
+        dialogOptionFlags=nil,
+        location=nil,
+        clientName=nil,
+        windowTitle=nil,
+        actionButtonLabel=nil,
+        cancelButtonLabel=nil,
+        preferenceKey=nil,
+        popupExtension=nil,
         eventProc=_dummy_Nav_eventproc,
-        fileType=None,
-        fileCreator=None,
-        wanted=None,
-        multiple=None){
+        fileType=nil,
+        fileCreator=nil,
+        wanted=nil,
+        multiple=nil){
     """Display a dialog asking the user for a filename to save to.
 
     wanted is the return type wanted: FSSpec, FSRef, unicode or string (default)
@@ -749,9 +749,9 @@ def AskFileForSave(
     } except Nav.error, arg{
         if arg[0] != -128{ # userCancelledErr
             raise Nav.error, arg;
-        } return None;
+        } return nil;
     } if not rr.validRecord or not rr.selection{
-        return None;
+        return nil;
     } if issubclass(tpwanted, Carbon.File.FSRef){
         raise TypeError, "Cannot pass wanted=FSRef to AskFileForSave";
     } if issubclass(tpwanted, Carbon.File.FSSpec){
@@ -770,23 +770,23 @@ def AskFileForSave(
     } raise TypeError, "Unknown value for argument 'wanted': %s" % repr(tpwanted);
 
 }
-def AskFolder(
-        message=None,
+function AskFolder(
+        message=nil,
         # From here on the order is not documented
-        version=None,
-        defaultLocation=None,
-        dialogOptionFlags=None,
-        location=None,
-        clientName=None,
-        windowTitle=None,
-        actionButtonLabel=None,
-        cancelButtonLabel=None,
-        preferenceKey=None,
-        popupExtension=None,
+        version=nil,
+        defaultLocation=nil,
+        dialogOptionFlags=nil,
+        location=nil,
+        clientName=nil,
+        windowTitle=nil,
+        actionButtonLabel=nil,
+        cancelButtonLabel=nil,
+        preferenceKey=nil,
+        popupExtension=nil,
         eventProc=_dummy_Nav_eventproc,
-        filterProc=None,
-        wanted=None,
-        multiple=None){
+        filterProc=nil,
+        wanted=nil,
+        multiple=nil){
     """Display a dialog asking the user for select a folder.
 
     wanted is the return type wanted: FSSpec, FSRef, unicode or string (default)
@@ -807,9 +807,9 @@ def AskFolder(
     } except Nav.error, arg{
         if arg[0] != -128{ # userCancelledErr
             raise Nav.error, arg;
-        } return None;
+        } return nil;
     } if not rr.validRecord or not rr.selection{
-        return None;
+        return nil;
     } if issubclass(tpwanted, Carbon.File.FSRef){
         return tpwanted(rr.selection_fsr[0]);
     } if issubclass(tpwanted, Carbon.File.FSSpec){
@@ -822,7 +822,7 @@ def AskFolder(
 
 
 }
-def test(){
+function test(){
     import time;
 
     Message("Testing EasyDialogs.");

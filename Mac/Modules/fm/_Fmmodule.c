@@ -118,8 +118,8 @@ static PyObject *Fm_SetFScaleDisable(PyObject *_self, PyObject *_args)
                           &fscaleDisable))
         return NULL;
     SetFScaleDisable(fscaleDisable);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -149,8 +149,8 @@ static PyObject *Fm_SetFractEnable(PyObject *_self, PyObject *_args)
                           &fractEnable))
         return NULL;
     SetFractEnable(fractEnable);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -200,8 +200,8 @@ static PyObject *Fm_SetOutlinePreferred(PyObject *_self, PyObject *_args)
                           &outlinePreferred))
         return NULL;
     SetOutlinePreferred(outlinePreferred);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -231,8 +231,8 @@ static PyObject *Fm_SetPreserveGlyph(PyObject *_self, PyObject *_args)
                           &preserveGlyph))
         return NULL;
     SetPreserveGlyph(preserveGlyph);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 

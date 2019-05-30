@@ -421,8 +421,8 @@ _PyCode_ConstantKey(PyObject *op)
 {
     PyObject *key;
 
-    /* Py_None is a singleton */
-    if (op == Py_None
+    /* Py_Nil is a singleton */
+    if (op == Py_Nil
         || _PyAnyInt_CheckExact(op)
         || PyBool_Check(op)
         || PyBytes_CheckExact(op)
@@ -439,7 +439,7 @@ _PyCode_ConstantKey(PyObject *op)
          * or -0.0 case from all others, just to avoid the "coercion".
          */
         if (d == 0.0 && copysign(1.0, d) < 0.0)
-            key = PyTuple_Pack(3, Py_TYPE(op), op, Py_None);
+            key = PyTuple_Pack(3, Py_TYPE(op), op, Py_Nil);
         else
             key = PyTuple_Pack(2, Py_TYPE(op), op);
     }
@@ -463,7 +463,7 @@ _PyCode_ConstantKey(PyObject *op)
             key = PyTuple_Pack(3, Py_TYPE(op), op, Py_False);
         }
         else if (real_negzero) {
-            key = PyTuple_Pack(3, Py_TYPE(op), op, Py_None);
+            key = PyTuple_Pack(3, Py_TYPE(op), op, Py_Nil);
         }
         else {
             key = PyTuple_Pack(2, Py_TYPE(op), op);

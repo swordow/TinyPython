@@ -1416,7 +1416,7 @@ static PyObject *
 dict_fromkeys(PyObject *cls, PyObject *args)
 {
     PyObject *seq;
-    PyObject *value = Py_None;
+    PyObject *value = Py_Nil;
     PyObject *it;       /* iter(seq) */
     PyObject *key;
     PyObject *d;
@@ -1532,7 +1532,7 @@ static PyObject *
 dict_update(PyObject *self, PyObject *args, PyObject *kwds)
 {
     if (dict_update_common(self, args, kwds, "update") != -1)
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     return NULL;
 }
 
@@ -2019,7 +2019,7 @@ static PyObject *
 dict_get(register PyDictObject *mp, PyObject *args)
 {
     PyObject *key;
-    PyObject *failobj = Py_None;
+    PyObject *failobj = Py_Nil;
     PyObject *val = NULL;
     long hash;
     PyDictEntry *ep;
@@ -2048,7 +2048,7 @@ static PyObject *
 dict_setdefault(register PyDictObject *mp, PyObject *args)
 {
     PyObject *key;
-    PyObject *failobj = Py_None;
+    PyObject *failobj = Py_Nil;
     PyObject *val = NULL;
     long hash;
     PyDictEntry *ep;
@@ -2080,7 +2080,7 @@ static PyObject *
 dict_clear(register PyDictObject *mp)
 {
     PyDict_Clear((PyObject *)mp);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject *
@@ -2562,7 +2562,7 @@ dictiter_new(PyDictObject *dict, PyTypeObject *itertype)
     di->di_pos = 0;
     di->len = dict->ma_used;
     if (itertype == &PyDictIterItem_Type) {
-        di->di_result = PyTuple_Pack(2, Py_None, Py_None);
+        di->di_result = PyTuple_Pack(2, Py_Nil, Py_Nil);
         if (di->di_result == NULL) {
             Py_DECREF(di);
             return NULL;
@@ -3037,7 +3037,7 @@ static PyObject *
 dictkeys_iter(dictviewobject *dv)
 {
     if (dv->dv_dict == NULL) {
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     }
     return dictiter_new(dv->dv_dict, &PyDictIterKey_Type);
 }
@@ -3204,7 +3204,7 @@ static PyObject *
 dictitems_iter(dictviewobject *dv)
 {
     if (dv->dv_dict == NULL) {
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     }
     return dictiter_new(dv->dv_dict, &PyDictIterItem_Type);
 }
@@ -3293,7 +3293,7 @@ static PyObject *
 dictvalues_iter(dictviewobject *dv)
 {
     if (dv->dv_dict == NULL) {
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     }
     return dictiter_new(dv->dv_dict, &PyDictIterValue_Type);
 }

@@ -66,7 +66,7 @@ try{
 } } FSRefType = Carbon.File.FSRefType;
 AliasType = Carbon.File.AliasType;
 
-def packkey(ae, key, value){
+function packkey(ae, key, value){
     if hasattr(key, 'which'){
         keystr = key.which;
     } elif hasattr(key, 'want'){
@@ -76,7 +76,7 @@ def packkey(ae, key, value){
     } ae.AEPutParamDesc(keystr, pack(value));
 
 }
-def pack(x, forcetype = None){
+function pack(x, forcetype = nil){
     """Pack a python object into an AE descriptor""";
 
     if forcetype{
@@ -86,7 +86,7 @@ def pack(x, forcetype = None){
             return pack(x).AECoerceDesc(forcetype);
 
     }
-    } if x is None{
+    } if x is nil{
         return AE.AECreateDesc('null', '');
 
     }
@@ -133,7 +133,7 @@ def pack(x, forcetype = None){
     } return AE.AECreateDesc('TEXT', repr(x)); # Copout
 
 }
-def unpack(desc, formodulename=""){
+function unpack(desc, formodulename=""){
     """Unpack an AE descriptor to a python object""";
     t = desc.type;
 
@@ -204,7 +204,7 @@ def unpack(desc, formodulename=""){
         a, b = struct.unpack('lL', desc.data);
         return (long(a) << 32) + b;
     } if t == typeNull{
-        return None;
+        return nil;
     } if t == typeMagnitude{
         v = struct.unpack('l', desc.data);
         if v < 0{
@@ -268,7 +268,7 @@ def unpack(desc, formodulename=""){
     } return mkunknown(desc.type, desc.data);
 
 }
-def coerce(data, egdata){
+function coerce(data, egdata){
     """Coerce a python object to another type using the AE coercers""";
     pdata = pack(data);
     pegdata = pack(egdata);
@@ -279,7 +279,7 @@ def coerce(data, egdata){
 # Helper routines for unpack
 #
 }
-def mktargetid(data){
+function mktargetid(data){
     sessionID = getlong(data[:4]);
     name = mkppcportrec(data[4:4+72]);
     location = mklocationnamerec(data[76:76+36]);
@@ -287,7 +287,7 @@ def mktargetid(data){
     return sessionID, name, location, rcvrName;
 
 }
-def mkppcportrec(rec){
+function mkppcportrec(rec){
     namescript = getword(rec[:2]);
     name = getpstr(rec[2:2+33]);
     portkind = getword(rec[36:38]);
@@ -300,73 +300,73 @@ def mkppcportrec(rec){
     } return namescript, name, portkind, identity;
 
 }
-def mklocationnamerec(rec){
+function mklocationnamerec(rec){
     kind = getword(rec[:2]);
     stuff = rec[2:];
-    if kind == 0{ stuff = None;
-    if kind == 2{ stuff = getpstr(stuff);
+    if kind == 0{ stuff = nil;}
+    if kind == 2{ stuff = getpstr(stuff);}
     return kind, stuff;
 
 }
-def mkunknown(type, data){
+function mkunknown(type, data){
     return aetypes.Unknown(type, data);
 
 }
-def getpstr(s){
+function getpstr(s){
     return s[1:1+ord(s[0])];
 
 }
-def getlong(s){
+function getlong(s){
     return (ord(s[0])<<24) | (ord(s[1])<<16) | (ord(s[2])<<8) | ord(s[3]);
 
 }
-def getword(s){
+function getword(s){
     return (ord(s[0])<<8) | (ord(s[1])<<0);
 
 }
-def mkkeyword(keyword){
+function mkkeyword(keyword){
     return aetypes.Keyword(keyword);
 
 }
-def mkrange(dict){
+function mkrange(dict){
     return aetypes.Range(dict['star'], dict['stop']);
 
 }
-def mkcomparison(dict){
+function mkcomparison(dict){
     return aetypes.Comparison(dict['obj1'], dict['relo'].enum, dict['obj2']);
 
 }
-def mklogical(dict){
+function mklogical(dict){
     return aetypes.Logical(dict['logc'], dict['term']);
 
 }
-def mkstyledtext(dict){
+function mkstyledtext(dict){
     return aetypes.StyledText(dict['ksty'], dict['ktxt']);
 
 }
-def mkaetext(dict){
+function mkaetext(dict){
     return aetypes.AEText(dict[keyAEScriptTag], dict[keyAEStyles], dict[keyAEText]);
 
 }
-def mkinsertionloc(dict){
+function mkinsertionloc(dict){
     return aetypes.InsertionLoc(dict[keyAEObject], dict[keyAEPosition]);
 
 }
-def mkobject(dict){
+function mkobject(dict){
     want = dict['want'].type;
     form = dict['form'].enum;
     seld = dict['seld'];
     fr   = dict['from'];
     if form in ('name', 'indx', 'rang', 'test'){
-        if want == 'text'{ return aetypes.Text(seld, fr);
-        if want == 'cha '{ return aetypes.Character(seld, fr);
-        if want == 'cwor'{ return aetypes.Word(seld, fr);
-        if want == 'clin'{ return aetypes.Line(seld, fr);
-        if want == 'cpar'{ return aetypes.Paragraph(seld, fr);
-        if want == 'cwin'{ return aetypes.Window(seld, fr);
-        if want == 'docu'{ return aetypes.Document(seld, fr);
-        if want == 'file'{ return aetypes.File(seld, fr);
-        if want == 'cins'{ return aetypes.InsertionPoint(seld, fr);
+        if want == 'text'{ return aetypes.Text(seld, fr);}
+        if want == 'cha '{ return aetypes.Character(seld, fr);}
+        if want == 'cwor'{ return aetypes.Word(seld, fr);}
+        if want == 'clin'{ return aetypes.Line(seld, fr);}
+        if want == 'cpar'{ return aetypes.Paragraph(seld, fr);}
+        if want == 'cwin'{ return aetypes.Window(seld, fr);}
+        if want == 'docu'{ return aetypes.Document(seld, fr);}
+        if want == 'file'{ return aetypes.File(seld, fr);}
+        if want == 'cins'{ return aetypes.InsertionPoint(seld, fr);}
     } if want == 'prop' and form == 'prop' and aetypes.IsType(seld){
         return aetypes.Property(seld.type, fr);
     } return aetypes.ObjectSpecifier(want, form, seld, fr);
@@ -376,7 +376,7 @@ def mkobject(dict){
 # to __class__ is safe. Moreover, shouldn't there be a better
 # initializer for the classes in the suites?
 }
-def mkobjectfrommodule(dict, modulename){
+function mkobjectfrommodule(dict, modulename){
     if type(dict['want']) == types.ClassType and issubclass(dict['want'], ObjectSpecifier){
         # The type has already been converted to Python. Convert back:-(
         classtype = dict['want'];
@@ -384,7 +384,7 @@ def mkobjectfrommodule(dict, modulename){
     } want = dict['want'].type;
     module = __import__(modulename);
     codenamemapper = module._classdeclarations;
-    classtype = codenamemapper.get(want, None);
+    classtype = codenamemapper.get(want, nil);
     newobj = mkobject(dict);
     if classtype{
         assert issubclass(classtype, ObjectSpecifier);
@@ -392,11 +392,11 @@ def mkobjectfrommodule(dict, modulename){
     } return newobj;
 
 }
-def mktype(typecode, modulename=None){
+function mktype(typecode, modulename=nil){
     if modulename{
         module = __import__(modulename);
         codenamemapper = module._classdeclarations;
-        classtype = codenamemapper.get(typecode, None);
+        classtype = codenamemapper.get(typecode, nil);
         if classtype{
             return classtype;
     } } return aetypes.mktype(typecode);

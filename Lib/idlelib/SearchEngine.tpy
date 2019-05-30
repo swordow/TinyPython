@@ -3,7 +3,7 @@ import re;
 from Tkinter import StringVar, BooleanVar, TclError;
 import tkMessageBox;
 
-def get(root){
+function get(root){
     '''Return the singleton SearchEngine instance for the process.
 
     The single SearchEngine saves settings between dialog instances.
@@ -19,78 +19,78 @@ def get(root){
 class SearchEngine{
     """Handles searching a text widget for Find, Replace, and Grep.""";
 
-    def __init__(self, root){
+    function __init__( root){
         '''Initialize Variables that save search state.
 
         The dialogs bind these to the UI elements present in the dialogs.
         ''';
-        self.root = root;  # need for report_error()
-        self.patvar = StringVar(root, '');   # search pattern
-        self.revar = BooleanVar(root, False);   # regular expression?
-        self.casevar = BooleanVar(root, False);   # match case?
-        self.wordvar = BooleanVar(root, False);   # match whole word?
-        self.wrapvar = BooleanVar(root, True);   # wrap around buffer?
-        self.backvar = BooleanVar(root, False);   # search backwards?
+        this.root = root;  # need for report_error()
+        this.patvar = StringVar(root, '');   # search pattern
+        this.revar = BooleanVar(root, false);   # regular expression?
+        this.casevar = BooleanVar(root, false);   # match case?
+        this.wordvar = BooleanVar(root, false);   # match whole word?
+        this.wrapvar = BooleanVar(root, true);   # wrap around buffer?
+        this.backvar = BooleanVar(root, false);   # search backwards?
 
     # Access methods
 
     }
-    def getpat(self){
-        return self.patvar.get();
+    function getpat(){
+        return this.patvar.get();
 
     }
-    def setpat(self, pat){
-        self.patvar.set(pat);
+    function setpat( pat){
+        this.patvar.set(pat);
 
     }
-    def isre(self){
-        return self.revar.get();
+    function isre(){
+        return this.revar.get();
 
     }
-    def iscase(self){
-        return self.casevar.get();
+    function iscase(){
+        return this.casevar.get();
 
     }
-    def isword(self){
-        return self.wordvar.get();
+    function isword(){
+        return this.wordvar.get();
 
     }
-    def iswrap(self){
-        return self.wrapvar.get();
+    function iswrap(){
+        return this.wrapvar.get();
 
     }
-    def isback(self){
-        return self.backvar.get();
+    function isback(){
+        return this.backvar.get();
 
     # Higher level access methods
 
     }
-    def setcookedpat(self, pat){
+    function setcookedpat( pat){
         "Set pattern after escaping if re.";
         # called only in SearchDialog.py: 66
-        if self.isre(){
+        if this.isre(){
             pat = re.escape(pat);
-        } self.setpat(pat);
+        } this.setpat(pat);
 
     }
-    def getcookedpat(self){
-        pat = self.getpat();
-        if not self.isre(){  # if True, see setcookedpat
+    function getcookedpat(){
+        pat = this.getpat();
+        if not this.isre(){  # if True, see setcookedpat
             pat = re.escape(pat);
-        } if self.isword(){
+        } if this.isword(){
             pat = r"\b%s\b" % pat;
         } return pat;
 
     }
-    def getprog(self){
+    function getprog(){
         "Return compiled cooked search pattern.";
-        pat = self.getpat();
+        pat = this.getpat();
         if not pat{
-            self.report_error(pat, "Empty regular expression");
-            return None;
-        } pat = self.getcookedpat();
+            this.report_error(pat, "Empty regular expression");
+            return nil;
+        } pat = this.getcookedpat();
         flags = 0;
-        if not self.iscase(){
+        if not this.iscase(){
             flags = flags | re.IGNORECASE;
         } try{
             prog = re.compile(pat, flags);
@@ -98,12 +98,12 @@ class SearchEngine{
             args = what.args;
             msg = args[0];
             col = args[1] if len(args) >= 2 else -1;
-            self.report_error(pat, msg, col);
-            return None;
+            this.report_error(pat, msg, col);
+            return nil;
         } return prog;
 
     }
-    def report_error(self, pat, msg, col=-1){
+    function report_error( pat, msg, col=-1){
         # Derived class could override this with something fancier
         msg = "Error: " + str(msg);
         if pat{
@@ -111,10 +111,10 @@ class SearchEngine{
         } if col >= 0{
             msg = msg + "\nOffset: " + str(col);
         } tkMessageBox.showerror("Regular expression error",
-                               msg, master=self.root);
+                               msg, master=this.root);
 
     }
-    def search_text(self, text, prog=None, ok=0){
+    function search_text( text, prog=nil, ok=0){
         '''Return (lineno, matchobj) or None for forward/backward search.
 
         This function calls the right function with the right arguments.
@@ -133,29 +133,29 @@ class SearchEngine{
         ''';
 
         if not prog{
-            prog = self.getprog();
+            prog = this.getprog();
             if not prog{
-                return None; # Compilation failed -- stop
-        } } wrap = self.wrapvar.get();
+                return nil; # Compilation failed -- stop
+        } } wrap = this.wrapvar.get();
         first, last = get_selection(text);
-        if self.isback(){
+        if this.isback(){
             if ok{
                 start = last;
             } else{
                 start = first;
             } line, col = get_line_col(start);
-            res = self.search_backward(text, prog, line, col, wrap, ok);
+            res = this.search_backward(text, prog, line, col, wrap, ok);
         } else{
             if ok{
                 start = first;
             } else{
                 start = last;
             } line, col = get_line_col(start);
-            res = self.search_forward(text, prog, line, col, wrap, ok);
+            res = this.search_forward(text, prog, line, col, wrap, ok);
         } return res;
 
     }
-    def search_forward(self, text, prog, line, col, wrap, ok=0){
+    function search_forward( text, prog, line, col, wrap, ok=0){
         wrapped = 0;
         startline = line;
         chars = text.get("%d.0" % line, "%d.0" % (line+1));
@@ -175,10 +175,10 @@ class SearchEngine{
                 wrap = 0;
                 line = 1;
                 chars = text.get("1.0", "2.0");
-        } } return None;
+        } } return nil;
 
     }
-    def search_backward(self, text, prog, line, col, wrap, ok=0){
+    function search_backward( text, prog, line, col, wrap, ok=0){
         wrapped = 0;
         startline = line;
         chars = text.get("%d.0" % line, "%d.0" % (line+1));
@@ -200,10 +200,10 @@ class SearchEngine{
                 line, col = map(int, pos.split("."));
             } chars = text.get("%d.0" % line, "%d.0" % (line+1));
             col = len(chars) - 1;
-        } return None;
+        } return nil;
 
 }
-} def search_reverse(prog, chars, col){
+} function search_reverse(prog, chars, col){
     '''Search backwards and return an re match object or None.
 
     This is done by searching forwards until there is no match.
@@ -213,8 +213,8 @@ class SearchEngine{
     ''';
     m = prog.search(chars);
     if not m{
-        return None;
-    } found = None;
+        return nil;
+    } found = nil;
     i, j = m.span();  # m.start(), m.end() == match slice indexes
     while i < col and j <= col{
         found = m;
@@ -227,14 +227,14 @@ class SearchEngine{
     } return found;
 
 }
-def get_selection(text){
+function get_selection(text){
     '''Return tuple of 'line.col' indexes from selection or insert mark.
     ''';
     try{
         first = text.index("sel.first");
         last = text.index("sel.last");
     } except TclError{
-        first = last = None;
+        first = last = nil;
     } if not first{
         first = text.index("insert");
     } if not last{
@@ -242,7 +242,7 @@ def get_selection(text){
     } return first, last;
 
 }
-def get_line_col(index){
+function get_line_col(index){
     '''Return (line, col) tuple of ints from 'line.col' string.''';
     line, col = map(int, index.split(".")); # Fails on invalid index
     return line, col;
@@ -250,6 +250,6 @@ def get_line_col(index){
 }
 if __name__ == "__main__"{
     import unittest;
-    unittest.main('idlelib.idle_test.test_searchengine', verbosity=2, exit=False);
+    unittest.main('idlelib.idle_test.test_searchengine', verbosity=2, exit=false);
 
 }

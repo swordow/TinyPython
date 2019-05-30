@@ -122,8 +122,8 @@ rf_write(rfobject *self, PyObject *args)
         PyMac_Error(err);
         return NULL;
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 
@@ -167,8 +167,8 @@ rf_seek(rfobject *self, PyObject *args)
         PyMac_Error(err);
         return NULL;
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 
@@ -207,8 +207,8 @@ rf_close(rfobject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, ""))
         return NULL;
     do_close(self);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 
@@ -389,8 +389,8 @@ MacOS_SetCreatorAndType(PyObject *self, PyObject *args)
 
         if ((err = FSpSetFInfo(&fss, &info)) != noErr)
             return PyErr_Mac(MacOS_Error, err);
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
 #else /* APPLE_SUPPORTS_QUICKTIME */
         return NULL;
 #endif /* APPLE_SUPPORTS_QUICKTIME */
@@ -424,8 +424,8 @@ MacOS_SetCreatorAndType(PyObject *self, PyObject *args)
         return NULL;
     }
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 
@@ -537,8 +537,8 @@ MacOS_splash(PyObject *self, PyObject *args)
     }
     if (olddialog)
         DisposeDialog(olddialog);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static char DebugStr_doc[] = "Switch to low-level debugger with a message";
@@ -553,8 +553,8 @@ MacOS_DebugStr(PyObject *self, PyObject *args)
         return NULL;
 
     DebugStr(message);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 
@@ -568,8 +568,8 @@ MacOS_SysBeep(PyObject *self, PyObject *args)
     if (!PyArg_ParseTuple(args, "|i", &duration))
         return NULL;
     SysBeep(duration);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 #endif /* __LP64__ */

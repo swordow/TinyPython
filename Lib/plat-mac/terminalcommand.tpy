@@ -28,7 +28,7 @@ START_TERMINAL = "/usr/bin/open /Applications/Utilities/Terminal.app";
 SEND_MODE = kAENoReply;  # kAEWaitReply hangs when run from Terminal.app itself
 
 
-def run(command){
+function run(command){
     """Run a shell command in a new Terminal.app window.""";
     termAddress = AE.AECreateDesc(typeApplicationBundleID, "com.apple.Terminal");
     theEvent = AE.AECreateAppleEvent(kAECoreSuite, kAEDoScript, termAddress,

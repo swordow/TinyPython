@@ -120,9 +120,9 @@ logreader_close(LogReaderObject *self, PyObject *args)
         fclose(self->logfp);
         self->logfp = NULL;
     }
-    Py_INCREF(Py_None);
+    Py_INCREF(Py_Nil);
 
-    return Py_None;
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(logreader_fileno__doc__,
@@ -441,8 +441,8 @@ restart:
         if (!err) {
             err = unpack_string(self, &s1);
             if (!err) {
-                Py_INCREF(Py_None);
-                s2 = Py_None;
+                Py_INCREF(Py_Nil);
+                s2 = Py_Nil;
             }
         }
         break;
@@ -1022,7 +1022,7 @@ profiler_addinfo(ProfilerObject *self, PyObject *args)
             PyErr_SetString(ProfilerError, "profiler already closed");
         else {
             if (pack_add_info(self, key, value) == 0) {
-                result = Py_None;
+                result = Py_Nil;
                 Py_INCREF(result);
             }
         }
@@ -1042,8 +1042,8 @@ profiler_close(ProfilerObject *self)
         fclose(self->logfp);
         self->logfp = NULL;
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 #define fileno__doc__ logreader_fileno__doc__
@@ -1100,7 +1100,7 @@ profiler_runcode(ProfilerObject *self, PyObject *args)
                          &PyDict_Type, &globals,
                          &locals)) {
         if (is_available(self)) {
-            if (locals == NULL || locals == Py_None)
+            if (locals == NULL || locals == Py_Nil)
                 locals = globals;
             else if (!PyDict_Check(locals)) {
                 PyErr_SetString(PyExc_TypeError,
@@ -1112,7 +1112,7 @@ profiler_runcode(ProfilerObject *self, PyObject *args)
             do_stop(self);
 #if 0
             if (!PyErr_Occurred()) {
-                result = Py_None;
+                result = Py_Nil;
                 Py_INCREF(result);
             }
 #endif
@@ -1132,7 +1132,7 @@ profiler_start(ProfilerObject *self, PyObject *args)
 
     if (is_available(self)) {
         do_start(self);
-        result = Py_None;
+        result = Py_Nil;
         Py_INCREF(result);
     }
     return result;
@@ -1151,7 +1151,7 @@ profiler_stop(ProfilerObject *self, PyObject *args)
         PyErr_SetString(ProfilerError, "profiler not active");
     else {
         do_stop(self);
-        result = Py_None;
+        result = Py_Nil;
         Py_INCREF(result);
     }
     return result;

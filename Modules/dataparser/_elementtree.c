@@ -108,8 +108,8 @@ typedef int Py_ssize_t;
 #if (PY_VERSION_HEX < 0x02040000)
 #define PyDict_CheckExact PyDict_Check
 
-#if !defined(Py_RETURN_NONE)
-#define Py_RETURN_NONE return Py_INCREF(Py_None), Py_None
+#if !defined(Py_RETURN_NIL)
+#define Py_RETURN_NIL return Py_INCREF(Py_Nil), Py_Nil
 #endif
 #endif
 
@@ -276,7 +276,7 @@ element_new_extra(ElementObject* self, PyObject* attrib)
         return -1;
 
     if (!attrib)
-        attrib = Py_None;
+        attrib = Py_Nil;
 
     Py_INCREF(attrib);
     self->extra->attrib = attrib;
@@ -315,11 +315,11 @@ element_new(PyObject* tag, PyObject* attrib)
 
     /* use None for empty dictionaries */
     if (PyDict_CheckExact(attrib) && !PyDict_Size(attrib))
-        attrib = Py_None;
+        attrib = Py_Nil;
 
     self->extra = NULL;
 
-    if (attrib != Py_None) {
+    if (attrib != Py_Nil) {
 
         if (element_new_extra(self, attrib) < 0) {
             PyObject_Del(self);
@@ -335,11 +335,11 @@ element_new(PyObject* tag, PyObject* attrib)
     Py_INCREF(tag);
     self->tag = tag;
 
-    Py_INCREF(Py_None);
-    self->text = Py_None;
+    Py_INCREF(Py_Nil);
+    self->text = Py_Nil;
 
-    Py_INCREF(Py_None);
-    self->tail = Py_None;
+    Py_INCREF(Py_Nil);
+    self->tail = Py_Nil;
 
     ALLOC(sizeof(ElementObject), "create element");
 
@@ -428,7 +428,7 @@ element_get_attrib(ElementObject* self)
 
     PyObject* res = self->extra->attrib;
 
-    if (res == Py_None) {
+    if (res == Py_Nil) {
         Py_DECREF(res);
         /* create missing dictionary */
         res = PyDict_New();
@@ -504,8 +504,8 @@ element(PyObject* self, PyObject* args, PyObject* kw)
             return NULL;
         }
     } else {
-        Py_INCREF(Py_None);
-        attrib = Py_None;
+        Py_INCREF(Py_Nil);
+        attrib = Py_Nil;
     }
 
     elem = element_new(tag, attrib);
@@ -537,8 +537,8 @@ subelement(PyObject* self, PyObject* args, PyObject* kw)
             return NULL;
         }
     } else {
-        Py_INCREF(Py_None);
-        attrib = Py_None;
+        Py_INCREF(Py_Nil);
+        attrib = Py_Nil;
     }
 
     elem = element_new(tag, attrib);
@@ -583,7 +583,7 @@ element_append(ElementObject* self, PyObject* args)
     if (element_add_subelement(self, element) < 0)
         return NULL;
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject*
@@ -597,13 +597,13 @@ element_clear(ElementObject* self, PyObject* args)
         self->extra = NULL;
     }
 
-    Py_INCREF(Py_None);
-    _set_joined_ptr(&self->text, Py_None);
+    Py_INCREF(Py_Nil);
+    _set_joined_ptr(&self->text, Py_Nil);
 
-    Py_INCREF(Py_None);
-    _set_joined_ptr(&self->tail, Py_None);
+    Py_INCREF(Py_Nil);
+    _set_joined_ptr(&self->tail, Py_Nil);
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject*
@@ -616,7 +616,7 @@ element_copy(ElementObject* self, PyObject* args)
         return NULL;
 
     element = (ElementObject*) element_new(
-        self->tag, (self->extra) ? self->extra->attrib : Py_None
+        self->tag, (self->extra) ? self->extra->attrib : Py_Nil
         );
     if (!element)
         return NULL;
@@ -672,8 +672,8 @@ element_deepcopy(ElementObject* self, PyObject* args)
             return NULL;
         }
     } else {
-        Py_INCREF(Py_None);
-        attrib = Py_None;
+        Py_INCREF(Py_Nil);
+        attrib = Py_Nil;
     }
 
     element = (ElementObject*) element_new(tag, attrib);
@@ -801,7 +801,7 @@ element_extend(ElementObject* self, PyObject* args)
 
     Py_DECREF(seq);
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject*
@@ -810,17 +810,17 @@ element_find(ElementObject* self, PyObject* args)
     int i;
 
     PyObject* tag;
-    PyObject* namespaces = Py_None;
+    PyObject* namespaces = Py_Nil;
     if (!PyArg_ParseTuple(args, "O|O:find", &tag, &namespaces))
         return NULL;
 
-    if (checkpath(tag) || namespaces != Py_None)
+    if (checkpath(tag) || namespaces != Py_Nil)
         return PyObject_CallMethod(
             elementpath_obj, "find", "OOO", self, tag, namespaces
             );
 
     if (!self->extra)
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
         
     for (i = 0; i < self->extra->length; i++) {
         PyObject* item = self->extra->children[i];
@@ -836,7 +836,7 @@ element_find(ElementObject* self, PyObject* args)
             return NULL;
     }
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject*
@@ -845,12 +845,12 @@ element_findtext(ElementObject* self, PyObject* args)
     int i;
 
     PyObject* tag;
-    PyObject* default_value = Py_None;
-    PyObject* namespaces = Py_None;
+    PyObject* default_value = Py_Nil;
+    PyObject* namespaces = Py_Nil;
     if (!PyArg_ParseTuple(args, "O|OO:findtext", &tag, &default_value, &namespaces))
         return NULL;
 
-    if (checkpath(tag) || namespaces != Py_None)
+    if (checkpath(tag) || namespaces != Py_Nil)
         return PyObject_CallMethod(
             elementpath_obj, "findtext", "OOOO", self, tag, default_value, namespaces
             );
@@ -869,7 +869,7 @@ element_findtext(ElementObject* self, PyObject* args)
         rc = PyObject_Compare(item->tag, tag);
         if (rc == 0) {
             PyObject* text = element_get_text(item);
-            if (text == Py_None) {
+            if (text == Py_Nil) {
                 Py_DECREF(item);
                 return PyString_FromString("");
             }
@@ -893,11 +893,11 @@ element_findall(ElementObject* self, PyObject* args)
     PyObject* out;
 
     PyObject* tag;
-    PyObject* namespaces = Py_None;
+    PyObject* namespaces = Py_Nil;
     if (!PyArg_ParseTuple(args, "O|O:findall", &tag, &namespaces))
         return NULL;
 
-    if (checkpath(tag) || namespaces != Py_None)
+    if (checkpath(tag) || namespaces != Py_Nil)
         return PyObject_CallMethod(
             elementpath_obj, "findall", "OOO", self, tag, namespaces
             );
@@ -932,7 +932,7 @@ static PyObject*
 element_iterfind(ElementObject* self, PyObject* args)
 {
     PyObject* tag;
-    PyObject* namespaces = Py_None;
+    PyObject* namespaces = Py_Nil;
     if (!PyArg_ParseTuple(args, "O|O:iterfind", &tag, &namespaces))
         return NULL;
 
@@ -947,11 +947,11 @@ element_get(ElementObject* self, PyObject* args)
     PyObject* value;
 
     PyObject* key;
-    PyObject* default_value = Py_None;
+    PyObject* default_value = Py_Nil;
     if (!PyArg_ParseTuple(args, "O|O:get", &key, &default_value))
         return NULL;
 
-    if (!self->extra || self->extra->attrib == Py_None)
+    if (!self->extra || self->extra->attrib == Py_Nil)
         value = default_value;
     else {
         value = PyDict_GetItem(self->extra->attrib, key);
@@ -1025,7 +1025,7 @@ element_iter_impl(ElementObject* self, PyObject* tag)
 static PyObject*
 element_iter(ElementObject* self, PyObject* args)
 {
-    PyObject* tag = Py_None;
+    PyObject* tag = Py_Nil;
     if (!PyArg_ParseTuple(args, "|O:iter", &tag))
         return NULL;
 
@@ -1035,7 +1035,7 @@ element_iter(ElementObject* self, PyObject* args)
 static PyObject*
 element_getiterator(ElementObject* self, PyObject* args)
 {
-    PyObject* tag = Py_None;
+    PyObject* tag = Py_Nil;
     if (!PyArg_ParseTuple(args, "|O:getiterator", &tag))
         return NULL;
 
@@ -1130,7 +1130,7 @@ element_insert(ElementObject* self, PyObject* args)
 
     self->extra->length++;
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject*
@@ -1139,7 +1139,7 @@ element_items(ElementObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, ":items"))
         return NULL;
 
-    if (!self->extra || self->extra->attrib == Py_None)
+    if (!self->extra || self->extra->attrib == Py_Nil)
         return PyList_New(0);
 
     return PyDict_Items(self->extra->attrib);
@@ -1151,7 +1151,7 @@ element_keys(ElementObject* self, PyObject* args)
     if (!PyArg_ParseTuple(args, ":keys"))
         return NULL;
 
-    if (!self->extra || self->extra->attrib == Py_None)
+    if (!self->extra || self->extra->attrib == Py_Nil)
         return PyList_New(0);
 
     return PyDict_Keys(self->extra->attrib);
@@ -1258,7 +1258,7 @@ element_remove(ElementObject* self, PyObject* args)
         self->extra->children[i] = self->extra->children[i+1];
 
     Py_DECREF(found);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject*
@@ -1311,7 +1311,7 @@ element_set(ElementObject* self, PyObject* args)
     if (PyDict_SetItem(attrib, key, value) < 0)
         return NULL;
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static int
@@ -1723,11 +1723,11 @@ treebuilder_new(void)
 
     self->root = NULL;
 
-    Py_INCREF(Py_None);
-    self->this = (ElementObject*) Py_None;
+    Py_INCREF(Py_Nil);
+    self->this = (ElementObject*) Py_Nil;
 
-    Py_INCREF(Py_None);
-    self->last = (ElementObject*) Py_None;
+    Py_INCREF(Py_Nil);
+    self->last = (ElementObject*) Py_Nil;
 
     self->data = NULL;
 
@@ -1830,7 +1830,7 @@ LOCAL(PyObject*)
 treebuilder_handle_xml(TreeBuilderObject* self, PyObject* encoding,
                        PyObject* standalone)
 {
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 LOCAL(PyObject*)
@@ -1848,7 +1848,7 @@ treebuilder_handle_start(TreeBuilderObject* self, PyObject* tag,
 
     this = (PyObject*) self->this;
 
-    if (this != Py_None) {
+    if (this != Py_Nil) {
         if (element_add_subelement((ElementObject*) this, node) < 0)
             goto error;
     } else {
@@ -1893,9 +1893,9 @@ LOCAL(PyObject*)
 treebuilder_handle_data(TreeBuilderObject* self, PyObject* data)
 {
     if (!self->data) {
-        if (self->last == (ElementObject*) Py_None) {
+        if (self->last == (ElementObject*) Py_Nil) {
             /* ignore calls to data before the first call to start */
-            Py_RETURN_NONE;
+            Py_RETURN_NIL;
         }
         /* store the first item as is */
         Py_INCREF(data); self->data = data;
@@ -1922,7 +1922,7 @@ treebuilder_handle_data(TreeBuilderObject* self, PyObject* data)
         }
     }
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 LOCAL(PyObject*)
@@ -1987,7 +1987,7 @@ treebuilder_done(TreeBuilderObject* self)
     if (self->root)
         res = self->root;
     else
-        res = Py_None;
+        res = Py_Nil;
 
     Py_INCREF(res);
     return res;
@@ -2006,7 +2006,7 @@ static PyObject*
 treebuilder_start(TreeBuilderObject* self, PyObject* args)
 {
     PyObject* tag;
-    PyObject* attrib = Py_None;
+    PyObject* attrib = Py_Nil;
     if (!PyArg_ParseTuple(args, "O|O:start", &tag, &attrib))
         return NULL;
 
@@ -2307,8 +2307,8 @@ expat_start_handler(XMLParserObject* self, const XML_Char* tag_in,
             attrib_in += 2;
         }
     } else {
-        Py_INCREF(Py_None);
-        attrib = Py_None;
+        Py_INCREF(Py_Nil);
+        attrib = Py_Nil;
     }
 
     if (TreeBuilder_CheckExact(self->target))
@@ -2316,7 +2316,7 @@ expat_start_handler(XMLParserObject* self, const XML_Char* tag_in,
         res = treebuilder_handle_start((TreeBuilderObject*) self->target,
                                        tag, attrib);
     else if (self->handle_start) {
-        if (attrib == Py_None) {
+        if (attrib == Py_Nil) {
             Py_DECREF(attrib);
             attrib = PyDict_New();
             if (!attrib) {
@@ -2368,7 +2368,7 @@ expat_end_handler(XMLParserObject* self, const XML_Char* tag_in)
         /* shortcut */
         /* the standard tree builder doesn't look at the end tag */
         res = treebuilder_handle_end(
-            (TreeBuilderObject*) self->target, Py_None
+            (TreeBuilderObject*) self->target, Py_Nil
             );
     else if (self->handle_end) {
         tag = makeuniversal(self, tag_in);
@@ -2432,7 +2432,7 @@ expat_end_ns_handler(XMLParserObject* self, const XML_Char* prefix_in)
     if (!target->events)
         return;
 
-    treebuilder_append_event(target, target->end_ns_event_obj, Py_None);
+    treebuilder_append_event(target, target->end_ns_event_obj, Py_Nil);
 }
 
 static void
@@ -2728,7 +2728,7 @@ expat_parse(XMLParserObject* self, char* data, int data_len, int final)
         return NULL;
     }
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject*
@@ -2841,7 +2841,7 @@ xmlparser_setevents(XMLParserObject* self, PyObject* args)
     TreeBuilderObject* target;
 
     PyObject* events; /* event collector */
-    PyObject* event_set = Py_None;
+    PyObject* event_set = Py_Nil;
     if (!PyArg_ParseTuple(args, "O!|O:_setevents",  &PyList_Type, &events,
                           &event_set))
         return NULL;
@@ -2866,10 +2866,10 @@ xmlparser_setevents(XMLParserObject* self, PyObject* args)
     Py_CLEAR(target->start_ns_event_obj);
     Py_CLEAR(target->end_ns_event_obj);
 
-    if (event_set == Py_None) {
+    if (event_set == Py_Nil) {
         /* default is "end" only */
         target->end_event_obj = PyString_FromString("end");
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     }
 
     if (!PyTuple_Check(event_set)) /* FIXME: handle arbitrary sequences */
@@ -2910,7 +2910,7 @@ xmlparser_setevents(XMLParserObject* self, PyObject* args)
         }
     }
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 
   error:
     PyErr_SetString(

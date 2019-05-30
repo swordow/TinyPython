@@ -9,33 +9,33 @@ class DynOptionMenu(OptionMenu){
     """
     unlike OptionMenu, our kwargs can include highlightthickness
     """;
-    def __init__(self, master, variable, value, *values, **kwargs){
+    function __init__( master, variable, value, *values, **kwargs){
         # TODO copy value instead of whole dict
         kwargsCopy=copy.copy(kwargs);
         if 'highlightthickness' in kwargs.keys(){
             del(kwargs['highlightthickness']);
-        } OptionMenu.__init__(self, master, variable, value, *values, **kwargs);
-        self.config(highlightthickness=kwargsCopy.get('highlightthickness'));
+        } OptionMenu.__init__(this, master, variable, value, *values, **kwargs);
+        this.config(highlightthickness=kwargsCopy.get('highlightthickness'));
         #self.menu=self['menu']
-        self.variable=variable;
-        self.command=kwargs.get('command');
+        this.variable=variable;
+        this.command=kwargs.get('command');
 
     }
-    def SetMenu(self,valueList,value=None){
+    function SetMenu(valueList,value=nil){
         """
         clear and reload the menu with a new set of options.
         valueList - list of new options
         value - initial value to set the optionmenu's menubutton to
         """;
-        self['menu'].delete(0,'end');
+        this['menu'].delete(0,'end');
         for item in valueList{
-            self['menu'].add_command(label=item,
-                    command=_setit(self.variable,item,self.command));
+            this['menu'].add_command(label=item,
+                    command=_setit(this.variable,item,this.command));
         } if value{
-            self.variable.set(value);
+            this.variable.set(value);
 
 }
-} } def _dyn_option_menu(parent){  # htest #
+} } function _dyn_option_menu(parent){  # htest #
     from Tkinter import Toplevel;
 
     top = Toplevel();
@@ -49,7 +49,7 @@ class DynOptionMenu(OptionMenu){
     dyn = DynOptionMenu(top,var, "old1","old2","old3","old4");
     dyn.pack();
 
-    def update(){
+    function update(){
         dyn.SetMenu(["new1","new2","new3","new4"], value="new option set");
     } button = Button(top, text="Change option set", command=update);
     button.pack();

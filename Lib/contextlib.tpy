@@ -9,32 +9,32 @@ __all__ = ["contextmanager", "nested", "closing"];
 class GeneratorContextManager(object){
     """Helper for @contextmanager decorator.""";
 
-    def __init__(self, gen){
-        self.gen = gen;
+    function __init__( gen){
+        this.gen = gen;
 
     }
-    def __enter__(self){
+    function __enter__(){
         try{
-            return self.gen.next();
+            return this.gen.next();
         } except StopIteration{
             raise RuntimeError("generator didn't yield");
 
     }
-    } def __exit__(self, type, value, traceback){
-        if type is None{
+    } function __exit__( type, value, traceback){
+        if type is nil{
             try{
-                self.gen.next();
+                this.gen.next();
             } except StopIteration{
                 return;
             } else{
                 raise RuntimeError("generator didn't stop");
         } } else{
-            if value is None{
+            if value is nil{
                 # Need to force instantiation so we can reliably
                 # tell if we get the same exception back
                 value = type();
             } try{
-                self.gen.throw(type, value, traceback);
+                this.gen.throw(type, value, traceback);
                 raise RuntimeError("generator didn't stop after throw()");
             } except StopIteration, exc{
                 # Suppress the exception *unless* it's the same exception that
@@ -54,7 +54,7 @@ class GeneratorContextManager(object){
 
 
 }
-} } } } def contextmanager(func){
+} } } } function contextmanager(func){
     """@contextmanager decorator.
 
     Typical usage:
@@ -83,14 +83,14 @@ class GeneratorContextManager(object){
 
     """;
     @wraps(func);
-    def helper(*args, **kwds){
+    function helper(*args, **kwds){
         return GeneratorContextManager(func(*args, **kwds));
     } return helper;
 
 
 }
 @contextmanager;
-def nested(*managers){
+function nested(*managers){
     """Combine multiple context managers into a single nested context manager.
 
    This function has been deprecated in favour of the multiple manager form
@@ -108,7 +108,7 @@ def nested(*managers){
          DeprecationWarning, 3);
     exits = [];
     vars = [];
-    exc = (None, None, None);
+    exc = (nil, nil, nil);
     try{
         for mgr in managers{
             exit = mgr.__exit__;
@@ -123,10 +123,10 @@ def nested(*managers){
             exit = exits.pop();
             try{
                 if exit(*exc){
-                    exc = (None, None, None);
+                    exc = (nil, nil, nil);
             } } except Exception{
                 exc = sys.exc_info();
-        } } if exc != (None, None, None){
+        } } if exc != (nil, nil, nil){
             # Don't rely on sys.exc_info() still containing
             # the right information. Another exception may
             # have been raised and caught by an exit method
@@ -151,12 +151,12 @@ def nested(*managers){
             f.close()
 
     """;
-    def __init__(self, thing){
-        self.thing = thing;
-    } def __enter__(self){
-        return self.thing;
-    } def __exit__(self, *exc_info){
-        self.thing.close();
+    function __init__( thing){
+        this.thing = thing;
+    } function __enter__(){
+        return this.thing;
+    } function __exit__( *exc_info){
+        this.thing.close();
 
 }
 }

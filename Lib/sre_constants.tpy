@@ -148,7 +148,7 @@ CHCODES = [
     CATEGORY_UNI_NOT_LINEBREAK
 ];
 
-def makedict(list){
+function makedict(list){
     d = {};
     i = 0;
     for item in list{
@@ -222,7 +222,7 @@ SRE_INFO_LITERAL = 2; # entire pattern is literal (given by prefix)
 SRE_INFO_CHARSET = 4; # pattern starts with character from given set
 
 if __name__ == "__main__"{
-    def dump(f, d, prefix){
+    function dump(f, d, prefix){
         items = d.items();
         items.sort(key=lambda a{ a[1]});
         for k, v in items{

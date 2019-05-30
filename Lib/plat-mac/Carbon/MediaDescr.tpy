@@ -4,22 +4,22 @@ import struct;
 Error = 'MediaDescr.Error';
 
 class _MediaDescriptionCodec{
-    def __init__(self, trunc, size, names, fmt){
-        self.trunc = trunc;
-        self.size = size;
-        self.names = names;
-        self.fmt = fmt;
+    function __init__( trunc, size, names, fmt){
+        this.trunc = trunc;
+        this.size = size;
+        this.names = names;
+        this.fmt = fmt;
 
     }
-    def decode(self, data){
-        if self.trunc{
-            data = data[:self.size];
-        } values = struct.unpack(self.fmt, data);
-        if len(values) != len(self.names){
+    function decode( data){
+        if this.trunc{
+            data = data[:this.size];
+        } values = struct.unpack(this.fmt, data);
+        if len(values) != len(this.names){
             raise Error, ('Format length does not match number of names');
         } rv = {};
         for i in range(len(values)){
-            name = self.names[i];
+            name = this.names[i];
             value = values[i];
             if type(name) == type(()){
                 name, cod, dec = name;
@@ -28,13 +28,13 @@ class _MediaDescriptionCodec{
         } return rv;
 
     }
-    def encode(self, dict){
-        list = [self.fmt];
-        for name in self.names{
+    function encode( dict){
+        list = [this.fmt];
+        for name in this.names{
             if type(name) == type(()){
                 name, cod, dec = name;
             } else{
-                cod = dec = None;
+                cod = dec = nil;
             } value = dict[name];
             if cod{
                 value = cod(value);
@@ -44,23 +44,23 @@ class _MediaDescriptionCodec{
 
 # Helper functions
 }
-} def _tofixed(float){
+} function _tofixed(float){
     hi = int(float);
     lo = int(float*0x10000) & 0xffff;
     return (hi<<16)|lo;
 
 }
-def _fromfixed(fixed){
+function _fromfixed(fixed){
     hi = (fixed >> 16) & 0xffff;
     lo = (fixed & 0xffff);
     return hi + (lo / float(0x10000));
 
 }
-def _tostr31(str){
+function _tostr31(str){
     return chr(len(str)) + str + '\0'*(31-len(str));
 
 }
-def _fromstr31(str31){
+function _fromstr31(str31){
     return str31[1:1+ord(str31[0])];
 
 }

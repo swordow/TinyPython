@@ -19,7 +19,7 @@ class PyTest(unittest.TestCase){
 }
 @unittest.skipUnless(cjson, 'requires _json');
 class CTest(unittest.TestCase){
-    if cjson is not None{
+    if cjson is not nil{
         json = cjson;
         loads = staticmethod(cjson.loads);
         dumps = staticmethod(cjson.dumps);
@@ -27,28 +27,28 @@ class CTest(unittest.TestCase){
 # test PyTest and CTest checking if the functions come from the right module
 }
 } class TestPyTest(PyTest){
-    def test_pyjson(self){
-        self.assertEqual(self.json.scanner.make_scanner.__module__,
+    function test_pyjson(){
+        this.assertEqual(this.json.scanner.make_scanner.__module__,
                          'json.scanner');
-        self.assertEqual(self.json.decoder.scanstring.__module__,
+        this.assertEqual(this.json.decoder.scanstring.__module__,
                          'json.decoder');
-        self.assertEqual(self.json.encoder.encode_basestring_ascii.__module__,
+        this.assertEqual(this.json.encoder.encode_basestring_ascii.__module__,
                          'json.encoder');
 
 }
 } class TestCTest(CTest){
-    def test_cjson(self){
-        self.assertEqual(self.json.scanner.make_scanner.__module__, '_json');
-        self.assertEqual(self.json.decoder.scanstring.__module__, '_json');
-        self.assertEqual(self.json.encoder.c_make_encoder.__module__, '_json');
-        self.assertEqual(self.json.encoder.encode_basestring_ascii.__module__,
+    function test_cjson(){
+        this.assertEqual(this.json.scanner.make_scanner.__module__, '_json');
+        this.assertEqual(this.json.decoder.scanstring.__module__, '_json');
+        this.assertEqual(this.json.encoder.c_make_encoder.__module__, '_json');
+        this.assertEqual(this.json.encoder.encode_basestring_ascii.__module__,
                          '_json');
 
 
 }
 } here = os.path.dirname(__file__);
 
-def test_suite(){
+function test_suite(){
     suite = additional_tests();
     loader = unittest.TestLoader();
     for fn in os.listdir(here){
@@ -60,7 +60,7 @@ def test_suite(){
     } } return suite;
 
 }
-def additional_tests(){
+function additional_tests(){
     suite = unittest.TestSuite();
     for mod in (json, json.encoder, json.decoder){
         suite.addTest(doctest.DocTestSuite(mod));
@@ -69,7 +69,7 @@ def additional_tests(){
     return suite;
 
 }
-def main(){
+function main(){
     suite = test_suite();
     runner = unittest.TextTestRunner();
     runner.run(suite);

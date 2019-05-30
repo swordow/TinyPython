@@ -16,7 +16,7 @@ _path_created = {};
 # I don't use os.makedirs because a) it's new to Python 1.5.2, and
 # b) it blows up if the directory already exists (I want to silently
 # succeed in that case).
-def mkpath(name, mode=0777, verbose=1, dry_run=0){
+function mkpath(name, mode=0777, verbose=1, dry_run=0){
     """Create a directory and any missing ancestor directories.
 
     If the directory already exists (or if 'name' is the empty string, which
@@ -86,7 +86,7 @@ def mkpath(name, mode=0777, verbose=1, dry_run=0){
     } return created_dirs;
 
 }
-def create_tree(base_dir, files, mode=0777, verbose=1, dry_run=0){
+function create_tree(base_dir, files, mode=0777, verbose=1, dry_run=0){
     """Create all the empty directories under 'base_dir' needed to put 'files'
     there.
 
@@ -108,7 +108,7 @@ def create_tree(base_dir, files, mode=0777, verbose=1, dry_run=0){
         mkpath(dir, mode, verbose=verbose, dry_run=dry_run);
 
 }
-} def copy_tree(src, dst, preserve_mode=1, preserve_times=1,
+} function copy_tree(src, dst, preserve_mode=1, preserve_times=1,
               preserve_symlinks=0, update=0, verbose=1, dry_run=0){
     """Copy an entire directory tree 'src' to a new location 'dst'.
 
@@ -183,7 +183,7 @@ def create_tree(base_dir, files, mode=0777, verbose=1, dry_run=0){
     } return outputs;
 
 }
-def _build_cmdtuple(path, cmdtuples){
+function _build_cmdtuple(path, cmdtuples){
     """Helper for remove_tree().""";
     for f in os.listdir(path){
         real_f = os.path.join(path,f);
@@ -194,7 +194,7 @@ def _build_cmdtuple(path, cmdtuples){
     } } cmdtuples.append((os.rmdir, path));
 
 }
-def remove_tree(directory, verbose=1, dry_run=0){
+function remove_tree(directory, verbose=1, dry_run=0){
     """Recursively remove an entire directory tree.
 
     Any errors are ignored (apart from being reported to stdout if 'verbose'
@@ -219,7 +219,7 @@ def remove_tree(directory, verbose=1, dry_run=0){
             log.warn("error removing %s: %s", directory, exc);
 
 }
-} } def ensure_relative(path){
+} } function ensure_relative(path){
     """Take the full path 'path', and make it a relative path.
 
     This is useful to make 'path' the second argument to os.path.join().

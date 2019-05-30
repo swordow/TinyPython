@@ -215,7 +215,7 @@ stringio_read(stringio *self, PyObject *args)
 {
     Py_ssize_t size, n;
     Py_UNICODE *output;
-    PyObject *arg = Py_None;
+    PyObject *arg = Py_Nil;
 
     CHECK_INITIALIZED(self);
     if (!PyArg_ParseTuple(args, "|O:read", &arg))
@@ -227,7 +227,7 @@ stringio_read(stringio *self, PyObject *args)
         if (size == -1 && PyErr_Occurred())
             return NULL;
     }
-    else if (arg == Py_None) {
+    else if (arg == Py_Nil) {
         /* Read until EOF is reached, by default. */
         size = -1;
     }
@@ -288,7 +288,7 @@ PyDoc_STRVAR(stringio_readline_doc,
 static PyObject *
 stringio_readline(stringio *self, PyObject *args)
 {
-    PyObject *arg = Py_None;
+    PyObject *arg = Py_Nil;
     Py_ssize_t limit = -1;
 
     CHECK_INITIALIZED(self);
@@ -301,7 +301,7 @@ stringio_readline(stringio *self, PyObject *args)
         if (limit == -1 && PyErr_Occurred())
             return NULL;
     }
-    else if (arg != Py_None) {
+    else if (arg != Py_Nil) {
         PyErr_Format(PyExc_TypeError, "integer argument expected, got '%s'",
                      Py_TYPE(arg)->tp_name);
         return NULL;
@@ -357,7 +357,7 @@ static PyObject *
 stringio_truncate(stringio *self, PyObject *args)
 {
     Py_ssize_t size;
-    PyObject *arg = Py_None;
+    PyObject *arg = Py_Nil;
 
     CHECK_INITIALIZED(self);
     if (!PyArg_ParseTuple(args, "|O:truncate", &arg))
@@ -369,7 +369,7 @@ stringio_truncate(stringio *self, PyObject *args)
         if (size == -1 && PyErr_Occurred())
             return NULL;
     }
-    else if (arg == Py_None) {
+    else if (arg == Py_Nil) {
         /* Truncate to current position if no argument is passed. */
         size = self->pos;
     }
@@ -493,7 +493,7 @@ stringio_close(stringio *self)
     Py_CLEAR(self->readnl);
     Py_CLEAR(self->writenl);
     Py_CLEAR(self->decoder);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static int
@@ -569,7 +569,7 @@ stringio_init(stringio *self, PyObject *args, PyObject *kwds)
                      "illegal newline value: %s", newline);
         return -1;
     }
-    if (value && value != Py_None && !PyUnicode_Check(value)) {
+    if (value && value != Py_Nil && !PyUnicode_Check(value)) {
         PyErr_Format(PyExc_TypeError,
                      "initial_value must be unicode or None, not %.200s",
                      Py_TYPE(value)->tp_name);
@@ -602,7 +602,7 @@ stringio_init(stringio *self, PyObject *args, PyObject *kwds)
     if (self->readuniversal) {
         self->decoder = PyObject_CallFunction(
             (PyObject *)&PyIncrementalNewlineDecoder_Type,
-            "Oi", Py_None, (int) self->readtranslate);
+            "Oi", Py_Nil, (int) self->readtranslate);
         if (self->decoder == NULL)
             return -1;
     }
@@ -610,7 +610,7 @@ stringio_init(stringio *self, PyObject *args, PyObject *kwds)
     /* Now everything is set up, resize buffer to size of initial value,
        and copy it */
     self->string_size = 0;
-    if (value && value != Py_None) {
+    if (value && value != Py_Nil) {
         Py_ssize_t len = PyUnicode_GetSize(value);
         /* This is a heuristic, for newline translation might change
            the string length. */
@@ -688,8 +688,8 @@ stringio_getstate(stringio *self)
     if (initvalue == NULL)
         return NULL;
     if (self->dict == NULL) {
-        Py_INCREF(Py_None);
-        dict = Py_None;
+        Py_INCREF(Py_Nil);
+        dict = Py_Nil;
     }
     else {
         dict = PyDict_Copy(self->dict);
@@ -700,7 +700,7 @@ stringio_getstate(stringio *self)
     }
 
     state = Py_BuildValue("(OOnN)", initvalue,
-                          self->readnl ? self->readnl : Py_None,
+                          self->readnl ? self->readnl : Py_Nil,
                           self->pos, dict);
     Py_DECREF(initvalue);
     return state;
@@ -774,7 +774,7 @@ stringio_setstate(stringio *self, PyObject *state)
 
     /* Set the dictionary of the instance variables. */
     dict = PyTuple_GET_ITEM(state, 3);
-    if (dict != Py_None) {
+    if (dict != Py_Nil) {
         if (!PyDict_Check(dict)) {
             PyErr_Format(PyExc_TypeError,
                          "fourth item of state should be a dict, got a %.200s",
@@ -793,7 +793,7 @@ stringio_setstate(stringio *self, PyObject *state)
         }
     }
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 
@@ -818,7 +818,7 @@ stringio_newlines(stringio *self, void *context)
     CHECK_INITIALIZED(self);
     CHECK_CLOSED(self);
     if (self->decoder == NULL)
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     return PyObject_GetAttr(self->decoder, _PyIO_str_newlines);
 }
 

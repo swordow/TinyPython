@@ -181,25 +181,25 @@ class ArgumentDescriptor(object){
         'doc',
     );
 
-    def __init__(self, name, n, reader, doc){
+    function __init__( name, n, reader, doc){
         assert isinstance(name, str);
-        self.name = name;
+        this.name = name;
 
         assert isinstance(n, (int, long)) and (n >= 0 or
                                        n in (UP_TO_NEWLINE,
                                              TAKEN_FROM_ARGUMENT1,
                                              TAKEN_FROM_ARGUMENT4));
-        self.n = n;
+        this.n = n;
 
-        self.reader = reader;
+        this.reader = reader;
 
         assert isinstance(doc, str);
-        self.doc = doc;
+        this.doc = doc;
 
 }
 } from struct import unpack as _unpack;
 
-def read_uint1(f){
+function read_uint1(f){
     r"""
     >>> import StringIO
     >>> read_uint1(StringIO.StringIO('\xff'))
@@ -219,7 +219,7 @@ uint1 = ArgumentDescriptor(
             doc="One-byte unsigned integer.");
 
 
-def read_uint2(f){
+function read_uint2(f){
     r"""
     >>> import StringIO
     >>> read_uint2(StringIO.StringIO('\xff\x00'))
@@ -241,7 +241,7 @@ uint2 = ArgumentDescriptor(
             doc="Two-byte unsigned integer, little-endian.");
 
 
-def read_int4(f){
+function read_int4(f){
     r"""
     >>> import StringIO
     >>> read_int4(StringIO.StringIO('\xff\x00\x00\x00'))
@@ -263,7 +263,7 @@ int4 = ArgumentDescriptor(
            doc="Four-byte signed integer, little-endian, 2's complement.");
 
 
-def read_stringnl(f, decode=True, stripquotes=True){
+function read_stringnl(f, decode=true, stripquotes=true){
     r"""
     >>> import StringIO
     >>> read_stringnl(StringIO.StringIO("'abcd'\nefg\n"))
@@ -324,8 +324,8 @@ stringnl = ArgumentDescriptor(
                    bracketing quotes.
                    """);
 
-def read_stringnl_noescape(f){
-    return read_stringnl(f, decode=False, stripquotes=False);
+function read_stringnl_noescape(f){
+    return read_stringnl(f, decode=false, stripquotes=false);
 
 }
 stringnl_noescape = ArgumentDescriptor(
@@ -339,7 +339,7 @@ stringnl_noescape = ArgumentDescriptor(
                         printable ASCII characters.
                         """);
 
-def read_stringnl_noescape_pair(f){
+function read_stringnl_noescape_pair(f){
     r"""
     >>> import StringIO
     >>> read_stringnl_noescape_pair(StringIO.StringIO("Queue\nEmpty\njunk"))
@@ -362,7 +362,7 @@ stringnl_noescape_pair = ArgumentDescriptor(
                              a single blank separating the two strings.
                              """);
 
-def read_string4(f){
+function read_string4(f){
     r"""
     >>> import StringIO
     >>> read_string4(StringIO.StringIO("\x00\x00\x00\x00abc"))
@@ -397,7 +397,7 @@ string4 = ArgumentDescriptor(
               """);
 
 
-def read_string1(f){
+function read_string1(f){
     r"""
     >>> import StringIO
     >>> read_string1(StringIO.StringIO("\x00"))
@@ -427,7 +427,7 @@ string1 = ArgumentDescriptor(
               """);
 
 
-def read_unicodestringnl(f){
+function read_unicodestringnl(f){
     r"""
     >>> import StringIO
     >>> read_unicodestringnl(StringIO.StringIO("abc\uabcd\njunk"))
@@ -453,7 +453,7 @@ unicodestringnl = ArgumentDescriptor(
                       escape sequences.
                       """);
 
-def read_unicodestring4(f){
+function read_unicodestring4(f){
     r"""
     >>> import StringIO
     >>> s = u'abcd\uabcd'
@@ -494,7 +494,7 @@ unicodestring4 = ArgumentDescriptor(
                     """);
 
 
-def read_decimalnl_short(f){
+function read_decimalnl_short(f){
     r"""
     >>> import StringIO
     >>> read_decimalnl_short(StringIO.StringIO("1234\n56"))
@@ -506,7 +506,7 @@ def read_decimalnl_short(f){
     ValueError: trailing 'L' not allowed in '1234L'
     """;
 
-    s = read_stringnl(f, decode=False, stripquotes=False);
+    s = read_stringnl(f, decode=false, stripquotes=false);
     if s.endswith("L"){
         raise ValueError("trailing 'L' not allowed in %r" % s);
 
@@ -515,9 +515,9 @@ def read_decimalnl_short(f){
     # for True and False here.
     }
     if s == "00"{
-        return False;
+        return false;
     } elif s == "01"{
-        return True;
+        return true;
 
     }
     try{
@@ -526,7 +526,7 @@ def read_decimalnl_short(f){
         return long(s);
 
 }
-} def read_decimalnl_long(f){
+} function read_decimalnl_long(f){
     r"""
     >>> import StringIO
 
@@ -544,7 +544,7 @@ def read_decimalnl_short(f){
     123456789012345678901234L
     """;
 
-    s = read_stringnl(f, decode=False, stripquotes=False);
+    s = read_stringnl(f, decode=false, stripquotes=false);
     if not s.endswith("L"){
         raise ValueError("trailing 'L' required in %r" % s);
     } return long(s);
@@ -575,13 +575,13 @@ decimalnl_long = ArgumentDescriptor(
                          """);
 
 
-def read_floatnl(f){
+function read_floatnl(f){
     r"""
     >>> import StringIO
     >>> read_floatnl(StringIO.StringIO("-1.25\n6"))
     -1.25
     """;
-    s = read_stringnl(f, decode=False, stripquotes=False);
+    s = read_stringnl(f, decode=false, stripquotes=false);
     return float(s);
 
 }
@@ -598,7 +598,7 @@ floatnl = ArgumentDescriptor(
               for infinities or NaNs).
               """);
 
-def read_float8(f){
+function read_float8(f){
     r"""
     >>> import StringIO, struct
     >>> raw = struct.pack(">d", -1.25)
@@ -637,7 +637,7 @@ float8 = ArgumentDescriptor(
 
 from pickle import decode_long;
 
-def read_long1(f){
+function read_long1(f){
     r"""
     >>> import StringIO
     >>> read_long1(StringIO.StringIO("\x00"))
@@ -670,7 +670,7 @@ long1 = ArgumentDescriptor(
     If the size is 0, that's taken as a shortcut for the long 0L.
     """);
 
-def read_long4(f){
+function read_long4(f){
     r"""
     >>> import StringIO
     >>> read_long4(StringIO.StringIO("\x02\x00\x00\x00\xff\x00"))
@@ -727,22 +727,22 @@ class StackObject(object){
         'doc',
     );
 
-    def __init__(self, name, obtype, doc){
+    function __init__( name, obtype, doc){
         assert isinstance(name, str);
-        self.name = name;
+        this.name = name;
 
         assert isinstance(obtype, type) or isinstance(obtype, tuple);
         if isinstance(obtype, tuple){
             for contained in obtype{
                 assert isinstance(contained, type);
-        } } self.obtype = obtype;
+        } } this.obtype = obtype;
 
         assert isinstance(doc, str);
-        self.doc = doc;
+        this.doc = doc;
 
     }
-    def __repr__(self){
-        return self.name;
+    function __repr__(){
+        return this.name;
 
 
 }
@@ -784,7 +784,7 @@ pyunicode = StackObject(
 
 pynone = StackObject(
              name="None",
-             obtype=type(None),
+             obtype=type(nil),
              doc="The Python None object.");
 
 pytuple = StackObject(
@@ -873,33 +873,33 @@ class OpcodeInfo(object){
         'doc',
     );
 
-    def __init__(self, name, code, arg,
+    function __init__( name, code, arg,
                  stack_before, stack_after, proto, doc){
         assert isinstance(name, str);
-        self.name = name;
+        this.name = name;
 
         assert isinstance(code, str);
         assert len(code) == 1;
-        self.code = code;
+        this.code = code;
 
-        assert arg is None or isinstance(arg, ArgumentDescriptor);
-        self.arg = arg;
+        assert arg is nil or isinstance(arg, ArgumentDescriptor);
+        this.arg = arg;
 
         assert isinstance(stack_before, list);
         for x in stack_before{
             assert isinstance(x, StackObject);
-        } self.stack_before = stack_before;
+        } this.stack_before = stack_before;
 
         assert isinstance(stack_after, list);
         for x in stack_after{
             assert isinstance(x, StackObject);
-        } self.stack_after = stack_after;
+        } this.stack_after = stack_after;
 
         assert isinstance(proto, (int, long)) and 0 <= proto <= 2;
-        self.proto = proto;
+        this.proto = proto;
 
         assert isinstance(doc, str);
-        self.doc = doc;
+        this.doc = doc;
 
 }
 } I = OpcodeInfo;
@@ -1056,7 +1056,7 @@ opcodes = [
 
     I(name='NONE',
       code='N',
-      arg=None,
+      arg=nil,
       stack_before=[],
       stack_after=[pynone],
       proto=0,
@@ -1067,7 +1067,7 @@ opcodes = [
 
     I(name='NEWTRUE',
       code='\x88',
-      arg=None,
+      arg=nil,
       stack_before=[],
       stack_after=[pybool],
       proto=2,
@@ -1075,7 +1075,7 @@ opcodes = [
 
     I(name='NEWFALSE',
       code='\x89',
-      arg=None,
+      arg=nil,
       stack_before=[],
       stack_after=[pybool],
       proto=2,
@@ -1151,7 +1151,7 @@ opcodes = [
 
     I(name='EMPTY_LIST',
       code=']',
-      arg=None,
+      arg=nil,
       stack_before=[],
       stack_after=[pylist],
       proto=1,
@@ -1159,7 +1159,7 @@ opcodes = [
 
     I(name='APPEND',
       code='a',
-      arg=None,
+      arg=nil,
       stack_before=[pylist, anyobject],
       stack_after=[pylist],
       proto=0,
@@ -1173,7 +1173,7 @@ opcodes = [
 
     I(name='APPENDS',
       code='e',
-      arg=None,
+      arg=nil,
       stack_before=[pylist, markobject, stackslice],
       stack_after=[pylist],
       proto=1,
@@ -1187,7 +1187,7 @@ opcodes = [
 
     I(name='LIST',
       code='l',
-      arg=None,
+      arg=nil,
       stack_before=[markobject, stackslice],
       stack_after=[pylist],
       proto=0,
@@ -1205,7 +1205,7 @@ opcodes = [
 
     I(name='EMPTY_TUPLE',
       code=')',
-      arg=None,
+      arg=nil,
       stack_before=[],
       stack_after=[pytuple],
       proto=1,
@@ -1213,7 +1213,7 @@ opcodes = [
 
     I(name='TUPLE',
       code='t',
-      arg=None,
+      arg=nil,
       stack_before=[markobject, stackslice],
       stack_after=[pytuple],
       proto=0,
@@ -1229,7 +1229,7 @@ opcodes = [
 
     I(name='TUPLE1',
       code='\x85',
-      arg=None,
+      arg=nil,
       stack_before=[anyobject],
       stack_after=[pytuple],
       proto=2,
@@ -1244,7 +1244,7 @@ opcodes = [
 
     I(name='TUPLE2',
       code='\x86',
-      arg=None,
+      arg=nil,
       stack_before=[anyobject, anyobject],
       stack_after=[pytuple],
       proto=2,
@@ -1259,7 +1259,7 @@ opcodes = [
 
     I(name='TUPLE3',
       code='\x87',
-      arg=None,
+      arg=nil,
       stack_before=[anyobject, anyobject, anyobject],
       stack_after=[pytuple],
       proto=2,
@@ -1276,7 +1276,7 @@ opcodes = [
 
     I(name='EMPTY_DICT',
       code='}',
-      arg=None,
+      arg=nil,
       stack_before=[],
       stack_after=[pydict],
       proto=1,
@@ -1284,7 +1284,7 @@ opcodes = [
 
     I(name='DICT',
       code='d',
-      arg=None,
+      arg=nil,
       stack_before=[markobject, stackslice],
       stack_after=[pydict],
       proto=0,
@@ -1301,7 +1301,7 @@ opcodes = [
 
     I(name='SETITEM',
       code='s',
-      arg=None,
+      arg=nil,
       stack_before=[pydict, anyobject, anyobject],
       stack_after=[pydict],
       proto=0,
@@ -1315,7 +1315,7 @@ opcodes = [
 
     I(name='SETITEMS',
       code='u',
-      arg=None,
+      arg=nil,
       stack_before=[pydict, markobject, stackslice],
       stack_after=[pydict],
       proto=1,
@@ -1338,7 +1338,7 @@ opcodes = [
 
     I(name='POP',
       code='0',
-      arg=None,
+      arg=nil,
       stack_before=[anyobject],
       stack_after=[],
       proto=0,
@@ -1346,7 +1346,7 @@ opcodes = [
 
     I(name='DUP',
       code='2',
-      arg=None,
+      arg=nil,
       stack_before=[anyobject],
       stack_after=[anyobject, anyobject],
       proto=0,
@@ -1354,7 +1354,7 @@ opcodes = [
 
     I(name='MARK',
       code='(',
-      arg=None,
+      arg=nil,
       stack_before=[],
       stack_after=[markobject],
       proto=0,
@@ -1367,7 +1367,7 @@ opcodes = [
 
     I(name='POP_MARK',
       code='1',
-      arg=None,
+      arg=nil,
       stack_before=[markobject, stackslice],
       stack_after=[],
       proto=1,
@@ -1527,7 +1527,7 @@ opcodes = [
 
     I(name='REDUCE',
       code='R',
-      arg=None,
+      arg=nil,
       stack_before=[anyobject, anyobject],
       stack_after=[anyobject],
       proto=0,
@@ -1556,7 +1556,7 @@ opcodes = [
 
     I(name='BUILD',
       code='b',
-      arg=None,
+      arg=nil,
       stack_before=[anyobject, anyobject],
       stack_after=[anyobject],
       proto=0,
@@ -1644,7 +1644,7 @@ opcodes = [
 
     I(name='OBJ',
       code='o',
-      arg=None,
+      arg=nil,
       stack_before=[markobject, anyobject, stackslice],
       stack_after=[anyobject],
       proto=1,
@@ -1677,7 +1677,7 @@ opcodes = [
 
     I(name='NEWOBJ',
       code='\x81',
-      arg=None,
+      arg=nil,
       stack_before=[anyobject, anyobject],
       stack_after=[anyobject],
       proto=2,
@@ -1706,7 +1706,7 @@ opcodes = [
 
     I(name='STOP',
       code='.',
-      arg=None,
+      arg=nil,
       stack_before=[anyobject],
       stack_after=[],
       proto=0,
@@ -1738,7 +1738,7 @@ opcodes = [
 
     I(name='BINPERSID',
       code='Q',
-      arg=None,
+      arg=nil,
       stack_before=[anyobject],
       stack_after=[anyobject],
       proto=1,
@@ -1781,7 +1781,7 @@ for d in opcodes{
     code2op[d.code] = d;
 } del d;
 
-def assure_pickle_consistency(verbose=False){
+function assure_pickle_consistency(verbose=false){
     import pickle, re;
 
     copy = code2op.copy();
@@ -1827,7 +1827,7 @@ del assure_pickle_consistency;
 ##############################################################################
 # A pickle opcode generator.
 
-def genops(pickle){
+function genops(pickle){
     """Generate all the opcodes in a pickle.
 
     'pickle' is a file-like object, or string, containing the pickle.
@@ -1860,22 +1860,22 @@ def genops(pickle){
     if hasattr(pickle, "tell"){
         getpos = pickle.tell;
     } else{
-        getpos = lambda{ None};
+        getpos = lambda{ nil};
 
     }
-    while True{
+    while true{
         pos = getpos();
         code = pickle.read(1);
         opcode = code2op.get(code);
-        if opcode is None{
+        if opcode is nil{
             if code == ""{
                 raise ValueError("pickle exhausted before seeing STOP");
             } else{
                 raise ValueError("at position %s, opcode %r unknown" % (
-                                 pos is None and "<unknown>" or pos,
+                                 pos is nil and "<unknown>" or pos,
                                  code));
-        } } if opcode.arg is None{
-            arg = None;
+        } } if opcode.arg is nil{
+            arg = nil;
         } else{
             arg = opcode.arg.reader(pickle);
         } yield opcode, arg, pos;
@@ -1887,15 +1887,15 @@ def genops(pickle){
 # A pickle optimizer.
 
 }
-} } def optimize(p){
+} } function optimize(p){
     'Optimize a pickle string by removing unused PUT opcodes';
     gets = set();            # set of args used by a GET opcode
     puts = [];               # (arg, startpos, stoppos) for the PUT opcodes
-    prevpos = None;          # set to pos if previous opcode was a PUT
+    prevpos = nil;          # set to pos if previous opcode was a PUT
     for opcode, arg, pos in genops(p){
-        if prevpos is not None{
+        if prevpos is not nil{
             puts.append((prevarg, prevpos, pos));
-            prevpos = None;
+            prevpos = nil;
         } if 'PUT' in opcode.name{
             prevarg, prevpos = arg, pos;
         } elif 'GET' in opcode.name{
@@ -1916,7 +1916,7 @@ def genops(pickle){
 # A symbolic pickle disassembler.
 
 }
-def dis(pickle, out=None, memo=None, indentlevel=4){
+function dis(pickle, out=nil, memo=nil, indentlevel=4){
     """Produce a symbolic disassembly of a pickle.
 
     'pickle' is a file-like object, or string, containing a (at least one)
@@ -1956,14 +1956,14 @@ def dis(pickle, out=None, memo=None, indentlevel=4){
     # (which in turn is needed to indent MARK blocks correctly).
 
     stack = [];          # crude emulation of unpickler stack
-    if memo is None{
+    if memo is nil{
         memo = {};       # crude emulation of unpickler memo
     } maxproto = -1;       # max protocol number seen
     markstack = [];      # bytecode positions of MARK opcodes
     indentchunk = ' ' * indentlevel;
-    errormsg = None;
+    errormsg = nil;
     for opcode, arg, pos in genops(pickle){
-        if pos is not None{
+        if pos is not nil{
             print >> out, "%5d:" % pos,;
 
         }
@@ -1977,7 +1977,7 @@ def dis(pickle, out=None, memo=None, indentlevel=4){
         numtopop = len(before);
 
         # See whether a MARK should be popped.
-        markmsg = None;
+        markmsg = nil;
         if markobject in before or (opcode.name == "POP" and
                                     stack and
                                     stack[-1] is markobject){
@@ -1987,7 +1987,7 @@ def dis(pickle, out=None, memo=None, indentlevel=4){
                     assert before[-1] is stackslice;
             } } if markstack{
                 markpos = markstack.pop();
-                if markpos is None{
+                if markpos is nil{
                     markmsg = "(MARK at unknown opcode offset)";
                 } else{
                     markmsg = "(MARK at %d)" % markpos;
@@ -2008,7 +2008,7 @@ def dis(pickle, out=None, memo=None, indentlevel=4){
         # Check for correct memo usage.
         }
         } if opcode.name in ("PUT", "BINPUT", "LONG_BINPUT"){
-            assert arg is not None;
+            assert arg is not nil;
             if arg in memo{
                 errormsg = "memo key %r already defined" % arg;
             } elif not stack{
@@ -2027,10 +2027,10 @@ def dis(pickle, out=None, memo=None, indentlevel=4){
                 errormsg = "memo key %r has never been stored into" % arg;
 
         }
-        } if arg is not None or markmsg{
+        } if arg is not nil or markmsg{
             # make a mild effort to align arguments
             line += ' ' * (10 - len(opcode.name));
-            if arg is not None{
+            if arg is not nil{
                 line += ' ' + repr(arg);
             } if markmsg{
                 line += ' ' + markmsg;
@@ -2063,8 +2063,8 @@ def dis(pickle, out=None, memo=None, indentlevel=4){
 # For use in the doctest, simply as an example of a class to pickle.
 }
 } class _Example{
-    def __init__(self, value){
-        self.value = value;
+    function __init__( value){
+        this.value = value;
 
 }
 } _dis_test = r"""
@@ -2304,7 +2304,7 @@ __test__ = {'disassembler_test': _dis_test,
             'disassembler_memo_test': _memo_test,
            };
 
-def _test(){
+function _test(){
     import doctest;
     return doctest.testmod();
 

@@ -47,7 +47,7 @@ class CodecRegistryError(LookupError, SystemError){
     pass;
 
 }
-def normalize_encoding(encoding){
+function normalize_encoding(encoding){
 
     """ Normalize an encoding name.
 
@@ -70,7 +70,7 @@ def normalize_encoding(encoding){
     } return '_'.join(encoding.translate(_norm_encoding_map).split());
 
 }
-def search_function(encoding){
+function search_function(encoding){
 
     # Cache lookup
     entry = _cache.get(encoding, _unknown);
@@ -88,7 +88,7 @@ def search_function(encoding){
     norm_encoding = normalize_encoding(encoding);
     aliased_encoding = _aliases.get(norm_encoding) or \
                        _aliases.get(norm_encoding.replace('.', '_'));
-    if aliased_encoding is not None{
+    if aliased_encoding is not nil{
         modnames = [aliased_encoding,
                     norm_encoding];
     } else{
@@ -106,20 +106,20 @@ def search_function(encoding){
         } else{
             break;
     } } else{
-        mod = None;
+        mod = nil;
 
     }
     try{
         getregentry = mod.getregentry;
     } except AttributeError{
         # Not a codec module
-        mod = None;
+        mod = nil;
 
     }
-    if mod is None{
+    if mod is nil{
         # Cache misses
-        _cache[encoding] = None;
-        return None;
+        _cache[encoding] = nil;
+        return nil;
 
     # Now ask the module for the registry entry
     }
@@ -131,15 +131,15 @@ def search_function(encoding){
                   (mod.__name__, mod.__file__);
         } if not hasattr(entry[0], '__call__') or \
            not hasattr(entry[1], '__call__') or \
-           (entry[2] is not None and not hasattr(entry[2], '__call__')) or \
-           (entry[3] is not None and not hasattr(entry[3], '__call__')) or \
-           (len(entry) > 4 and entry[4] is not None and not hasattr(entry[4], '__call__')) or \
-           (len(entry) > 5 and entry[5] is not None and not hasattr(entry[5], '__call__')){
+           (entry[2] is not nil and not hasattr(entry[2], '__call__')) or \
+           (entry[3] is not nil and not hasattr(entry[3], '__call__')) or \
+           (len(entry) > 4 and entry[4] is not nil and not hasattr(entry[4], '__call__')) or \
+           (len(entry) > 5 and entry[5] is not nil and not hasattr(entry[5], '__call__')){
             raise CodecRegistryError,\
                 'incompatible codecs in module "%s" (%s)' % \
                 (mod.__name__, mod.__file__);
-        } if len(entry)<7 or entry[6] is None{
-            entry += (None,)*(6-len(entry)) + (mod.__name__.split(".", 1)[1],);
+        } if len(entry)<7 or entry[6] is nil{
+            entry += (nil,)*(6-len(entry)) + (mod.__name__.split(".", 1)[1],);
         } entry = codecs.CodecInfo(*entry);
 
     # Cache the codec registry entry

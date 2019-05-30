@@ -166,8 +166,8 @@ static PyObject *AEDesc_AEPutPtr(AEDescObject *_self, PyObject *_args)
                     typeCode,
                     dataPtr__in__, dataPtr__len__);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -188,8 +188,8 @@ static PyObject *AEDesc_AEPutDesc(AEDescObject *_self, PyObject *_args)
                      index,
                      &theAEDesc);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -299,8 +299,8 @@ static PyObject *AEDesc_AEDeleteItem(AEDescObject *_self, PyObject *_args)
     _err = AEDeleteItem(&_self->ob_itself,
                         index);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -327,8 +327,8 @@ static PyObject *AEDesc_AEPutParamPtr(AEDescObject *_self, PyObject *_args)
                          typeCode,
                          dataPtr__in__, dataPtr__len__);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -349,8 +349,8 @@ static PyObject *AEDesc_AEPutParamDesc(AEDescObject *_self, PyObject *_args)
                           theAEKeyword,
                           &theAEDesc);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -454,8 +454,8 @@ static PyObject *AEDesc_AEDeleteParam(AEDescObject *_self, PyObject *_args)
     _err = AEDeleteParam(&_self->ob_itself,
                          theAEKeyword);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -568,8 +568,8 @@ static PyObject *AEDesc_AEPutAttributePtr(AEDescObject *_self, PyObject *_args)
                              typeCode,
                              dataPtr__in__, dataPtr__len__);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -590,8 +590,8 @@ static PyObject *AEDesc_AEPutAttributeDesc(AEDescObject *_self, PyObject *_args)
                               theAEKeyword,
                               &theAEDesc);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -650,8 +650,8 @@ static PyObject *AEDesc_AEResetTimer(AEDescObject *_self, PyObject *_args)
         return NULL;
     _err = AEResetTimer(&_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -666,8 +666,8 @@ static PyObject *AEDesc_AESuspendTheCurrentEvent(AEDescObject *_self, PyObject *
         return NULL;
     _err = AESuspendTheCurrentEvent(&_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -690,8 +690,8 @@ static PyObject *AEDesc_AEResumeTheCurrentEvent(AEDescObject *_self, PyObject *_
                                    dispatcher__proc__,
                                    (SRefCon)dispatcher);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     Py_INCREF(dispatcher); /* XXX leak, but needed */
     return _res;
 }
@@ -707,8 +707,8 @@ static PyObject *AEDesc_AEGetTheCurrentEvent(AEDescObject *_self, PyObject *_arg
         return NULL;
     _err = AEGetTheCurrentEvent(&_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -723,8 +723,8 @@ static PyObject *AEDesc_AESetTheCurrentEvent(AEDescObject *_self, PyObject *_arg
         return NULL;
     _err = AESetTheCurrentEvent(&_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1081,8 +1081,8 @@ static PyObject *AE_AEProcessAppleEvent(PyObject *_self, PyObject *_args)
         return NULL;
     _err = AEProcessAppleEvent(&theEventRecord);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1116,8 +1116,8 @@ static PyObject *AE_AESetInteractionAllowed(PyObject *_self, PyObject *_args)
         return NULL;
     _err = AESetInteractionAllowed(level);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1136,8 +1136,8 @@ static PyObject *AE_AEInteractWithUser(PyObject *_self, PyObject *_args)
                               (NMRecPtr)0,
                               upp_AEIdleProc);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1162,8 +1162,8 @@ static PyObject *AE_AEInstallEventHandler(PyObject *_self, PyObject *_args)
                                  handler__proc__, (SRefCon)handler,
                                  0);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     Py_INCREF(handler); /* XXX leak, but needed */
     return _res;
 }
@@ -1186,8 +1186,8 @@ static PyObject *AE_AERemoveEventHandler(PyObject *_self, PyObject *_args)
                                 upp_GenericEventHandler,
                                 0);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1232,8 +1232,8 @@ static PyObject *AE_AEInstallSpecialHandler(PyObject *_self, PyObject *_args)
                                    upp_GenericEventHandler,
                                    0);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1252,8 +1252,8 @@ static PyObject *AE_AERemoveSpecialHandler(PyObject *_self, PyObject *_args)
                                   upp_GenericEventHandler,
                                   0);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1288,8 +1288,8 @@ static PyObject *AE_AEObjectInit(PyObject *_self, PyObject *_args)
         return NULL;
     _err = AEObjectInit();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 

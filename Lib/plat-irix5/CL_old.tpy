@@ -44,7 +44,7 @@ YCbCr422DC = 7;                          # 4:1:1 sampling
 
 BEST_FIT = -1;
 
-def BytesPerSample(s){
+function BytesPerSample(s){
     if s in (MONO, YUV){
         return 2;
     } elif s == STEREO_INTERLEAVED{
@@ -53,7 +53,7 @@ def BytesPerSample(s){
         return 0;
 
 }
-} def BytesPerPixel(f){
+} function BytesPerPixel(f){
     if f in (RGB, YUV){
         return 3;
     } elif f in (RGBX, RGBA){
@@ -64,7 +64,7 @@ def BytesPerSample(s){
         return 2;
 
 }
-} def AudioFormatName(f){
+} function AudioFormatName(f){
     if f == MONO{
         return 'MONO';
     } elif f == STEREO_INTERLEAVED{
@@ -73,7 +73,7 @@ def BytesPerSample(s){
         return 'Not a valid format';
 
 }
-} def VideoFormatName(f){
+} function VideoFormatName(f){
     if f == RGB{
         return 'RGB';
     } elif f == RGBX{
@@ -103,11 +103,11 @@ MAX_NUMBER_OF_VIDEO_ALGORITHMS = 32;
 AUDIO = 0;
 VIDEO = 1;
 
-def AlgorithmNumber(scheme){
+function AlgorithmNumber(scheme){
     return scheme & 0x7fff;
-} def AlgorithmType(scheme){
+} function AlgorithmType(scheme){
     return (scheme >> 15) & 1;
-} def Algorithm(type, n){
+} function Algorithm(type, n){
     return n | ((type & 1) << 15);
 
 #

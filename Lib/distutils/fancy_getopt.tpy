@@ -42,7 +42,7 @@ class FancyGetopt{
         on the command line sets 'verbose' to false
     """;
 
-    def __init__ (self, option_table=None){
+    function __init__ ( option_table=nil){
 
         # The option table is (currently) a list of tuples.  The
         # tuples may have 3 or four values:
@@ -52,71 +52,71 @@ class FancyGetopt{
         # in any case.  If a long_option doesn't have a corresponding
         # short_option, short_option should be None.  All option tuples
         # must have long options.
-        self.option_table = option_table;
+        this.option_table = option_table;
 
         # 'option_index' maps long option names to entries in the option
         # table (ie. those 3-tuples).
-        self.option_index = {};
-        if self.option_table{
-            self._build_index();
+        this.option_index = {};
+        if this.option_table{
+            this._build_index();
 
         # 'alias' records (duh) alias options; {'foo': 'bar'} means
         # --foo is an alias for --bar
         }
-        self.alias = {};
+        this.alias = {};
 
         # 'negative_alias' keeps track of options that are the boolean
         # opposite of some other option
-        self.negative_alias = {};
+        this.negative_alias = {};
 
         # These keep track of the information in the option table.  We
         # don't actually populate these structures until we're ready to
         # parse the command-line, since the 'option_table' passed in here
         # isn't necessarily the final word.
-        self.short_opts = [];
-        self.long_opts = [];
-        self.short2long = {};
-        self.attr_name = {};
-        self.takes_arg = {};
+        this.short_opts = [];
+        this.long_opts = [];
+        this.short2long = {};
+        this.attr_name = {};
+        this.takes_arg = {};
 
         # And 'option_order' is filled up in 'getopt()'; it records the
         # original order of options (and their values) on the command-line,
         # but expands short options, converts aliases, etc.
-        self.option_order = [];
+        this.option_order = [];
 
     # __init__ ()
 
 
     }
-    def _build_index (self){
-        self.option_index.clear();
-        for option in self.option_table{
-            self.option_index[option[0]] = option;
+    function _build_index (){
+        this.option_index.clear();
+        for option in this.option_table{
+            this.option_index[option[0]] = option;
 
     }
-    } def set_option_table (self, option_table){
-        self.option_table = option_table;
-        self._build_index();
+    } function set_option_table ( option_table){
+        this.option_table = option_table;
+        this._build_index();
 
     }
-    def add_option (self, long_option, short_option=None, help_string=None){
-        if long_option in self.option_index{
+    function add_option ( long_option, short_option=nil, help_string=nil){
+        if long_option in this.option_index{
             raise DistutilsGetoptError, \
                   "option conflict: already an option '%s'" % long_option;
         } else{
             option = (long_option, short_option, help_string);
-            self.option_table.append(option);
-            self.option_index[long_option] = option;
+            this.option_table.append(option);
+            this.option_index[long_option] = option;
 
 
     }
-    } def has_option (self, long_option){
+    } function has_option ( long_option){
         """Return true if the option table for this parser has an
         option with long name 'long_option'.""";
-        return long_option in self.option_index;
+        return long_option in this.option_index;
 
     }
-    def get_attr_name (self, long_option){
+    function get_attr_name ( long_option){
         """Translate long option name 'long_option' to the form it
         has as an attribute of some object: ie., translate hyphens
         to underscores.""";
@@ -124,46 +124,46 @@ class FancyGetopt{
 
 
     }
-    def _check_alias_dict (self, aliases, what){
+    function _check_alias_dict ( aliases, what){
         assert isinstance(aliases, dict);
         for (alias, opt) in aliases.items(){
-            if alias not in self.option_index{
+            if alias not in this.option_index{
                 raise DistutilsGetoptError, \
                       ("invalid %s '%s': "
                        "option '%s' not defined") % (what, alias, alias);
-            } if opt not in self.option_index{
+            } if opt not in this.option_index{
                 raise DistutilsGetoptError, \
                       ("invalid %s '%s': "
                        "aliased option '%s' not defined") % (what, alias, opt);
 
     }
-    } } def set_aliases (self, alias){
+    } } function set_aliases ( alias){
         """Set the aliases for this option parser.""";
-        self._check_alias_dict(alias, "alias");
-        self.alias = alias;
+        this._check_alias_dict(alias, "alias");
+        this.alias = alias;
 
     }
-    def set_negative_aliases (self, negative_alias){
+    function set_negative_aliases ( negative_alias){
         """Set the negative aliases for this option parser.
         'negative_alias' should be a dictionary mapping option names to
         option names, both the key and value must already be defined
         in the option table.""";
-        self._check_alias_dict(negative_alias, "negative alias");
-        self.negative_alias = negative_alias;
+        this._check_alias_dict(negative_alias, "negative alias");
+        this.negative_alias = negative_alias;
 
 
     }
-    def _grok_option_table (self){
+    function _grok_option_table (){
         """Populate the various data structures that keep tabs on the
         option table.  Called by 'getopt()' before it can do anything
         worthwhile.
         """;
-        self.long_opts = [];
-        self.short_opts = [];
-        self.short2long.clear();
-        self.repeat = {};
+        this.long_opts = [];
+        this.short_opts = [];
+        this.short2long.clear();
+        this.repeat = {};
 
-        for option in self.option_table{
+        for option in this.option_table{
             if len(option) == 3{
                 long, short, help = option;
                 repeat = 0;
@@ -182,46 +182,46 @@ class FancyGetopt{
                        "must be a string of length >= 2") % long;
 
             }
-            if (not ((short is None) or
+            if (not ((short is nil) or
                      (isinstance(short, str) and len(short) == 1))){
                 raise DistutilsGetoptError, \
                       ("invalid short option '%s': "
                        "must a single character or None") % short;
 
             }
-            self.repeat[long] = repeat;
-            self.long_opts.append(long);
+            this.repeat[long] = repeat;
+            this.long_opts.append(long);
 
             if long[-1] == '='{             # option takes an argument?
-                if short{ short = short + ':';
+                if short{ short = short + ':';}
                 long = long[0:-1];
-                self.takes_arg[long] = 1;
+                this.takes_arg[long] = 1;
             } else{
 
                 # Is option is a "negative alias" for some other option (eg.
                 # "quiet" == "!verbose")?
-                alias_to = self.negative_alias.get(long);
-                if alias_to is not None{
-                    if self.takes_arg[alias_to]{
+                alias_to = this.negative_alias.get(long);
+                if alias_to is not nil{
+                    if this.takes_arg[alias_to]{
                         raise DistutilsGetoptError, \
                               ("invalid negative alias '%s': "
                                "aliased option '%s' takes a value") % \
                                (long, alias_to);
 
                     }
-                    self.long_opts[-1] = long; # XXX redundant?!
-                    self.takes_arg[long] = 0;
+                    this.long_opts[-1] = long; # XXX redundant?!
+                    this.takes_arg[long] = 0;
 
                 }
                 else{
-                    self.takes_arg[long] = 0;
+                    this.takes_arg[long] = 0;
 
             # If this is an alias option, make sure its "takes arg" flag is
             # the same as the option it's aliased to.
             }
-            } alias_to = self.alias.get(long);
-            if alias_to is not None{
-                if self.takes_arg[long] != self.takes_arg[alias_to]{
+            } alias_to = this.alias.get(long);
+            if alias_to is not nil{
+                if this.takes_arg[long] != this.takes_arg[alias_to]{
                     raise DistutilsGetoptError, \
                           ("invalid alias '%s': inconsistent with "
                            "aliased option '%s' (one of them takes a value, "
@@ -239,10 +239,10 @@ class FancyGetopt{
                        "(must be letters, numbers, hyphens only") % long;
 
             }
-            self.attr_name[long] = self.get_attr_name(long);
+            this.attr_name[long] = this.get_attr_name(long);
             if short{
-                self.short_opts.append(short);
-                self.short2long[short[0]] = long;
+                this.short_opts.append(short);
+                this.short2long[short[0]] = long;
 
         # for option_table
 
@@ -250,7 +250,7 @@ class FancyGetopt{
 
 
     }
-    } } def getopt (self, args=None, object=None){
+    } } function getopt ( args=nil, object=nil){
         """Parse command-line options in args. Store as attributes on object.
 
         If 'args' is None or not supplied, uses 'sys.argv[1:]'.  If
@@ -261,40 +261,40 @@ class FancyGetopt{
         'args' is a modified copy of the passed-in 'args' list, which
         is left untouched.
         """;
-        if args is None{
+        if args is nil{
             args = sys.argv[1:];
-        } if object is None{
+        } if object is nil{
             object = OptionDummy();
             created_object = 1;
         } else{
             created_object = 0;
 
         }
-        self._grok_option_table();
+        this._grok_option_table();
 
-        short_opts = string.join(self.short_opts);
+        short_opts = string.join(this.short_opts);
         try{
-            opts, args = getopt.getopt(args, short_opts, self.long_opts);
+            opts, args = getopt.getopt(args, short_opts, this.long_opts);
         } except getopt.error, msg{
             raise DistutilsArgError, msg;
 
         }
         for opt, val in opts{
             if len(opt) == 2 and opt[0] == '-'{ # it's a short option
-                opt = self.short2long[opt[1]];
+                opt = this.short2long[opt[1]];
             } else{
                 assert len(opt) > 2 and opt[:2] == '--';
                 opt = opt[2:];
 
             }
-            alias = self.alias.get(opt);
+            alias = this.alias.get(opt);
             if alias{
                 opt = alias;
 
             }
-            if not self.takes_arg[opt]{     # boolean option?
+            if not this.takes_arg[opt]{     # boolean option?
                 assert val == '', "boolean option can't have value";
-                alias = self.negative_alias.get(opt);
+                alias = this.negative_alias.get(opt);
                 if alias{
                     opt = alias;
                     val = 0;
@@ -302,13 +302,13 @@ class FancyGetopt{
                     val = 1;
 
             }
-            } attr = self.attr_name[opt];
+            } attr = this.attr_name[opt];
             # The only repeating option at the moment is 'verbose'.
             # It has a negative option -q quiet, which should set verbose = 0.
-            if val and self.repeat.get(attr) is not None{
+            if val and this.repeat.get(attr) is not nil{
                 val = getattr(object, attr, 0) + 1;
             } setattr(object, attr, val);
-            self.option_order.append((opt, val));
+            this.option_order.append((opt, val));
 
         # for opts
         }
@@ -321,19 +321,19 @@ class FancyGetopt{
 
 
     }
-    } def get_option_order (self){
+    } function get_option_order (){
         """Returns the list of (option, value) tuples processed by the
         previous run of 'getopt()'.  Raises RuntimeError if
         'getopt()' hasn't been called yet.
         """;
-        if self.option_order is None{
+        if this.option_order is nil{
             raise RuntimeError, "'getopt()' hasn't been called yet";
         } else{
-            return self.option_order;
+            return this.option_order;
 
 
     }
-    } def generate_help (self, header=None){
+    } function generate_help ( header=nil){
         """Generate help text (a list of strings, one per suggested line of
         output) from the option table for this FancyGetopt object.
         """;
@@ -342,13 +342,13 @@ class FancyGetopt{
 
         # First pass: determine maximum length of long option names
         max_opt = 0;
-        for option in self.option_table{
+        for option in this.option_table{
             long = option[0];
             short = option[1];
             l = len(long);
             if long[-1] == '='{
                 l = l - 1;
-            } if short is not None{
+            } if short is not nil{
                 l = l + 5;                   # " (-x)" where short == 'x'
             } if l > max_opt{
                 max_opt = l;
@@ -387,7 +387,7 @@ class FancyGetopt{
             lines = ['Option summary:'];
 
         }
-        for option in self.option_table{
+        for option in this.option_table{
             long, short, help = option[:3];
             text = wrap_text(help, text_width);
             if long[-1] == '='{
@@ -395,7 +395,7 @@ class FancyGetopt{
 
             # Case 1: no short option at all (makes life easy)
             }
-            if short is None{
+            if short is nil{
                 if text{
                     lines.append("  --%-*s  %s" % (max_opt, long, text[0]));
                 } else{
@@ -424,17 +424,17 @@ class FancyGetopt{
     # generate_help ()
 
     }
-    def print_help (self, header=None, file=None){
-        if file is None{
+    function print_help ( header=nil, file=nil){
+        if file is nil{
             file = sys.stdout;
-        } for line in self.generate_help(header){
+        } for line in this.generate_help(header){
             file.write(line + "\n");
 
 # class FancyGetopt
 
 
 }
-} } def fancy_getopt (options, negative_opt, object, args){
+} } function fancy_getopt (options, negative_opt, object, args){
     parser = FancyGetopt(options);
     parser.set_negative_aliases(negative_opt);
     return parser.getopt(args, object);
@@ -443,14 +443,14 @@ class FancyGetopt{
 }
 WS_TRANS = string.maketrans(string.whitespace, ' ' * len(string.whitespace));
 
-def wrap_text (text, width){
+function wrap_text (text, width){
     """wrap_text(text : string, width : int) -> [string]
 
     Split 'text' into multiple lines of no more than 'width' characters
     each, and return the list of strings that results.
     """;
 
-    if text is None{
+    if text is nil{
         return [];
     } if len(text) <= width{
         return [text];
@@ -459,7 +459,7 @@ def wrap_text (text, width){
     text = string.expandtabs(text);
     text = string.translate(text, WS_TRANS);
     chunks = re.split(r'( +|-+)', text);
-    chunks = filter(None, chunks);      # ' - ' results in empty strings
+    chunks = filter(nil, chunks);      # ' - ' results in empty strings
     lines = [];
 
     while chunks{
@@ -508,7 +508,7 @@ def wrap_text (text, width){
 
 
 }
-def translate_longopt(opt){
+function translate_longopt(opt){
     """Convert a long option name to a valid Python identifier by
     changing "-" to "_".
     """;
@@ -520,11 +520,11 @@ class OptionDummy{
     """Dummy class just used as a place to hold command-line option
     values as instance attributes.""";
 
-    def __init__ (self, options=[]){
+    function __init__ ( options=[]){
         """Create a new OptionDummy instance.  The attributes listed in
         'options' will be initialized to None.""";
         for opt in options{
-            setattr(self, opt, None);
+            setattr(this, opt, nil);
 
 }
 } }

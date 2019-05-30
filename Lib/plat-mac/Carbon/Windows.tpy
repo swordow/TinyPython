@@ -1,6 +1,6 @@
 # Generated from 'MacWindows.h'
 
-def FOUR_CHAR_CODE(x){ return x;
+function FOUR_CHAR_CODE(x){ return x;}
 false = 0;
 true = 1;
 kWindowNoConstrainAttribute = 0x80000000;

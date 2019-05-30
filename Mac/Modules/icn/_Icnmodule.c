@@ -52,8 +52,8 @@ static PyObject *Icn_PlotCIcon(PyObject *_self, PyObject *_args)
         return NULL;
     PlotCIcon(&theRect,
               theIcon);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -68,8 +68,8 @@ static PyObject *Icn_DisposeCIcon(PyObject *_self, PyObject *_args)
                           ResObj_Convert, &theIcon))
         return NULL;
     DisposeCIcon(theIcon);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -104,8 +104,8 @@ static PyObject *Icn_PlotIcon(PyObject *_self, PyObject *_args)
         return NULL;
     PlotIcon(&theRect,
              theIcon);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -131,8 +131,8 @@ static PyObject *Icn_PlotIconID(PyObject *_self, PyObject *_args)
                       transform,
                       theResID);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -172,8 +172,8 @@ static PyObject *Icn_AddIconToSuite(PyObject *_self, PyObject *_args)
                           theSuite,
                           theType);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -239,8 +239,8 @@ static PyObject *Icn_DisposeIconSuite(PyObject *_self, PyObject *_args)
     _err = DisposeIconSuite(theIconSuite,
                             disposeData);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -266,8 +266,8 @@ static PyObject *Icn_PlotIconSuite(PyObject *_self, PyObject *_args)
                          transform,
                          theIconSuite);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -293,8 +293,8 @@ static PyObject *Icn_LoadIconCache(PyObject *_self, PyObject *_args)
                          transform,
                          theIconCache);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -447,8 +447,8 @@ static PyObject *Icn_IconIDToRgn(PyObject *_self, PyObject *_args)
                        align,
                        iconID);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -474,8 +474,8 @@ static PyObject *Icn_IconSuiteToRgn(PyObject *_self, PyObject *_args)
                           align,
                           theIconSuite);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -495,8 +495,8 @@ static PyObject *Icn_SetSuiteLabel(PyObject *_self, PyObject *_args)
     _err = SetSuiteLabel(theSuite,
                          theLabel);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -539,8 +539,8 @@ static PyObject *Icn_PlotIconHandle(PyObject *_self, PyObject *_args)
                           transform,
                           theIcon);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -566,8 +566,8 @@ static PyObject *Icn_PlotSICNHandle(PyObject *_self, PyObject *_args)
                           transform,
                           theSICN);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -593,8 +593,8 @@ static PyObject *Icn_PlotCIconHandle(PyObject *_self, PyObject *_args)
                            transform,
                            theCIcon);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -686,8 +686,8 @@ static PyObject *Icn_SetIconFamilyData(PyObject *_self, PyObject *_args)
                              iconType,
                              h);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -710,8 +710,8 @@ static PyObject *Icn_GetIconFamilyData(PyObject *_self, PyObject *_args)
                              iconType,
                              h);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -748,8 +748,8 @@ static PyObject *Icn_AcquireIconRef(PyObject *_self, PyObject *_args)
         return NULL;
     _err = AcquireIconRef(theIconRef);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -766,8 +766,8 @@ static PyObject *Icn_ReleaseIconRef(PyObject *_self, PyObject *_args)
         return NULL;
     _err = ReleaseIconRef(theIconRef);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -949,8 +949,8 @@ static PyObject *Icn_UnregisterIconRef(PyObject *_self, PyObject *_args)
     _err = UnregisterIconRef(creator,
                              iconType);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -967,8 +967,8 @@ static PyObject *Icn_UpdateIconRef(PyObject *_self, PyObject *_args)
         return NULL;
     _err = UpdateIconRef(theIconRef);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -991,8 +991,8 @@ static PyObject *Icn_OverrideIconRefFromResource(PyObject *_self, PyObject *_arg
                                        &resourceFile,
                                        resourceID);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1012,8 +1012,8 @@ static PyObject *Icn_OverrideIconRef(PyObject *_self, PyObject *_args)
     _err = OverrideIconRef(oldIconRef,
                            newIconRef);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1030,8 +1030,8 @@ static PyObject *Icn_RemoveIconRefOverride(PyObject *_self, PyObject *_args)
         return NULL;
     _err = RemoveIconRefOverride(theIconRef);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1123,8 +1123,8 @@ static PyObject *Icn_PlotIconRef(PyObject *_self, PyObject *_args)
                        theIconServicesUsageFlags,
                        theIconRef);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1211,8 +1211,8 @@ static PyObject *Icn_IconRefToRgn(PyObject *_self, PyObject *_args)
                         iconServicesUsageFlags,
                         theIconRef);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1258,8 +1258,8 @@ static PyObject *Icn_FlushIconRefs(PyObject *_self, PyObject *_args)
     _err = FlushIconRefs(creator,
                          iconType);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1276,8 +1276,8 @@ static PyObject *Icn_FlushIconRefsByVolume(PyObject *_self, PyObject *_args)
         return NULL;
     _err = FlushIconRefsByVolume(vRefNum);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1297,8 +1297,8 @@ static PyObject *Icn_SetCustomIconsEnabled(PyObject *_self, PyObject *_args)
     _err = SetCustomIconsEnabled(vRefNum,
                                  enableCustomIcons);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1444,8 +1444,8 @@ static PyObject *Icn_WriteIconFile(PyObject *_self, PyObject *_args)
     _err = WriteIconFile(iconFamily,
                          &iconFile);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 #endif /* APPLE_SUPPORTS_QUICKTIME */

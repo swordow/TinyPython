@@ -44,11 +44,11 @@ class MozillaCookieJar(FileCookieJar){
 
 """;
 
-    def _really_load(self, f, filename, ignore_discard, ignore_expires){
+    function _really_load( f, filename, ignore_discard, ignore_expires){
         now = time.time();
 
         magic = f.readline();
-        if not re.search(self.magic_re, magic){
+        if not re.search(this.magic_re, magic){
             f.close();
             raise LoadError(
                 "%r does not look like a Netscape format cookies file" %
@@ -58,10 +58,10 @@ class MozillaCookieJar(FileCookieJar){
         try{
             while 1{
                 line = f.readline();
-                if line == ""{ break;
+                if line == ""{ break;}
 
                 # last field may be absent, so keep any trailing tab
-                if line.endswith("\n"){ line = line[:-1];
+                if line.endswith("\n"){ line = line[:-1];}
 
                 # skip comments and blank lines XXX what is $ for?
                 if (line.strip().startswith(("#", "$")) or
@@ -78,34 +78,34 @@ class MozillaCookieJar(FileCookieJar){
                     # with no name, whereas cookielib regards it as a
                     # cookie with no value.
                     name = value;
-                    value = None;
+                    value = nil;
 
                 }
                 initial_dot = domain.startswith(".");
                 assert domain_specified == initial_dot;
 
-                discard = False;
+                discard = false;
                 if expires == ""{
-                    expires = None;
-                    discard = True;
+                    expires = nil;
+                    discard = true;
 
                 # assume path_specified is false
                 }
                 c = Cookie(0, name, value,
-                           None, False,
+                           nil, false,
                            domain, domain_specified, initial_dot,
-                           path, False,
+                           path, false,
                            secure,
                            expires,
                            discard,
-                           None,
-                           None,
+                           nil,
+                           nil,
                            {});
                 if not ignore_discard and c.discard{
                     continue;
                 } if not ignore_expires and c.is_expired(now){
                     continue;
-                } self.set_cookie(c);
+                } this.set_cookie(c);
 
         }
         } except IOError{
@@ -116,30 +116,30 @@ class MozillaCookieJar(FileCookieJar){
                             (filename, line));
 
     }
-    } def save(self, filename=None, ignore_discard=False, ignore_expires=False){
-        if filename is None{
-            if self.filename is not None{ filename = self.filename;
-            else{ raise ValueError(MISSING_FILENAME_TEXT);
+    } function save( filename=nil, ignore_discard=false, ignore_expires=false){
+        if filename is nil{
+            if this.filename is not nil{ filename = this.filename;}
+            else{ raise ValueError(MISSING_FILENAME_TEXT);}
 
         }
         f = open(filename, "w");
         try{
-            f.write(self.header);
+            f.write(this.header);
             now = time.time();
-            for cookie in self{
+            for cookie in this{
                 if not ignore_discard and cookie.discard{
                     continue;
                 } if not ignore_expires and cookie.is_expired(now){
                     continue;
-                } if cookie.secure{ secure = "TRUE";
-                else{ secure = "FALSE";
-                if cookie.domain.startswith("."){ initial_dot = "TRUE";
-                else{ initial_dot = "FALSE";
-                if cookie.expires is not None{
+                } if cookie.secure{ secure = "TRUE";}
+                else{ secure = "FALSE";}
+                if cookie.domain.startswith("."){ initial_dot = "TRUE";}
+                else{ initial_dot = "FALSE";}
+                if cookie.expires is not nil{
                     expires = str(cookie.expires);
                 } else{
                     expires = "";
-                } if cookie.value is None{
+                } if cookie.value is nil{
                     # cookies.txt regards 'Set-Cookie: foo' as a cookie
                     # with no name, whereas cookielib regards it as a
                     # cookie with no value.

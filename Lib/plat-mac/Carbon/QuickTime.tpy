@@ -1,6 +1,6 @@
 # Generated from 'Movies.h'
 
-def FOUR_CHAR_CODE(x){ return x;
+function FOUR_CHAR_CODE(x){ return x;}
 xmlIdentifierUnrecognized = -1;
 kControllerMinimum = -0xf777;
 notImplementedMusicOSErr      = -2071;

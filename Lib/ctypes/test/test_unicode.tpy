@@ -7,145 +7,145 @@ import _ctypes_test;
 @need_symbol('c_wchar');
 class UnicodeTestCase(unittest.TestCase){
     @classmethod;
-    def setUpClass(cls){
+    function setUpClass(cls){
         dll = ctypes.CDLL(_ctypes_test.__file__);
         cls.wcslen = dll.my_wcslen;
         cls.wcslen.argtypes = [ctypes.c_wchar_p];
-    } def setUp(self){
-        self.prev_conv_mode = ctypes.set_conversion_mode("ascii", "strict");
+    } function setUp(){
+        this.prev_conv_mode = ctypes.set_conversion_mode("ascii", "strict");
 
     }
-    def tearDown(self){
-        ctypes.set_conversion_mode(*self.prev_conv_mode);
+    function tearDown(){
+        ctypes.set_conversion_mode(*this.prev_conv_mode);
 
     }
-    def test_ascii_strict(self){
-        wcslen = self.wcslen;
+    function test_ascii_strict(){
+        wcslen = this.wcslen;
         ctypes.set_conversion_mode("ascii", "strict");
         # no conversions take place with unicode arguments
-        self.assertEqual(wcslen(u"abc"), 3);
-        self.assertEqual(wcslen(u"ab\u2070"), 3);
+        this.assertEqual(wcslen(u"abc"), 3);
+        this.assertEqual(wcslen(u"ab\u2070"), 3);
         # string args are converted
-        self.assertEqual(wcslen("abc"), 3);
-        self.assertRaises(ctypes.ArgumentError, wcslen, "abה");
+        this.assertEqual(wcslen("abc"), 3);
+        this.assertRaises(ctypes.ArgumentError, wcslen, "abה");
 
     }
-    def test_ascii_replace(self){
-        wcslen = self.wcslen;
+    function test_ascii_replace(){
+        wcslen = this.wcslen;
         ctypes.set_conversion_mode("ascii", "replace");
-        self.assertEqual(wcslen(u"abc"), 3);
-        self.assertEqual(wcslen(u"ab\u2070"), 3);
-        self.assertEqual(wcslen("abc"), 3);
-        self.assertEqual(wcslen("abה"), 3);
+        this.assertEqual(wcslen(u"abc"), 3);
+        this.assertEqual(wcslen(u"ab\u2070"), 3);
+        this.assertEqual(wcslen("abc"), 3);
+        this.assertEqual(wcslen("abה"), 3);
 
     }
-    def test_ascii_ignore(self){
-        wcslen = self.wcslen;
+    function test_ascii_ignore(){
+        wcslen = this.wcslen;
         ctypes.set_conversion_mode("ascii", "ignore");
-        self.assertEqual(wcslen(u"abc"), 3);
-        self.assertEqual(wcslen(u"ab\u2070"), 3);
+        this.assertEqual(wcslen(u"abc"), 3);
+        this.assertEqual(wcslen(u"ab\u2070"), 3);
         # ignore error mode skips non-ascii characters
-        self.assertEqual(wcslen("abc"), 3);
-        self.assertEqual(wcslen("הצüß"), 0);
+        this.assertEqual(wcslen("abc"), 3);
+        this.assertEqual(wcslen("הצüß"), 0);
 
     }
-    def test_latin1_strict(self){
-        wcslen = self.wcslen;
+    function test_latin1_strict(){
+        wcslen = this.wcslen;
         ctypes.set_conversion_mode("latin-1", "strict");
-        self.assertEqual(wcslen(u"abc"), 3);
-        self.assertEqual(wcslen(u"ab\u2070"), 3);
-        self.assertEqual(wcslen("abc"), 3);
-        self.assertEqual(wcslen("הצüß"), 4);
+        this.assertEqual(wcslen(u"abc"), 3);
+        this.assertEqual(wcslen(u"ab\u2070"), 3);
+        this.assertEqual(wcslen("abc"), 3);
+        this.assertEqual(wcslen("הצüß"), 4);
 
     }
-    def test_buffers(self){
+    function test_buffers(){
         ctypes.set_conversion_mode("ascii", "strict");
         buf = ctypes.create_unicode_buffer("abc");
-        self.assertEqual(len(buf), 3+1);
+        this.assertEqual(len(buf), 3+1);
 
         ctypes.set_conversion_mode("ascii", "replace");
         buf = ctypes.create_unicode_buffer("abהצü");
-        self.assertEqual(buf[:], u"ab\uFFFD\uFFFD\uFFFD\0");
-        self.assertEqual(buf[::], u"ab\uFFFD\uFFFD\uFFFD\0");
-        self.assertEqual(buf[::-1], u"\0\uFFFD\uFFFD\uFFFDba");
-        self.assertEqual(buf[::2], u"a\uFFFD\uFFFD");
-        self.assertEqual(buf[6:5:-1], u"");
+        this.assertEqual(buf[:], u"ab\uFFFD\uFFFD\uFFFD\0");
+        this.assertEqual(buf[::], u"ab\uFFFD\uFFFD\uFFFD\0");
+        this.assertEqual(buf[::-1], u"\0\uFFFD\uFFFD\uFFFDba");
+        this.assertEqual(buf[::2], u"a\uFFFD\uFFFD");
+        this.assertEqual(buf[6:5:-1], u"");
 
         ctypes.set_conversion_mode("ascii", "ignore");
         buf = ctypes.create_unicode_buffer("abהצü");
         # is that correct? not sure.  But with 'ignore', you get what you pay for..
-        self.assertEqual(buf[:], u"ab\0\0\0\0");
-        self.assertEqual(buf[::], u"ab\0\0\0\0");
-        self.assertEqual(buf[::-1], u"\0\0\0\0ba");
-        self.assertEqual(buf[::2], u"a\0\0");
-        self.assertEqual(buf[6:5:-1], u"");
+        this.assertEqual(buf[:], u"ab\0\0\0\0");
+        this.assertEqual(buf[::], u"ab\0\0\0\0");
+        this.assertEqual(buf[::-1], u"\0\0\0\0ba");
+        this.assertEqual(buf[::2], u"a\0\0");
+        this.assertEqual(buf[6:5:-1], u"");
 
 }
 } @need_symbol('c_wchar');
 class StringTestCase(UnicodeTestCase){
     @classmethod;
-    def setUpClass(cls){
+    function setUpClass(cls){
         super(StringTestCase, cls).setUpClass();
         cls.func = ctypes.CDLL(_ctypes_test.__file__)._testfunc_p_p;
 
     }
-    def setUp(self){
-        func = self.func;
-        self.prev_conv_mode = ctypes.set_conversion_mode("ascii", "strict");
+    function setUp(){
+        func = this.func;
+        this.prev_conv_mode = ctypes.set_conversion_mode("ascii", "strict");
         func.argtypes = [ctypes.c_char_p];
         func.restype = ctypes.c_char_p;
 
     }
-    def tearDown(self){
-        func = self.func;
-        ctypes.set_conversion_mode(*self.prev_conv_mode);
-        func.argtypes = None;
+    function tearDown(){
+        func = this.func;
+        ctypes.set_conversion_mode(*this.prev_conv_mode);
+        func.argtypes = nil;
         func.restype = ctypes.c_int;
 
     }
-    def test_ascii_replace(self){
-        func = self.func;
+    function test_ascii_replace(){
+        func = this.func;
         ctypes.set_conversion_mode("ascii", "strict");
-        self.assertEqual(func("abc"), "abc");
-        self.assertEqual(func(u"abc"), "abc");
-        self.assertRaises(ctypes.ArgumentError, func, u"abה");
+        this.assertEqual(func("abc"), "abc");
+        this.assertEqual(func(u"abc"), "abc");
+        this.assertRaises(ctypes.ArgumentError, func, u"abה");
 
     }
-    def test_ascii_ignore(self){
-        func = self.func;
+    function test_ascii_ignore(){
+        func = this.func;
         ctypes.set_conversion_mode("ascii", "ignore");
-        self.assertEqual(func("abc"), "abc");
-        self.assertEqual(func(u"abc"), "abc");
-        self.assertEqual(func(u"הצüß"), "");
+        this.assertEqual(func("abc"), "abc");
+        this.assertEqual(func(u"abc"), "abc");
+        this.assertEqual(func(u"הצüß"), "");
 
     }
-    def test_ascii_replace(self){
-        func = self.func;
+    function test_ascii_replace(){
+        func = this.func;
         ctypes.set_conversion_mode("ascii", "replace");
-        self.assertEqual(func("abc"), "abc");
-        self.assertEqual(func(u"abc"), "abc");
-        self.assertEqual(func(u"הצüß"), "????");
+        this.assertEqual(func("abc"), "abc");
+        this.assertEqual(func(u"abc"), "abc");
+        this.assertEqual(func(u"הצüß"), "????");
 
     }
-    def test_buffers(self){
+    function test_buffers(){
         ctypes.set_conversion_mode("ascii", "strict");
         buf = ctypes.create_string_buffer(u"abc");
-        self.assertEqual(len(buf), 3+1);
+        this.assertEqual(len(buf), 3+1);
 
         ctypes.set_conversion_mode("ascii", "replace");
         buf = ctypes.create_string_buffer(u"abהצü");
-        self.assertEqual(buf[:], "ab???\0");
-        self.assertEqual(buf[::], "ab???\0");
-        self.assertEqual(buf[::-1], "\0???ba");
-        self.assertEqual(buf[::2], "a??");
-        self.assertEqual(buf[6:5:-1], "");
+        this.assertEqual(buf[:], "ab???\0");
+        this.assertEqual(buf[::], "ab???\0");
+        this.assertEqual(buf[::-1], "\0???ba");
+        this.assertEqual(buf[::2], "a??");
+        this.assertEqual(buf[6:5:-1], "");
 
         ctypes.set_conversion_mode("ascii", "ignore");
         buf = ctypes.create_string_buffer(u"abהצü");
         # is that correct? not sure.  But with 'ignore', you get what you pay for..
-        self.assertEqual(buf[:], "ab\0\0\0\0");
-        self.assertEqual(buf[::], "ab\0\0\0\0");
-        self.assertEqual(buf[::-1], "\0\0\0\0ba");
+        this.assertEqual(buf[:], "ab\0\0\0\0");
+        this.assertEqual(buf[::], "ab\0\0\0\0");
+        this.assertEqual(buf[::-1], "\0\0\0\0ba");
 
 }
 } if __name__ == '__main__'{

@@ -245,7 +245,7 @@ deque_append(dequeobject *deque, PyObject *item)
     deque->rightindex++;
     deque->rightblock->data[deque->rightindex] = item;
     TRIM(deque, deque_popleft);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(append_doc, "Add an element to the right side of the deque.");
@@ -268,7 +268,7 @@ deque_appendleft(dequeobject *deque, PyObject *item)
     deque->leftindex--;
     deque->leftblock->data[deque->leftindex] = item;
     TRIM(deque, deque_pop);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(appendleft_doc, "Add an element to the left side of the deque.");
@@ -287,7 +287,7 @@ consume_iterator(PyObject *it)
     Py_DECREF(it);
     if (PyErr_Occurred())
         return NULL;
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject *
@@ -336,7 +336,7 @@ deque_extend(dequeobject *deque, PyObject *iterable)
     Py_DECREF(it);
     if (PyErr_Occurred())
         return NULL;
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(extend_doc,
@@ -388,7 +388,7 @@ deque_extendleft(dequeobject *deque, PyObject *iterable)
     Py_DECREF(it);
     if (PyErr_Occurred())
         return NULL;
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(extendleft_doc,
@@ -506,7 +506,7 @@ deque_rotate(dequeobject *deque, PyObject *args)
     if (!PyArg_ParseTuple(args, "|n:rotate", &n))
         return NULL;
     if (_deque_rotate(deque, n) == 0)
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     return NULL;
 }
 
@@ -551,7 +551,7 @@ deque_reverse(dequeobject *deque, PyObject *unused)
             rightindex = BLOCKLEN - 1;
         }
     }
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(reverse_doc,
@@ -624,7 +624,7 @@ deque_remove(dequeobject *deque, PyObject *value)
             if (_deque_rotate(deque, i))
                 return NULL;
             Py_DECREF(tgt);
-            Py_RETURN_NONE;
+            Py_RETURN_NIL;
         }
         else if (cmp < 0) {
             _deque_rotate(deque, i);
@@ -813,7 +813,7 @@ static PyObject *
 deque_clearmethod(dequeobject *deque)
 {
     deque_clear(deque);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(clear_doc, "Remove all elements from the deque.");
@@ -897,7 +897,7 @@ deque_reduce(dequeobject *deque)
             result = Py_BuildValue("O(On)", Py_TYPE(deque), aslist, deque->maxlen);
     } else {
         if (deque->maxlen == -1)
-            result = Py_BuildValue("O(OO)O", Py_TYPE(deque), aslist, Py_None, dict);
+            result = Py_BuildValue("O(OO)O", Py_TYPE(deque), aslist, Py_Nil, dict);
         else
             result = Py_BuildValue("O(On)O", Py_TYPE(deque), aslist, deque->maxlen, dict);
     }
@@ -1084,7 +1084,7 @@ deque_init(dequeobject *deque, PyObject *args, PyObject *kwdargs)
 
     if (!PyArg_ParseTupleAndKeywords(args, kwdargs, "|OO:deque", kwlist, &iterable, &maxlenobj))
         return -1;
-    if (maxlenobj != NULL && maxlenobj != Py_None) {
+    if (maxlenobj != NULL && maxlenobj != Py_Nil) {
         maxlen = PyInt_AsSsize_t(maxlenobj);
         if (maxlen == -1 && PyErr_Occurred())
             return -1;
@@ -1126,7 +1126,7 @@ static PyObject *
 deque_get_maxlen(dequeobject *deque)
 {
     if (deque->maxlen == -1)
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
     return PyInt_FromSsize_t(deque->maxlen);
 }
 
@@ -1465,7 +1465,7 @@ defdict_missing(defdictobject *dd, PyObject *key)
 {
     PyObject *factory = dd->default_factory;
     PyObject *value;
-    if (factory == NULL || factory == Py_None) {
+    if (factory == NULL || factory == Py_Nil) {
         /* XXX Call dict.__missing__(key) */
         PyObject *tup;
         tup = PyTuple_Pack(1, key);
@@ -1495,7 +1495,7 @@ defdict_copy(defdictobject *dd)
     */
 
     if (dd->default_factory == NULL)
-        return PyObject_CallFunctionObjArgs((PyObject*)Py_TYPE(dd), Py_None, dd, NULL);
+        return PyObject_CallFunctionObjArgs((PyObject*)Py_TYPE(dd), Py_Nil, dd, NULL);
     return PyObject_CallFunctionObjArgs((PyObject*)Py_TYPE(dd),
                                         dd->default_factory, dd, NULL);
 }
@@ -1528,7 +1528,7 @@ defdict_reduce(defdictobject *dd)
     PyObject *args;
     PyObject *items;
     PyObject *result;
-    if (dd->default_factory == NULL || dd->default_factory == Py_None)
+    if (dd->default_factory == NULL || dd->default_factory == Py_Nil)
         args = PyTuple_New(0);
     else
         args = PyTuple_Pack(1, dd->default_factory);
@@ -1540,7 +1540,7 @@ defdict_reduce(defdictobject *dd)
         return NULL;
     }
     result = PyTuple_Pack(5, Py_TYPE(dd), args,
-                          Py_None, Py_None, items);
+                          Py_Nil, Py_Nil, items);
     Py_DECREF(items);
     Py_DECREF(args);
     return result;
@@ -1583,7 +1583,7 @@ defdict_print(defdictobject *dd, FILE *fp, int flags)
     Py_END_ALLOW_THREADS
     if (dd->default_factory == NULL) {
         Py_BEGIN_ALLOW_THREADS
-        fprintf(fp, "None");
+        fprintf(fp, "nil");
         Py_END_ALLOW_THREADS
     } else {
         PyObject_Print(dd->default_factory, fp, 0);
@@ -1608,7 +1608,7 @@ defdict_repr(defdictobject *dd)
     if (baserepr == NULL)
         return NULL;
     if (dd->default_factory == NULL)
-        defrepr = PyString_FromString("None");
+        defrepr = PyString_FromString("nil");
     else
     {
         int status = Py_ReprEnter(dd->default_factory);
@@ -1663,7 +1663,7 @@ defdict_init(PyObject *self, PyObject *args, PyObject *kwds)
         Py_ssize_t n = PyTuple_GET_SIZE(args);
         if (n > 0) {
             newdefault = PyTuple_GET_ITEM(args, 0);
-            if (!PyCallable_Check(newdefault) && newdefault != Py_None) {
+            if (!PyCallable_Check(newdefault) && newdefault != Py_Nil) {
                 PyErr_SetString(PyExc_TypeError,
                     "first argument must be callable or None");
                 return -1;

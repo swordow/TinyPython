@@ -16,7 +16,7 @@ class Metrowerks_Shell_Suite_Events{
         'To_Segment' : 'Segm',
     };
 
-    def Add_Files(self, _object, _attributes={}, **_arguments){
+    function Add_Files( _object, _attributes={}, **_arguments){
         """Add Files: Add the specified file(s) to the current project
         Required argument: List of files to add
         Keyword argument To_Segment: Segment number into which to add the file(s)
@@ -26,11 +26,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'AddF';
 
-        aetools.keysubst(_arguments, self._argmap_Add_Files);
+        aetools.keysubst(_arguments, this._argmap_Add_Files);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -44,7 +44,7 @@ class Metrowerks_Shell_Suite_Events{
         'ExternalEditor' : 'Errs',
     };
 
-    def Check_Syntax(self, _object, _attributes={}, **_arguments){
+    function Check_Syntax( _object, _attributes={}, **_arguments){
         """Check Syntax: Check the syntax of the specified file(s)
         Required argument: List of files to check the syntax of
         Keyword argument ExternalEditor: Should the contents of the message window be returned to the caller?
@@ -54,11 +54,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'Chek';
 
-        aetools.keysubst(_arguments, self._argmap_Check_Syntax);
+        aetools.keysubst(_arguments, this._argmap_Check_Syntax);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -68,18 +68,18 @@ class Metrowerks_Shell_Suite_Events{
             return _arguments['----'];
 
     }
-    } def Close_Project(self, _no_object=None, _attributes={}, **_arguments){
+    } function Close_Project( _no_object=nil, _attributes={}, **_arguments){
         """Close Project: Close the current project
         Keyword argument _attributes: AppleEvent attribute dictionary
         """;
         _code = 'MMPR';
         _subcode = 'ClsP';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -93,7 +93,7 @@ class Metrowerks_Shell_Suite_Events{
         'Saving' : 'savo',
     };
 
-    def Close_Window(self, _object, _attributes={}, **_arguments){
+    function Close_Window( _object, _attributes={}, **_arguments){
         """Close Window: Close the windows showing the specified files
         Required argument: The files to close
         Keyword argument Saving: Whether to save changes to each file before closing its window
@@ -102,12 +102,12 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'ClsW';
 
-        aetools.keysubst(_arguments, self._argmap_Close_Window);
+        aetools.keysubst(_arguments, this._argmap_Close_Window);
         _arguments['----'] = _object;
 
         aetools.enumsubst(_arguments, 'savo', _Enum_savo);
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -121,7 +121,7 @@ class Metrowerks_Shell_Suite_Events{
         'ExternalEditor' : 'Errs',
     };
 
-    def Compile(self, _object, _attributes={}, **_arguments){
+    function Compile( _object, _attributes={}, **_arguments){
         """Compile: Compile the specified file(s)
         Required argument: List of files to compile
         Keyword argument ExternalEditor: Should the contents of the message window be returned to the caller?
@@ -131,11 +131,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'Comp';
 
-        aetools.keysubst(_arguments, self._argmap_Compile);
+        aetools.keysubst(_arguments, this._argmap_Compile);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -149,7 +149,7 @@ class Metrowerks_Shell_Suite_Events{
         'from_stationery' : 'Tmpl',
     };
 
-    def Create_Project(self, _object, _attributes={}, **_arguments){
+    function Create_Project( _object, _attributes={}, **_arguments){
         """Create Project: Create a new project file
         Required argument: New project file specifier
         Keyword argument from_stationery: undocumented, typecode 'alis'
@@ -158,11 +158,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'NewP';
 
-        aetools.keysubst(_arguments, self._argmap_Create_Project);
+        aetools.keysubst(_arguments, this._argmap_Create_Project);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -172,7 +172,7 @@ class Metrowerks_Shell_Suite_Events{
             return _arguments['----'];
 
     }
-    } def Get_Definition(self, _object, _attributes={}, **_arguments){
+    } function Get_Definition( _object, _attributes={}, **_arguments){
         """Get Definition: Returns the location(s) of a globally scoped function or data object.
         Required argument: undocumented, typecode 'TEXT'
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -181,11 +181,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'GDef';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -195,7 +195,7 @@ class Metrowerks_Shell_Suite_Events{
             return _arguments['----'];
 
     }
-    } def Get_Open_Documents(self, _no_object=None, _attributes={}, **_arguments){
+    } function Get_Open_Documents( _no_object=nil, _attributes={}, **_arguments){
         """Get Open Documents: Returns the list of open documents
         Keyword argument _attributes: AppleEvent attribute dictionary
         Returns: The list of documents
@@ -203,11 +203,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'GDoc';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -222,7 +222,7 @@ class Metrowerks_Shell_Suite_Events{
         'from_panel' : 'PNam',
     };
 
-    def Get_Preferences(self, _no_object=None, _attributes={}, **_arguments){
+    function Get_Preferences( _no_object=nil, _attributes={}, **_arguments){
         """Get Preferences: Get the preferences for the current project
         Keyword argument of: Names of requested preferences
         Keyword argument from_panel: Name of the preference panel
@@ -232,11 +232,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'Gref';
 
-        aetools.keysubst(_arguments, self._argmap_Get_Preferences);
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        aetools.keysubst(_arguments, this._argmap_Get_Preferences);
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -250,7 +250,7 @@ class Metrowerks_Shell_Suite_Events{
         'Segment' : 'Segm',
     };
 
-    def Get_Project_File(self, _object, _attributes={}, **_arguments){
+    function Get_Project_File( _object, _attributes={}, **_arguments){
         """Get Project File: Returns a description of a file in the project window.
         Required argument: The index of the file within its segment.
         Keyword argument Segment: The segment containing the file.
@@ -260,11 +260,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'GFil';
 
-        aetools.keysubst(_arguments, self._argmap_Get_Project_File);
+        aetools.keysubst(_arguments, this._argmap_Get_Project_File);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -274,7 +274,7 @@ class Metrowerks_Shell_Suite_Events{
             return _arguments['----'];
 
     }
-    } def Get_Project_Specifier(self, _no_object=None, _attributes={}, **_arguments){
+    } function Get_Project_Specifier( _no_object=nil, _attributes={}, **_arguments){
         """Get Project Specifier: Return the File Specifier for the current project
         Keyword argument _attributes: AppleEvent attribute dictionary
         Returns: File Specifier for the current project
@@ -282,11 +282,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'GetP';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -296,7 +296,7 @@ class Metrowerks_Shell_Suite_Events{
             return _arguments['----'];
 
     }
-    } def Get_Segments(self, _no_object=None, _attributes={}, **_arguments){
+    } function Get_Segments( _no_object=nil, _attributes={}, **_arguments){
         """Get Segments: Returns a description of each segment in the project.
         Keyword argument _attributes: AppleEvent attribute dictionary
         Returns: undocumented, typecode 'Seg '
@@ -304,11 +304,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'GSeg';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -318,7 +318,7 @@ class Metrowerks_Shell_Suite_Events{
             return _arguments['----'];
 
     }
-    } def Get_member_function_names(self, _object, _attributes={}, **_arguments){
+    } function Get_member_function_names( _object, _attributes={}, **_arguments){
         """Get member function names: Returns a list containing the names of all the member functions of a class object
         Required argument: must be a class object
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -327,11 +327,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'MbFN';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -341,7 +341,7 @@ class Metrowerks_Shell_Suite_Events{
             return _arguments['----'];
 
     }
-    } def Get_nonsimple_classes(self, _no_object=None, _attributes={}, **_arguments){
+    } function Get_nonsimple_classes( _no_object=nil, _attributes={}, **_arguments){
         """Get nonsimple classes: Returns an alphabetical list of classes with member functions, bases classes, or subclasses
         Keyword argument _attributes: AppleEvent attribute dictionary
         Returns: undocumented, typecode 'list'
@@ -349,11 +349,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'NsCl';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -363,7 +363,7 @@ class Metrowerks_Shell_Suite_Events{
             return _arguments['----'];
 
     }
-    } def Goto_Function(self, _object, _attributes={}, **_arguments){
+    } function Goto_Function( _object, _attributes={}, **_arguments){
         """Goto Function: Goto Specified Function Name
         Required argument: undocumented, typecode 'TEXT'
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -371,11 +371,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'GoFn';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -385,7 +385,7 @@ class Metrowerks_Shell_Suite_Events{
             return _arguments['----'];
 
     }
-    } def Goto_Line(self, _object, _attributes={}, **_arguments){
+    } function Goto_Line( _object, _attributes={}, **_arguments){
         """Goto Line: Goto Specified Line Number
         Required argument: The requested source file line number
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -393,11 +393,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'GoLn';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -407,7 +407,7 @@ class Metrowerks_Shell_Suite_Events{
             return _arguments['----'];
 
     }
-    } def Is_In_Project(self, _object, _attributes={}, **_arguments){
+    } function Is_In_Project( _object, _attributes={}, **_arguments){
         """Is In Project: Whether or not the specified file(s) is in the current project
         Required argument: List of files to check for project membership
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -416,11 +416,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'FInP';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -434,7 +434,7 @@ class Metrowerks_Shell_Suite_Events{
         'ExternalEditor' : 'Errs',
     };
 
-    def Make_Project(self, _no_object=None, _attributes={}, **_arguments){
+    function Make_Project( _no_object=nil, _attributes={}, **_arguments){
         """Make Project: Make the current project
         Keyword argument ExternalEditor: Should the contents of the message window be returned to the caller?
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -443,11 +443,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'Make';
 
-        aetools.keysubst(_arguments, self._argmap_Make_Project);
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        aetools.keysubst(_arguments, this._argmap_Make_Project);
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -457,7 +457,7 @@ class Metrowerks_Shell_Suite_Events{
             return _arguments['----'];
 
     }
-    } def Open_browser(self, _object, _attributes={}, **_arguments){
+    } function Open_browser( _object, _attributes={}, **_arguments){
         """Open browser: Display a class, member function, or data member object in a single class browser window
         Required argument: an AE object reference
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -465,11 +465,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'Brow';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -484,7 +484,7 @@ class Metrowerks_Shell_Suite_Events{
         'ExternalEditor' : 'Errs',
     };
 
-    def Precompile(self, _object, _attributes={}, **_arguments){
+    function Precompile( _object, _attributes={}, **_arguments){
         """Precompile: Precompile the specified file to the specified destination file
         Required argument: File to precompile
         Keyword argument Saving_As: Destination file for precompiled header
@@ -495,11 +495,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'PreC';
 
-        aetools.keysubst(_arguments, self._argmap_Precompile);
+        aetools.keysubst(_arguments, this._argmap_Precompile);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -513,7 +513,7 @@ class Metrowerks_Shell_Suite_Events{
         'ExternalEditor' : 'Errs',
     };
 
-    def Preprocess(self, _object, _attributes={}, **_arguments){
+    function Preprocess( _object, _attributes={}, **_arguments){
         """Preprocess: Preprocesses the specified file(s)
         Required argument: undocumented, typecode 'alis'
         Keyword argument ExternalEditor: undocumented, typecode 'bool'
@@ -523,11 +523,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'PreP';
 
-        aetools.keysubst(_arguments, self._argmap_Preprocess);
+        aetools.keysubst(_arguments, this._argmap_Preprocess);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -537,18 +537,18 @@ class Metrowerks_Shell_Suite_Events{
             return _arguments['----'];
 
     }
-    } def Remove_Binaries(self, _no_object=None, _attributes={}, **_arguments){
+    } function Remove_Binaries( _no_object=nil, _attributes={}, **_arguments){
         """Remove Binaries: Remove the binary object code from the current project
         Keyword argument _attributes: AppleEvent attribute dictionary
         """;
         _code = 'MMPR';
         _subcode = 'RemB';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -558,7 +558,7 @@ class Metrowerks_Shell_Suite_Events{
             return _arguments['----'];
 
     }
-    } def Remove_Files(self, _object, _attributes={}, **_arguments){
+    } function Remove_Files( _object, _attributes={}, **_arguments){
         """Remove Files: Remove the specified file(s) from the current project
         Required argument: List of files to remove
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -567,11 +567,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'RemF';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -581,18 +581,18 @@ class Metrowerks_Shell_Suite_Events{
             return _arguments['----'];
 
     }
-    } def Reset_File_Paths(self, _no_object=None, _attributes={}, **_arguments){
+    } function Reset_File_Paths( _no_object=nil, _attributes={}, **_arguments){
         """Reset File Paths: Resets access paths for all files belonging to open project.
         Keyword argument _attributes: AppleEvent attribute dictionary
         """;
         _code = 'MMPR';
         _subcode = 'ReFP';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -607,7 +607,7 @@ class Metrowerks_Shell_Suite_Events{
         'SourceDebugger' : 'DeBg',
     };
 
-    def Run_Project(self, _no_object=None, _attributes={}, **_arguments){
+    function Run_Project( _no_object=nil, _attributes={}, **_arguments){
         """Run Project: Run the current project
         Keyword argument ExternalEditor: Should the contents of the message window be returned to the caller?
         Keyword argument SourceDebugger: Run the application under the control of the source-level debugger
@@ -617,11 +617,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'RunP';
 
-        aetools.keysubst(_arguments, self._argmap_Run_Project);
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        aetools.keysubst(_arguments, this._argmap_Run_Project);
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -631,7 +631,7 @@ class Metrowerks_Shell_Suite_Events{
             return _arguments['----'];
 
     }
-    } def Save_Error_Window_As(self, _object, _attributes={}, **_arguments){
+    } function Save_Error_Window_As( _object, _attributes={}, **_arguments){
         """Save Error Window As: Saves the Errors & Warnings window as a text file
         Required argument: Destination file for Save Message Window As
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -639,11 +639,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'SvMs';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -653,7 +653,7 @@ class Metrowerks_Shell_Suite_Events{
             return _arguments['----'];
 
     }
-    } def Set_Current_Target(self, _object=None, _attributes={}, **_arguments){
+    } function Set_Current_Target( _object=nil, _attributes={}, **_arguments){
         """Set Current Target: Set the current target of a project
         Required argument: Name of target
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -661,11 +661,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'STrg';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -675,7 +675,7 @@ class Metrowerks_Shell_Suite_Events{
             return _arguments['----'];
 
     }
-    } def Set_Default_Project(self, _object, _attributes={}, **_arguments){
+    } function Set_Default_Project( _object, _attributes={}, **_arguments){
         """Set Default Project: Set the default project
         Required argument: Name of project
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -683,11 +683,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'SDfP';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -701,7 +701,7 @@ class Metrowerks_Shell_Suite_Events{
         'to' : 'MDat',
     };
 
-    def Set_Modification_Date(self, _object, _attributes={}, **_arguments){
+    function Set_Modification_Date( _object, _attributes={}, **_arguments){
         """Set Modification Date: Changes the internal modification date of the specified file(s)
         Required argument: List of files
         Keyword argument to: undocumented, typecode 'ldt '
@@ -711,11 +711,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'SMod';
 
-        aetools.keysubst(_arguments, self._argmap_Set_Modification_Date);
+        aetools.keysubst(_arguments, this._argmap_Set_Modification_Date);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -730,7 +730,7 @@ class Metrowerks_Shell_Suite_Events{
         'to' : 'PRec',
     };
 
-    def Set_Preferences(self, _no_object=None, _attributes={}, **_arguments){
+    function Set_Preferences( _no_object=nil, _attributes={}, **_arguments){
         """Set Preferences: Set the preferences for the current project
         Keyword argument of_panel: Name of the preference panel
         Keyword argument to: Preferences settings
@@ -739,11 +739,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'Pref';
 
-        aetools.keysubst(_arguments, self._argmap_Set_Preferences);
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        aetools.keysubst(_arguments, this._argmap_Set_Preferences);
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -757,7 +757,7 @@ class Metrowerks_Shell_Suite_Events{
         'to' : 'SrcS',
     };
 
-    def Set_Project_File(self, _object, _attributes={}, **_arguments){
+    function Set_Project_File( _object, _attributes={}, **_arguments){
         """Set Project File: Changes the settings for a given file in the project.
         Required argument: The name of the file
         Keyword argument to: The new settings for the file
@@ -766,11 +766,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'SFil';
 
-        aetools.keysubst(_arguments, self._argmap_Set_Project_File);
+        aetools.keysubst(_arguments, this._argmap_Set_Project_File);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -784,7 +784,7 @@ class Metrowerks_Shell_Suite_Events{
         'to' : 'Segm',
     };
 
-    def Set_Segment(self, _object, _attributes={}, **_arguments){
+    function Set_Segment( _object, _attributes={}, **_arguments){
         """Set Segment: Changes the name and attributes of a segment.
         Required argument: The segment to change
         Keyword argument to: The new name and attributes for the segment.
@@ -793,11 +793,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'SSeg';
 
-        aetools.keysubst(_arguments, self._argmap_Set_Segment);
+        aetools.keysubst(_arguments, this._argmap_Set_Segment);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -807,7 +807,7 @@ class Metrowerks_Shell_Suite_Events{
             return _arguments['----'];
 
     }
-    } def Touch(self, _object, _attributes={}, **_arguments){
+    } function Touch( _object, _attributes={}, **_arguments){
         """Touch: Force recompilation of the specified file(s)
         Required argument: List of files to compile
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -816,11 +816,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'Toch';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -834,7 +834,7 @@ class Metrowerks_Shell_Suite_Events{
         'ExternalEditor' : 'Errs',
     };
 
-    def Update_Project(self, _no_object=None, _attributes={}, **_arguments){
+    function Update_Project( _no_object=nil, _attributes={}, **_arguments){
         """Update Project: Update the current project
         Keyword argument ExternalEditor: Should the contents of the message window be returned to the caller?
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -843,11 +843,11 @@ class Metrowerks_Shell_Suite_Events{
         _code = 'MMPR';
         _subcode = 'UpdP';
 
-        aetools.keysubst(_arguments, self._argmap_Update_Project);
-        if _no_object is not None{ raise TypeError, 'No direct arg expected';
+        aetools.keysubst(_arguments, this._argmap_Update_Project);
+        if _no_object is not nil{ raise TypeError, 'No direct arg expected';}
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);

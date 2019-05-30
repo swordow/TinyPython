@@ -11,7 +11,7 @@ import _lsprof;
 # ____________________________________________________________
 # Simple interface
 
-def run(statement, filename=None, sort=-1){
+function run(statement, filename=nil, sort=-1){
     """Run statement under profiler optionally saving results in filename
 
     This function takes a single argument that can be passed to the
@@ -23,35 +23,35 @@ def run(statement, filename=None, sort=-1){
     each line.
     """;
     prof = Profile();
-    result = None;
+    result = nil;
     try{
         try{
             prof = prof.run(statement);
         } except SystemExit{
             pass;
     } } finally{
-        if filename is not None{
+        if filename is not nil{
             prof.dump_stats(filename);
         } else{
             result = prof.print_stats(sort);
     } } return result;
 
 }
-def runctx(statement, globals, locals, filename=None, sort=-1){
+function runctx(statement, globals, locals, filename=nil, sort=-1){
     """Run statement under profiler, supplying your own globals and locals,
     optionally saving results in filename.
 
     statement and filename have the same semantics as profile.run
     """;
     prof = Profile();
-    result = None;
+    result = nil;
     try{
         try{
             prof = prof.runctx(statement, globals, locals);
         } except SystemExit{
             pass;
     } } finally{
-        if filename is not None{
+        if filename is not nil{
             prof.dump_stats(filename);
         } else{
             result = prof.print_stats(sort);
@@ -59,7 +59,7 @@ def runctx(statement, globals, locals, filename=None, sort=-1){
 
 # Backwards compatibility.
 }
-def help(){
+function help(){
     print "Documentation for the profile/cProfile modules can be found ";
     print "in the Python Library Reference, section 'The Python Profiler'.";
 
@@ -79,27 +79,27 @@ class Profile(_lsprof.Profiler){
     # Most of the functionality is in the base class.
     # This subclass only adds convenient and backward-compatible methods.
 
-    def print_stats(self, sort=-1){
+    function print_stats( sort=-1){
         import pstats;
-        pstats.Stats(self).strip_dirs().sort_stats(sort).print_stats();
+        pstats.Stats(this).strip_dirs().sort_stats(sort).print_stats();
 
     }
-    def dump_stats(self, file){
+    function dump_stats( file){
         import marshal;
         f = open(file, 'wb');
-        self.create_stats();
-        marshal.dump(self.stats, f);
+        this.create_stats();
+        marshal.dump(this.stats, f);
         f.close();
 
     }
-    def create_stats(self){
-        self.disable();
-        self.snapshot_stats();
+    function create_stats(){
+        this.disable();
+        this.snapshot_stats();
 
     }
-    def snapshot_stats(self){
-        entries = self.getstats();
-        self.stats = {};
+    function snapshot_stats(){
+        entries = this.getstats();
+        this.stats = {};
         callersdicts = {};
         # call information
         for entry in entries{
@@ -110,7 +110,7 @@ class Profile(_lsprof.Profiler){
             ct = entry.totaltime;         # cumtime column of pstats
             callers = {};
             callersdicts[id(entry.code)] = callers;
-            self.stats[func] = cc, nc, tt, ct, callers;
+            this.stats[func] = cc, nc, tt, ct, callers;
         # subcall information
         }
         for entry in entries{
@@ -137,33 +137,33 @@ class Profile(_lsprof.Profiler){
     # a profiler to profile a statement, given as a string.
 
     }
-    } } } def run(self, cmd){
+    } } } function run( cmd){
         import __main__;
         dict = __main__.__dict__;
-        return self.runctx(cmd, dict, dict);
+        return this.runctx(cmd, dict, dict);
 
     }
-    def runctx(self, cmd, globals, locals){
-        self.enable();
+    function runctx( cmd, globals, locals){
+        this.enable();
         try{
             exec cmd in globals, locals;
         } finally{
-            self.disable();
-        } return self;
+            this.disable();
+        } return this;
 
     # This method is more useful to profile a single function call.
     }
-    def runcall(self, func, *args, **kw){
-        self.enable();
+    function runcall( func, *args, **kw){
+        this.enable();
         try{
             return func(*args, **kw);
         } finally{
-            self.disable();
+            this.disable();
 
 # ____________________________________________________________
 
 }
-} } def label(code){
+} } function label(code){
     if isinstance(code, str){
         return ('~', 0, code);    # built-in functions ('~' sorts at the end)
     } else{
@@ -172,14 +172,14 @@ class Profile(_lsprof.Profiler){
 # ____________________________________________________________
 
 }
-} def main(){
+} function main(){
     import os, sys, pstats;
     from optparse import OptionParser;
     usage = "cProfile.py [-o output_file_path] [-s sort] scriptfile [arg] ...";
     parser = OptionParser(usage=usage);
-    parser.allow_interspersed_args = False;
+    parser.allow_interspersed_args = false;
     parser.add_option('-o', '--outfile', dest="outfile",
-        help="Save stats to <outfile>", default=None);
+        help="Save stats to <outfile>", default=nil);
     parser.add_option('-s', '--sort', dest="sort",
         help="Sort order when printing to stdout, based on pstats.Stats class",
         default=-1,
@@ -201,9 +201,9 @@ class Profile(_lsprof.Profiler){
         } globs = {
             '__file__': progname,
             '__name__': '__main__',
-            '__package__': None,
+            '__package__': nil,
         };
-        runctx(code, globs, None, options.outfile, options.sort);
+        runctx(code, globs, nil, options.outfile, options.sort);
     } else{
         parser.print_usage();
     } return parser;

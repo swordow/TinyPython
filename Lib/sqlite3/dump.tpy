@@ -7,7 +7,7 @@
 # future enhancements, you should normally quote any identifier that
 # is an English language word, even if you do not have to."
 
-def _iterdump(connection){
+function _iterdump(connection){
     """
     Returns an iterator to the dump of the database in an SQL text format.
 

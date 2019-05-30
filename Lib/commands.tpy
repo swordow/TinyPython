@@ -34,7 +34,7 @@ __all__ = ["getstatusoutput","getoutput","getstatus"];
 
 # Get 'ls -l' status for an object into a string
 #
-def getstatus(file){
+function getstatus(file){
     """Return output of "ls -ld <file>" in a string.""";
     import warnings;
     warnings.warn("commands.getstatus() is deprecated", DeprecationWarning, 2);
@@ -46,7 +46,7 @@ def getstatus(file){
 # Assume the command will work with '{ ... ; } 2>&1' around it..
 #
 }
-def getoutput(cmd){
+function getoutput(cmd){
     """Return output (stdout or stderr) of executing cmd in a shell.""";
     return getstatusoutput(cmd)[1];
 
@@ -55,21 +55,21 @@ def getoutput(cmd){
 # Returns a pair (sts, output)
 #
 }
-def getstatusoutput(cmd){
+function getstatusoutput(cmd){
     """Return (status, output) of executing cmd in a shell.""";
     import os;
     pipe = os.popen('{ ' + cmd + '; } 2>&1', 'r');
     text = pipe.read();
     sts = pipe.close();
-    if sts is None{ sts = 0;
-    if text[-1:] == '\n'{ text = text[:-1];
+    if sts is nil{ sts = 0;}
+    if text[-1:] == '\n'{ text = text[:-1];}
     return sts, text;
 
 
 # Make command argument from directory and pathname (prefix space, add quotes).
 #
 }
-def mk2arg(head, x){
+function mk2arg(head, x){
     import os;
     return mkarg(os.path.join(head, x));
 
@@ -82,7 +82,7 @@ def mk2arg(head, x){
 # with backslash.
 #
 }
-def mkarg(x){
+function mkarg(x){
     if '\'' not in x{
         return ' \'' + x + '\'';
     } s = ' "';

@@ -1,7 +1,7 @@
 # Generated from 'QuickDraw.h'
 
 
-def FOUR_CHAR_CODE(x){ return x;
+function FOUR_CHAR_CODE(x){ return x;}
 normal                                          = 0;
 bold                                            = 1;
 italic                                          = 2;
@@ -178,7 +178,7 @@ kCursorComponentLastReserved = 0x0050;
 # Generated from 'QuickDrawText.h'
 
 
-def FOUR_CHAR_CODE(x){ return x;
+function FOUR_CHAR_CODE(x){ return x;}
 normal                                          = 0;
 bold                                            = 1;
 italic                                          = 2;

@@ -365,8 +365,8 @@ imp_acquire_lock(PyObject *self, PyObject *noargs)
 //#ifdef WITH_THREAD
 //    _PyImport_AcquireLock();
 //#endif
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *
@@ -379,8 +379,8 @@ imp_release_lock(PyObject *self, PyObject *noargs)
 //        return NULL;
 //    }
 //#endif
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static void
@@ -447,7 +447,7 @@ PyImport_Cleanup(void)
         dict = PyModule_GetDict(value);
         if (Py_VerboseFlag)
             PySys_WriteStderr("# clear __builtin__._\n");
-        if (PyDict_SetItemString(dict, "_", Py_None) < 0) {
+        if (PyDict_SetItemString(dict, "_", Py_Nil) < 0) {
             PyErr_Clear();
         }
     }
@@ -459,7 +459,7 @@ PyImport_Cleanup(void)
         for (p = sys_deletes; *p != NULL; p++) {
             if (Py_VerboseFlag)
                 PySys_WriteStderr("# clear sys.%s\n", *p);
-            if (PyDict_SetItemString(dict, *p, Py_None) < 0) {
+            if (PyDict_SetItemString(dict, *p, Py_Nil) < 0) {
                 PyErr_Clear();
             }
         }
@@ -468,7 +468,7 @@ PyImport_Cleanup(void)
                 PySys_WriteStderr("# restore sys.%s\n", *p);
             v = PyDict_GetItemString(dict, *(p+1));
             if (v == NULL)
-                v = Py_None;
+                v = Py_Nil;
             if (PyDict_SetItemString(dict, *p, v) < 0) {
                 PyErr_Clear();
             }
@@ -481,7 +481,7 @@ PyImport_Cleanup(void)
         if (Py_VerboseFlag)
             PySys_WriteStderr("# cleanup __main__\n");
         _PyModule_Clear(value);
-        if (PyDict_SetItemString(modules, "__main__", Py_None) < 0) {
+        if (PyDict_SetItemString(modules, "__main__", Py_Nil) < 0) {
             PyErr_Clear();
         }
     }
@@ -518,7 +518,7 @@ PyImport_Cleanup(void)
                     PySys_WriteStderr(
                         "# cleanup[1] %s\n", name);
                 _PyModule_Clear(value);
-                if (PyDict_SetItem(modules, key, Py_None) < 0) {
+                if (PyDict_SetItem(modules, key, Py_Nil) < 0) {
                     PyErr_Clear();
                 }
                 ndone++;
@@ -541,7 +541,7 @@ PyImport_Cleanup(void)
             if (Py_VerboseFlag)
                 PySys_WriteStderr("# cleanup[2] %s\n", name);
             _PyModule_Clear(value);
-            if (PyDict_SetItem(modules, key, Py_None) < 0) {
+            if (PyDict_SetItem(modules, key, Py_Nil) < 0) {
                 PyErr_Clear();
             }
         }
@@ -556,7 +556,7 @@ PyImport_Cleanup(void)
         if (Py_VerboseFlag)
             PySys_WriteStderr("# cleanup sys\n");
         _PyModule_Clear(value);
-        if (PyDict_SetItemString(modules, "sys", Py_None) < 0) {
+        if (PyDict_SetItemString(modules, "sys", Py_Nil) < 0) {
             PyErr_Clear();
         }
     }
@@ -565,7 +565,7 @@ PyImport_Cleanup(void)
         if (Py_VerboseFlag)
             PySys_WriteStderr("# cleanup __builtin__\n");
         _PyModule_Clear(value);
-        if (PyDict_SetItemString(modules, "__builtin__", Py_None) < 0) {
+        if (PyDict_SetItemString(modules, "__builtin__", Py_Nil) < 0) {
             PyErr_Clear();
         }
     }
@@ -1269,7 +1269,7 @@ get_path_importer(PyObject *path_importer_cache, PyObject *path_hooks,
         return importer;
 
     /* set path_importer_cache[p] to None to avoid recursion */
-    if (PyDict_SetItem(path_importer_cache, p, Py_None) != 0)
+    if (PyDict_SetItem(path_importer_cache, p, Py_Nil) != 0)
         return NULL;
 
     for (j = 0; j < nhooks; j++) {
@@ -1292,7 +1292,7 @@ get_path_importer(PyObject *path_importer_cache, PyObject *path_hooks,
         if (importer == NULL) {
             if (PyErr_ExceptionMatches(PyExc_ImportError)) {
                 PyErr_Clear();
-                return Py_None;
+                return Py_Nil;
             }
         }
     }
@@ -1385,12 +1385,12 @@ find_module(char *fullname, char *subname, PyObject *path, char *buf,
             loader = PyObject_CallMethod(hook, "find_module",
                                          "sO", fullname,
                                          path != NULL ?
-                                         path : Py_None);
+                                         path : Py_Nil);
             if (loader == NULL) {
                 Py_DECREF(meta_path);
                 goto error_exit;  /* true error */
             }
-            if (loader != Py_None) {
+            if (loader != Py_Nil) {
                 /* a loader was found */
                 *p_loader = loader;
                 Py_DECREF(meta_path);
@@ -1507,7 +1507,7 @@ find_module(char *fullname, char *subname, PyObject *path, char *buf,
                 goto error_exit;
             }
             /* Note: importer is a borrowed reference */
-            if (importer != Py_None) {
+            if (importer != Py_Nil) {
                 PyObject *loader;
                 loader = PyObject_CallMethod(importer,
                                              "find_module",
@@ -1515,7 +1515,7 @@ find_module(char *fullname, char *subname, PyObject *path, char *buf,
                 Py_XDECREF(copy);
                 if (loader == NULL)
                     goto error_exit;  /* error */
-                if (loader != Py_None) {
+                if (loader != Py_Nil) {
                     /* a loader was found */
                     *p_loader = loader;
                     PyMem_FREE(name);
@@ -2266,7 +2266,7 @@ import_module_level(char *name, PyObject *globals, PyObject *locals,
         goto error_exit;
 
     Py_INCREF(parent);
-    head = load_next(parent, level < 0 ? Py_None : parent, &name, buf,
+    head = load_next(parent, level < 0 ? Py_Nil : parent, &name, buf,
                         &buflen);
     Py_DECREF(parent);
     if (head == NULL)
@@ -2283,8 +2283,8 @@ import_module_level(char *name, PyObject *globals, PyObject *locals,
         }
         tail = next;
     }
-    if (tail == Py_None) {
-        /* If tail is Py_None, both get_parent and load_next found
+    if (tail == Py_Nil) {
+        /* If tail is Py_Nil, both get_parent and load_next found
            an empty module name: someone called __import__("") or
            doctored faulty bytecode */
         Py_DECREF(tail);
@@ -2295,7 +2295,7 @@ import_module_level(char *name, PyObject *globals, PyObject *locals,
     }
 
     if (fromlist != NULL) {
-        int b = (fromlist == Py_None) ? 0 : PyObject_IsTrue(fromlist);
+        int b = (fromlist == Py_Nil) ? 0 : PyObject_IsTrue(fromlist);
         if (b < 0) {
             Py_DECREF(tail);
             Py_DECREF(head);
@@ -2350,7 +2350,7 @@ PyImport_ImportModuleLevel(char *name, PyObject *globals, PyObject *locals,
    the name in *p_buflen.
 
    If globals doesn't come from a package or a module in a package, or a
-   corresponding entry is not found in sys.modules, Py_None is returned.
+   corresponding entry is not found in sys.modules, Py_Nil is returned.
 */
 static PyObject *
 get_parent(PyObject *globals, char *buf, Py_ssize_t *p_buflen, int level)
@@ -2362,7 +2362,7 @@ get_parent(PyObject *globals, char *buf, Py_ssize_t *p_buflen, int level)
     int orig_level = level;
 
     if (globals == NULL || !PyDict_Check(globals) || !level)
-        return Py_None;
+        return Py_Nil;
 
     if (namestr == NULL) {
         namestr = PyString_InternFromString("__name__");
@@ -2384,7 +2384,7 @@ get_parent(PyObject *globals, char *buf, Py_ssize_t *p_buflen, int level)
     *p_buflen = 0;
     pkgname = PyDict_GetItem(globals, pkgstr);
 
-    if ((pkgname != NULL) && (pkgname != Py_None)) {
+    if ((pkgname != NULL) && (pkgname != Py_Nil)) {
         /* __package__ is set, so use it */
         Py_ssize_t len;
         if (!PyString_Check(pkgname)) {
@@ -2399,7 +2399,7 @@ get_parent(PyObject *globals, char *buf, Py_ssize_t *p_buflen, int level)
                     "Attempted relative import in non-package");
                 return NULL;
             }
-            return Py_None;
+            return Py_Nil;
         }
         if (len > MAXPATHLEN) {
             PyErr_SetString(PyExc_ValueError,
@@ -2411,7 +2411,7 @@ get_parent(PyObject *globals, char *buf, Py_ssize_t *p_buflen, int level)
         /* __package__ not set, so figure it out and set it */
         modname = PyDict_GetItem(globals, namestr);
         if (modname == NULL || !PyString_Check(modname))
-            return Py_None;
+            return Py_Nil;
 
         modpath = PyDict_GetItem(globals, pathstr);
         if (modpath != NULL) {
@@ -2442,13 +2442,13 @@ get_parent(PyObject *globals, char *buf, Py_ssize_t *p_buflen, int level)
                 return NULL;
             }
             if (lastdot == NULL) {
-                error = PyDict_SetItem(globals, pkgstr, Py_None);
+                error = PyDict_SetItem(globals, pkgstr, Py_Nil);
                 if (error) {
                     PyErr_SetString(PyExc_ValueError,
                         "Could not set __package__");
                     return NULL;
                 }
-                return Py_None;
+                return Py_Nil;
             }
             len = lastdot - start;
             if (len >= MAXPATHLEN) {
@@ -2497,7 +2497,7 @@ get_parent(PyObject *globals, char *buf, Py_ssize_t *p_buflen, int level)
                             PyString_AsString(err_msg), 1)) {
                 *buf = '\0';
                 *p_buflen = 0;
-                parent = Py_None;
+                parent = Py_Nil;
             }
             Py_DECREF(err_msg);
         } else {
@@ -2559,11 +2559,11 @@ load_next(PyObject *mod, PyObject *altmod, char **p_name, char *buf,
     *p_buflen = p+len-buf;
 
     result = import_submodule(mod, p, buf);
-    if (result == Py_None && altmod != mod) {
+    if (result == Py_Nil && altmod != mod) {
         Py_DECREF(result);
         /* Here, altmod must be None and mod must not be None */
         result = import_submodule(altmod, p, p);
-        if (result != NULL && result != Py_None) {
+        if (result != NULL && result != Py_Nil) {
             if (mark_miss(buf) != 0) {
                 Py_DECREF(result);
                 return NULL;
@@ -2576,7 +2576,7 @@ load_next(PyObject *mod, PyObject *altmod, char **p_name, char *buf,
     if (result == NULL)
         return NULL;
 
-    if (result == Py_None) {
+    if (result == Py_Nil) {
         Py_DECREF(result);
         PyErr_Format(PyExc_ImportError,
                      "No module named %.200s", name);
@@ -2590,7 +2590,7 @@ static int
 mark_miss(char *name)
 {
     PyObject *modules = PyImport_GetModuleDict();
-    return PyDict_SetItemString(modules, name, Py_None);
+    return PyDict_SetItemString(modules, name, Py_Nil);
 }
 
 static int
@@ -2667,7 +2667,7 @@ static int
 add_submodule(PyObject *mod, PyObject *submod, char *fullname, char *subname,
               PyObject *modules)
 {
-    if (mod == Py_None)
+    if (mod == Py_Nil)
         return 1;
     /* Irrespective of the success of this load, make a
        reference to it in the parent package module.  A copy gets
@@ -2717,14 +2717,14 @@ import_submodule(PyObject *mod, char *subname, char *fullname)
         struct filedescr *fdp;
         FILE *fp = NULL;
 
-        if (mod == Py_None)
+        if (mod == Py_Nil)
             path = NULL;
         else {
             path = PyObject_GetAttrString(mod, "__path__");
             if (path == NULL) {
                 PyErr_Clear();
-                Py_INCREF(Py_None);
-                return Py_None;
+                Py_INCREF(Py_Nil);
+                return Py_Nil;
             }
         }
 
@@ -2741,8 +2741,8 @@ import_submodule(PyObject *mod, char *subname, char *fullname)
             if (!PyErr_ExceptionMatches(PyExc_ImportError))
                 return NULL;
             PyErr_Clear();
-            Py_INCREF(Py_None);
-            return Py_None;
+            Py_INCREF(Py_Nil);
+            return Py_Nil;
         }
         m = load_module(fullname, fp, buf, fdp->type, loader);
         Py_XDECREF(loader);
@@ -2999,7 +2999,7 @@ call_find_module(char *name, PyObject *path)
         return PyErr_NoMemory();
     }
     pathname[0] = '\0';
-    if (path == Py_None)
+    if (path == Py_Nil)
         path = NULL;
     fdp = find_module(NULL, name, path, pathname, MAXPATHLEN+1, &fp, NULL);
     if (fdp == NULL) {
@@ -3014,7 +3014,7 @@ call_find_module(char *name, PyObject *path)
         }
     }
     else {
-        fob = Py_None;
+        fob = Py_Nil;
         Py_INCREF(fob);
     }
     ret = Py_BuildValue("Os(ssi)",
@@ -3046,8 +3046,8 @@ imp_init_builtin(PyObject *self, PyObject *args)
     if (ret < 0)
         return NULL;
     if (ret == 0) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     m = PyImport_AddModule(name);
     Py_XINCREF(m);
@@ -3066,8 +3066,8 @@ imp_init_frozen(PyObject *self, PyObject *args)
     if (ret < 0)
         return NULL;
     if (ret == 0) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     m = PyImport_AddModule(name);
     Py_XINCREF(m);
@@ -3214,7 +3214,7 @@ imp_load_module(PyObject *self, PyObject *args)
             return NULL;
         }
     }
-    if (fob == Py_None)
+    if (fob == Py_Nil)
         fp = NULL;
     else {
         if (!PyFile_Check(fob)) {
@@ -3380,7 +3380,7 @@ NullImporter_init(NullImporter *self, PyObject *args, PyObject *kwds)
 static PyObject *
 NullImporter_find_module(NullImporter *self, PyObject *args)
 {
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyMethodDef NullImporter_methods[] = {

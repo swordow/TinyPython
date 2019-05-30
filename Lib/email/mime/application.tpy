@@ -13,7 +13,7 @@ from email.mime.nonmultipart import MIMENonMultipart;
 class MIMEApplication(MIMENonMultipart){
     """Class for generating application/* MIME documents.""";
 
-    def __init__(self, _data, _subtype='octet-stream',
+    function __init__( _data, _subtype='octet-stream',
                  _encoder=encoders.encode_base64, **_params){
         """Create an application/* type MIME document.
 
@@ -29,11 +29,11 @@ class MIMEApplication(MIMENonMultipart){
         constructor, which turns them into parameters on the Content-Type
         header.
         """;
-        if _subtype is None{
+        if _subtype is nil{
             raise TypeError('Invalid application MIME subtype');
-        } MIMENonMultipart.__init__(self, 'application', _subtype, **_params);
-        self.set_payload(_data);
-        _encoder(self);
+        } MIMENonMultipart.__init__(this, 'application', _subtype, **_params);
+        this.set_payload(_data);
+        _encoder(this);
 
 }
 }

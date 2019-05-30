@@ -1,8 +1,8 @@
 # Generated from 'Folders.h'
 
-def FOUR_CHAR_CODE(x){ return x;
-true = True;
-false = False;
+function FOUR_CHAR_CODE(x){ return x;}
+true = true;
+false = false;
 kOnSystemDisk = -32768L;
 kOnAppropriateDisk = -32767;
 kSystemDomain = -32766;

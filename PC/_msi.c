@@ -1,5 +1,5 @@
 /* Helper library for MSI creation with Python.
- * Copyright (C) 2005 Martin v. Löwis
+ * Copyright (C) 2005 Martin v. Lï¿½wis
  * Licensed to PSF under a contributor agreement.
  */
 
@@ -253,8 +253,8 @@ static PyObject* fcicreate(PyObject* obj, PyObject* args)
     if (!FCIDestroy(hfci))
         goto err;
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 err:
     PyErr_Format(PyExc_ValueError, "FCI error %d", erf.erfOper); /* XXX better error type */
     FCIDestroy(hfci);
@@ -279,8 +279,8 @@ msiobj_close(msiobj* msidb, PyObject *args)
 {
     MsiCloseHandle(msidb->h);
     msidb->h = 0;
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject*
@@ -393,8 +393,8 @@ record_cleardata(msiobj* record, PyObject *args)
     if (status != ERROR_SUCCESS)
         return msierror(status);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject*
@@ -410,8 +410,8 @@ record_setstring(msiobj* record, PyObject *args)
     if ((status = MsiRecordSetString(record->h, field, data)) != ERROR_SUCCESS)
         return msierror(status);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject*
@@ -427,8 +427,8 @@ record_setstream(msiobj* record, PyObject *args)
     if ((status = MsiRecordSetStream(record->h, field, data)) != ERROR_SUCCESS)
         return msierror(status);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject*
@@ -444,8 +444,8 @@ record_setinteger(msiobj* record, PyObject *args)
     if ((status = MsiRecordSetInteger(record->h, field, data)) != ERROR_SUCCESS)
         return msierror(status);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 
@@ -608,8 +608,8 @@ summary_setproperty(msiobj* si, PyObject *args)
     if (status != ERROR_SUCCESS)
         return msierror(status);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 
@@ -621,8 +621,8 @@ summary_persist(msiobj* si, PyObject *args)
     status = MsiSummaryInfoPersist(si->h);
     if (status != ERROR_SUCCESS)
         return msierror(status);
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyMethodDef summary_methods[] = {
@@ -688,12 +688,12 @@ view_execute(msiobj *view, PyObject*args)
 {
     int status;
     MSIHANDLE params = 0;
-    PyObject *oparams = Py_None;
+    PyObject *oparams = Py_Nil;
 
     if (!PyArg_ParseTuple(args, "O:Execute", &oparams))
         return NULL;
 
-    if (oparams != Py_None) {
+    if (oparams != Py_Nil) {
         if (oparams->ob_type != &record_Type) {
             PyErr_SetString(PyExc_TypeError, "Execute argument must be a record");
             return NULL;
@@ -705,8 +705,8 @@ view_execute(msiobj *view, PyObject*args)
     if (status != ERROR_SUCCESS)
         return msierror(status);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject*
@@ -755,8 +755,8 @@ view_modify(msiobj *view, PyObject *args)
     if ((status = MsiViewModify(view->h, kind, ((msiobj*)data)->h)) != ERROR_SUCCESS)
         return msierror(status);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject*
@@ -767,8 +767,8 @@ view_close(msiobj *view, PyObject*args)
     if ((status = MsiViewClose(view->h)) != ERROR_SUCCESS)
         return msierror(status);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyMethodDef view_methods[] = {
@@ -863,8 +863,8 @@ msidb_commit(msiobj *msidb, PyObject *args)
     if ((status = MsiDatabaseCommit(msidb->h)) != ERROR_SUCCESS)
         return msierror(status);
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject*

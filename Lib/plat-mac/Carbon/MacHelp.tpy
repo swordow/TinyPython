@@ -1,6 +1,6 @@
 # Generated from 'MacHelp.h'
 
-def FOUR_CHAR_CODE(x){ return x;
+function FOUR_CHAR_CODE(x){ return x;}
 kMacHelpVersion = 0x0003;
 kHMSupplyContent = 0;
 kHMDisposeContent = 1;

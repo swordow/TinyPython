@@ -454,7 +454,7 @@ converttuple(PyObject *arg, const char **p_format, va_list *p_va, int flags,
                       toplevel ? "expected %d arguments, not %.50s" :
                       "must be %d-item sequence, not %.50s",
                   n,
-                  arg == Py_None ? "None" : arg->ob_type->tp_name);
+                  arg == Py_Nil ? "nil" : arg->ob_type->tp_name);
         return msgbuf;
     }
 
@@ -542,7 +542,7 @@ converterr(const char *expected, PyObject *arg, char *msgbuf, size_t bufsize)
     else {
         PyOS_snprintf(msgbuf, bufsize,
                       "must be %.50s, not %.50s", expected,
-                      arg == Py_None ? "None" : arg->ob_type->tp_name);
+                      arg == Py_Nil ? "nil" : arg->ob_type->tp_name);
     }
     return msgbuf;
 }
@@ -932,7 +932,7 @@ convertsimple(PyObject *arg, const char **p_format, va_list *p_va, int flags,
         if (*format == '*') {
             Py_buffer *p = (Py_buffer *)va_arg(*p_va, Py_buffer *);
 
-            if (arg == Py_None)
+            if (arg == Py_Nil)
                 PyBuffer_FillInfo(p, NULL, NULL, 0, 1, 0);
             else if (PyString_Check(arg)) {
                 PyBuffer_FillInfo(p, arg,
@@ -965,7 +965,7 @@ convertsimple(PyObject *arg, const char **p_format, va_list *p_va, int flags,
             void **p = (void **)va_arg(*p_va, char **);
             FETCH_SIZE;
 
-            if (arg == Py_None) {
+            if (arg == Py_Nil) {
                 *p = 0;
                 STORE_SIZE(0);
             }
@@ -994,7 +994,7 @@ convertsimple(PyObject *arg, const char **p_format, va_list *p_va, int flags,
         } else {
             char **p = va_arg(*p_va, char **);
 
-            if (arg == Py_None)
+            if (arg == Py_Nil)
                 *p = 0;
             else if (PyString_Check(arg))
                 *p = PyString_AS_STRING(arg);
@@ -1013,7 +1013,7 @@ convertsimple(PyObject *arg, const char **p_format, va_list *p_va, int flags,
             if (*format == '#') {
                 FETCH_SIZE;
                 assert(0); /* XXX redundant with if-case */
-                if (arg == Py_None) {
+                if (arg == Py_Nil) {
                     STORE_SIZE(0);
                 } else {
                     STORE_SIZE(PyString_Size(arg));

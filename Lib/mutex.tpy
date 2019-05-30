@@ -18,45 +18,45 @@ del warnpy3k;
 from collections import deque;
 
 class mutex{
-    def __init__(self){
+    function __init__(){
         """Create a new mutex -- initially unlocked.""";
-        self.locked = False;
-        self.queue = deque();
+        this.locked = false;
+        this.queue = deque();
 
     }
-    def test(self){
+    function test(){
         """Test the locked bit of the mutex.""";
-        return self.locked;
+        return this.locked;
 
     }
-    def testandset(self){
+    function testandset(){
         """Atomic test-and-set -- grab the lock if it is not set,
         return True if it succeeded.""";
-        if not self.locked{
-            self.locked = True;
-            return True;
+        if not this.locked{
+            this.locked = true;
+            return true;
         } else{
-            return False;
+            return false;
 
     }
-    } def lock(self, function, argument){
+    } function lock( arg_function, argument){
         """Lock a mutex, call the function with supplied argument
         when it is acquired.  If the mutex is already locked, place
         function and argument in the queue.""";
-        if self.testandset(){
-            function(argument);
+        if this.testandset(){
+            arg_function(argument);
         } else{
-            self.queue.append((function, argument));
+            this.queue.append((arg_function, argument));
 
     }
-    } def unlock(self){
+    } function unlock(){
         """Unlock a mutex.  If the queue is not empty, call the next
         function with its argument.""";
-        if self.queue{
-            function, argument = self.queue.popleft();
-            function(argument);
+        if this.queue{
+            arg_function, argument = this.queue.popleft();
+            arg_function(argument);
         } else{
-            self.locked = False;
+            this.locked = false;
 
 }
 } }

@@ -12,7 +12,7 @@ _code = 'trmx';
 
 class Terminal_Suite_Events{
 
-    def GetURL(self, _object, _attributes={}, **_arguments){
+    function GetURL( _object, _attributes={}, **_arguments){
         """GetURL: Opens a telnet: URL
         Required argument: the object for the command
         Keyword argument _attributes: AppleEvent attribute dictionary
@@ -20,11 +20,11 @@ class Terminal_Suite_Events{
         _code = 'GURL';
         _subcode = 'GURL';
 
-        if _arguments{ raise TypeError, 'No optional args expected';
+        if _arguments{ raise TypeError, 'No optional args expected';}
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);
@@ -39,7 +39,7 @@ class Terminal_Suite_Events{
         'with_command' : 'cmnd',
     };
 
-    def do_script(self, _object, _attributes={}, **_arguments){
+    function do_script( _object, _attributes={}, **_arguments){
         """do script: Run a UNIX shell script or command
         Required argument: the object for the command
         Keyword argument in_: the window in which to execute the command
@@ -50,11 +50,11 @@ class Terminal_Suite_Events{
         _code = 'core';
         _subcode = 'dosc';
 
-        aetools.keysubst(_arguments, self._argmap_do_script);
+        aetools.keysubst(_arguments, this._argmap_do_script);
         _arguments['----'] = _object;
 
 
-        _reply, _arguments, _attributes = self.send(_code, _subcode,
+        _reply, _arguments, _attributes = this.send(_code, _subcode,
                 _arguments, _attributes);
         if _arguments.get('errn', 0){
             raise aetools.Error, aetools.decodeerror(_arguments);

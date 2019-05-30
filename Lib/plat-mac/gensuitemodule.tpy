@@ -31,7 +31,7 @@ _MAC_LIB_FOLDER=os.path.dirname(aetools.__file__);
 DEFAULT_STANDARD_PACKAGEFOLDER=os.path.join(_MAC_LIB_FOLDER, 'lib-scriptpackages');
 DEFAULT_USER_PACKAGEFOLDER=distutils.sysconfig.get_python_lib();
 
-def usage(){
+function usage(){
     sys.stderr.write("Usage: %s [opts] application-or-resource-file\n" % sys.argv[0]);
     sys.stderr.write("""Options:
 --output pkgdir  Pathname of the output package (short: -o)
@@ -45,7 +45,7 @@ def usage(){
     sys.exit(1);
 
 }
-def main(){
+function main(){
     if len(sys.argv) > 1{
         SHORTOPTS = "rb:o:e:c:dv";
         LONGOPTS = ("resource", "base=", "output=", "edit=", "creator=", "dump", "verbose");
@@ -57,11 +57,11 @@ def main(){
         }
         process_func = processfile;
         basepkgname = 'StdSuites';
-        output = None;
+        output = nil;
         edit_modnames = [];
-        creatorsignature = None;
-        dump = None;
-        verbose = None;
+        creatorsignature = nil;
+        dump = nil;
+        verbose = nil;
 
         for o, a in opts{
             if o in ('-r', '--resource'){
@@ -100,10 +100,10 @@ def main(){
         main_interactive();
 
 }
-} def main_interactive(interact=0, basepkgname='StdSuites'){
+} function main_interactive(interact=0, basepkgname='StdSuites'){
     if interact{
         # Ask for save-filename for each module
-        edit_modnames = None;
+        edit_modnames = nil;
     } else{
         # Use default filenames for each module
         edit_modnames = [];
@@ -129,21 +129,21 @@ def main(){
             basepkgname=basepkgname, verbose=sys.stderr);
 
 }
-} def is_scriptable(application){
+} function is_scriptable(application){
     """Return true if the application is scriptable""";
     if os.path.isdir(application){
         plistfile = os.path.join(application, 'Contents', 'Info.plist');
         if not os.path.exists(plistfile){
-            return False;
+            return false;
         } plist = plistlib.Plist.fromFile(plistfile);
-        return plist.get('NSAppleScriptEnabled', False);
+        return plist.get('NSAppleScriptEnabled', false);
     # If it is a file test for an aete/aeut resource.
     }
     currf = CurResFile();
     try{
         refno = macresource.open_pathname(application);
     } except MacOS.Error{
-        return False;
+        return false;
     } UseResFile(refno);
     n_terminology = Count1Resources('aete') + Count1Resources('aeut') + \
         Count1Resources('scsz') + Count1Resources('osiz');
@@ -152,8 +152,8 @@ def main(){
     return n_terminology > 0;
 
 }
-def processfile_fromresource(fullname, output=None, basepkgname=None,
-        edit_modnames=None, creatorsignature=None, dump=None, verbose=None){
+function processfile_fromresource(fullname, output=nil, basepkgname=nil,
+        edit_modnames=nil, creatorsignature=nil, dump=nil, verbose=nil){
     """Process all resources in a single file""";
     if not is_scriptable(fullname) and verbose{
         print >>verbose, "Warning: app does not seem scriptable: %s" % fullname;
@@ -193,9 +193,9 @@ def processfile_fromresource(fullname, output=None, basepkgname=None,
         creatorsignature=creatorsignature, verbose=verbose);
 
 }
-def processfile(fullname, output=None, basepkgname=None,
-        edit_modnames=None, creatorsignature=None, dump=None,
-        verbose=None){
+function processfile(fullname, output=nil, basepkgname=nil,
+        edit_modnames=nil, creatorsignature=nil, dump=nil,
+        verbose=nil){
     """Ask an application for its terminology and process that""";
     if not is_scriptable(fullname) and verbose{
         print >>verbose, "Warning: app does not seem scriptable: %s" % fullname;
@@ -230,12 +230,12 @@ def processfile(fullname, output=None, basepkgname=None,
     if dump{
         dumpaetelist([aete], dump);
         return;
-    } compileaete(aete, None, fullname, output=output, basepkgname=basepkgname,
+    } compileaete(aete, nil, fullname, output=output, basepkgname=basepkgname,
         creatorsignature=creatorsignature, edit_modnames=edit_modnames,
         verbose=verbose);
 
 }
-def getappterminology(fullname, verbose=None){
+function getappterminology(fullname, verbose=nil){
     """Get application terminology by sending an AppleEvent""";
     # First check that we actually can send AppleEvents
     if not MacOS.WMAvailable(){
@@ -270,20 +270,20 @@ def getappterminology(fullname, verbose=None){
 
 
 }
-def compileaetelist(aetelist, fullname, output=None, basepkgname=None,
-            edit_modnames=None, creatorsignature=None, verbose=None){
+function compileaetelist(aetelist, fullname, output=nil, basepkgname=nil,
+            edit_modnames=nil, creatorsignature=nil, verbose=nil){
     for aete, resinfo in aetelist{
         compileaete(aete, resinfo, fullname, output=output,
             basepkgname=basepkgname, edit_modnames=edit_modnames,
             creatorsignature=creatorsignature, verbose=verbose);
 
 }
-} def dumpaetelist(aetelist, output){
+} function dumpaetelist(aetelist, output){
     import pprint;
     pprint.pprint(aetelist, output);
 
 }
-def decode(data, verbose=None){
+function decode(data, verbose=nil){
     """Decode a resource into a python data structure""";
     f = StringIO.StringIO(data);
     aete = generic(getaete, f);
@@ -297,7 +297,7 @@ def decode(data, verbose=None){
     } return aete;
 
 }
-def simplify(item){
+function simplify(item){
     """Recursively replace singleton tuples by their constituent item""";
     if type(item) is types.ListType{
         return map(simplify, item);
@@ -312,14 +312,14 @@ def simplify(item){
 # references to the lower-level part-decoders from the high-level part-decoders.
 
 }
-} def getbyte(f, *args){
+} function getbyte(f, *args){
     c = f.read(1);
     if not c{
         raise EOFError, 'in getbyte' + str(args);
     } return ord(c);
 
 }
-def getword(f, *args){
+function getword(f, *args){
     getalign(f);
     s = f.read(2);
     if len(s) < 2{
@@ -327,7 +327,7 @@ def getword(f, *args){
     } return (ord(s[0])<<8) | ord(s[1]);
 
 }
-def getlong(f, *args){
+function getlong(f, *args){
     getalign(f);
     s = f.read(4);
     if len(s) < 4{
@@ -335,7 +335,7 @@ def getlong(f, *args){
     } return (ord(s[0])<<24) | (ord(s[1])<<16) | (ord(s[2])<<8) | ord(s[3]);
 
 }
-def getostype(f, *args){
+function getostype(f, *args){
     getalign(f);
     s = f.read(4);
     if len(s) < 4{
@@ -343,26 +343,26 @@ def getostype(f, *args){
     } return s;
 
 }
-def getpstr(f, *args){
+function getpstr(f, *args){
     c = f.read(1);
     if len(c) < 1{
         raise EOFError, 'in getpstr[1]' + str(args);
     } nbytes = ord(c);
-    if nbytes == 0{ return '';
+    if nbytes == 0{ return '';}
     s = f.read(nbytes);
     if len(s) < nbytes{
         raise EOFError, 'in getpstr[2]' + str(args);
     } return s;
 
 }
-def getalign(f){
+function getalign(f){
     if f.tell() & 1{
         c = f.read(1);
         ##if c != '\0':
         ##  print align:', repr(c)
 
 }
-} def getlist(f, description, getitem){
+} function getlist(f, description, getitem){
     count = getword(f);
     list = [];
     for i in range(count){
@@ -371,14 +371,14 @@ def getalign(f){
     } return list;
 
 }
-def alt_generic(what, f, *args){
+function alt_generic(what, f, *args){
     print "generic", repr(what), args;
     res = vageneric(what, f, args);
     print '->', repr(res);
     return res;
 
 }
-def generic(what, f, *args){
+function generic(what, f, *args){
     if type(what) == types.FunctionType{
         return apply(what, (f,) + args);
     } if type(what) == types.ListType{
@@ -457,8 +457,8 @@ getaete = [
     (getlist, "suites", getsuite)
     ];
 
-def compileaete(aete, resinfo, fname, output=None, basepkgname=None,
-        edit_modnames=None, creatorsignature=None, verbose=None){
+function compileaete(aete, resinfo, fname, output=nil, basepkgname=nil,
+        edit_modnames=nil, creatorsignature=nil, verbose=nil){
     """Generate code for a full aete resource. fname passed for doc purposes""";
     [version, language, script, suites] = aete;
     major, minor = divmod(version, 256);
@@ -492,7 +492,7 @@ def compileaete(aete, resinfo, fname, output=None, basepkgname=None,
             sys.path.insert(0, dirname);
         } basepackage = __import__(basepkgname);
     } else{
-        basepackage = None;
+        basepackage = nil;
     } suitelist = [];
     allprecompinfo = [];
     allsuites = [];
@@ -555,7 +555,7 @@ def compileaete(aete, resinfo, fname, output=None, basepkgname=None,
 
     # Generate a code-to-name mapper for all of the types (classes) declared in this module
     }
-    } } application_class = None;
+    } } application_class = nil;
     if allprecompinfo{
         fp.write("\n#\n# Indices of types declared in this module\n#\n");
         fp.write("_classdeclarations = {\n");
@@ -582,65 +582,65 @@ def compileaete(aete, resinfo, fname, output=None, basepkgname=None,
 
 }
 class SuiteCompiler{
-    def __init__(self, suite, basepackage, output, edit_modnames, verbose){
-        self.suite = suite;
-        self.basepackage = basepackage;
-        self.edit_modnames = edit_modnames;
-        self.output = output;
-        self.verbose = verbose;
+    function __init__( suite, basepackage, output, edit_modnames, verbose){
+        this.suite = suite;
+        this.basepackage = basepackage;
+        this.edit_modnames = edit_modnames;
+        this.output = output;
+        this.verbose = verbose;
 
         # Set by precompilesuite
-        self.pathname = None;
-        self.modname = None;
+        this.pathname = nil;
+        this.modname = nil;
 
         # Set by compilesuite
-        self.fp = None;
-        self.basemodule = None;
-        self.enumsneeded = {};
+        this.fp = nil;
+        this.basemodule = nil;
+        this.enumsneeded = {};
 
     }
-    def precompilesuite(self){
+    function precompilesuite(){
         """Parse a single suite without generating the output. This step is needed
         so we can resolve recursive references by suites to enums/comps/etc declared
         in other suites""";
-        [name, desc, code, level, version, events, classes, comps, enums] = self.suite;
+        [name, desc, code, level, version, events, classes, comps, enums] = this.suite;
 
         modname = identify(name);
         if len(modname) > 28{
             modname = modname[:27];
-        } if self.edit_modnames is None{
-            self.pathname = EasyDialogs.AskFileForSave(message='Python output file',
+        } if this.edit_modnames is nil{
+            this.pathname = EasyDialogs.AskFileForSave(message='Python output file',
                 savedFileName=modname+'.py');
         } else{
-            for old, new in self.edit_modnames{
+            for old, new in this.edit_modnames{
                 if old == modname{
                     modname = new;
             } } if modname{
-                self.pathname = os.path.join(self.output, modname + '.py');
+                this.pathname = os.path.join(this.output, modname + '.py');
             } else{
-                self.pathname = None;
-        } } if not self.pathname{
-            return None, None, None;
+                this.pathname = nil;
+        } } if not this.pathname{
+            return nil, nil, nil;
 
         }
-        self.modname = os.path.splitext(os.path.split(self.pathname)[1])[0];
+        this.modname = os.path.splitext(os.path.split(this.pathname)[1])[0];
 
-        if self.basepackage and code in self.basepackage._code_to_module{
+        if this.basepackage and code in this.basepackage._code_to_module{
             # We are an extension of a baseclass (usually an application extending
             # Standard_Suite or so). Import everything from our base module
-            basemodule = self.basepackage._code_to_module[code];
+            basemodule = this.basepackage._code_to_module[code];
         } else{
             # We are not an extension.
-            basemodule = None;
+            basemodule = nil;
 
         }
-        self.enumsneeded = {};
+        this.enumsneeded = {};
         for event in events{
-            self.findenumsinevent(event);
+            this.findenumsinevent(event);
 
         }
-        objc = ObjectCompiler(None, self.modname, basemodule, interact=(self.edit_modnames is None),
-            verbose=self.verbose);
+        objc = ObjectCompiler(nil, this.modname, basemodule, interact=(this.edit_modnames is nil),
+            verbose=this.verbose);
         for cls in classes{
             objc.compileclass(cls);
         } for cls in classes{
@@ -651,26 +651,26 @@ class SuiteCompiler{
             objc.compileenumeration(enum);
 
         }
-        for enum in self.enumsneeded.keys(){
+        for enum in this.enumsneeded.keys(){
             objc.checkforenum(enum);
 
         }
         objc.dumpindex();
 
-        precompinfo = objc.getprecompinfo(self.modname);
+        precompinfo = objc.getprecompinfo(this.modname);
 
-        return code, self.modname, precompinfo;
+        return code, this.modname, precompinfo;
 
     }
-    def compilesuite(self, major, minor, language, script, fname, precompinfo){
+    function compilesuite( major, minor, language, script, fname, precompinfo){
         """Generate code for a single suite""";
-        [name, desc, code, level, version, events, classes, comps, enums] = self.suite;
+        [name, desc, code, level, version, events, classes, comps, enums] = this.suite;
         # Sort various lists, so re-generated source is easier compared
-        def class_sorter(k1, k2){
+        function class_sorter(k1, k2){
             """Sort classes by code, and make sure main class sorts before synonyms""";
             # [name, code, desc, properties, elements] = cls
-            if k1[1] < k2[1]{ return -1;
-            if k1[1] > k2[1]{ return 1;
+            if k1[1] < k2[1]{ return -1;}
+            if k1[1] > k2[1]{ return 1;}
             if not k2[3] or k2[3][0][1] == 'c@#!'{
                 # This is a synonym, the other one is better
                 return -1;
@@ -685,8 +685,8 @@ class SuiteCompiler{
         comps.sort();
         enums.sort();
 
-        self.fp = fp = open(self.pathname, 'w');
-        MacOS.SetCreatorAndType(self.pathname, 'Pyth', 'TEXT');
+        this.fp = fp = open(this.pathname, 'w');
+        MacOS.SetCreatorAndType(this.pathname, 'Pyth', 'TEXT');
 
         fp.write('"""Suite %s: %s\n' % (ascii(name), ascii(desc)));
         fp.write("Level %d, version %d\n\n" % (level, version));
@@ -698,31 +698,31 @@ class SuiteCompiler{
         fp.write('import aetools\n');
         fp.write('import MacOS\n\n');
         fp.write("_code = %r\n\n"% (code,));
-        if self.basepackage and code in self.basepackage._code_to_module{
+        if this.basepackage and code in this.basepackage._code_to_module{
             # We are an extension of a baseclass (usually an application extending
             # Standard_Suite or so). Import everything from our base module
-            fp.write('from %s import *\n'%self.basepackage._code_to_fullname[code][0]);
-            basemodule = self.basepackage._code_to_module[code];
-        } elif self.basepackage and code.lower() in self.basepackage._code_to_module{
+            fp.write('from %s import *\n'%this.basepackage._code_to_fullname[code][0]);
+            basemodule = this.basepackage._code_to_module[code];
+        } elif this.basepackage and code.lower() in this.basepackage._code_to_module{
             # This is needed by CodeWarrior and some others.
-            fp.write('from %s import *\n'%self.basepackage._code_to_fullname[code.lower()][0]);
-            basemodule = self.basepackage._code_to_module[code.lower()];
+            fp.write('from %s import *\n'%this.basepackage._code_to_fullname[code.lower()][0]);
+            basemodule = this.basepackage._code_to_module[code.lower()];
         } else{
             # We are not an extension.
-            basemodule = None;
-        } self.basemodule = basemodule;
-        self.compileclassheader();
+            basemodule = nil;
+        } this.basemodule = basemodule;
+        this.compileclassheader();
 
-        self.enumsneeded = {};
+        this.enumsneeded = {};
         if events{
             for event in events{
-                self.compileevent(event);
+                this.compileevent(event);
         } } else{
             fp.write("    pass\n\n");
 
         }
-        objc = ObjectCompiler(fp, self.modname, basemodule, precompinfo, interact=(self.edit_modnames is None),
-            verbose=self.verbose);
+        objc = ObjectCompiler(fp, this.modname, basemodule, precompinfo, interact=(this.edit_modnames is nil),
+            verbose=this.verbose);
         for cls in classes{
             objc.compileclass(cls);
         } for cls in classes{
@@ -733,28 +733,28 @@ class SuiteCompiler{
             objc.compileenumeration(enum);
 
         }
-        for enum in self.enumsneeded.keys(){
+        for enum in this.enumsneeded.keys(){
             objc.checkforenum(enum);
 
         }
         objc.dumpindex();
 
     }
-    def compileclassheader(self){
+    function compileclassheader(){
         """Generate class boilerplate""";
-        classname = '%s_Events'%self.modname;
-        if self.basemodule{
-            modshortname = string.split(self.basemodule.__name__, '.')[-1];
+        classname = '%s_Events'%this.modname;
+        if this.basemodule{
+            modshortname = string.split(this.basemodule.__name__, '.')[-1];
             baseclassname = '%s_Events'%modshortname;
-            self.fp.write("class %s(%s):\n\n"%(classname, baseclassname));
+            this.fp.write("class %s(%s):\n\n"%(classname, baseclassname));
         } else{
-            self.fp.write("class %s:\n\n"%classname);
+            this.fp.write("class %s:\n\n"%classname);
 
     }
-    } def compileevent(self, event){
+    } function compileevent( event){
         """Generate code for a single event""";
         [name, desc, code, subcode, returns, accepts, arguments] = event;
-        fp = self.fp;
+        fp = this.fp;
         funcname = identify(name);
         #
         # generate name->keyword map
@@ -831,7 +831,7 @@ class SuiteCompiler{
                 if ename != '****'{
                     fp.write("        aetools.enumsubst(_arguments, %r, _Enum_%s)\n" %
                         (kname, identify(ename)));
-                    self.enumsneeded[ename] = 1;
+                    this.enumsneeded[ename] = 1;
         } } } fp.write("\n");
         #
         # Do the transaction
@@ -854,14 +854,14 @@ class SuiteCompiler{
         fp.write("\n");
 
     }
-    def findenumsinevent(self, event){
+    function findenumsinevent( event){
         """Find all enums for a single event""";
         [name, desc, code, subcode, returns, accepts, arguments] = event;
         for a in arguments{
             if is_enum(a[2]){
                 ename = a[2][0];
                 if ename != '****'{
-                    self.enumsneeded[ename] = 1;
+                    this.enumsneeded[ename] = 1;
 
 #
 # This class stores the code<->name translations for a single module. It is used
@@ -873,220 +873,220 @@ class SuiteCompiler{
 }
 } } } } class CodeNameMapper{
 
-    def __init__(self, interact=1, verbose=None){
-        self.code2name = {
+    function __init__( interact=1, verbose=nil){
+        this.code2name = {
             "property" : {},
             "class" : {},
             "enum" : {},
             "comparison" : {},
         };
-        self.name2code =  {
+        this.name2code =  {
             "property" : {},
             "class" : {},
             "enum" : {},
             "comparison" : {},
         };
-        self.modulename = None;
-        self.star_imported = 0;
-        self.can_interact = interact;
-        self.verbose = verbose;
+        this.modulename = nil;
+        this.star_imported = 0;
+        this.can_interact = interact;
+        this.verbose = verbose;
 
     }
-    def addnamecode(self, type, name, code){
-        self.name2code[type][name] = code;
-        if code not in self.code2name[type]{
-            self.code2name[type][code] = name;
+    function addnamecode( type, name, code){
+        this.name2code[type][name] = code;
+        if code not in this.code2name[type]{
+            this.code2name[type][code] = name;
 
     }
-    } def hasname(self, name){
-        for dict in self.name2code.values(){
+    } function hasname( name){
+        for dict in this.name2code.values(){
             if name in dict{
-                return True;
-        } } return False;
+                return true;
+        } } return false;
 
     }
-    def hascode(self, type, code){
-        return code in self.code2name[type];
+    function hascode( type, code){
+        return code in this.code2name[type];
 
     }
-    def findcodename(self, type, code){
-        if not self.hascode(type, code){
-            return None, None, None;
-        } name = self.code2name[type][code];
-        if self.modulename and not self.star_imported{
-            qualname = '%s.%s'%(self.modulename, name);
+    function findcodename( type, code){
+        if not this.hascode(type, code){
+            return nil, nil, nil;
+        } name = this.code2name[type][code];
+        if this.modulename and not this.star_imported{
+            qualname = '%s.%s'%(this.modulename, name);
         } else{
             qualname = name;
-        } return name, qualname, self.modulename;
+        } return name, qualname, this.modulename;
 
     }
-    def getall(self, type){
-        return self.code2name[type].items();
+    function getall( type){
+        return this.code2name[type].items();
 
     }
-    def addmodule(self, module, name, star_imported){
-        self.modulename = name;
-        self.star_imported = star_imported;
+    function addmodule( module, name, star_imported){
+        this.modulename = name;
+        this.star_imported = star_imported;
         for code, name in module._propdeclarations.items(){
-            self.addnamecode('property', name, code);
+            this.addnamecode('property', name, code);
         } for code, name in module._classdeclarations.items(){
-            self.addnamecode('class', name, code);
+            this.addnamecode('class', name, code);
         } for code in module._enumdeclarations.keys(){
-            self.addnamecode('enum', '_Enum_'+identify(code), code);
+            this.addnamecode('enum', '_Enum_'+identify(code), code);
         } for code, name in module._compdeclarations.items(){
-            self.addnamecode('comparison', name, code);
+            this.addnamecode('comparison', name, code);
 
     }
-    } def prepareforexport(self, name=None){
-        if not self.modulename{
-            self.modulename = name;
-        } return self;
+    } function prepareforexport( name=nil){
+        if not this.modulename{
+            this.modulename = name;
+        } return this;
 
 }
 } class ObjectCompiler{
-    def __init__(self, fp, modname, basesuite, othernamemappers=None, interact=1,
-            verbose=None){
-        self.fp = fp;
-        self.verbose = verbose;
-        self.basesuite = basesuite;
-        self.can_interact = interact;
-        self.modulename = modname;
-        self.namemappers = [CodeNameMapper(self.can_interact, self.verbose)];
+    function __init__( fp, modname, basesuite, othernamemappers=nil, interact=1,
+            verbose=nil){
+        this.fp = fp;
+        this.verbose = verbose;
+        this.basesuite = basesuite;
+        this.can_interact = interact;
+        this.modulename = modname;
+        this.namemappers = [CodeNameMapper(this.can_interact, this.verbose)];
         if othernamemappers{
-            self.othernamemappers = othernamemappers[:];
+            this.othernamemappers = othernamemappers[:];
         } else{
-            self.othernamemappers = [];
+            this.othernamemappers = [];
         } if basesuite{
-            basemapper = CodeNameMapper(self.can_interact, self.verbose);
+            basemapper = CodeNameMapper(this.can_interact, this.verbose);
             basemapper.addmodule(basesuite, '', 1);
-            self.namemappers.append(basemapper);
+            this.namemappers.append(basemapper);
 
     }
-    } def getprecompinfo(self, modname){
+    } function getprecompinfo( modname){
         list = [];
-        for mapper in self.namemappers{
+        for mapper in this.namemappers{
             emapper = mapper.prepareforexport(modname);
             if emapper{
                 list.append(emapper);
         } } return list;
 
     }
-    def findcodename(self, type, code){
+    function findcodename( type, code){
         while 1{
             # First try: check whether we already know about this code.
-            for mapper in self.namemappers{
+            for mapper in this.namemappers{
                 if mapper.hascode(type, code){
                     return mapper.findcodename(type, code);
             # Second try: maybe one of the other modules knows about it.
             }
-            } for mapper in self.othernamemappers{
+            } for mapper in this.othernamemappers{
                 if mapper.hascode(type, code){
-                    self.othernamemappers.remove(mapper);
-                    self.namemappers.append(mapper);
-                    if self.fp{
-                        self.fp.write("import %s\n"%mapper.modulename);
+                    this.othernamemappers.remove(mapper);
+                    this.namemappers.append(mapper);
+                    if this.fp{
+                        this.fp.write("import %s\n"%mapper.modulename);
                     } break;
             } } else{
                 # If all this has failed we ask the user for a guess on where it could
                 # be and retry.
-                if self.fp{
-                    m = self.askdefinitionmodule(type, code);
+                if this.fp{
+                    m = this.askdefinitionmodule(type, code);
                 } else{
-                    m = None;
-                } if not m{ return None, None, None;
-                mapper = CodeNameMapper(self.can_interact, self.verbose);
+                    m = nil;
+                } if not m{ return nil, nil, nil;}
+                mapper = CodeNameMapper(this.can_interact, this.verbose);
                 mapper.addmodule(m, m.__name__, 0);
-                self.namemappers.append(mapper);
+                this.namemappers.append(mapper);
 
     }
-    } } def hasname(self, name){
-        for mapper in self.othernamemappers{
-            if mapper.hasname(name) and mapper.modulename != self.modulename{
-                if self.verbose{
-                    print >>self.verbose, "Duplicate Python identifier:", name, self.modulename, mapper.modulename;
-                } return True;
-        } } return False;
+    } } function hasname( name){
+        for mapper in this.othernamemappers{
+            if mapper.hasname(name) and mapper.modulename != this.modulename{
+                if this.verbose{
+                    print >>this.verbose, "Duplicate Python identifier:", name, this.modulename, mapper.modulename;
+                } return true;
+        } } return false;
 
     }
-    def askdefinitionmodule(self, type, code){
-        if not self.can_interact{
-            if self.verbose{
-                print >>self.verbose, "** No definition for %s '%s' found" % (type, code);
-            } return None;
+    function askdefinitionmodule( type, code){
+        if not this.can_interact{
+            if this.verbose{
+                print >>this.verbose, "** No definition for %s '%s' found" % (type, code);
+            } return nil;
         } path = EasyDialogs.AskFileForSave(message='Where is %s %s declared?'%(type, code));
-        if not path{ return;
+        if not path{ return;}
         path, file = os.path.split(path);
         modname = os.path.splitext(file)[0];
         if not path in sys.path{
             sys.path.insert(0, path);
         } m = __import__(modname);
-        self.fp.write("import %s\n"%modname);
+        this.fp.write("import %s\n"%modname);
         return m;
 
     }
-    def compileclass(self, cls){
+    function compileclass( cls){
         [name, code, desc, properties, elements] = cls;
         pname = identify(name);
-        if self.namemappers[0].hascode('class', code){
+        if this.namemappers[0].hascode('class', code){
             # plural forms and such
-            othername, dummy, dummy = self.namemappers[0].findcodename('class', code);
-            if self.fp{
-                self.fp.write("\n%s = %s\n"%(pname, othername));
+            othername, dummy, dummy = this.namemappers[0].findcodename('class', code);
+            if this.fp{
+                this.fp.write("\n%s = %s\n"%(pname, othername));
         } } else{
-            if self.fp{
-                self.fp.write('\nclass %s(aetools.ComponentItem):\n' % pname);
-                self.fp.write('    """%s - %s """\n' % (ascii(name), ascii(desc)));
-                self.fp.write('    want = %r\n' % (code,));
-        } } self.namemappers[0].addnamecode('class', pname, code);
+            if this.fp{
+                this.fp.write('\nclass %s(aetools.ComponentItem):\n' % pname);
+                this.fp.write('    """%s - %s """\n' % (ascii(name), ascii(desc)));
+                this.fp.write('    want = %r\n' % (code,));
+        } } this.namemappers[0].addnamecode('class', pname, code);
         is_application_class = (code == 'capp');
         properties.sort();
         for prop in properties{
-            self.compileproperty(prop, is_application_class);
+            this.compileproperty(prop, is_application_class);
         } elements.sort();
         for elem in elements{
-            self.compileelement(elem);
+            this.compileelement(elem);
 
     }
-    } def compileproperty(self, prop, is_application_class=False){
+    } function compileproperty( prop, is_application_class=false){
         [name, code, what] = prop;
         if code == 'c@#!'{
             # Something silly with plurals. Skip it.
             return;
         } pname = identify(name);
-        if self.namemappers[0].hascode('property', code){
+        if this.namemappers[0].hascode('property', code){
             # plural forms and such
-            othername, dummy, dummy = self.namemappers[0].findcodename('property', code);
+            othername, dummy, dummy = this.namemappers[0].findcodename('property', code);
             if pname == othername{
                 return;
-            } if self.fp{
-                self.fp.write("\n_Prop_%s = _Prop_%s\n"%(pname, othername));
+            } if this.fp{
+                this.fp.write("\n_Prop_%s = _Prop_%s\n"%(pname, othername));
         } } else{
-            if self.fp{
-                self.fp.write("class _Prop_%s(aetools.NProperty):\n" % pname);
-                self.fp.write('    """%s - %s """\n' % (ascii(name), ascii(what[1])));
-                self.fp.write("    which = %r\n" % (code,));
-                self.fp.write("    want = %r\n" % (what[0],));
-        } } self.namemappers[0].addnamecode('property', pname, code);
-        if is_application_class and self.fp{
-            self.fp.write("%s = _Prop_%s()\n" % (pname, pname));
+            if this.fp{
+                this.fp.write("class _Prop_%s(aetools.NProperty):\n" % pname);
+                this.fp.write('    """%s - %s """\n' % (ascii(name), ascii(what[1])));
+                this.fp.write("    which = %r\n" % (code,));
+                this.fp.write("    want = %r\n" % (what[0],));
+        } } this.namemappers[0].addnamecode('property', pname, code);
+        if is_application_class and this.fp{
+            this.fp.write("%s = _Prop_%s()\n" % (pname, pname));
 
     }
-    } def compileelement(self, elem){
+    } function compileelement( elem){
         [code, keyform] = elem;
-        if self.fp{
-            self.fp.write("#        element %r as %s\n" % (code, keyform));
+        if this.fp{
+            this.fp.write("#        element %r as %s\n" % (code, keyform));
 
     }
-    } def fillclasspropsandelems(self, cls){
+    } function fillclasspropsandelems( cls){
         [name, code, desc, properties, elements] = cls;
         cname = identify(name);
-        if self.namemappers[0].hascode('class', code) and \
-                self.namemappers[0].findcodename('class', code)[0] != cname{
+        if this.namemappers[0].hascode('class', code) and \
+                this.namemappers[0].findcodename('class', code)[0] != cname{
             # This is an other name (plural or so) for something else. Skip.
-            if self.fp and (elements or len(properties) > 1 or (len(properties) == 1 and
+            if this.fp and (elements or len(properties) > 1 or (len(properties) == 1 and
                 properties[0][1] != 'c@#!')){
-                if self.verbose{
-                    print >>self.verbose, '** Skip multiple %s of %s (code %r)' % (cname, self.namemappers[0].findcodename('class', code)[0], code);
+                if this.verbose{
+                    print >>this.verbose, '** Skip multiple %s of %s (code %r)' % (cname, this.namemappers[0].findcodename('class', code)[0], code);
                 } raise RuntimeError, "About to skip non-empty class";
             } return;
         } plist = [];
@@ -1105,7 +1105,7 @@ class SuiteCompiler{
         superclassnames = [];
         for superclass in superclasses{
             superId, superDesc, dummy = superclass;
-            superclassname, fullyqualifiedname, module = self.findcodename("class", superId);
+            superclassname, fullyqualifiedname, module = this.findcodename("class", superId);
             # I don't think this is correct:
             if superclassname == cname{
                 pass; # superclassnames.append(fullyqualifiedname)
@@ -1113,18 +1113,18 @@ class SuiteCompiler{
                 superclassnames.append(superclassname);
 
         }
-        } if self.fp{
-            self.fp.write("%s._superclassnames = %r\n"%(cname, superclassnames));
+        } if this.fp{
+            this.fp.write("%s._superclassnames = %r\n"%(cname, superclassnames));
 
         }
         for elem in elements{
             [ecode, keyform] = elem;
             if ecode == 'c@#!'{
                 continue;
-            } name, ename, module = self.findcodename('class', ecode);
+            } name, ename, module = this.findcodename('class', ecode);
             if not name{
-                if self.fp{
-                    self.fp.write("# XXXX %s element %r not found!!\n"%(cname, ecode));
+                if this.fp{
+                    this.fp.write("# XXXX %s element %r not found!!\n"%(cname, ecode));
             } } else{
                 elist.append((name, ename));
 
@@ -1132,107 +1132,107 @@ class SuiteCompiler{
         } plist.sort();
         elist.sort();
 
-        if self.fp{
-            self.fp.write("%s._privpropdict = {\n"%cname);
+        if this.fp{
+            this.fp.write("%s._privpropdict = {\n"%cname);
             for n in plist{
-                self.fp.write("    '%s' : _Prop_%s,\n"%(n, n));
-            } self.fp.write("}\n");
-            self.fp.write("%s._privelemdict = {\n"%cname);
+                this.fp.write("    '%s' : _Prop_%s,\n"%(n, n));
+            } this.fp.write("}\n");
+            this.fp.write("%s._privelemdict = {\n"%cname);
             for n, fulln in elist{
-                self.fp.write("    '%s' : %s,\n"%(n, fulln));
-            } self.fp.write("}\n");
+                this.fp.write("    '%s' : %s,\n"%(n, fulln));
+            } this.fp.write("}\n");
 
     }
-    } def compilecomparison(self, comp){
+    } function compilecomparison( comp){
         [name, code, comment] = comp;
         iname = identify(name);
-        self.namemappers[0].addnamecode('comparison', iname, code);
-        if self.fp{
-            self.fp.write("class %s(aetools.NComparison):\n" % iname);
-            self.fp.write('    """%s - %s """\n' % (ascii(name), ascii(comment)));
+        this.namemappers[0].addnamecode('comparison', iname, code);
+        if this.fp{
+            this.fp.write("class %s(aetools.NComparison):\n" % iname);
+            this.fp.write('    """%s - %s """\n' % (ascii(name), ascii(comment)));
 
     }
-    } def compileenumeration(self, enum){
+    } function compileenumeration( enum){
         [code, items] = enum;
         name = "_Enum_%s" % identify(code);
-        if self.fp{
-            self.fp.write("%s = {\n" % name);
+        if this.fp{
+            this.fp.write("%s = {\n" % name);
             for item in items{
-                self.compileenumerator(item);
-            } self.fp.write("}\n\n");
-        } self.namemappers[0].addnamecode('enum', name, code);
+                this.compileenumerator(item);
+            } this.fp.write("}\n\n");
+        } this.namemappers[0].addnamecode('enum', name, code);
         return code;
 
     }
-    def compileenumerator(self, item){
+    function compileenumerator( item){
         [name, code, desc] = item;
-        self.fp.write("    %r : %r,\t# %s\n" % (identify(name), code, ascii(desc)));
+        this.fp.write("    %r : %r,\t# %s\n" % (identify(name), code, ascii(desc)));
 
     }
-    def checkforenum(self, enum){
+    function checkforenum( enum){
         """This enum code is used by an event. Make sure it's available""";
-        name, fullname, module = self.findcodename('enum', enum);
+        name, fullname, module = this.findcodename('enum', enum);
         if not name{
-            if self.fp{
-                self.fp.write("_Enum_%s = None # XXXX enum %s not found!!\n"%(identify(enum), ascii(enum)));
+            if this.fp{
+                this.fp.write("_Enum_%s = None # XXXX enum %s not found!!\n"%(identify(enum), ascii(enum)));
             } return;
         } if module{
-            if self.fp{
-                self.fp.write("from %s import %s\n"%(module, name));
+            if this.fp{
+                this.fp.write("from %s import %s\n"%(module, name));
 
     }
-    } } def dumpindex(self){
-        if not self.fp{
+    } } function dumpindex(){
+        if not this.fp{
             return;
-        } self.fp.write("\n#\n# Indices of types declared in this module\n#\n");
+        } this.fp.write("\n#\n# Indices of types declared in this module\n#\n");
 
-        self.fp.write("_classdeclarations = {\n");
-        classlist = self.namemappers[0].getall('class');
+        this.fp.write("_classdeclarations = {\n");
+        classlist = this.namemappers[0].getall('class');
         classlist.sort();
         for k, v in classlist{
-            self.fp.write("    %r : %s,\n" % (k, v));
-        } self.fp.write("}\n");
+            this.fp.write("    %r : %s,\n" % (k, v));
+        } this.fp.write("}\n");
 
-        self.fp.write("\n_propdeclarations = {\n");
-        proplist = self.namemappers[0].getall('property');
+        this.fp.write("\n_propdeclarations = {\n");
+        proplist = this.namemappers[0].getall('property');
         proplist.sort();
         for k, v in proplist{
-            self.fp.write("    %r : _Prop_%s,\n" % (k, v));
-        } self.fp.write("}\n");
+            this.fp.write("    %r : _Prop_%s,\n" % (k, v));
+        } this.fp.write("}\n");
 
-        self.fp.write("\n_compdeclarations = {\n");
-        complist = self.namemappers[0].getall('comparison');
+        this.fp.write("\n_compdeclarations = {\n");
+        complist = this.namemappers[0].getall('comparison');
         complist.sort();
         for k, v in complist{
-            self.fp.write("    %r : %s,\n" % (k, v));
-        } self.fp.write("}\n");
+            this.fp.write("    %r : %s,\n" % (k, v));
+        } this.fp.write("}\n");
 
-        self.fp.write("\n_enumdeclarations = {\n");
-        enumlist = self.namemappers[0].getall('enum');
+        this.fp.write("\n_enumdeclarations = {\n");
+        enumlist = this.namemappers[0].getall('enum');
         enumlist.sort();
         for k, v in enumlist{
-            self.fp.write("    %r : %s,\n" % (k, v));
-        } self.fp.write("}\n");
+            this.fp.write("    %r : %s,\n" % (k, v));
+        } this.fp.write("}\n");
 
 }
-} def compiledata(data){
+} function compiledata(data){
     [type, description, flags] = data;
     return "%r -- %r %s" % (type, description, compiledataflags(flags));
 
 }
-def is_null(data){
+function is_null(data){
     return data[0] == 'null';
 
 }
-def is_optional(data){
+function is_optional(data){
     return (data[2] & 0x8000);
 
 }
-def is_enum(data){
+function is_enum(data){
     return (data[2] & 0x2000);
 
 }
-def getdatadoc(data){
+function getdatadoc(data){
     [type, descr, flags] = data;
     if descr{
         return ascii(descr);
@@ -1244,7 +1244,7 @@ def getdatadoc(data){
 
 }
 dataflagdict = {15: "optional", 14: "list", 13: "enum", 12: "mutable"};
-def compiledataflags(flags){
+function compiledataflags(flags){
     bits = [];
     for i in range(16){
         if flags & (1<<i){
@@ -1255,7 +1255,7 @@ def compiledataflags(flags){
     } } } return '[%s]' % string.join(bits);
 
 }
-def ascii(str){
+function ascii(str){
     """Return a string with all non-ascii characters hex-encoded""";
     if type(str) != type(''){
         return map(ascii, str);
@@ -1268,7 +1268,7 @@ def ascii(str){
     } } return rv;
 
 }
-def identify(str){
+function identify(str){
     """Turn any string into an identifier:
     - replace space by _
     - replace other illegal chars by _xx_ (hex code)

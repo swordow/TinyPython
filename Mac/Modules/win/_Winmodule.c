@@ -73,7 +73,7 @@ PyObject *WinObj_New(WindowPtr itself)
 int WinObj_Convert(PyObject *v, WindowPtr *p_itself)
 {
 
-    if (v == Py_None) { *p_itself = NULL; return 1; }
+    if (v == Py_Nil) { *p_itself = NULL; return 1; }
     if (PyInt_Check(v)) { *p_itself = (WindowPtr)PyInt_AsLong(v); return 1; }
 
     {
@@ -134,8 +134,8 @@ static PyObject *WinObj_CloneWindow(WindowObject *_self, PyObject *_args)
         return NULL;
     _err = CloneWindow(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -165,8 +165,8 @@ static PyObject *WinObj_RetainWindow(WindowObject *_self, PyObject *_args)
         return NULL;
     _err = RetainWindow(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -181,8 +181,8 @@ static PyObject *WinObj_ReleaseWindow(WindowObject *_self, PyObject *_args)
         return NULL;
     _err = ReleaseWindow(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -197,8 +197,8 @@ static PyObject *WinObj_ReshapeCustomWindow(WindowObject *_self, PyObject *_args
         return NULL;
     _err = ReshapeCustomWindow(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -273,8 +273,8 @@ static PyObject *WinObj_ChangeWindowAttributes(WindowObject *_self, PyObject *_a
                                   setTheseAttributes,
                                   clearTheseAttributes);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -292,8 +292,8 @@ static PyObject *WinObj_SetWindowClass(WindowObject *_self, PyObject *_args)
     _err = SetWindowClass(_self->ob_itself,
                           inWindowClass);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -314,8 +314,8 @@ static PyObject *WinObj_SetWindowModality(WindowObject *_self, PyObject *_args)
                              inModalKind,
                              inUnavailableWindow);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -354,8 +354,8 @@ static PyObject *WinObj_SetWindowContentColor(WindowObject *_self, PyObject *_ar
     _err = SetWindowContentColor(_self->ob_itself,
                                  &color);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -391,8 +391,8 @@ static PyObject *WinObj_GetWindowContentPattern(WindowObject *_self, PyObject *_
     _err = GetWindowContentPattern(_self->ob_itself,
                                    outPixPat);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -410,8 +410,8 @@ static PyObject *WinObj_SetWindowContentPattern(WindowObject *_self, PyObject *_
     _err = SetWindowContentPattern(_self->ob_itself,
                                    pixPat);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -441,8 +441,8 @@ static PyObject *WinObj_ScrollWindowRect(WindowObject *_self, PyObject *_args)
                             inOptions,
                             outExposedRgn);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -472,8 +472,8 @@ static PyObject *WinObj_ScrollWindowRegion(WindowObject *_self, PyObject *_args)
                               inOptions,
                               outExposedRgn);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -486,8 +486,8 @@ static PyObject *WinObj_ClipAbove(WindowObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     ClipAbove(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -503,8 +503,8 @@ static PyObject *WinObj_PaintOne(WindowObject *_self, PyObject *_args)
         return NULL;
     PaintOne(_self->ob_itself,
              clobberedRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -520,8 +520,8 @@ static PyObject *WinObj_PaintBehind(WindowObject *_self, PyObject *_args)
         return NULL;
     PaintBehind(_self->ob_itself,
                 clobberedRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -534,8 +534,8 @@ static PyObject *WinObj_CalcVis(WindowObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     CalcVis(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -551,8 +551,8 @@ static PyObject *WinObj_CalcVisBehind(WindowObject *_self, PyObject *_args)
         return NULL;
     CalcVisBehind(_self->ob_itself,
                   clobberedRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -565,8 +565,8 @@ static PyObject *WinObj_BringToFront(WindowObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     BringToFront(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -582,8 +582,8 @@ static PyObject *WinObj_SendBehind(WindowObject *_self, PyObject *_args)
         return NULL;
     SendBehind(_self->ob_itself,
                behindWindow);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -596,8 +596,8 @@ static PyObject *WinObj_SelectWindow(WindowObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     SelectWindow(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -636,8 +636,8 @@ static PyObject *WinObj_SetWindowAlternateTitle(WindowObject *_self, PyObject *_
     _err = SetWindowAlternateTitle(_self->ob_itself,
                                    inTitle);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -671,8 +671,8 @@ static PyObject *WinObj_HiliteWindow(WindowObject *_self, PyObject *_args)
         return NULL;
     HiliteWindow(_self->ob_itself,
                  fHilite);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -688,8 +688,8 @@ static PyObject *WinObj_SetWRefCon(WindowObject *_self, PyObject *_args)
         return NULL;
     SetWRefCon(_self->ob_itself,
                data);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -720,8 +720,8 @@ static PyObject *WinObj_SetWindowPic(WindowObject *_self, PyObject *_args)
         return NULL;
     SetWindowPic(_self->ob_itself,
                  pic);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -790,8 +790,8 @@ static PyObject *WinObj_GetWindowRegion(WindowObject *_self, PyObject *_args)
                            inRegionCode,
                            ioWinRgn);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -822,8 +822,8 @@ static PyObject *WinObj_BeginUpdate(WindowObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     BeginUpdate(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -836,8 +836,8 @@ static PyObject *WinObj_EndUpdate(WindowObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     EndUpdate(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -855,8 +855,8 @@ static PyObject *WinObj_InvalWindowRgn(WindowObject *_self, PyObject *_args)
     _err = InvalWindowRgn(_self->ob_itself,
                           region);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -874,8 +874,8 @@ static PyObject *WinObj_InvalWindowRect(WindowObject *_self, PyObject *_args)
     _err = InvalWindowRect(_self->ob_itself,
                            &bounds);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -893,8 +893,8 @@ static PyObject *WinObj_ValidWindowRgn(WindowObject *_self, PyObject *_args)
     _err = ValidWindowRgn(_self->ob_itself,
                           region);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -912,8 +912,8 @@ static PyObject *WinObj_ValidWindowRect(WindowObject *_self, PyObject *_args)
     _err = ValidWindowRect(_self->ob_itself,
                            &bounds);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -926,8 +926,8 @@ static PyObject *WinObj_DrawGrowIcon(WindowObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     DrawGrowIcon(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -943,8 +943,8 @@ static PyObject *WinObj_SetWTitle(WindowObject *_self, PyObject *_args)
         return NULL;
     SetWTitle(_self->ob_itself,
               title);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -978,8 +978,8 @@ static PyObject *WinObj_SetWindowTitleWithCFString(WindowObject *_self, PyObject
     _err = SetWindowTitleWithCFString(_self->ob_itself,
                                       inString);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1015,8 +1015,8 @@ static PyObject *WinObj_SetWindowProxyFSSpec(WindowObject *_self, PyObject *_arg
     _err = SetWindowProxyFSSpec(_self->ob_itself,
                                 &inFile);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1052,8 +1052,8 @@ static PyObject *WinObj_SetWindowProxyAlias(WindowObject *_self, PyObject *_args
     _err = SetWindowProxyAlias(_self->ob_itself,
                                inAlias);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1095,8 +1095,8 @@ static PyObject *WinObj_SetWindowProxyCreatorAndType(WindowObject *_self, PyObje
                                         fileType,
                                         vRefNum);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1132,8 +1132,8 @@ static PyObject *WinObj_SetWindowProxyIcon(WindowObject *_self, PyObject *_args)
     _err = SetWindowProxyIcon(_self->ob_itself,
                               icon);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1148,8 +1148,8 @@ static PyObject *WinObj_RemoveWindowProxy(WindowObject *_self, PyObject *_args)
         return NULL;
     _err = RemoveWindowProxy(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1188,8 +1188,8 @@ static PyObject *WinObj_EndWindowProxyDrag(WindowObject *_self, PyObject *_args)
     _err = EndWindowProxyDrag(_self->ob_itself,
                               theDrag);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1213,8 +1213,8 @@ static PyObject *WinObj_TrackWindowProxyFromExistingDrag(WindowObject *_self, Py
                                             drag,
                                             inDragOutlineRgn);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1232,8 +1232,8 @@ static PyObject *WinObj_TrackWindowProxyDrag(WindowObject *_self, PyObject *_arg
     _err = TrackWindowProxyDrag(_self->ob_itself,
                                 startPt);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1266,8 +1266,8 @@ static PyObject *WinObj_SetWindowModified(WindowObject *_self, PyObject *_args)
     _err = SetWindowModified(_self->ob_itself,
                              modified);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1324,8 +1324,8 @@ static PyObject *WinObj_HiliteWindowFrameForDrag(WindowObject *_self, PyObject *
     _err = HiliteWindowFrameForDrag(_self->ob_itself,
                                     hilited);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1349,8 +1349,8 @@ static PyObject *WinObj_TransitionWindow(WindowObject *_self, PyObject *_args)
                             inAction,
                             &inRect);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1377,8 +1377,8 @@ static PyObject *WinObj_TransitionWindowAndParent(WindowObject *_self, PyObject 
                                      inAction,
                                      &inRect);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1400,8 +1400,8 @@ static PyObject *WinObj_MacMoveWindow(WindowObject *_self, PyObject *_args)
                   hGlobal,
                   vGlobal,
                   front);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1423,8 +1423,8 @@ static PyObject *WinObj_SizeWindow(WindowObject *_self, PyObject *_args)
                w,
                h,
                fUpdate);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1464,8 +1464,8 @@ static PyObject *WinObj_DragWindow(WindowObject *_self, PyObject *_args)
     DragWindow(_self->ob_itself,
                startPt,
                &boundsRect);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1484,8 +1484,8 @@ static PyObject *WinObj_ZoomWindow(WindowObject *_self, PyObject *_args)
     ZoomWindow(_self->ob_itself,
                partCode,
                front);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1533,8 +1533,8 @@ static PyObject *WinObj_CollapseWindow(WindowObject *_self, PyObject *_args)
     _err = CollapseWindow(_self->ob_itself,
                           collapse);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1600,8 +1600,8 @@ static PyObject *WinObj_SetWindowBounds(WindowObject *_self, PyObject *_args)
                            regionCode,
                            &globalBounds);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1622,8 +1622,8 @@ static PyObject *WinObj_RepositionWindow(WindowObject *_self, PyObject *_args)
                             parentWindow,
                             method);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1644,8 +1644,8 @@ static PyObject *WinObj_MoveWindowStructure(WindowObject *_self, PyObject *_args
                                hGlobal,
                                vGlobal);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1723,8 +1723,8 @@ static PyObject *WinObj_SetWindowIdealUserState(WindowObject *_self, PyObject *_
     _err = SetWindowIdealUserState(_self->ob_itself,
                                    &inUserState);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1788,8 +1788,8 @@ static PyObject *WinObj_HideWindow(WindowObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     HideWindow(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1802,8 +1802,8 @@ static PyObject *WinObj_MacShowWindow(WindowObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     MacShowWindow(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1819,8 +1819,8 @@ static PyObject *WinObj_ShowHide(WindowObject *_self, PyObject *_args)
         return NULL;
     ShowHide(_self->ob_itself,
              showFlag);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1853,8 +1853,8 @@ static PyObject *WinObj_ShowSheetWindow(WindowObject *_self, PyObject *_args)
     _err = ShowSheetWindow(_self->ob_itself,
                            inParentWindow);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1869,8 +1869,8 @@ static PyObject *WinObj_HideSheetWindow(WindowObject *_self, PyObject *_args)
         return NULL;
     _err = HideSheetWindow(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1939,8 +1939,8 @@ static PyObject *WinObj_ChangeWindowPropertyAttributes(WindowObject *_self, PyOb
                                           attributesToSet,
                                           attributesToClear);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2117,8 +2117,8 @@ static PyObject *WinObj_SetWindowKind(WindowObject *_self, PyObject *_args)
         return NULL;
     SetWindowKind(_self->ob_itself,
                   kind);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2134,8 +2134,8 @@ static PyObject *WinObj_SetWindowStandardState(WindowObject *_self, PyObject *_a
         return NULL;
     SetWindowStandardState(_self->ob_itself,
                            &rect);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2151,8 +2151,8 @@ static PyObject *WinObj_SetWindowUserState(WindowObject *_self, PyObject *_args)
         return NULL;
     SetWindowUserState(_self->ob_itself,
                        &rect);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2165,8 +2165,8 @@ static PyObject *WinObj_SetPortWindowPort(WindowObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     SetPortWindowPort(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2213,8 +2213,8 @@ static PyObject *WinObj_GetWindowStructureRgn(WindowObject *_self, PyObject *_ar
         return NULL;
     GetWindowStructureRgn(_self->ob_itself,
                           r);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2230,8 +2230,8 @@ static PyObject *WinObj_GetWindowContentRgn(WindowObject *_self, PyObject *_args
         return NULL;
     GetWindowContentRgn(_self->ob_itself,
                         r);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2247,8 +2247,8 @@ static PyObject *WinObj_GetWindowUpdateRgn(WindowObject *_self, PyObject *_args)
         return NULL;
     GetWindowUpdateRgn(_self->ob_itself,
                        r);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2285,8 +2285,8 @@ static PyObject *WinObj_MoveWindow(WindowObject *_self, PyObject *_args)
                hGlobal,
                vGlobal,
                front);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2299,8 +2299,8 @@ static PyObject *WinObj_ShowWindow(WindowObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     ShowWindow(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2824,8 +2824,8 @@ static PyObject *Win_ShowFloatingWindows(PyObject *_self, PyObject *_args)
         return NULL;
     _err = ShowFloatingWindows();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -2840,8 +2840,8 @@ static PyObject *Win_HideFloatingWindows(PyObject *_self, PyObject *_args)
         return NULL;
     _err = HideFloatingWindows();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3006,8 +3006,8 @@ static PyObject *Win_CollapseAllWindows(PyObject *_self, PyObject *_args)
         return NULL;
     _err = CollapseAllWindows(collapse);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3042,8 +3042,8 @@ static PyObject *Win_DisableScreenUpdates(PyObject *_self, PyObject *_args)
         return NULL;
     _err = DisableScreenUpdates();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3058,8 +3058,8 @@ static PyObject *Win_EnableScreenUpdates(PyObject *_self, PyObject *_args)
         return NULL;
     _err = EnableScreenUpdates();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -3216,7 +3216,7 @@ WinObj_WhichWindow(WindowPtr w)
     PyObject *it;
 
     if (w == NULL) {
-        it = Py_None;
+        it = Py_Nil;
         Py_INCREF(it);
     } else {
         it = (PyObject *) GetWRefCon(w);

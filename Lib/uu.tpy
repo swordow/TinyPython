@@ -40,7 +40,7 @@ class Error(Exception){
     pass;
 
 }
-def encode(in_file, out_file, name=None, mode=None){
+function encode(in_file, out_file, name=nil, mode=nil){
     """Uuencode file""";
     #
     # If in_file is a pathname open it and change defaults
@@ -50,9 +50,9 @@ def encode(in_file, out_file, name=None, mode=None){
         if in_file == '-'{
             in_file = sys.stdin;
         } elif isinstance(in_file, basestring){
-            if name is None{
+            if name is nil{
                 name = os.path.basename(in_file);
-            } if mode is None{
+            } if mode is nil{
                 try{
                     mode = os.stat(in_file).st_mode;
                 } except AttributeError{
@@ -72,9 +72,9 @@ def encode(in_file, out_file, name=None, mode=None){
         # Set defaults for name and mode
         #
         }
-        if name is None{
+        if name is nil{
             name = '-';
-        } if mode is None{
+        } if mode is nil{
             mode = 0666;
         #
         # Write the data
@@ -92,7 +92,7 @@ def encode(in_file, out_file, name=None, mode=None){
 
 
 }
-} } def decode(in_file, out_file=None, mode=None, quiet=0){
+} } function decode(in_file, out_file=nil, mode=nil, quiet=0){
     """Decode uuencoded file""";
     #
     # Open the input file, if needed.
@@ -107,7 +107,7 @@ def encode(in_file, out_file, name=None, mode=None){
         #
         # Read until a begin is encountered or we've exhausted the file
         #
-        while True{
+        while true{
             hdr = in_file.readline();
             if not hdr{
                 raise Error('No valid begin line found in input file');
@@ -120,11 +120,11 @@ def encode(in_file, out_file, name=None, mode=None){
                     break;
                 } except ValueError{
                     pass;
-        } } } if out_file is None{
+        } } } if out_file is nil{
             out_file = hdrfields[2].rstrip();
             if os.path.exists(out_file){
                 raise Error('Cannot overwrite existing file: %s' % out_file);
-        } } if mode is None{
+        } } if mode is nil{
             mode = int(hdrfields[1], 8);
         #
         # Open the output file
@@ -163,13 +163,13 @@ def encode(in_file, out_file, name=None, mode=None){
             f.close();
 
 }
-} } def test(){
+} } function test(){
     """uuencode/uudecode main program""";
 
     import optparse;
     parser = optparse.OptionParser(usage='usage: %prog [-d] [-t] [input [output]]');
-    parser.add_option('-d', '--decode', dest='decode', help='Decode (instead of encode)?', default=False, action='store_true');
-    parser.add_option('-t', '--text', dest='text', help='data is text, encoded format unix-compatible text?', default=False, action='store_true');
+    parser.add_option('-d', '--decode', dest='decode', help='Decode (instead of encode)?', default=false, action='store_true');
+    parser.add_option('-t', '--text', dest='text', help='data is text, encoded format unix-compatible text?', default=false, action='store_true');
 
     (options, args) = parser.parse_args();
     if len(args) > 2{

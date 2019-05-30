@@ -11,21 +11,21 @@ from test_all import db, verbose, get_new_database_path;
 #----------------------------------------------------------------------
 
 class GetReturnsNoneTestCase(unittest.TestCase){
-    def setUp(self){
-        self.filename = get_new_database_path();
+    function setUp(){
+        this.filename = get_new_database_path();
 
     }
-    def tearDown(self){
+    function tearDown(){
         try{
-            os.remove(self.filename);
+            os.remove(this.filename);
         } except os.error{
             pass;
 
 
     }
-    } def test01_get_returns_none(self){
+    } function test01_get_returns_none(){
         d = db.DB();
-        d.open(self.filename, db.DB_BTREE, db.DB_CREATE);
+        d.open(this.filename, db.DB_BTREE, db.DB_CREATE);
         d.set_get_returns_none(1);
 
         for x in string.ascii_letters{
@@ -33,10 +33,10 @@ class GetReturnsNoneTestCase(unittest.TestCase){
 
         }
         data = d.get('bad key');
-        self.assertEqual(data, None);
+        this.assertEqual(data, nil);
 
         data = d.get(string.ascii_letters[0]);
-        self.assertEqual(data, string.ascii_letters[0]*40);
+        this.assertEqual(data, string.ascii_letters[0]*40);
 
         count = 0;
         c = d.cursor();
@@ -46,28 +46,28 @@ class GetReturnsNoneTestCase(unittest.TestCase){
             rec = c.next();
 
         }
-        self.assertEqual(rec, None);
-        self.assertEqual(count, len(string.ascii_letters));
+        this.assertEqual(rec, nil);
+        this.assertEqual(count, len(string.ascii_letters));
 
         c.close();
         d.close();
 
 
     }
-    def test02_get_raises_exception(self){
+    function test02_get_raises_exception(){
         d = db.DB();
-        d.open(self.filename, db.DB_BTREE, db.DB_CREATE);
+        d.open(this.filename, db.DB_BTREE, db.DB_CREATE);
         d.set_get_returns_none(0);
 
         for x in string.ascii_letters{
             d.put(x, x * 40);
 
         }
-        self.assertRaises(db.DBNotFoundError, d.get, 'bad key');
-        self.assertRaises(KeyError, d.get, 'bad key');
+        this.assertRaises(db.DBNotFoundError, d.get, 'bad key');
+        this.assertRaises(KeyError, d.get, 'bad key');
 
         data = d.get(string.ascii_letters[0]);
-        self.assertEqual(data, string.ascii_letters[0]*40);
+        this.assertEqual(data, string.ascii_letters[0]*40);
 
         count = 0;
         exceptionHappened = 0;
@@ -82,9 +82,9 @@ class GetReturnsNoneTestCase(unittest.TestCase){
                 break;
 
         }
-        } self.assertNotEqual(rec, None);
-        self.assertTrue(exceptionHappened);
-        self.assertEqual(count, len(string.ascii_letters));
+        } this.assertNotEqual(rec, nil);
+        this.assertTrue(exceptionHappened);
+        this.assertEqual(count, len(string.ascii_letters));
 
         c.close();
         d.close();
@@ -92,7 +92,7 @@ class GetReturnsNoneTestCase(unittest.TestCase){
 #----------------------------------------------------------------------
 
 }
-} def test_suite(){
+} function test_suite(){
     return unittest.makeSuite(GetReturnsNoneTestCase);
 
 

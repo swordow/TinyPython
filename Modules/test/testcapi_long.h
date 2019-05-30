@@ -177,6 +177,6 @@ TESTNAME(PyObject *error(const char*))
         Py_DECREF(one);
     }
 
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }

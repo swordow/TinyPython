@@ -4,18 +4,18 @@ warnpy3k("the WAIT module has been removed in Python 3.0", stacklevel=2);
 del warnpy3k;
 
 # Included from standards.h
-def _W_INT(i){ return (i);
+function _W_INT(i){ return (i);}
 
 WUNTRACED = 0004;
 WNOHANG = 0100;
 _WSTOPPED = 0177;
-def WIFEXITED(stat){ return ((_W_INT(stat)&0377)==0);
+function WIFEXITED(stat){ return ((_W_INT(stat)&0377)==0);}
 
-def WEXITSTATUS(stat){ return ((_W_INT(stat)>>8)&0377);
+function WEXITSTATUS(stat){ return ((_W_INT(stat)>>8)&0377);}
 
-def WTERMSIG(stat){ return (_W_INT(stat)&0177);
+function WTERMSIG(stat){ return (_W_INT(stat)&0177);}
 
-def WSTOPSIG(stat){ return ((_W_INT(stat)>>8)&0377);
+function WSTOPSIG(stat){ return ((_W_INT(stat)>>8)&0377);}
 
 WEXITED = 0001;
 WTRAPPED = 0002;
@@ -27,11 +27,11 @@ WSTOPFLG = 0177;
 WCONTFLG = 0177777;
 WCOREFLAG = 0200;
 WSIGMASK = 0177;
-def WWORD(stat){ return (_W_INT(stat)&0177777);
+function WWORD(stat){ return (_W_INT(stat)&0177777);}
 
-def WIFCONTINUED(stat){ return (WWORD(stat)==WCONTFLG);
+function WIFCONTINUED(stat){ return (WWORD(stat)==WCONTFLG);}
 
-def WCOREDUMP(stat){ return (_W_INT(stat) & WCOREFLAG);
+function WCOREDUMP(stat){ return (_W_INT(stat) & WCOREFLAG);}
 
 
 # Included from sys/types.h
@@ -61,9 +61,9 @@ MAXMIN = 0x3ffff;
 OLDDEV = 0;
 NEWDEV = 1;
 MKDEV_VER = NEWDEV;
-def major(dev){ return __major(MKDEV_VER, dev);
+function major(dev){ return __major(MKDEV_VER, dev);}
 
-def minor(dev){ return __minor(MKDEV_VER, dev);
+function minor(dev){ return __minor(MKDEV_VER, dev);}
 
 
 # Included from sys/select.h
@@ -289,9 +289,9 @@ CXT_SR = CTX_SR;
 SV_ONSTACK = 0x0001;
 SV_INTERRUPT = 0x0002;
 NUMBSDSIGS = (32);
-def sigmask(sig){ return (1L << ((sig)-1));
+function sigmask(sig){ return (1L << ((sig)-1));}
 
-def sigmask(sig){ return (1L << ((sig)-1));
+function sigmask(sig){ return (1L << ((sig)-1));}
 
 SIG_ERR = (-1);
 SIG_IGN = (1);

@@ -12,7 +12,7 @@ class _C{ pass;}
 _InstanceType = type(_C());
 
 
-def abstractmethod(funcobj){
+function abstractmethod(funcobj){
     """A decorator indicating abstract methods.
 
     Requires that the metaclass is ABCMeta or derived from it.  A
@@ -29,7 +29,7 @@ def abstractmethod(funcobj){
             def my_abstract_method(self, ...):
                 ...
     """;
-    funcobj.__isabstractmethod__ = True;
+    funcobj.__isabstractmethod__ = true;
     return funcobj;
 
 
@@ -60,7 +60,7 @@ class abstractproperty(property){
             def setx(self, value): ...
             x = abstractproperty(getx, setx)
     """;
-    __isabstractmethod__ = True;
+    __isabstractmethod__ = true;
 
 
 }
@@ -85,16 +85,16 @@ class ABCMeta(type){
     # negative cache to be cleared before its next use.
     _abc_invalidation_counter = 0;
 
-    def __new__(mcls, name, bases, namespace){
+    function __new__(mcls, name, bases, namespace){
         cls = super(ABCMeta, mcls).__new__(mcls, name, bases, namespace);
         # Compute set of abstract method names
         abstracts = set(name
                      for name, value in namespace.items()
-                     if getattr(value, "__isabstractmethod__", False));
+                     if getattr(value, "__isabstractmethod__", false));
         for base in bases{
             for name in getattr(base, "__abstractmethods__", set()){
-                value = getattr(cls, name, None);
-                if getattr(value, "__isabstractmethod__", False){
+                value = getattr(cls, name, nil);
+                if getattr(value, "__isabstractmethod__", false){
                     abstracts.add(name);
         } } } cls.__abstractmethods__ = frozenset(abstracts);
         # Set up inheritance registry
@@ -105,7 +105,7 @@ class ABCMeta(type){
         return cls;
 
     }
-    def register(cls, subclass){
+    function register(subclass){
         """Register a virtual subclass of an ABC.""";
         if not isinstance(subclass, (type, types.ClassType)){
             raise TypeError("Can only register classes");
@@ -121,7 +121,7 @@ class ABCMeta(type){
         ABCMeta._abc_invalidation_counter += 1;  # Invalidate negative cache
 
     }
-    def _dump_registry(cls, file=None){
+    function _dump_registry(file=nil){
         """Debug helper to print the ABC registry.""";
         print >> file, "Class: %s.%s" % (cls.__module__, cls.__name__);
         print >> file, "Inv.counter: %s" % ABCMeta._abc_invalidation_counter;
@@ -131,21 +131,21 @@ class ABCMeta(type){
                 print >> file, "%s: %r" % (name, value);
 
     }
-    } } def __instancecheck__(cls, instance){
+    } } function __instancecheck__(instance){
         """Override for isinstance(instance, cls).""";
         # Inline the cache checking when it's simple.
-        subclass = getattr(instance, '__class__', None);
-        if subclass is not None and subclass in cls._abc_cache{
-            return True;
+        subclass = getattr(instance, '__class__', nil);
+        if subclass is not nil and subclass in cls._abc_cache{
+            return true;
         } subtype = type(instance);
         # Old-style instances
         if subtype is _InstanceType{
             subtype = subclass;
-        } if subtype is subclass or subclass is None{
+        } if subtype is subclass or subclass is nil{
             if (cls._abc_negative_cache_version ==
                 ABCMeta._abc_invalidation_counter and
                 subtype in cls._abc_negative_cache){
-                return False;
+                return false;
             # Fall back to the subclass check.
             }
             return cls.__subclasscheck__(subtype);
@@ -153,11 +153,11 @@ class ABCMeta(type){
                 cls.__subclasscheck__(subtype));
 
     }
-    def __subclasscheck__(cls, subclass){
+    function __subclasscheck__(subclass){
         """Override for issubclass(subclass, cls).""";
         # Check cache
         if subclass in cls._abc_cache{
-            return True;
+            return true;
         # Check negative cache; may have to invalidate
         }
         if cls._abc_negative_cache_version < ABCMeta._abc_invalidation_counter{
@@ -165,7 +165,7 @@ class ABCMeta(type){
             cls._abc_negative_cache = WeakSet();
             cls._abc_negative_cache_version = ABCMeta._abc_invalidation_counter;
         } elif subclass in cls._abc_negative_cache{
-            return False;
+            return false;
         # Check the subclass hook
         }
         ok = cls.__subclasshook__(subclass);
@@ -180,23 +180,23 @@ class ABCMeta(type){
         }
         if cls in getattr(subclass, '__mro__', ()){
             cls._abc_cache.add(subclass);
-            return True;
+            return true;
         # Check if it's a subclass of a registered class (recursive)
         }
         for rcls in cls._abc_registry{
             if issubclass(subclass, rcls){
                 cls._abc_cache.add(subclass);
-                return True;
+                return true;
         # Check if it's a subclass of a subclass (recursive)
         }
         } for scls in cls.__subclasses__(){
             if issubclass(subclass, scls){
                 cls._abc_cache.add(subclass);
-                return True;
+                return true;
         # No dice; update negative cache
         }
         } cls._abc_negative_cache.add(subclass);
-        return False;
+        return false;
 
 }
 }

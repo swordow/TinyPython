@@ -567,7 +567,7 @@ PyTypeObject PyCArg_Type = {
  * C function call.
  *
  * 1. Python integers are converted to C int and passed by value.
- *    Py_None is converted to a C NULL pointer.
+ *    Py_Nil is converted to a C NULL pointer.
  *
  * 2. 3-tuples are expected to have a format character in the first
  *    item, which must be 'i', 'f', 'd', 'q', or 'P'.
@@ -641,7 +641,7 @@ static int ConvParam(PyObject *obj, Py_ssize_t index, struct argument *pa)
     }
 
     /* check for None, integer, string or unicode and use directly if successful */
-    if (obj == Py_None) {
+    if (obj == Py_Nil) {
         pa->ffi_type = &ffi_type_pointer;
         pa->value.p = NULL;
         return 0;
@@ -919,9 +919,9 @@ static PyObject *GetResult(PyObject *restype, void *result, PyObject *checker)
     if (restype == NULL)
         return PyInt_FromLong(*(int *)result);
 
-    if (restype == Py_None) {
-        Py_INCREF(Py_None);
-        return Py_None;
+    if (restype == Py_Nil) {
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
 
     dict = PyType_stgdict(restype);
@@ -1321,8 +1321,8 @@ static PyObject *free_library(PyObject *self, PyObject *args)
         return NULL;
     if (!FreeLibrary((HMODULE)hMod))
         return PyErr_SetFromWindowsErr(GetLastError());
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 /* obsolete, should be removed */
@@ -1450,8 +1450,8 @@ static PyObject *py_dl_close(PyObject *self, PyObject *args)
                                ctypes_dlerror());
         return NULL;
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *py_dl_sym(PyObject *self, PyObject *args)
@@ -1783,8 +1783,8 @@ resize(PyObject *self, PyObject *args)
         obj->b_size = size;
     }
   done:
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 static PyObject *

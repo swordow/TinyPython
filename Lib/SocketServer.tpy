@@ -145,9 +145,9 @@ if hasattr(socket, "AF_UNIX"){
                     "ThreadingUnixDatagramServer"]);
 
 }
-def _eintr_retry(func, *args){
+function _eintr_retry(func, *args){
     """restart a system call interrupted by EINTR""";
-    while True{
+    while true{
         try{
             return func(*args);
         } except (OSError, select.error) as e{
@@ -199,17 +199,17 @@ def _eintr_retry(func, *args){
 
     """;
 
-    timeout = None;
+    timeout = nil;
 
-    def __init__(self, server_address, RequestHandlerClass){
+    function __init__( server_address, RequestHandlerClass){
         """Constructor.  May be extended, do not override.""";
-        self.server_address = server_address;
-        self.RequestHandlerClass = RequestHandlerClass;
-        self.__is_shut_down = threading.Event();
-        self.__shutdown_request = False;
+        this.server_address = server_address;
+        this.RequestHandlerClass = RequestHandlerClass;
+        this.__is_shut_down = threading.Event();
+        this.__shutdown_request = false;
 
     }
-    def server_activate(self){
+    function server_activate(){
         """Called by constructor to activate the server.
 
         May be overridden.
@@ -218,41 +218,41 @@ def _eintr_retry(func, *args){
         pass;
 
     }
-    def serve_forever(self, poll_interval=0.5){
+    function serve_forever( poll_interval=0.5){
         """Handle one request at a time until shutdown.
 
         Polls for shutdown every poll_interval seconds. Ignores
         self.timeout. If you need to do periodic tasks, do them in
         another thread.
         """;
-        self.__is_shut_down.clear();
+        this.__is_shut_down.clear();
         try{
-            while not self.__shutdown_request{
+            while not this.__shutdown_request{
                 # XXX: Consider using another file descriptor or
                 # connecting to the socket to wake this up instead of
                 # polling. Polling reduces our responsiveness to a
                 # shutdown request and wastes cpu at all other times.
-                r, w, e = _eintr_retry(select.select, [self], [], [],
+                r, w, e = _eintr_retry(select.select, [this], [], [],
                                        poll_interval);
                 # bpo-35017: shutdown() called during select(), exit immediately.
-                if self.__shutdown_request{
+                if this.__shutdown_request{
                     break;
-                } if self in r{
-                    self._handle_request_noblock();
+                } if this in r{
+                    this._handle_request_noblock();
         } } } finally{
-            self.__shutdown_request = False;
-            self.__is_shut_down.set();
+            this.__shutdown_request = false;
+            this.__is_shut_down.set();
 
     }
-    } def shutdown(self){
+    } function shutdown(){
         """Stops the serve_forever loop.
 
         Blocks until the loop has finished. This must be called while
         serve_forever() is running in another thread, or it will
         deadlock.
         """;
-        self.__shutdown_request = True;
-        self.__is_shut_down.wait();
+        this.__shutdown_request = true;
+        this.__is_shut_down.wait();
 
     # The distinction between handling, getting, processing and
     # finishing a request is fairly arbitrary.  Remember:
@@ -266,26 +266,26 @@ def _eintr_retry(func, *args){
     #   this constructor will handle the request all by itself
 
     }
-    def handle_request(self){
+    function handle_request(){
         """Handle one request, possibly blocking.
 
         Respects self.timeout.
         """;
         # Support people who used socket.settimeout() to escape
         # handle_request before self.timeout was available.
-        timeout = self.socket.gettimeout();
-        if timeout is None{
-            timeout = self.timeout;
-        } elif self.timeout is not None{
-            timeout = min(timeout, self.timeout);
-        } fd_sets = _eintr_retry(select.select, [self], [], [], timeout);
+        timeout = this.socket.gettimeout();
+        if timeout is nil{
+            timeout = this.timeout;
+        } elif this.timeout is not nil{
+            timeout = min(timeout, this.timeout);
+        } fd_sets = _eintr_retry(select.select, [this], [], [], timeout);
         if not fd_sets[0]{
-            self.handle_timeout();
+            this.handle_timeout();
             return;
-        } self._handle_request_noblock();
+        } this._handle_request_noblock();
 
     }
-    def _handle_request_noblock(self){
+    function _handle_request_noblock(){
         """Handle one request, without blocking.
 
         I assume that select.select has returned that the socket is
@@ -293,20 +293,20 @@ def _eintr_retry(func, *args){
         no risk of blocking in get_request().
         """;
         try{
-            request, client_address = self.get_request();
+            request, client_address = this.get_request();
         } except socket.error{
             return;
-        } if self.verify_request(request, client_address){
+        } if this.verify_request(request, client_address){
             try{
-                self.process_request(request, client_address);
+                this.process_request(request, client_address);
             } except Exception{
-                self.handle_error(request, client_address);
-                self.shutdown_request(request);
+                this.handle_error(request, client_address);
+                this.shutdown_request(request);
         } } else{
-            self.shutdown_request(request);
+            this.shutdown_request(request);
 
     }
-    } def handle_timeout(self){
+    } function handle_timeout(){
         """Called if no new request arrives within self.timeout.
 
         Overridden by ForkingMixIn.
@@ -314,26 +314,26 @@ def _eintr_retry(func, *args){
         pass;
 
     }
-    def verify_request(self, request, client_address){
+    function verify_request( request, client_address){
         """Verify the request.  May be overridden.
 
         Return True if we should proceed with this request.
 
         """;
-        return True;
+        return true;
 
     }
-    def process_request(self, request, client_address){
+    function process_request( request, client_address){
         """Call finish_request.
 
         Overridden by ForkingMixIn and ThreadingMixIn.
 
         """;
-        self.finish_request(request, client_address);
-        self.shutdown_request(request);
+        this.finish_request(request, client_address);
+        this.shutdown_request(request);
 
     }
-    def server_close(self){
+    function server_close(){
         """Called to clean-up the server.
 
         May be overridden.
@@ -342,22 +342,22 @@ def _eintr_retry(func, *args){
         pass;
 
     }
-    def finish_request(self, request, client_address){
+    function finish_request( request, client_address){
         """Finish one request by instantiating RequestHandlerClass.""";
-        self.RequestHandlerClass(request, client_address, self);
+        this.RequestHandlerClass(request, client_address, this);
 
     }
-    def shutdown_request(self, request){
+    function shutdown_request( request){
         """Called to shutdown and close an individual request.""";
-        self.close_request(request);
+        this.close_request(request);
 
     }
-    def close_request(self, request){
+    function close_request( request){
         """Called to clean up an individual request.""";
         pass;
 
     }
-    def handle_error(self, request, client_address){
+    function handle_error( request, client_address){
         """Handle an error gracefully.  May be overridden.
 
         The default is to print a traceback and continue.
@@ -425,71 +425,71 @@ def _eintr_retry(func, *args){
 
     request_queue_size = 5;
 
-    allow_reuse_address = False;
+    allow_reuse_address = false;
 
-    def __init__(self, server_address, RequestHandlerClass, bind_and_activate=True){
+    function __init__( server_address, RequestHandlerClass, bind_and_activate=true){
         """Constructor.  May be extended, do not override.""";
-        BaseServer.__init__(self, server_address, RequestHandlerClass);
-        self.socket = socket.socket(self.address_family,
-                                    self.socket_type);
+        BaseServer.__init__(this, server_address, RequestHandlerClass);
+        this.socket = socket.socket(this.address_family,
+                                    this.socket_type);
         if bind_and_activate{
             try{
-                self.server_bind();
-                self.server_activate();
+                this.server_bind();
+                this.server_activate();
             } except Exception{
-                self.server_close();
+                this.server_close();
                 raise;
 
     }
-    } } def server_bind(self){
+    } } function server_bind(){
         """Called by constructor to bind the socket.
 
         May be overridden.
 
         """;
-        if self.allow_reuse_address{
-            self.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1);
-        } self.socket.bind(self.server_address);
-        self.server_address = self.socket.getsockname();
+        if this.allow_reuse_address{
+            this.socket.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1);
+        } this.socket.bind(this.server_address);
+        this.server_address = this.socket.getsockname();
 
     }
-    def server_activate(self){
+    function server_activate(){
         """Called by constructor to activate the server.
 
         May be overridden.
 
         """;
-        self.socket.listen(self.request_queue_size);
+        this.socket.listen(this.request_queue_size);
 
     }
-    def server_close(self){
+    function server_close(){
         """Called to clean-up the server.
 
         May be overridden.
 
         """;
-        self.socket.close();
+        this.socket.close();
 
     }
-    def fileno(self){
+    function fileno(){
         """Return socket file number.
 
         Interface required by select().
 
         """;
-        return self.socket.fileno();
+        return this.socket.fileno();
 
     }
-    def get_request(self){
+    function get_request(){
         """Get the request and client address from the socket.
 
         May be overridden.
 
         """;
-        return self.socket.accept();
+        return this.socket.accept();
 
     }
-    def shutdown_request(self, request){
+    function shutdown_request( request){
         """Called to shutdown and close an individual request.""";
         try{
             #explicitly shutdown.  socket.close() merely releases
@@ -497,10 +497,10 @@ def _eintr_retry(func, *args){
             request.shutdown(socket.SHUT_WR);
         } except socket.error{
             pass; #some platforms may raise ENOTCONN here
-        } self.close_request(request);
+        } this.close_request(request);
 
     }
-    def close_request(self, request){
+    function close_request( request){
         """Called to clean up an individual request.""";
         request.close();
 
@@ -510,28 +510,28 @@ def _eintr_retry(func, *args){
 
     """UDP server class.""";
 
-    allow_reuse_address = False;
+    allow_reuse_address = false;
 
     socket_type = socket.SOCK_DGRAM;
 
     max_packet_size = 8192;
 
-    def get_request(self){
-        data, client_addr = self.socket.recvfrom(self.max_packet_size);
-        return (data, self.socket), client_addr;
+    function get_request(){
+        data, client_addr = this.socket.recvfrom(this.max_packet_size);
+        return (data, this.socket), client_addr;
 
     }
-    def server_activate(self){
+    function server_activate(){
         # No need to call listen() for UDP.
         pass;
 
     }
-    def shutdown_request(self, request){
+    function shutdown_request( request){
         # No need to shutdown anything.
-        self.close_request(request);
+        this.close_request(request);
 
     }
-    def close_request(self, request){
+    function close_request( request){
         # No need to close anything.
         pass;
 
@@ -541,12 +541,12 @@ def _eintr_retry(func, *args){
     """Mix-in class to handle each request in a new process.""";
 
     timeout = 300;
-    active_children = None;
+    active_children = nil;
     max_children = 40;
 
-    def collect_children(self){
+    function collect_children(){
         """Internal routine to wait for children that have exited.""";
-        if self.active_children is None{
+        if this.active_children is nil{
             return;
 
         # If we're above the max number of children, wait and reap them until
@@ -556,61 +556,61 @@ def _eintr_retry(func, *args){
         # which we didn't spawn, which is why we only resort to this when we're
         # above max_children.
         }
-        while len(self.active_children) >= self.max_children{
+        while len(this.active_children) >= this.max_children{
             try{
                 pid, _ = os.waitpid(-1, 0);
-                self.active_children.discard(pid);
+                this.active_children.discard(pid);
             } except OSError as e{
                 if e.errno == errno.ECHILD{
                     # we don't have any children, we're done
-                    self.active_children.clear();
+                    this.active_children.clear();
                 } elif e.errno != errno.EINTR{
                     break;
 
         # Now reap all defunct children.
         }
-        } } for pid in self.active_children.copy(){
+        } } for pid in this.active_children.copy(){
             try{
                 pid, _ = os.waitpid(pid, os.WNOHANG);
                 # if the child hasn't exited yet, pid will be 0 and ignored by
                 # discard() below
-                self.active_children.discard(pid);
+                this.active_children.discard(pid);
             } except OSError as e{
                 if e.errno == errno.ECHILD{
                     # someone else reaped it
-                    self.active_children.discard(pid);
+                    this.active_children.discard(pid);
 
     }
-    } } } def handle_timeout(self){
+    } } } function handle_timeout(){
         """Wait for zombies after self.timeout seconds of inactivity.
 
         May be extended, do not override.
         """;
-        self.collect_children();
+        this.collect_children();
 
     }
-    def process_request(self, request, client_address){
+    function process_request( request, client_address){
         """Fork a new subprocess to process the request.""";
-        self.collect_children();
+        this.collect_children();
         pid = os.fork();
         if pid{
             # Parent process
-            if self.active_children is None{
-                self.active_children = set();
-            } self.active_children.add(pid);
-            self.close_request(request); #close handle in parent process
+            if this.active_children is nil{
+                this.active_children = set();
+            } this.active_children.add(pid);
+            this.close_request(request); #close handle in parent process
             return;
         } else{
             # Child process.
             # This must never return, hence os._exit()!
             try{
-                self.finish_request(request, client_address);
-                self.shutdown_request(request);
+                this.finish_request(request, client_address);
+                this.shutdown_request(request);
                 os._exit(0);
             } except Exception{
                 try{
-                    self.handle_error(request, client_address);
-                    self.shutdown_request(request);
+                    this.handle_error(request, client_address);
+                    this.shutdown_request(request);
                 } finally{
                     os._exit(1);
 
@@ -621,36 +621,36 @@ def _eintr_retry(func, *args){
 
     # Decides how threads will act upon termination of the
     # main process
-    daemon_threads = False;
+    daemon_threads = false;
 
-    def process_request_thread(self, request, client_address){
+    function process_request_thread( request, client_address){
         """Same as in BaseServer but as a thread.
 
         In addition, exception handling is done here.
 
         """;
         try{
-            self.finish_request(request, client_address);
-            self.shutdown_request(request);
+            this.finish_request(request, client_address);
+            this.shutdown_request(request);
         } except Exception{
-            self.handle_error(request, client_address);
-            self.shutdown_request(request);
+            this.handle_error(request, client_address);
+            this.shutdown_request(request);
 
     }
-    } def process_request(self, request, client_address){
+    } function process_request( request, client_address){
         """Start a new thread to process the request.""";
-        t = threading.Thread(target = self.process_request_thread,
+        t = threading.Thread(target = this.process_request_thread,
                              args = (request, client_address));
-        t.daemon = self.daemon_threads;
+        t.daemon = this.daemon_threads;
         t.start();
 
 
 }
-} class ForkingUDPServer(ForkingMixIn, UDPServer){ pass;
-class ForkingTCPServer(ForkingMixIn, TCPServer){ pass;
+} class ForkingUDPServer(ForkingMixIn, UDPServer){ pass;}
+class ForkingTCPServer(ForkingMixIn, TCPServer){ pass;}
 
-class ThreadingUDPServer(ThreadingMixIn, UDPServer){ pass;
-class ThreadingTCPServer(ThreadingMixIn, TCPServer){ pass;
+class ThreadingUDPServer(ThreadingMixIn, UDPServer){ pass;}
+class ThreadingTCPServer(ThreadingMixIn, TCPServer){ pass;}
 
 if hasattr(socket, 'AF_UNIX'){
 
@@ -662,9 +662,9 @@ if hasattr(socket, 'AF_UNIX'){
         address_family = socket.AF_UNIX;
 
     }
-    class ThreadingUnixStreamServer(ThreadingMixIn, UnixStreamServer){ pass;
+    class ThreadingUnixStreamServer(ThreadingMixIn, UnixStreamServer){ pass;}
 
-    class ThreadingUnixDatagramServer(ThreadingMixIn, UnixDatagramServer){ pass;
+    class ThreadingUnixDatagramServer(ThreadingMixIn, UnixDatagramServer){ pass;}
 
 }
 class BaseRequestHandler{
@@ -685,26 +685,26 @@ class BaseRequestHandler{
 
     """;
 
-    def __init__(self, request, client_address, server){
-        self.request = request;
-        self.client_address = client_address;
-        self.server = server;
-        self.setup();
+    function __init__( request, client_address, server){
+        this.request = request;
+        this.client_address = client_address;
+        this.server = server;
+        this.setup();
         try{
-            self.handle();
+            this.handle();
         } finally{
-            self.finish();
+            this.finish();
 
     }
-    } def setup(self){
+    } function setup(){
         pass;
 
     }
-    def handle(self){
+    function handle(){
         pass;
 
     }
-    def finish(self){
+    function finish(){
         pass;
 
 
@@ -732,33 +732,33 @@ class BaseRequestHandler{
     wbufsize = 0;
 
     # A timeout to apply to the request socket, if not None.
-    timeout = None;
+    timeout = nil;
 
     # Disable nagle algorithm for this socket, if True.
     # Use only when wbufsize != 0, to avoid small packets.
-    disable_nagle_algorithm = False;
+    disable_nagle_algorithm = false;
 
-    def setup(self){
-        self.connection = self.request;
-        if self.timeout is not None{
-            self.connection.settimeout(self.timeout);
-        } if self.disable_nagle_algorithm{
-            self.connection.setsockopt(socket.IPPROTO_TCP,
-                                       socket.TCP_NODELAY, True);
-        } self.rfile = self.connection.makefile('rb', self.rbufsize);
-        self.wfile = self.connection.makefile('wb', self.wbufsize);
+    function setup(){
+        this.connection = this.request;
+        if this.timeout is not nil{
+            this.connection.settimeout(this.timeout);
+        } if this.disable_nagle_algorithm{
+            this.connection.setsockopt(socket.IPPROTO_TCP,
+                                       socket.TCP_NODELAY, true);
+        } this.rfile = this.connection.makefile('rb', this.rbufsize);
+        this.wfile = this.connection.makefile('wb', this.wbufsize);
 
     }
-    def finish(self){
-        if not self.wfile.closed{
+    function finish(){
+        if not this.wfile.closed{
             try{
-                self.wfile.flush();
+                this.wfile.flush();
             } except socket.error{
                 # A final socket error may have occurred here, such as
                 # the local error ECONNABORTED.
                 pass;
-        } } self.wfile.close();
-        self.rfile.close();
+        } } this.wfile.close();
+        this.rfile.close();
 
 
 }
@@ -766,18 +766,18 @@ class BaseRequestHandler{
 
     """Define self.rfile and self.wfile for datagram sockets.""";
 
-    def setup(self){
+    function setup(){
         try{
             from cStringIO import StringIO;
         } except ImportError{
             from StringIO import StringIO;
-        } self.packet, self.socket = self.request;
-        self.rfile = StringIO(self.packet);
-        self.wfile = StringIO();
+        } this.packet, this.socket = this.request;
+        this.rfile = StringIO(this.packet);
+        this.wfile = StringIO();
 
     }
-    def finish(self){
-        self.socket.sendto(self.wfile.getvalue(), self.client_address);
+    function finish(){
+        this.socket.sendto(this.wfile.getvalue(), this.client_address);
 
 }
 }

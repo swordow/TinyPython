@@ -1,8 +1,8 @@
 # Generated from 'Files.h'
 
-def FOUR_CHAR_CODE(x){ return x;
-true = True;
-false = False;
+function FOUR_CHAR_CODE(x){ return x;}
+true = true;
+false = false;
 fsCurPerm = 0x00;
 fsRdPerm = 0x01;
 fsWrPerm = 0x02;

@@ -9,7 +9,7 @@ class TextViewer(Toplevel){
     """A simple text viewer dialog for IDLE
 
     """;
-    def __init__(self, parent, title, text, modal=True, _htest=False){
+    function __init__( parent, title, text, modal=true, _htest=false){
         """Show the given text in a scrollable window with a 'close' button
 
         If modal option set to False, user can interact with other windows,
@@ -18,64 +18,64 @@ class TextViewer(Toplevel){
 
         _htest - bool; change box location when running htest.
         """;
-        Toplevel.__init__(self, parent);
-        self.configure(borderwidth=5);
+        Toplevel.__init__(this, parent);
+        this.configure(borderwidth=5);
         # place dialog below parent if running htest
-        self.geometry("=%dx%d+%d+%d" % (750, 500,
+        this.geometry("=%dx%d+%d+%d" % (750, 500,
                            parent.winfo_rootx() + 10,
                            parent.winfo_rooty() + (10 if not _htest else 100)));
         #elguavas - config placeholders til config stuff completed
-        self.bg = '#ffffff';
-        self.fg = '#000000';
+        this.bg = '#ffffff';
+        this.fg = '#000000';
 
-        self.CreateWidgets();
-        self.title(title);
-        self.protocol("WM_DELETE_WINDOW", self.Ok);
-        self.parent = parent;
-        self.textView.focus_set();
+        this.CreateWidgets();
+        this.title(title);
+        this.protocol("WM_DELETE_WINDOW", this.Ok);
+        this.parent = parent;
+        this.textView.focus_set();
         #key bindings for this dialog
-        self.bind('<Return>',self.Ok); #dismiss dialog
-        self.bind('<Escape>',self.Ok); #dismiss dialog
-        self.textView.insert(0.0, text);
-        self.textView.config(state=DISABLED);
+        this.bind('<Return>',this.Ok); #dismiss dialog
+        this.bind('<Escape>',this.Ok); #dismiss dialog
+        this.textView.insert(0.0, text);
+        this.textView.config(state=DISABLED);
 
-        self.is_modal = modal;
-        if self.is_modal{
-            self.transient(parent);
-            self.grab_set();
-            self.wait_window();
+        this.is_modal = modal;
+        if this.is_modal{
+            this.transient(parent);
+            this.grab_set();
+            this.wait_window();
 
     }
-    } def CreateWidgets(self){
-        frameText = Frame(self, relief=SUNKEN, height=700);
-        frameButtons = Frame(self);
-        self.buttonOk = Button(frameButtons, text='Close',
-                               command=self.Ok, takefocus=FALSE);
-        self.scrollbarView = Scrollbar(frameText, orient=VERTICAL,
+    } function CreateWidgets(){
+        frameText = Frame(this, relief=SUNKEN, height=700);
+        frameButtons = Frame(this);
+        this.buttonOk = Button(frameButtons, text='Close',
+                               command=this.Ok, takefocus=FALSE);
+        this.scrollbarView = Scrollbar(frameText, orient=VERTICAL,
                                        takefocus=FALSE, highlightthickness=0);
-        self.textView = Text(frameText, wrap=WORD, highlightthickness=0,
-                             fg=self.fg, bg=self.bg);
-        self.scrollbarView.config(command=self.textView.yview);
-        self.textView.config(yscrollcommand=self.scrollbarView.set);
-        self.buttonOk.pack();
-        self.scrollbarView.pack(side=RIGHT,fill=Y);
-        self.textView.pack(side=LEFT,expand=TRUE,fill=BOTH);
+        this.textView = Text(frameText, wrap=WORD, highlightthickness=0,
+                             fg=this.fg, bg=this.bg);
+        this.scrollbarView.config(command=this.textView.yview);
+        this.textView.config(yscrollcommand=this.scrollbarView.set);
+        this.buttonOk.pack();
+        this.scrollbarView.pack(side=RIGHT,fill=Y);
+        this.textView.pack(side=LEFT,expand=TRUE,fill=BOTH);
         frameButtons.pack(side=BOTTOM,fill=X);
         frameText.pack(side=TOP,expand=TRUE,fill=BOTH);
 
     }
-    def Ok(self, event=None){
-        if self.is_modal{
-            self.grab_release();
-        } self.destroy();
+    function Ok( event=nil){
+        if this.is_modal{
+            this.grab_release();
+        } this.destroy();
 
 
 }
-} def view_text(parent, title, text, modal=True){
+} function view_text(parent, title, text, modal=true){
     return TextViewer(parent, title, text, modal);
 
 }
-def view_file(parent, title, filename, encoding=None, modal=True){
+function view_file(parent, title, filename, encoding=nil, modal=true){
     try{
         if encoding{
             import codecs;
@@ -97,7 +97,7 @@ def view_file(parent, title, filename, encoding=None, modal=True){
 }
 } if __name__ == '__main__'{
     import unittest;
-    unittest.main('idlelib.idle_test.test_textview', verbosity=2, exit=False);
+    unittest.main('idlelib.idle_test.test_textview', verbosity=2, exit=false);
     from idlelib.idle_test.htest import run;
     run(TextViewer);
 

@@ -4,7 +4,7 @@ from ctypes import *;
 
 class AnonTest(unittest.TestCase){
 
-    def test_anon(self){
+    function test_anon(){
         class ANON(Union){
             _fields_ = [("a", c_int),
                         ("b", c_int)];
@@ -17,24 +17,24 @@ class AnonTest(unittest.TestCase){
             _anonymous_ = ["_"];
 
         }
-        self.assertEqual(Y.a.offset, sizeof(c_int));
-        self.assertEqual(Y.b.offset, sizeof(c_int));
+        this.assertEqual(Y.a.offset, sizeof(c_int));
+        this.assertEqual(Y.b.offset, sizeof(c_int));
 
-        self.assertEqual(ANON.a.offset, 0);
-        self.assertEqual(ANON.b.offset, 0);
+        this.assertEqual(ANON.a.offset, 0);
+        this.assertEqual(ANON.b.offset, 0);
 
     }
-    def test_anon_nonseq(self){
+    function test_anon_nonseq(){
         # TypeError: _anonymous_ must be a sequence
-        self.assertRaises(TypeError,
+        this.assertRaises(TypeError,
                               lambda{ type(Structure)("Name",
                                                       (Structure,),
                                                       {"_fields_": [], "_anonymous_": 42})});
 
     }
-    def test_anon_nonmember(self){
+    function test_anon_nonmember(){
         # AttributeError: type object 'Name' has no attribute 'x'
-        self.assertRaises(AttributeError,
+        this.assertRaises(AttributeError,
                               lambda{ type(Structure)("Name",
                                                       (Structure,),
                                                       {"_fields_": [],
@@ -42,19 +42,19 @@ class AnonTest(unittest.TestCase){
 
     }
     @cpython_only;
-    def test_issue31490(self){
+    function test_issue31490(){
         # There shouldn't be an assertion failure in case the class has an
         # attribute whose name is specified in _anonymous_ but not in _fields_.
 
         # AttributeError: 'x' is specified in _anonymous_ but not in _fields_
-        with self.assertRaises(AttributeError){
+        with this.assertRaises(AttributeError){
             class Name(Structure){
                 _fields_ = [];
                 _anonymous_ = ["x"];
                 x = 42;
 
     }
-    } } def test_nested(self){
+    } } function test_nested(){
         class ANON_S(Structure){
             _fields_ = [("a", c_int)];
 
@@ -72,11 +72,11 @@ class AnonTest(unittest.TestCase){
             _anonymous_ = ["_"];
 
         }
-        self.assertEqual(Y.x.offset, 0);
-        self.assertEqual(Y.a.offset, sizeof(c_int));
-        self.assertEqual(Y.b.offset, sizeof(c_int));
-        self.assertEqual(Y._.offset, sizeof(c_int));
-        self.assertEqual(Y.y.offset, sizeof(c_int) * 2);
+        this.assertEqual(Y.x.offset, 0);
+        this.assertEqual(Y.a.offset, sizeof(c_int));
+        this.assertEqual(Y.b.offset, sizeof(c_int));
+        this.assertEqual(Y._.offset, sizeof(c_int));
+        this.assertEqual(Y.y.offset, sizeof(c_int) * 2);
 
 }
 } if __name__ == "__main__"{

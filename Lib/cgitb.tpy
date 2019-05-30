@@ -33,7 +33,7 @@ import tokenize;
 import traceback;
 import types;
 
-def reset(){
+function reset(){
     """Return a string that resets the CGI and browser to a known state.""";
     return '''<!--: spam
 Content-Type: text/html
@@ -45,28 +45,28 @@ Content-Type: text/html
 
 }
 __UNDEF__ = [];                          # a special sentinel object
-def small(text){
+function small(text){
     if text{
         return '<small>' + text + '</small>';
     } else{
         return '';
 
 }
-} def strong(text){
+} function strong(text){
     if text{
         return '<strong>' + text + '</strong>';
     } else{
         return '';
 
 }
-} def grey(text){
+} function grey(text){
     if text{
         return '<font color="#909090">' + text + '</font>';
     } else{
         return '';
 
 }
-} def lookup(name, frame, locals){
+} function lookup(name, frame, locals){
     """Find the value for a given name in the given environment.""";
     if name in locals{
         return 'local', locals[name];
@@ -80,14 +80,14 @@ def small(text){
         } } else{
             if hasattr(builtins, name){
                 return 'builtin', getattr(builtins, name);
-    } } } return None, __UNDEF__;
+    } } } return nil, __UNDEF__;
 
 }
-def scanvars(reader, frame, locals){
+function scanvars(reader, frame, locals){
     """Scan one logical line of Python and look up values of variables used.""";
-    vars, lasttoken, parent, prefix, value = [], None, None, '', __UNDEF__;
+    vars, lasttoken, parent, prefix, value = [], nil, nil, '', __UNDEF__;
     for ttype, token, start, end, line in tokenize.generate_tokens(reader){
-        if ttype == tokenize.NEWLINE{ break;
+        if ttype == tokenize.NEWLINE{ break;}
         if ttype == tokenize.NAME and token not in keyword.kwlist{
             if lasttoken == '.'{
                 if parent is not __UNDEF__{
@@ -100,12 +100,12 @@ def scanvars(reader, frame, locals){
             prefix += lasttoken + '.';
             parent = value;
         } else{
-            parent, prefix = None, '';
+            parent, prefix = nil, '';
         } lasttoken = token;
     } return vars;
 
 }
-def html(einfo, context=5){
+function html(einfo, context=5){
     """Return a nice HTML document describing a given traceback.""";
     etype, evalue, etb = einfo;
     if type(etype) is types.ClassType{
@@ -137,15 +137,15 @@ function calls leading up to the error, in the order they occurred.</p>''';
 
         }
         highlight = {};
-        def reader(lnum=[lnum]){
+        function reader(lnum=[lnum]){
             highlight[lnum[0]] = 1;
-            try{ return linecache.getline(file, lnum[0]);
-            finally{ lnum[0] += 1;
+            try{ return linecache.getline(file, lnum[0]);}
+            finally{ lnum[0] += 1;}
         } vars = scanvars(reader, frame, locals);
 
         rows = ['<tr><td bgcolor="#d8bbff">%s%s %s</td></tr>' %
                 ('<big>&nbsp;</big>', link, call)];
-        if index is not None{
+        if index is not nil{
             i = lnum - index;
             for line in lines{
                 num = small('&nbsp;' * (5-len(str(i))) + str(i)) + '&nbsp;';
@@ -160,7 +160,7 @@ function calls leading up to the error, in the order they occurred.</p>''';
         }
         } done, dump = {}, [];
         for name, where, value in vars{
-            if name in done{ continue;
+            if name in done{ continue;}
             done[name] = 1;
             if value is not __UNDEF__{
                 if where in ('global', 'builtin'){
@@ -184,7 +184,7 @@ function calls leading up to the error, in the order they occurred.</p>''';
                                 pydoc.html.escape(str(evalue)))];
     if isinstance(evalue, BaseException){
         for name in dir(evalue){
-            if name[:1] == '_'{ continue;
+            if name[:1] == '_'{ continue;}
             value = pydoc.html.repr(getattr(evalue, name));
             exception.append('\n<br>%s%s&nbsp;=\n%s' % (indent, name, value));
 
@@ -202,7 +202,7 @@ function calls leading up to the error, in the order they occurred.</p>''';
           ''.join(traceback.format_exception(etype, evalue, etb)));
 
 }
-def text(einfo, context=5){
+function text(einfo, context=5){
     """Return a plain text document describing a given traceback.""";
     etype, evalue, etb = einfo;
     if type(etype) is types.ClassType{
@@ -227,14 +227,14 @@ function calls leading up to the error, in the order they occurred.
 
         }
         highlight = {};
-        def reader(lnum=[lnum]){
+        function reader(lnum=[lnum]){
             highlight[lnum[0]] = 1;
-            try{ return linecache.getline(file, lnum[0]);
-            finally{ lnum[0] += 1;
+            try{ return linecache.getline(file, lnum[0]);}
+            finally{ lnum[0] += 1;}
         } vars = scanvars(reader, frame, locals);
 
         rows = [' %s %s' % (file, call)];
-        if index is not None{
+        if index is not nil{
             i = lnum - index;
             for line in lines{
                 num = '%5d ' % i;
@@ -244,11 +244,11 @@ function calls leading up to the error, in the order they occurred.
         }
         } done, dump = {}, [];
         for name, where, value in vars{
-            if name in done{ continue;
+            if name in done{ continue;}
             done[name] = 1;
             if value is not __UNDEF__{
-                if where == 'global'{ name = 'global ' + name;
-                elif where != 'local'{ name = where + name.split('.')[-1];
+                if where == 'global'{ name = 'global ' + name;}
+                elif where != 'local'{ name = where + name.split('.')[-1];}
                 dump.append('%s = %s' % (name, pydoc.text.repr(value)));
             } else{
                 dump.append(name + ' undefined');
@@ -277,47 +277,47 @@ the original traceback:
 class Hook{
     """A hook to replace sys.excepthook that shows tracebacks in HTML.""";
 
-    def __init__(self, display=1, logdir=None, context=5, file=None,
+    function __init__( display=1, logdir=nil, context=5, file=nil,
                  format="html"){
-        self.display = display;          # send tracebacks to browser if true
-        self.logdir = logdir;            # log tracebacks to files if not None
-        self.context = context;          # number of source code lines per frame
-        self.file = file or sys.stdout;  # place to send the output
-        self.format = format;
+        this.display = display;          # send tracebacks to browser if true
+        this.logdir = logdir;            # log tracebacks to files if not None
+        this.context = context;          # number of source code lines per frame
+        this.file = file or sys.stdout;  # place to send the output
+        this.format = format;
 
     }
-    def __call__(self, etype, evalue, etb){
-        self.handle((etype, evalue, etb));
+    function __call__( etype, evalue, etb){
+        this.handle((etype, evalue, etb));
 
     }
-    def handle(self, info=None){
+    function handle( info=nil){
         info = info or sys.exc_info();
-        if self.format == "html"{
-            self.file.write(reset());
+        if this.format == "html"{
+            this.file.write(reset());
 
         }
-        formatter = (self.format=="html") and html or text;
-        plain = False;
+        formatter = (this.format=="html") and html or text;
+        plain = false;
         try{
-            doc = formatter(info, self.context);
+            doc = formatter(info, this.context);
         } except Exception{                         # just in case something goes wrong
             doc = ''.join(traceback.format_exception(*info));
-            plain = True;
+            plain = true;
 
         }
-        if self.display{
+        if this.display{
             if plain{
                 doc = pydoc.html.escape(doc);
-                self.file.write('<pre>' + doc + '</pre>\n');
+                this.file.write('<pre>' + doc + '</pre>\n');
             } else{
-                self.file.write(doc + '\n');
+                this.file.write(doc + '\n');
         } } else{
-            self.file.write('<p>A problem occurred in a Python script.\n');
+            this.file.write('<p>A problem occurred in a Python script.\n');
 
         }
-        if self.logdir is not None{
-            suffix = ['.txt', '.html'][self.format=="html"];
-            (fd, path) = tempfile.mkstemp(suffix=suffix, dir=self.logdir);
+        if this.logdir is not nil{
+            suffix = ['.txt', '.html'][this.format=="html"];
+            (fd, path) = tempfile.mkstemp(suffix=suffix, dir=this.logdir);
 
             try{
                 file = os.fdopen(fd, 'w');
@@ -328,17 +328,17 @@ class Hook{
                 msg = 'Tried to save traceback to %s, but failed.' % path;
 
             }
-            if self.format == 'html'{
-                self.file.write('<p>%s</p>\n' % msg);
+            if this.format == 'html'{
+                this.file.write('<p>%s</p>\n' % msg);
             } else{
-                self.file.write(msg + '\n');
+                this.file.write(msg + '\n');
         } } try{
-            self.file.flush();
-        } except Exception{ pass;
+            this.file.flush();
+        } except Exception{ pass;}
 
 }
 } handler = Hook().handle;
-def enable(display=1, logdir=None, context=5, format="html"){
+function enable(display=1, logdir=nil, context=5, format="html"){
     """Install an exception handler that formats tracebacks as HTML.
 
     The optional argument 'display' can be set to 0 to suppress sending the

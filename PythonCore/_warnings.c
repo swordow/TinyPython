@@ -20,7 +20,7 @@ check_matched(PyObject *obj, PyObject *arg)
     PyObject *result;
     int rc;
 
-    if (obj == Py_None)
+    if (obj == Py_Nil)
         return 1;
     result = PyObject_CallMethod(obj, "match", "O", arg);
     if (result == NULL)
@@ -297,11 +297,11 @@ warn_explicit(PyObject *category, PyObject *message,
               PyObject *module, PyObject *registry, PyObject *sourceline)
 {
     PyObject *key = NULL, *text = NULL, *result = NULL, *lineno_obj = NULL;
-    PyObject *item = Py_None;
+    PyObject *item = Py_Nil;
     const char *action;
     int rc;
 
-    if (registry && !PyDict_Check(registry) && (registry != Py_None)) {
+    if (registry && !PyDict_Check(registry) && (registry != Py_Nil)) {
         PyErr_SetString(PyExc_TypeError, "'registry' must be a dict or None");
         return NULL;
     }
@@ -343,7 +343,7 @@ warn_explicit(PyObject *category, PyObject *message,
     if (key == NULL)
         goto cleanup;
 
-    if ((registry != NULL) && (registry != Py_None)) {
+    if ((registry != NULL) && (registry != Py_Nil)) {
         rc = already_warned(registry, key, 0);
         if (rc == -1)
             goto cleanup;
@@ -365,13 +365,13 @@ warn_explicit(PyObject *category, PyObject *message,
        is "always". */
     rc = 0;
     if (strcmp(action, "always") != 0) {
-        if (registry != NULL && registry != Py_None &&
+        if (registry != NULL && registry != Py_Nil &&
                 PyDict_SetItem(registry, key, Py_True) < 0)
             goto cleanup;
         else if (strcmp(action, "ignore") == 0)
             goto return_none;
         else if (strcmp(action, "once") == 0) {
-            if (registry == NULL || registry == Py_None) {
+            if (registry == NULL || registry == Py_Nil) {
                 registry = get_once_registry();
                 if (registry == NULL)
                     goto cleanup;
@@ -381,7 +381,7 @@ warn_explicit(PyObject *category, PyObject *message,
         }
         else if (strcmp(action, "module") == 0) {
             /* registry[(text, category, 0)] = 1 */
-            if (registry != NULL && registry != Py_None)
+            if (registry != NULL && registry != Py_Nil)
                 rc = update_registry(registry, text, category, 0);
         }
         else if (strcmp(action, "default") != 0) {
@@ -431,7 +431,7 @@ warn_explicit(PyObject *category, PyObject *message,
         goto cleanup;
 
  return_none:
-    result = Py_None;
+    result = Py_Nil;
     Py_INCREF(result);
 
  cleanup:
@@ -440,7 +440,7 @@ warn_explicit(PyObject *category, PyObject *message,
     Py_XDECREF(lineno_obj);
     Py_DECREF(module);
     Py_XDECREF(message);
-    return result;  /* Py_None or NULL. */
+    return result;  /* Py_Nil or NULL. */
 }
 
 /* filename, module, and registry are new refs, globals is borrowed */
@@ -678,8 +678,8 @@ warnings_warn_explicit(PyObject *self, PyObject *args, PyObject *kwds)
                                                 module_name, NULL);
         if (!source)
             return NULL;
-        else if (source == Py_None) {
-            Py_DECREF(Py_None);
+        else if (source == Py_Nil) {
+            Py_DECREF(Py_Nil);
             goto standard_call;
         }
 
@@ -838,7 +838,7 @@ create_filter(PyObject *category, const char *action)
     lineno = PyInt_FromLong(0);
     if (lineno == NULL)
         return NULL;
-    result = PyTuple_Pack(5, action_obj, Py_None, category, Py_None, lineno);
+    result = PyTuple_Pack(5, action_obj, Py_Nil, category, Py_Nil, lineno);
     Py_DECREF(lineno);
     return result;
 }

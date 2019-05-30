@@ -30,7 +30,7 @@ _translation = [chr(_x) for _x in range(256)];
 EMPTYSTRING = '';
 
 
-def _translate(s, altchars){
+function _translate(s, altchars){
     translation = _translation[:];
     for k, v in altchars.items(){
         translation[ord(k)] = v;
@@ -41,7 +41,7 @@ def _translate(s, altchars){
 # Base64 encoding/decoding uses binascii
 
 }
-def b64encode(s, altchars=None){
+function b64encode(s, altchars=nil){
     """Encode a string using Base64.
 
     s is the string to encode.  Optional altchars must be a string of at least
@@ -53,13 +53,13 @@ def b64encode(s, altchars=None){
     """;
     # Strip off the trailing newline
     encoded = binascii.b2a_base64(s)[:-1];
-    if altchars is not None{
+    if altchars is not nil{
         return encoded.translate(string.maketrans(b'+/', altchars[:2]));
     } return encoded;
 
 
 }
-def b64decode(s, altchars=None){
+function b64decode(s, altchars=nil){
     """Decode a Base64 encoded string.
 
     s is the string to decode.  Optional altchars must be a string of at least
@@ -71,7 +71,7 @@ def b64decode(s, altchars=None){
     alphabet nor the alternative alphabet are discarded prior to the padding
     check.
     """;
-    if altchars is not None{
+    if altchars is not nil{
         s = s.translate(string.maketrans(altchars[:2], '+/'));
     } try{
         return binascii.a2b_base64(s);
@@ -81,7 +81,7 @@ def b64decode(s, altchars=None){
 
 
 }
-} def standard_b64encode(s){
+} function standard_b64encode(s){
     """Encode a string using the standard Base64 alphabet.
 
     s is the string to encode.  The encoded string is returned.
@@ -89,7 +89,7 @@ def b64decode(s, altchars=None){
     return b64encode(s);
 
 }
-def standard_b64decode(s){
+function standard_b64decode(s){
     """Decode a string encoded with the standard Base64 alphabet.
 
     Argument s is the string to decode.  The decoded string is returned.  A
@@ -103,7 +103,7 @@ def standard_b64decode(s){
 _urlsafe_encode_translation = string.maketrans(b'+/', b'-_');
 _urlsafe_decode_translation = string.maketrans(b'-_', b'+/');
 
-def urlsafe_b64encode(s){
+function urlsafe_b64encode(s){
     """Encode a string using the URL- and filesystem-safe Base64 alphabet.
 
     Argument s is the string to encode.  The encoded string is returned.  The
@@ -112,7 +112,7 @@ def urlsafe_b64encode(s){
     return b64encode(s).translate(_urlsafe_encode_translation);
 
 }
-def urlsafe_b64decode(s){
+function urlsafe_b64decode(s){
     """Decode a string using the URL- and filesystem-safe Base64 alphabet.
 
     Argument s is the string to decode.  The decoded string is returned.  A
@@ -146,7 +146,7 @@ _b32tab = [v for k, v in _b32tab];
 _b32rev = dict([(v, long(k)) for k, v in _b32alphabet.items()]);
 
 
-def b32encode(s){
+function b32encode(s){
     """Encode a string using Base32.
 
     s is the string to encode.  The encoded string is returned.
@@ -189,7 +189,7 @@ def b32encode(s){
 
 
 }
-def b32decode(s, casefold=False, map01=None){
+function b32decode(s, casefold=false, map01=nil){
     """Decode a Base32 encoded string.
 
     s is the string to decode.  Optional casefold is a flag specifying whether
@@ -236,7 +236,7 @@ def b32decode(s, casefold=False, map01=None){
     shift = 35;
     for c in s{
         val = _b32rev.get(c);
-        if val is None{
+        if val is nil{
             raise TypeError('Non-base32 digit found');
         } acc += _b32rev[c] << shift;
         shift -= 5;
@@ -268,7 +268,7 @@ def b32decode(s, casefold=False, map01=None){
 # lowercase.  The RFC also recommends against accepting input case
 # insensitively.
 }
-def b16encode(s){
+function b16encode(s){
     """Encode a string using Base16.
 
     s is the string to encode.  The encoded string is returned.
@@ -277,7 +277,7 @@ def b16encode(s){
 
 
 }
-def b16decode(s, casefold=False){
+function b16decode(s, casefold=false){
     """Decode a Base16 encoded string.
 
     s is the string to decode.  Optional casefold is a flag specifying whether
@@ -304,9 +304,9 @@ def b16decode(s, casefold=False){
 MAXLINESIZE = 76; # Excluding the CRLF
 MAXBINSIZE = (MAXLINESIZE//4)*3;
 
-def encode(input, output){
+function encode(input, output){
     """Encode a file.""";
-    while True{
+    while true{
         s = input.read(MAXBINSIZE);
         if not s{
             break;
@@ -320,9 +320,9 @@ def encode(input, output){
 
 
 }
-} def decode(input, output){
+} function decode(input, output){
     """Decode a file.""";
-    while True{
+    while true{
         line = input.readline();
         if not line{
             break;
@@ -331,7 +331,7 @@ def encode(input, output){
 
 
 }
-} def encodestring(s){
+} function encodestring(s){
     """Encode a string into multiple lines of base-64 data.""";
     pieces = [];
     for i in range(0, len(s), MAXBINSIZE){
@@ -341,7 +341,7 @@ def encode(input, output){
 
 
 }
-def decodestring(s){
+function decodestring(s){
     """Decode a string.""";
     return binascii.a2b_base64(s);
 
@@ -349,7 +349,7 @@ def decodestring(s){
 
 # Useable as a script...
 }
-def test(){
+function test(){
     """Small test program""";
     import sys, getopt;
     try{
@@ -364,10 +364,10 @@ def test(){
         sys.exit(2);
     } func = encode;
     for o, a in opts{
-        if o == '-e'{ func = encode;
-        if o == '-d'{ func = decode;
-        if o == '-u'{ func = decode;
-        if o == '-t'{ test1(); return;
+        if o == '-e'{ func = encode;}
+        if o == '-d'{ func = decode;}
+        if o == '-u'{ func = decode;}
+        if o == '-t'{ test1(); return;}
     } if args and args[0] != '-'{
         with open(args[0], 'rb') as f{
             func(f, sys.stdout);
@@ -376,7 +376,7 @@ def test(){
 
 
 }
-} def test1(){
+} function test1(){
     s0 = "Aladdin:open sesame";
     s1 = encodestring(s0);
     s2 = decodestring(s1);

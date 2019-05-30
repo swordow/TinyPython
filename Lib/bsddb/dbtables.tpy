@@ -70,32 +70,32 @@ class TableDBError(StandardError){
 }
 class Cond{
     """This condition matches everything""";
-    def __call__(self, s){
+    function __call__( s){
         return 1;
 
 }
 } class ExactCond(Cond){
     """Acts as an exact match condition function""";
-    def __init__(self, strtomatch){
-        self.strtomatch = strtomatch;
-    } def __call__(self, s){
-        return s == self.strtomatch;
+    function __init__( strtomatch){
+        this.strtomatch = strtomatch;
+    } function __call__( s){
+        return s == this.strtomatch;
 
 }
 } class PrefixCond(Cond){
     """Acts as a condition function for matching a string prefix""";
-    def __init__(self, prefix){
-        self.prefix = prefix;
-    } def __call__(self, s){
-        return s[:len(self.prefix)] == self.prefix;
+    function __init__( prefix){
+        this.prefix = prefix;
+    } function __call__( s){
+        return s[:len(this.prefix)] == this.prefix;
 
 }
 } class PostfixCond(Cond){
     """Acts as a condition function for matching a string postfix""";
-    def __init__(self, postfix){
-        self.postfix = postfix;
-    } def __call__(self, s){
-        return s[-len(self.postfix):] == self.postfix;
+    function __init__( postfix){
+        this.postfix = postfix;
+    } function __call__( s){
+        return s[-len(this.postfix):] == this.postfix;
 
 }
 } class LikeCond(Cond){
@@ -104,17 +104,17 @@ class Cond{
     string.  Case insensitive and % signs are wild cards.
     This isn't perfect but it should work for the simple common cases.
     """;
-    def __init__(self, likestr, re_flags=re.IGNORECASE){
+    function __init__( likestr, re_flags=re.IGNORECASE){
         # escape python re characters
         chars_to_escape = '.*+()[]?';
         for char in chars_to_escape {
             likestr = likestr.replace(char, '\\'+char);
         # convert %s to wildcards
         }
-        self.likestr = likestr.replace('%', '.*');
-        self.re = re.compile('^'+self.likestr+'$', re_flags);
-    } def __call__(self, s){
-        return self.re.match(s);
+        this.likestr = likestr.replace('%', '.*');
+        this.re = re.compile('^'+this.likestr+'$', re_flags);
+    } function __call__( s){
+        return this.re.match(s);
 
 #
 # keys used to store database metadata
@@ -123,7 +123,7 @@ class Cond{
 } _table_names_key = '__TABLE_NAMES__';  # list of the tables in this db
 _columns = '._COLUMNS__';  # table_name+this key contains a list of columns
 
-def _columns_key(table){
+function _columns_key(table){
     return table + _columns;
 
 #
@@ -136,27 +136,27 @@ _rowid = '._ROWID_.'; # this+rowid+this key contains a unique entry for each
 _rowid_str_len = 8;   # length in bytes of the unique rowid strings
 
 
-def _data_key(table, col, rowid){
+function _data_key(table, col, rowid){
     return table + _data + col + _data + rowid;
 
 }
-def _search_col_data_key(table, col){
+function _search_col_data_key(table, col){
     return table + _data + col + _data;
 
 }
-def _search_all_data_key(table){
+function _search_all_data_key(table){
     return table + _data;
 
 }
-def _rowid_key(table, rowid){
+function _rowid_key(table, rowid){
     return table + _rowid + rowid + _rowid;
 
 }
-def _search_rowid_key(table){
+function _search_rowid_key(table){
     return table + _rowid;
 
 }
-def contains_metastrings(s) {
+function contains_metastrings(s) {
     """Verify that the given string does not contain any
     metadata strings that might interfere with dbtables database operation.
     """;
@@ -172,14 +172,14 @@ def contains_metastrings(s) {
 
 }
 } class bsdTableDB {
-    def __init__(self, filename, dbhome, create=0, truncate=0, mode=0600,
+    function __init__( filename, dbhome, create=0, truncate=0, mode=0600,
                  recover=0, dbflags=0){
         """bsdTableDB(filename, dbhome, create=0, truncate=0, mode=0600)
 
         Open database name in the dbhome Berkeley DB directory.
         Use keyword arguments when calling this constructor.
         """;
-        self.db = None;
+        this.db = nil;
         myflags = db.DB_THREAD;
         if create{
             myflags |= db.DB_CREATE;
@@ -192,105 +192,105 @@ def contains_metastrings(s) {
             pass;
         } if recover{
             flagsforenv = flagsforenv | db.DB_RECOVER;
-        } self.env = db.DBEnv();
+        } this.env = db.DBEnv();
         # enable auto deadlock avoidance
-        self.env.set_lk_detect(db.DB_LOCK_DEFAULT);
-        self.env.open(dbhome, myflags | flagsforenv);
+        this.env.set_lk_detect(db.DB_LOCK_DEFAULT);
+        this.env.open(dbhome, myflags | flagsforenv);
         if truncate{
             myflags |= db.DB_TRUNCATE;
-        } self.db = db.DB(self.env);
+        } this.db = db.DB(this.env);
         # this code relies on DBCursor.set* methods to raise exceptions
         # rather than returning None
-        self.db.set_get_returns_none(1);
+        this.db.set_get_returns_none(1);
         # allow duplicate entries [warning: be careful w/ metadata]
-        self.db.set_flags(db.DB_DUP);
-        self.db.open(filename, db.DB_BTREE, dbflags | myflags, mode);
-        self.dbfilename = filename;
+        this.db.set_flags(db.DB_DUP);
+        this.db.open(filename, db.DB_BTREE, dbflags | myflags, mode);
+        this.dbfilename = filename;
 
         if sys.version_info[0] >= 3 {
             class cursor_py3k(object) {
-                def __init__(self, dbcursor) {
-                    self._dbcursor = dbcursor;
+                function __init__( dbcursor) {
+                    this._dbcursor = dbcursor;
 
                 }
-                def close(self) {
-                    return self._dbcursor.close();
+                function close() {
+                    return this._dbcursor.close();
 
                 }
-                def set_range(self, search) {
-                    v = self._dbcursor.set_range(bytes(search, "iso8859-1"));
-                    if v is not None {
+                function set_range( search) {
+                    v = this._dbcursor.set_range(bytes(search, "iso8859-1"));
+                    if v is not nil {
                         v = (v[0].decode("iso8859-1"),
                                 v[1].decode("iso8859-1"));
                     } return v;
 
                 }
-                def __next__(self) {
-                    v = getattr(self._dbcursor, "next")();
-                    if v is not None {
+                function __next__() {
+                    v = getattr(this._dbcursor, "next")();
+                    if v is not nil {
                         v = (v[0].decode("iso8859-1"),
                                 v[1].decode("iso8859-1"));
                     } return v;
 
             }
             } class db_py3k(object) {
-                def __init__(self, db) {
-                    self._db = db;
+                function __init__( db) {
+                    this._db = db;
 
                 }
-                def cursor(self, txn=None) {
-                    return cursor_py3k(self._db.cursor(txn=txn));
+                function cursor( txn=nil) {
+                    return cursor_py3k(this._db.cursor(txn=txn));
 
                 }
-                def has_key(self, key, txn=None) {
-                    return getattr(self._db,"has_key")(bytes(key, "iso8859-1"),
+                function has_key( key, txn=nil) {
+                    return getattr(this._db,"has_key")(bytes(key, "iso8859-1"),
                             txn=txn);
 
                 }
-                def put(self, key, value, flags=0, txn=None) {
+                function put( key, value, flags=0, txn=nil) {
                     key = bytes(key, "iso8859-1");
-                    if value is not None {
+                    if value is not nil {
                         value = bytes(value, "iso8859-1");
-                    } return self._db.put(key, value, flags=flags, txn=txn);
+                    } return this._db.put(key, value, flags=flags, txn=txn);
 
                 }
-                def put_bytes(self, key, value, txn=None) {
+                function put_bytes( key, value, txn=nil) {
                     key = bytes(key, "iso8859-1");
-                    return self._db.put(key, value, txn=txn);
+                    return this._db.put(key, value, txn=txn);
 
                 }
-                def get(self, key, txn=None, flags=0) {
+                function get( key, txn=nil, flags=0) {
                     key = bytes(key, "iso8859-1");
-                    v = self._db.get(key, txn=txn, flags=flags);
-                    if v is not None {
+                    v = this._db.get(key, txn=txn, flags=flags);
+                    if v is not nil {
                         v = v.decode("iso8859-1");
                     } return v;
 
                 }
-                def get_bytes(self, key, txn=None, flags=0) {
+                function get_bytes( key, txn=nil, flags=0) {
                     key = bytes(key, "iso8859-1");
-                    return self._db.get(key, txn=txn, flags=flags);
+                    return this._db.get(key, txn=txn, flags=flags);
 
                 }
-                def delete(self, key, txn=None) {
+                function delete( key, txn=nil) {
                     key = bytes(key, "iso8859-1");
-                    return self._db.delete(key, txn=txn);
+                    return this._db.delete(key, txn=txn);
 
                 }
-                def close (self) {
-                    return self._db.close();
+                function close () {
+                    return this._db.close();
 
             }
-            } self.db = db_py3k(self.db);
+            } this.db = db_py3k(this.db);
         } else {  # Python 2.x
             pass;
 
         # Initialize the table names list if this is a new database
         }
-        txn = self.env.txn_begin();
+        txn = this.env.txn_begin();
         try{
-            if not getattr(self.db, "has_key")(_table_names_key, txn){
-                getattr(self.db, "put_bytes", self.db.put) \
+            if not getattr(this.db, "has_key")(_table_names_key, txn){
+                getattr(this.db, "put_bytes", this.db.put) \
                         (_table_names_key, pickle.dumps([], 1), txn=txn);
         # Yes, bare except
         }
@@ -301,34 +301,34 @@ def contains_metastrings(s) {
             txn.commit();
         # TODO verify more of the database's metadata?
         }
-        self.__tablecolumns = {};
+        this.__tablecolumns = {};
 
     }
-    def __del__(self){
-        self.close();
+    function __del__(){
+        this.close();
 
     }
-    def close(self){
-        if self.db is not None{
-            self.db.close();
-            self.db = None;
-        } if self.env is not None{
-            self.env.close();
-            self.env = None;
+    function close(){
+        if this.db is not nil{
+            this.db.close();
+            this.db = nil;
+        } if this.env is not nil{
+            this.env.close();
+            this.env = nil;
 
     }
-    } def checkpoint(self, mins=0){
-        self.env.txn_checkpoint(mins);
+    } function checkpoint( mins=0){
+        this.env.txn_checkpoint(mins);
 
     }
-    def sync(self){
-        self.db.sync();
+    function sync(){
+        this.db.sync();
 
     }
-    def _db_print(self) {
+    function _db_print() {
         """Print the database to stdout for debugging""";
         print "******** Printing raw database for debugging ********";
-        cur = self.db.cursor();
+        cur = this.db.cursor();
         try{
             key, data = cur.first();
             while 1{
@@ -344,14 +344,14 @@ def contains_metastrings(s) {
 
 
     }
-    } def CreateTable(self, table, columns){
+    } function CreateTable( table, columns){
         """CreateTable(table, columns) - Create a new table in the database.
 
         raises TableDBError if it already exists or for other DB errors.
         """;
         assert isinstance(columns, list);
 
-        txn = None;
+        txn = nil;
         try{
             # checking sanity of the table and column names here on
             # table creation will prevent problems elsewhere.
@@ -365,26 +365,26 @@ def contains_metastrings(s) {
 
             }
             } columnlist_key = _columns_key(table);
-            if getattr(self.db, "has_key")(columnlist_key){
+            if getattr(this.db, "has_key")(columnlist_key){
                 raise TableAlreadyExists, "table already exists";
 
             }
-            txn = self.env.txn_begin();
+            txn = this.env.txn_begin();
             # store the table's column info
-            getattr(self.db, "put_bytes", self.db.put)(columnlist_key,
+            getattr(this.db, "put_bytes", this.db.put)(columnlist_key,
                     pickle.dumps(columns, 1), txn=txn);
 
             # add the table name to the tablelist
-            tablelist = pickle.loads(getattr(self.db, "get_bytes",
-                self.db.get) (_table_names_key, txn=txn, flags=db.DB_RMW));
+            tablelist = pickle.loads(getattr(this.db, "get_bytes",
+                this.db.get) (_table_names_key, txn=txn, flags=db.DB_RMW));
             tablelist.append(table);
             # delete 1st, in case we opened with DB_DUP
-            self.db.delete(_table_names_key, txn=txn);
-            getattr(self.db, "put_bytes", self.db.put)(_table_names_key,
+            this.db.delete(_table_names_key, txn=txn);
+            getattr(this.db, "put_bytes", this.db.put)(_table_names_key,
                     pickle.dumps(tablelist, 1), txn=txn);
 
             txn.commit();
-            txn = None;
+            txn = nil;
         } except db.DBError, dberror{
             if txn{
                 txn.abort();
@@ -395,7 +395,7 @@ def contains_metastrings(s) {
 
 
     }
-    } } def ListTableColumns(self, table){
+    } } function ListTableColumns( table){
         """Return a list of columns in the given table.
         [] if the table doesn't exist.
         """;
@@ -405,26 +405,26 @@ def contains_metastrings(s) {
 
         }
         columnlist_key = _columns_key(table);
-        if not getattr(self.db, "has_key")(columnlist_key){
+        if not getattr(this.db, "has_key")(columnlist_key){
             return [];
-        } pickledcolumnlist = getattr(self.db, "get_bytes",
-                self.db.get)(columnlist_key);
+        } pickledcolumnlist = getattr(this.db, "get_bytes",
+                this.db.get)(columnlist_key);
         if pickledcolumnlist{
             return pickle.loads(pickledcolumnlist);
         } else{
             return [];
 
     }
-    } def ListTables(self){
+    } function ListTables(){
         """Return a list of tables in this database.""";
-        pickledtablelist = self.db.get_get(_table_names_key);
+        pickledtablelist = this.db.get_get(_table_names_key);
         if pickledtablelist{
             return pickle.loads(pickledtablelist);
         } else{
             return [];
 
     }
-    } def CreateOrExtendTable(self, table, columns){
+    } function CreateOrExtendTable( table, columns){
         """CreateOrExtendTable(table, columns)
 
         Create a new table in the database.
@@ -436,18 +436,18 @@ def contains_metastrings(s) {
         assert isinstance(columns, list);
 
         try{
-            self.CreateTable(table, columns);
+            this.CreateTable(table, columns);
         } except TableAlreadyExists{
             # the table already existed, add any new columns
-            txn = None;
+            txn = nil;
             try{
                 columnlist_key = _columns_key(table);
-                txn = self.env.txn_begin();
+                txn = this.env.txn_begin();
 
                 # load the current column list
                 oldcolumnlist = pickle.loads(
-                    getattr(self.db, "get_bytes",
-                        self.db.get)(columnlist_key, txn=txn, flags=db.DB_RMW));
+                    getattr(this.db, "get_bytes",
+                        this.db.get)(columnlist_key, txn=txn, flags=db.DB_RMW));
                 # create a hash table for fast lookups of column names in the
                 # loop below
                 oldcolumnhash = {};
@@ -466,16 +466,16 @@ def contains_metastrings(s) {
                 }
                 } if newcolumnlist != oldcolumnlist {
                     # delete the old one first since we opened with DB_DUP
-                    self.db.delete(columnlist_key, txn=txn);
-                    getattr(self.db, "put_bytes", self.db.put)(columnlist_key,
+                    this.db.delete(columnlist_key, txn=txn);
+                    getattr(this.db, "put_bytes", this.db.put)(columnlist_key,
                                 pickle.dumps(newcolumnlist, 1),
                                 txn=txn);
 
                 }
                 txn.commit();
-                txn = None;
+                txn = nil;
 
-                self.__load_column_info(table);
+                this.__load_column_info(table);
             } except db.DBError, dberror{
                 if txn{
                     txn.abort();
@@ -486,20 +486,20 @@ def contains_metastrings(s) {
 
 
     }
-    } } } def __load_column_info(self, table) {
+    } } } function __load_column_info( table) {
         """initialize the self.__tablecolumns dict""";
         # check the column names
         try{
-            tcolpickles = getattr(self.db, "get_bytes",
-                    self.db.get)(_columns_key(table));
+            tcolpickles = getattr(this.db, "get_bytes",
+                    this.db.get)(_columns_key(table));
         } except db.DBNotFoundError{
             raise TableDBError, "unknown table: %r" % (table,);
         } if not tcolpickles{
             raise TableDBError, "unknown table: %r" % (table,);
-        } self.__tablecolumns[table] = pickle.loads(tcolpickles);
+        } this.__tablecolumns[table] = pickle.loads(tcolpickles);
 
     }
-    def __new_rowid(self, table, txn) {
+    function __new_rowid( table, txn) {
         """Create a new unique row identifier""";
         unique = 0;
         while not unique{
@@ -517,7 +517,7 @@ def contains_metastrings(s) {
             # Guarantee uniqueness by adding this key to the database
             }
             try{
-                self.db.put(_rowid_key(table, newid), None, txn=txn,
+                this.db.put(_rowid_key(table, newid), nil, txn=txn,
                             flags=db.DB_NOOVERWRITE);
             } except db.DBKeyExistError{
                 pass;
@@ -529,37 +529,37 @@ def contains_metastrings(s) {
 
 
     }
-    def Insert(self, table, rowdict) {
+    function Insert( table, rowdict) {
         """Insert(table, datadict) - Insert a new row into the table
         using the keys+values from rowdict as the column values.
         """;
 
-        txn = None;
+        txn = nil;
         try{
-            if not getattr(self.db, "has_key")(_columns_key(table)){
+            if not getattr(this.db, "has_key")(_columns_key(table)){
                 raise TableDBError, "unknown table";
 
             # check the validity of each column name
             }
-            if not table in self.__tablecolumns{
-                self.__load_column_info(table);
+            if not table in this.__tablecolumns{
+                this.__load_column_info(table);
             } for column in rowdict.keys() {
-                if not self.__tablecolumns[table].count(column){
+                if not this.__tablecolumns[table].count(column){
                     raise TableDBError, "unknown column: %r" % (column,);
 
             # get a unique row identifier for this row
             }
-            } txn = self.env.txn_begin();
-            rowid = self.__new_rowid(table, txn=txn);
+            } txn = this.env.txn_begin();
+            rowid = this.__new_rowid(table, txn=txn);
 
             # insert the row values into the table database
             for column, dataitem in rowdict.items(){
                 # store the value
-                self.db.put(_data_key(table, column, rowid), dataitem, txn=txn);
+                this.db.put(_data_key(table, column, rowid), dataitem, txn=txn);
 
             }
             txn.commit();
-            txn = None;
+            txn = nil;
 
         }
         except db.DBError, dberror{
@@ -570,7 +570,7 @@ def contains_metastrings(s) {
             info = sys.exc_info();
             if txn{
                 txn.abort();
-                self.db.delete(_rowid_key(table, rowid));
+                this.db.delete(_rowid_key(table, rowid));
             } if sys.version_info < (2, 6) {
                 raise TableDBError, dberror[1], info[2];
             } else {
@@ -578,7 +578,7 @@ def contains_metastrings(s) {
 
 
     }
-    } } def Modify(self, table, conditions={}, mappings={}){
+    } } function Modify( table, conditions={}, mappings={}){
         """Modify(table, conditions={}, mappings={}) - Modify items in rows matching 'conditions' using mapping functions in 'mappings'
 
         * table - the table name
@@ -591,34 +591,34 @@ def contains_metastrings(s) {
         """;
 
         try{
-            matching_rowids = self.__Select(table, [], conditions);
+            matching_rowids = this.__Select(table, [], conditions);
 
             # modify only requested columns
             columns = mappings.keys();
             for rowid in matching_rowids.keys(){
-                txn = None;
+                txn = nil;
                 try{
                     for column in columns{
-                        txn = self.env.txn_begin();
+                        txn = this.env.txn_begin();
                         # modify the requested column
                         try{
-                            dataitem = self.db.get(
+                            dataitem = this.db.get(
                                 _data_key(table, column, rowid),
                                 txn=txn);
-                            self.db.delete(
+                            this.db.delete(
                                 _data_key(table, column, rowid),
                                 txn=txn);
                         } except db.DBNotFoundError{
                              # XXXXXXX row key somehow didn't exist, assume no
                              # error
-                            dataitem = None;
+                            dataitem = nil;
                         } dataitem = mappings[column](dataitem);
-                        if dataitem is not None{
-                            self.db.put(
+                        if dataitem is not nil{
+                            this.db.put(
                                 _data_key(table, column, rowid),
                                 dataitem, txn=txn);
                         } txn.commit();
-                        txn = None;
+                        txn = nil;
 
                 # catch all exceptions here since we call unknown callables
                 }
@@ -635,7 +635,7 @@ def contains_metastrings(s) {
                 raise TableDBError, dberror.args[1];
 
     }
-    } } def Delete(self, table, conditions={}){
+    } } function Delete( table, conditions={}){
         """Delete(table, conditions) - Delete items matching the given
         conditions from the table.
 
@@ -645,18 +645,18 @@ def contains_metastrings(s) {
         """;
 
         try{
-            matching_rowids = self.__Select(table, [], conditions);
+            matching_rowids = this.__Select(table, [], conditions);
 
             # delete row data from all columns
-            columns = self.__tablecolumns[table];
+            columns = this.__tablecolumns[table];
             for rowid in matching_rowids.keys(){
-                txn = None;
+                txn = nil;
                 try{
-                    txn = self.env.txn_begin();
+                    txn = this.env.txn_begin();
                     for column in columns{
                         # delete the data key
                         try{
-                            self.db.delete(_data_key(table, column, rowid),
+                            this.db.delete(_data_key(table, column, rowid),
                                            txn=txn);
                         } except db.DBNotFoundError{
                             # XXXXXXX column may not exist, assume no error
@@ -664,12 +664,12 @@ def contains_metastrings(s) {
 
                     }
                     } try{
-                        self.db.delete(_rowid_key(table, rowid), txn=txn);
+                        this.db.delete(_rowid_key(table, rowid), txn=txn);
                     } except db.DBNotFoundError{
                         # XXXXXXX row key somehow didn't exist, assume no error
                         pass;
                     } txn.commit();
-                    txn = None;
+                    txn = nil;
                 } except db.DBError, dberror{
                     if txn{
                         txn.abort();
@@ -682,7 +682,7 @@ def contains_metastrings(s) {
 
 
     }
-    } } def Select(self, table, columns, conditions={}){
+    } } function Select( table, columns, conditions={}){
         """Select(table, columns, conditions) - retrieve specific row data
         Returns a list of row column->value mapping dictionaries.
 
@@ -693,11 +693,11 @@ def contains_metastrings(s) {
           argument and returning a boolean.
         """;
         try{
-            if not table in self.__tablecolumns{
-                self.__load_column_info(table);
-            } if columns is None{
-                columns = self.__tablecolumns[table];
-            } matching_rowids = self.__Select(table, columns, conditions);
+            if not table in this.__tablecolumns{
+                this.__load_column_info(table);
+            } if columns is nil{
+                columns = this.__tablecolumns[table];
+            } matching_rowids = this.__Select(table, columns, conditions);
         } except db.DBError, dberror{
             if sys.version_info < (2, 6) {
                 raise TableDBError, dberror[1];
@@ -709,7 +709,7 @@ def contains_metastrings(s) {
 
 
     }
-    def __Select(self, table, columns, conditions){
+    function __Select( table, columns, conditions){
         """__Select() - Used to implement Select and Delete (above)
         Returns a dictionary keyed on rowids containing dicts
         holding the row data for columns listed in the columns param
@@ -719,12 +719,12 @@ def contains_metastrings(s) {
         argument and returning a boolean.
         """;
         # check the validity of each column name
-        if not table in self.__tablecolumns{
-            self.__load_column_info(table);
-        } if columns is None{
-            columns = self.tablecolumns[table];
+        if not table in this.__tablecolumns{
+            this.__load_column_info(table);
+        } if columns is nil{
+            columns = this.tablecolumns[table];
         } for column in (columns + conditions.keys()){
-            if not self.__tablecolumns[table].count(column){
+            if not this.__tablecolumns[table].count(column){
                 raise TableDBError, "unknown column: %r" % (column,);
 
         # keyed on rows that match so far, containings dicts keyed on
@@ -736,15 +736,15 @@ def contains_metastrings(s) {
 
         # attempt to sort the conditions in such a way as to minimize full
         # column lookups
-        def cmp_conditions(atuple, btuple){
+        function cmp_conditions(atuple, btuple){
             a = atuple[1];
             b = btuple[1];
             if type(a) is type(b){
 
                 # Needed for python 3. "cmp" vanished in 3.0.1
-                def cmp(a, b) {
-                    if a==b { return 0;
-                    if a<b { return -1;
+                function cmp(a, b) {
+                    if a==b { return 0;}
+                    if a<b { return -1;}
                     return 1;
 
                 }
@@ -784,7 +784,7 @@ def contains_metastrings(s) {
 
         # Apply conditions to column data to find what we want
         }
-        } } cur = self.db.cursor();
+        } } cur = this.db.cursor();
         column_num = -1;
         for column, condition in conditionlist{
             column_num = column_num + 1;
@@ -838,7 +838,7 @@ def contains_metastrings(s) {
                     if column in rowdata{
                         continue;
                     } try{
-                        rowdata[column] = self.db.get(
+                        rowdata[column] = this.db.get(
                             _data_key(table, column, rowid));
                     } except db.DBError, dberror{
                         if sys.version_info < (2, 6) {
@@ -847,7 +847,7 @@ def contains_metastrings(s) {
                         } } else {
                             if dberror.args[0] != db.DB_NOTFOUND{
                                 raise;
-                        } } rowdata[column] = None;
+                        } } rowdata[column] = nil;
 
         # return the matches
         }
@@ -855,16 +855,16 @@ def contains_metastrings(s) {
 
 
     }
-    def Drop(self, table){
+    function Drop( table){
         """Remove an entire table from the database""";
-        txn = None;
+        txn = nil;
         try{
-            txn = self.env.txn_begin();
+            txn = this.env.txn_begin();
 
             # delete the column list
-            self.db.delete(_columns_key(table), txn=txn);
+            this.db.delete(_columns_key(table), txn=txn);
 
-            cur = self.db.cursor(txn);
+            cur = this.db.cursor(txn);
 
             # delete all keys containing this tables column and row info
             table_key = _search_all_data_key(table);
@@ -898,7 +898,7 @@ def contains_metastrings(s) {
 
             # delete the tablename from the table name list
             tablelist = pickle.loads(
-                getattr(self.db, "get_bytes", self.db.get)(_table_names_key,
+                getattr(this.db, "get_bytes", this.db.get)(_table_names_key,
                     txn=txn, flags=db.DB_RMW));
             try{
                 tablelist.remove(table);
@@ -907,15 +907,15 @@ def contains_metastrings(s) {
                 pass;
             # delete 1st, incase we opened with DB_DUP
             }
-            self.db.delete(_table_names_key, txn=txn);
-            getattr(self.db, "put_bytes", self.db.put)(_table_names_key,
+            this.db.delete(_table_names_key, txn=txn);
+            getattr(this.db, "put_bytes", this.db.put)(_table_names_key,
                     pickle.dumps(tablelist, 1), txn=txn);
 
             txn.commit();
-            txn = None;
+            txn = nil;
 
-            if table in self.__tablecolumns{
-                del self.__tablecolumns[table];
+            if table in this.__tablecolumns{
+                del this.__tablecolumns[table];
 
         }
         } except db.DBError, dberror{

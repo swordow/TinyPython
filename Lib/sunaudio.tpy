@@ -12,13 +12,13 @@ class error(Exception){
 
 
 }
-def get_long_be(s){
+function get_long_be(s){
     """Convert a 4-char value to integer.""";
     return (ord(s[0])<<24) | (ord(s[1])<<16) | (ord(s[2])<<8) | ord(s[3]);
 
 
 }
-def gethdr(fp){
+function gethdr(fp){
     """Read a sound header from an open file.""";
     if fp.read(4) != MAGIC{
         raise error, 'gethdr: bad magic word';
@@ -38,7 +38,7 @@ def gethdr(fp){
 
 
 }
-def printhdr(file){
+function printhdr(file){
     """Read and print the sound header of a named file.""";
     hdr = gethdr(open(file, 'r'));
     data_size, encoding, sample_rate, channels, info = hdr;

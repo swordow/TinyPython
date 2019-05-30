@@ -505,18 +505,18 @@ get_ulonglong(PyObject *v, unsigned PY_LONG_LONG *p)
  * instance inserts this object into its 'b_objects' list.
  *
  * For simple Python types like integers or characters, there is nothing that
- * has to been kept alive, so Py_None is returned in these cases.  But this
+ * has to been kept alive, so Py_Nil is returned in these cases.  But this
  * makes inspecting the 'b_objects' list, which is accessible from Python for
  * debugging, less useful.
  *
  * So, defining the _CTYPES_DEBUG_KEEP symbol returns the original value
- * instead of Py_None.
+ * instead of Py_Nil.
  */
 
 #ifdef _CTYPES_DEBUG_KEEP
 #define _RET(x) Py_INCREF(x); return x
 #else
-#define _RET(X) Py_INCREF(Py_None); return Py_None
+#define _RET(X) Py_INCREF(Py_Nil); return Py_Nil
 #endif
 
 /*****************************************************************
@@ -1344,7 +1344,7 @@ s_set(void *ptr, PyObject *value, Py_ssize_t length)
 static PyObject *
 z_set(void *ptr, PyObject *value, Py_ssize_t size)
 {
-    if (value == Py_None) {
+    if (value == Py_Nil) {
         *(char **)ptr = NULL;
         Py_INCREF(value);
         return value;
@@ -1390,8 +1390,8 @@ z_get(void *ptr, Py_ssize_t size)
 #endif
         return PyString_FromString(*(char **)ptr);
     } else {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
 }
 
@@ -1399,7 +1399,7 @@ z_get(void *ptr, Py_ssize_t size)
 static PyObject *
 Z_set(void *ptr, PyObject *value, Py_ssize_t size)
 {
-    if (value == Py_None) {
+    if (value == Py_Nil) {
         *(wchar_t **)ptr = NULL;
         Py_INCREF(value);
         return value;
@@ -1416,8 +1416,8 @@ Z_set(void *ptr, PyObject *value, Py_ssize_t size)
 #else
         *(wchar_t **)ptr = (wchar_t *)PyInt_AsUnsignedLongMask(value);
 #endif
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     } else if (!PyUnicode_Check(value)) {
         PyErr_Format(PyExc_TypeError,
                      "unicode string or integer address expected instead of %s instance",
@@ -1483,8 +1483,8 @@ Z_get(void *ptr, Py_ssize_t size)
 #endif
         return PyUnicode_FromWideChar(p, wcslen(p));
     } else {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
 }
 #endif
@@ -1496,7 +1496,7 @@ BSTR_set(void *ptr, PyObject *value, Py_ssize_t size)
     BSTR bstr;
 
     /* convert value into a PyUnicodeObject or NULL */
-    if (Py_None == value) {
+    if (Py_Nil == value) {
         value = NULL;
     } else if (PyString_Check(value)) {
         value = PyUnicode_FromEncodedObject(value,
@@ -1550,8 +1550,8 @@ BSTR_get(void *ptr, Py_ssize_t size)
         /* Hm, it seems NULL pointer and zero length string are the
            same in BSTR, see Don Box, p 81
         */
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
 }
 #endif
@@ -1560,7 +1560,7 @@ static PyObject *
 P_set(void *ptr, PyObject *value, Py_ssize_t size)
 {
     void *v;
-    if (value == Py_None) {
+    if (value == Py_Nil) {
         *(void **)ptr = NULL;
         _RET(value);
     }
@@ -1593,8 +1593,8 @@ static PyObject *
 P_get(void *ptr, Py_ssize_t size)
 {
     if (*(void **)ptr == NULL) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     return PyLong_FromVoidPtr(*(void **)ptr);
 }

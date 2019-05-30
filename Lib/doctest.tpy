@@ -125,7 +125,7 @@ TestResults = namedtuple('TestResults', 'failed attempted');
 # Option constants.
 
 OPTIONFLAGS_BY_NAME = {};
-def register_optionflag(name){
+function register_optionflag(name){
     # Create a new flag unless `name` is already known.
     return OPTIONFLAGS_BY_NAME.setdefault(name, 1 << len(OPTIONFLAGS_BY_NAME));
 
@@ -176,20 +176,20 @@ ELLIPSIS_MARKER = '...';
 ## 1. Utility Functions
 ######################################################################
 
-def _extract_future_flags(globs){
+function _extract_future_flags(globs){
     """
     Return the compiler-flags associated with the future features that
     have been imported into the given namespace (globs).
     """;
     flags = 0;
     for fname in __future__.all_feature_names{
-        feature = globs.get(fname, None);
+        feature = globs.get(fname, nil);
         if feature is getattr(__future__, fname){
             flags |= feature.compiler_flag;
     } } return flags;
 
 }
-def _normalize_module(module, depth=2){
+function _normalize_module(module, depth=2){
     """
     Return the module specified by `module`.  In particular:
       - If `module` is a module, then return module.
@@ -203,13 +203,13 @@ def _normalize_module(module, depth=2){
         return module;
     } elif isinstance(module, (str, unicode)){
         return __import__(module, globals(), locals(), ["*"]);
-    } elif module is None{
+    } elif module is nil{
         return sys.modules[sys._getframe(depth).f_globals['__name__']];
     } else{
         raise TypeError("Expected a module, string, or None");
 
 }
-} def _load_testfile(filename, package, module_relative){
+} function _load_testfile(filename, package, module_relative){
     if module_relative{
         package = _normalize_module(package, 3);
         filename = _module_relative_path(package, filename);
@@ -224,9 +224,9 @@ def _normalize_module(module, depth=2){
 
 # Use sys.stdout encoding for output.
 }
-} _encoding = getattr(sys.__stdout__, 'encoding', None) or 'utf-8';
+} _encoding = getattr(sys.__stdout__, 'encoding', nil) or 'utf-8';
 
-def _indent(s, indent=4){
+function _indent(s, indent=4){
     """
     Add the given number of space characters to the beginning of
     every non-blank line in `s`, and return the result.
@@ -240,7 +240,7 @@ def _indent(s, indent=4){
     return re.sub('(?m)^(?!$)', indent*' ', s);
 
 }
-def _exception_traceback(exc_info){
+function _exception_traceback(exc_info){
     """
     Return a string containing a traceback message for the given
     exc_info tuple (as returned by sys.exc_info()).
@@ -254,8 +254,8 @@ def _exception_traceback(exc_info){
 # Override some StringIO methods.
 }
 class _SpoofOut(StringIO){
-    def getvalue(self){
-        result = StringIO.getvalue(self);
+    function getvalue(){
+        result = StringIO.getvalue(this);
         # If anything at all was written, make sure there's a trailing
         # newline.  There's no way for the expected output to indicate
         # that a trailing newline is missing.
@@ -264,22 +264,22 @@ class _SpoofOut(StringIO){
         # Prevent softspace from screwing up the next test case, in
         # case they used print with a trailing comma in an example.
         }
-        if hasattr(self, "softspace"){
-            del self.softspace;
+        if hasattr(this, "softspace"){
+            del this.softspace;
         } return result;
 
     }
-    def truncate(self,   size=None){
-        StringIO.truncate(self, size);
-        if hasattr(self, "softspace"){
-            del self.softspace;
-        } if not self.buf{
+    function truncate(   size=nil){
+        StringIO.truncate(this, size);
+        if hasattr(this, "softspace"){
+            del this.softspace;
+        } if not this.buf{
             # Reset it to an empty string, to make sure it's not unicode.
-            self.buf = '';
+            this.buf = '';
 
 # Worst-case linear-time ellipsis matching.
 }
-} } def _ellipsis_match(want, got){
+} } function _ellipsis_match(want, got){
     """
     Essentially the only subtle case:
     >>> _ellipsis_match('aa...aa', 'aaa')
@@ -301,20 +301,20 @@ class _SpoofOut(StringIO){
             startpos = len(w);
             del ws[0];
         } else{
-            return False;
+            return false;
     } } w = ws[-1];
     if w{   # ends with exact match
         if got.endswith(w){
             endpos -= len(w);
             del ws[-1];
         } else{
-            return False;
+            return false;
 
     }
     } if startpos > endpos{
         # Exact end matches required more characters than we have, as in
         # _ellipsis_match('aa...aa', 'aaa')
-        return False;
+        return false;
 
     # For the rest, we only need to find the leftmost non-overlapping
     # match for each piece.  If there's no overall match that way alone,
@@ -326,14 +326,14 @@ class _SpoofOut(StringIO){
         # Search for an empty string succeeds, and doesn't change startpos.
         startpos = got.find(w, startpos, endpos);
         if startpos < 0{
-            return False;
+            return false;
         } startpos += len(w);
 
     }
-    return True;
+    return true;
 
 }
-def _comment_line(line){
+function _comment_line(line){
     "Return a commented form of the given line";
     line = line.rstrip();
     if line{
@@ -342,7 +342,7 @@ def _comment_line(line){
         return '#';
 
 }
-} def _strip_exception_details(msg){
+} function _strip_exception_details(msg){
     # Support for IGNORE_EXCEPTION_DETAIL.
     # Get rid of everything except the exception name; in particular, drop
     # the possibly dotted module path (if any) and the exception message (if
@@ -377,41 +377,41 @@ class _OutputRedirectingPdb(pdb.Pdb){
     to a given stream when interacting with the user.  Stdout is *not*
     redirected when traced code is executed.
     """;
-    def __init__(self, out){
-        self.__out = out;
-        self.__debugger_used = False;
-        pdb.Pdb.__init__(self, stdout=out);
+    function __init__( out){
+        this.__out = out;
+        this.__debugger_used = false;
+        pdb.Pdb.__init__(this, stdout=out);
         # still use input() to get user input
-        self.use_rawinput = 1;
+        this.use_rawinput = 1;
 
     }
-    def set_trace(self, frame=None){
-        self.__debugger_used = True;
-        if frame is None{
+    function set_trace( frame=nil){
+        this.__debugger_used = true;
+        if frame is nil{
             frame = sys._getframe().f_back;
-        } pdb.Pdb.set_trace(self, frame);
+        } pdb.Pdb.set_trace(this, frame);
 
     }
-    def set_continue(self){
+    function set_continue(){
         # Calling set_continue unconditionally would break unit test
         # coverage reporting, as Bdb.set_continue calls sys.settrace(None).
-        if self.__debugger_used{
-            pdb.Pdb.set_continue(self);
+        if this.__debugger_used{
+            pdb.Pdb.set_continue(this);
 
     }
-    } def trace_dispatch(self, *args){
+    } function trace_dispatch( *args){
         # Redirect stdout to the given stream.
         save_stdout = sys.stdout;
-        sys.stdout = self.__out;
+        sys.stdout = this.__out;
         # Call Pdb's trace dispatch method.
         try{
-            return pdb.Pdb.trace_dispatch(self, *args);
+            return pdb.Pdb.trace_dispatch(this, *args);
         } finally{
             sys.stdout = save_stdout;
 
 # [XX] Normalize with respect to os.path.pardir?
 }
-} } def _module_relative_path(module, path){
+} } function _module_relative_path(module, path){
     if not inspect.ismodule(module){
         raise TypeError, 'Expected a module: %r' % module;
     } if path.startswith('/'){
@@ -485,46 +485,46 @@ class Example{
         are left at their default value (as specified by the
         DocTestRunner's optionflags).  By default, no options are set.
     """;
-    def __init__(self, source, want, exc_msg=None, lineno=0, indent=0,
-                 options=None){
+    function __init__( source, want, exc_msg=nil, lineno=0, indent=0,
+                 options=nil){
         # Normalize inputs.
         if not source.endswith('\n'){
             source += '\n';
         } if want and not want.endswith('\n'){
             want += '\n';
-        } if exc_msg is not None and not exc_msg.endswith('\n'){
+        } if exc_msg is not nil and not exc_msg.endswith('\n'){
             exc_msg += '\n';
         # Store properties.
         }
-        self.source = source;
-        self.want = want;
-        self.lineno = lineno;
-        self.indent = indent;
-        if options is None{ options = {};
-        self.options = options;
-        self.exc_msg = exc_msg;
+        this.source = source;
+        this.want = want;
+        this.lineno = lineno;
+        this.indent = indent;
+        if options is nil{ options = {};}
+        this.options = options;
+        this.exc_msg = exc_msg;
 
     }
-    def __eq__(self, other){
-        if type(self) is not type(other){
+    function __eq__( other){
+        if type(this) is not type(other){
             return NotImplemented;
 
         }
-        return self.source == other.source and \
-               self.want == other.want and \
-               self.lineno == other.lineno and \
-               self.indent == other.indent and \
-               self.options == other.options and \
-               self.exc_msg == other.exc_msg;
+        return this.source == other.source and \
+               this.want == other.want and \
+               this.lineno == other.lineno and \
+               this.indent == other.indent and \
+               this.options == other.options and \
+               this.exc_msg == other.exc_msg;
 
     }
-    def __ne__(self, other){
-        return not self == other;
+    function __ne__( other){
+        return not this == other;
 
     }
-    def __hash__(self){
-        return hash((self.source, self.want, self.lineno, self.indent,
-                     self.exc_msg));
+    function __hash__(){
+        return hash((this.source, this.want, this.lineno, this.indent,
+                     this.exc_msg));
 
 
 }
@@ -552,58 +552,58 @@ class Example{
       - docstring: The string that the examples were extracted from,
         or `None` if the string is unavailable.
     """;
-    def __init__(self, examples, globs, name, filename, lineno, docstring){
+    function __init__( examples, globs, name, filename, lineno, docstring){
         """
         Create a new DocTest containing the given examples.  The
         DocTest's globals are initialized with a copy of `globs`.
         """;
         assert not isinstance(examples, basestring), \
                "DocTest no longer accepts str; use DocTestParser instead";
-        self.examples = examples;
-        self.docstring = docstring;
-        self.globs = globs.copy();
-        self.name = name;
-        self.filename = filename;
-        self.lineno = lineno;
+        this.examples = examples;
+        this.docstring = docstring;
+        this.globs = globs.copy();
+        this.name = name;
+        this.filename = filename;
+        this.lineno = lineno;
 
     }
-    def __repr__(self){
-        if len(self.examples) == 0{
+    function __repr__(){
+        if len(this.examples) == 0{
             examples = 'no examples';
-        } elif len(self.examples) == 1{
+        } elif len(this.examples) == 1{
             examples = '1 example';
         } else{
-            examples = '%d examples' % len(self.examples);
+            examples = '%d examples' % len(this.examples);
         } return ('<DocTest %s from %s:%s (%s)>' %
-                (self.name, self.filename, self.lineno, examples));
+                (this.name, this.filename, this.lineno, examples));
 
     }
-    def __eq__(self, other){
-        if type(self) is not type(other){
+    function __eq__( other){
+        if type(this) is not type(other){
             return NotImplemented;
 
         }
-        return self.examples == other.examples and \
-               self.docstring == other.docstring and \
-               self.globs == other.globs and \
-               self.name == other.name and \
-               self.filename == other.filename and \
-               self.lineno == other.lineno;
+        return this.examples == other.examples and \
+               this.docstring == other.docstring and \
+               this.globs == other.globs and \
+               this.name == other.name and \
+               this.filename == other.filename and \
+               this.lineno == other.lineno;
 
     }
-    def __ne__(self, other){
-        return not self == other;
+    function __ne__( other){
+        return not this == other;
 
     }
-    def __hash__(self){
-        return hash((self.docstring, self.name, self.filename, self.lineno));
+    function __hash__(){
+        return hash((this.docstring, this.name, this.filename, this.lineno));
 
     # This lets us sort tests by name:
     }
-    def __cmp__(self, other){
+    function __cmp__( other){
         if not isinstance(other, DocTest){
             return -1;
-        } return cmp((self.name, self.filename, self.lineno, id(self)),
+        } return cmp((this.name, this.filename, this.lineno, id(this)),
                    (other.name, other.filename, other.lineno, id(other)));
 
 ######################################################################
@@ -659,7 +659,7 @@ class Example{
     # or contains a single comment.
     _IS_BLANK_OR_COMMENT = re.compile(r'^[ ]*(#.*)?$').match;
 
-    def parse(self, string, name='<string>'){
+    function parse( string, name='<string>'){
         """
         Divide the given string into examples and intervening text,
         and return them as a list of alternating Examples and strings.
@@ -669,7 +669,7 @@ class Example{
         """;
         string = string.expandtabs();
         # If all lines begin with the same indentation, then strip it.
-        min_indent = self._min_indent(string);
+        min_indent = this._min_indent(string);
         if min_indent > 0{
             string = '\n'.join([l[min_indent:] for l in string.split('\n')]);
 
@@ -677,16 +677,16 @@ class Example{
         output = [];
         charno, lineno = 0, 0;
         # Find all doctest examples in the string:
-        for m in self._EXAMPLE_RE.finditer(string){
+        for m in this._EXAMPLE_RE.finditer(string){
             # Add the pre-example text to `output`.
             output.append(string[charno:m.start()]);
             # Update lineno (lines before this example)
             lineno += string.count('\n', charno, m.start());
             # Extract info from the regexp match.
             (source, options, want, exc_msg) = \
-                     self._parse_example(m, name, lineno);
+                     this._parse_example(m, name, lineno);
             # Create an Example, and add it to the list.
-            if not self._IS_BLANK_OR_COMMENT(source){
+            if not this._IS_BLANK_OR_COMMENT(source){
                 output.append( Example(source, want, exc_msg,
                                     lineno=lineno,
                                     indent=min_indent+len(m.group('indent')),
@@ -702,7 +702,7 @@ class Example{
         return output;
 
     }
-    def get_doctest(self, string, globs, name, filename, lineno){
+    function get_doctest( string, globs, name, filename, lineno){
         """
         Extract all doctest examples from the given string, and
         collect them into a `DocTest` object.
@@ -711,11 +711,11 @@ class Example{
         the new `DocTest` object.  See the documentation for `DocTest`
         for more information.
         """;
-        return DocTest(self.get_examples(string, name), globs,
+        return DocTest(this.get_examples(string, name), globs,
                        name, filename, lineno, string);
 
     }
-    def get_examples(self, string, name='<string>'){
+    function get_examples( string, name='<string>'){
         """
         Extract all doctest examples from the given string, and return
         them as a list of `Example` objects.  Line numbers are
@@ -726,11 +726,11 @@ class Example{
         The optional argument `name` is a name identifying this
         string, and is only used for error messages.
         """;
-        return [x for x in self.parse(string, name)
+        return [x for x in this.parse(string, name)
                 if isinstance(x, Example)];
 
     }
-    def _parse_example(self, m, name, lineno){
+    function _parse_example( m, name, lineno){
         """
         Given a regular expression match from `_EXAMPLE_RE` (`m`),
         return a pair `(source, want)`, where `source` is the matched
@@ -747,8 +747,8 @@ class Example{
         # Divide source into lines; check that they're properly
         # indented; and then strip their indentation & prompts.
         source_lines = m.group('source').split('\n');
-        self._check_prompt_blank(source_lines, indent, name, lineno);
-        self._check_prefix(source_lines[1:], ' '*indent + '.', name, lineno);
+        this._check_prompt_blank(source_lines, indent, name, lineno);
+        this._check_prefix(source_lines[1:], ' '*indent + '.', name, lineno);
         source = '\n'.join([sl[indent+4:] for sl in source_lines]);
 
         # Divide want into lines; check that it's properly indented; and
@@ -758,20 +758,20 @@ class Example{
         want_lines = want.split('\n');
         if len(want_lines) > 1 and re.match(r' *$', want_lines[-1]){
             del want_lines[-1];  # forget final newline & spaces after it
-        } self._check_prefix(want_lines, ' '*indent, name,
+        } this._check_prefix(want_lines, ' '*indent, name,
                            lineno + len(source_lines));
         want = '\n'.join([wl[indent:] for wl in want_lines]);
 
         # If `want` contains a traceback message, then extract it.
-        m = self._EXCEPTION_RE.match(want);
+        m = this._EXCEPTION_RE.match(want);
         if m{
             exc_msg = m.group('msg');
         } else{
-            exc_msg = None;
+            exc_msg = nil;
 
         # Extract options from the source.
         }
-        options = self._find_options(source, name, lineno);
+        options = this._find_options(source, name, lineno);
 
         return source, options, want, exc_msg;
 
@@ -786,7 +786,7 @@ class Example{
     _OPTION_DIRECTIVE_RE = re.compile(r'#\s*doctest:\s*([^\n\'"]*)$',
                                       re.MULTILINE);
 
-    def _find_options(self, source, name, lineno){
+    function _find_options( source, name, lineno){
         """
         Return a dictionary containing option overrides extracted from
         option directives in the given source string.
@@ -796,7 +796,7 @@ class Example{
         """;
         options = {};
         # (note: with the current regexp, this will match at most once:)
-        for m in self._OPTION_DIRECTIVE_RE.finditer(source){
+        for m in this._OPTION_DIRECTIVE_RE.finditer(source){
             option_strings = m.group(1).replace(',', ' ').split();
             for option in option_strings{
                 if (option[0] not in '+-' or
@@ -806,7 +806,7 @@ class Example{
                                      (lineno+1, name, option));
                 } flag = OPTIONFLAGS_BY_NAME[option[1:]];
                 options[flag] = (option[0] == '+');
-        } } if options and self._IS_BLANK_OR_COMMENT(source){
+        } } if options and this._IS_BLANK_OR_COMMENT(source){
             raise ValueError('line %r of the doctest for %s has an option '
                              'directive on a line with no example: %r' %
                              (lineno, name, source));
@@ -817,16 +817,16 @@ class Example{
     }
     _INDENT_RE = re.compile('^([ ]*)(?=\S)', re.MULTILINE);
 
-    def _min_indent(self, s){
+    function _min_indent( s){
         "Return the minimum indentation of any non-blank line in `s`";
-        indents = [len(indent) for indent in self._INDENT_RE.findall(s)];
+        indents = [len(indent) for indent in this._INDENT_RE.findall(s)];
         if len(indents) > 0{
             return min(indents);
         } else{
             return 0;
 
     }
-    } def _check_prompt_blank(self, lines, indent, name, lineno){
+    } function _check_prompt_blank( lines, indent, name, lineno){
         """
         Given the lines of a source string (including prompts and
         leading indentation), check to make sure that every prompt is
@@ -841,7 +841,7 @@ class Example{
                                   line[indent:indent+3], line));
 
     }
-    } } def _check_prefix(self, lines, prefix, name, lineno){
+    } } function _check_prefix( lines, prefix, name, lineno){
         """
         Check that every line in the given list starts with the given
         prefix; if any line does not, then raise a ValueError.
@@ -867,8 +867,8 @@ class Example{
     classmethods, and properties.
     """;
 
-    def __init__(self, verbose=False, parser=DocTestParser(),
-                 recurse=True, exclude_empty=True){
+    function __init__( verbose=false, parser=DocTestParser(),
+                 recurse=true, exclude_empty=true){
         """
         Create a new doctest finder.
 
@@ -884,13 +884,13 @@ class Example{
         If the optional argument `exclude_empty` is false, then `find`
         will include tests for objects with empty docstrings.
         """;
-        self._parser = parser;
-        self._verbose = verbose;
-        self._recurse = recurse;
-        self._exclude_empty = exclude_empty;
+        this._parser = parser;
+        this._verbose = verbose;
+        this._recurse = recurse;
+        this._exclude_empty = exclude_empty;
 
     }
-    def find(self, obj, name=None, module=None, globs=None, extraglobs=None){
+    function find( obj, name=nil, module=nil, globs=nil, extraglobs=nil){
         """
         Return a list of the DocTests that are defined by the given
         object's docstring, or by any of its contained objects'
@@ -926,9 +926,9 @@ class Example{
 
         """;
         # If name was not specified, then extract it from the object.
-        if name is None{
-            name = getattr(obj, '__name__', None);
-            if name is None{
+        if name is nil{
+            name = getattr(obj, '__name__', nil);
+            if name is nil{
                 raise ValueError("DocTestFinder.find: name must be given "
                         "when obj.__name__ doesn't exist: %r" %
                                  (type(obj),));
@@ -937,9 +937,9 @@ class Example{
         # a module, then module=obj.).  Note: this may fail, in which
         # case module will be None.
         }
-        } if module is False{
-            module = None;
-        } elif module is None{
+        } if module is false{
+            module = nil;
+        } elif module is nil{
             module = inspect.getmodule(obj);
 
         # Read the module's source code.  This is used by
@@ -948,7 +948,7 @@ class Example{
         }
         try{
             file = inspect.getsourcefile(obj) or inspect.getfile(obj);
-            if module is not None{
+            if module is not nil{
                 # Supply the module globals in case the module was
                 # originally loaded via a PEP 302 loader and
                 # file is not a valid filesystem path
@@ -958,20 +958,20 @@ class Example{
                 # filesystem path
                 source_lines = linecache.getlines(file);
             } if not source_lines{
-                source_lines = None;
+                source_lines = nil;
         } } except TypeError{
-            source_lines = None;
+            source_lines = nil;
 
         # Initialize globals, and merge in extraglobs.
         }
-        if globs is None{
-            if module is None{
+        if globs is nil{
+            if module is nil{
                 globs = {};
             } else{
                 globs = module.__dict__.copy();
         } } else{
             globs = globs.copy();
-        } if extraglobs is not None{
+        } if extraglobs is not nil{
             globs.update(extraglobs);
         } if '__name__' not in globs{
             globs['__name__'] = '__main__';  # provide a default module name
@@ -979,7 +979,7 @@ class Example{
         # Recursively explore `obj`, extracting DocTests.
         }
         tests = [];
-        self._find(tests, obj, name, module, source_lines, globs, {});
+        this._find(tests, obj, name, module, source_lines, globs, {});
         # Sort the tests by alpha order of names, for consistency in
         # verbose-mode output.  This was a feature of doctest in Pythons
         # <= 2.3 that got lost by accident in 2.4.  It was repaired in
@@ -988,14 +988,14 @@ class Example{
         return tests;
 
     }
-    def _from_module(self, module, object){
+    function _from_module( module, object){
         """
         Return true if the given object is defined in the given
         module.
         """;
-        if module is None{
-            return True;
-        } elif inspect.getmodule(object) is not None{
+        if module is nil{
+            return true;
+        } elif inspect.getmodule(object) is not nil{
             return module is inspect.getmodule(object);
         } elif inspect.isfunction(object){
             return module.__dict__ is object.func_globals;
@@ -1004,17 +1004,17 @@ class Example{
         } elif hasattr(object, '__module__'){
             return module.__name__ == object.__module__;
         } elif isinstance(object, property){
-            return True; # [XX] no way not be sure.
+            return true; # [XX] no way not be sure.
         } else{
             raise ValueError("object must be a class or function");
 
     }
-    } def _find(self, tests, obj, name, module, source_lines, globs, seen){
+    } function _find( tests, obj, name, module, source_lines, globs, seen){
         """
         Find tests for the given object and any contained objects, and
         add them to `tests`.
         """;
-        if self._verbose{
+        if this._verbose{
             print 'Finding tests in %s' % name;
 
         # If we've already processed this object, then ignore it.
@@ -1024,24 +1024,24 @@ class Example{
         } seen[id(obj)] = 1;
 
         # Find a test for this object, and add it to the list of tests.
-        test = self._get_test(obj, name, module, globs, source_lines);
-        if test is not None{
+        test = this._get_test(obj, name, module, globs, source_lines);
+        if test is not nil{
             tests.append(test);
 
         # Look for tests in a module's contained objects.
         }
-        if inspect.ismodule(obj) and self._recurse{
+        if inspect.ismodule(obj) and this._recurse{
             for valname, val in obj.__dict__.items(){
                 valname = '%s.%s' % (name, valname);
                 # Recurse to functions & classes.
                 if ((inspect.isfunction(val) or inspect.isclass(val)) and
-                    self._from_module(module, val)){
-                    self._find(tests, val, valname, module, source_lines,
+                    this._from_module(module, val)){
+                    this._find(tests, val, valname, module, source_lines,
                                globs, seen);
 
         # Look for tests in a module's __test__ dictionary.
         }
-        } } if inspect.ismodule(obj) and self._recurse{
+        } } if inspect.ismodule(obj) and this._recurse{
             for valname, val in getattr(obj, '__test__', {}).items(){
                 if not isinstance(valname, basestring){
                     raise ValueError("DocTestFinder.find: __test__ keys "
@@ -1055,12 +1055,12 @@ class Example{
                                      "classes, or modules: %r" %
                                      (type(val),));
                 } valname = '%s.__test__.%s' % (name, valname);
-                self._find(tests, val, valname, module, source_lines,
+                this._find(tests, val, valname, module, source_lines,
                            globs, seen);
 
         # Look for tests in a class's contained objects.
         }
-        } if inspect.isclass(obj) and self._recurse{
+        } if inspect.isclass(obj) and this._recurse{
             for valname, val in obj.__dict__.items(){
                 # Special handling for staticmethod/classmethod.
                 if isinstance(val, staticmethod){
@@ -1072,13 +1072,13 @@ class Example{
                 }
                 if ((inspect.isfunction(val) or inspect.isclass(val) or
                       isinstance(val, property)) and
-                      self._from_module(module, val)){
+                      this._from_module(module, val)){
                     valname = '%s.%s' % (name, valname);
-                    self._find(tests, val, valname, module, source_lines,
+                    this._find(tests, val, valname, module, source_lines,
                                globs, seen);
 
     }
-    } } } def _get_test(self, obj, name, module, globs, source_lines){
+    } } } function _get_test( obj, name, module, globs, source_lines){
         """
         Return a DocTest for the given object, if it defines a docstring;
         otherwise, return None.
@@ -1089,7 +1089,7 @@ class Example{
             docstring = obj;
         } else{
             try{
-                if obj.__doc__ is None{
+                if obj.__doc__ is nil{
                     docstring = '';
                 } else{
                     docstring = obj.__doc__;
@@ -1100,30 +1100,30 @@ class Example{
 
         # Find the docstring's location in the file.
         }
-        } lineno = self._find_lineno(obj, source_lines);
+        } lineno = this._find_lineno(obj, source_lines);
 
         # Don't bother if the docstring is empty.
-        if self._exclude_empty and not docstring{
-            return None;
+        if this._exclude_empty and not docstring{
+            return nil;
 
         # Return a DocTest for this object.
         }
-        if module is None{
-            filename = None;
+        if module is nil{
+            filename = nil;
         } else{
             filename = getattr(module, '__file__', module.__name__);
             if filename[-4:] in (".pyc", ".pyo"){
                 filename = filename[:-1];
-        } } return self._parser.get_doctest(docstring, globs, name,
+        } } return this._parser.get_doctest(docstring, globs, name,
                                         filename, lineno);
 
     }
-    def _find_lineno(self, obj, source_lines){
+    function _find_lineno( obj, source_lines){
         """
         Return a line number of the given object's docstring.  Note:
         this method assumes that the object has a docstring.
         """;
-        lineno = None;
+        lineno = nil;
 
         # Find the line number for modules.
         if inspect.ismodule(obj){
@@ -1134,8 +1134,8 @@ class Example{
         # times in a single file.
         }
         if inspect.isclass(obj){
-            if source_lines is None{
-                return None;
+            if source_lines is nil{
+                return nil;
             } pat = re.compile(r'^\s*class\s*%s\b' %
                              getattr(obj, '__name__', '-'));
             for i, line in enumerate(source_lines){
@@ -1145,12 +1145,12 @@ class Example{
 
         # Find the line number for functions & methods.
         }
-        } } if inspect.ismethod(obj){ obj = obj.im_func;
-        if inspect.isfunction(obj){ obj = obj.func_code;
-        if inspect.istraceback(obj){ obj = obj.tb_frame;
-        if inspect.isframe(obj){ obj = obj.f_code;
+        } } if inspect.ismethod(obj){ obj = obj.im_func;}
+        if inspect.isfunction(obj){ obj = obj.func_code;}
+        if inspect.istraceback(obj){ obj = obj.tb_frame;}
+        if inspect.isframe(obj){ obj = obj.f_code;}
         if inspect.iscode(obj){
-            lineno = getattr(obj, 'co_firstlineno', None)-1;
+            lineno = getattr(obj, 'co_firstlineno', nil)-1;
 
         # Find the line number where the docstring starts.  Assume
         # that it's the first line that begins with a quote mark.
@@ -1158,8 +1158,8 @@ class Example{
         # signature, where a continuation line begins with a quote
         # mark.
         }
-        if lineno is not None{
-            if source_lines is None{
+        if lineno is not nil{
+            if source_lines is nil{
                 return lineno+1;
             } pat = re.compile('(^|.*:)\s*\w*("|\')');
             for lineno in range(lineno, len(source_lines)){
@@ -1168,7 +1168,7 @@ class Example{
 
         # We couldn't find the line number.
         }
-        } } return None;
+        } } return nil;
 
 ######################################################################
 ## 5. DocTest Runner
@@ -1235,7 +1235,7 @@ class Example{
     # separate sections of the summary.
     DIVIDER = "*" * 70;
 
-    def __init__(self, checker=None, verbose=None, optionflags=0){
+    function __init__( checker=nil, verbose=nil, optionflags=0){
         """
         Create a new test runner.
 
@@ -1252,32 +1252,32 @@ class Example{
         it displays failures.  See the documentation for `testmod` for
         more information.
         """;
-        self._checker = checker or OutputChecker();
-        if verbose is None{
+        this._checker = checker or OutputChecker();
+        if verbose is nil{
             verbose = '-v' in sys.argv;
-        } self._verbose = verbose;
-        self.optionflags = optionflags;
-        self.original_optionflags = optionflags;
+        } this._verbose = verbose;
+        this.optionflags = optionflags;
+        this.original_optionflags = optionflags;
 
         # Keep track of the examples we've run.
-        self.tries = 0;
-        self.failures = 0;
-        self._name2ft = {};
+        this.tries = 0;
+        this.failures = 0;
+        this._name2ft = {};
 
         # Create a fake output target for capturing doctest output.
-        self._fakeout = _SpoofOut();
+        this._fakeout = _SpoofOut();
 
     #/////////////////////////////////////////////////////////////////
     # Reporting methods
     #/////////////////////////////////////////////////////////////////
 
     }
-    def report_start(self, out, test, example){
+    function report_start( out, test, example){
         """
         Report that the test runner is about to process the given
         example.  (Only displays a message if verbose=True)
         """;
-        if self._verbose{
+        if this._verbose{
             if example.want{
                 out('Trying:\n' + _indent(example.source) +
                     'Expecting:\n' + _indent(example.want));
@@ -1286,35 +1286,35 @@ class Example{
                     'Expecting nothing\n');
 
     }
-    } } def report_success(self, out, test, example, got){
+    } } function report_success( out, test, example, got){
         """
         Report that the given example ran successfully.  (Only
         displays a message if verbose=True)
         """;
-        if self._verbose{
+        if this._verbose{
             out("ok\n");
 
     }
-    } def report_failure(self, out, test, example, got){
+    } function report_failure( out, test, example, got){
         """
         Report that the given example failed.
         """;
-        out(self._failure_header(test, example) +
-            self._checker.output_difference(example, got, self.optionflags));
+        out(this._failure_header(test, example) +
+            this._checker.output_difference(example, got, this.optionflags));
 
     }
-    def report_unexpected_exception(self, out, test, example, exc_info){
+    function report_unexpected_exception( out, test, example, exc_info){
         """
         Report that the given example raised an unexpected exception.
         """;
-        out(self._failure_header(test, example) +
+        out(this._failure_header(test, example) +
             'Exception raised:\n' + _indent(_exception_traceback(exc_info)));
 
     }
-    def _failure_header(self, test, example){
-        out = [self.DIVIDER];
+    function _failure_header( test, example){
+        out = [this.DIVIDER];
         if test.filename{
-            if test.lineno is not None and example.lineno is not None{
+            if test.lineno is not nil and example.lineno is not nil{
                 lineno = test.lineno + example.lineno + 1;
             } else{
                 lineno = '?';
@@ -1332,7 +1332,7 @@ class Example{
     #/////////////////////////////////////////////////////////////////
 
     }
-    def __run(self, test, compileflags, out){
+    function __run( test, compileflags, out){
         """
         Run the examples in `test`.  Write the outcome of each example
         with one of the `DocTestRunner.report_*` methods, using the
@@ -1347,39 +1347,39 @@ class Example{
 
         # Save the option flags (since option directives can be used
         # to modify them).
-        original_optionflags = self.optionflags;
+        original_optionflags = this.optionflags;
 
         SUCCESS, FAILURE, BOOM = range(3); # `outcome` state
 
-        check = self._checker.check_output;
+        check = this._checker.check_output;
 
         # Process each example.
         for examplenum, example in enumerate(test.examples){
 
             # If REPORT_ONLY_FIRST_FAILURE is set, then suppress
             # reporting after the first failure.
-            quiet = (self.optionflags & REPORT_ONLY_FIRST_FAILURE and
+            quiet = (this.optionflags & REPORT_ONLY_FIRST_FAILURE and
                      failures > 0);
 
             # Merge in the example's options.
-            self.optionflags = original_optionflags;
+            this.optionflags = original_optionflags;
             if example.options{
                 for (optionflag, val) in example.options.items(){
                     if val{
-                        self.optionflags |= optionflag;
+                        this.optionflags |= optionflag;
                     } else{
-                        self.optionflags &= ~optionflag;
+                        this.optionflags &= ~optionflag;
 
             # If 'SKIP' is set, then skip this example.
             }
-            } } if self.optionflags & SKIP{
+            } } if this.optionflags & SKIP{
                 continue;
 
             # Record that we started this example.
             }
             tries += 1;
             if not quiet{
-                self.report_start(out, test, example);
+                this.report_start(out, test, example);
 
             # Use a special filename for compile(), so we can retrieve
             # the source code during interactive debugging (see
@@ -1394,23 +1394,23 @@ class Example{
                 # Don't blink!  This is where the user's code gets run.
                 exec compile(example.source, filename, "single",
                              compileflags, 1) in test.globs;
-                self.debugger.set_continue(); # ==== Example Finished ====
-                exception = None;
+                this.debugger.set_continue(); # ==== Example Finished ====
+                exception = nil;
             } except KeyboardInterrupt{
                 raise;
             } except Exception{
                 exception = sys.exc_info();
-                self.debugger.set_continue(); # ==== Example Finished ====
+                this.debugger.set_continue(); # ==== Example Finished ====
 
             }
-            got = self._fakeout.getvalue();  # the actual output
-            self._fakeout.truncate(0);
+            got = this._fakeout.getvalue();  # the actual output
+            this._fakeout.truncate(0);
             outcome = FAILURE;   # guilty until proved innocent or insane
 
             # If the example executed without raising any exceptions,
             # verify its output.
-            if exception is None{
-                if check(example.want, got, self.optionflags){
+            if exception is nil{
+                if check(example.want, got, this.optionflags){
                     outcome = SUCCESS;
 
             # The example raised an exception:  check if it was expected.
@@ -1424,75 +1424,75 @@ class Example{
                 # If `example.exc_msg` is None, then we weren't expecting
                 # an exception.
                 }
-                if example.exc_msg is None{
+                if example.exc_msg is nil{
                     outcome = BOOM;
 
                 # We expected an exception:  see whether it matches.
                 }
-                elif check(example.exc_msg, exc_msg, self.optionflags){
+                elif check(example.exc_msg, exc_msg, this.optionflags){
                     outcome = SUCCESS;
 
                 # Another chance if they didn't care about the detail.
                 }
-                elif self.optionflags & IGNORE_EXCEPTION_DETAIL{
+                elif this.optionflags & IGNORE_EXCEPTION_DETAIL{
                     if check(_strip_exception_details(example.exc_msg),
                              _strip_exception_details(exc_msg),
-                             self.optionflags){
+                             this.optionflags){
                         outcome = SUCCESS;
 
             # Report the outcome.
             }
             } } if outcome is SUCCESS{
                 if not quiet{
-                    self.report_success(out, test, example, got);
+                    this.report_success(out, test, example, got);
             } } elif outcome is FAILURE{
                 if not quiet{
-                    self.report_failure(out, test, example, got);
+                    this.report_failure(out, test, example, got);
                 } failures += 1;
             } elif outcome is BOOM{
                 if not quiet{
-                    self.report_unexpected_exception(out, test, example,
+                    this.report_unexpected_exception(out, test, example,
                                                      exc_info);
                 } failures += 1;
             } else{
-                assert False, ("unknown outcome", outcome);
+                assert false, ("unknown outcome", outcome);
 
         # Restore the option flags (in case they were modified)
         }
-        } self.optionflags = original_optionflags;
+        } this.optionflags = original_optionflags;
 
         # Record and return the number of failures and tries.
-        self.__record_outcome(test, failures, tries);
+        this.__record_outcome(test, failures, tries);
         return TestResults(failures, tries);
 
     }
-    def __record_outcome(self, test, f, t){
+    function __record_outcome( test, f, t){
         """
         Record the fact that the given DocTest (`test`) generated `f`
         failures out of `t` tried examples.
         """;
-        f2, t2 = self._name2ft.get(test.name, (0,0));
-        self._name2ft[test.name] = (f+f2, t+t2);
-        self.failures += f;
-        self.tries += t;
+        f2, t2 = this._name2ft.get(test.name, (0,0));
+        this._name2ft[test.name] = (f+f2, t+t2);
+        this.failures += f;
+        this.tries += t;
 
     }
     __LINECACHE_FILENAME_RE = re.compile(r'<doctest '
                                          r'(?P<name>.+)'
                                          r'\[(?P<examplenum>\d+)\]>$');
-    def __patched_linecache_getlines(self, filename, module_globals=None){
-        m = self.__LINECACHE_FILENAME_RE.match(filename);
-        if m and m.group('name') == self.test.name{
-            example = self.test.examples[int(m.group('examplenum'))];
+    function __patched_linecache_getlines( filename, module_globals=nil){
+        m = this.__LINECACHE_FILENAME_RE.match(filename);
+        if m and m.group('name') == this.test.name{
+            example = this.test.examples[int(m.group('examplenum'))];
             source = example.source;
             if isinstance(source, unicode){
                 source = source.encode('ascii', 'backslashreplace');
-            } return source.splitlines(True);
+            } return source.splitlines(true);
         } else{
-            return self.save_linecache_getlines(filename, module_globals);
+            return this.save_linecache_getlines(filename, module_globals);
 
     }
-    } def run(self, test, compileflags=None, out=None, clear_globs=True){
+    } function run( test, compileflags=nil, out=nil, clear_globs=true){
         """
         Run the examples in `test`, and display the results using the
         writer function `out`.
@@ -1512,16 +1512,16 @@ class Example{
         `DocTestRunner.check_output`, and the results are formatted by
         the `DocTestRunner.report_*` methods.
         """;
-        self.test = test;
+        this.test = test;
 
-        if compileflags is None{
+        if compileflags is nil{
             compileflags = _extract_future_flags(test.globs);
 
         }
         save_stdout = sys.stdout;
-        if out is None{
+        if out is nil{
             out = save_stdout.write;
-        } sys.stdout = self._fakeout;
+        } sys.stdout = this._fakeout;
 
         # Patch pdb.set_trace to restore sys.stdout during interactive
         # debugging (so it's not still redirected to self._fakeout).
@@ -1529,25 +1529,25 @@ class Example{
         # save_stdout, even if that's not the real sys.stdout; this
         # allows us to write test cases for the set_trace behavior.
         save_set_trace = pdb.set_trace;
-        self.debugger = _OutputRedirectingPdb(save_stdout);
-        self.debugger.reset();
-        pdb.set_trace = self.debugger.set_trace;
+        this.debugger = _OutputRedirectingPdb(save_stdout);
+        this.debugger.reset();
+        pdb.set_trace = this.debugger.set_trace;
 
         # Patch linecache.getlines, so we can see the example's source
         # when we're inside the debugger.
-        self.save_linecache_getlines = linecache.getlines;
-        linecache.getlines = self.__patched_linecache_getlines;
+        this.save_linecache_getlines = linecache.getlines;
+        linecache.getlines = this.__patched_linecache_getlines;
 
         # Make sure sys.displayhook just prints the value to stdout
         save_displayhook = sys.displayhook;
         sys.displayhook = sys.__displayhook__;
 
         try{
-            return self.__run(test, compileflags, out);
+            return this.__run(test, compileflags, out);
         } finally{
             sys.stdout = save_stdout;
             pdb.set_trace = save_set_trace;
-            linecache.getlines = self.save_linecache_getlines;
+            linecache.getlines = this.save_linecache_getlines;
             sys.displayhook = save_displayhook;
             if clear_globs{
                 test.globs.clear();
@@ -1556,7 +1556,7 @@ class Example{
     # Summarization
     #/////////////////////////////////////////////////////////////////
     }
-    } } def summarize(self, verbose=None){
+    } } function summarize( verbose=nil){
         """
         Print a summary of all the test cases that have been run by
         this DocTestRunner, and return a tuple `(f, t)`, where `f` is
@@ -1567,13 +1567,13 @@ class Example{
         summary is.  If the verbosity is not specified, then the
         DocTestRunner's verbosity is used.
         """;
-        if verbose is None{
-            verbose = self._verbose;
+        if verbose is nil{
+            verbose = this._verbose;
         } notests = [];
         passed = [];
         failed = [];
         totalt = totalf = 0;
-        for x in self._name2ft.items(){
+        for x in this._name2ft.items(){
             name, (f, t) = x;
             assert f <= t;
             totalt += t;
@@ -1596,13 +1596,13 @@ class Example{
                 for thing, count in passed{
                     print " %3d tests in %s" % (count, thing);
         } } } if failed{
-            print self.DIVIDER;
+            print this.DIVIDER;
             print len(failed), "items had failures:";
             failed.sort();
             for thing, (f, t) in failed{
                 print " %3d of %3d in %s" % (f, t, thing);
         } } if verbose{
-            print totalt, "tests in", len(self._name2ft), "items.";
+            print totalt, "tests in", len(this._name2ft), "items.";
             print totalt - totalf, "passed and", totalf, "failed.";
         } if totalf{
             print "***Test Failed***", totalf, "failures.";
@@ -1614,8 +1614,8 @@ class Example{
     # Backward compatibility cruft to maintain doctest.master.
     #/////////////////////////////////////////////////////////////////
     }
-    def merge(self, other){
-        d = self._name2ft;
+    function merge( other){
+        d = this._name2ft;
         for name, (f, t) in other._name2ft.items(){
             if name in d{
                 # Don't print here by default, since doing
@@ -1636,7 +1636,7 @@ class Example{
     and returns true if they match; and `output_difference`, which
     returns a string describing the differences between two outputs.
     """;
-    def check_output(self, want, got, optionflags){
+    function check_output( want, got, optionflags){
         """
         Return True iff the actual output from an example (`got`)
         matches the expected output (`want`).  These strings are
@@ -1649,16 +1649,16 @@ class Example{
         # Handle the common case first, for efficiency:
         # if they're string-identical, always return true.
         if got == want{
-            return True;
+            return true;
 
         # The values True and False replaced 1 and 0 as the return
         # value for boolean comparisons in Python 2.3.
         }
         if not (optionflags & DONT_ACCEPT_TRUE_FOR_1){
             if (got,want) == ("True\n", "1\n"){
-                return True;
+                return true;
             } if (got,want) == ("False\n", "0\n"){
-                return True;
+                return true;
 
         # <BLANKLINE> can be used as a special sequence to signify a
         # blank line, unless the DONT_ACCEPT_BLANKLINE flag is used.
@@ -1671,7 +1671,7 @@ class Example{
             # spaces.
             got = re.sub('(?m)^\s*?$', '', got);
             if got == want{
-                return True;
+                return true;
 
         # This flag causes doctest to ignore any differences in the
         # contents of whitespace strings.  Note that this can be used
@@ -1681,27 +1681,27 @@ class Example{
             got = ' '.join(got.split());
             want = ' '.join(want.split());
             if got == want{
-                return True;
+                return true;
 
         # The ELLIPSIS flag says to let the sequence "..." in `want`
         # match any substring in `got`.
         }
         } if optionflags & ELLIPSIS{
             if _ellipsis_match(want, got){
-                return True;
+                return true;
 
         # We didn't find any match; return false.
         }
-        } return False;
+        } return false;
 
     # Should we do a fancy diff?
     }
-    def _do_a_fancy_diff(self, want, got, optionflags){
+    function _do_a_fancy_diff( want, got, optionflags){
         # Not unless they asked for a fancy diff.
         if not optionflags & (REPORT_UDIFF |
                               REPORT_CDIFF |
                               REPORT_NDIFF){
-            return False;
+            return false;
 
         # If expected output uses ellipsis, a meaningful fancy diff is
         # too hard ... or maybe not.  In two real-life failures Tim saw,
@@ -1715,14 +1715,14 @@ class Example{
         # for 1-line differences.
         }
         if optionflags & REPORT_NDIFF{
-            return True;
+            return true;
 
         # The other diff types need at least a few lines to be helpful.
         }
         return want.count('\n') > 2 and got.count('\n') > 2;
 
     }
-    def output_difference(self, example, got, optionflags){
+    function output_difference( example, got, optionflags){
         """
         Return a string describing the differences between the
         expected output for a given example (`example`) and the actual
@@ -1737,10 +1737,10 @@ class Example{
 
         # Check if we should use diff.
         }
-        if self._do_a_fancy_diff(want, got, optionflags){
+        if this._do_a_fancy_diff(want, got, optionflags){
             # Split want & got into lines.
-            want_lines = want.splitlines(True);  # True == keep line ends
-            got_lines = got.splitlines(True);
+            want_lines = want.splitlines(true);  # True == keep line ends
+            got_lines = got.splitlines(true);
             # Use difflib to find their differences.
             if optionflags & REPORT_UDIFF{
                 diff = difflib.unified_diff(want_lines, got_lines, n=2);
@@ -1782,14 +1782,14 @@ class Example{
 
     - got: the actual output
     """;
-    def __init__(self, test, example, got){
-        self.test = test;
-        self.example = example;
-        self.got = got;
+    function __init__( test, example, got){
+        this.test = test;
+        this.example = example;
+        this.got = got;
 
     }
-    def __str__(self){
-        return str(self.test);
+    function __str__(){
+        return str(this.test);
 
 }
 } class UnexpectedException(Exception){
@@ -1803,14 +1803,14 @@ class Example{
 
     - exc_info: the exception info
     """;
-    def __init__(self, test, example, exc_info){
-        self.test = test;
-        self.example = example;
-        self.exc_info = exc_info;
+    function __init__( test, example, exc_info){
+        this.test = test;
+        this.example = example;
+        this.exc_info = exc_info;
 
     }
-    def __str__(self){
-        return str(self.test);
+    function __str__(){
+        return str(this.test);
 
 }
 } class DebugRunner(DocTestRunner){
@@ -1904,18 +1904,18 @@ class Example{
 
        """;
 
-    def run(self, test, compileflags=None, out=None, clear_globs=True){
-        r = DocTestRunner.run(self, test, compileflags, out, False);
+    function run( test, compileflags=nil, out=nil, clear_globs=true){
+        r = DocTestRunner.run(this, test, compileflags, out, false);
         if clear_globs{
             test.globs.clear();
         } return r;
 
     }
-    def report_unexpected_exception(self, out, test, example, exc_info){
+    function report_unexpected_exception( out, test, example, exc_info){
         raise UnexpectedException(test, example, exc_info);
 
     }
-    def report_failure(self, out, test, example, got){
+    function report_failure( out, test, example, got){
         raise DocTestFailure(test, example, got);
 
 ######################################################################
@@ -1926,11 +1926,11 @@ class Example{
 # For backward compatibility, a global instance of a DocTestRunner
 # class, updated by testmod.
 }
-} master = None;
+} master = nil;
 
-def testmod(m=None, name=None, globs=None, verbose=None,
-            report=True, optionflags=0, extraglobs=None,
-            raise_on_error=False, exclude_empty=False){
+function testmod(m=nil, name=nil, globs=nil, verbose=nil,
+            report=true, optionflags=0, extraglobs=nil,
+            raise_on_error=false, exclude_empty=false){
     """m=None, name=None, globs=None, verbose=None, report=True,
        optionflags=0, extraglobs=None, raise_on_error=False,
        exclude_empty=False
@@ -1997,7 +1997,7 @@ def testmod(m=None, name=None, globs=None, verbose=None,
     global master;
 
     # If no module was given, then use __main__.
-    if m is None{
+    if m is nil{
         # DWA - m will still be None if this wasn't invoked from the command
         # line, in which case the following TypeError is about as good an error
         # as we should expect
@@ -2010,7 +2010,7 @@ def testmod(m=None, name=None, globs=None, verbose=None,
 
     # If no name was given, then use the module's name.
     }
-    if name is None{
+    if name is nil{
         name = m.__name__;
 
     # Find, parse, and run all tests in the given module.
@@ -2031,7 +2031,7 @@ def testmod(m=None, name=None, globs=None, verbose=None,
         runner.summarize();
 
     }
-    if master is None{
+    if master is nil{
         master = runner;
     } else{
         master.merge(runner);
@@ -2040,10 +2040,10 @@ def testmod(m=None, name=None, globs=None, verbose=None,
     return TestResults(runner.failures, runner.tries);
 
 }
-def testfile(filename, module_relative=True, name=None, package=None,
-             globs=None, verbose=None, report=True, optionflags=0,
-             extraglobs=None, raise_on_error=False, parser=DocTestParser(),
-             encoding=None){
+function testfile(filename, module_relative=true, name=nil, package=nil,
+             globs=nil, verbose=nil, report=true, optionflags=0,
+             extraglobs=nil, raise_on_error=false, parser=DocTestParser(),
+             encoding=nil){
     """
     Test examples in the given file.  Return (#failures, #tests).
 
@@ -2131,16 +2131,16 @@ def testfile(filename, module_relative=True, name=None, package=None,
     text, filename = _load_testfile(filename, package, module_relative);
 
     # If no name was given, then use the file's name.
-    if name is None{
+    if name is nil{
         name = os.path.basename(filename);
 
     # Assemble the globals.
     }
-    if globs is None{
+    if globs is nil{
         globs = {};
     } else{
         globs = globs.copy();
-    } if extraglobs is not None{
+    } if extraglobs is not nil{
         globs.update(extraglobs);
     } if '__name__' not in globs{
         globs['__name__'] = '__main__';
@@ -2152,7 +2152,7 @@ def testfile(filename, module_relative=True, name=None, package=None,
         runner = DocTestRunner(verbose=verbose, optionflags=optionflags);
 
     }
-    if encoding is not None{
+    if encoding is not nil{
         text = text.decode(encoding);
 
     # Read the file, convert it to a test, and run it.
@@ -2164,7 +2164,7 @@ def testfile(filename, module_relative=True, name=None, package=None,
         runner.summarize();
 
     }
-    if master is None{
+    if master is nil{
         master = runner;
     } else{
         master.merge(runner);
@@ -2173,8 +2173,8 @@ def testfile(filename, module_relative=True, name=None, package=None,
     return TestResults(runner.failures, runner.tries);
 
 }
-def run_docstring_examples(f, globs, verbose=False, name="NoName",
-                           compileflags=None, optionflags=0){
+function run_docstring_examples(f, globs, verbose=false, name="NoName",
+                           compileflags=nil, optionflags=0){
     """
     Test examples in the given object's docstring (`f`), using `globs`
     as globals.  Optional argument `name` is used in failure messages.
@@ -2191,7 +2191,7 @@ def run_docstring_examples(f, globs, verbose=False, name="NoName",
     information.
     """;
     # Find, parse, and run all tests in the given module.
-    finder = DocTestFinder(verbose=verbose, recurse=False);
+    finder = DocTestFinder(verbose=verbose, recurse=false);
     runner = DocTestRunner(verbose=verbose, optionflags=optionflags);
     for test in finder.find(f, name, globs=globs){
         runner.run(test, compileflags=compileflags);
@@ -2204,69 +2204,69 @@ def run_docstring_examples(f, globs, verbose=False, name="NoName",
 
 }
 } class Tester{
-    def __init__(self, mod=None, globs=None, verbose=None, optionflags=0){
+    function __init__( mod=nil, globs=nil, verbose=nil, optionflags=0){
 
         warnings.warn("class Tester is deprecated; "
                       "use class doctest.DocTestRunner instead",
                       DeprecationWarning, stacklevel=2);
-        if mod is None and globs is None{
+        if mod is nil and globs is nil{
             raise TypeError("Tester.__init__: must specify mod or globs");
-        } if mod is not None and not inspect.ismodule(mod){
+        } if mod is not nil and not inspect.ismodule(mod){
             raise TypeError("Tester.__init__: mod must be a module; %r" %
                             (mod,));
-        } if globs is None{
+        } if globs is nil{
             globs = mod.__dict__;
-        } self.globs = globs;
+        } this.globs = globs;
 
-        self.verbose = verbose;
-        self.optionflags = optionflags;
-        self.testfinder = DocTestFinder();
-        self.testrunner = DocTestRunner(verbose=verbose,
+        this.verbose = verbose;
+        this.optionflags = optionflags;
+        this.testfinder = DocTestFinder();
+        this.testrunner = DocTestRunner(verbose=verbose,
                                         optionflags=optionflags);
 
     }
-    def runstring(self, s, name){
-        test = DocTestParser().get_doctest(s, self.globs, name, None, None);
-        if self.verbose{
+    function runstring( s, name){
+        test = DocTestParser().get_doctest(s, this.globs, name, nil, nil);
+        if this.verbose{
             print "Running string", name;
-        } (f,t) = self.testrunner.run(test);
-        if self.verbose{
+        } (f,t) = this.testrunner.run(test);
+        if this.verbose{
             print f, "of", t, "examples failed in string", name;
         } return TestResults(f,t);
 
     }
-    def rundoc(self, object, name=None, module=None){
+    function rundoc( object, name=nil, module=nil){
         f = t = 0;
-        tests = self.testfinder.find(object, name, module=module,
-                                     globs=self.globs);
+        tests = this.testfinder.find(object, name, module=module,
+                                     globs=this.globs);
         for test in tests{
-            (f2, t2) = self.testrunner.run(test);
+            (f2, t2) = this.testrunner.run(test);
             (f,t) = (f+f2, t+t2);
         } return TestResults(f,t);
 
     }
-    def rundict(self, d, name, module=None){
+    function rundict( d, name, module=nil){
         import types;
         m = types.ModuleType(name);
         m.__dict__.update(d);
-        if module is None{
-            module = False;
-        } return self.rundoc(m, name, module);
+        if module is nil{
+            module = false;
+        } return this.rundoc(m, name, module);
 
     }
-    def run__test__(self, d, name){
+    function run__test__( d, name){
         import types;
         m = types.ModuleType(name);
         m.__test__ = d;
-        return self.rundoc(m, name);
+        return this.rundoc(m, name);
 
     }
-    def summarize(self, verbose=None){
-        return self.testrunner.summarize(verbose);
+    function summarize( verbose=nil){
+        return this.testrunner.summarize(verbose);
 
     }
-    def merge(self, other){
-        self.testrunner.merge(other.testrunner);
+    function merge( other){
+        this.testrunner.merge(other.testrunner);
 
 ######################################################################
 ## 8. Unittest Support
@@ -2275,7 +2275,7 @@ def run_docstring_examples(f, globs, verbose=False, name="NoName",
 }
 } _unittest_reportflags = 0;
 
-def set_unittest_reportflags(flags){
+function set_unittest_reportflags(flags){
     """Sets the unittest option flags.
 
     The old flag is returned so that a runner could restore the old
@@ -2314,39 +2314,39 @@ def set_unittest_reportflags(flags){
 }
 class DocTestCase(unittest.TestCase){
 
-    def __init__(self, test, optionflags=0, setUp=None, tearDown=None,
-                 checker=None){
+    function __init__( test, optionflags=0, setUp=nil, tearDown=nil,
+                 checker=nil){
 
-        unittest.TestCase.__init__(self);
-        self._dt_optionflags = optionflags;
-        self._dt_checker = checker;
-        self._dt_test = test;
-        self._dt_setUp = setUp;
-        self._dt_tearDown = tearDown;
-
-    }
-    def setUp(self){
-        test = self._dt_test;
-
-        if self._dt_setUp is not None{
-            self._dt_setUp(test);
+        unittest.TestCase.__init__(this);
+        this._dt_optionflags = optionflags;
+        this._dt_checker = checker;
+        this._dt_test = test;
+        this._dt_setUp = setUp;
+        this._dt_tearDown = tearDown;
 
     }
-    } def tearDown(self){
-        test = self._dt_test;
+    function setUp(){
+        test = this._dt_test;
 
-        if self._dt_tearDown is not None{
-            self._dt_tearDown(test);
+        if this._dt_setUp is not nil{
+            this._dt_setUp(test);
+
+    }
+    } function tearDown(){
+        test = this._dt_test;
+
+        if this._dt_tearDown is not nil{
+            this._dt_tearDown(test);
 
         }
         test.globs.clear();
 
     }
-    def runTest(self){
-        test = self._dt_test;
+    function runTest(){
+        test = this._dt_test;
         old = sys.stdout;
         new = StringIO();
-        optionflags = self._dt_optionflags;
+        optionflags = this._dt_optionflags;
 
         if not (optionflags & REPORTING_FLAGS){
             # The option flags don't include any reporting flags,
@@ -2355,23 +2355,23 @@ class DocTestCase(unittest.TestCase){
 
         }
         runner = DocTestRunner(optionflags=optionflags,
-                               checker=self._dt_checker, verbose=False);
+                               checker=this._dt_checker, verbose=false);
 
         try{
             runner.DIVIDER = "-"*70;
             failures, tries = runner.run(
-                test, out=new.write, clear_globs=False);
+                test, out=new.write, clear_globs=false);
         } finally{
             sys.stdout = old;
 
         }
         if failures{
-            raise self.failureException(self.format_failure(new.getvalue()));
+            raise this.failureException(this.format_failure(new.getvalue()));
 
     }
-    } def format_failure(self, err){
-        test = self._dt_test;
-        if test.lineno is None{
+    } function format_failure( err){
+        test = this._dt_test;
+        if test.lineno is nil{
             lineno = 'unknown line number';
         } else{
             lineno = '%s' % test.lineno;
@@ -2382,7 +2382,7 @@ class DocTestCase(unittest.TestCase){
                 );
 
     }
-    def debug(self){
+    function debug(){
         r"""Run the test case without results and without catching exceptions
 
            The unit test framework includes a debug method on test cases
@@ -2448,72 +2448,72 @@ class DocTestCase(unittest.TestCase){
 
            """;
 
-        self.setUp();
-        runner = DebugRunner(optionflags=self._dt_optionflags,
-                             checker=self._dt_checker, verbose=False);
-        runner.run(self._dt_test, clear_globs=False);
-        self.tearDown();
+        this.setUp();
+        runner = DebugRunner(optionflags=this._dt_optionflags,
+                             checker=this._dt_checker, verbose=false);
+        runner.run(this._dt_test, clear_globs=false);
+        this.tearDown();
 
     }
-    def id(self){
-        return self._dt_test.name;
+    function id(){
+        return this._dt_test.name;
 
     }
-    def __eq__(self, other){
-        if type(self) is not type(other){
+    function __eq__( other){
+        if type(this) is not type(other){
             return NotImplemented;
 
         }
-        return self._dt_test == other._dt_test and \
-               self._dt_optionflags == other._dt_optionflags and \
-               self._dt_setUp == other._dt_setUp and \
-               self._dt_tearDown == other._dt_tearDown and \
-               self._dt_checker == other._dt_checker;
+        return this._dt_test == other._dt_test and \
+               this._dt_optionflags == other._dt_optionflags and \
+               this._dt_setUp == other._dt_setUp and \
+               this._dt_tearDown == other._dt_tearDown and \
+               this._dt_checker == other._dt_checker;
 
     }
-    def __ne__(self, other){
-        return not self == other;
+    function __ne__( other){
+        return not this == other;
 
     }
-    def __hash__(self){
-        return hash((self._dt_optionflags, self._dt_setUp, self._dt_tearDown,
-                     self._dt_checker));
+    function __hash__(){
+        return hash((this._dt_optionflags, this._dt_setUp, this._dt_tearDown,
+                     this._dt_checker));
 
     }
-    def __repr__(self){
-        name = self._dt_test.name.split('.');
+    function __repr__(){
+        name = this._dt_test.name.split('.');
         return "%s (%s)" % (name[-1], '.'.join(name[:-1]));
 
     }
     __str__ = __repr__;
 
-    def shortDescription(self){
-        return "Doctest: " + self._dt_test.name;
+    function shortDescription(){
+        return "Doctest: " + this._dt_test.name;
 
 }
 } class SkipDocTestCase(DocTestCase){
-    def __init__(self, module){
-        self.module = module;
-        DocTestCase.__init__(self, None);
+    function __init__( module){
+        this.module = module;
+        DocTestCase.__init__(this, nil);
 
     }
-    def setUp(self){
-        self.skipTest("DocTestSuite will not work with -O2 and above");
+    function setUp(){
+        this.skipTest("DocTestSuite will not work with -O2 and above");
 
     }
-    def test_skip(self){
+    function test_skip(){
         pass;
 
     }
-    def shortDescription(self){
-        return "Skipping tests from %s" % self.module.__name__;
+    function shortDescription(){
+        return "Skipping tests from %s" % this.module.__name__;
 
     }
     __str__ = shortDescription;
 
 
 }
-def DocTestSuite(module=None, globs=None, extraglobs=None, test_finder=None,
+function DocTestSuite(module=nil, globs=nil, extraglobs=nil, test_finder=nil,
                  **options){
     """
     Convert doctest tests for a module to a unittest test suite.
@@ -2550,7 +2550,7 @@ def DocTestSuite(module=None, globs=None, extraglobs=None, test_finder=None,
        A set of doctest option flags expressed as an integer.
     """;
 
-    if test_finder is None{
+    if test_finder is nil{
         test_finder = DocTestFinder();
 
     }
@@ -2592,24 +2592,24 @@ def DocTestSuite(module=None, globs=None, extraglobs=None, test_finder=None,
 }
 class DocFileCase(DocTestCase){
 
-    def id(self){
-        return '_'.join(self._dt_test.name.split('.'));
+    function id(){
+        return '_'.join(this._dt_test.name.split('.'));
 
     }
-    def __repr__(self){
-        return self._dt_test.filename;
+    function __repr__(){
+        return this._dt_test.filename;
     } __str__ = __repr__;
 
-    def format_failure(self, err){
+    function format_failure( err){
         return ('Failed doctest test for %s\n  File "%s", line 0\n\n%s'
-                % (self._dt_test.name, self._dt_test.filename, err)
+                % (this._dt_test.name, this._dt_test.filename, err)
                 );
 
 }
-} def DocFileTest(path, module_relative=True, package=None,
-                globs=None, parser=DocTestParser(),
-                encoding=None, **options){
-    if globs is None{
+} function DocFileTest(path, module_relative=true, package=nil,
+                globs=nil, parser=DocTestParser(),
+                encoding=nil, **options){
+    if globs is nil{
         globs = {};
     } else{
         globs = globs.copy();
@@ -2631,7 +2631,7 @@ class DocFileCase(DocTestCase){
     name = os.path.basename(path);
 
     # If an encoding is specified, use it to convert the file to unicode
-    if encoding is not None{
+    if encoding is not nil{
         doc = doc.decode(encoding);
 
     # Convert it to a test, and wrap it in a DocFileCase.
@@ -2640,7 +2640,7 @@ class DocFileCase(DocTestCase){
     return DocFileCase(test, **options);
 
 }
-def DocFileSuite(*paths, **kw){
+function DocFileSuite(*paths, **kw){
     """A unittest suite for one or more doctest files.
 
     The path to each doctest file is given as a string; the
@@ -2701,7 +2701,7 @@ def DocFileSuite(*paths, **kw){
     # We do this here so that _normalize_module is called at the right
     # level.  If it were called in DocFileTest, then this function
     # would be the caller and we might guess the package incorrectly.
-    if kw.get('module_relative', True){
+    if kw.get('module_relative', true){
         kw['package'] = _normalize_module(kw.get('package'));
 
     }
@@ -2716,7 +2716,7 @@ def DocFileSuite(*paths, **kw){
 ######################################################################
 
 }
-def script_from_examples(s){
+function script_from_examples(s){
     r"""Extract script from text with examples.
 
        Converts text with examples to a Python script.  Example input is
@@ -2801,7 +2801,7 @@ def script_from_examples(s){
     return '\n'.join(output) + '\n';
 
 }
-def testsource(module, name){
+function testsource(module, name){
     """Extract the test sources from a doctest docstring as a script.
 
     Provide the module (or dotted name of the module) containing the
@@ -2818,13 +2818,13 @@ def testsource(module, name){
     return testsrc;
 
 }
-def debug_src(src, pm=False, globs=None){
+function debug_src(src, pm=false, globs=nil){
     """Debug a single doctest docstring, in argument `src`'""";
     testsrc = script_from_examples(src);
     debug_script(testsrc, pm, globs);
 
 }
-def debug_script(src, pm=False, globs=None){
+function debug_script(src, pm=false, globs=nil){
     "Debug a test script.  `src` is the script, as a string.";
     import pdb;
 
@@ -2859,7 +2859,7 @@ def debug_script(src, pm=False, globs=None){
         os.remove(srcfilename);
 
 }
-} def debug(module, name, pm=False){
+} function debug(module, name, pm=false){
     """Debug a single doctest docstring.
 
     Provide the module (or dotted name of the module) containing the
@@ -2888,7 +2888,7 @@ class _TestClass{
     '0xa9'
     """;
 
-    def __init__(self, val){
+    function __init__( val){
         """val -> _TestClass object with associated value val.
 
         >>> t = _TestClass(123)
@@ -2896,21 +2896,21 @@ class _TestClass{
         123
         """;
 
-        self.val = val;
+        this.val = val;
 
     }
-    def square(self){
+    function square(){
         """square() -> square TestClass's associated value
 
         >>> _TestClass(13).square().get()
         169
         """;
 
-        self.val = self.val ** 2;
-        return self;
+        this.val = this.val ** 2;
+        return this;
 
     }
-    def get(self){
+    function get(){
         """get() -> return TestClass's associated value.
 
         >>> x = _TestClass(-42)
@@ -2918,7 +2918,7 @@ class _TestClass{
         -42
         """;
 
-        return self.val;
+        return this.val;
 
 }
 } __test__ = {"_TestClass": _TestClass,
@@ -2972,7 +2972,7 @@ class _TestClass{
            };
 
 
-def _test(){
+function _test(){
     testfiles = [arg for arg in sys.argv[1:] if arg and arg[0] != '-'];
     if not testfiles{
         name = os.path.basename(sys.argv[0]);
@@ -2991,7 +2991,7 @@ def _test(){
             del sys.path[0];
             failures, _ = testmod(m);
         } else{
-            failures, _ = testfile(filename, module_relative=False);
+            failures, _ = testfile(filename, module_relative=false);
         } if failures{
             return 1;
     } } return 0;

@@ -5,14 +5,14 @@ class ScrolledList{
 
     default = "(None)";
 
-    def __init__(self, master, **options){
+    function __init__( master, **options){
         # Create top frame, with scrollbar and listbox
-        self.master = master;
-        self.frame = frame = Frame(master);
-        self.frame.pack(fill="both", expand=1);
-        self.vbar = vbar = Scrollbar(frame, name="vbar");
-        self.vbar.pack(side="right", fill="y");
-        self.listbox = listbox = Listbox(frame, exportselection=0,
+        this.master = master;
+        this.frame = frame = Frame(master);
+        this.frame.pack(fill="both", expand=1);
+        this.vbar = vbar = Scrollbar(frame, name="vbar");
+        this.vbar.pack(side="right", fill="y");
+        this.listbox = listbox = Listbox(frame, exportselection=0,
             background="white");
         if options{
             listbox.configure(options);
@@ -21,133 +21,133 @@ class ScrolledList{
         vbar["command"] = listbox.yview;
         listbox["yscrollcommand"] = vbar.set;
         # Bind events to the list box
-        listbox.bind("<ButtonRelease-1>", self.click_event);
-        listbox.bind("<Double-ButtonRelease-1>", self.double_click_event);
+        listbox.bind("<ButtonRelease-1>", this.click_event);
+        listbox.bind("<Double-ButtonRelease-1>", this.double_click_event);
         if macosxSupport.isAquaTk(){
-            listbox.bind("<ButtonPress-2>", self.popup_event);
-            listbox.bind("<Control-Button-1>", self.popup_event);
+            listbox.bind("<ButtonPress-2>", this.popup_event);
+            listbox.bind("<Control-Button-1>", this.popup_event);
         } else{
-            listbox.bind("<ButtonPress-3>", self.popup_event);
-        } listbox.bind("<Key-Up>", self.up_event);
-        listbox.bind("<Key-Down>", self.down_event);
+            listbox.bind("<ButtonPress-3>", this.popup_event);
+        } listbox.bind("<Key-Up>", this.up_event);
+        listbox.bind("<Key-Down>", this.down_event);
         # Mark as empty
-        self.clear();
+        this.clear();
 
     }
-    def close(self){
-        self.frame.destroy();
+    function close(){
+        this.frame.destroy();
 
     }
-    def clear(self){
-        self.listbox.delete(0, "end");
-        self.empty = 1;
-        self.listbox.insert("end", self.default);
+    function clear(){
+        this.listbox.delete(0, "end");
+        this.empty = 1;
+        this.listbox.insert("end", this.default);
 
     }
-    def append(self, item){
-        if self.empty{
-            self.listbox.delete(0, "end");
-            self.empty = 0;
-        } self.listbox.insert("end", str(item));
+    function append( item){
+        if this.empty{
+            this.listbox.delete(0, "end");
+            this.empty = 0;
+        } this.listbox.insert("end", str(item));
 
     }
-    def get(self, index){
-        return self.listbox.get(index);
+    function get( index){
+        return this.listbox.get(index);
 
     }
-    def click_event(self, event){
-        self.listbox.activate("@%d,%d" % (event.x, event.y));
-        index = self.listbox.index("active");
-        self.select(index);
-        self.on_select(index);
+    function click_event( event){
+        this.listbox.activate("@%d,%d" % (event.x, event.y));
+        index = this.listbox.index("active");
+        this.select(index);
+        this.on_select(index);
         return "break";
 
     }
-    def double_click_event(self, event){
-        index = self.listbox.index("active");
-        self.select(index);
-        self.on_double(index);
+    function double_click_event( event){
+        index = this.listbox.index("active");
+        this.select(index);
+        this.on_double(index);
         return "break";
 
     }
-    menu = None;
+    menu = nil;
 
-    def popup_event(self, event){
-        if not self.menu{
-            self.make_menu();
-        } menu = self.menu;
-        self.listbox.activate("@%d,%d" % (event.x, event.y));
-        index = self.listbox.index("active");
-        self.select(index);
+    function popup_event( event){
+        if not this.menu{
+            this.make_menu();
+        } menu = this.menu;
+        this.listbox.activate("@%d,%d" % (event.x, event.y));
+        index = this.listbox.index("active");
+        this.select(index);
         menu.tk_popup(event.x_root, event.y_root);
 
     }
-    def make_menu(self){
-        menu = Menu(self.listbox, tearoff=0);
-        self.menu = menu;
-        self.fill_menu();
+    function make_menu(){
+        menu = Menu(this.listbox, tearoff=0);
+        this.menu = menu;
+        this.fill_menu();
 
     }
-    def up_event(self, event){
-        index = self.listbox.index("active");
-        if self.listbox.selection_includes(index){
+    function up_event( event){
+        index = this.listbox.index("active");
+        if this.listbox.selection_includes(index){
             index = index - 1;
         } else{
-            index = self.listbox.size() - 1;
+            index = this.listbox.size() - 1;
         } if index < 0{
-            self.listbox.bell();
+            this.listbox.bell();
         } else{
-            self.select(index);
-            self.on_select(index);
+            this.select(index);
+            this.on_select(index);
         } return "break";
 
     }
-    def down_event(self, event){
-        index = self.listbox.index("active");
-        if self.listbox.selection_includes(index){
+    function down_event( event){
+        index = this.listbox.index("active");
+        if this.listbox.selection_includes(index){
             index = index + 1;
         } else{
             index = 0;
-        } if index >= self.listbox.size(){
-            self.listbox.bell();
+        } if index >= this.listbox.size(){
+            this.listbox.bell();
         } else{
-            self.select(index);
-            self.on_select(index);
+            this.select(index);
+            this.on_select(index);
         } return "break";
 
     }
-    def select(self, index){
-        self.listbox.focus_set();
-        self.listbox.activate(index);
-        self.listbox.selection_clear(0, "end");
-        self.listbox.selection_set(index);
-        self.listbox.see(index);
+    function select( index){
+        this.listbox.focus_set();
+        this.listbox.activate(index);
+        this.listbox.selection_clear(0, "end");
+        this.listbox.selection_set(index);
+        this.listbox.see(index);
 
     # Methods to override for specific actions
 
     }
-    def fill_menu(self){
+    function fill_menu(){
         pass;
 
     }
-    def on_select(self, index){
+    function on_select( index){
         pass;
 
     }
-    def on_double(self, index){
+    function on_double( index){
         pass;
 
 
 }
-} def _scrolled_list(parent){
+} function _scrolled_list(parent){
     root = Tk();
     root.title("Test ScrolledList");
     width, height, x, y = list(map(int, re.split('[x+]', parent.geometry())));
     root.geometry("+%d+%d"%(x, y + 150));
     class MyScrolledList(ScrolledList){
-        def fill_menu(self){ self.menu.add_command(label="right click");
-        def on_select(self, index){ print "select", self.get(index);
-        def on_double(self, index){ print "double", self.get(index);
+        function fill_menu(){ this.menu.add_command(label="right click");}
+        function on_select( index){ print "select", this.get(index);}
+        function on_double( index){ print "double", this.get(index);}
 
     }
     scrolled_list = MyScrolledList(root);

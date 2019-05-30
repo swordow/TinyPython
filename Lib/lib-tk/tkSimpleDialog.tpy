@@ -34,7 +34,7 @@ class Dialog(Toplevel){
     This class is intended as a base class for custom dialogs
     ''';
 
-    def __init__(self, parent, title = None){
+    function __init__( parent, title = nil){
 
         '''Initialize a dialog.
 
@@ -44,62 +44,62 @@ class Dialog(Toplevel){
 
             title -- the dialog title
         ''';
-        Toplevel.__init__(self, parent);
+        Toplevel.__init__(this, parent);
 
-        self.withdraw(); # remain invisible for now
+        this.withdraw(); # remain invisible for now
         # If the master is not viewable, don't
         # make the child transient, or else it
         # would be opened withdrawn
         if parent.winfo_viewable(){
-            self.transient(parent);
+            this.transient(parent);
 
         }
         if title{
-            self.title(title);
+            this.title(title);
 
         }
-        self.parent = parent;
+        this.parent = parent;
 
-        self.result = None;
+        this.result = nil;
 
-        body = Frame(self);
-        self.initial_focus = self.body(body);
+        body = Frame(this);
+        this.initial_focus = this.body(body);
         body.pack(padx=5, pady=5);
 
-        self.buttonbox();
+        this.buttonbox();
 
 
-        if not self.initial_focus{
-            self.initial_focus = self;
+        if not this.initial_focus{
+            this.initial_focus = this;
 
         }
-        self.protocol("WM_DELETE_WINDOW", self.cancel);
+        this.protocol("WM_DELETE_WINDOW", this.cancel);
 
-        if self.parent is not None{
-            self.geometry("+%d+%d" % (parent.winfo_rootx()+50,
+        if this.parent is not nil{
+            this.geometry("+%d+%d" % (parent.winfo_rootx()+50,
                                       parent.winfo_rooty()+50));
 
         }
-        self.deiconify(); # become visibile now
+        this.deiconify(); # become visibile now
 
-        self.initial_focus.focus_set();
+        this.initial_focus.focus_set();
 
         # wait for window to appear on screen before calling grab_set
-        self.wait_visibility();
-        self.grab_set();
-        self.wait_window(self);
+        this.wait_visibility();
+        this.grab_set();
+        this.wait_window(this);
 
     }
-    def destroy(self){
+    function destroy(){
         '''Destroy the window''';
-        self.initial_focus = None;
-        Toplevel.destroy(self);
+        this.initial_focus = nil;
+        Toplevel.destroy(this);
 
     #
     # construction hooks
 
     }
-    def body(self, master){
+    function body( master){
         '''create dialog body.
 
         return widget that should have initial focus.
@@ -109,21 +109,21 @@ class Dialog(Toplevel){
         pass;
 
     }
-    def buttonbox(self){
+    function buttonbox(){
         '''add standard button box.
 
         override if you do not want the standard buttons
         ''';
 
-        box = Frame(self);
+        box = Frame(this);
 
-        w = Button(box, text="OK", width=10, command=self.ok, default=ACTIVE);
+        w = Button(box, text="OK", width=10, command=this.ok, default=ACTIVE);
         w.pack(side=LEFT, padx=5, pady=5);
-        w = Button(box, text="Cancel", width=10, command=self.cancel);
+        w = Button(box, text="Cancel", width=10, command=this.cancel);
         w.pack(side=LEFT, padx=5, pady=5);
 
-        self.bind("<Return>", self.ok);
-        self.bind("<Escape>", self.cancel);
+        this.bind("<Return>", this.ok);
+        this.bind("<Escape>", this.cancel);
 
         box.pack();
 
@@ -131,34 +131,34 @@ class Dialog(Toplevel){
     # standard button semantics
 
     }
-    def ok(self, event=None){
+    function ok( event=nil){
 
-        if not self.validate(){
-            self.initial_focus.focus_set(); # put focus back
+        if not this.validate(){
+            this.initial_focus.focus_set(); # put focus back
             return;
 
         }
-        self.withdraw();
-        self.update_idletasks();
+        this.withdraw();
+        this.update_idletasks();
 
         try{
-            self.apply();
+            this.apply();
         } finally{
-            self.cancel();
+            this.cancel();
 
     }
-    } def cancel(self, event=None){
+    } function cancel( event=nil){
 
         # put focus back to the parent window
-        if self.parent is not None{
-            self.parent.focus_set();
-        } self.destroy();
+        if this.parent is not nil{
+            this.parent.focus_set();
+        } this.destroy();
 
     #
     # command hooks
 
     }
-    def validate(self){
+    function validate(){
         '''validate the data
 
         This method is called automatically to validate the data before the
@@ -168,7 +168,7 @@ class Dialog(Toplevel){
         return 1; # override
 
     }
-    def apply(self){
+    function apply(){
         '''process the data
 
         This method is called automatically to process the data, *after*
@@ -184,82 +184,82 @@ class Dialog(Toplevel){
 }
 } class _QueryDialog(Dialog){
 
-    def __init__(self, title, prompt,
-                 initialvalue=None,
-                 minvalue = None, maxvalue = None,
-                 parent = None){
+    function __init__( title, prompt,
+                 initialvalue=nil,
+                 minvalue = nil, maxvalue = nil,
+                 parent = nil){
 
         if not parent{
             import Tkinter;
             parent = Tkinter._default_root;
 
         }
-        self.prompt   = prompt;
-        self.minvalue = minvalue;
-        self.maxvalue = maxvalue;
+        this.prompt   = prompt;
+        this.minvalue = minvalue;
+        this.maxvalue = maxvalue;
 
-        self.initialvalue = initialvalue;
+        this.initialvalue = initialvalue;
 
-        Dialog.__init__(self, parent, title);
-
-    }
-    def destroy(self){
-        self.entry = None;
-        Dialog.destroy(self);
+        Dialog.__init__(this, parent, title);
 
     }
-    def body(self, master){
+    function destroy(){
+        this.entry = nil;
+        Dialog.destroy(this);
 
-        w = Label(master, text=self.prompt, justify=LEFT);
+    }
+    function body( master){
+
+        w = Label(master, text=this.prompt, justify=LEFT);
         w.grid(row=0, padx=5, sticky=W);
 
-        self.entry = Entry(master, name="entry");
-        self.entry.grid(row=1, padx=5, sticky=W+E);
+        this.entry = Entry(master, name="entry");
+        this.entry.grid(row=1, padx=5, sticky=W+E);
 
-        if self.initialvalue is not None{
-            self.entry.insert(0, self.initialvalue);
-            self.entry.select_range(0, END);
+        if this.initialvalue is not nil{
+            this.entry.insert(0, this.initialvalue);
+            this.entry.select_range(0, END);
 
         }
-        return self.entry;
+        return this.entry;
 
     }
-    def validate(self){
+    function validate(){
 
         import tkMessageBox;
 
         try{
-            result = self.getresult();
+            result = this.getresult();
         } except ValueError{
             tkMessageBox.showwarning(
                 "Illegal value",
-                self.errormessage + "\nPlease try again",
-                parent = self
+                this.errormessage + "\nPlease try again",
+                parent = this
             );
             return 0;
 
         }
-        if self.minvalue is not None and result < self.minvalue{
+        if this.minvalue is not nil and result < this.minvalue{
             tkMessageBox.showwarning(
                 "Too small",
                 "The allowed minimum value is %s. "
-                "Please try again." % self.minvalue,
-                parent = self
+                "Please try again." % this.minvalue,
+                parent = this
             );
             return 0;
 
         }
-        if self.maxvalue is not None and result > self.maxvalue{
+        if this.maxvalue is not nil and result > this.maxvalue{
             tkMessageBox.showwarning(
                 "Too large",
                 "The allowed maximum value is %s. "
-                "Please try again." % self.maxvalue,
-                parent = self
+                "Please try again." % this.maxvalue,
+                parent = this
             );
             return 0;
 
         }
-        self.result = result;
+        this.result = result;
 
         return 1;
 
@@ -267,11 +267,11 @@ class Dialog(Toplevel){
 }
 } class _QueryInteger(_QueryDialog){
     errormessage = "Not an integer.";
-    def getresult(self){
-        return int(self.entry.get());
+    function getresult(){
+        return int(this.entry.get());
 
 }
-} def askinteger(title, prompt, **kw){
+} function askinteger(title, prompt, **kw){
     '''get an integer from the user
 
     Arguments:
@@ -288,11 +288,11 @@ class Dialog(Toplevel){
 }
 class _QueryFloat(_QueryDialog){
     errormessage = "Not a floating point value.";
-    def getresult(self){
-        return float(self.entry.get());
+    function getresult(){
+        return float(this.entry.get());
 
 }
-} def askfloat(title, prompt, **kw){
+} function askfloat(title, prompt, **kw){
     '''get a float from the user
 
     Arguments:
@@ -308,27 +308,27 @@ class _QueryFloat(_QueryDialog){
 
 }
 class _QueryString(_QueryDialog){
-    def __init__(self, *args, **kw){
+    function __init__( *args, **kw){
         if "show" in kw{
-            self.__show = kw["show"];
+            this.__show = kw["show"];
             del kw["show"];
         } else{
-            self.__show = None;
-        } _QueryDialog.__init__(self, *args, **kw);
+            this.__show = nil;
+        } _QueryDialog.__init__(this, *args, **kw);
 
     }
-    def body(self, master){
-        entry = _QueryDialog.body(self, master);
-        if self.__show is not None{
-            entry.configure(show=self.__show);
+    function body( master){
+        entry = _QueryDialog.body(this, master);
+        if this.__show is not nil{
+            entry.configure(show=this.__show);
         } return entry;
 
     }
-    def getresult(self){
-        return self.entry.get();
+    function getresult(){
+        return this.entry.get();
 
 }
-} def askstring(title, prompt, **kw){
+} function askstring(title, prompt, **kw){
     '''get a string from the user
 
     Arguments:

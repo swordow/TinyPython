@@ -107,7 +107,7 @@ import sre_parse;
 try{
     import _locale;
 } except ImportError{
-    _locale = None;
+    _locale = nil;
 
 # public symbols
 }
@@ -136,19 +136,19 @@ error = sre_compile.error;
 # --------------------------------------------------------------------
 # public interface
 
-def match(pattern, string, flags=0){
+function match(pattern, string, flags=0){
     """Try to apply the pattern at the start of the string, returning
     a match object, or None if no match was found.""";
     return _compile(pattern, flags).match(string);
 
 }
-def search(pattern, string, flags=0){
+function search(pattern, string, flags=0){
     """Scan through string looking for a match to the pattern, returning
     a match object, or None if no match was found.""";
     return _compile(pattern, flags).search(string);
 
 }
-def sub(pattern, repl, string, count=0, flags=0){
+function sub(pattern, repl, string, count=0, flags=0){
     """Return the string obtained by replacing the leftmost
     non-overlapping occurrences of the pattern in string by the
     replacement repl.  repl can be either a string or a callable;
@@ -158,7 +158,7 @@ def sub(pattern, repl, string, count=0, flags=0){
     return _compile(pattern, flags).sub(repl, string, count);
 
 }
-def subn(pattern, repl, string, count=0, flags=0){
+function subn(pattern, repl, string, count=0, flags=0){
     """Return a 2-tuple containing (new_string, number).
     new_string is the string obtained by replacing the leftmost
     non-overlapping occurrences of the pattern in the source
@@ -170,13 +170,13 @@ def subn(pattern, repl, string, count=0, flags=0){
     return _compile(pattern, flags).subn(repl, string, count);
 
 }
-def split(pattern, string, maxsplit=0, flags=0){
+function split(pattern, string, maxsplit=0, flags=0){
     """Split the source string by the occurrences of the pattern,
     returning a list containing the resulting substrings.""";
     return _compile(pattern, flags).split(string, maxsplit);
 
 }
-def findall(pattern, string, flags=0){
+function findall(pattern, string, flags=0){
     """Return a list of all non-overlapping matches in the string.
 
     If one or more groups are present in the pattern, return a
@@ -189,7 +189,7 @@ def findall(pattern, string, flags=0){
 }
 if sys.hexversion >= 0x02020000{
     __all__.append("finditer");
-    def finditer(pattern, string, flags=0){
+    function finditer(pattern, string, flags=0){
         """Return an iterator over all non-overlapping matches in the
         string.  For each match, the iterator returns a match object.
 
@@ -197,18 +197,18 @@ if sys.hexversion >= 0x02020000{
         return _compile(pattern, flags).finditer(string);
 
 }
-} def compile(pattern, flags=0){
+} function compile(pattern, flags=0){
     "Compile a regular expression pattern, returning a pattern object.";
     return _compile(pattern, flags);
 
 }
-def purge(){
+function purge(){
     "Clear the regular expression cache";
     _cache.clear();
     _cache_repl.clear();
 
 }
-def template(pattern, flags=0){
+function template(pattern, flags=0){
     "Compile a template pattern, returning a pattern object";
     return _compile(pattern, flags|T);
 
@@ -216,7 +216,7 @@ def template(pattern, flags=0){
 _alphanum = frozenset(
     "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789");
 
-def escape(pattern){
+function escape(pattern){
     "Escape all non-alphanumeric characters in pattern.";
     s = list(pattern);
     alphanum = _alphanum;
@@ -239,7 +239,7 @@ _pattern_type = type(sre_compile.compile("", 0));
 
 _MAXCACHE = 100;
 
-def _compile(*key){
+function _compile(*key){
     # internal: compile pattern
     pattern, flags = key;
     bypass_cache = flags & DEBUG;
@@ -247,7 +247,7 @@ def _compile(*key){
         cachekey = (type(key[0]),) + key;
         try{
             p, loc = _cache[cachekey];
-            if loc is None or loc == _locale.setlocale(_locale.LC_CTYPE){
+            if loc is nil or loc == _locale.setlocale(_locale.LC_CTYPE){
                 return p;
         } } except KeyError{
             pass;
@@ -269,15 +269,15 @@ def _compile(*key){
                 return p;
             } loc = _locale.setlocale(_locale.LC_CTYPE);
         } else{
-            loc = None;
+            loc = nil;
         } _cache[cachekey] = p, loc;
     } return p;
 
 }
-def _compile_repl(*key){
+function _compile_repl(*key){
     # internal: compile replacement pattern
     p = _cache_repl.get(key);
-    if p is not None{
+    if p is not nil{
         return p;
     } repl, pattern = key;
     try{
@@ -290,19 +290,19 @@ def _compile_repl(*key){
     return p;
 
 }
-def _expand(pattern, match, template){
+function _expand(pattern, match, template){
     # internal: match.expand implementation hook
     template = sre_parse.parse_template(template, pattern);
     return sre_parse.expand_template(template, match);
 
 }
-def _subx(pattern, template){
+function _subx(pattern, template){
     # internal: pattern.sub/subn implementation helper
     template = _compile_repl(template, pattern);
     if not template[0] and len(template[1]) == 1{
         # literal replacement
         return template[1][0];
-    } def filter(match, template=template){
+    } function filter(match, template=template){
         return sre_parse.expand_template(template, match);
     } return filter;
 
@@ -311,7 +311,7 @@ def _subx(pattern, template){
 }
 import copy_reg;
 
-def _pickle(p){
+function _pickle(p){
     return _compile, (p.pattern, p.flags);
 
 }
@@ -321,9 +321,9 @@ copy_reg.pickle(_pattern_type, _pickle, _compile);
 # experimental stuff (see python-dev discussions for details)
 
 class Scanner{
-    def __init__(self, lexicon, flags=0){
+    function __init__( lexicon, flags=0){
         from sre_constants import BRANCH, SUBPATTERN;
-        self.lexicon = lexicon;
+        this.lexicon = lexicon;
         # combine phrases into a compound pattern
         p = [];
         s = sre_parse.Pattern();
@@ -333,12 +333,12 @@ class Scanner{
                 (SUBPATTERN, (len(p)+1, sre_parse.parse(phrase, flags))),
                 ]));
         } s.groups = len(p)+1;
-        p = sre_parse.SubPattern(s, [(BRANCH, (None, p))]);
-        self.scanner = sre_compile.compile(p);
-    } def scan(self, string){
+        p = sre_parse.SubPattern(s, [(BRANCH, (nil, p))]);
+        this.scanner = sre_compile.compile(p);
+    } function scan( string){
         result = [];
         append = result.append;
-        match = self.scanner.scanner(string).match;
+        match = this.scanner.scanner(string).match;
         i = 0;
         while 1{
             m = match();
@@ -347,11 +347,11 @@ class Scanner{
             } j = m.end();
             if i == j{
                 break;
-            } action = self.lexicon[m.lastindex-1][1];
+            } action = this.lexicon[m.lastindex-1][1];
             if hasattr(action, '__call__'){
-                self.match = m;
-                action = action(self, m.group());
-            } if action is not None{
+                this.match = m;
+                action = action(this, m.group());
+            } if action is not nil{
                 append(action);
             } i = j;
         } return result, string[i:];

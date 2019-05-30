@@ -21,7 +21,7 @@ error = "cfm.error";
 
 BUFSIZE = 0x80000;
 
-def mergecfmfiles(srclist, dst, architecture = 'fat'){
+function mergecfmfiles(srclist, dst, architecture = 'fat'){
     """Merge all files in srclist into a new file dst.
 
     If architecture is given, only code fragments of that type will be used:
@@ -62,11 +62,11 @@ def mergecfmfiles(srclist, dst, architecture = 'fat'){
 }
 } class CfrgResource{
 
-    def __init__(self, path = None){
-        self.version = 1;
-        self.fragments = [];
-        self.path = path;
-        if path is not None and os.path.exists(path){
+    function __init__( path = nil){
+        this.version = 1;
+        this.fragments = [];
+        this.path = path;
+        if path is not nil and os.path.exists(path){
             currentresref = Res.CurResFile();
             resref = Res.FSpOpenResFile(path, 1);
             Res.UseResFile(resref);
@@ -78,116 +78,116 @@ def mergecfmfiles(srclist, dst, architecture = 'fat'){
             } } finally{
                 Res.CloseResFile(resref);
                 Res.UseResFile(currentresref);
-            } self.parse(data);
-            if self.version != 1{
+            } this.parse(data);
+            if this.version != 1{
                 raise error, "unknown 'cfrg' resource format";
 
     }
-    } } def parse(self, data){
-        (res1, res2, self.version,
+    } } function parse( data){
+        (res1, res2, this.version,
             res3, res4, res5, res6,
-            self.memberCount) = struct.unpack("8l", data[:32]);
+            this.memberCount) = struct.unpack("8l", data[:32]);
         data = data[32:];
         while data{
-            frag = FragmentDescriptor(self.path, data);
+            frag = FragmentDescriptor(this.path, data);
             data = data[frag.memberSize:];
-            self.fragments.append(frag);
+            this.fragments.append(frag);
 
     }
-    } def build(self){
-        self.memberCount = len(self.fragments);
-        data = struct.pack("8l", 0, 0, self.version, 0, 0, 0, 0, self.memberCount);
-        for frag in self.fragments{
+    } function build(){
+        this.memberCount = len(this.fragments);
+        data = struct.pack("8l", 0, 0, this.version, 0, 0, 0, 0, this.memberCount);
+        for frag in this.fragments{
             data = data + frag.build();
         } return data;
 
     }
-    def append(self, frag){
-        self.fragments.append(frag);
+    function append( frag){
+        this.fragments.append(frag);
 
 
 }
 } class FragmentDescriptor{
 
-    def __init__(self, path, data = None){
-        self.path = path;
-        if data is not None{
-            self.parse(data);
+    function __init__( path, data = nil){
+        this.path = path;
+        if data is not nil{
+            this.parse(data);
 
     }
-    } def parse(self, data){
-        self.architecture = data[:4];
-        (   self.updatelevel,
-            self.currentVersion,
-            self.oldDefVersion,
-            self.stacksize,
-            self.applibdir,
-            self.fragtype,
-            self.where,
-            self.offset,
-            self.length,
-            self.res1, self.res2,
-            self.memberSize,) = struct.unpack("4lhBB4lh", data[4:42]);
-        pname = data[42:self.memberSize];
-        self.name = pname[1:1+ord(pname[0])];
+    } function parse( data){
+        this.architecture = data[:4];
+        (   this.updatelevel,
+            this.currentVersion,
+            this.oldDefVersion,
+            this.stacksize,
+            this.applibdir,
+            this.fragtype,
+            this.where,
+            this.offset,
+            this.length,
+            this.res1, this.res2,
+            this.memberSize,) = struct.unpack("4lhBB4lh", data[4:42]);
+        pname = data[42:this.memberSize];
+        this.name = pname[1:1+ord(pname[0])];
 
     }
-    def build(self){
-        data = self.architecture;
+    function build(){
+        data = this.architecture;
         data = data + struct.pack("4lhBB4l",
-                self.updatelevel,
-                self.currentVersion,
-                self.oldDefVersion,
-                self.stacksize,
-                self.applibdir,
-                self.fragtype,
-                self.where,
-                self.offset,
-                self.length,
-                self.res1, self.res2);
-        self.memberSize = len(data) + 2 + 1 + len(self.name);
+                this.updatelevel,
+                this.currentVersion,
+                this.oldDefVersion,
+                this.stacksize,
+                this.applibdir,
+                this.fragtype,
+                this.where,
+                this.offset,
+                this.length,
+                this.res1, this.res2);
+        this.memberSize = len(data) + 2 + 1 + len(this.name);
         # pad to 4 byte boundaries
-        if self.memberSize % 4{
-            self.memberSize = self.memberSize + 4 - (self.memberSize % 4);
-        } data = data + struct.pack("hb", self.memberSize, len(self.name));
-        data = data + self.name;
-        data = data + '\000' * (self.memberSize - len(data));
+        if this.memberSize % 4{
+            this.memberSize = this.memberSize + 4 - (this.memberSize % 4);
+        } data = data + struct.pack("hb", this.memberSize, len(this.name));
+        data = data + this.name;
+        data = data + '\000' * (this.memberSize - len(data));
         return data;
 
     }
-    def getfragment(self){
-        if self.where != 1{
+    function getfragment(){
+        if this.where != 1{
             raise error, "can't read fragment, unsupported location";
-        } f = open(self.path, "rb");
-        f.seek(self.offset);
-        if self.length{
-            frag = f.read(self.length);
+        } f = open(this.path, "rb");
+        f.seek(this.offset);
+        if this.length{
+            frag = f.read(this.length);
         } else{
             frag = f.read();
         } f.close();
         return frag;
 
     }
-    def copydata(self, outfile){
-        if self.where != 1{
+    function copydata( outfile){
+        if this.where != 1{
             raise error, "can't read fragment, unsupported location";
-        } infile = open(self.path, "rb");
-        if self.length == 0{
+        } infile = open(this.path, "rb");
+        if this.length == 0{
             infile.seek(0, 2);
-            self.length = infile.tell();
+            this.length = infile.tell();
 
         # Position input file and record new offset from output file
         }
-        infile.seek(self.offset);
+        infile.seek(this.offset);
 
         # pad to 16 byte boundaries
         offset = outfile.tell();
         if offset % 16{
             offset = offset + 16 - (offset % 16);
         } outfile.seek(offset);
-        self.offset = offset;
+        this.offset = offset;
 
-        l = self.length;
+        l = this.length;
         while l{
             if l > BUFSIZE{
                 outfile.write(infile.read(BUFSIZE));

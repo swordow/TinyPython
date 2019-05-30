@@ -903,7 +903,7 @@ mbiencoder_reset(MultibyteIncrementalEncoderObject *self)
         return NULL;
     self->pendingsize = 0;
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static struct PyMethodDef mbiencoder_methods[] = {
@@ -1112,7 +1112,7 @@ mbidecoder_reset(MultibyteIncrementalDecoderObject *self)
         return NULL;
     self->pendingsize = 0;
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static struct PyMethodDef mbidecoder_methods[] = {
@@ -1349,7 +1349,7 @@ mbstreamreader_read(MultibyteStreamReaderObject *self, PyObject *args)
     if (!PyArg_UnpackTuple(args, "read", 0, 1, &sizeobj))
         return NULL;
 
-    if (sizeobj == Py_None || sizeobj == NULL)
+    if (sizeobj == Py_Nil || sizeobj == NULL)
         size = -1;
     else if (PyInt_Check(sizeobj))
         size = PyInt_AsSsize_t(sizeobj);
@@ -1370,7 +1370,7 @@ mbstreamreader_readline(MultibyteStreamReaderObject *self, PyObject *args)
     if (!PyArg_UnpackTuple(args, "readline", 0, 1, &sizeobj))
         return NULL;
 
-    if (sizeobj == Py_None || sizeobj == NULL)
+    if (sizeobj == Py_Nil || sizeobj == NULL)
         size = -1;
     else if (PyInt_Check(sizeobj))
         size = PyInt_AsSsize_t(sizeobj);
@@ -1391,7 +1391,7 @@ mbstreamreader_readlines(MultibyteStreamReaderObject *self, PyObject *args)
     if (!PyArg_UnpackTuple(args, "readlines", 0, 1, &sizehintobj))
         return NULL;
 
-    if (sizehintobj == Py_None || sizehintobj == NULL)
+    if (sizehintobj == Py_Nil || sizehintobj == NULL)
         sizehint = -1;
     else if (PyInt_Check(sizehintobj))
         sizehint = PyInt_AsSsize_t(sizehintobj);
@@ -1417,7 +1417,7 @@ mbstreamreader_reset(MultibyteStreamReaderObject *self)
         return NULL;
     self->pendingsize = 0;
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static struct PyMethodDef mbstreamreader_methods[] = {
@@ -1580,7 +1580,7 @@ mbstreamwriter_write(MultibyteStreamWriterObject *self, PyObject *strobj)
     if (mbstreamwriter_iwrite(self, strobj))
         return NULL;
     else
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
 }
 
 static PyObject *
@@ -1610,7 +1610,7 @@ mbstreamwriter_writelines(MultibyteStreamWriterObject *self, PyObject *lines)
     if (PyErr_Occurred())
         return NULL;
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject *
@@ -1641,7 +1641,7 @@ mbstreamwriter_reset(MultibyteStreamWriterObject *self)
     }
     Py_DECREF(pwrt);
 
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyObject *

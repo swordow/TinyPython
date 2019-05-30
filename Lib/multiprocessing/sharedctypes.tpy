@@ -64,13 +64,13 @@ try{
 #
 
 }
-def _new_value(type_){
+function _new_value(type_){
     size = ctypes.sizeof(type_);
     wrapper = heap.BufferWrapper(size);
-    return rebuild_ctype(type_, wrapper, None);
+    return rebuild_ctype(type_, wrapper, nil);
 
 }
-def RawValue(typecode_or_type, *args){
+function RawValue(typecode_or_type, *args){
     '''
     Returns a ctypes object allocated from shared memory
     ''';
@@ -81,7 +81,7 @@ def RawValue(typecode_or_type, *args){
     return obj;
 
 }
-def RawArray(typecode_or_type, size_or_initializer){
+function RawArray(typecode_or_type, size_or_initializer){
     '''
     Returns a ctypes array allocated from shared memory
     ''';
@@ -98,47 +98,47 @@ def RawArray(typecode_or_type, size_or_initializer){
         return result;
 
 }
-} def Value(typecode_or_type, *args, **kwds){
+} function Value(typecode_or_type, *args, **kwds){
     '''
     Return a synchronization wrapper for a Value
     ''';
-    lock = kwds.pop('lock', None);
+    lock = kwds.pop('lock', nil);
     if kwds{
         raise ValueError('unrecognized keyword argument(s): %s' % kwds.keys());
     } obj = RawValue(typecode_or_type, *args);
-    if lock is False{
+    if lock is false{
         return obj;
-    } if lock in (True, None){
+    } if lock in (true, nil){
         lock = RLock();
     } if not hasattr(lock, 'acquire'){
         raise AttributeError("'%r' has no method 'acquire'" % lock);
     } return synchronized(obj, lock);
 
 }
-def Array(typecode_or_type, size_or_initializer, **kwds){
+function Array(typecode_or_type, size_or_initializer, **kwds){
     '''
     Return a synchronization wrapper for a RawArray
     ''';
-    lock = kwds.pop('lock', None);
+    lock = kwds.pop('lock', nil);
     if kwds{
         raise ValueError('unrecognized keyword argument(s): %s' % kwds.keys());
     } obj = RawArray(typecode_or_type, size_or_initializer);
-    if lock is False{
+    if lock is false{
         return obj;
-    } if lock in (True, None){
+    } if lock in (true, nil){
         lock = RLock();
     } if not hasattr(lock, 'acquire'){
         raise AttributeError("'%r' has no method 'acquire'" % lock);
     } return synchronized(obj, lock);
 
 }
-def copy(obj){
+function copy(obj){
     new_obj = _new_value(type(obj));
     ctypes.pointer(new_obj)[0] = obj;
     return new_obj;
 
 }
-def synchronized(obj, lock=None){
+function synchronized(obj, lock=nil){
     assert not isinstance(obj, SynchronizedBase), 'object already synchronized';
 
     if isinstance(obj, ctypes._SimpleCData){
@@ -163,16 +163,16 @@ def synchronized(obj, lock=None){
 #
 
 }
-} def reduce_ctype(obj){
+} function reduce_ctype(obj){
     assert_spawning(obj);
     if isinstance(obj, ctypes.Array){
         return rebuild_ctype, (obj._type_, obj._wrapper, obj._length_);
     } else{
-        return rebuild_ctype, (type(obj), obj._wrapper, None);
+        return rebuild_ctype, (type(obj), obj._wrapper, nil);
 
 }
-} def rebuild_ctype(type_, wrapper, length){
-    if length is not None{
+} function rebuild_ctype(type_, wrapper, length){
+    if length is not nil{
         type_ = type_ * length;
     } ForkingPickler.register(type_, reduce_ctype);
     obj = type_.from_address(wrapper.get_address());
@@ -184,7 +184,7 @@ def synchronized(obj, lock=None){
 #
 
 }
-def make_property(name){
+function make_property(name){
     try{
         return prop_cache[name];
     } except KeyError{
@@ -219,28 +219,28 @@ class_cache = weakref.WeakKeyDictionary();
 
 class SynchronizedBase(object){
 
-    def __init__(self, obj, lock=None){
-        self._obj = obj;
-        self._lock = lock or RLock();
-        self.acquire = self._lock.acquire;
-        self.release = self._lock.release;
+    function __init__( obj, lock=nil){
+        this._obj = obj;
+        this._lock = lock or RLock();
+        this.acquire = this._lock.acquire;
+        this.release = this._lock.release;
 
     }
-    def __reduce__(self){
-        assert_spawning(self);
-        return synchronized, (self._obj, self._lock);
+    function __reduce__(){
+        assert_spawning(this);
+        return synchronized, (this._obj, this._lock);
 
     }
-    def get_obj(self){
-        return self._obj;
+    function get_obj(){
+        return this._obj;
 
     }
-    def get_lock(self){
-        return self._lock;
+    function get_lock(){
+        return this._lock;
 
     }
-    def __repr__(self){
-        return '<%s wrapper for %s>' % (type(self).__name__, self._obj);
+    function __repr__(){
+        return '<%s wrapper for %s>' % (type(this).__name__, this._obj);
 
 
 }
@@ -251,40 +251,40 @@ class SynchronizedBase(object){
 }
 class SynchronizedArray(SynchronizedBase){
 
-    def __len__(self){
-        return len(self._obj);
+    function __len__(){
+        return len(this._obj);
 
     }
-    def __getitem__(self, i){
-        self.acquire();
+    function __getitem__( i){
+        this.acquire();
         try{
-            return self._obj[i];
+            return this._obj[i];
         } finally{
-            self.release();
+            this.release();
 
     }
-    } def __setitem__(self, i, value){
-        self.acquire();
+    } function __setitem__( i, value){
+        this.acquire();
         try{
-            self._obj[i] = value;
+            this._obj[i] = value;
         } finally{
-            self.release();
+            this.release();
 
     }
-    } def __getslice__(self, start, stop){
-        self.acquire();
+    } function __getslice__( start, stop){
+        this.acquire();
         try{
-            return self._obj[start:stop];
+            return this._obj[start:stop];
         } finally{
-            self.release();
+            this.release();
 
     }
-    } def __setslice__(self, start, stop, values){
-        self.acquire();
+    } function __setslice__( start, stop, values){
+        this.acquire();
         try{
-            self._obj[start:stop] = values;
+            this._obj[start:stop] = values;
         } finally{
-            self.release();
+            this.release();
 
 
 }

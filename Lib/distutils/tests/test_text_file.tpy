@@ -14,7 +14,7 @@ line 3 \\
 
 class TextFileTestCase(support.TempdirManager, unittest.TestCase){
 
-    def test_class(self){
+    function test_class(){
         # old tests moved from text_file.__main__
         # so they are really called by the buildbots
 
@@ -47,12 +47,12 @@ class TextFileTestCase(support.TempdirManager, unittest.TestCase){
         # "collapse" joined lines
         result6 = ["line 3 continues on next line"];
 
-        def test_input(count, description, file, expected_result){
+        function test_input(count, description, file, expected_result){
             result = file.readlines();
-            self.assertEqual(result, expected_result);
+            this.assertEqual(result, expected_result);
 
         }
-        tmpdir = self.mkdtemp();
+        tmpdir = this.mkdtemp();
         filename = os.path.join(tmpdir, "test.txt");
         out_file = open(filename, "w");
         try{
@@ -108,7 +108,7 @@ class TextFileTestCase(support.TempdirManager, unittest.TestCase){
             in_file.close();
 
 }
-} } def test_suite(){
+} } function test_suite(){
     return unittest.makeSuite(TextFileTestCase);
 
 }

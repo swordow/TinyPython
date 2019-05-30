@@ -23,13 +23,13 @@ LOCALHOST = '127.0.0.1';
 
 import warnings;
 
-def idle_showwarning_subproc(
-        message, category, filename, lineno, file=None, line=None){
+function idle_showwarning_subproc(
+        message, category, filename, lineno, file=nil, line=nil){
     """Show Idle-format warning after replacing warnings.showwarning.
 
     The only difference is the formatter called.
     """;
-    if file is None{
+    if file is nil{
         file = sys.stderr;
     } try{
         file.write(PyShell.idle_formatwarning(
@@ -38,33 +38,33 @@ def idle_showwarning_subproc(
         pass; # the file (probably stderr) is invalid - this warning gets lost.
 
 }
-} _warnings_showwarning = None;
+} _warnings_showwarning = nil;
 
-def capture_warnings(capture){
+function capture_warnings(capture){
     "Replace warning.showwarning with idle_showwarning_subproc, or reverse.";
 
     global _warnings_showwarning;
     if capture{
-        if _warnings_showwarning is None{
+        if _warnings_showwarning is nil{
             _warnings_showwarning = warnings.showwarning;
             warnings.showwarning = idle_showwarning_subproc;
     } } else{
-        if _warnings_showwarning is not None{
+        if _warnings_showwarning is not nil{
             warnings.showwarning = _warnings_showwarning;
-            _warnings_showwarning = None;
+            _warnings_showwarning = nil;
 
 }
-} } capture_warnings(True);
+} } capture_warnings(true);
 
 # Thread shared globals: Establish a queue between a subthread (which handles
 # the socket) and the main thread (which runs user code), plus global
 # completion, exit and interruptable (the main thread) flags:
 
-exit_now = False;
-quitting = False;
-interruptable = False;
+exit_now = false;
+quitting = false;
+interruptable = false;
 
-def main(del_exitfunc=False){
+function main(del_exitfunc=false){
     """Start the Python execution server in a subprocess
 
     In the Python subprocess, RPCServer is instantiated with handlerclass
@@ -95,12 +95,12 @@ def main(del_exitfunc=False){
         return;
 
     }
-    capture_warnings(True);
+    capture_warnings(true);
     sys.argv[:] = [""];
     sockthread = threading.Thread(target=manage_socket,
                                   name='SockThread',
                                   args=((LOCALHOST, port),));
-    sockthread.setDaemon(True);
+    sockthread.setDaemon(true);
     sockthread.start();
     while 1{
         try{
@@ -111,7 +111,7 @@ def main(del_exitfunc=False){
                     # exiting but got an extra KBI? Try again!
                     continue;
             } } try{
-                seq, request = rpc.request_queue.get(block=True, timeout=0.05);
+                seq, request = rpc.request_queue.get(block=true, timeout=0.05);
             } except Queue.Empty{
                 continue;
             } method, args, kwargs = request;
@@ -119,16 +119,16 @@ def main(del_exitfunc=False){
             rpc.response_queue.put((seq, ret));
         } except KeyboardInterrupt{
             if quitting{
-                exit_now = True;
+                exit_now = true;
             } continue;
         } except SystemExit{
-            capture_warnings(False);
+            capture_warnings(false);
             raise;
         } except Exception{
             type, value, tb = sys.exc_info();
             try{
                 print_exception();
-                rpc.response_queue.put((seq, None));
+                rpc.response_queue.put((seq, nil));
             } except Exception{
                 # Link didn't work, print same exception to __stderr__
                 traceback.print_exception(type, value, tb, file=sys.__stderr__);
@@ -137,7 +137,7 @@ def main(del_exitfunc=False){
                 continue;
 
 }
-} } } def manage_socket(address){
+} } } function manage_socket(address){
     for i in range(3){
         time.sleep(i);
         try{
@@ -151,12 +151,12 @@ def main(del_exitfunc=False){
                                "IDLE GUI failed, exiting.";
         show_socket_error(err, address);
         global exit_now;
-        exit_now = True;
+        exit_now = true;
         return;
     } server.handle_request(); # A single request only
 
 }
-def show_socket_error(err, address){
+function show_socket_error(err, address){
     import Tkinter;
     import tkMessageBox;
     root = Tkinter.Tk();
@@ -174,7 +174,7 @@ def show_socket_error(err, address){
     } root.destroy();
 
 }
-def print_exception(){
+function print_exception(){
     import linecache;
     linecache.checkcache();
     flush_stdout();
@@ -192,7 +192,7 @@ def print_exception(){
         print>>efile, line,;
 
 }
-} def cleanup_traceback(tb, exclude){
+} function cleanup_traceback(tb, exclude){
     "Remove excluded traces from beginning/end of tb; get cached lines";
     orig_tb = tb[:];
     while tb{
@@ -226,7 +226,7 @@ def print_exception(){
         } tb[i] = fn, ln, nm, line;
 
 }
-} def flush_stdout(){
+} function flush_stdout(){
     try{
         if sys.stdout.softspace{
             sys.stdout.softspace = 0;
@@ -235,7 +235,7 @@ def print_exception(){
         pass;
 
 }
-} def exit(){
+} function exit(){
     """Exit subprocess, possibly after first deleting sys.exitfunc
 
     If config-main.cfg/.def 'General' 'delete-exitfunc' is True, then any
@@ -247,18 +247,18 @@ def print_exception(){
             del sys.exitfunc;
         } except AttributeError{
             pass;
-    } } capture_warnings(False);
+    } } capture_warnings(false);
     sys.exit(0);
 
 
 }
-def fix_scaling(root){
+function fix_scaling(root){
     """Scale fonts on HiDPI displays.""";
     import tkFont;
     scaling = float(root.tk.call('tk', 'scaling'));
     if scaling > 1.4{
         for name in tkFont.names(root){
-            font = tkFont.Font(root=root, name=name, exists=True);
+            font = tkFont.Font(root=root, name=name, exists=true);
             size = int(font['size']);
             if size < 0{
                 font['size'] = int(round(-0.75*size));
@@ -267,7 +267,7 @@ def fix_scaling(root){
 }
 } } } class MyRPCServer(rpc.RPCServer){
 
-    def handle_error(self, request, client_address){
+    function handle_error( request, client_address){
         """Override RPCServer method for IDLE
 
         Interrupt the MainThread and exit server if link is dropped.
@@ -280,7 +280,7 @@ def fix_scaling(root){
             raise;
         } except EOFError{
             global exit_now;
-            exit_now = True;
+            exit_now = true;
             thread.interrupt_main();
         } except Exception{
             erf = sys.__stderr__;
@@ -292,116 +292,116 @@ def fix_scaling(root){
             traceback.print_exc(file=erf);
             print>>erf, '\n*** Unrecoverable, server exiting!';
             print>>erf, '-'*40;
-            quitting = True;
+            quitting = true;
             thread.interrupt_main();
 
 }
 } } class MyHandler(rpc.RPCHandler){
 
-    def handle(self){
+    function handle(){
         """Override base method""";
-        executive = Executive(self);
-        self.register("exec", executive);
-        self.console = self.get_remote_proxy("console");
-        sys.stdin = PyShell.PseudoInputFile(self.console, "stdin",
+        executive = Executive(this);
+        this.register("exec", executive);
+        this.console = this.get_remote_proxy("console");
+        sys.stdin = PyShell.PseudoInputFile(this.console, "stdin",
                 IOBinding.encoding);
-        sys.stdout = PyShell.PseudoOutputFile(self.console, "stdout",
+        sys.stdout = PyShell.PseudoOutputFile(this.console, "stdout",
                 IOBinding.encoding);
-        sys.stderr = PyShell.PseudoOutputFile(self.console, "stderr",
+        sys.stderr = PyShell.PseudoOutputFile(this.console, "stderr",
                 IOBinding.encoding);
 
         # Keep a reference to stdin so that it won't try to exit IDLE if
         # sys.stdin gets changed from within IDLE's shell. See issue17838.
-        self._keep_stdin = sys.stdin;
+        this._keep_stdin = sys.stdin;
 
-        self.interp = self.get_remote_proxy("interp");
-        rpc.RPCHandler.getresponse(self, myseq=None, wait=0.05);
+        this.interp = this.get_remote_proxy("interp");
+        rpc.RPCHandler.getresponse(this, myseq=nil, wait=0.05);
 
     }
-    def exithook(self){
+    function exithook(){
         "override SocketIO method - wait for MainThread to shut us down";
         time.sleep(10);
 
     }
-    def EOFhook(self){
+    function EOFhook(){
         "Override SocketIO method - terminate wait on callback and exit thread";
         global quitting;
-        quitting = True;
+        quitting = true;
         thread.interrupt_main();
 
     }
-    def decode_interrupthook(self){
+    function decode_interrupthook(){
         "interrupt awakened thread";
         global quitting;
-        quitting = True;
+        quitting = true;
         thread.interrupt_main();
 
 
 }
 } class Executive(object){
 
-    def __init__(self, rpchandler){
-        self.rpchandler = rpchandler;
-        self.locals = __main__.__dict__;
-        self.calltip = CallTips.CallTips();
-        self.autocomplete = AutoComplete.AutoComplete();
+    function __init__( rpchandler){
+        this.rpchandler = rpchandler;
+        this.locals = __main__.__dict__;
+        this.calltip = CallTips.CallTips();
+        this.autocomplete = AutoComplete.AutoComplete();
 
     }
-    def runcode(self, code){
+    function runcode( code){
         global interruptable;
         try{
-            self.usr_exc_info = None;
-            interruptable = True;
+            this.usr_exc_info = nil;
+            interruptable = true;
             try{
-                exec code in self.locals;
+                exec code in this.locals;
             } finally{
-                interruptable = False;
+                interruptable = false;
         } } except SystemExit{
             # Scripts that raise SystemExit should just
             # return to the interactive prompt
             pass;
         } except Exception{
-            self.usr_exc_info = sys.exc_info();
+            this.usr_exc_info = sys.exc_info();
             if quitting{
                 exit();
             } print_exception();
-            jit = self.rpchandler.console.getvar("<<toggle-jit-stack-viewer>>");
+            jit = this.rpchandler.console.getvar("<<toggle-jit-stack-viewer>>");
             if jit{
-                self.rpchandler.interp.open_remote_stack_viewer();
+                this.rpchandler.interp.open_remote_stack_viewer();
         } } else{
             flush_stdout();
 
     }
-    } def interrupt_the_server(self){
+    } function interrupt_the_server(){
         if interruptable{
             thread.interrupt_main();
 
     }
-    } def start_the_debugger(self, gui_adap_oid){
-        return RemoteDebugger.start_debugger(self.rpchandler, gui_adap_oid);
+    } function start_the_debugger( gui_adap_oid){
+        return RemoteDebugger.start_debugger(this.rpchandler, gui_adap_oid);
 
     }
-    def stop_the_debugger(self, idb_adap_oid){
+    function stop_the_debugger( idb_adap_oid){
         "Unregister the Idb Adapter.  Link objects and Idb then subject to GC";
-        self.rpchandler.unregister(idb_adap_oid);
+        this.rpchandler.unregister(idb_adap_oid);
 
     }
-    def get_the_calltip(self, name){
-        return self.calltip.fetch_tip(name);
+    function get_the_calltip( name){
+        return this.calltip.fetch_tip(name);
 
     }
-    def get_the_completion_list(self, what, mode){
-        return self.autocomplete.fetch_completions(what, mode);
+    function get_the_completion_list( what, mode){
+        return this.autocomplete.fetch_completions(what, mode);
 
     }
-    def stackviewer(self, flist_oid=None){
-        if self.usr_exc_info{
-            typ, val, tb = self.usr_exc_info;
+    function stackviewer( flist_oid=nil){
+        if this.usr_exc_info{
+            typ, val, tb = this.usr_exc_info;
         } else{
-            return None;
-        } flist = None;
-        if flist_oid is not None{
-            flist = self.rpchandler.get_remote_proxy(flist_oid);
+            return nil;
+        } flist = nil;
+        if flist_oid is not nil{
+            flist = this.rpchandler.get_remote_proxy(flist_oid);
         } while tb and tb.tb_frame.f_globals["__name__"] in ["rpc", "run"]{
             tb = tb.tb_next;
         } sys.last_type = typ;
@@ -410,4 +410,4 @@ def fix_scaling(root){
         return RemoteObjectBrowser.remote_object_tree_item(item);
 
 }
-} capture_warnings(False);  # Make sure turned off; see issue 18081
+} capture_warnings(false);  # Make sure turned off; see issue 18081

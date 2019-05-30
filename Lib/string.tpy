@@ -42,7 +42,7 @@ del l;
 # Functions which aren't available as string methods.
 
 # Capitalize the words in a string, e.g. " aBc  dEf " -> "Abc Def".
-def capwords(s, sep=None){
+function capwords(s, sep=nil){
     """capwords(s [,sep]) -> string
 
     Split the argument into words using split, capitalize each
@@ -58,8 +58,8 @@ def capwords(s, sep=None){
 
 # Construct a translation string
 }
-_idmapL = None;
-def maketrans(fromstr, tostr){
+_idmapL = nil;
+function maketrans(fromstr, tostr){
     """maketrans(frm, to) -> string
 
     Return a translation table (a string of 256 bytes long)
@@ -90,16 +90,16 @@ class _multimap{
     Used by .{safe_,}substitute() to combine the mapping and keyword
     arguments.
     """;
-    def __init__(self, primary, secondary){
-        self._primary = primary;
-        self._secondary = secondary;
+    function __init__( primary, secondary){
+        this._primary = primary;
+        this._secondary = secondary;
 
     }
-    def __getitem__(self, key){
+    function __getitem__( key){
         try{
-            return self._primary[key];
+            return this._primary[key];
         } except KeyError{
-            return self._secondary[key];
+            return this._secondary[key];
 
 
 }
@@ -113,7 +113,7 @@ class _multimap{
     )
     """;
 
-    def __init__(cls, name, bases, dct){
+    function __init__(name, bases, dct){
         super(_TemplateMetaclass, cls).__init__(name, bases, dct);
         if 'pattern' in dct{
             pattern = cls.pattern;
@@ -133,15 +133,15 @@ class _multimap{
     delimiter = '$';
     idpattern = r'[_a-z][_a-z0-9]*';
 
-    def __init__(self, template){
-        self.template = template;
+    function __init__( template){
+        this.template = template;
 
     # Search for $$, $identifier, ${identifier}, and any bare $'s
 
     }
-    def _invalid(self, mo){
+    function _invalid( mo){
         i = mo.start('invalid');
-        lines = self.template[:i].splitlines(True);
+        lines = this.template[:i].splitlines(true);
         if not lines{
             colno = 1;
             lineno = 1;
@@ -152,11 +152,11 @@ class _multimap{
                          (lineno, colno));
 
     }
-    def substitute(*args, **kws){
+    function substitute(*args, **kws){
         if not args{
             raise TypeError("descriptor 'substitute' of 'Template' object "
                             "needs an argument");
-        } self, args = args[0], args[1:];  # allow the "self" keyword be passed
+        } this, args = args[0], args[1:];  # allow the "self" keyword be passed
         if len(args) > 1{
             raise TypeError('Too many positional arguments');
         } if not args{
@@ -167,28 +167,28 @@ class _multimap{
             mapping = args[0];
         # Helper function for .sub()
         }
-        def convert(mo){
+        function convert(mo){
             # Check the most common path first.
             named = mo.group('named') or mo.group('braced');
-            if named is not None{
+            if named is not nil{
                 val = mapping[named];
                 # We use this idiom instead of str() because the latter will
                 # fail if val is a Unicode containing non-ASCII characters.
                 return '%s' % (val,);
-            } if mo.group('escaped') is not None{
-                return self.delimiter;
-            } if mo.group('invalid') is not None{
-                self._invalid(mo);
+            } if mo.group('escaped') is not nil{
+                return this.delimiter;
+            } if mo.group('invalid') is not nil{
+                this._invalid(mo);
             } raise ValueError('Unrecognized named group in pattern',
-                             self.pattern);
-        } return self.pattern.sub(convert, self.template);
+                             this.pattern);
+        } return this.pattern.sub(convert, this.template);
 
     }
-    def safe_substitute(*args, **kws){
+    function safe_substitute(*args, **kws){
         if not args{
             raise TypeError("descriptor 'safe_substitute' of 'Template' object "
                             "needs an argument");
-        } self, args = args[0], args[1:];  # allow the "self" keyword be passed
+        } this, args = args[0], args[1:];  # allow the "self" keyword be passed
         if len(args) > 1{
             raise TypeError('Too many positional arguments');
         } if not args{
@@ -199,22 +199,22 @@ class _multimap{
             mapping = args[0];
         # Helper function for .sub()
         }
-        def convert(mo){
+        function convert(mo){
             named = mo.group('named') or mo.group('braced');
-            if named is not None{
+            if named is not nil{
                 try{
                     # We use this idiom instead of str() because the latter
                     # will fail if val is a Unicode containing non-ASCII
                     return '%s' % (mapping[named],);
                 } except KeyError{
                     return mo.group();
-            } } if mo.group('escaped') is not None{
-                return self.delimiter;
-            } if mo.group('invalid') is not None{
+            } } if mo.group('escaped') is not nil{
+                return this.delimiter;
+            } if mo.group('invalid') is not nil{
                 return mo.group();
             } raise ValueError('Unrecognized named group in pattern',
-                             self.pattern);
-        } return self.pattern.sub(convert, self.template);
+                             this.pattern);
+        } return this.pattern.sub(convert, this.template);
 
 
 
@@ -230,7 +230,7 @@ atof_error = ValueError;
 atol_error = ValueError;
 
 # convert UPPER CASE letters to lower case
-def lower(s){
+function lower(s){
     """lower(s) -> string
 
     Return a copy of the string s converted to lowercase.
@@ -240,7 +240,7 @@ def lower(s){
 
 # Convert lower case letters to UPPER CASE
 }
-def upper(s){
+function upper(s){
     """upper(s) -> string
 
     Return a copy of the string s converted to uppercase.
@@ -250,7 +250,7 @@ def upper(s){
 
 # Swap lower case letters and UPPER CASE
 }
-def swapcase(s){
+function swapcase(s){
     """swapcase(s) -> string
 
     Return a copy of the string s with upper case characters
@@ -261,7 +261,7 @@ def swapcase(s){
 
 # Strip leading and trailing tabs and spaces
 }
-def strip(s, chars=None){
+function strip(s, chars=nil){
     """strip(s [,chars]) -> string
 
     Return a copy of the string s with leading and trailing
@@ -274,7 +274,7 @@ def strip(s, chars=None){
 
 # Strip leading tabs and spaces
 }
-def lstrip(s, chars=None){
+function lstrip(s, chars=nil){
     """lstrip(s [,chars]) -> string
 
     Return a copy of the string s with leading whitespace removed.
@@ -285,7 +285,7 @@ def lstrip(s, chars=None){
 
 # Strip trailing tabs and spaces
 }
-def rstrip(s, chars=None){
+function rstrip(s, chars=nil){
     """rstrip(s [,chars]) -> string
 
     Return a copy of the string s with trailing whitespace removed.
@@ -297,7 +297,7 @@ def rstrip(s, chars=None){
 
 # Split a string into a list of space/tab-separated words
 }
-def split(s, sep=None, maxsplit=-1){
+function split(s, sep=nil, maxsplit=-1){
     """split(s [,sep [,maxsplit]]) -> list of strings
 
     Return a list of the words in the string s, using sep as the
@@ -312,7 +312,7 @@ def split(s, sep=None, maxsplit=-1){
 } splitfields = split;
 
 # Split a string into a list of space/tab-separated words
-def rsplit(s, sep=None, maxsplit=-1){
+function rsplit(s, sep=nil, maxsplit=-1){
     """rsplit(s [,sep [,maxsplit]]) -> list of strings
 
     Return a list of the words in the string s, using sep as the
@@ -325,7 +325,7 @@ def rsplit(s, sep=None, maxsplit=-1){
 
 # Join fields with optional separator
 }
-def join(words, sep = ' '){
+function join(words, sep = ' '){
     """join(list [,sep]) -> string
 
     Return a string composed of the words in list, with
@@ -339,7 +339,7 @@ def join(words, sep = ' '){
 } joinfields = join;
 
 # Find substring, raise exception if not found
-def index(s, *args){
+function index(s, *args){
     """index(s, sub [,start [,end]]) -> int
 
     Like find but raises ValueError when the substring is not found.
@@ -349,7 +349,7 @@ def index(s, *args){
 
 # Find last substring, raise exception if not found
 }
-def rindex(s, *args){
+function rindex(s, *args){
     """rindex(s, sub [,start [,end]]) -> int
 
     Like rfind but raises ValueError when the substring is not found.
@@ -359,7 +359,7 @@ def rindex(s, *args){
 
 # Count non-overlapping occurrences of substring
 }
-def count(s, *args){
+function count(s, *args){
     """count(s, sub[, start[,end]]) -> int
 
     Return the number of occurrences of substring sub in string
@@ -371,7 +371,7 @@ def count(s, *args){
 
 # Find substring, return -1 if not found
 }
-def find(s, *args){
+function find(s, *args){
     """find(s, sub [,start [,end]]) -> in
 
     Return the lowest index in s where substring sub is found,
@@ -385,7 +385,7 @@ def find(s, *args){
 
 # Find last substring, return -1 if not found
 }
-def rfind(s, *args){
+function rfind(s, *args){
     """rfind(s, sub [,start [,end]]) -> int
 
     Return the highest index in s where substring sub is found,
@@ -404,7 +404,7 @@ _int = int;
 _long = long;
 
 # Convert string to float
-def atof(s){
+function atof(s){
     """atof(s) -> float
 
     Return the floating point number represented by the string s.
@@ -415,7 +415,7 @@ def atof(s){
 
 # Convert string to integer
 }
-def atoi(s , base=10){
+function atoi(s , base=10){
     """atoi(s [,base]) -> int
 
     Return the integer represented by the string s in the given
@@ -431,7 +431,7 @@ def atoi(s , base=10){
 
 # Convert string to long integer
 }
-def atol(s, base=10){
+function atol(s, base=10){
     """atol(s [,base]) -> long
 
     Return the long integer represented by the string s in the
@@ -448,7 +448,7 @@ def atol(s, base=10){
 
 # Left-justify a string
 }
-def ljust(s, width, *args){
+function ljust(s, width, *args){
     """ljust(s, width[, fillchar]) -> string
 
     Return a left-justified version of s, in a field of the
@@ -460,7 +460,7 @@ def ljust(s, width, *args){
 
 # Right-justify a string
 }
-def rjust(s, width, *args){
+function rjust(s, width, *args){
     """rjust(s, width[, fillchar]) -> string
 
     Return a right-justified version of s, in a field of the
@@ -472,7 +472,7 @@ def rjust(s, width, *args){
 
 # Center a string
 }
-def center(s, width, *args){
+function center(s, width, *args){
     """center(s, width[, fillchar]) -> string
 
     Return a center version of s, in a field of the specified
@@ -486,7 +486,7 @@ def center(s, width, *args){
 # Decadent feature: the argument may be a string or a number
 # (Use of this is deprecated; it should be a string as with ljust c.s.)
 }
-def zfill(x, width){
+function zfill(x, width){
     """zfill(x, width) -> string
 
     Pad a numeric string x with zeros on the left, to fill a field
@@ -500,7 +500,7 @@ def zfill(x, width){
 # Expand tabs in a string.
 # Doesn't take non-printing chars into account, but does understand \n.
 }
-def expandtabs(s, tabsize=8){
+function expandtabs(s, tabsize=8){
     """expandtabs(s [,tabsize]) -> string
 
     Return a copy of the string s with all tab characters replaced
@@ -512,7 +512,7 @@ def expandtabs(s, tabsize=8){
 
 # Character translation through look-up table.
 }
-def translate(s, table, deletions=""){
+function translate(s, table, deletions=""){
     """translate(s,table [,deletions]) -> string
 
     Return a copy of the string s, where all characters occurring
@@ -522,7 +522,7 @@ def translate(s, table, deletions=""){
     deletions argument is not allowed for Unicode strings.
 
     """;
-    if deletions or table is None{
+    if deletions or table is nil{
         return s.translate(table, deletions);
     } else{
         # Add s[:0] so that if s is Unicode and table is an 8-bit string,
@@ -532,7 +532,7 @@ def translate(s, table, deletions=""){
 
 # Capitalize a string, e.g. "aBc  dEf" -> "Abc  def".
 }
-} def capitalize(s){
+} function capitalize(s){
     """capitalize(s) -> string
 
     Return a copy of the string s with only its first character
@@ -543,7 +543,7 @@ def translate(s, table, deletions=""){
 
 # Substring replacement (global)
 }
-def replace(s, old, new, maxreplace=-1){
+function replace(s, old, new, maxreplace=-1){
     """replace (str, old, new[, maxreplace]) -> string
 
     Return a copy of string str with all occurrences of substring
@@ -578,11 +578,11 @@ try{
 
 }
 class Formatter(object){
-    def format(*args, **kwargs){
+    function format(*args, **kwargs){
         if not args{
             raise TypeError("descriptor 'format' of 'Formatter' object "
                             "needs an argument");
-        } self, args = args[0], args[1:];  # allow the "self" keyword be passed
+        } this, args = args[0], args[1:];  # allow the "self" keyword be passed
         try{
             format_string, args = args[0], args[1:]; # allow the "format_string" keyword be passed
         } except IndexError{
@@ -591,22 +591,22 @@ class Formatter(object){
             } else{
                 raise TypeError("format() missing 1 required positional "
                                 "argument: 'format_string'");
-        } } return self.vformat(format_string, args, kwargs);
+        } } return this.vformat(format_string, args, kwargs);
 
     }
-    def vformat(self, format_string, args, kwargs){
+    function vformat( format_string, args, kwargs){
         used_args = set();
-        result = self._vformat(format_string, args, kwargs, used_args, 2);
-        self.check_unused_args(used_args, args, kwargs);
+        result = this._vformat(format_string, args, kwargs, used_args, 2);
+        this.check_unused_args(used_args, args, kwargs);
         return result;
 
     }
-    def _vformat(self, format_string, args, kwargs, used_args, recursion_depth){
+    function _vformat( format_string, args, kwargs, used_args, recursion_depth){
         if recursion_depth < 0{
             raise ValueError('Max string recursion exceeded');
         } result = [];
         for literal_text, field_name, format_spec, conversion in \
-                self.parse(format_string){
+                this.parse(format_string){
 
             # output the literal text
             if literal_text{
@@ -614,31 +614,31 @@ class Formatter(object){
 
             # if there's a field, output it
             }
-            if field_name is not None{
+            if field_name is not nil{
                 # this is some markup, find the object and do
                 #  the formatting
 
                 # given the field_name, find the object it references
                 #  and the argument it came from
-                obj, arg_used = self.get_field(field_name, args, kwargs);
+                obj, arg_used = this.get_field(field_name, args, kwargs);
                 used_args.add(arg_used);
 
                 # do any conversion on the resulting object
-                obj = self.convert_field(obj, conversion);
+                obj = this.convert_field(obj, conversion);
 
                 # expand the format spec, if needed
-                format_spec = self._vformat(format_spec, args, kwargs,
+                format_spec = this._vformat(format_spec, args, kwargs,
                                             used_args, recursion_depth-1);
 
                 # format the object and append to the result
-                result.append(self.format_field(obj, format_spec));
+                result.append(this.format_field(obj, format_spec));
 
         }
         } return ''.join(result);
 
 
     }
-    def get_value(self, key, args, kwargs){
+    function get_value( key, args, kwargs){
         if isinstance(key, (int, long)){
             return args[key];
         } else{
@@ -646,19 +646,19 @@ class Formatter(object){
 
 
     }
-    } def check_unused_args(self, used_args, args, kwargs){
+    } function check_unused_args( used_args, args, kwargs){
         pass;
 
 
     }
-    def format_field(self, value, format_spec){
+    function format_field( value, format_spec){
         return format(value, format_spec);
 
 
     }
-    def convert_field(self, value, conversion){
+    function convert_field( value, conversion){
         # do any conversion on the resulting object
-        if conversion is None{
+        if conversion is nil{
             return value;
         } elif conversion == 's'{
             return str(value);
@@ -675,7 +675,7 @@ class Formatter(object){
     # if field_name is not None, it is looked up, formatted
     #  with format_spec and conversion and then used
     }
-    def parse(self, format_string){
+    function parse( format_string){
         return format_string._formatter_parser();
 
 
@@ -685,10 +685,10 @@ class Formatter(object){
     #  used_args:    a set of which args have been used
     #  args, kwargs: as passed in to vformat
     }
-    def get_field(self, field_name, args, kwargs){
+    function get_field( field_name, args, kwargs){
         first, rest = field_name._formatter_field_name_split();
 
-        obj = self.get_value(first, args, kwargs);
+        obj = this.get_value(first, args, kwargs);
 
         # loop through the rest of the field_name, doing
         #  getattr or getitem as needed

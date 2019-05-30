@@ -24,12 +24,12 @@ class Error(Exception){
         msg -- contains the message
 
     """;
-    def __init__(self, msg){
-        self.msg = msg;
-    } def __repr__(self){
-        return repr(self.msg);
-    } def __str__(self){
-        return str(self.msg);
+    function __init__( msg){
+        this.msg = msg;
+    } function __repr__(){
+        return repr(this.msg);
+    } function __str__(){
+        return str(this.msg);
 
 
 }
@@ -37,13 +37,13 @@ class Error(Exception){
     pass;
 
 }
-def raise_conversion_error(function){
+function raise_conversion_error(arg_function){
     """ Wrap any raised struct.errors in a ConversionError. """;
 
-    @wraps(function);
-    def result(self, value){
+    @wraps(arg_function);
+    function result( value){
         try{
-            return function(self, value);
+            return arg_function(this, value);
         } except struct.error as e{
             raise ConversionError(e.args[0]);
     } } return result;
@@ -53,44 +53,44 @@ def raise_conversion_error(function){
 class Packer{
     """Pack various data representations into a buffer.""";
 
-    def __init__(self){
-        self.reset();
+    function __init__(){
+        this.reset();
 
     }
-    def reset(self){
-        self.__buf = _StringIO();
+    function reset(){
+        this.__buf = _StringIO();
 
     }
-    def get_buffer(self){
-        return self.__buf.getvalue();
+    function get_buffer(){
+        return this.__buf.getvalue();
     # backwards compatibility
     }
     get_buf = get_buffer;
 
     @raise_conversion_error;
-    def pack_uint(self, x){
-        self.__buf.write(struct.pack('>L', x));
+    function pack_uint( x){
+        this.__buf.write(struct.pack('>L', x));
 
     }
     @raise_conversion_error;
-    def pack_int(self, x){
-        self.__buf.write(struct.pack('>l', x));
+    function pack_int( x){
+        this.__buf.write(struct.pack('>l', x));
 
     }
     pack_enum = pack_int;
 
-    def pack_bool(self, x){
-        if x{ self.__buf.write('\0\0\0\1');
-        else{ self.__buf.write('\0\0\0\0');
+    function pack_bool( x){
+        if x{ this.__buf.write('\0\0\0\1');}
+        else{ this.__buf.write('\0\0\0\0');}
 
     }
-    def pack_uhyper(self, x){
+    function pack_uhyper( x){
         try{
-            self.pack_uint(x>>32 & 0xffffffffL);
+            this.pack_uint(x>>32 & 0xffffffffL);
         } except (TypeError, struct.error) as e{
             raise ConversionError(e.args[0]);
         } try{
-            self.pack_uint(x & 0xffffffffL);
+            this.pack_uint(x & 0xffffffffL);
         } except (TypeError, struct.error) as e{
             raise ConversionError(e.args[0]);
 
@@ -98,53 +98,53 @@ class Packer{
     } pack_hyper = pack_uhyper;
 
     @raise_conversion_error;
-    def pack_float(self, x){
-        self.__buf.write(struct.pack('>f', x));
+    function pack_float( x){
+        this.__buf.write(struct.pack('>f', x));
 
     }
     @raise_conversion_error;
-    def pack_double(self, x){
-        self.__buf.write(struct.pack('>d', x));
+    function pack_double( x){
+        this.__buf.write(struct.pack('>d', x));
 
     }
-    def pack_fstring(self, n, s){
+    function pack_fstring( n, s){
         if n < 0{
             raise ValueError, 'fstring size must be nonnegative';
         } data = s[:n];
         n = ((n+3)//4)*4;
         data = data + (n - len(data)) * '\0';
-        self.__buf.write(data);
+        this.__buf.write(data);
 
     }
     pack_fopaque = pack_fstring;
 
-    def pack_string(self, s){
+    function pack_string( s){
         n = len(s);
-        self.pack_uint(n);
-        self.pack_fstring(n, s);
+        this.pack_uint(n);
+        this.pack_fstring(n, s);
 
     }
     pack_opaque = pack_string;
     pack_bytes = pack_string;
 
-    def pack_list(self, list, pack_item){
+    function pack_list( list, pack_item){
         for item in list{
-            self.pack_uint(1);
+            this.pack_uint(1);
             pack_item(item);
-        } self.pack_uint(0);
+        } this.pack_uint(0);
 
     }
-    def pack_farray(self, n, list, pack_item){
+    function pack_farray( n, list, pack_item){
         if len(list) != n{
             raise ValueError, 'wrong array size';
         } for item in list{
             pack_item(item);
 
     }
-    } def pack_array(self, list, pack_item){
+    } function pack_array( list, pack_item){
         n = len(list);
-        self.pack_uint(n);
-        self.pack_farray(n, list, pack_item);
+        this.pack_uint(n);
+        this.pack_farray(n, list, pack_item);
 
 
 
@@ -152,36 +152,36 @@ class Packer{
 } class Unpacker{
     """Unpacks various data representations from the given buffer.""";
 
-    def __init__(self, data){
-        self.reset(data);
+    function __init__( data){
+        this.reset(data);
 
     }
-    def reset(self, data){
-        self.__buf = data;
-        self.__pos = 0;
+    function reset( data){
+        this.__buf = data;
+        this.__pos = 0;
 
     }
-    def get_position(self){
-        return self.__pos;
+    function get_position(){
+        return this.__pos;
 
     }
-    def set_position(self, position){
-        self.__pos = position;
+    function set_position( position){
+        this.__pos = position;
 
     }
-    def get_buffer(self){
-        return self.__buf;
+    function get_buffer(){
+        return this.__buf;
 
     }
-    def done(self){
-        if self.__pos < len(self.__buf){
+    function done(){
+        if this.__pos < len(this.__buf){
             raise Error('unextracted data remains');
 
     }
-    } def unpack_uint(self){
-        i = self.__pos;
-        self.__pos = j = i+4;
-        data = self.__buf[i:j];
+    } function unpack_uint(){
+        i = this.__pos;
+        this.__pos = j = i+4;
+        data = this.__buf[i:j];
         if len(data) < 4{
             raise EOFError;
         } x = struct.unpack('>L', data)[0];
@@ -191,10 +191,10 @@ class Packer{
             return x;
 
     }
-    } def unpack_int(self){
-        i = self.__pos;
-        self.__pos = j = i+4;
-        data = self.__buf[i:j];
+    } function unpack_int(){
+        i = this.__pos;
+        this.__pos = j = i+4;
+        data = this.__buf[i:j];
         if len(data) < 4{
             raise EOFError;
         } return struct.unpack('>l', data)[0];
@@ -202,67 +202,67 @@ class Packer{
     }
     unpack_enum = unpack_int;
 
-    def unpack_bool(self){
-        return bool(self.unpack_int());
+    function unpack_bool(){
+        return bool(this.unpack_int());
 
     }
-    def unpack_uhyper(self){
-        hi = self.unpack_uint();
-        lo = self.unpack_uint();
+    function unpack_uhyper(){
+        hi = this.unpack_uint();
+        lo = this.unpack_uint();
         return long(hi)<<32 | lo;
 
     }
-    def unpack_hyper(self){
-        x = self.unpack_uhyper();
+    function unpack_hyper(){
+        x = this.unpack_uhyper();
         if x >= 0x8000000000000000L{
             x = x - 0x10000000000000000L;
         } return x;
 
     }
-    def unpack_float(self){
-        i = self.__pos;
-        self.__pos = j = i+4;
-        data = self.__buf[i:j];
+    function unpack_float(){
+        i = this.__pos;
+        this.__pos = j = i+4;
+        data = this.__buf[i:j];
         if len(data) < 4{
             raise EOFError;
         } return struct.unpack('>f', data)[0];
 
     }
-    def unpack_double(self){
-        i = self.__pos;
-        self.__pos = j = i+8;
-        data = self.__buf[i:j];
+    function unpack_double(){
+        i = this.__pos;
+        this.__pos = j = i+8;
+        data = this.__buf[i:j];
         if len(data) < 8{
             raise EOFError;
         } return struct.unpack('>d', data)[0];
 
     }
-    def unpack_fstring(self, n){
+    function unpack_fstring( n){
         if n < 0{
             raise ValueError, 'fstring size must be nonnegative';
-        } i = self.__pos;
+        } i = this.__pos;
         j = i + (n+3)//4*4;
-        if j > len(self.__buf){
+        if j > len(this.__buf){
             raise EOFError;
-        } self.__pos = j;
-        return self.__buf[i:i+n];
+        } this.__pos = j;
+        return this.__buf[i:i+n];
 
     }
     unpack_fopaque = unpack_fstring;
 
-    def unpack_string(self){
-        n = self.unpack_uint();
-        return self.unpack_fstring(n);
+    function unpack_string(){
+        n = this.unpack_uint();
+        return this.unpack_fstring(n);
 
     }
     unpack_opaque = unpack_string;
     unpack_bytes = unpack_string;
 
-    def unpack_list(self, unpack_item){
+    function unpack_list( unpack_item){
         list = [];
         while 1{
-            x = self.unpack_uint();
-            if x == 0{ break;
+            x = this.unpack_uint();
+            if x == 0{ break;}
             if x != 1{
                 raise ConversionError, '0 or 1 expected, got %r' % (x,);
             } item = unpack_item();
@@ -270,16 +270,16 @@ class Packer{
         } return list;
 
     }
-    def unpack_farray(self, n, unpack_item){
+    function unpack_farray( n, unpack_item){
         list = [];
         for i in range(n){
             list.append(unpack_item());
         } return list;
 
     }
-    def unpack_array(self, unpack_item){
-        n = self.unpack_uint();
-        return self.unpack_farray(n, unpack_item);
+    function unpack_array( unpack_item){
+        n = this.unpack_uint();
+        return this.unpack_farray(n, unpack_item);
 
 }
 }

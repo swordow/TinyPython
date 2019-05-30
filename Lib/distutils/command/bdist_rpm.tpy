@@ -22,27 +22,27 @@ class bdist_rpm (Command){
     description = "create an RPM distribution";
 
     user_options = [
-        ('bdist-base=', None,
+        ('bdist-base=', nil,
          "base directory for creating built distributions"),
-        ('rpm-base=', None,
+        ('rpm-base=', nil,
          "base directory for creating RPMs (defaults to \"rpm\" under "
          "--bdist-base; must be specified for RPM 2)"),
         ('dist-dir=', 'd',
          "directory to put final RPM files in "
          "(and .spec files if --spec-only)"),
-        ('python=', None,
+        ('python=', nil,
          "path to Python interpreter to hard-code in the .spec file "
          "(default: \"python\")"),
-        ('fix-python', None,
+        ('fix-python', nil,
          "hard-code the exact path to the current Python interpreter in "
          "the .spec file"),
-        ('spec-only', None,
+        ('spec-only', nil,
          "only regenerate spec file"),
-        ('source-only', None,
+        ('source-only', nil,
          "only generate source RPM"),
-        ('binary-only', None,
+        ('binary-only', nil,
          "only generate binary RPM"),
-        ('use-bzip2', None,
+        ('use-bzip2', nil,
          "use bzip2 instead of gzip to create source distribution"),
 
         # More meta-data: too RPM-specific to put in the setup script,
@@ -50,80 +50,80 @@ class bdist_rpm (Command){
         # to "bdist_rpm".  The idea is that packagers would put this
         # info in setup.cfg, although they are of course free to
         # supply it on the command line.
-        ('distribution-name=', None,
+        ('distribution-name=', nil,
          "name of the (Linux) distribution to which this "
          "RPM applies (*not* the name of the module distribution!)"),
-        ('group=', None,
+        ('group=', nil,
          "package classification [default: \"Development/Libraries\"]"),
-        ('release=', None,
+        ('release=', nil,
          "RPM release number"),
-        ('serial=', None,
+        ('serial=', nil,
          "RPM serial number"),
-        ('vendor=', None,
+        ('vendor=', nil,
          "RPM \"vendor\" (eg. \"Joe Blow <joe@example.com>\") "
          "[default: maintainer or author from setup script]"),
-        ('packager=', None,
+        ('packager=', nil,
          "RPM packager (eg. \"Jane Doe <jane@example.net>\") "
          "[default: vendor]"),
-        ('doc-files=', None,
+        ('doc-files=', nil,
          "list of documentation files (space or comma-separated)"),
-        ('changelog=', None,
+        ('changelog=', nil,
          "RPM changelog"),
-        ('icon=', None,
+        ('icon=', nil,
          "name of icon file"),
-        ('provides=', None,
+        ('provides=', nil,
          "capabilities provided by this package"),
-        ('requires=', None,
+        ('requires=', nil,
          "capabilities required by this package"),
-        ('conflicts=', None,
+        ('conflicts=', nil,
          "capabilities which conflict with this package"),
-        ('build-requires=', None,
+        ('build-requires=', nil,
          "capabilities required to build this package"),
-        ('obsoletes=', None,
+        ('obsoletes=', nil,
          "capabilities made obsolete by this package"),
-        ('no-autoreq', None,
+        ('no-autoreq', nil,
          "do not automatically calculate dependencies"),
 
         # Actions to take when building RPM
         ('keep-temp', 'k',
          "don't clean up RPM build directory"),
-        ('no-keep-temp', None,
+        ('no-keep-temp', nil,
          "clean up RPM build directory [default]"),
-        ('use-rpm-opt-flags', None,
+        ('use-rpm-opt-flags', nil,
          "compile with RPM_OPT_FLAGS when building from source RPM"),
-        ('no-rpm-opt-flags', None,
+        ('no-rpm-opt-flags', nil,
          "do not pass any RPM CFLAGS to compiler"),
-        ('rpm3-mode', None,
+        ('rpm3-mode', nil,
          "RPM 3 compatibility mode (default)"),
-        ('rpm2-mode', None,
+        ('rpm2-mode', nil,
          "RPM 2 compatibility mode"),
 
         # Add the hooks necessary for specifying custom scripts
-        ('prep-script=', None,
+        ('prep-script=', nil,
          "Specify a script for the PREP phase of RPM building"),
-        ('build-script=', None,
+        ('build-script=', nil,
          "Specify a script for the BUILD phase of RPM building"),
 
-        ('pre-install=', None,
+        ('pre-install=', nil,
          "Specify a script for the pre-INSTALL phase of RPM building"),
-        ('install-script=', None,
+        ('install-script=', nil,
          "Specify a script for the INSTALL phase of RPM building"),
-        ('post-install=', None,
+        ('post-install=', nil,
          "Specify a script for the post-INSTALL phase of RPM building"),
 
-        ('pre-uninstall=', None,
+        ('pre-uninstall=', nil,
          "Specify a script for the pre-UNINSTALL phase of RPM building"),
-        ('post-uninstall=', None,
+        ('post-uninstall=', nil,
          "Specify a script for the post-UNINSTALL phase of RPM building"),
 
-        ('clean-script=', None,
+        ('clean-script=', nil,
          "Specify a script for the CLEAN phase of RPM building"),
 
-        ('verify-script=', None,
+        ('verify-script=', nil,
          "Specify a script for the VERIFY phase of the RPM build"),
 
         # Allow a packager to explicitly force an architecture
-        ('force-arch=', None,
+        ('force-arch=', nil,
          "Force an architecture onto the RPM build process"),
 
         ('quiet', 'q',
@@ -138,70 +138,70 @@ class bdist_rpm (Command){
                     'rpm2-mode': 'rpm3-mode'};
 
 
-    def initialize_options (self){
-        self.bdist_base = None;
-        self.rpm_base = None;
-        self.dist_dir = None;
-        self.python = None;
-        self.fix_python = None;
-        self.spec_only = None;
-        self.binary_only = None;
-        self.source_only = None;
-        self.use_bzip2 = None;
+    function initialize_options (){
+        this.bdist_base = nil;
+        this.rpm_base = nil;
+        this.dist_dir = nil;
+        this.python = nil;
+        this.fix_python = nil;
+        this.spec_only = nil;
+        this.binary_only = nil;
+        this.source_only = nil;
+        this.use_bzip2 = nil;
 
-        self.distribution_name = None;
-        self.group = None;
-        self.release = None;
-        self.serial = None;
-        self.vendor = None;
-        self.packager = None;
-        self.doc_files = None;
-        self.changelog = None;
-        self.icon = None;
+        this.distribution_name = nil;
+        this.group = nil;
+        this.release = nil;
+        this.serial = nil;
+        this.vendor = nil;
+        this.packager = nil;
+        this.doc_files = nil;
+        this.changelog = nil;
+        this.icon = nil;
 
-        self.prep_script = None;
-        self.build_script = None;
-        self.install_script = None;
-        self.clean_script = None;
-        self.verify_script = None;
-        self.pre_install = None;
-        self.post_install = None;
-        self.pre_uninstall = None;
-        self.post_uninstall = None;
-        self.prep = None;
-        self.provides = None;
-        self.requires = None;
-        self.conflicts = None;
-        self.build_requires = None;
-        self.obsoletes = None;
+        this.prep_script = nil;
+        this.build_script = nil;
+        this.install_script = nil;
+        this.clean_script = nil;
+        this.verify_script = nil;
+        this.pre_install = nil;
+        this.post_install = nil;
+        this.pre_uninstall = nil;
+        this.post_uninstall = nil;
+        this.prep = nil;
+        this.provides = nil;
+        this.requires = nil;
+        this.conflicts = nil;
+        this.build_requires = nil;
+        this.obsoletes = nil;
 
-        self.keep_temp = 0;
-        self.use_rpm_opt_flags = 1;
-        self.rpm3_mode = 1;
-        self.no_autoreq = 0;
+        this.keep_temp = 0;
+        this.use_rpm_opt_flags = 1;
+        this.rpm3_mode = 1;
+        this.no_autoreq = 0;
 
-        self.force_arch = None;
-        self.quiet = 0;
+        this.force_arch = nil;
+        this.quiet = 0;
 
     # initialize_options()
 
 
     }
-    def finalize_options (self){
-        self.set_undefined_options('bdist', ('bdist_base', 'bdist_base'));
-        if self.rpm_base is None{
-            if not self.rpm3_mode{
+    function finalize_options (){
+        this.set_undefined_options('bdist', ('bdist_base', 'bdist_base'));
+        if this.rpm_base is nil{
+            if not this.rpm3_mode{
                 raise DistutilsOptionError, \
                       "you must specify --rpm-base in RPM 2 mode";
-            } self.rpm_base = os.path.join(self.bdist_base, "rpm");
+            } this.rpm_base = os.path.join(this.bdist_base, "rpm");
 
         }
-        if self.python is None{
-            if self.fix_python{
-                self.python = sys.executable;
+        if this.python is nil{
+            if this.fix_python{
+                this.python = sys.executable;
             } else{
-                self.python = "python";
-        } } elif self.fix_python{
+                this.python = "python";
+        } } elif this.fix_python{
             raise DistutilsOptionError, \
                   "--python and --fix-python are mutually exclusive options";
 
@@ -210,127 +210,127 @@ class bdist_rpm (Command){
             raise DistutilsPlatformError, \
                   ("don't know how to create RPM "
                    "distributions on platform %s" % os.name);
-        } if self.binary_only and self.source_only{
+        } if this.binary_only and this.source_only{
             raise DistutilsOptionError, \
                   "cannot supply both '--source-only' and '--binary-only'";
 
         # don't pass CFLAGS to pure python distributions
         }
-        if not self.distribution.has_ext_modules(){
-            self.use_rpm_opt_flags = 0;
+        if not this.distribution.has_ext_modules(){
+            this.use_rpm_opt_flags = 0;
 
         }
-        self.set_undefined_options('bdist', ('dist_dir', 'dist_dir'));
-        self.finalize_package_data();
+        this.set_undefined_options('bdist', ('dist_dir', 'dist_dir'));
+        this.finalize_package_data();
 
     # finalize_options()
 
     }
-    def finalize_package_data (self){
-        self.ensure_string('group', "Development/Libraries");
-        self.ensure_string('vendor',
-                           "%s <%s>" % (self.distribution.get_contact(),
-                                        self.distribution.get_contact_email()));
-        self.ensure_string('packager');
-        self.ensure_string_list('doc_files');
-        if isinstance(self.doc_files, list){
+    function finalize_package_data (){
+        this.ensure_string('group', "Development/Libraries");
+        this.ensure_string('vendor',
+                           "%s <%s>" % (this.distribution.get_contact(),
+                                        this.distribution.get_contact_email()));
+        this.ensure_string('packager');
+        this.ensure_string_list('doc_files');
+        if isinstance(this.doc_files, list){
             for readme in ('README', 'README.txt'){
-                if os.path.exists(readme) and readme not in self.doc_files{
-                    self.doc_files.append(readme);
+                if os.path.exists(readme) and readme not in this.doc_files{
+                    this.doc_files.append(readme);
 
         }
-        } } self.ensure_string('release', "1");
-        self.ensure_string('serial');   # should it be an int?
+        } } this.ensure_string('release', "1");
+        this.ensure_string('serial');   # should it be an int?
 
-        self.ensure_string('distribution_name');
+        this.ensure_string('distribution_name');
 
-        self.ensure_string('changelog');
+        this.ensure_string('changelog');
           # Format changelog correctly
-        self.changelog = self._format_changelog(self.changelog);
+        this.changelog = this._format_changelog(this.changelog);
 
-        self.ensure_filename('icon');
+        this.ensure_filename('icon');
 
-        self.ensure_filename('prep_script');
-        self.ensure_filename('build_script');
-        self.ensure_filename('install_script');
-        self.ensure_filename('clean_script');
-        self.ensure_filename('verify_script');
-        self.ensure_filename('pre_install');
-        self.ensure_filename('post_install');
-        self.ensure_filename('pre_uninstall');
-        self.ensure_filename('post_uninstall');
+        this.ensure_filename('prep_script');
+        this.ensure_filename('build_script');
+        this.ensure_filename('install_script');
+        this.ensure_filename('clean_script');
+        this.ensure_filename('verify_script');
+        this.ensure_filename('pre_install');
+        this.ensure_filename('post_install');
+        this.ensure_filename('pre_uninstall');
+        this.ensure_filename('post_uninstall');
 
         # XXX don't forget we punted on summaries and descriptions -- they
         # should be handled here eventually!
 
         # Now *this* is some meta-data that belongs in the setup script...
-        self.ensure_string_list('provides');
-        self.ensure_string_list('requires');
-        self.ensure_string_list('conflicts');
-        self.ensure_string_list('build_requires');
-        self.ensure_string_list('obsoletes');
+        this.ensure_string_list('provides');
+        this.ensure_string_list('requires');
+        this.ensure_string_list('conflicts');
+        this.ensure_string_list('build_requires');
+        this.ensure_string_list('obsoletes');
 
-        self.ensure_string('force_arch');
+        this.ensure_string('force_arch');
     # finalize_package_data ()
 
 
     }
-    def run (self){
+    function run (){
 
         if DEBUG{
             print "before _get_package_data():";
-            print "vendor =", self.vendor;
-            print "packager =", self.packager;
-            print "doc_files =", self.doc_files;
-            print "changelog =", self.changelog;
+            print "vendor =", this.vendor;
+            print "packager =", this.packager;
+            print "doc_files =", this.doc_files;
+            print "changelog =", this.changelog;
 
         # make directories
         }
-        if self.spec_only{
-            spec_dir = self.dist_dir;
-            self.mkpath(spec_dir);
+        if this.spec_only{
+            spec_dir = this.dist_dir;
+            this.mkpath(spec_dir);
         } else{
             rpm_dir = {};
             for d in ('SOURCES', 'SPECS', 'BUILD', 'RPMS', 'SRPMS'){
-                rpm_dir[d] = os.path.join(self.rpm_base, d);
-                self.mkpath(rpm_dir[d]);
+                rpm_dir[d] = os.path.join(this.rpm_base, d);
+                this.mkpath(rpm_dir[d]);
             } spec_dir = rpm_dir['SPECS'];
 
         # Spec file goes into 'dist_dir' if '--spec-only specified',
         # build/rpm.<plat> otherwise.
         }
         spec_path = os.path.join(spec_dir,
-                                 "%s.spec" % self.distribution.get_name());
-        self.execute(write_file,
+                                 "%s.spec" % this.distribution.get_name());
+        this.execute(write_file,
                      (spec_path,
-                      self._make_spec_file()),
+                      this._make_spec_file()),
                      "writing '%s'" % spec_path);
 
-        if self.spec_only{ # stop if requested
+        if this.spec_only{ # stop if requested
             return;
 
         # Make a source distribution and copy to SOURCES directory with
         # optional icon.
         }
-        saved_dist_files = self.distribution.dist_files[:];
-        sdist = self.reinitialize_command('sdist');
-        if self.use_bzip2{
+        saved_dist_files = this.distribution.dist_files[:];
+        sdist = this.reinitialize_command('sdist');
+        if this.use_bzip2{
             sdist.formats = ['bztar'];
         } else{
             sdist.formats = ['gztar'];
-        } self.run_command('sdist');
-        self.distribution.dist_files = saved_dist_files;
+        } this.run_command('sdist');
+        this.distribution.dist_files = saved_dist_files;
 
         source = sdist.get_archive_files()[0];
         source_dir = rpm_dir['SOURCES'];
-        self.copy_file(source, source_dir);
+        this.copy_file(source, source_dir);
 
-        if self.icon{
-            if os.path.exists(self.icon){
-                self.copy_file(self.icon, source_dir);
+        if this.icon{
+            if os.path.exists(this.icon){
+                this.copy_file(this.icon, source_dir);
             } else{
                 raise DistutilsFileError, \
-                      "icon file '%s' does not exist" % self.icon;
+                      "icon file '%s' does not exist" % this.icon;
 
 
         # build package
@@ -342,20 +342,20 @@ class bdist_rpm (Command){
             rpm_cmd = ['rpmbuild'];
 
         }
-        if self.source_only{ # what kind of RPMs?
+        if this.source_only{ # what kind of RPMs?
             rpm_cmd.append('-bs');
-        } elif self.binary_only{
+        } elif this.binary_only{
             rpm_cmd.append('-bb');
         } else{
             rpm_cmd.append('-ba');
-        } if self.rpm3_mode{
+        } if this.rpm3_mode{
             rpm_cmd.extend(['--define',
-                             '_topdir %s' % os.path.abspath(self.rpm_base)]);
-        } if not self.keep_temp{
+                             '_topdir %s' % os.path.abspath(this.rpm_base)]);
+        } if not this.keep_temp{
             rpm_cmd.append('--clean');
 
         }
-        if self.quiet{
+        if this.quiet{
             rpm_cmd.append('--quiet');
 
         }
@@ -373,7 +373,7 @@ class bdist_rpm (Command){
         out = os.popen(q_cmd);
         try{
             binary_rpms = [];
-            source_rpm = None;
+            source_rpm = nil;
             while 1{
                 line = out.readline();
                 if not line{
@@ -382,7 +382,7 @@ class bdist_rpm (Command){
                 assert(len(l) == 2);
                 binary_rpms.append(l[1]);
                 # The source rpm is named after the first entry in the spec file
-                if source_rpm is None{
+                if source_rpm is nil{
                     source_rpm = l[0];
 
             }
@@ -395,52 +395,52 @@ class bdist_rpm (Command){
             out.close();
 
         }
-        self.spawn(rpm_cmd);
+        this.spawn(rpm_cmd);
 
-        if not self.dry_run{
-            if self.distribution.has_ext_modules(){
+        if not this.dry_run{
+            if this.distribution.has_ext_modules(){
                 pyversion = get_python_version();
             } else{
                 pyversion = 'any';
 
             }
-            if not self.binary_only{
+            if not this.binary_only{
                 srpm = os.path.join(rpm_dir['SRPMS'], source_rpm);
                 assert(os.path.exists(srpm));
-                self.move_file(srpm, self.dist_dir);
-                filename = os.path.join(self.dist_dir, source_rpm);
-                self.distribution.dist_files.append(
+                this.move_file(srpm, this.dist_dir);
+                filename = os.path.join(this.dist_dir, source_rpm);
+                this.distribution.dist_files.append(
                     ('bdist_rpm', pyversion, filename));
 
             }
-            if not self.source_only{
+            if not this.source_only{
                 for rpm in binary_rpms{
                     rpm = os.path.join(rpm_dir['RPMS'], rpm);
                     if os.path.exists(rpm){
-                        self.move_file(rpm, self.dist_dir);
-                        filename = os.path.join(self.dist_dir,
+                        this.move_file(rpm, this.dist_dir);
+                        filename = os.path.join(this.dist_dir,
                                                 os.path.basename(rpm));
-                        self.distribution.dist_files.append(
+                        this.distribution.dist_files.append(
                             ('bdist_rpm', pyversion, filename));
     # run()
 
     }
-    } } } } def _dist_path(self, path){
-        return os.path.join(self.dist_dir, os.path.basename(path));
+    } } } } function _dist_path( path){
+        return os.path.join(this.dist_dir, os.path.basename(path));
 
     }
-    def _make_spec_file(self){
+    function _make_spec_file(){
         """Generate the text of an RPM spec file and return it as a
         list of strings (one per line).
         """;
         # definitions and headers
         spec_file = [
-            '%define name ' + self.distribution.get_name(),
-            '%define version ' + self.distribution.get_version().replace('-','_'),
-            '%define unmangled_version ' + self.distribution.get_version(),
-            '%define release ' + self.release.replace('-','_'),
+            '%define name ' + this.distribution.get_name(),
+            '%define version ' + this.distribution.get_version().replace('-','_'),
+            '%define unmangled_version ' + this.distribution.get_version(),
+            '%define release ' + this.release.replace('-','_'),
             '',
-            'Summary: ' + self.distribution.get_description(),
+            'Summary: ' + this.distribution.get_description(),
             ];
 
         # put locale summaries into spec file
@@ -458,24 +458,24 @@ class bdist_rpm (Command){
         # XXX yuck! this filename is available from the "sdist" command,
         # but only after it has run: and we create the spec file before
         # running "sdist", in case of --spec-only.
-        if self.use_bzip2{
+        if this.use_bzip2{
             spec_file.append('Source0: %{name}-%{unmangled_version}.tar.bz2');
         } else{
             spec_file.append('Source0: %{name}-%{unmangled_version}.tar.gz');
 
         }
         spec_file.extend([
-            'License: ' + self.distribution.get_license(),
-            'Group: ' + self.group,
+            'License: ' + this.distribution.get_license(),
+            'Group: ' + this.group,
             'BuildRoot: %{_tmppath}/%{name}-%{version}-%{release}-buildroot',
             'Prefix: %{_prefix}', ]);
 
-        if not self.force_arch{
+        if not this.force_arch{
             # noarch if no extension modules
-            if not self.distribution.has_ext_modules(){
+            if not this.distribution.has_ext_modules(){
                 spec_file.append('BuildArch: noarch');
         } } else{
-            spec_file.append( 'BuildArch: %s' % self.force_arch );
+            spec_file.append( 'BuildArch: %s' % this.force_arch );
 
         }
         for field in ('Vendor',
@@ -485,39 +485,39 @@ class bdist_rpm (Command){
                       'Conflicts',
                       'Obsoletes',
                       ){
-            val = getattr(self, string.lower(field));
+            val = getattr(this, string.lower(field));
             if isinstance(val, list){
                 spec_file.append('%s: %s' % (field, string.join(val)));
-            } elif val is not None{
+            } elif val is not nil{
                 spec_file.append('%s: %s' % (field, val));
 
 
         }
-        } if self.distribution.get_url() != 'UNKNOWN'{
-            spec_file.append('Url: ' + self.distribution.get_url());
+        } if this.distribution.get_url() != 'UNKNOWN'{
+            spec_file.append('Url: ' + this.distribution.get_url());
 
         }
-        if self.distribution_name{
-            spec_file.append('Distribution: ' + self.distribution_name);
+        if this.distribution_name{
+            spec_file.append('Distribution: ' + this.distribution_name);
 
         }
-        if self.build_requires{
+        if this.build_requires{
             spec_file.append('BuildRequires: ' +
-                             string.join(self.build_requires));
+                             string.join(this.build_requires));
 
         }
-        if self.icon{
-            spec_file.append('Icon: ' + os.path.basename(self.icon));
+        if this.icon{
+            spec_file.append('Icon: ' + os.path.basename(this.icon));
 
         }
-        if self.no_autoreq{
+        if this.no_autoreq{
             spec_file.append('AutoReq: 0');
 
         }
         spec_file.extend([
             '',
             '%description',
-            self.distribution.get_long_description()
+            this.distribution.get_long_description()
             ]);
 
         # put locale descriptions into spec file
@@ -532,9 +532,9 @@ class bdist_rpm (Command){
 
         # rpm scripts
         # figure out default build script
-        def_setup_call = "%s %s" % (self.python,os.path.basename(sys.argv[0]));
+        def_setup_call = "%s %s" % (this.python,os.path.basename(sys.argv[0]));
         def_build = "%s build" % def_setup_call;
-        if self.use_rpm_opt_flags{
+        if this.use_rpm_opt_flags{
             def_build = 'env CFLAGS="$RPM_OPT_FLAGS" ' + def_build;
 
         # insert contents of files
@@ -552,17 +552,17 @@ class bdist_rpm (Command){
             ('build', 'build_script', def_build),
             ('install', 'install_script', install_cmd),
             ('clean', 'clean_script', "rm -rf $RPM_BUILD_ROOT"),
-            ('verifyscript', 'verify_script', None),
-            ('pre', 'pre_install', None),
-            ('post', 'post_install', None),
-            ('preun', 'pre_uninstall', None),
-            ('postun', 'post_uninstall', None),
+            ('verifyscript', 'verify_script', nil),
+            ('pre', 'pre_install', nil),
+            ('post', 'post_install', nil),
+            ('preun', 'pre_uninstall', nil),
+            ('postun', 'post_uninstall', nil),
         ];
 
         for (rpm_opt, attr, default) in script_options{
             # Insert contents of file referred to, if no file is referred to
             # use 'default' as contents of script
-            val = getattr(self, attr);
+            val = getattr(this, attr);
             if val or default{
                 spec_file.extend([
                     '',
@@ -581,15 +581,15 @@ class bdist_rpm (Command){
             '%defattr(-,root,root)',
             ]);
 
-        if self.doc_files{
-            spec_file.append('%doc ' + string.join(self.doc_files));
+        if this.doc_files{
+            spec_file.append('%doc ' + string.join(this.doc_files));
 
         }
-        if self.changelog{
+        if this.changelog{
             spec_file.extend([
                 '',
                 '%changelog',]);
-            spec_file.extend(self.changelog);
+            spec_file.extend(this.changelog);
 
         }
         return spec_file;
@@ -597,7 +597,7 @@ class bdist_rpm (Command){
     # _make_spec_file ()
 
     }
-    def _format_changelog(self, changelog){
+    function _format_changelog( changelog){
         """Format the changelog correctly and convert it to a list of strings
         """;
         if not changelog{

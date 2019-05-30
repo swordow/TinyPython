@@ -27,7 +27,7 @@ PyObject *PyMac_GetOSErrException(void);
 static int
 OptCFStringRefObj_Convert(PyObject *v, CFStringRef *spec)
 {
-    if (v == Py_None) {
+    if (v == Py_Nil) {
         *spec = NULL;
         return 1;
     }
@@ -38,8 +38,8 @@ PyObject *
 OptCFStringRefObj_New(CFStringRef it)
 {
     if (it == NULL) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     return CFStringRefObj_New(it);
 }
@@ -176,8 +176,8 @@ static PyObject *Launch_LSSetExtensionHiddenForRef(PyObject *_self, PyObject *_a
     _err = LSSetExtensionHiddenForRef(&inRef,
                                       inHide);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -194,8 +194,8 @@ static PyObject *Launch_LSSetExtensionHiddenForURL(PyObject *_self, PyObject *_a
     _err = LSSetExtensionHiddenForURL(inURL,
                                       inHide);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 

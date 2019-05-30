@@ -32,57 +32,57 @@ import errno;
 import string;
 
 class DBRecIO{
-    def __init__(self, db, key, txn=None){
-        self.db = db;
-        self.key = key;
-        self.txn = txn;
-        self.len = None;
-        self.pos = 0;
-        self.closed = 0;
-        self.softspace = 0;
+    function __init__( db, key, txn=nil){
+        this.db = db;
+        this.key = key;
+        this.txn = txn;
+        this.len = nil;
+        this.pos = 0;
+        this.closed = 0;
+        this.softspace = 0;
 
     }
-    def close(self){
-        if not self.closed{
-            self.closed = 1;
-            del self.db, self.txn;
+    function close(){
+        if not this.closed{
+            this.closed = 1;
+            del this.db, this.txn;
 
     }
-    } def isatty(self){
-        if self.closed{
+    } function isatty(){
+        if this.closed{
             raise ValueError, "I/O operation on closed file";
         } return 0;
 
     }
-    def seek(self, pos, mode = 0){
-        if self.closed{
+    function seek( pos, mode = 0){
+        if this.closed{
             raise ValueError, "I/O operation on closed file";
         } if mode == 1{
-            pos = pos + self.pos;
+            pos = pos + this.pos;
         } elif mode == 2{
-            pos = pos + self.len;
-        } self.pos = max(0, pos);
+            pos = pos + this.len;
+        } this.pos = max(0, pos);
 
     }
-    def tell(self){
-        if self.closed{
+    function tell(){
+        if this.closed{
             raise ValueError, "I/O operation on closed file";
-        } return self.pos;
+        } return this.pos;
 
     }
-    def read(self, n = -1){
-        if self.closed{
+    function read( n = -1){
+        if this.closed{
             raise ValueError, "I/O operation on closed file";
         } if n < 0{
-            newpos = self.len;
+            newpos = this.len;
         } else{
-            newpos = min(self.pos+n, self.len);
+            newpos = min(this.pos+n, this.len);
 
         }
-        dlen = newpos - self.pos;
+        dlen = newpos - this.pos;
 
-        r = self.db.get(self.key, txn=self.txn, dlen=dlen, doff=self.pos);
-        self.pos = newpos;
+        r = this.db.get(this.key, txn=this.txn, dlen=dlen, doff=this.pos);
+        this.pos = newpos;
         return r;
 
     }
@@ -118,37 +118,37 @@ class DBRecIO{
         return lines
     """;
 
-    def truncate(self, size=None){
-        if self.closed{
+    function truncate( size=nil){
+        if this.closed{
             raise ValueError, "I/O operation on closed file";
-        } if size is None{
-            size = self.pos;
+        } if size is nil{
+            size = this.pos;
         } elif size < 0{
             raise IOError(errno.EINVAL,
                                       "Negative size not allowed");
-        } elif size < self.pos{
-            self.pos = size;
-        } self.db.put(self.key, "", txn=self.txn, dlen=self.len-size, doff=size);
+        } elif size < this.pos{
+            this.pos = size;
+        } this.db.put(this.key, "", txn=this.txn, dlen=this.len-size, doff=size);
 
     }
-    def write(self, s){
-        if self.closed{
+    function write( s){
+        if this.closed{
             raise ValueError, "I/O operation on closed file";
-        } if not s{ return;
-        if self.pos > self.len{
-            self.buflist.append('\0'*(self.pos - self.len));
-            self.len = self.pos;
-        } newpos = self.pos + len(s);
-        self.db.put(self.key, s, txn=self.txn, dlen=len(s), doff=self.pos);
-        self.pos = newpos;
+        } if not s{ return;}
+        if this.pos > this.len{
+            this.buflist.append('\0'*(this.pos - this.len));
+            this.len = this.pos;
+        } newpos = this.pos + len(s);
+        this.db.put(this.key, s, txn=this.txn, dlen=len(s), doff=this.pos);
+        this.pos = newpos;
 
     }
-    def writelines(self, list){
-        self.write(string.joinfields(list, ''));
+    function writelines( list){
+        this.write(string.joinfields(list, ''));
 
     }
-    def flush(self){
-        if self.closed{
+    function flush(){
+        if this.closed{
             raise ValueError, "I/O operation on closed file";
 
 

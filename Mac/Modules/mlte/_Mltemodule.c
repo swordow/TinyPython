@@ -39,7 +39,7 @@ static int
 OptFSSpecPtr_Convert(PyObject *v, FSSpec **p_itself)
 {
     static FSSpec fss;
-    if (v == Py_None)
+    if (v == Py_Nil)
     {
         *p_itself = NULL;
         return 1;
@@ -54,7 +54,7 @@ OptFSSpecPtr_Convert(PyObject *v, FSSpec **p_itself)
 static int
 OptGWorldObj_Convert(PyObject *v, GWorldPtr *p_itself)
 {
-    if (v == Py_None)
+    if (v == Py_Nil)
     {
         *p_itself = NULL;
         return 1;
@@ -112,8 +112,8 @@ static PyObject *TXNObj_TXNDeleteObject(TXNObjectObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TXNDeleteObject(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -135,8 +135,8 @@ static PyObject *TXNObj_TXNResizeFrame(TXNObjectObject *_self, PyObject *_args)
                    iWidth,
                    iHeight,
                    iTXNFrameID);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -164,8 +164,8 @@ static PyObject *TXNObj_TXNSetFrameBounds(TXNObjectObject *_self, PyObject *_arg
                       iBottom,
                       iRight,
                       iTXNFrameID);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -181,8 +181,8 @@ static PyObject *TXNObj_TXNKeyDown(TXNObjectObject *_self, PyObject *_args)
         return NULL;
     TXNKeyDown(_self->ob_itself,
                &iEvent);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -198,8 +198,8 @@ static PyObject *TXNObj_TXNAdjustCursor(TXNObjectObject *_self, PyObject *_args)
         return NULL;
     TXNAdjustCursor(_self->ob_itself,
                     ioCursorRgn);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -215,8 +215,8 @@ static PyObject *TXNObj_TXNClick(TXNObjectObject *_self, PyObject *_args)
         return NULL;
     TXNClick(_self->ob_itself,
              &iEvent);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -229,8 +229,8 @@ static PyObject *TXNObj_TXNSelectAll(TXNObjectObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TXNSelectAll(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -246,8 +246,8 @@ static PyObject *TXNObj_TXNFocus(TXNObjectObject *_self, PyObject *_args)
         return NULL;
     TXNFocus(_self->ob_itself,
              iBecomingFocused);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -260,8 +260,8 @@ static PyObject *TXNObj_TXNUpdate(TXNObjectObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TXNUpdate(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -277,8 +277,8 @@ static PyObject *TXNObj_TXNDraw(TXNObjectObject *_self, PyObject *_args)
         return NULL;
     TXNDraw(_self->ob_itself,
         iDrawPort);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -291,8 +291,8 @@ static PyObject *TXNObj_TXNForceUpdate(TXNObjectObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TXNForceUpdate(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -320,8 +320,8 @@ static PyObject *TXNObj_TXNIdle(TXNObjectObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TXNIdle(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -337,8 +337,8 @@ static PyObject *TXNObj_TXNGrowWindow(TXNObjectObject *_self, PyObject *_args)
         return NULL;
     TXNGrowWindow(_self->ob_itself,
                   &iEvent);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -354,8 +354,8 @@ static PyObject *TXNObj_TXNZoomWindow(TXNObjectObject *_self, PyObject *_args)
         return NULL;
     TXNZoomWindow(_self->ob_itself,
                   iPart);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -386,8 +386,8 @@ static PyObject *TXNObj_TXNUndo(TXNObjectObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TXNUndo(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -418,8 +418,8 @@ static PyObject *TXNObj_TXNRedo(TXNObjectObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TXNRedo(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -434,8 +434,8 @@ static PyObject *TXNObj_TXNCut(TXNObjectObject *_self, PyObject *_args)
         return NULL;
     _err = TXNCut(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -450,8 +450,8 @@ static PyObject *TXNObj_TXNCopy(TXNObjectObject *_self, PyObject *_args)
         return NULL;
     _err = TXNCopy(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -466,8 +466,8 @@ static PyObject *TXNObj_TXNPaste(TXNObjectObject *_self, PyObject *_args)
         return NULL;
     _err = TXNPaste(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -482,8 +482,8 @@ static PyObject *TXNObj_TXNClear(TXNObjectObject *_self, PyObject *_args)
         return NULL;
     _err = TXNClear(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -518,8 +518,8 @@ static PyObject *TXNObj_TXNShowSelection(TXNObjectObject *_self, PyObject *_args
         return NULL;
     TXNShowSelection(_self->ob_itself,
                      iShowEnd);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -555,8 +555,8 @@ static PyObject *TXNObj_TXNSetSelection(TXNObjectObject *_self, PyObject *_args)
                            iStartOffset,
                            iEndOffset);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -676,8 +676,8 @@ static PyObject *TXNObj_TXNSetDataFromFile(TXNObjectObject *_self, PyObject *_ar
                               iStartOffset,
                               iEndOffset);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -725,8 +725,8 @@ static PyObject *TXNObj_TXNSave(TXNObjectObject *_self, PyObject *_args)
                    iDataReference,
                    iResourceReference);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -741,8 +741,8 @@ static PyObject *TXNObj_TXNRevert(TXNObjectObject *_self, PyObject *_args)
         return NULL;
     _err = TXNRevert(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -757,8 +757,8 @@ static PyObject *TXNObj_TXNPageSetup(TXNObjectObject *_self, PyObject *_args)
         return NULL;
     _err = TXNPageSetup(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -773,8 +773,8 @@ static PyObject *TXNObj_TXNPrint(TXNObjectObject *_self, PyObject *_args)
         return NULL;
     _err = TXNPrint(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -806,8 +806,8 @@ static PyObject *TXNObj_TXNSetViewRect(TXNObjectObject *_self, PyObject *_args)
         return NULL;
     TXNSetViewRect(_self->ob_itself,
                    &iViewRect);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -828,8 +828,8 @@ static PyObject *TXNObj_TXNAttachObjectToWindow(TXNObjectObject *_self, PyObject
                                    iWindow,
                                    iIsActualWindow);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -874,8 +874,8 @@ static PyObject *TXNObj_TXNDragTracker(TXNObjectObject *_self, PyObject *_args)
                           iDragReference,
                           iDifferentObjectSameWindow);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -902,8 +902,8 @@ static PyObject *TXNObj_TXNDragReceiver(TXNObjectObject *_self, PyObject *_args)
                            iDragReference,
                            iDifferentObjectSameWindow);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -924,8 +924,8 @@ static PyObject *TXNObj_TXNActivate(TXNObjectObject *_self, PyObject *_args)
                        iTXNFrameID,
                        iActiveState);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -949,8 +949,8 @@ static PyObject *TXNObj_TXNEchoMode(TXNObjectObject *_self, PyObject *_args)
                        iEncoding,
                        iOn);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -974,8 +974,8 @@ static PyObject *TXNObj_TXNDoFontMenuSelection(TXNObjectObject *_self, PyObject 
                                   iMenuID,
                                   iMenuItem);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -993,8 +993,8 @@ static PyObject *TXNObj_TXNPrepareFontMenu(TXNObjectObject *_self, PyObject *_ar
     _err = TXNPrepareFontMenu(_self->ob_itself,
                               iTXNFontMenuObject);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1112,8 +1112,8 @@ static PyObject *TXNObj_TXNRecalcTextLayout(TXNObjectObject *_self, PyObject *_a
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TXNRecalcTextLayout(_self->ob_itself);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1368,8 +1368,8 @@ static PyObject *TXNFontMenuObj_TXNDisposeFontMenuObject(TXNFontMenuObjectObject
         return NULL;
     _err = TXNDisposeFontMenuObject(_self->ob_itself);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1506,8 +1506,8 @@ static PyObject *Mlte_TXNTerminateTextension(PyObject *_self, PyObject *_args)
     if (!PyArg_ParseTuple(_args, ""))
         return NULL;
     TXNTerminateTextension();
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1537,8 +1537,8 @@ static PyObject *Mlte_TXNConvertToPublicScrap(PyObject *_self, PyObject *_args)
         return NULL;
     _err = TXNConvertToPublicScrap();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1553,8 +1553,8 @@ static PyObject *Mlte_TXNConvertFromPublicScrap(PyObject *_self, PyObject *_args
         return NULL;
     _err = TXNConvertFromPublicScrap();
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 }
 
@@ -1616,8 +1616,8 @@ static PyObject *Mlte_TXNInitTextension(PyObject *_self, PyObject *_args)
                              iCountDefaultFonts,
                              iUsageFlags);
     if (_err != noErr) return PyMac_Error(_err);
-    Py_INCREF(Py_None);
-    _res = Py_None;
+    Py_INCREF(Py_Nil);
+    _res = Py_Nil;
     return _res;
 
 }

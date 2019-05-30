@@ -17,7 +17,7 @@ separators = operators + whitespace + ';' + '"';
 # Tokenize a string.
 # Return a list of tokens (strings).
 #
-def tokenize_string(s){
+function tokenize_string(s){
     tokens = [];
     while s{
         c = s[:1];
@@ -31,8 +31,8 @@ def tokenize_string(s){
             while i < n{
                 c = s[i];
                 i = i+1;
-                if c == '"'{ break;
-                if c == '\\'{ i = i+1;
+                if c == '"'{ break;}
+                if c == '\\'{ i = i+1;}
             } tokens.append(s[:i]);
             s = s[i:];
         } elif c in operators{
@@ -42,7 +42,7 @@ def tokenize_string(s){
             n = len(s);
             i = 1;
             while i < n{
-                if s[i] in separators{ break;
+                if s[i] in separators{ break;}
                 i = i+1;
             } tokens.append(s[:i]);
             s = s[i:];
@@ -53,11 +53,11 @@ def tokenize_string(s){
 # Return a list of tokens (strings).
 #
 }
-def tokenize_file(fp){
+function tokenize_file(fp){
     tokens = [];
     while 1{
         line = fp.readline();
-        if not line{ break;
+        if not line{ break;}
         tokens = tokens + tokenize_string(line);
     } return tokens;
 
@@ -75,7 +75,7 @@ syntax_error = 'syntax error';
 # and tokens contains the remaining tokens.
 # May raise syntax_error.
 #
-def parse_expr(tokens){
+function parse_expr(tokens){
     if (not tokens) or tokens[0] != '('{
         raise syntax_error, 'expected "("';
     } tokens = tokens[1:];
@@ -97,7 +97,7 @@ def parse_expr(tokens){
 # Return a list of parsed S-expressions found at the top level.
 #
 }
-} } def parse_file(fp){
+} } function parse_file(fp){
     tokens = tokenize_file(fp);
     exprlist = [];
     while tokens{

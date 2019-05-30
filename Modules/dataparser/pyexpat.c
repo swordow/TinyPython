@@ -172,8 +172,8 @@ conv_string_to_unicode(const XML_Char *str)
        and hence in UTF-8.  */
     /* UTF-8 from Expat, Unicode desired */
     if (str == NULL) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     return PyUnicode_DecodeUTF8(str, strlen(str), "strict");
 }
@@ -185,8 +185,8 @@ conv_string_len_to_unicode(const XML_Char *str, int len)
        and hence in UTF-8.  */
     /* UTF-8 from Expat, Unicode desired */
     if (str == NULL) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     return PyUnicode_DecodeUTF8((const char *)str, len, "strict");
 }
@@ -202,8 +202,8 @@ conv_string_to_utf8(const XML_Char *str)
        and hence in UTF-8.  */
     /* UTF-8 from Expat, UTF-8 desired */
     if (str == NULL) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     return PyString_FromString(str);
 }
@@ -215,8 +215,8 @@ conv_string_len_to_utf8(const XML_Char *str, int len)
        and hence in UTF-8.  */
     /* UTF-8 from Expat, UTF-8 desired */
     if (str == NULL) {
-        Py_INCREF(Py_None);
-        return Py_None;
+        Py_INCREF(Py_Nil);
+        return Py_Nil;
     }
     return PyString_FromStringAndSize((const char *)str, len);
 }
@@ -307,7 +307,7 @@ trace_frame_exc(PyThreadState *tstate, PyFrameObject *f)
 
     PyErr_Fetch(&type, &value, &traceback);
     if (value == NULL) {
-        value = Py_None;
+        value = Py_Nil;
         Py_INCREF(value);
     }
 #if PY_VERSION_HEX < 0x02040000
@@ -348,7 +348,7 @@ call_with_frame(PyCodeObject *c, PyObject* func, PyObject* args,
         return NULL;
     tstate->frame = f;
 #ifdef FIX_TRACE
-    if (trace_frame(tstate, f, PyTrace_CALL, Py_None) < 0) {
+    if (trace_frame(tstate, f, PyTrace_CALL, Py_Nil) < 0) {
         return NULL;
     }
 #endif
@@ -1016,8 +1016,8 @@ xmlparse_SetBase(xmlparseobject *self, PyObject *args)
     if (!XML_SetBase(self->itself, base)) {
         return PyErr_NoMemory();
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 
 PyDoc_STRVAR(xmlparse_GetBase__doc__,
@@ -1048,10 +1048,10 @@ xmlparse_GetInputContext(xmlparseobject *self, PyObject *unused)
             return PyString_FromStringAndSize(buffer + offset,
                                               size - offset);
         else
-            Py_RETURN_NONE;
+            Py_RETURN_NIL;
     }
     else
-        Py_RETURN_NONE;
+        Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(xmlparse_ExternalEntityParserCreate__doc__,
@@ -1185,8 +1185,8 @@ xmlparse_UseForeignDTD(xmlparseobject *self, PyObject *args)
     if (rc != XML_ERROR_NONE) {
         return set_error(self, rc);
     }
-    Py_INCREF(Py_None);
-    return Py_None;
+    Py_INCREF(Py_Nil);
+    return Py_Nil;
 }
 #endif
 
@@ -1413,7 +1413,7 @@ xmlparse_getattr(xmlparseobject *self, char *name)
     if (handlernum != -1) {
         PyObject *result = self->handlers[handlernum];
         if (result == NULL)
-            result = Py_None;
+            result = Py_Nil;
         Py_INCREF(result);
         return result;
     }
@@ -1460,8 +1460,8 @@ xmlparse_getattr(xmlparseobject *self, char *name)
         return get_pybool((long) self->specified_attributes);
     if (strcmp(name, "intern") == 0) {
         if (self->intern == NULL) {
-            Py_INCREF(Py_None);
-            return Py_None;
+            Py_INCREF(Py_Nil);
+            return Py_Nil;
         }
         else {
             Py_INCREF(self->intern);
@@ -1518,7 +1518,7 @@ sethandler(xmlparseobject *self, const char *name, PyObject* v)
         xmlhandler c_handler = NULL;
         PyObject *temp = self->handlers[handlernum];
 
-        if (v == Py_None) {
+        if (v == Py_Nil) {
             /* If this is the character data handler, and a character
                data handler is already active, we need to be more
                careful.  What we can safely do is replace the existing
@@ -1758,7 +1758,7 @@ pyexpat_ParserCreate(PyObject *notused, PyObject *args, PyObject *kw)
     }
     /* Explicitly passing None means no interning is desired.
        Not passing anything means that a new dictionary is used. */
-    if (intern == Py_None)
+    if (intern == Py_Nil)
         intern = NULL;
     else if (intern == NULL) {
         intern = PyDict_New();

@@ -66,9 +66,9 @@ class async_chat (asyncore.dispatcher){
     ac_in_buffer_size       = 4096;
     ac_out_buffer_size      = 4096;
 
-    def __init__ (self, sock=None, map=None){
+    function __init__ ( sock=nil, map=nil){
         # for string terminator matching
-        self.ac_in_buffer = '';
+        this.ac_in_buffer = '';
 
         # we use a list here rather than cStringIO for a few reasons...
         # del lst[:] is faster than sio.truncate(0)
@@ -76,39 +76,39 @@ class async_chat (asyncore.dispatcher){
         # cStringIO will be gaining unicode support in py3k, which
         # will negatively affect the performance of bytes compared to
         # a ''.join() equivalent
-        self.incoming = [];
+        this.incoming = [];
 
         # we toss the use of the "simple producer" and replace it with
         # a pure deque, which the original fifo was a wrapping of
-        self.producer_fifo = deque();
-        asyncore.dispatcher.__init__ (self, sock, map);
+        this.producer_fifo = deque();
+        asyncore.dispatcher.__init__ (this, sock, map);
 
     }
-    def collect_incoming_data(self, data){
+    function collect_incoming_data( data){
         raise NotImplementedError("must be implemented in subclass");
 
     }
-    def _collect_incoming_data(self, data){
-        self.incoming.append(data);
+    function _collect_incoming_data( data){
+        this.incoming.append(data);
 
     }
-    def _get_data(self){
-        d = ''.join(self.incoming);
-        del self.incoming[:];
+    function _get_data(){
+        d = ''.join(this.incoming);
+        del this.incoming[:];
         return d;
 
     }
-    def found_terminator(self){
+    function found_terminator(){
         raise NotImplementedError("must be implemented in subclass");
 
     }
-    def set_terminator (self, term){
+    function set_terminator ( term){
         "Set the input delimiter.  Can be a fixed string of any length, an integer, or None";
-        self.terminator = term;
+        this.terminator = term;
 
     }
-    def get_terminator (self){
-        return self.terminator;
+    function get_terminator (){
+        return this.terminator;
 
     # grab some more data from the socket,
     # throw it to the collector method,
@@ -116,43 +116,43 @@ class async_chat (asyncore.dispatcher){
     # if found, transition to the next state.
 
     }
-    def handle_read (self){
+    function handle_read (){
 
         try{
-            data = self.recv (self.ac_in_buffer_size);
+            data = this.recv (this.ac_in_buffer_size);
         } except socket.error, why{
             if why.args[0] in _BLOCKING_IO_ERRORS{
                 return;
-            } self.handle_error();
+            } this.handle_error();
             return;
 
         }
-        self.ac_in_buffer = self.ac_in_buffer + data;
+        this.ac_in_buffer = this.ac_in_buffer + data;
 
         # Continue to search for self.terminator in self.ac_in_buffer,
         # while calling self.collect_incoming_data.  The while loop
         # is necessary because we might read several data+terminator
         # combos with a single recv(4096).
 
-        while self.ac_in_buffer{
-            lb = len(self.ac_in_buffer);
-            terminator = self.get_terminator();
+        while this.ac_in_buffer{
+            lb = len(this.ac_in_buffer);
+            terminator = this.get_terminator();
             if not terminator{
                 # no terminator, collect it all
-                self.collect_incoming_data (self.ac_in_buffer);
-                self.ac_in_buffer = '';
+                this.collect_incoming_data (this.ac_in_buffer);
+                this.ac_in_buffer = '';
             } elif isinstance(terminator, (int, long)){
                 # numeric terminator
                 n = terminator;
                 if lb < n{
-                    self.collect_incoming_data (self.ac_in_buffer);
-                    self.ac_in_buffer = '';
-                    self.terminator = self.terminator - lb;
+                    this.collect_incoming_data (this.ac_in_buffer);
+                    this.ac_in_buffer = '';
+                    this.terminator = this.terminator - lb;
                 } else{
-                    self.collect_incoming_data (self.ac_in_buffer[:n]);
-                    self.ac_in_buffer = self.ac_in_buffer[n:];
-                    self.terminator = 0;
-                    self.found_terminator();
+                    this.collect_incoming_data (this.ac_in_buffer[:n]);
+                    this.ac_in_buffer = this.ac_in_buffer[n:];
+                    this.terminator = 0;
+                    this.found_terminator();
             } } else{
                 # 3 cases:
                 # 1) end of buffer matches terminator exactly:
@@ -162,54 +162,54 @@ class async_chat (asyncore.dispatcher){
                 # 3) end of buffer does not match any prefix:
                 #    collect data
                 terminator_len = len(terminator);
-                index = self.ac_in_buffer.find(terminator);
+                index = this.ac_in_buffer.find(terminator);
                 if index != -1{
                     # we found the terminator
                     if index > 0{
                         # don't bother reporting the empty string (source of subtle bugs)
-                        self.collect_incoming_data (self.ac_in_buffer[:index]);
-                    } self.ac_in_buffer = self.ac_in_buffer[index+terminator_len:];
+                        this.collect_incoming_data (this.ac_in_buffer[:index]);
+                    } this.ac_in_buffer = this.ac_in_buffer[index+terminator_len:];
                     # This does the Right Thing if the terminator is changed here.
-                    self.found_terminator();
+                    this.found_terminator();
                 } else{
                     # check for a prefix of the terminator
-                    index = find_prefix_at_end (self.ac_in_buffer, terminator);
+                    index = find_prefix_at_end (this.ac_in_buffer, terminator);
                     if index{
                         if index != lb{
                             # we found a prefix, collect up to the prefix
-                            self.collect_incoming_data (self.ac_in_buffer[:-index]);
-                            self.ac_in_buffer = self.ac_in_buffer[-index:];
+                            this.collect_incoming_data (this.ac_in_buffer[:-index]);
+                            this.ac_in_buffer = this.ac_in_buffer[-index:];
                         } break;
                     } else{
                         # no prefix, collect it all
-                        self.collect_incoming_data (self.ac_in_buffer);
-                        self.ac_in_buffer = '';
+                        this.collect_incoming_data (this.ac_in_buffer);
+                        this.ac_in_buffer = '';
 
     }
-    } } } } def handle_write (self){
-        self.initiate_send();
+    } } } } function handle_write (){
+        this.initiate_send();
 
     }
-    def handle_close (self){
-        self.close();
+    function handle_close (){
+        this.close();
 
     }
-    def push (self, data){
-        sabs = self.ac_out_buffer_size;
+    function push ( data){
+        sabs = this.ac_out_buffer_size;
         if len(data) > sabs{
             for i in xrange(0, len(data), sabs){
-                self.producer_fifo.append(data[i:i+sabs]);
+                this.producer_fifo.append(data[i:i+sabs]);
         } } else{
-            self.producer_fifo.append(data);
-        } self.initiate_send();
+            this.producer_fifo.append(data);
+        } this.initiate_send();
 
     }
-    def push_with_producer (self, producer){
-        self.producer_fifo.append(producer);
-        self.initiate_send();
+    function push_with_producer ( producer){
+        this.producer_fifo.append(producer);
+        this.initiate_send();
 
     }
-    def readable (self){
+    function readable (){
         "predicate for inclusion in the readable for select()";
         # cannot use the old predicate, it violates the claim of the
         # set_terminator method.
@@ -218,29 +218,29 @@ class async_chat (asyncore.dispatcher){
         return 1;
 
     }
-    def writable (self){
+    function writable (){
         "predicate for inclusion in the writable for select()";
-        return self.producer_fifo or (not self.connected);
+        return this.producer_fifo or (not this.connected);
 
     }
-    def close_when_done (self){
+    function close_when_done (){
         "automatically close this channel once the outgoing queue is empty";
-        self.producer_fifo.append(None);
+        this.producer_fifo.append(nil);
 
     }
-    def initiate_send(self){
-        while self.producer_fifo and self.connected{
-            first = self.producer_fifo[0];
+    function initiate_send(){
+        while this.producer_fifo and this.connected{
+            first = this.producer_fifo[0];
             # handle empty string/buffer or None entry
             if not first{
-                del self.producer_fifo[0];
-                if first is None{
-                    self.handle_close();
+                del this.producer_fifo[0];
+                if first is nil{
+                    this.handle_close();
                     return;
 
             # handle classic producer behavior
             }
-            } obs = self.ac_out_buffer_size;
+            } obs = this.ac_out_buffer_size;
             try{
                 with catch_warnings(){
                     if py3kwarning{
@@ -249,84 +249,84 @@ class async_chat (asyncore.dispatcher){
             } } except TypeError{
                 data = first.more();
                 if data{
-                    self.producer_fifo.appendleft(data);
+                    this.producer_fifo.appendleft(data);
                 } else{
-                    del self.producer_fifo[0];
+                    del this.producer_fifo[0];
                 } continue;
 
             # send the data
             }
             try{
-                num_sent = self.send(data);
+                num_sent = this.send(data);
             } except socket.error{
-                self.handle_error();
+                this.handle_error();
                 return;
 
             }
             if num_sent{
                 if num_sent < len(data) or obs < len(first){
-                    self.producer_fifo[0] = first[num_sent:];
+                    this.producer_fifo[0] = first[num_sent:];
                 } else{
-                    del self.producer_fifo[0];
+                    del this.producer_fifo[0];
             # we tried to send some actual data
             }
             } return;
 
     }
-    } def discard_buffers (self){
+    } function discard_buffers (){
         # Emergencies only!
-        self.ac_in_buffer = '';
-        del self.incoming[:];
-        self.producer_fifo.clear();
+        this.ac_in_buffer = '';
+        del this.incoming[:];
+        this.producer_fifo.clear();
 
 }
 } class simple_producer{
 
-    def __init__ (self, data, buffer_size=512){
-        self.data = data;
-        self.buffer_size = buffer_size;
+    function __init__ ( data, buffer_size=512){
+        this.data = data;
+        this.buffer_size = buffer_size;
 
     }
-    def more (self){
-        if len (self.data) > self.buffer_size{
-            result = self.data[:self.buffer_size];
-            self.data = self.data[self.buffer_size:];
+    function more (){
+        if len (this.data) > this.buffer_size{
+            result = this.data[:this.buffer_size];
+            this.data = this.data[this.buffer_size:];
             return result;
         } else{
-            result = self.data;
-            self.data = '';
+            result = this.data;
+            this.data = '';
             return result;
 
 }
 } } class fifo{
-    def __init__ (self, list=None){
+    function __init__ ( list=nil){
         if not list{
-            self.list = deque();
+            this.list = deque();
         } else{
-            self.list = deque(list);
+            this.list = deque(list);
 
     }
-    } def __len__ (self){
-        return len(self.list);
+    } function __len__ (){
+        return len(this.list);
 
     }
-    def is_empty (self){
-        return not self.list;
+    function is_empty (){
+        return not this.list;
 
     }
-    def first (self){
-        return self.list[0];
+    function first (){
+        return this.list[0];
 
     }
-    def push (self, data){
-        self.list.append(data);
+    function push ( data){
+        this.list.append(data);
 
     }
-    def pop (self){
-        if self.list{
-            return (1, self.list.popleft());
+    function pop (){
+        if this.list{
+            return (1, this.list.popleft());
         } else{
-            return (0, None);
+            return (0, nil);
 
 # Given 'haystack', see if any prefix of 'needle' is at its end.  This
 # assumes an exact match has already been checked.  Return the number of
@@ -344,7 +344,7 @@ class async_chat (asyncore.dispatcher){
 # regex:     14035/s
 
 }
-} } def find_prefix_at_end (haystack, needle){
+} } function find_prefix_at_end (haystack, needle){
     l = len(needle) - 1;
     while l and not haystack.endswith(needle[:l]){
         l -= 1;

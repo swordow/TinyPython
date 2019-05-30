@@ -13,16 +13,16 @@ class ZoomHeight{
          ])
     ];
 
-    def __init__(self, editwin){
-        self.editwin = editwin;
+    function __init__( editwin){
+        this.editwin = editwin;
 
     }
-    def zoom_height_event(self, event){
-        top = self.editwin.top;
+    function zoom_height_event( event){
+        top = this.editwin.top;
         zoom_height(top);
 
 }
-} def zoom_height(top){
+} function zoom_height(top){
     geom = top.wm_geometry();
     m = re.match(r"(\d+)x(\d+)\+(-?\d+)\+(-?\d+)", geom);
     if not m{

@@ -565,7 +565,7 @@ static PyObject* ast2obj_list(asdl_seq *seq, PyObject* (*func)(void*))
 static PyObject* ast2obj_object(void *o)
 {
     if (!o)
-        o = Py_None;
+        o = Py_Nil;
     Py_INCREF((PyObject*)o);
     return (PyObject*)o;
 }
@@ -585,7 +585,7 @@ static PyObject* ast2obj_int(long b)
 
 static int obj2ast_object(PyObject* obj, PyObject** out, PyArena* arena)
 {
-    if (obj == Py_None)
+    if (obj == Py_Nil)
         obj = NULL;
     if (obj)
         PyArena_AddPyObject(arena, obj);
@@ -596,7 +596,7 @@ static int obj2ast_object(PyObject* obj, PyObject** out, PyArena* arena)
 
 static int obj2ast_identifier(PyObject* obj, PyObject** out, PyArena* arena)
 {
-    if (!PyString_CheckExact(obj) && obj != Py_None) {
+    if (!PyString_CheckExact(obj) && obj != Py_Nil) {
         PyErr_Format(PyExc_TypeError,
                     "AST identifier must be of type str");
         return 1;
@@ -2136,8 +2136,8 @@ ast2obj_mod(void* _o)
         mod_ty o = (mod_ty)_o;
         PyObject *result = NULL, *value = NULL;
         if (!o) {
-                Py_INCREF(Py_None);
-                return Py_None;
+                Py_INCREF(Py_Nil);
+                return Py_Nil;
         }
 
         switch (o->kind) {
@@ -2191,8 +2191,8 @@ ast2obj_stmt(void* _o)
         stmt_ty o = (stmt_ty)_o;
         PyObject *result = NULL, *value = NULL;
         if (!o) {
-                Py_INCREF(Py_None);
-                return Py_None;
+                Py_INCREF(Py_Nil);
+                return Py_Nil;
         }
 
         switch (o->kind) {
@@ -2568,8 +2568,8 @@ ast2obj_expr(void* _o)
         expr_ty o = (expr_ty)_o;
         PyObject *result = NULL, *value = NULL;
         if (!o) {
-                Py_INCREF(Py_None);
-                return Py_None;
+                Py_INCREF(Py_Nil);
+                return Py_Nil;
         }
 
         switch (o->kind) {
@@ -2962,8 +2962,8 @@ ast2obj_slice(void* _o)
         slice_ty o = (slice_ty)_o;
         PyObject *result = NULL, *value = NULL;
         if (!o) {
-                Py_INCREF(Py_None);
-                return Py_None;
+                Py_INCREF(Py_Nil);
+                return Py_Nil;
         }
 
         switch (o->kind) {
@@ -3142,8 +3142,8 @@ ast2obj_comprehension(void* _o)
         comprehension_ty o = (comprehension_ty)_o;
         PyObject *result = NULL, *value = NULL;
         if (!o) {
-                Py_INCREF(Py_None);
-                return Py_None;
+                Py_INCREF(Py_Nil);
+                return Py_Nil;
         }
 
         result = PyType_GenericNew(comprehension_type, NULL, NULL);
@@ -3176,8 +3176,8 @@ ast2obj_excepthandler(void* _o)
         excepthandler_ty o = (excepthandler_ty)_o;
         PyObject *result = NULL, *value = NULL;
         if (!o) {
-                Py_INCREF(Py_None);
-                return Py_None;
+                Py_INCREF(Py_Nil);
+                return Py_Nil;
         }
 
         switch (o->kind) {
@@ -3224,8 +3224,8 @@ ast2obj_arguments(void* _o)
         arguments_ty o = (arguments_ty)_o;
         PyObject *result = NULL, *value = NULL;
         if (!o) {
-                Py_INCREF(Py_None);
-                return Py_None;
+                Py_INCREF(Py_Nil);
+                return Py_Nil;
         }
 
         result = PyType_GenericNew(arguments_type, NULL, NULL);
@@ -3263,8 +3263,8 @@ ast2obj_keyword(void* _o)
         keyword_ty o = (keyword_ty)_o;
         PyObject *result = NULL, *value = NULL;
         if (!o) {
-                Py_INCREF(Py_None);
-                return Py_None;
+                Py_INCREF(Py_Nil);
+                return Py_Nil;
         }
 
         result = PyType_GenericNew(keyword_type, NULL, NULL);
@@ -3292,8 +3292,8 @@ ast2obj_alias(void* _o)
         alias_ty o = (alias_ty)_o;
         PyObject *result = NULL, *value = NULL;
         if (!o) {
-                Py_INCREF(Py_None);
-                return Py_None;
+                Py_INCREF(Py_Nil);
+                return Py_Nil;
         }
 
         result = PyType_GenericNew(alias_type, NULL, NULL);
@@ -3323,7 +3323,7 @@ obj2ast_mod(PyObject* obj, mod_ty* out, PyArena* arena)
         int isinstance;
 
 
-        if (obj == Py_None) {
+        if (obj == Py_Nil) {
                 *out = NULL;
                 return 0;
         }
@@ -3488,7 +3488,7 @@ obj2ast_stmt(PyObject* obj, stmt_ty* out, PyArena* arena)
         int lineno;
         int col_offset;
 
-        if (obj == Py_None) {
+        if (obj == Py_Nil) {
                 *out = NULL;
                 return 0;
         }
@@ -4800,7 +4800,7 @@ obj2ast_expr(PyObject* obj, expr_ty* out, PyArena* arena)
         int lineno;
         int col_offset;
 
-        if (obj == Py_None) {
+        if (obj == Py_Nil) {
                 *out = NULL;
                 return 0;
         }
@@ -5989,7 +5989,7 @@ obj2ast_slice(PyObject* obj, slice_ty* out, PyArena* arena)
         int isinstance;
 
 
-        if (obj == Py_None) {
+        if (obj == Py_Nil) {
                 *out = NULL;
                 return 0;
         }
@@ -6482,7 +6482,7 @@ obj2ast_excepthandler(PyObject* obj, excepthandler_ty* out, PyArena* arena)
         int lineno;
         int col_offset;
 
-        if (obj == Py_None) {
+        if (obj == Py_Nil) {
                 *out = NULL;
                 return 0;
         }

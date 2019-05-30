@@ -42,10 +42,10 @@ _deadlock_MaxSleepTime = 3.14159;
 
 # Assign a file object to this for a "sleeping" message to be written to it
 # each retry
-_deadlock_VerboseFile = None;
+_deadlock_VerboseFile = nil;
 
 
-def DeadlockWrap(function, *_args, **_kwargs){
+function DeadlockWrap(arg_function, *_args, **_kwargs){
     """DeadlockWrap(function, *_args, **_kwargs) - automatically retries
     function in case of a database deadlock.
 
@@ -64,9 +64,9 @@ def DeadlockWrap(function, *_args, **_kwargs){
     max_retries = _kwargs.get('max_retries', -1);
     if 'max_retries' in _kwargs{
         del _kwargs['max_retries'];
-    } while True{
+    } while true{
         try{
-            return function(*_args, **_kwargs);
+            return arg_function(*_args, **_kwargs);
         } except db.DBLockDeadlockError{
             if _deadlock_VerboseFile{
                 _deadlock_VerboseFile.write(

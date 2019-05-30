@@ -48,60 +48,60 @@ class File{
     """A simple fake file object that knows about limited read-ahead and
     boundaries.  The only supported method is readline().""";
 
-    def __init__(self, file, boundary){
-        self.file = file;
-        self.boundary = boundary;
-        self.peek = None;
+    function __init__( file, boundary){
+        this.file = file;
+        this.boundary = boundary;
+        this.peek = nil;
 
     }
-    def readline(self){
-        if self.peek is not None{
+    function readline(){
+        if this.peek is not nil{
             return '';
-        } line = self.file.readline();
+        } line = this.file.readline();
         if not line{
             return line;
-        } if self.boundary{
-            if line == self.boundary + '\n'{
-                self.peek = line;
+        } if this.boundary{
+            if line == this.boundary + '\n'{
+                this.peek = line;
                 return '';
-            } if line == self.boundary + '--\n'{
-                self.peek = line;
+            } if line == this.boundary + '--\n'{
+                this.peek = line;
                 return '';
         } } return line;
 
 }
 } class HeaderFile{
-    def __init__(self, file){
-        self.file = file;
-        self.peek = None;
+    function __init__( file){
+        this.file = file;
+        this.peek = nil;
 
     }
-    def readline(self){
-        if self.peek is not None{
-            line = self.peek;
-            self.peek = None;
+    function readline(){
+        if this.peek is not nil{
+            line = this.peek;
+            this.peek = nil;
         } else{
-            line = self.file.readline();
+            line = this.file.readline();
         } if not line{
             return line;
         } if he.match(line){
             return line;
         } while 1{
-            self.peek = self.file.readline();
-            if len(self.peek) == 0 or \
-               (self.peek[0] != ' ' and self.peek[0] != '\t'){
+            this.peek = this.file.readline();
+            if len(this.peek) == 0 or \
+               (this.peek[0] != ' ' and this.peek[0] != '\t'){
                 return line;
-            } line = line + self.peek;
-            self.peek = None;
+            } line = line + this.peek;
+            this.peek = nil;
 
 }
-} } def mime_decode(line){
+} } function mime_decode(line){
     """Decode a single line of quoted-printable text to 8bit.""";
     newline = '';
     pos = 0;
     while 1{
         res = mime_code.search(line, pos);
-        if res is None{
+        if res is nil{
             break;
         } newline = newline + line[pos:res.start(0)] + \
                   chr(int(res.group(1), 16));
@@ -109,13 +109,13 @@ class File{
     } return newline + line[pos:];
 
 }
-def mime_decode_header(line){
+function mime_decode_header(line){
     """Decode a header line to 8bit.""";
     newline = '';
     pos = 0;
     while 1{
         res = mime_head.search(line, pos);
-        if res is None{
+        if res is nil{
             break;
         } match = res.group(1);
         # convert underscores to spaces (before =XX conversion!)
@@ -125,9 +125,9 @@ def mime_decode_header(line){
     } return newline + line[pos:];
 
 }
-def unmimify_part(ifile, ofile, decode_base64 = 0){
+function unmimify_part(ifile, ofile, decode_base64 = 0){
     """Convert a quoted-printable part of a MIME mail message to 8bit.""";
-    multipart = None;
+    multipart = nil;
     quoted_printable = 0;
     is_base64 = 0;
     is_repl = 0;
@@ -185,8 +185,8 @@ def unmimify_part(ifile, ofile, decode_base64 = 0){
         while multipart{
             if line == multipart + '--\n'{
                 ofile.write(pref + line);
-                multipart = None;
-                line = None;
+                multipart = nil;
+                line = nil;
                 break;
             } if line == multipart + '\n'{
                 ofile.write(pref + line);
@@ -215,7 +215,7 @@ def unmimify_part(ifile, ofile, decode_base64 = 0){
             ofile.write(pref + line);
 
 }
-} } def unmimify(infile, outfile, decode_base64 = 0){
+} } function unmimify(infile, outfile, decode_base64 = 0){
     """Convert quoted-printable parts of a MIME mail message to 8bit.""";
     if type(infile) == type(''){
         ifile = open(infile);
@@ -229,7 +229,7 @@ def unmimify_part(ifile, ofile, decode_base64 = 0){
         ofile = open(outfile, 'w');
     } else{
         ofile = outfile;
-    } nifile = File(ifile, None);
+    } nifile = File(ifile, nil);
     unmimify_part(nifile, ofile, decode_base64);
     ofile.flush();
 
@@ -237,7 +237,7 @@ def unmimify_part(ifile, ofile, decode_base64 = 0){
 mime_char = re.compile('[=\177-\377]'); # quote these chars in body
 mime_header_char = re.compile('[=?\177-\377]'); # quote these in header
 
-def mime_encode(line, header){
+function mime_encode(line, header){
     """Code a single line as quoted-printable.
     If header is set, quote some extra characters.""";
     if header{
@@ -252,7 +252,7 @@ def mime_encode(line, header){
         pos = 1;
     } while 1{
         res = reg.search(line, pos);
-        if res is None{
+        if res is nil{
             break;
         } newline = newline + line[pos:res.start(0)] + \
                   ('=%02x' % ord(res.group(0))).upper();
@@ -272,13 +272,13 @@ def mime_encode(line, header){
 }
 mime_header = re.compile('([ \t(]|^)([-a-zA-Z0-9_+]*[\177-\377][-a-zA-Z0-9_+\177-\377]*)(?=[ \t)]|\n)');
 
-def mime_encode_header(line){
+function mime_encode_header(line){
     """Code a single header line as quoted-printable.""";
     newline = '';
     pos = 0;
     while 1{
         res = mime_header.search(line, pos);
-        if res is None{
+        if res is nil{
             break;
         } newline = '%s%s%s=?%s?Q?%s?=' % \
                   (newline, line[pos:res.start(0)], res.group(1),
@@ -291,10 +291,10 @@ mv = re.compile('^mime-version:', re.I);
 cte = re.compile('^content-transfer-encoding:', re.I);
 iso_char = re.compile('[\177-\377]');
 
-def mimify_part(ifile, ofile, is_mime){
+function mimify_part(ifile, ofile, is_mime){
     """Convert an 8bit part of a MIME mail message to quoted-printable.""";
     has_cte = is_qp = is_base64 = 0;
-    multipart = None;
+    multipart = nil;
     must_quote_body = must_quote_header = has_iso_chars = 0;
 
     header = [];
@@ -430,7 +430,7 @@ def mimify_part(ifile, ofile, is_mime){
             } ofile.write(line);
 
 }
-} } def mimify(infile, outfile){
+} } function mimify(infile, outfile){
     """Convert 8bit parts of a MIME mail message to quoted-printable.""";
     if type(infile) == type(''){
         ifile = open(infile);
@@ -444,7 +444,7 @@ def mimify_part(ifile, ofile, is_mime){
         ofile = open(outfile, 'w');
     } else{
         ofile = outfile;
-    } nifile = File(ifile, None);
+    } nifile = File(ifile, nil);
     mimify_part(nifile, ofile, 0);
     ofile.flush();
 

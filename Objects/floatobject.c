@@ -820,7 +820,7 @@ float_pow(PyObject *v, PyObject *w, PyObject *z)
     double iv, iw, ix;
     int negate_result = 0;
 
-    if ((PyObject *)z != Py_None) {
+    if ((PyObject *)z != Py_Nil) {
         PyErr_SetString(PyExc_TypeError, "pow() 3rd argument not "
             "allowed unless all arguments are integers");
         return NULL;
@@ -1966,7 +1966,7 @@ float_setformat(PyTypeObject *v, PyObject* args)
     }
 
     *p = f;
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 PyDoc_STRVAR(float_setformat_doc,

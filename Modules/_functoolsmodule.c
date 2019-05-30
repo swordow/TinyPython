@@ -279,7 +279,7 @@ partial_reduce(partialobject *pto, PyObject *unused)
 {
     return Py_BuildValue("O(O)(OOOO)", Py_TYPE(pto), pto->fn, pto->fn,
                          pto->args, pto->kw,
-                         pto->dict ? pto->dict : Py_None);
+                         pto->dict ? pto->dict : Py_Nil);
 }
 
 PyObject *
@@ -291,7 +291,7 @@ partial_setstate(partialobject *pto, PyObject *state)
         !PyArg_ParseTuple(state, "OOOO", &fn, &fnargs, &kw, &dict) ||
         !PyCallable_Check(fn) ||
         !PyTuple_Check(fnargs) ||
-        (kw != Py_None && !PyDict_Check(kw)))
+        (kw != Py_Nil && !PyDict_Check(kw)))
     {
         PyErr_SetString(PyExc_TypeError, "invalid partial state");
         return NULL;
@@ -304,7 +304,7 @@ partial_setstate(partialobject *pto, PyObject *state)
     if (fnargs == NULL)
         return NULL;
 
-    if (kw == Py_None)
+    if (kw == Py_Nil)
         kw = PyDict_New();
     else if(!PyDict_CheckExact(kw))
         kw = PyDict_Copy(kw);
@@ -316,7 +316,7 @@ partial_setstate(partialobject *pto, PyObject *state)
     }
 
     Py_INCREF(fn);
-    if (dict == Py_None)
+    if (dict == Py_Nil)
         dict = NULL;
     else
         Py_INCREF(dict);
@@ -325,7 +325,7 @@ partial_setstate(partialobject *pto, PyObject *state)
     Py_SETREF(pto->args, fnargs);
     Py_SETREF(pto->kw, kw);
     Py_XSETREF(pto->dict, dict);
-    Py_RETURN_NONE;
+    Py_RETURN_NIL;
 }
 
 static PyMethodDef partial_methods[] = {
