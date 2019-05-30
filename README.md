@@ -11,6 +11,14 @@ so modify the grammar a little.
 * Using '{' and '}', Code Block lies between '{' '}' as well as c/c++ language.
 * Statement must ends with ';'
 * In 'try except' statement, except must be followed with a expression
+* "None" replaced with "nil"
+* "True" replaced with "true"
+* "False" replaced with "false"
+*  function "def" replaced with "function" (from javascript)
+* remove "self" as the function first arg, "self" will be insterted in compiling stage.
+* "self" is replaced with "this" (from c++/javascrpit/c#)
+* In class method , using **this** keyword reference to the class instance(the function first argument)
+* In classmethod, using **cls** keyword reference to the class object(the function first argument)
 
 Python:
   
@@ -20,19 +28,43 @@ Python:
     except:
       print "except could with none parameter"
       
+     class Base(object):
+      def __init__(self):
+        print "Class Base"
+        self.value = None
+        
+      def show(self):
+        print self.value
+      
 Tiny Python:
 
     try 
     {
-      if True
+      if true
       {
-        print "If True";
+        print "If true";
       }
     } 
     except Exception 
     {
       print "except must have one expression...";
     }
+    
+    class Base(object)
+    {
+      function __init__()
+      {
+        print "Class Base";
+        this.value = nil;
+      }
+      
+      function show()
+      {
+        print this.value;
+      }
+    }
+    
+    
     
 
 
